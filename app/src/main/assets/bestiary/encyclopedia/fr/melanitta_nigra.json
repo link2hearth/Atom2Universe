@@ -1,0 +1,38 @@
+{
+  "id": "melanitta_nigra",
+  "name": "Macreuse noire",
+  "scientific": "Melanitta nigra",
+  "group": "birds",
+  "sections": {
+    "overview": "La Macreuse noire niche dans le nord de l’Eurasie et hiverne surtout en mer le long des côtes européennes ; des hivernages plus à l’est, en Asie, sont aussi signalés.",
+    "identification": "Le mâle est presque entièrement noir et porte une bosse jaune orangé bien visible sur le bec ; la femelle est brune.",
+    "habitat": "Il niche près de lacs et de cours d’eau douce dans les régions nordiques, puis fréquente les eaux côtières et du large hors de la période de reproduction.",
+    "diet": "Il plonge pour capturer des proies benthiques, surtout des bivalves marins ; il peut aussi consommer des crustacés, des gastéropodes et de petits poissons.",
+    "behavior": "Hors de la saison de reproduction, il se rassemble en grandes bandes en mer et plonge pour se nourrir.",
+    "reproduction": "Il se reproduit en couples isolés près de l’eau douce ; les détails du nid et de la ponte ne sont pas précisés ici, car les sources consultées les couvrent inégalement.",
+    "ecology": "Sur certaines portions du littoral français, c’est un canard marin hivernant régulier qui peut côtoyer la Macreuse brune (*Melanitta fusca*).",
+    "conservation": "À l’échelle mondiale, elle est en préoccupation mineure, mais la petite population nicheuse du Royaume-Uni est classée en liste rouge et a diminué entre les recensements nationaux."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Melanitta_nigra/",
+      "title": "Melanitta nigra — Animal Diversity Web, Université du Michigan"
+    },
+    {
+      "url": "https://collections-biologie.u-bordeaux.fr/Fiches_oiseaux/Macreuse-noire.html",
+      "title": "Macreuse noire — collections zoologiques, Université de Bordeaux"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/common-scoter",
+      "title": "Macreuse noire — British Trust for Ornithology Birdfacts"
+    },
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/2213",
+      "title": "Macreuse noire — Marine Life Information Network"
+    },
+    {
+      "url": "https://www.persee.fr/doc/medit_0025-8296_1999_num_93_4_3132",
+      "title": "Hivernage des macreuses sur le littoral du Pays d’Auge — Persée"
+    }
+  ]
+}

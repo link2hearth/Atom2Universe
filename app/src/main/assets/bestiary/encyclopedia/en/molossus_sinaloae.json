@@ -1,0 +1,34 @@
+{
+  "id": "molossus_sinaloae",
+  "name": "Sinaloan Mastiff Bat",
+  "scientific": "Molossus sinaloae",
+  "group": "mammals",
+  "sections": {
+    "overview": "Molossus sinaloae is a free-tailed bat whose current range records are centred in Mexico; recent taxonomic revisions narrowed a range once reported across Central and northern South America.",
+    "identification": "It is a medium-sized member of the mastiff-bat family Molossidae; field identification can be difficult among similar Molossus species.",
+    "habitat": "In Mexico it has been recorded in varied settings, including the Pacific coastal plain; older accounts also describe use of both dry and wet forests.",
+    "diet": "It catches flying insects in open air; moths and beetles are among reported prey.",
+    "behavior": "Like other free-tailed bats, it roosts by day in sheltered cavities; historic records include building roosts, sometimes with dozens of bats.",
+    "reproduction": "Available accounts report reproduction in Mexico, but timing and colony patterns are not well established across its revised range.",
+    "ecology": "The name reflects its type locality in Sinaloa. Older Central American records need care because similar Molossus bats were later separated or re-identified.",
+    "conservation": "The Mammal Diversity Database lists it as Least Concern, but the restricted range shown by current taxonomic treatments differs from older assessments and merits updated monitoring."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1644/0.691.1",
+      "title": "Molossus sinaloae — Mammalian Species, American Society of Mammalogists"
+    },
+    {
+      "url": "https://doi.org/10.12933/therya_notes-24-186",
+      "title": "Molossus sinaloae — Therya Notes (English and Spanish)"
+    },
+    {
+      "url": "https://mapress.com/zt/article/download/zootaxa.5357.4.1/52086/60607",
+      "title": "Updated list of mammals of Costa Rica — Zootaxa 2023"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1005206/",
+      "title": "Molossus sinaloae — Mammal Diversity Database"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "mesophylla_macconnelli",
+  "name": "Chauve-souris de MacConnell",
+  "scientific": "Mesophylla macconnelli",
+  "group": "mammals",
+  "sections": {
+    "overview": "La Chauve-souris de MacConnell est une chauve-souris néotropicale de la famille des Phyllostomidés.",
+    "identification": "C’est une petite chauve-souris pâle, aux oreilles et à la feuille nasale jaune vif à l’état vivant ; ces traits aident à la distinguer d’autres phyllostomidés.",
+    "habitat": "Elle vit dans les régions tropicales d’Amérique centrale et du nord de l’Amérique du Sud, notamment en forêt amazonienne, et se repose dans le feuillage ou des feuilles aménagées en tentes.",
+    "diet": "Une étude péruvienne sur les communautés de chauves-souris la classe comme strictement frugivore ; le petit nombre de fruits documentés ne permet pas d’établir tout son régime.",
+    "behavior": "Elle utilise des abris de feuillage, dont de petites tentes formées par des feuilles de palmier modifiées.",
+    "reproduction": "Des observations péruviennes signalent des femelles gestantes en septembre, tandis que des sources régionales plus anciennes rapportent une reproduction pendant les saisons sèche et pluvieuse ; la période peut varier selon les régions.",
+    "ecology": "Son histoire taxonomique comprend des classements dans les genres Ectophylla et Vampyressa, tandis que les bases actuelles des mammifères la maintiennent dans Mesophylla.",
+    "conservation": "La Mammal Diversity Database rapporte le statut mondial UICN de préoccupation mineure ; cette catégorie générale n’exclut pas des pressions locales sur l’habitat."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1005031/",
+      "title": "Chauve-souris de MacConnell — Mammal Diversity Database"
+    },
+    {
+      "url": "https://bioone.org/journals/bulletin-of-the-american-museum-of-natural-history/volume-451/issue-1/0003-0090.451.1.1/Mammalian-Diversity-and-Matses-Ethnomammalogy-in-Amazonian-Peru-Part-4/10.1206/0003-0090.451.1.1.pdf",
+      "title": "Diversité des mammifères et ethnomammalogie Matses en Amazonie péruvienne, partie 4 : chauves-souris — American Museum of Natural History"
+    },
+    {
+      "url": "https://museohn.unmsm.edu.pe/docs/pub_zoologia/Publicaciones%20Zologia%20Serie%20A%20N%C2%B0%2042.pdf",
+      "title": "Liste annotée des chauves-souris du parc national du Manu — Museo de Historia Natural, UNMSM"
+    },
+    {
+      "url": "https://revistasinvestigacion.unmsm.edu.pe/index.php/rpb/article/download/16375/14103",
+      "title": "Régime alimentaire et structure trophique d’un assemblage de chauves-souris au Pérou — Revista Peruana de Biología"
+    },
+    {
+      "url": "https://www.scielo.sa.cr/scielo.php?lng=en&nrm=iso&pid=S0034-77442016000301333&script=sci_arttext",
+      "title": "Refuges naturels utilisés par les chauves-souris en Amazonie centrale, Brésil — SciELO"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0065345410420094",
+      "title": "Déterminants écologiques des systèmes sociaux chez les chauves-souris à tentes foliaires — Advances in the Study of Behavior"
+    }
+  ]
+}

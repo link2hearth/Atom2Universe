@@ -1,0 +1,164 @@
+{
+  "id": "melanerpes_pulcher",
+  "scientific": "Melanerpes pulcher",
+  "group": "birds",
+  "name": {
+    "en": "Beautiful Woodpecker",
+    "fr": "Pic splendide"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Beautiful Woodpecker is endemic to Colombia and is confined to the Magdalena River valley.",
+      "fr": "Le Pic splendide est endémique de Colombie et limité à la vallée du río Magdalena."
+    },
+    "identification": {
+      "en": "The male has a red crown extending to the nape; the female has a black forecrown and red hindcrown, a pattern distinguishing it from the related Golden-naped Woodpecker (*M. chrysauchen*).",
+      "fr": "Chez le mâle, la calotte rouge s’étend jusqu’à la nuque ; chez la femelle, l’avant de la calotte est noir et l’arrière rouge, un motif qui le distingue du Pic à nuque dorée apparenté (*M. chrysauchen*)."
+    },
+    "habitat": {
+      "en": "It uses forest, forest fragments and, occasionally, plantations in the Magdalena valley.",
+      "fr": "Dans la vallée du Magdalena, il fréquente les forêts, leurs fragments et parfois les plantations."
+    },
+    "diet": {
+      "en": "It takes insects, including termites and beetles, and supplements them with fruits and seeds.",
+      "fr": "Il consomme des insectes, notamment des termites et des coléoptères, ainsi que des fruits et des graines."
+    },
+    "behavior": {
+      "en": "It often forages in the middle or upper tree canopy, alone or in pairs, and calls from high branches.",
+      "fr": "Il cherche souvent sa nourriture dans les étages moyens ou supérieurs des arbres, seul ou en couple, et chante depuis les hautes branches."
+    },
+    "reproduction": {
+      "en": "Species-specific nesting details were not established by the regional sources consulted.",
+      "fr": "Les sources régionales consultées ne précisent pas les détails de sa nidification."
+    },
+    "ecology": {
+      "en": "Its diet links tree-dwelling insects and fruits to the food web of Magdalena valley forests.",
+      "fr": "Son régime, composé d’insectes arboricoles et de fruits, le relie au réseau trophique des forêts du Magdalena."
+    },
+    "conservation": {
+      "en": "A 2024 Colombian endemic-bird atlas lists it as Least Concern nationally while documenting a restricted distribution and remaining forest cover.",
+      "fr": "Un atlas colombien de 2024 classe l’espèce en préoccupation mineure à l’échelle nationale, tout en documentant une aire restreinte et un couvert forestier résiduel."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Aves de la Reserva Natural Riomanso — WCS Colombia",
+        "fr": "Oiseaux de la réserve naturelle Riomanso — WCS Colombia"
+      },
+      "url": "https://colombia.wcs.org/Portals/113/Publicaciones%20y%20libros/Divulgativas%202025/Guia%20de%20aves%20Riomanso.pdf?timestamp=1740751780933&ver=xPx3aNJkb6XdytB-Rb-11Q%3D%3D",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The WCS guide places this endemic woodpecker only in the Magdalena valley, in forests, fragments and sometimes plantations."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 18,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aves y ecosistemas de Boyacá — Corpoboyacá",
+        "fr": "Oiseaux et écosystèmes de Boyacá — Corpoboyacá"
+      },
+      "url": "https://www.corpoboyaca.gov.co/cms/wp-content/uploads/2021/03/Cartilla-Bosques-Comunidaes-y-Aves-Digital.pdf",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "The Spanish regional guide reports termites, beetles and larvae plus Cecropia, figs, seeds and palm fruits; birds forage in mid and upper tree levels, alone or in pairs, and call from high branches. It explains tree cavity excavation by woodpeckers generally, so no species-level nesting claim is made."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 48,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlas de la Biodiversidad de Colombia: Aves endémicas — Humboldt / SELVA (2024)",
+        "fr": "Atlas de la biodiversité de Colombie : oiseaux endémiques — Humboldt / SELVA (2024)"
+      },
+      "url": "https://www.selva.org.co/wp-content/uploads/2024/04/IAvH-2024_Aves-Endemicas-de-Colombia.pdf",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The Spanish atlas reports national Least Concern status, a mapped restricted range and forest dense/secondary vegetation as range cover."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 19,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taxonomic proposal: Split Melanerpes pulcher from M. chrysauchen — South American Classification Committee",
+        "fr": "Proposition taxonomique : séparer Melanerpes pulcher de M. chrysauchen — South American Classification Committee"
+      },
+      "url": "https://www.museum.lsu.edu/~Remsen/SACCprop123.htm",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The SACC proposal describes plumage differences from the Golden-naped Woodpecker: male red crown reaches the nape; female has black forecrown and red hindcrown."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 23,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Colombian WCS and Boyacá guides are regional accounts; their local observations should not be generalized beyond the species' known range.",
+    "The consulted regional accounts do not give species-specific nesting details."
+  ],
+  "review_note": "Concise profile based on Colombian institutional and conservation sources in Spanish; local diet observations are attributed to a Boyacá guide.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

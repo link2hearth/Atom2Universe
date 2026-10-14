@@ -1,0 +1,30 @@
+{
+  "id": "melitta_tricincta",
+  "name": "Red Bartsia Bee",
+  "scientific": "Melitta tricincta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Red Bartsia Bee is a small solitary bee associated with flowering *Odontites*, especially in western Europe.",
+    "identification": "It is a compact, brown-haired bee with narrow pale bands across the abdomen.",
+    "habitat": "It favours open, often chalky grassland and other sunny, relatively dry sites where its food plant grows.",
+    "diet": "Females collect pollen almost exclusively from Red Bartsia (*Odontites vernus*), though the bee may visit other flowers for nectar.",
+    "behavior": "Adults are most often seen around flowering Red Bartsia in late summer, when bee activity is otherwise waning.",
+    "reproduction": "Females excavate nest burrows in soil; the species is solitary rather than colony-forming.",
+    "ecology": "Its close dependence on one pollen plant links its local presence to the availability of flowering Red Bartsia.",
+    "conservation": "Buglife lists the species as Not Evaluated in its UK profile; that local listing is not a global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.buglife.org.uk/bugs/bug-directory/red-bartsia-bee/",
+      "title": "Red Bartsia Bee — Buglife"
+    },
+    {
+      "url": "https://zoologie.umons.ac.be/Hymenoptera/pagetaxon.aspx?tx_id=1016",
+      "title": "Melitta (Melitta) tricincta — Atlas Hymenoptera, Université de Mons"
+    },
+    {
+      "url": "https://pollinatoracademy.eu/assets/Uploads/Document/BEE-GENUS-MELITTA-2024.05.01.pdf",
+      "title": "The bee genus Melitta — Pollinator Academy (2024)"
+    }
+  ]
+}

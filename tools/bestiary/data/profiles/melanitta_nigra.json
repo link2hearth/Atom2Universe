@@ -1,0 +1,186 @@
+{
+  "id": "melanitta_nigra",
+  "scientific": "Melanitta nigra",
+  "group": "birds",
+  "name": {
+    "en": "Common Scoter",
+    "fr": "Macreuse noire"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Common Scoter breeds across northern Eurasia and winters mainly at sea along European coasts, with farther east Asian wintering also reported.",
+      "fr": "La Macreuse noire niche dans le nord de l’Eurasie et hiverne surtout en mer le long des côtes européennes ; des hivernages plus à l’est, en Asie, sont aussi signalés."
+    },
+    "identification": {
+      "en": "The male is mostly black with a conspicuous yellow-orange knob on the bill; the female is brown.",
+      "fr": "Le mâle est presque entièrement noir et porte une bosse jaune orangé bien visible sur le bec ; la femelle est brune."
+    },
+    "habitat": {
+      "en": "It nests near freshwater lakes and rivers in northern regions, then uses coastal and offshore marine waters outside the breeding season.",
+      "fr": "Il niche près de lacs et de cours d’eau douce dans les régions nordiques, puis fréquente les eaux côtières et du large hors de la période de reproduction."
+    },
+    "diet": {
+      "en": "It dives for benthic prey, especially marine bivalves; crustaceans, gastropods and small fish can also be eaten.",
+      "fr": "Il plonge pour capturer des proies benthiques, surtout des bivalves marins ; il peut aussi consommer des crustacés, des gastéropodes et de petits poissons."
+    },
+    "behavior": {
+      "en": "Outside the breeding season it gathers in large flocks on marine waters and dives to feed.",
+      "fr": "Hors de la saison de reproduction, il se rassemble en grandes bandes en mer et plonge pour se nourrir."
+    },
+    "reproduction": {
+      "en": "It breeds in solitary pairs near freshwater; species-specific nest and clutch details are omitted here because the consulted sources differ in coverage.",
+      "fr": "Il se reproduit en couples isolés près de l’eau douce ; les détails du nid et de la ponte ne sont pas précisés ici, car les sources consultées les couvrent inégalement."
+    },
+    "ecology": {
+      "en": "Along parts of the French coast, it is a regular wintering sea duck and may occur alongside the Velvet Scoter (*Melanitta fusca*).",
+      "fr": "Sur certaines portions du littoral français, c’est un canard marin hivernant régulier qui peut côtoyer la Macreuse brune (*Melanitta fusca*)."
+    },
+    "conservation": {
+      "en": "Globally, it is Least Concern, but the UK's small breeding population is Red-listed and contracted between national surveys.",
+      "fr": "À l’échelle mondiale, elle est en préoccupation mineure, mais la petite population nicheuse du Royaume-Uni est classée en liste rouge et a diminué entre les recensements nationaux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Melanitta nigra — Animal Diversity Web, University of Michigan",
+        "fr": "Melanitta nigra — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Melanitta_nigra/",
+      "supports": [
+        "overview",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "ADW summarizes northern Eurasian breeding, winter migration, marine bivalves in the diet and solitary-pair breeding."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 15,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macreuse noire — collections zoologiques, Université de Bordeaux",
+        "fr": "Macreuse noire — collections zoologiques, Université de Bordeaux"
+      },
+      "url": "https://collections-biologie.u-bordeaux.fr/Fiches_oiseaux/Macreuse-noire.html",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The French university collection gives the French name and the male's yellow bill mark."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 14,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Scoter — British Trust for Ornithology Birdfacts",
+        "fr": "Macreuse noire — British Trust for Ornithology Birdfacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/common-scoter",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "BTO describes coastal and marine non-breeding use; its UK account says global Least Concern, UK Red-listed, with breeding population contraction between surveys."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 22,
+        "total": 102,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common scoter — Marine Life Information Network",
+        "fr": "Macreuse noire — Marine Life Information Network"
+      },
+      "url": "https://www.marlin.ac.uk/species/detail/2213",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "MarLIN describes boreal freshwater breeding waters and offshore/coastal marine feeding habitat."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 11,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wintering scoters on the Pays d’Auge coast — Persée",
+        "fr": "Hivernage des macreuses sur le littoral du Pays d’Auge — Persée"
+      },
+      "url": "https://www.persee.fr/doc/medit_0025-8296_1999_num_93_4_3132",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The French study reports Common Scoters wintering along the eastern Calvados coast from September to April, alongside Velvet Scoters."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 19,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation statement combines a global category reported in an older species account with current Scottish regional monitoring; neither substitutes for a current global population trend.",
+    "The French wintering study concerns a particular stretch of Normandy coast, not the whole winter range."
+  ],
+  "review_note": "Uses an academic species account, French university collection, BTO and NatureScot; distinguishes global status from Scottish breeding trend.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

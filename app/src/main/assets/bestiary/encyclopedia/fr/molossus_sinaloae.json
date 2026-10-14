@@ -1,0 +1,34 @@
+{
+  "id": "molossus_sinaloae",
+  "name": "Molossus sinaloae",
+  "scientific": "Molossus sinaloae",
+  "group": "mammals",
+  "sections": {
+    "overview": "Molossus sinaloae est une chauve-souris à queue libre dont l’aire actuelle est centrée sur le Mexique ; des révisions taxonomiques récentes ont restreint une aire autrefois décrite jusqu’en Amérique centrale et dans le nord de l’Amérique du Sud.",
+    "identification": "C’est une chauve-souris de taille moyenne de la famille des Molossidés ; son identification peut être difficile parmi les espèces proches du genre Molossus.",
+    "habitat": "Au Mexique, elle a été signalée dans des milieux variés, dont la plaine côtière du Pacifique ; des sources plus anciennes rapportent aussi sa présence en forêts sèches et humides.",
+    "diet": "Elle capture des insectes en vol ; des papillons de nuit et des coléoptères figurent parmi les proies signalées.",
+    "behavior": "Comme d’autres chauves-souris à queue libre, elle se repose le jour dans des cavités abritées ; d’anciens relevés signalent des colonies dans des bâtiments, parfois de plusieurs dizaines d’individus.",
+    "reproduction": "Des sources rapportent sa reproduction au Mexique, mais les périodes et les colonies restent mal documentées à l’échelle de son aire révisée.",
+    "ecology": "Son nom rappelle sa localité type, dans l’État mexicain de Sinaloa. Les anciens signalements d’Amérique centrale sont à interpréter prudemment, car des Molossus proches ont depuis été séparés ou réidentifiés.",
+    "conservation": "La Mammal Diversity Database la classe en préoccupation mineure, mais l’aire restreinte indiquée par les traitements taxonomiques actuels diffère des anciennes évaluations et justifie un suivi actualisé."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1644/0.691.1",
+      "title": "Molossus sinaloae — Mammalian Species, American Society of Mammalogists"
+    },
+    {
+      "url": "https://doi.org/10.12933/therya_notes-24-186",
+      "title": "Molossus sinaloae — Therya Notes (anglais et espagnol)"
+    },
+    {
+      "url": "https://mapress.com/zt/article/download/zootaxa.5357.4.1/52086/60607",
+      "title": "Mise à jour des mammifères du Costa Rica — Zootaxa 2023"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1005206/",
+      "title": "Molossus sinaloae — Mammal Diversity Database"
+    }
+  ]
+}

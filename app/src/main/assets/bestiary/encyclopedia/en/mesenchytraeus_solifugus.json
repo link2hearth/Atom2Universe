@@ -1,0 +1,34 @@
+{
+  "id": "mesenchytraeus_solifugus",
+  "name": "Glacier Ice Worm",
+  "scientific": "Mesenchytraeus solifugus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This small enchytraeid annelid is specialized for life on temperate coastal glaciers of western North America.",
+    "identification": "It is an elongate annelid with a head pore, many sensory structures and abruptly curved setae.",
+    "habitat": "It is known from coastal glaciers from southern Alaska through British Columbia and Washington to Oregon.",
+    "diet": "Field observations report grazing on snow algae and other tiny organisms on snow and glacier meltwater.",
+    "behavior": "Worms rise toward the shaded snow surface in the evening and retreat below the surface during bright daytime conditions.",
+    "reproduction": "Tight bundles have been observed in melt pools and may be associated with reproduction, but their function has not been confirmed for this species.",
+    "ecology": "It completes its life cycle in glacier ice and snow close to freezing. Physiological experiments found that its energy-nucleotide levels rise when cooled.",
+    "conservation": "Its habitat is shrinking as glaciers retreat, and field counts at some North Cascade glaciers have declined; these local observations are not a global population assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.researchwithrutgers.org/en/publications/morphologic-characterization-of-the-ice-worm-mesenchytraeus-solif/",
+      "title": "Morphologic characterization of the ice worm Mesenchytraeus solifugus — Rutgers University"
+    },
+    {
+      "url": "https://glaciers.nichols.edu/iceworm/",
+      "title": "Ice Worms — North Cascade Glacier Climate Project"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S1055790312000255",
+      "title": "Historical biogeography of the North American glacier ice worm — Molecular Phylogenetics and Evolution"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S1095643303003155",
+      "title": "The ice worm Mesenchytraeus solifugus elevates adenylate levels at low physiological temperature — Comparative Biochemistry and Physiology A"
+    }
+  ]
+}

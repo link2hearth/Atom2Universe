@@ -1,0 +1,30 @@
+{
+  "id": "montastraea_cavernosa",
+  "name": "Great star coral",
+  "scientific": "Montastraea cavernosa",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Montastraea cavernosa is a widespread reef-building stony coral of the tropical Atlantic and Caribbean.",
+    "identification": "Its colonies form rounded masses, domes or pillars, sometimes flattened at depth. The large, star-shaped polyps are about 6–12 mm across and vary from brown or green to grey or violet.",
+    "habitat": "It occupies many reef settings from shallow water to at least 100 m; abundance is often greatest at intermediate depths, and it tolerates some turbid conditions.",
+    "diet": "At night, extended polyps capture plankton and other small particles with their tentacles; symbiotic algae also contribute energy.",
+    "behavior": "The polyps usually retract during the day and extend at night to feed.",
+    "reproduction": "It releases eggs and sperm into the water during synchronized spawning; colonies have separate sexes, unlike many broadcast-spawning corals.",
+    "ecology": "The coral’s tissues host symbiotic algae. Heat stress can disrupt this partnership, causing bleaching and weakening the colony.",
+    "conservation": "The IUCN assessment lists it as Least Concern, but that global assessment dates to 2008 and notes reef-habitat loss and climate-related threats."
+  },
+  "sources": [
+    {
+      "url": "https://doris.ffessm.fr/Especes/Montastraea-cavernosa-Grand-corail-etoile-284",
+      "title": "Grand corail étoilé — DORIS / FFESSM"
+    },
+    {
+      "url": "https://flowergarden.noaa.gov/education/coralspawning.html",
+      "title": "Coral spawning — NOAA Flower Garden Banks National Marine Sanctuary"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2008.RLTS.T133237A3646174.en",
+      "title": "Montastraea cavernosa — IUCN Red List"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "id": "mnemiopsis_leidyi",
+  "scientific": "Mnemiopsis leidyi",
+  "group": "invertebrates",
+  "name": {
+    "en": "Sea walnut",
+    "fr": "Mnémiopsis"
+  },
+  "sections": {
+    "overview": {
+      "en": "Mnemiopsis leidyi is a transparent, lobed comb jelly native to the Atlantic coasts of the Americas.",
+      "fr": "Mnemiopsis leidyi est un cténophore transparent et lobé, originaire des côtes atlantiques des Amériques."
+    },
+    "identification": {
+      "en": "Its oval body is usually a few centimetres long and bears rows of beating cilia that shimmer in light; unlike true jellyfish, it is a ctenophore.",
+      "fr": "Son corps ovale mesure généralement quelques centimètres et porte des rangées de cils vibratiles irisés ; ce n’est pas une méduse vraie, mais un cténophore."
+    },
+    "habitat": {
+      "en": "It lives in the water column of estuaries, bays and shallow coastal waters, tolerating broad salinity and temperature changes.",
+      "fr": "Elle vit dans la colonne d’eau des estuaires, des baies et des eaux côtières peu profondes ; elle tolère d’amples variations de salinité et de température."
+    },
+    "diet": {
+      "en": "It consumes zooplankton and can also eat eggs and larvae of pelagic fish, competing with young fish for planktonic food.",
+      "fr": "Elle consomme du zooplancton et peut aussi manger des œufs et des larves de poissons pélagiques, concurrençant les jeunes poissons pour la nourriture planctonique."
+    },
+    "behavior": {
+      "en": "When food is abundant it can form dense aggregations; its comb rows refract light and may appear to glow.",
+      "fr": "Lorsque la nourriture abonde, elle peut former des agrégats denses ; ses rangées de cils diffractent la lumière et peuvent sembler lumineuses."
+    },
+    "reproduction": {
+      "en": "Each individual has male and female reproductive organs and can self-fertilize; under favorable conditions it matures and reproduces rapidly.",
+      "fr": "Chaque individu possède des organes reproducteurs mâles et femelles et peut s’autoféconder ; dans des conditions favorables, il atteint rapidement la maturité et se reproduit."
+    },
+    "ecology": {
+      "en": "Transported in ships’ ballast water, it spread beyond its native Atlantic range; blooms in the Black and Caspian seas disrupted plankton food webs and fisheries.",
+      "fr": "Transportée dans les eaux de ballast des navires, elle s’est propagée hors de son aire atlantique d’origine ; ses proliférations en mer Noire et en mer Caspienne ont perturbé les réseaux planctoniques et les pêcheries."
+    },
+    "conservation": {
+      "en": "Its effects differ by sea; Mediterranean impacts are reported as less dramatic than Black or Caspian Sea impacts.",
+      "fr": "Ses effets varient selon les mers ; l’impact méditerranéen est décrit comme moindre qu’en mer Noire ou Caspienne."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sea Walnut (Mnemiopsis leidyi) — Smithsonian Ocean",
+        "fr": "Noix de mer (Mnemiopsis leidyi) — Smithsonian Ocean"
+      },
+      "url": "https://ocean.si.edu/ocean-life/invertebrates/sea-walnut-mnemiopsis-leidyi",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Smithsonian account summarizes native range, ballast-water introduction, invasion and food-web effects in Black and Caspian seas."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 16,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mnemiopsis leidyi — IUCN MedMIS (French)",
+        "fr": "Mnemiopsis leidyi — IUCN MedMIS (français)"
+      },
+      "url": "https://iucn-medmis.org/fr/especes/mnemiopsis-leidyi",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "French IUCN-associated species account describes anatomy, coastal habitat, diet, self-fertilization, spread and varying ecosystem impacts."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 15,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mnémiopsis — DORIS / FFESSM (French)",
+        "fr": "Mnémiopsis — DORIS / FFESSM (français)"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Mnemiopsis-leidyi-Mnemiopsis-234/(rOffset)/0",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "French underwater-fauna account gives body features, feeding, rapid reproduction and introduced distribution."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 12,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Reported sizes, daily egg production and time to maturity vary by source and environmental conditions; the profile avoids treating maximum figures as typical.",
+    "Invasion impacts differ between seas and through time."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Smithsonian Ocean with two French-language species accounts, including IUCN MedMIS; kept invasion impacts regional and reproductive rate conditional."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "mnemiopsis_leidyi",
+  "name": "Sea walnut",
+  "scientific": "Mnemiopsis leidyi",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Mnemiopsis leidyi is a transparent, lobed comb jelly native to the Atlantic coasts of the Americas.",
+    "identification": "Its oval body is usually a few centimetres long and bears rows of beating cilia that shimmer in light; unlike true jellyfish, it is a ctenophore.",
+    "habitat": "It lives in the water column of estuaries, bays and shallow coastal waters, tolerating broad salinity and temperature changes.",
+    "diet": "It consumes zooplankton and can also eat eggs and larvae of pelagic fish, competing with young fish for planktonic food.",
+    "behavior": "When food is abundant it can form dense aggregations; its comb rows refract light and may appear to glow.",
+    "reproduction": "Each individual has male and female reproductive organs and can self-fertilize; under favorable conditions it matures and reproduces rapidly.",
+    "ecology": "Transported in ships’ ballast water, it spread beyond its native Atlantic range; blooms in the Black and Caspian seas disrupted plankton food webs and fisheries.",
+    "conservation": "Its effects differ by sea; Mediterranean impacts are reported as less dramatic than Black or Caspian Sea impacts."
+  },
+  "sources": [
+    {
+      "url": "https://ocean.si.edu/ocean-life/invertebrates/sea-walnut-mnemiopsis-leidyi",
+      "title": "Sea Walnut (Mnemiopsis leidyi) — Smithsonian Ocean"
+    },
+    {
+      "url": "https://iucn-medmis.org/fr/especes/mnemiopsis-leidyi",
+      "title": "Mnemiopsis leidyi — IUCN MedMIS (French)"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Mnemiopsis-leidyi-Mnemiopsis-234/(rOffset)/0",
+      "title": "Mnémiopsis — DORIS / FFESSM (French)"
+    }
+  ]
+}

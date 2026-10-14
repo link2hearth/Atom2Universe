@@ -1,0 +1,42 @@
+{
+  "id": "merops_philippinus",
+  "name": "Guêpier à queue d’azur",
+  "scientific": "Merops philippinus",
+  "group": "birds",
+  "sections": {
+    "overview": "eBird cartographie les aires de reproduction et d’hivernage de ce guêpier en Asie du Sud et du Sud-Est.",
+    "identification": "Vert sur le dessus, il a le croupion et la queue bleus, un trait oculaire sombre bordé de bleu et le menton jaune au-dessus d’une gorge rousse. Le Guêpier de Leschenault a la tête châtain ; voir sa fiche pour comparer.",
+    "habitat": "Il fréquente les milieux boisés, où les grands arbres offrent des perchoirs de chasse dégagés ; il est aussi présent en milieu urbain.",
+    "diet": "Il capture en vol des insectes comme les abeilles, guêpes, coléoptères, mouches et libellules ; il prend parfois de petits poissons.",
+    "behavior": "Sur ses lieux de reproduction, il niche en colonies.",
+    "reproduction": "Il creuse des terriers de nidification dans les berges sableuses.",
+    "ecology": "Le Guêpier de Leschenault est un proche parent, avec un ancêtre commun estimé à environ 5,1 millions d’années ; voir sa fiche pour comparer.",
+    "conservation": "BirdLife DataZone indique la catégorie mondiale UICN de préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://science.ebird.org/status-and-trends/species/btbeat1/range-map",
+      "title": "Guêpier à queue d’azur — eBird Status and Trends"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/guepier.a.queue.d.azur.html",
+      "title": "Guêpier à queue d’azur — Oiseaux.net (identification et alimentation)"
+    },
+    {
+      "url": "https://www.nparks.gov.sg/publications-resources/articles/what-is-that-blue-bird",
+      "title": "Guêpier à queue d’azur — NParks"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0006320709001487",
+      "title": "La restauration des sites de nidification augmente la densité de couples de Guêpiers à queue d’azur — Biological Conservation"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/guepier.de.leschenault.html",
+      "title": "Guêpier de Leschenault — Oiseaux.net (parenté)"
+    },
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/blue-tailed-bee-eater-merops-philippinus",
+      "title": "Guêpier à queue d’azur — BirdLife DataZone"
+    }
+  ]
+}

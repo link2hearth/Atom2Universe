@@ -1,0 +1,34 @@
+{
+  "id": "micropterix_aureatella",
+  "name": "Micropterix aureatella",
+  "scientific": "Micropterix aureatella",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Micropterix aureatella est un très petit papillon de jour de l’ancienne famille des Micropterigidae.",
+    "identification": "Son envergure est d’environ 9 à 11 mm ; ses ailes antérieures bronze violacé portent de larges bandes dorées et une tache médiane.",
+    "habitat": "En Grande-Bretagne, elle fréquente les bois et les landes et reste largement présente malgré une répartition inégale ; l’espèce possède une aire paléarctique bien plus vaste.",
+    "diet": "Les adultes consomment du pollen, notamment celui des laîches (Carex) ; l’alimentation larvaire est moins certaine, une larve ayant été trouvée dans la litière parmi des hyphes fongiques.",
+    "behavior": "Les adultes volent de jour par temps ensoleillé et, contrairement à la plupart des papillons de nuit, conservent des mandibules fonctionnelles.",
+    "reproduction": "En Grande-Bretagne, les adultes sont observés de mai à juillet dans certaines régions ; le stade larvaire est présent au début du printemps.",
+    "ecology": "Elle appartient aux Micropterigidae, une lignée de papillons dont les adultes mâchent leur nourriture ; ce caractère aide à la distinguer de groupes plus récents.",
+    "conservation": "Aucune évaluation mondiale de conservation n’a été trouvée ; les données régionales britanniques citées ici ne permettent pas d’établir une tendance globale."
+  },
+  "sources": [
+    {
+      "url": "https://ukmoths.org.uk/species/micropterix-aureatella/",
+      "title": "Micropterix aureatella — UKMoths"
+    },
+    {
+      "url": "https://dgmoths.info/moths/micropterix-aureatella/",
+      "title": "Micropterix aureatella — Dumfries & Galloway Moths"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Micropterix_Aureatella",
+      "title": "Micropterix aureatella — LepiWiki (allemand)"
+    },
+    {
+      "url": "https://www.zobodat.at/pdf/Nota-lepidopterologica_38_0133-0146.pdf",
+      "title": "Une nouvelle espèce de Micropterix d’Italie — Nota Lepidopterologica"
+    }
+  ]
+}

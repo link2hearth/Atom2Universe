@@ -1,0 +1,162 @@
+{
+  "id": "mesenchytraeus_solifugus",
+  "scientific": "Mesenchytraeus solifugus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Glacier Ice Worm",
+    "fr": "Ver des glaces"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small enchytraeid annelid is specialized for life on temperate coastal glaciers of western North America.",
+      "fr": "Ce petit annélide enchytéidé est adapté à la vie sur les glaciers côtiers tempérés de l’ouest de l’Amérique du Nord."
+    },
+    "identification": {
+      "en": "It is an elongate annelid with a head pore, many sensory structures and abruptly curved setae.",
+      "fr": "C’est un annélide allongé, avec un pore céphalique, de nombreuses structures sensorielles et des soies brusquement recourbées."
+    },
+    "habitat": {
+      "en": "It is known from coastal glaciers from southern Alaska through British Columbia and Washington to Oregon.",
+      "fr": "Il est connu sur les glaciers côtiers, du sud de l’Alaska à l’Oregon en passant par la Colombie-Britannique et l’État de Washington."
+    },
+    "diet": {
+      "en": "Field observations report grazing on snow algae and other tiny organisms on snow and glacier meltwater.",
+      "fr": "Des observations de terrain rapportent qu’il broute les algues des neiges et d’autres organismes minuscules sur la neige et dans l’eau de fonte glaciaire."
+    },
+    "behavior": {
+      "en": "Worms rise toward the shaded snow surface in the evening and retreat below the surface during bright daytime conditions.",
+      "fr": "Les vers remontent vers la surface enneigée à l’ombre le soir et se retirent sous la surface pendant les heures lumineuses."
+    },
+    "reproduction": {
+      "en": "Tight bundles have been observed in melt pools and may be associated with reproduction, but their function has not been confirmed for this species.",
+      "fr": "Des amas serrés ont été observés dans des mares de fonte et pourraient être liés à la reproduction, mais leur fonction n’est pas confirmée chez cette espèce."
+    },
+    "ecology": {
+      "en": "It completes its life cycle in glacier ice and snow close to freezing. Physiological experiments found that its energy-nucleotide levels rise when cooled.",
+      "fr": "Il accomplit son cycle de vie dans la glace et la neige glaciaires, à une température proche du point de congélation. Des expériences physiologiques ont montré que ses nucléotides énergétiques augmentent quand il refroidit."
+    },
+    "conservation": {
+      "en": "Its habitat is shrinking as glaciers retreat, and field counts at some North Cascade glaciers have declined; these local observations are not a global population assessment.",
+      "fr": "Son habitat se réduit avec le recul des glaciers et les comptages ont baissé sur certains glaciers des North Cascades ; ces observations locales ne constituent pas une évaluation mondiale de la population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Morphologic characterization of the ice worm Mesenchytraeus solifugus — Rutgers University",
+        "fr": "Caractérisation morphologique du ver des glaces Mesenchytraeus solifugus — Rutgers University"
+      },
+      "url": "https://www.researchwithrutgers.org/en/publications/morphologic-characterization-of-the-ice-worm-mesenchytraeus-solif/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Peer-reviewed microscopy documents the elongated head pore, sensory structures and abruptly curved setae."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 13,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ice Worms — North Cascade Glacier Climate Project",
+        "fr": "Vers des glaces — North Cascade Glacier Climate Project"
+      },
+      "url": "https://glaciers.nichols.edu/iceworm/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Field notes report algae grazing, bundles and declines."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 8,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Historical biogeography of the North American glacier ice worm — Molecular Phylogenetics and Evolution",
+        "fr": "Biogéographie historique du ver glaciaire nord-américain — Molecular Phylogenetics and Evolution"
+      },
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S1055790312000255",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The peer-reviewed study identifies coastal glaciers from Alaska to Oregon as this glacier-obligate species’ primary habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 16,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The ice worm Mesenchytraeus solifugus elevates adenylate levels at low physiological temperature — Comparative Biochemistry and Physiology A",
+        "fr": "Le ver des glaces Mesenchytraeus solifugus augmente ses nucléotides énergétiques à basse température — Comparative Biochemistry and Physiology A"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S1095643303003155",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "A peer-reviewed physiological experiment found increases in ATP, ADP and AMP after cooling."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 13,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

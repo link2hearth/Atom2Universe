@@ -1,0 +1,164 @@
+{
+  "id": "meleagris_ocellata",
+  "scientific": "Meleagris ocellata",
+  "group": "birds",
+  "name": {
+    "en": "Ocellated Turkey",
+    "fr": "Dindon ocellé"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Ocellated Turkey is a resident of the Yucatán Peninsula and adjacent northern Guatemala and Belize.",
+      "fr": "Le Dindon ocellé est sédentaire dans la péninsule du Yucatán et les régions voisines du nord du Guatemala et du Belize."
+    },
+    "identification": {
+      "en": "Its iridescent blue-green plumage and eye-like tail spots are characteristic.",
+      "fr": "Son plumage irisé bleu-vert et les ocelles de sa queue sont caractéristiques."
+    },
+    "habitat": {
+      "en": "It mainly occupies mature lowland forest, including seasonally flooded forest edges and open areas used during breeding.",
+      "fr": "Il fréquente surtout les forêts matures de basse altitude, notamment leurs lisières inondées selon la saison et les espaces ouverts utilisés pendant la reproduction."
+    },
+    "diet": {
+      "en": "In one Campeche agroforestry study of males during breeding, crop contents were mostly seeds, especially maize and sorghum.",
+      "fr": "Dans une étude menée au Campeche sur des mâles en période de reproduction, le contenu du jabot était surtout constitué de graines, principalement de maïs et de sorgho."
+    },
+    "behavior": {
+      "en": "It is resident rather than migratory, and uses clearings during the breeding season.",
+      "fr": "Il est sédentaire et utilise les espaces ouverts pendant la période de reproduction."
+    },
+    "reproduction": {
+      "en": "The female nests in a shallow scrape on the ground and lays about 8–15 eggs; incubation lasts roughly 28 days.",
+      "fr": "La femelle niche dans une simple dépression au sol et pond environ 8 à 15 œufs ; l’incubation dure approximativement 28 jours."
+    },
+    "ecology": {
+      "en": "Its foraging uses both forest and nearby agricultural habitat, making intact forest and the surrounding landscape relevant to its ecology.",
+      "fr": "Son alimentation mobilise la forêt et des milieux agricoles voisins, de sorte que la forêt intacte et les paysages adjacents comptent pour son écologie."
+    },
+    "conservation": {
+      "en": "BirdLife classifies it as Near Threatened (2020), citing ongoing habitat loss and hunting pressure.",
+      "fr": "BirdLife le classe quasi menacé (2020), en raison de la perte persistante d’habitat et de la pression de chasse."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ocellated Turkey — BirdLife International DataZone",
+        "fr": "Dindon ocellé — BirdLife International DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/ocellated-turkey-meleagris-ocellata",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife reports the Yucatán–Belize–Guatemala range, year-round residency, breeding-season clearings, forest/agricultural ecology and Near Threatened status in its 2020 assessment."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 19,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pavo de monte — Gobierno del Estado de Yucatán",
+        "fr": "Dindon des forêts — gouvernement de l’État du Yucatán"
+      },
+      "url": "https://www.yucatan.gob.mx/?p=pavo_monte",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The Yucatán government describes iridescent blue-green plumage and eye-like spots on the tail."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 13,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ocellated Turkey diets and feeding ecology — Tropical and Subtropical Agroecosystems (2021)",
+        "fr": "Régime et écologie alimentaire du Dindon ocellé — Tropical and Subtropical Agroecosystems (2021)"
+      },
+      "url": "https://www.revista.ccba.uady.mx/ojs/index.php/TSA/article/view/3715",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The 2021 Campeche study of male crops from the breeding season found a seed-dominated diet with maize and sorghum prominent."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 20,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Meleagris ocellata — Animal Diversity Web, University of Michigan",
+        "fr": "Meleagris ocellata — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Meleagris_ocellata/",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "ADW reports ground nesting, clutches of 8–15 eggs and an incubation period of about 28 days."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 16,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The 2020 BirdLife assessment is the most recent assessment year shown on the consulted factsheet; status may be reassessed subsequently.",
+    "The Campeche diet paper examines one agroforestry territory, so its findings are not assumed to represent the entire range."
+  ],
+  "review_note": "Balances the current BirdLife species account with a Yucatán government account in Spanish and a peer-reviewed Campeche diet study.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

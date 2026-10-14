@@ -1,0 +1,34 @@
+{
+  "id": "meleagris_ocellata",
+  "name": "Ocellated Turkey",
+  "scientific": "Meleagris ocellata",
+  "group": "birds",
+  "sections": {
+    "overview": "The Ocellated Turkey is a resident of the Yucatán Peninsula and adjacent northern Guatemala and Belize.",
+    "identification": "Its iridescent blue-green plumage and eye-like tail spots are characteristic.",
+    "habitat": "It mainly occupies mature lowland forest, including seasonally flooded forest edges and open areas used during breeding.",
+    "diet": "In one Campeche agroforestry study of males during breeding, crop contents were mostly seeds, especially maize and sorghum.",
+    "behavior": "It is resident rather than migratory, and uses clearings during the breeding season.",
+    "reproduction": "The female nests in a shallow scrape on the ground and lays about 8–15 eggs; incubation lasts roughly 28 days.",
+    "ecology": "Its foraging uses both forest and nearby agricultural habitat, making intact forest and the surrounding landscape relevant to its ecology.",
+    "conservation": "BirdLife classifies it as Near Threatened (2020), citing ongoing habitat loss and hunting pressure."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/ocellated-turkey-meleagris-ocellata",
+      "title": "Ocellated Turkey — BirdLife International DataZone"
+    },
+    {
+      "url": "https://www.yucatan.gob.mx/?p=pavo_monte",
+      "title": "Pavo de monte — Gobierno del Estado de Yucatán"
+    },
+    {
+      "url": "https://www.revista.ccba.uady.mx/ojs/index.php/TSA/article/view/3715",
+      "title": "Ocellated Turkey diets and feeding ecology — Tropical and Subtropical Agroecosystems (2021)"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Meleagris_ocellata/",
+      "title": "Meleagris ocellata — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "micropterix_aureatella",
+  "name": "Yellow-barred Gold",
+  "scientific": "Micropterix aureatella",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Micropterix aureatella is a very small, day-flying moth in the ancient family Micropterigidae.",
+    "identification": "Its wingspan is about 9–11 mm; the bronze-purple forewings bear broad golden bands and a median spot.",
+    "habitat": "In Britain it occurs in woodland and heathland, and is widespread though unevenly distributed; the species has a much broader Palearctic range.",
+    "diet": "Adults feed on pollen, particularly from sedges (Carex); the larval food is less certain, with a larva found in leaf litter among fungal hyphae.",
+    "behavior": "Adults fly by day in sunshine, and unlike most moths they retain working mandibles.",
+    "reproduction": "Adults are recorded from May to July in parts of Britain; the larval stage is present in early spring.",
+    "ecology": "It belongs to Micropterigidae, a lineage of moths with chewing adults; the family context helps distinguish it from later moth groups.",
+    "conservation": "No global conservation assessment was located; the regional British records cited here do not establish a global trend."
+  },
+  "sources": [
+    {
+      "url": "https://ukmoths.org.uk/species/micropterix-aureatella/",
+      "title": "Micropterix aureatella — UKMoths"
+    },
+    {
+      "url": "https://dgmoths.info/moths/micropterix-aureatella/",
+      "title": "Yellow-barred Pollen-moth — Dumfries & Galloway Moths"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Micropterix_Aureatella",
+      "title": "Micropterix aureatella — LepiWiki (German)"
+    },
+    {
+      "url": "https://www.zobodat.at/pdf/Nota-lepidopterologica_38_0133-0146.pdf",
+      "title": "A new species of Micropterix from Italy — Nota Lepidopterologica"
+    }
+  ]
+}

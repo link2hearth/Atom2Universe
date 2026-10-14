@@ -1,0 +1,30 @@
+{
+  "id": "miomantis_binotata",
+  "name": "African pinstripe mantis",
+  "scientific": "Miomantis binotata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Miomantis binotata is an African praying mantis described by Giglio-Tos in 1911.",
+    "identification": "The consulted references do not provide a reliable species-specific field description or measurements.",
+    "habitat": "Published records list it from several African countries, including Kenya, Malawi, Rwanda, Tanzania and Togo.",
+    "diet": "The sources consulted do not document its prey or feeding in detail.",
+    "behavior": "Detailed behavior specific to this species was not described in the sources consulted.",
+    "reproduction": "The available species accounts do not describe its reproduction.",
+    "ecology": "The updated South African museum checklist treats its distribution from earlier literature and does not report a South African occurrence for this species.",
+    "conservation": "No species-level global assessment was located."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10848684/",
+      "title": "Documenting Mantodea species in South African museum collections and an updated species list — ZooKeys"
+    },
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/bioproject/286407",
+      "title": "Miomantis binotata — NCBI Taxonomy / BioProject"
+    },
+    {
+      "url": "https://www.arcjournals.org/pdfs/ijrsz/v2-i4/3.pdf",
+      "title": "Updated Checklist and Distribution of Mantidae — International Journal of Research Studies in Zoology"
+    }
+  ]
+}

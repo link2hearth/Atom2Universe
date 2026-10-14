@@ -1,0 +1,164 @@
+{
+  "id": "micropterix_aureatella",
+  "scientific": "Micropterix aureatella",
+  "group": "invertebrates",
+  "name": {
+    "en": "Yellow-barred Gold",
+    "fr": "Micropterix aureatella"
+  },
+  "sections": {
+    "overview": {
+      "en": "Micropterix aureatella is a very small, day-flying moth in the ancient family Micropterigidae.",
+      "fr": "Micropterix aureatella est un très petit papillon de jour de l’ancienne famille des Micropterigidae."
+    },
+    "identification": {
+      "en": "Its wingspan is about 9–11 mm; the bronze-purple forewings bear broad golden bands and a median spot.",
+      "fr": "Son envergure est d’environ 9 à 11 mm ; ses ailes antérieures bronze violacé portent de larges bandes dorées et une tache médiane."
+    },
+    "habitat": {
+      "en": "In Britain it occurs in woodland and heathland, and is widespread though unevenly distributed; the species has a much broader Palearctic range.",
+      "fr": "En Grande-Bretagne, elle fréquente les bois et les landes et reste largement présente malgré une répartition inégale ; l’espèce possède une aire paléarctique bien plus vaste."
+    },
+    "diet": {
+      "en": "Adults feed on pollen, particularly from sedges (Carex); the larval food is less certain, with a larva found in leaf litter among fungal hyphae.",
+      "fr": "Les adultes consomment du pollen, notamment celui des laîches (Carex) ; l’alimentation larvaire est moins certaine, une larve ayant été trouvée dans la litière parmi des hyphes fongiques."
+    },
+    "behavior": {
+      "en": "Adults fly by day in sunshine, and unlike most moths they retain working mandibles.",
+      "fr": "Les adultes volent de jour par temps ensoleillé et, contrairement à la plupart des papillons de nuit, conservent des mandibules fonctionnelles."
+    },
+    "reproduction": {
+      "en": "Adults are recorded from May to July in parts of Britain; the larval stage is present in early spring.",
+      "fr": "En Grande-Bretagne, les adultes sont observés de mai à juillet dans certaines régions ; le stade larvaire est présent au début du printemps."
+    },
+    "ecology": {
+      "en": "It belongs to Micropterigidae, a lineage of moths with chewing adults; the family context helps distinguish it from later moth groups.",
+      "fr": "Elle appartient aux Micropterigidae, une lignée de papillons dont les adultes mâchent leur nourriture ; ce caractère aide à la distinguer de groupes plus récents."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was located; the regional British records cited here do not establish a global trend.",
+      "fr": "Aucune évaluation mondiale de conservation n’a été trouvée ; les données régionales britanniques citées ici ne permettent pas d’établir une tendance globale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Micropterix aureatella — UKMoths",
+        "fr": "Micropterix aureatella — UKMoths"
+      },
+      "url": "https://ukmoths.org.uk/species/micropterix-aureatella/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "UK species account reports wingspan, habitat, pollen diet and uncertain larval food."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 12,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Yellow-barred Pollen-moth — Dumfries & Galloway Moths",
+        "fr": "Micropterix aureatella — Dumfries & Galloway Moths"
+      },
+      "url": "https://dgmoths.info/moths/micropterix-aureatella/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Regional moth-recording account reports daytime flight, pollen feeding, seasonal stages and a larva among fungal hyphae."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 16,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Micropterix aureatella — LepiWiki (German)",
+        "fr": "Micropterix aureatella — LepiWiki (allemand)"
+      },
+      "url": "https://lepiforum.org/wiki/page/Micropterix_Aureatella",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "German-language Lepidoptera reference lists the species in the European and Asian fauna."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 12,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A new species of Micropterix from Italy — Nota Lepidopterologica",
+        "fr": "Une nouvelle espèce de Micropterix d’Italie — Nota Lepidopterologica"
+      },
+      "url": "https://www.zobodat.at/pdf/Nota-lepidopterologica_38_0133-0146.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Peer-reviewed European review notes M. aureatella is the only European Micropterix extending to Japan."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 113,
+        "notes_words": 14,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Larval food is not fully established; bilberry is proposed by some British accounts, while a larva has also been recorded in litter with fungal hyphae.",
+    "No species-specific global conservation assessment was located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared regional British accounts with a German-language species reference and a European taxonomic paper; kept uncertain larval food and global status qualified."
+}

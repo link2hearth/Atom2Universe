@@ -1,0 +1,146 @@
+{
+  "id": "mompha_raschkiella",
+  "scientific": "Mompha raschkiella",
+  "group": "invertebrates",
+  "name": {
+    "en": "Fireweed Mompha",
+    "fr": "Mompha raschkiella"
+  },
+  "sections": {
+    "overview": {
+      "en": "Mompha raschkiella is a small European micromoth in the family Momphidae, associated especially with rosebay willowherb.",
+      "fr": "Mompha raschkiella est une petite teigne européenne de la famille des Momphidés, surtout associée à l’épilobe en épi."
+    },
+    "identification": {
+      "en": "The adult has a wingspan around 7–11 mm. It can be separated from the similar Mompha locupletella by the latter’s contrasting pale and dark patches near the forewing base.",
+      "fr": "L’adulte présente une envergure d’environ 7 à 11 mm. On peut le distinguer de Mompha locupletella, qui porte des plages claires et sombres contrastées à la base de l’aile antérieure."
+    },
+    "habitat": {
+      "en": "It occurs in open, often disturbed places such as heathland, woodland clearings, verges and waste ground.",
+      "fr": "Elle fréquente des lieux ouverts, souvent remaniés, comme les landes, les clairières, les bords de route et les terrains vagues."
+    },
+    "diet": {
+      "en": "The caterpillar mines the leaves of rosebay willowherb (Chamerion angustifolium), leaving a blotch-like mine.",
+      "fr": "La chenille mine les feuilles de l’épilobe en épi (Chamerion angustifolium), où elle forme une galerie élargie en tache."
+    },
+    "behavior": {
+      "en": "The larva feeds concealed inside a leaf mine; adults are recorded from late spring into summer, with a later flight in some regions.",
+      "fr": "La larve se nourrit à l’abri dans une mine foliaire ; les adultes sont observés de la fin du printemps à l’été, avec une période de vol plus tardive dans certaines régions."
+    },
+    "reproduction": {
+      "en": "The species has more than one generation in parts of its range; it overwinters as a pupa.",
+      "fr": "L’espèce produit plusieurs générations dans certaines régions ; elle hiverne au stade de chrysalide."
+    },
+    "ecology": {
+      "en": "Its life cycle is tied closely to willowherb leaves. Records on hairy willowherb (Epilobium hirsutum) are considered uncertain by Lepiforum.",
+      "fr": "Son cycle dépend étroitement des feuilles d’épilobe. Lepiforum juge incertaines les mentions sur l’épilobe hérissé (Epilobium hirsutum)."
+    },
+    "conservation": {
+      "en": "Regional moth atlases describe it as widespread in Britain but locally scarce; these local records do not establish a global population trend.",
+      "fr": "Les atlas régionaux la décrivent comme répandue en Grande-Bretagne mais localisée ; ces données régionales ne permettent pas d’établir une tendance mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mompha raschkiella — Hantsmoths",
+        "fr": "Mompha raschkiella — Hantsmoths"
+      },
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=40.015",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "British moth account provides size, lookalike distinction, habitats, host plant, leaf-mining larva, flight months and regional distribution."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 17,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mompha raschkiella — Dumfries & Galloway Moths",
+        "fr": "Mompha raschkiella — Dumfries & Galloway Moths"
+      },
+      "url": "https://dgmoths.info/moths/mompha-raschkiella/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Regional species account records larvae mining rosebay willowherb from summer into autumn and two adult periods."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 16,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mompha raschkiella — LepiWiki (German)",
+        "fr": "Mompha raschkiella — LepiWiki (allemand)"
+      },
+      "url": "https://lepiforum.org/wiki/page/Mompha_raschkiella",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "habitat"
+      ],
+      "facts": [
+        "European lepidopterist reference identifies Chamerion angustifolium as the principal larval foodplant and cautions that records on Epilobium hirsutum are uncertain.",
+        "Photo records document woodland and forest edges as occupied habitats."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 30,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Flight periods and abundance vary regionally; local status is not a global conservation assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English regional moth accounts with German LepiWiki; restricted the host plant to the well-supported primary host and retained uncertainty about Epilobium hirsutum."
+}

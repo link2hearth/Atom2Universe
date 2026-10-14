@@ -1,0 +1,38 @@
+{
+  "id": "melanitta_nigra",
+  "name": "Common Scoter",
+  "scientific": "Melanitta nigra",
+  "group": "birds",
+  "sections": {
+    "overview": "The Common Scoter breeds across northern Eurasia and winters mainly at sea along European coasts, with farther east Asian wintering also reported.",
+    "identification": "The male is mostly black with a conspicuous yellow-orange knob on the bill; the female is brown.",
+    "habitat": "It nests near freshwater lakes and rivers in northern regions, then uses coastal and offshore marine waters outside the breeding season.",
+    "diet": "It dives for benthic prey, especially marine bivalves; crustaceans, gastropods and small fish can also be eaten.",
+    "behavior": "Outside the breeding season it gathers in large flocks on marine waters and dives to feed.",
+    "reproduction": "It breeds in solitary pairs near freshwater; species-specific nest and clutch details are omitted here because the consulted sources differ in coverage.",
+    "ecology": "Along parts of the French coast, it is a regular wintering sea duck and may occur alongside the Velvet Scoter (*Melanitta fusca*).",
+    "conservation": "Globally, it is Least Concern, but the UK's small breeding population is Red-listed and contracted between national surveys."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Melanitta_nigra/",
+      "title": "Melanitta nigra — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://collections-biologie.u-bordeaux.fr/Fiches_oiseaux/Macreuse-noire.html",
+      "title": "Macreuse noire — collections zoologiques, Université de Bordeaux"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/common-scoter",
+      "title": "Common Scoter — British Trust for Ornithology Birdfacts"
+    },
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/2213",
+      "title": "Common scoter — Marine Life Information Network"
+    },
+    {
+      "url": "https://www.persee.fr/doc/medit_0025-8296_1999_num_93_4_3132",
+      "title": "Wintering scoters on the Pays d’Auge coast — Persée"
+    }
+  ]
+}

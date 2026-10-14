@@ -1,0 +1,34 @@
+{
+  "id": "meleagris_ocellata",
+  "name": "Dindon ocellé",
+  "scientific": "Meleagris ocellata",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Dindon ocellé est sédentaire dans la péninsule du Yucatán et les régions voisines du nord du Guatemala et du Belize.",
+    "identification": "Son plumage irisé bleu-vert et les ocelles de sa queue sont caractéristiques.",
+    "habitat": "Il fréquente surtout les forêts matures de basse altitude, notamment leurs lisières inondées selon la saison et les espaces ouverts utilisés pendant la reproduction.",
+    "diet": "Dans une étude menée au Campeche sur des mâles en période de reproduction, le contenu du jabot était surtout constitué de graines, principalement de maïs et de sorgho.",
+    "behavior": "Il est sédentaire et utilise les espaces ouverts pendant la période de reproduction.",
+    "reproduction": "La femelle niche dans une simple dépression au sol et pond environ 8 à 15 œufs ; l’incubation dure approximativement 28 jours.",
+    "ecology": "Son alimentation mobilise la forêt et des milieux agricoles voisins, de sorte que la forêt intacte et les paysages adjacents comptent pour son écologie.",
+    "conservation": "BirdLife le classe quasi menacé (2020), en raison de la perte persistante d’habitat et de la pression de chasse."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/ocellated-turkey-meleagris-ocellata",
+      "title": "Dindon ocellé — BirdLife International DataZone"
+    },
+    {
+      "url": "https://www.yucatan.gob.mx/?p=pavo_monte",
+      "title": "Dindon des forêts — gouvernement de l’État du Yucatán"
+    },
+    {
+      "url": "https://www.revista.ccba.uady.mx/ojs/index.php/TSA/article/view/3715",
+      "title": "Régime et écologie alimentaire du Dindon ocellé — Tropical and Subtropical Agroecosystems (2021)"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Meleagris_ocellata/",
+      "title": "Meleagris ocellata — Animal Diversity Web, Université du Michigan"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "menophra_abruptaria",
+  "name": "Boarmie pétrifiée",
+  "scientific": "Menophra abruptaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "La Boarmie pétrifiée est une phalène présente dans une grande partie de l’Europe, jusqu’en Afrique du Nord et en Asie occidentale.",
+    "identification": "L’adulte porte un motif brun mimant l’écorce et mesure environ 36 à 42 mm d’envergure.",
+    "habitat": "Elle fréquente les bois, les parcs et les jardins ; les données françaises la signalent aussi dans les lisières et d’autres milieux plantés.",
+    "diet": "Ses chenilles consomment plusieurs plantes ligneuses, notamment troène et lilas ; des sources régionales citent aussi le frêne et le prunellier.",
+    "behavior": "Les adultes volent du printemps à l’été ; une seconde génération partielle est possible lorsque les conditions sont favorables en Belgique.",
+    "reproduction": "Elle hiverne au stade de chrysalide, dans un cocon fixé à sa plante nourricière.",
+    "ecology": "Les chenilles utilisent divers arbustes et arbres, ce qui permet à la phalène de vivre en forêt semi-naturelle comme dans des milieux plantés.",
+    "conservation": "Un catalogue belge la classe en préoccupation mineure en Flandre (2023) ; cette catégorie est régionale et non mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/menophra-abruptaria/larva/",
+      "title": "Boarmie pétrifiée — UKMoths"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5222/",
+      "title": "Menophra abruptaria — Catalogue des Lépidoptères de Belgique"
+    },
+    {
+      "url": "https://oreina.org/artemisiae/observatoire/index.php?action=fiche&d=hetero&id=248901&module=fiche",
+      "title": "Menophra abruptaria — Observatoire Artemisiae, France"
+    }
+  ]
+}

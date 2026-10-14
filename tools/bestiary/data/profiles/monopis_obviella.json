@@ -1,0 +1,143 @@
+{
+  "id": "monopis_obviella",
+  "scientific": "Monopis obviella",
+  "group": "invertebrates",
+  "name": {
+    "en": "Yellow-backed Detritus Moth",
+    "fr": "Teigne détriticole à dos jaune"
+  },
+  "sections": {
+    "overview": {
+      "en": "Monopis obviella is a small tineid moth whose caterpillars recycle decaying organic material.",
+      "fr": "Monopis obviella est une petite teigne dont la chenille consomme des matières organiques en décomposition."
+    },
+    "identification": {
+      "en": "The adult’s wingspan is about 10–13 mm. Its wing pattern is easily confused with that of the close relative Monopis crocicapitella, and the two were historically confused.",
+      "fr": "L’adulte présente une envergure d’environ 10 à 13 mm. Son motif alaire peut être confondu avec celui de Monopis crocicapitella, une espèce proche avec laquelle elle a longtemps été confondue."
+    },
+    "habitat": {
+      "en": "Adults are recorded in Britain mainly in southern England and may be found around buildings as well as outdoors.",
+      "fr": "En Grande-Bretagne, les adultes sont signalés surtout dans le sud de l’Angleterre et se rencontrent aussi près des bâtiments."
+    },
+    "diet": {
+      "en": "The caterpillars scavenge animal and plant refuse, including woollen material and detritus in bird nests or raptor pellets.",
+      "fr": "Les chenilles consomment des débris d’origine animale ou végétale, notamment de la laine, des résidus de nids d’oiseaux ou des pelotes de rapaces."
+    },
+    "behavior": {
+      "en": "Adults fly mainly from May to October and are sometimes attracted to lights.",
+      "fr": "Les adultes volent surtout de mai à octobre et sont parfois attirés par les lumières."
+    },
+    "reproduction": {
+      "en": "Two generations are considered likely in Britain, though this is not firmly established.",
+      "fr": "Deux générations sont jugées probables en Grande-Bretagne, sans que cela soit fermement établi."
+    },
+    "ecology": {
+      "en": "Its larvae are scavengers rather than plant-feeding pests; confusion with Monopis crocicapitella has made the species’ distribution harder to map.",
+      "fr": "Ses chenilles sont détritivores plutôt que phytophages ; la confusion avec Monopis crocicapitella a compliqué la cartographie de sa répartition."
+    },
+    "conservation": {
+      "en": "It is recorded locally in Britain, but historical misidentifications make regional distribution estimates uncertain.",
+      "fr": "Elle est signalée localement en Grande-Bretagne, mais les confusions d’identification anciennes rendent les estimations régionales incertaines."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Monopis obviella — UKMoths",
+        "fr": "Monopis obviella — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/monopis-obviella/adult/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Species account covers identification, larval feeding, flight season and regional range."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 11,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Monopis obviella — Hantsmoths",
+        "fr": "Monopis obviella — Hantsmoths"
+      },
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=12.038",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "Regional moth account reports larvae feeding on woollen materials, refuse and detritus in birds’ nests."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 15,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Monopis obviella — Catalogue of the Lepidoptera of Belgium",
+        "fr": "Monopis obviella — Catalogue des Lépidoptères de Belgique"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/4177/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Belgian national biodiversity catalog confirms species identity and occurrence; regional data should not be read as a global status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 19,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species is easily confused with Monopis crocicapitella; published regional ranges and abundance may therefore be incomplete."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used UK moth recording sources and the Belgian Lepidoptera catalogue; phrased the generation count as likely and the regional distribution as uncertain."
+}

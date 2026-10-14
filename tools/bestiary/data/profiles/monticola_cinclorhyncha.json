@@ -1,0 +1,165 @@
+{
+  "id": "monticola_cinclorhyncha",
+  "scientific": "Monticola cinclorhyncha",
+  "group": "birds",
+  "name": {
+    "en": "Blue-capped Rock Thrush",
+    "fr": "Monticole à croupion roux"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Blue-capped Rock Thrush is a migratory Old World flycatcher that breeds in the Himalayas and winters farther south in the Indian subcontinent.",
+      "fr": "Le Monticole à croupion roux est un gobemouche de l’Ancien Monde migrateur ; il niche dans l’Himalaya et hiverne plus au sud du sous-continent indien."
+    },
+    "identification": {
+      "en": "The male has a blue head, orange-rufous rump and underparts, a dark mask and a conspicuous white wing patch. Females are browner and more subdued.",
+      "fr": "Le mâle a la tête bleue, le croupion et le dessous roux orangé, un masque sombre et une tache blanche bien visible sur l’aile. La femelle est plus discrète et brunâtre."
+    },
+    "habitat": {
+      "en": "It breeds in open or pine forest and rocky, grassy Himalayan hills, generally at montane elevations; winter habitat includes wooded areas farther south.",
+      "fr": "Il niche dans les forêts claires ou de pins et sur les pentes himalayennes rocheuses et herbeuses, généralement en montagne ; il fréquente des secteurs boisés plus au sud en hiver."
+    },
+    "diet": {
+      "en": "It feeds mainly on invertebrates, taken on or near the ground.",
+      "fr": "Il se nourrit surtout d’invertébrés, capturés au sol ou à proximité."
+    },
+    "behavior": {
+      "en": "During winter it can move with mixed-species flocks; in the breeding season males sing from exposed perches.",
+      "fr": "En hiver, il peut se déplacer en groupes mêlés à d’autres espèces ; pendant la reproduction, les mâles chantent depuis des perchoirs dégagés."
+    },
+    "reproduction": {
+      "en": "It breeds in the Himalayan region; available species summaries report a clutch of roughly three to four eggs.",
+      "fr": "Il se reproduit dans la région himalayenne ; les synthèses disponibles indiquent des pontes d’environ trois à quatre œufs."
+    },
+    "ecology": {
+      "en": "Despite its English name, it is a forest-associated flycatcher rather than a true thrush; it belongs to Muscicapidae.",
+      "fr": "Malgré son nom anglais, c’est un gobemouche associé aux forêts, et non une grive au sens strict ; il appartient aux Muscicapidés."
+    },
+    "conservation": {
+      "en": "The global assessment is Least Concern, while the State of India’s Birds reports a declining national trend; these assessments describe different geographic scales.",
+      "fr": "L’évaluation mondiale est « préoccupation mineure », tandis que State of India’s Birds signale un déclin national ; ces évaluations portent sur des échelles géographiques différentes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Blue-capped Rock Thrush — Oiseaux.net (English page with French and other names)",
+        "fr": "Monticole à croupion roux — Oiseaux.net (page en anglais avec noms français et étrangers)"
+      },
+      "url": "https://www.oiseaux.net/en/oiseaux/blue-capped.rock.thrush.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Species account supplies French common name, Muscicapidae placement, migration, forest habitat, invertebrate diet and clutch data with cited ornithological sources."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 20,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blue-capped Rock Thrush — State of India’s Birds 2023",
+        "fr": "Monticole à croupion roux — State of India’s Birds 2023"
+      },
+      "url": "https://stateofindiasbirds.in/species/2023/bcrthr1/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "National assessment reports within-India migrant status, forest specialization, global Least Concern category and a declining long-term Indian population trend."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 19,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blue-capped Rock Thrush — eBird / Cornell Lab",
+        "fr": "Monticole à croupion roux — eBird / Cornell Lab"
+      },
+      "url": "https://ebird.org/species/bcrthr1/IN-KL-TS",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Cornell eBird species page describes male plumage and mixed-species flocks in winter."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 12,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blue-capped Rock Thrush — official Great Himalayan National Park",
+        "fr": "Monticole à croupion roux — parc national du Grand Himalaya"
+      },
+      "url": "https://greathimalayannationalpark.org/monticola-cinclorhynchus-ghnp/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Park account reports Himalayan forest breeding habitat and male song from perches during breeding season."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 15,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Winter distribution and exact migration routes differ among summaries; the profile uses the broad Indian-subcontinent pattern. Population trends in India should not be conflated with the global IUCN category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a French-named Oiseaux.net species account with Cornell eBird, the Indian national bird assessment and the Himalayan national park account; separated global status from national trend."
+}

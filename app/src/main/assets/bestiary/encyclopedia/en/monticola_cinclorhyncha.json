@@ -1,0 +1,34 @@
+{
+  "id": "monticola_cinclorhyncha",
+  "name": "Blue-capped Rock Thrush",
+  "scientific": "Monticola cinclorhyncha",
+  "group": "birds",
+  "sections": {
+    "overview": "The Blue-capped Rock Thrush is a migratory Old World flycatcher that breeds in the Himalayas and winters farther south in the Indian subcontinent.",
+    "identification": "The male has a blue head, orange-rufous rump and underparts, a dark mask and a conspicuous white wing patch. Females are browner and more subdued.",
+    "habitat": "It breeds in open or pine forest and rocky, grassy Himalayan hills, generally at montane elevations; winter habitat includes wooded areas farther south.",
+    "diet": "It feeds mainly on invertebrates, taken on or near the ground.",
+    "behavior": "During winter it can move with mixed-species flocks; in the breeding season males sing from exposed perches.",
+    "reproduction": "It breeds in the Himalayan region; available species summaries report a clutch of roughly three to four eggs.",
+    "ecology": "Despite its English name, it is a forest-associated flycatcher rather than a true thrush; it belongs to Muscicapidae.",
+    "conservation": "The global assessment is Least Concern, while the State of India’s Birds reports a declining national trend; these assessments describe different geographic scales."
+  },
+  "sources": [
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/blue-capped.rock.thrush.html",
+      "title": "Blue-capped Rock Thrush — Oiseaux.net (English page with French and other names)"
+    },
+    {
+      "url": "https://stateofindiasbirds.in/species/2023/bcrthr1/",
+      "title": "Blue-capped Rock Thrush — State of India’s Birds 2023"
+    },
+    {
+      "url": "https://ebird.org/species/bcrthr1/IN-KL-TS",
+      "title": "Blue-capped Rock Thrush — eBird / Cornell Lab"
+    },
+    {
+      "url": "https://greathimalayannationalpark.org/monticola-cinclorhynchus-ghnp/",
+      "title": "Blue-capped Rock Thrush — official Great Himalayan National Park"
+    }
+  ]
+}

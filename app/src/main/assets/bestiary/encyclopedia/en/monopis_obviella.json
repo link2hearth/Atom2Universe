@@ -1,0 +1,30 @@
+{
+  "id": "monopis_obviella",
+  "name": "Yellow-backed Detritus Moth",
+  "scientific": "Monopis obviella",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Monopis obviella is a small tineid moth whose caterpillars recycle decaying organic material.",
+    "identification": "The adult’s wingspan is about 10–13 mm. Its wing pattern is easily confused with that of the close relative Monopis crocicapitella, and the two were historically confused.",
+    "habitat": "Adults are recorded in Britain mainly in southern England and may be found around buildings as well as outdoors.",
+    "diet": "The caterpillars scavenge animal and plant refuse, including woollen material and detritus in bird nests or raptor pellets.",
+    "behavior": "Adults fly mainly from May to October and are sometimes attracted to lights.",
+    "reproduction": "Two generations are considered likely in Britain, though this is not firmly established.",
+    "ecology": "Its larvae are scavengers rather than plant-feeding pests; confusion with Monopis crocicapitella has made the species’ distribution harder to map.",
+    "conservation": "It is recorded locally in Britain, but historical misidentifications make regional distribution estimates uncertain."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/monopis-obviella/adult/",
+      "title": "Monopis obviella — UKMoths"
+    },
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=12.038",
+      "title": "Monopis obviella — Hantsmoths"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/4177/",
+      "title": "Monopis obviella — Catalogue of the Lepidoptera of Belgium"
+    }
+  ]
+}

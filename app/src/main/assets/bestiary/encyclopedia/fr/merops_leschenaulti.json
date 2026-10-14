@@ -1,0 +1,34 @@
+{
+  "id": "merops_leschenaulti",
+  "name": "Guêpier de Leschenault",
+  "scientific": "Merops leschenaulti",
+  "group": "birds",
+  "sections": {
+    "overview": "eBird cartographie les aires de reproduction et d’hivernage de ce guêpier en Asie du Sud et du Sud-Est.",
+    "identification": "L’adulte a la tête châtain, la gorge jaune et le croupion bleu sur un corps vert.",
+    "habitat": "Il fréquente les boisements ouverts, lisières et vergers, souvent près de l’eau ou de berges terreuses propices à la nidification.",
+    "diet": "Il capture des insectes en vol, surtout des abeilles et des guêpes, mais aussi des fourmis, termites, libellules, papillons et sauterelles.",
+    "behavior": "Il guette souvent depuis un perchoir avant de poursuivre ses proies dans les airs ; des oiseaux peuvent se rassembler dans des dortoirs communs en soirée.",
+    "reproduction": "Le couple creuse un terrier dans une berge ou un talus terreux et niche seul ou en colonie lâche ; les deux parents couvent les œufs.",
+    "ecology": "Le Guêpier à queue d’azur est un proche parent ; les synthèses fondées sur BirdTree estiment leur divergence à environ 5,1 millions d’années, et sa fiche liée compare les deux espèces.",
+    "conservation": "La source ornithologique citée rapporte le statut mondial UICN de préoccupation mineure ; cette catégorie ne signifie pas que toutes les populations locales sont stables."
+  },
+  "sources": [
+    {
+      "url": "https://science.ebird.org/status-and-trends/species/chbeat1/range-map",
+      "title": "Guêpier de Leschenault — eBird Status and Trends"
+    },
+    {
+      "url": "https://indiabiodiversity.org/species/show/239002",
+      "title": "Guêpier de Leschenault — India Biodiversity Portal"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/guepier.de.leschenault.html",
+      "title": "Guêpier de Leschenault — Oiseaux.net"
+    },
+    {
+      "url": "https://stateofindiasbirds.in/species/2023/pas-chbeat1/",
+      "title": "State of India's Birds : Guêpier de Leschenault"
+    }
+  ]
+}

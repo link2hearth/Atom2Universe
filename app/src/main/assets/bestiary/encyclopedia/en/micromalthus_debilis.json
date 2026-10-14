@@ -1,0 +1,30 @@
+{
+  "id": "micromalthus_debilis",
+  "name": "Telephone-pole beetle",
+  "scientific": "Micromalthus debilis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Micromalthus debilis is a tiny wood-boring beetle and the sole living species of Micromalthidae.",
+    "identification": "Winged adults are rarely encountered; some reproductive females retain a larva-like form, so the beetle is often found as larvae or larviform females.",
+    "habitat": "Its larvae develop in damp, decaying wood, especially fallen or damaged timber; the species is native to eastern North America and has been transported elsewhere with wood.",
+    "diet": "Larvae bore through decaying wood associated with fungi; the sources describe this substrate rather than a narrow prey-based diet.",
+    "behavior": "A colony can remain larval for much of the year, with larval females producing live young without mating, a rare form of paedogenesis.",
+    "reproduction": "Most reproduction is viviparous and parthenogenetic in larviform females; winged adults and males occur in a complex, comparatively uncommon phase.",
+    "ecology": "By living in decaying wood, it participates in wood decomposition; it may also infest persistently damp structural timber, which explains its common name.",
+    "conservation": "The sources consulted provide no global conservation assessment or population trend for this beetle."
+  },
+  "sources": [
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0960982213002169",
+      "title": "Micromalthus debilis — Current Biology Quick Guide"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4895236/",
+      "title": "The ghost sex-life of the paedogenetic beetle Micromalthus debilis — Scientific Reports"
+    },
+    {
+      "url": "https://portal.ct.gov/-/media/deep/forestry/eab/aphisfirewoodpathwayassessmentpdf.pdf?hash=03BB1B57F4D4760ED464559A85762BFF&rev=7524c274a24f4d868d57eedb530b9eb9",
+      "title": "Micromalthus debilis — USDA/APHIS firewood pathway assessment"
+    }
+  ]
+}

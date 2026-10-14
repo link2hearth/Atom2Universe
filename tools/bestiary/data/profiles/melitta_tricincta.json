@@ -1,0 +1,142 @@
+{
+  "id": "melitta_tricincta",
+  "scientific": "Melitta tricincta",
+  "group": "invertebrates",
+  "name": {
+    "en": "Red Bartsia Bee",
+    "fr": "Mélitte de l’Odontite"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Red Bartsia Bee is a small solitary bee associated with flowering *Odontites*, especially in western Europe.",
+      "fr": "La Mélitte de l’Odontite est une petite abeille solitaire associée aux *Odontites* en fleurs, notamment en Europe occidentale."
+    },
+    "identification": {
+      "en": "It is a compact, brown-haired bee with narrow pale bands across the abdomen.",
+      "fr": "C’est une abeille trapue, couverte de poils bruns et portant de fines bandes claires sur l’abdomen."
+    },
+    "habitat": {
+      "en": "It favours open, often chalky grassland and other sunny, relatively dry sites where its food plant grows.",
+      "fr": "Elle préfère les pelouses ouvertes, souvent calcaires, et d’autres milieux ensoleillés et assez secs où pousse sa plante ressource."
+    },
+    "diet": {
+      "en": "Females collect pollen almost exclusively from Red Bartsia (*Odontites vernus*), though the bee may visit other flowers for nectar.",
+      "fr": "Les femelles récoltent le pollen presque exclusivement sur l’Odontite rouge (*Odontites vernus*), même si l’abeille peut visiter d’autres fleurs pour le nectar."
+    },
+    "behavior": {
+      "en": "Adults are most often seen around flowering Red Bartsia in late summer, when bee activity is otherwise waning.",
+      "fr": "Les adultes s’observent surtout sur l’Odontite rouge en fin d’été, lorsque l’activité de nombreuses autres abeilles décline."
+    },
+    "reproduction": {
+      "en": "Females excavate nest burrows in soil; the species is solitary rather than colony-forming.",
+      "fr": "Les femelles creusent leurs galeries de nidification dans le sol ; l’espèce est solitaire et ne forme pas de colonies."
+    },
+    "ecology": {
+      "en": "Its close dependence on one pollen plant links its local presence to the availability of flowering Red Bartsia.",
+      "fr": "Sa forte dépendance à une plante pollinifère relie sa présence locale à la disponibilité de l’Odontite rouge en fleurs."
+    },
+    "conservation": {
+      "en": "Buglife lists the species as Not Evaluated in its UK profile; that local listing is not a global conservation assessment.",
+      "fr": "Buglife indique « non évaluée » dans sa fiche britannique ; cette mention locale ne constitue pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Red Bartsia Bee — Buglife",
+        "fr": "Mélitte de l’Odontite — Buglife"
+      },
+      "url": "https://www.buglife.org.uk/bugs/bug-directory/red-bartsia-bee/",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Buglife's UK account describes the bee's compact, banded form, late-summer activity around Red Bartsia and UK status Not Evaluated."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 19,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Melitta (Melitta) tricincta — Atlas Hymenoptera, Université de Mons",
+        "fr": "Melitta (Melitta) tricincta — Atlas Hymenoptera, Université de Mons"
+      },
+      "url": "https://zoologie.umons.ac.be/Hymenoptera/pagetaxon.aspx?tx_id=1016",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The French atlas describes warm dry grasslands and oligolexy on Odontites, especially O. vernus subsp. serotinus."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 16,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The bee genus Melitta — Pollinator Academy (2024)",
+        "fr": "Le genre d’abeilles Melitta — Pollinator Academy (2024)"
+      },
+      "url": "https://pollinatoracademy.eu/assets/Uploads/Document/BEE-GENUS-MELITTA-2024.05.01.pdf",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The 2024 genus review describes Melitta bees as solitary ground nesters whose females excavate soil burrows."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 16,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Pollen specialization is very strong but not always exclusive in every population; the profile follows source wording such as “almost exclusively.”",
+    "The conservation label quoted is specific to Buglife's UK profile and is not presented as a global assessment."
+  ],
+  "review_note": "Cross-checks a UK conservation charity account with two French-language specialist bee atlas pages; keeps the status geographically scoped.",
+  "reviewed": true,
+  "source_audit_version": 1
+}
