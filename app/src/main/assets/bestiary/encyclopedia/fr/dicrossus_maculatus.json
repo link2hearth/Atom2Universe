@@ -1,0 +1,30 @@
+{
+  "id": "dicrossus_maculatus",
+  "name": "Cichlidé damier à queue en spatule",
+  "scientific": "Dicrossus maculatus",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce petit cichlidé sud-américain est connu du bassin amazonien, notamment du drainage du Tapajós au Brésil.",
+    "identification": "Les longueurs maximales rapportées sont de 5,3 cm de longueur standard pour les mâles ou les individus non sexés et de 6,0 cm pour les femelles ; les sources consultées donnent peu de détails comparatifs d’identification sur le terrain.",
+    "habitat": "FishBase le signale dans des rivières d’eau douce et le décrit comme benthopélagique ; la fiche consultée ne précise pas davantage son microhabitat.",
+    "diet": "La principale fiche consultée ne fournit pas de données alimentaires propres à l’espèce ; aucun type de proie ou mode d’alimentation particulier ne peut donc être affirmé ici avec assurance.",
+    "behavior": "La fiche disponible ne rapporte pas d’observations comportementales détaillées et indique que l’espèce est rare dans le commerce aquariophile.",
+    "reproduction": "Les sources consultées ne fournissent pas d’informations propres à l’espèce sur la ponte et la reproduction.",
+    "ecology": "Une analyse phylogénétique de 2005 réunit Dicrossus et Crenicara dans un clade crenicarine ; elle relie ce poisson aux deux fiches Crenicara du bestiaire, sans établir que l’une ou l’autre est son espèce sœur directe.",
+    "conservation": "FishBase affiche la catégorie mondiale UICN « Préoccupation mineure », évaluée le 7 novembre 2018 ; cette évaluation ne constitue pas une estimation actuelle de population."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Dicrossus-maculatus",
+      "title": "Dicrossus maculatus — résumé d’espèce FishBase"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.2005.00209.x",
+      "title": "Morphologie, molécules et congruence des caractères dans la phylogénie des cichlidés géophages sud-américains"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/dicrossus-maculatus/",
+      "title": "Dicrossus — Aquarium Atlas"
+    }
+  ]
+}

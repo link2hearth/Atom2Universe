@@ -1,0 +1,38 @@
+{
+  "id": "edonis_helena",
+  "name": "Libellule Edonis helena",
+  "scientific": "Edonis helena",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Edonis helena est la seule espèce décrite du genre de libellules Edonis; elle est signalée au Brésil, au Paraguay et en Argentine.",
+    "identification": "Une clé d’identification distingue Edonis par une tache basale sombre de l’aile postérieure atteignant le triangle et deux nervures transversales de liaison à l’aile antérieure.",
+    "habitat": "Son habitat et ses stades larvaires restent inconnus dans la source taxonomique citée par la littérature.",
+    "diet": "Les sources consultées ne décrivent ni proies ni observations alimentaires propres à l’espèce.",
+    "behavior": "Les données régionales disponibles sont trop limitées pour décrire son activité quotidienne ou saisonnière.",
+    "reproduction": "Aucune description propre à l’espèce de la ponte ou du développement larvaire n’a été trouvée; la larve reste inconnue dans la référence citée.",
+    "ecology": "La revue des odonates du Chaco indique que l’espèce reste connue par peu de spécimens, ceux de la description originale et des signalements argentins ultérieurs.",
+    "conservation": "L’évaluation nationale brésilienne de 2014 l’a classée en données insuffisantes; cette catégorie nationale ne constitue pas une évaluation mondiale de la Liste rouge."
+  },
+  "sources": [
+    {
+      "url": "https://www.pugetsound.edu/puget-sound-museum-natural-history/biodiversity-resources/insects/dragonflies/world-odonata-list/south-american-odonata",
+      "title": "Odonates d’Amérique du Sud — liste mondiale des odonates, University of Puget Sound"
+    },
+    {
+      "url": "https://ri.conicet.gov.ar/bitstream/handle/11336/14417/CONICET_Digital_Nro.17660.pdf?isAllowed=y&sequence=1",
+      "title": "Odonates du Chaco — International Journal of Odonatology"
+    },
+    {
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/livro_vermelho_2018_vol1.pdf",
+      "title": "Livre rouge brésilien de la faune menacée — ICMBio"
+    },
+    {
+      "url": "https://www.press.jhu.edu/books/title/8509/dragonfly-genera-new-world",
+      "title": "Dragonfly Genera of the New World — Johns Hopkins University Press"
+    },
+    {
+      "url": "https://www.worlddragonfly.org/s/IJO_233_p239-289_Odonata_of_eembucu_Paraguay-indicator_spp_of_wetland_habitats.pdf",
+      "title": "Odonates de Ñeembucú, Paraguay — International Journal of Odonatology"
+    }
+  ]
+}

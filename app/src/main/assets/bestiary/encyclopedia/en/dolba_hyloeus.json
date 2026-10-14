@@ -1,0 +1,30 @@
+{
+  "id": "dolba_hyloeus",
+  "name": "Pawpaw Sphinx",
+  "scientific": "Dolba hyloeus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Pawpaw Sphinx is an eastern North American hawkmoth; Hartweg’s Sphinx, Dolbogene hartwegii, is another sphingid in a separate genus.",
+    "identification": "Adults have dark brown forewings dusted with pale scales and span about 50–68 mm.",
+    "habitat": "The species ranges from southeastern Canada through the eastern United States, south to Florida and eastern Texas.",
+    "diet": "Caterpillars use pawpaw, sweetfern, alder and deciduous hollies; adults take nectar from flowers.",
+    "behavior": "Several broods occur along the Gulf Coast, while farther north the species generally has one annual brood.",
+    "reproduction": "Mature caterpillars pupate in underground burrows and overwinter there.",
+    "ecology": "Its larvae feed on several native woody plants, with pawpaw among the best-known hosts.",
+    "conservation": "The North American species account rates it G5, globally secure."
+  },
+  "sources": [
+    {
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?phylo=890100&state=ECT",
+      "title": "Pawpaw Sphinx — Moth Photographers Group"
+    },
+    {
+      "url": "https://www.butterfliesandmoths.org/species/Dolba-hyloeus?quicktabs_8=0",
+      "title": "Pawpaw Sphinx — Butterflies and Moths of North America"
+    },
+    {
+      "url": "https://nc-biodiversity.com/sites/default/files/publications/Final%20Report%2C%202022-12-10%2C%20minus%20appendixes.pdf",
+      "title": "Dolba hyloeus host-plant records — North Carolina Biodiversity Project"
+    }
+  ]
+}

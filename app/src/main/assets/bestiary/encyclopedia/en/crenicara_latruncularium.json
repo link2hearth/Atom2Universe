@@ -10,7 +10,7 @@
     "diet": "A species-specific prey list is not established in the sources used, so its feeding is best left undescribed rather than inferred from captive foods.",
     "behavior": "Aquarium observations in the original description show a territorial male with separate spawning territories defended by females.",
     "reproduction": "Females lay eggs on a vertical surface and care for the clutch and larvae, including moving young to a prepared shallow pit after hatching.",
-    "ecology": "FishBase describes it as a freshwater, benthopelagic fish of tropical waters, with records from the Guaporé–Mamoré basin.",
+    "ecology": "FishBase describes it as a freshwater, benthopelagic fish of tropical waters, with records from the Guaporé–Mamoré basin. A 2005 phylogeny places Crenicara with Dicrossus in the crenicarine clade; see Dicrossus maculatus.",
     "conservation": "FishBase relays a global IUCN assessment of Least Concern, but the sources reviewed do not provide a detailed population trend."
   },
   "sources": [
@@ -25,6 +25,10 @@
     {
       "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=37604",
       "title": "Crenicara punctulata — Eschmeyer’s Catalog of Fishes"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.2005.00209.x",
+      "title": "Morphology, molecules, and character congruence in the phylogeny of South American geophagine cichlids"
     }
   ]
 }

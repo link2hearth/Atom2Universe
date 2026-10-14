@@ -1,0 +1,142 @@
+{
+  "id": "echinococcus_shiquicus",
+  "scientific": "Echinococcus shiquicus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Shiqu tapeworm",
+    "fr": "Échinocoque du Shiqu"
+  },
+  "sections": {
+    "overview": {
+      "en": "Echinococcus shiquicus is a small tapeworm described from the Qinghai–Tibet Plateau and recognized as distinct using morphological, ecological and genetic evidence.",
+      "fr": "Echinococcus shiquicus est un petit ténia décrit du plateau Qinghai–Tibet et reconnu comme distinct à partir d’indices morphologiques, écologiques et génétiques."
+    },
+    "identification": {
+      "en": "It is a cestode in the genus Echinococcus; molecular data distinguish it from the closely related E. multilocularis.",
+      "fr": "C’est un cestode du genre Echinococcus; les données moléculaires le distinguent de son proche parent E. multilocularis."
+    },
+    "habitat": {
+      "en": "Published records are from the Qinghai–Tibet Plateau, where its known host cycle occurs in high-altitude grassland landscapes.",
+      "fr": "Les données publiées proviennent du plateau Qinghai–Tibet, où son cycle connu se déroule dans des paysages de prairies d’altitude."
+    },
+    "diet": {
+      "en": "As a parasite, its larval stage develops in mammalian intermediate hosts and its adult stage inhabits the intestine of a definitive host.",
+      "fr": "Parasite, sa forme larvaire se développe chez des mammifères hôtes intermédiaires et sa forme adulte vit dans l’intestin d’un hôte définitif."
+    },
+    "behavior": {
+      "en": "The established wildlife cycle links Tibetan foxes, which carry adult worms, with plateau pikas, in which larval cysts occur.",
+      "fr": "Le cycle sauvage établi relie le renard du Tibet, porteur des vers adultes, au pika du plateau, chez lequel se développent les kystes larvaires."
+    },
+    "reproduction": {
+      "en": "Like other tapeworms, it produces eggs in its adult host; the documented cycle passes between carnivorous definitive hosts and small-mammal intermediate hosts.",
+      "fr": "Comme les autres ténias, il produit des œufs chez son hôte adulte; le cycle documenté passe entre des hôtes définitifs carnivores et de petits mammifères intermédiaires."
+    },
+    "ecology": {
+      "en": "A 2024 review describes E. shiquicus as a sister taxon to E. multilocularis and reports its records from the Tibetan Plateau.",
+      "fr": "Une revue de 2024 décrit E. shiquicus comme taxon frère d’E. multilocularis et rapporte ses mentions sur le plateau tibétain."
+    },
+    "conservation": {
+      "en": "The parasite sources consulted discuss host ecology and public-health uncertainty rather than assigning this species a conservation category.",
+      "fr": "Les sources parasitologiques consultées traitent de l’écologie des hôtes et des incertitudes sanitaires, sans attribuer de catégorie de conservation à cette espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Echinococcus shiquicus, a taeniid cestode from Tibetan fox and plateau pika in China — PubMed",
+        "fr": "Echinococcus shiquicus, cestode du renard du Tibet et du pika des hauts plateaux en Chine — PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15862582/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Original description: distinct species based on morphology, genetics and ecology; Tibetan fox and plateau pika records; no human infection identified in that study."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 23,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Echinococcus species in wildlife — review (PMC)",
+        "fr": "Espèces d’Echinococcus chez les animaux sauvages — revue (PMC)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10884515/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Review identifies E. shiquicus as sister taxon to E. multilocularis and summarizes plateau host cycle and unresolved alternate-host records."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 19,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New intermediate host of Echinococcus shiquicus — Parasites & Vectors (PMC)",
+        "fr": "Nouvel hôte intermédiaire d’Echinococcus shiquicus — Parasites & Vectors (PMC)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12174222/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Recent study confirms Tibetan fox and plateau pika host roles and reports a genetically verified plateau-zokor intermediate-host finding."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 18,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Whether other mammals or domestic dogs contribute meaningfully to transmission remains unsettled; the 2025 report expands the known intermediate-host records.",
+    "The original 2005 study reported no human infection identified at that time; this does not establish present-day zoonotic risk."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the original species description, a 2024 wildlife review and a 2025 host-record study. Kept claims about humans and alternate hosts explicitly limited to the cited study periods."
+}

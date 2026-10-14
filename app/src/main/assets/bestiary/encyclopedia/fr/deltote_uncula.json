@@ -1,0 +1,34 @@
+{
+  "id": "deltote_uncula",
+  "name": "L’Ancre",
+  "scientific": "Deltote uncula",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "L’Ancre est un petit papillon de nuit européen de la famille des Noctuidae.",
+    "identification": "Ses ailes antérieures brun olive portent une traînée crème et une marque contrastée en forme d’éperon; les ailes postérieures sont généralement sombres. Ce dessin la distingue de nombreux petits papillons des herbes, mais une observation attentive reste utile.",
+    "habitat": "Elle fréquente des milieux ouverts et humides, notamment les bas-marais, les marais et les landes détrempées.",
+    "diet": "Les chenilles consomment des laîches, notamment des Carex, ainsi que des graminées robustes comme Deschampsia. Ces plantes nourricières des larves sont à distinguer des fleurs parfois visitées par les adultes.",
+    "behavior": "Le jour, on peut faire s’envoler les adultes de la végétation basse; ils viennent aussi aux lumières artificielles après le crépuscule. En Grande-Bretagne, leur période de vol est généralement indiquée de la fin du printemps à l’été.",
+    "reproduction": "Les données belges signalent deux générations par an; l’espèce passe l’hiver au stade de chrysalide dans un cocon.",
+    "ecology": "Sa répartition dépend de la végétation des zones humides et de la présence de laîches et graminées nourricières. Comme les marais et bas-marais favorables peuvent être localisés et fragmentés, les observations varient fortement selon les régions.",
+    "conservation": "Son statut évalué varie selon les régions : elle est classée en danger dans l’évaluation flamande, mais en préoccupation mineure en Allemagne. Ces catégories régionales ne constituent pas une évaluation mondiale unique."
+  },
+  "sources": [
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/6010/",
+      "title": "Deltote uncula — Catalogue des Lépidoptères de Belgique"
+    },
+    {
+      "url": "https://www.habitas.org.uk/moths/species.asp?item=6518",
+      "title": "Silver Hook — Papillons et papillons de nuit d’Irlande du Nord"
+    },
+    {
+      "url": "https://www.rote-liste-zentrum.de/en/detailseite/?species_uuid=a280d597-5507-4e8a-b5c4-1d463dea582f",
+      "title": "Deltote uncula — Centre allemand des listes rouges"
+    },
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=73.026",
+      "title": "Silver Hook — Hantsmoths"
+    }
+  ]
+}

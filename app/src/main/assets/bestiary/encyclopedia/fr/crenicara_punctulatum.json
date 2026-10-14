@@ -10,7 +10,7 @@
     "diet": "La redescription de Kullander ne donne pas d’inventaire détaillé des proies naturelles ; aucun régime spécialisé ne lui est donc attribué ici.",
     "behavior": "Des sources anciennes lui ont attribué un changement de sexe, mais le statut de C. punctulatum comme poisson réellement hermaphrodite séquentiel reste contesté.",
     "reproduction": "Il pond des œufs fixés aux plantes ou aux pierres, et la femelle garde la ponte ; les nombres d’œufs rapportés varient selon les synthèses compilées.",
-    "ecology": "C’est un poisson dulçaquicole tropical benthopélagique des cours d’eau et de leurs rives, qui partage son genre avec C. latruncularium, à l’aire plus localisée.",
+    "ecology": "C’est un poisson dulçaquicole tropical benthopélagique des cours d’eau et de leurs rives, qui partage son genre avec C. latruncularium, à l’aire plus localisée. Une phylogénie de 2005 place Crenicara avec Dicrossus dans le clade crenicarine ; voir Dicrossus maculatus.",
     "conservation": "FishBase relaie une évaluation mondiale UICN en préoccupation mineure ; ce statut est distinct des incertitudes concernant sa biologie reproductive."
   },
   "sources": [
@@ -29,6 +29,10 @@
     {
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8440468/",
       "title": "Régulation épigénétique et détermination environnementale du sexe chez les cichlidés — revue"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.2005.00209.x",
+      "title": "Morphologie, molécules et congruence des caractères dans la phylogénie des cichlidés géophages sud-américains"
     }
   ]
 }

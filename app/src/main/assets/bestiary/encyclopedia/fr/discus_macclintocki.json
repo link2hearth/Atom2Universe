@@ -1,0 +1,30 @@
+{
+  "id": "discus_macclintocki",
+  "name": "Disque du Pléistocène de l’Iowa",
+  "scientific": "Discus macclintocki",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ce petit escargot terrestre subsiste dans quelques refuges frais et humides de la région sans dérive glaciaire du Midwest supérieur, surtout dans le nord-est de l’Iowa et les secteurs voisins de l’Illinois.",
+    "identification": "C’est un minuscule escargot à coquille discoïde, d’environ 5 à 8 mm de diamètre selon le compte rendu de l’Université d’État de l’Iowa ; son nom anglais évoque la faune pléistocène de la région.",
+    "habitat": "Il vit dans la litière de pentes d’éboulis algifiques ombragées, fraîches et humides, où l’air refroidi par la glace souterraine ressort par des ouvertures du versant.",
+    "diet": "Le Disque du Pléistocène utilise la litière, qui lui procure à la fois nourriture et abri ; les fiches consultées ne précisent pas davantage son régime.",
+    "behavior": "Selon le Fish and Wildlife Service américain, l’habitat reste sous 10 °C en été et au-dessus de −10 °C en hiver.",
+    "reproduction": "Le mode de reproduction n’est pas établi dans la fiche de conservation consultée ; l’autofécondation n’y est évoquée que comme possibilité déduite chez certains escargots terrestres apparentés.",
+    "ecology": "Ces fragiles versants à air froid abritent une population relique ; une modification de l’équilibre entre glace et humidité pourrait détruire le microclimat dont elle dépend.",
+    "conservation": "L’espèce est inscrite comme « En danger » au niveau fédéral américain depuis 1978 ; les menaces comprennent le changement climatique, l’exploitation forestière, les carrières, les routes, la modification des dolines, la contamination et le piétinement."
+  },
+  "sources": [
+    {
+      "url": "https://www.fws.gov/species/iowa-pleistocene-snail-discus-macclintocki",
+      "title": "Escargot du Pléistocène de l’Iowa — U.S. Fish and Wildlife Service"
+    },
+    {
+      "url": "https://faculty.sites.iastate.edu/kjroe/project/iowa-pleistocene-snail",
+      "title": "Escargot du Pléistocène de l’Iowa — Université d’État de l’Iowa"
+    },
+    {
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.111599/Discus_macclintocki",
+      "title": "Discus macclintocki — NatureServe Explorer"
+    }
+  ]
+}

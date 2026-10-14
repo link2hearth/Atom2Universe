@@ -1,0 +1,168 @@
+{
+  "id": "dichomeris_alacella",
+  "scientific": "Dichomeris alacella",
+  "group": "invertebrates",
+  "name": {
+    "en": "Lichen Sober",
+    "fr": "Gelechie des lichens"
+  },
+  "sections": {
+    "overview": {
+      "en": "Dichomeris alacella is a small gelechiid moth known in Britain as the Lichen Sober.",
+      "fr": "Dichomeris alacella est un petit papillon de nuit de la famille des Gelechiidae, appelé Lichen Sober en Grande-Bretagne."
+    },
+    "identification": {
+      "en": "Its pointed forewings have pale patches beyond three dark stigmata, with pale-tipped dark labial palps; the wingspan is about 13–14 mm.",
+      "fr": "Ses ailes antérieures pointues portent des taches pâles au-delà de trois stigmates sombres, et ses palpes foncés ont une pointe claire; l’envergure atteint environ 13 à 14 mm."
+    },
+    "habitat": {
+      "en": "It is associated with woodland, especially mature broad-leaved trees and possibly ancient broad-leaved woods; long-established fruit trees may also host larval signs.",
+      "fr": "Elle est associée aux bois, notamment aux feuillus âgés et peut-être aux forêts anciennes; des arbres fruitiers établis de longue date peuvent aussi porter des traces larvaires."
+    },
+    "diet": {
+      "en": "The larva has been reported feeding on mosses and lichens on trunks and fences; a Dutch observation found one beneath a lichen on an oak branch.",
+      "fr": "La larve a été signalée sur les mousses et lichens des troncs et clôtures; une observation néerlandaise en a trouvé une sous un lichen sur une branche de chêne."
+    },
+    "behavior": {
+      "en": "Adults rest on tree trunks by day. At night, they come to artificial lights.",
+      "fr": "Les adultes se reposent sur les troncs le jour. La nuit, ils viennent aux lumières artificielles."
+    },
+    "reproduction": {
+      "en": "Adults fly mainly in July and August; the early stages remain poorly described.",
+      "fr": "Les adultes volent surtout en juillet et août; les stades immatures restent peu décrits."
+    },
+    "ecology": {
+      "en": "Its larval food is associated with bark surfaces rather than living foliage, linking the moth to lichens and mosses on mature woody substrates.",
+      "fr": "Sa nourriture larvaire se trouve sur les surfaces d’écorce plutôt que sur le feuillage vivant, reliant ce papillon aux lichens et mousses des vieux supports ligneux."
+    },
+    "conservation": {
+      "en": "The British recording scheme calls it nationally scarce but notes a recent increase in records; this regional trend should not be treated as a global assessment.",
+      "fr": "Le réseau britannique la qualifie de rare à l’échelle nationale, tout en signalant une hausse récente des observations; cette tendance régionale n’est pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Dichomeris alacella — Gelechiid Recording Scheme",
+        "fr": "Dichomeris alacella — Réseau de suivi des Gelechiidae"
+      },
+      "url": "https://gelechiid.co.uk/species/dichomeris-alacella",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Specialist scheme describes woodland habitat, daytime resting and British status."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 10,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dichomeris alacella — Natural History Museum Species Dictionary",
+        "fr": "Dichomeris alacella — Dictionnaire des espèces du Muséum d’histoire naturelle"
+      },
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NBNSYS0100002796",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Natural History Museum checklist confirms accepted species name, family placement and English common name Lichen Sober."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 16,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dichomeris alacella — Hantsmoths",
+        "fr": "Dichomeris alacella — Hantsmoths"
+      },
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=35.025",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Hampshire and Isle of Wight moth account gives the small wingspan and diagnostic forewing pattern."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 15,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dichomeris alacella — UKmoths",
+        "fr": "Dichomeris alacella — UKmoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/dichomeris-alacella/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "UKmoths reports larvae on trunk lichens, adults at light, a summer flight period and poorly documented early stages."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 18,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Larval records are sparse and host use may be incomplete; the British scheme explicitly notes the lack of a located British larval record and cites a Dutch observation."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Prioritized the specialist Gelechiid Recording Scheme, cross-checking identification with Hantsmoths and accepted nomenclature with the Natural History Museum; noted sparse early-stage evidence."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "echinococcus_shiquicus",
+  "name": "Shiqu tapeworm",
+  "scientific": "Echinococcus shiquicus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Echinococcus shiquicus is a small tapeworm described from the Qinghai–Tibet Plateau and recognized as distinct using morphological, ecological and genetic evidence.",
+    "identification": "It is a cestode in the genus Echinococcus; molecular data distinguish it from the closely related E. multilocularis.",
+    "habitat": "Published records are from the Qinghai–Tibet Plateau, where its known host cycle occurs in high-altitude grassland landscapes.",
+    "diet": "As a parasite, its larval stage develops in mammalian intermediate hosts and its adult stage inhabits the intestine of a definitive host.",
+    "behavior": "The established wildlife cycle links Tibetan foxes, which carry adult worms, with plateau pikas, in which larval cysts occur.",
+    "reproduction": "Like other tapeworms, it produces eggs in its adult host; the documented cycle passes between carnivorous definitive hosts and small-mammal intermediate hosts.",
+    "ecology": "A 2024 review describes E. shiquicus as a sister taxon to E. multilocularis and reports its records from the Tibetan Plateau.",
+    "conservation": "The parasite sources consulted discuss host ecology and public-health uncertainty rather than assigning this species a conservation category."
+  },
+  "sources": [
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15862582/",
+      "title": "Echinococcus shiquicus, a taeniid cestode from Tibetan fox and plateau pika in China — PubMed"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10884515/",
+      "title": "Echinococcus species in wildlife — review (PMC)"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12174222/",
+      "title": "New intermediate host of Echinococcus shiquicus — Parasites & Vectors (PMC)"
+    }
+  ]
+}

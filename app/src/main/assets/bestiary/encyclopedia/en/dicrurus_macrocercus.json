@@ -1,0 +1,30 @@
+{
+  "id": "dicrurus_macrocercus",
+  "name": "Black Drongo",
+  "scientific": "Dicrurus macrocercus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Black Drongo is a widespread resident of tropical South and Southeast Asia, with records extending from southwestern Iran to Indonesia.",
+    "identification": "It is a glossy black bird about 28 cm long, with a conspicuously broad, deeply forked tail.",
+    "habitat": "It uses open agricultural country and forest edges, often perching conspicuously on bare branches or utility wires.",
+    "diet": "Its diet is mainly insects, including grasshoppers, termites, beetles and dragonflies, which it captures around open ground and vegetation.",
+    "behavior": "The Bangladesh Red List records it as active by day and at twilight.",
+    "reproduction": "In India, breeding timing varies geographically: it is reported mainly in February and March in the south, and may continue until August elsewhere; both sexes help build a stick cup nest.",
+    "ecology": "Its insect-eating habits make it a familiar bird of farmland and open habitats; the India assessment reports stable recent annual trend but an inconclusive long-term trend nationally.",
+    "conservation": "The global Red List category is Least Concern, while the 2025 Indian factsheet notes that national long-term trend estimates remain inconclusive."
+  },
+  "sources": [
+    {
+      "url": "https://neeriathome.neeri.res.in/biodiversity/blackdrongo.php",
+      "title": "Black Drongo — CSIR-NEERI Biodiversity Portal"
+    },
+    {
+      "url": "https://stateofindiasbirds.in/species/one-bladro1/",
+      "title": "Black Drongo — State of India’s Birds 2025"
+    },
+    {
+      "url": "https://sufal.bforest.gov.bd/redlist/wp-content/uploads/2023/03/Volume-3-Birds-Full-Book.pdf",
+      "title": "Dicrurus macrocercus — Bangladesh Red List of Birds"
+    }
+  ]
+}

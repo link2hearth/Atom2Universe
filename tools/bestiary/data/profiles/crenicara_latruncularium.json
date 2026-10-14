@@ -32,8 +32,8 @@
       "fr": "Les femelles pondent sur une surface verticale et prennent soin de la ponte puis des larves, qu’elles déplacent après l’éclosion vers une petite cuvette préparée."
     },
     "ecology": {
-      "en": "FishBase describes it as a freshwater, benthopelagic fish of tropical waters, with records from the Guaporé–Mamoré basin.",
-      "fr": "FishBase le décrit comme un poisson dulçaquicole benthopélagique des eaux tropicales, signalé dans le bassin Guaporé–Mamoré."
+      "en": "FishBase describes it as a freshwater, benthopelagic fish of tropical waters, with records from the Guaporé–Mamoré basin. A 2005 phylogeny places Crenicara with Dicrossus in the crenicarine clade; see Dicrossus maculatus.",
+      "fr": "FishBase le décrit comme un poisson dulçaquicole benthopélagique des eaux tropicales, signalé dans le bassin Guaporé–Mamoré. Une phylogénie de 2005 place Crenicara avec Dicrossus dans le clade crenicarine ; voir Dicrossus maculatus."
     },
     "conservation": {
       "en": "FishBase relays a global IUCN assessment of Least Concern, but the sources reviewed do not provide a detailed population trend.",
@@ -165,6 +165,31 @@
         "The catalog confirms the accepted form Crenicara punctulata and gives its upper-Amazon distribution. "
       ],
       "prose_claims": []
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.2005.00209.x",
+      "title": {
+        "en": "Morphology, molecules, and character congruence in the phylogeny of South American geophagine cichlids",
+        "fr": "Morphologie, molécules et congruence des caractères dans la phylogénie des cichlidés géophages sud-américains"
+      },
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2005 phylogenetic analysis identifies a crenicarine clade comprising the genera Crenicara and Dicrossus."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
     }
   ],
   "uncertainties": [

@@ -1,0 +1,30 @@
+{
+  "id": "dermacentor_marginatus",
+  "name": "Ornate Sheep Tick",
+  "scientific": "Dermacentor marginatus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The ornate sheep tick ranges from northern Africa across Europe into Central Asia.",
+    "identification": "For hard ticks, adults are generally the best stage for species-level identification, which relies on diagnostic morphological characters.",
+    "habitat": "In southwest Germany, it is associated with sheep in warmer regions.",
+    "diet": "Adult ticks are frequently found on sheep in southwest Germany. Larvae and nymphs feed mainly on small mammals.",
+    "behavior": "Adults are active in spring, early summer and autumn.",
+    "reproduction": "It takes three blood meals. In warm sites, a generation may develop within one growing season.",
+    "ecology": "It can carry spotted-fever rickettsiae and Coxiella burnetii, the Q-fever agent.",
+    "conservation": "The German study discusses possible northward expansion under climate warming, not population decline."
+  },
+  "sources": [
+    {
+      "url": "https://link.springer.com/article/10.1007/s00436-016-4958-9",
+      "title": "The ecological niche of Dermacentor marginatus in Germany"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1439-0418.1976.tb03354.x",
+      "title": "Occurrence and ecology of medically and veterinary important ticks in Germany"
+    },
+    {
+      "url": "https://www.cdc.gov/ticks/about/tick-lifecycles.html",
+      "title": "Tick lifecycles — U.S. Centers for Disease Control and Prevention"
+    }
+  ]
+}

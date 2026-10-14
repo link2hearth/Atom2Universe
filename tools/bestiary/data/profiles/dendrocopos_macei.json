@@ -1,0 +1,143 @@
+{
+  "id": "dendrocopos_macei",
+  "scientific": "Dendrocopos macei",
+  "group": "birds",
+  "name": {
+    "en": "Fulvous-breasted Woodpecker",
+    "fr": "Pic à poitrine fauve"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Fulvous-breasted Woodpecker is a resident Asian woodpecker occurring from the Indian subcontinent into parts of Southeast Asia.",
+      "fr": "Le Pic à poitrine fauve est un pic asiatique sédentaire, présent du sous-continent indien jusqu’à certaines régions d’Asie du Sud-Est."
+    },
+    "identification": {
+      "en": "It has strongly barred black-and-white upperparts and a buff-toned breast; the male has a red crown, unlike the female.",
+      "fr": "Son dessus est fortement barré de noir et de blanc, et sa poitrine est fauve; le mâle porte une calotte rouge, contrairement à la femelle."
+    },
+    "habitat": {
+      "en": "It uses open wooded country, broad-leaved woodland, forest clearings and trees along roads, including varied habitats across Bangladesh.",
+      "fr": "Il fréquente les paysages boisés ouverts, les forêts de feuillus, les clairières et les arbres des bords de route; au Bangladesh, il utilise des milieux variés."
+    },
+    "diet": {
+      "en": "Its recorded foods include insect grubs, other insects, fruit pulp and nectar, which it takes while pecking at tree trunks.",
+      "fr": "Son alimentation documentée comprend des larves d’insectes, d’autres insectes, de la pulpe de fruits et du nectar, recherchés en picorant les troncs."
+    },
+    "behavior": {
+      "en": "This diurnal species is usually seen in pairs or small groups working over trees, and it is described as sedentary in Bangladesh.",
+      "fr": "Cette espèce diurne est généralement observée en couple ou en petits groupes qui prospectent les arbres; elle est décrite comme sédentaire au Bangladesh."
+    },
+    "reproduction": {
+      "en": "Bangladesh records report breeding in April and May. The sources consulted do not provide a confirmed clutch size or a detailed account of nest construction.",
+      "fr": "Les données du Bangladesh signalent une reproduction en avril et en mai. Les sources consultées ne donnent ni taille de ponte confirmée ni description détaillée de la construction du nid."
+    },
+    "ecology": {
+      "en": "By searching trunks for animal prey and also taking fruit and nectar, it uses several food resources in wooded landscapes.",
+      "fr": "En recherchant des proies animales sur les troncs tout en consommant aussi fruits et nectar, il exploite plusieurs ressources des paysages boisés."
+    },
+    "conservation": {
+      "en": "The Bangladesh species account reports that its population size and trend are unknown, so it does not establish a local trend.",
+      "fr": "La fiche bangladaise indique que la taille et la tendance de la population sont inconnues; elle n’établit donc pas de tendance locale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bangladesh Red List of Birds — Dendrocopos macei species profile",
+        "fr": "Liste rouge des oiseaux du Bangladesh — fiche de Dendrocopos macei"
+      },
+      "url": "https://sufal.bforest.gov.bd/redlist/wp-content/uploads/2023/03/Volume-3-Birds-Full-Book.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Bangladesh account records feeding, breeding and population data."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 185,
+        "notes_words": 8,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fulvous-breasted Woodpecker — Oiseaux.net",
+        "fr": "Pic à poitrine fauve — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/en/oiseaux/fulvous-breasted.woodpecker.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Species account describes the sexes’ contrasting crown coloration and plumage."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 10,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fulvous-breasted Woodpecker — BirdLife DataZone",
+        "fr": "Pic à poitrine fauve — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/fulvous-breasted-woodpecker-dendrocopos-macei",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "BirdLife maintains the global distribution and habitat/ecology record for this species."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 11,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Bangladesh profile does not supply a population estimate or detailed nest data; no clutch size is included here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the Bangladesh Forest Department Red List account and cross-checked the plumage and global-status context against bird reference accounts; avoided inferring nest details."
+}

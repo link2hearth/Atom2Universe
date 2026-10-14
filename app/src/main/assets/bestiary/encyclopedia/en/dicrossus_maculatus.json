@@ -1,0 +1,30 @@
+{
+  "id": "dicrossus_maculatus",
+  "name": "Spade-tail Checkerboard Cichlid",
+  "scientific": "Dicrossus maculatus",
+  "group": "fish",
+  "sections": {
+    "overview": "This small South American cichlid is known from the Amazon basin, especially the Tapajós drainage in Brazil.",
+    "identification": "Reported maximum lengths are 5.3 cm standard length for males or unsexed fish and 6.0 cm for females; the sources consulted provide little comparative field-identification detail.",
+    "habitat": "FishBase records it from freshwater rivers and describes it as benthopelagic; the available species account gives no finer microhabitat description.",
+    "diet": "Species-specific diet data were not provided by the principal account consulted, so a particular prey or feeding mode cannot be stated confidently here.",
+    "behavior": "The available species account gives no detailed behavioral observations, and aquarium occurrence is described as rare.",
+    "reproduction": "Species-specific spawning and breeding information was not available in the consulted profile.",
+    "ecology": "A 2005 phylogenetic analysis places Dicrossus and Crenicara together in a crenicarine clade; this links the present fish to the two Crenicara profiles in this bestiary, without implying that either is its direct sister species.",
+    "conservation": "FishBase displays a global IUCN category of Least Concern, assessed on 7 November 2018; that assessment should not be mistaken for a current population estimate."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Dicrossus-maculatus",
+      "title": "Dicrossus maculatus — FishBase species summary"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.2005.00209.x",
+      "title": "Morphology, molecules, and character congruence in the phylogeny of South American geophagine cichlids"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/dicrossus-maculatus/",
+      "title": "Dicrossus — Aquarium Atlas"
+    }
+  ]
+}

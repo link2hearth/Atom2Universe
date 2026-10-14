@@ -1,0 +1,30 @@
+{
+  "id": "echinococcus_shiquicus",
+  "name": "Échinocoque du Shiqu",
+  "scientific": "Echinococcus shiquicus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Echinococcus shiquicus est un petit ténia décrit du plateau Qinghai–Tibet et reconnu comme distinct à partir d’indices morphologiques, écologiques et génétiques.",
+    "identification": "C’est un cestode du genre Echinococcus; les données moléculaires le distinguent de son proche parent E. multilocularis.",
+    "habitat": "Les données publiées proviennent du plateau Qinghai–Tibet, où son cycle connu se déroule dans des paysages de prairies d’altitude.",
+    "diet": "Parasite, sa forme larvaire se développe chez des mammifères hôtes intermédiaires et sa forme adulte vit dans l’intestin d’un hôte définitif.",
+    "behavior": "Le cycle sauvage établi relie le renard du Tibet, porteur des vers adultes, au pika du plateau, chez lequel se développent les kystes larvaires.",
+    "reproduction": "Comme les autres ténias, il produit des œufs chez son hôte adulte; le cycle documenté passe entre des hôtes définitifs carnivores et de petits mammifères intermédiaires.",
+    "ecology": "Une revue de 2024 décrit E. shiquicus comme taxon frère d’E. multilocularis et rapporte ses mentions sur le plateau tibétain.",
+    "conservation": "Les sources parasitologiques consultées traitent de l’écologie des hôtes et des incertitudes sanitaires, sans attribuer de catégorie de conservation à cette espèce."
+  },
+  "sources": [
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15862582/",
+      "title": "Echinococcus shiquicus, cestode du renard du Tibet et du pika des hauts plateaux en Chine — PubMed"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10884515/",
+      "title": "Espèces d’Echinococcus chez les animaux sauvages — revue (PMC)"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12174222/",
+      "title": "Nouvel hôte intermédiaire d’Echinococcus shiquicus — Parasites & Vectors (PMC)"
+    }
+  ]
+}

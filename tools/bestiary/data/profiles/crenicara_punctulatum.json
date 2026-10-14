@@ -32,8 +32,8 @@
       "fr": "Il pond des œufs fixés aux plantes ou aux pierres, et la femelle garde la ponte ; les nombres d’œufs rapportés varient selon les synthèses compilées."
     },
     "ecology": {
-      "en": "It is a benthopelagic freshwater fish of tropical lowland streams and shores, sharing its genus with the more localized C. latruncularium.",
-      "fr": "C’est un poisson dulçaquicole tropical benthopélagique des cours d’eau et de leurs rives, qui partage son genre avec C. latruncularium, à l’aire plus localisée."
+      "en": "It is a benthopelagic freshwater fish of tropical lowland streams and shores, sharing its genus with the more localized C. latruncularium. A 2005 phylogeny places Crenicara with Dicrossus in the crenicarine clade; see Dicrossus maculatus.",
+      "fr": "C’est un poisson dulçaquicole tropical benthopélagique des cours d’eau et de leurs rives, qui partage son genre avec C. latruncularium, à l’aire plus localisée. Une phylogénie de 2005 place Crenicara avec Dicrossus dans le clade crenicarine ; voir Dicrossus maculatus."
     },
     "conservation": {
       "en": "FishBase relays a global IUCN assessment of Least Concern; this status is distinct from the contested details of its reproductive biology.",
@@ -180,6 +180,31 @@
         "The review notes evidence debated for Crenicara punctulatum and cautions that experts generally do not regard it as a confirmed sex-changing cichlid."
       ],
       "prose_claims": []
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.2005.00209.x",
+      "title": {
+        "en": "Morphology, molecules, and character congruence in the phylogeny of South American geophagine cichlids",
+        "fr": "Morphologie, molécules et congruence des caractères dans la phylogénie des cichlidés géophages sud-américains"
+      },
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2005 phylogenetic analysis identifies a crenicarine clade comprising the genera Crenicara and Dicrossus."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
     }
   ],
   "uncertainties": [

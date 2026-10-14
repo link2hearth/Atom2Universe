@@ -1,0 +1,30 @@
+{
+  "id": "diachrysia_zosimi",
+  "name": "Métallisée de Zosime",
+  "scientific": "Diachrysia zosimi",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Diachrysia zosimi est un papillon de nuit localisé des zones humides d’Europe, dont les populations sont dispersées dans certaines régions.",
+    "identification": "C’est un papillon de taille moyenne du groupe des noctuelles dorées; la marque métallique verdâtre de ses ailes antérieures aide à le distinguer d’espèces proches de Diachrysia.",
+    "habitat": "Espèce sténotopique, elle fréquente surtout les bas-marais calcaires, les tourbières de transition et les zones humides riveraines à végétation abondante.",
+    "diet": "Les chenilles se nourrissent surtout de la sanguisorbe officinale, Sanguisorba officinalis; des données finlandaises mentionnent aussi d’autres rosacées, apparemment moins habituelles.",
+    "behavior": "Les adultes volent au milieu de l’été et sont attirés par les lumières artificielles; les observations finlandaises signalent aussi des visites aux fleurs.",
+    "reproduction": "La fiche polonaise signale une génération annuelle. Les chenilles se nourrissent de l’été au printemps suivant et passent l’hiver avant la nymphose.",
+    "ecology": "Comme elle dépend d’une végétation humide spécialisée et de plantes-hôtes, ses populations peuvent se limiter à de très petits sites et rester isolées.",
+    "conservation": "Elle a disparu de nombreuses localités européennes et la fiche polonaise recommande de protéger les sites occupés; il ne s’agit pas d’une catégorie mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.iop.krakow.pl/pckz/opisba35.html?id=221&je=pl",
+      "title": "Livre rouge des animaux de Pologne — Diachrysia zosimi"
+    },
+    {
+      "url": "https://www.perhoset.fi/historia/plusiinae/dia-zosimi.htm",
+      "title": "Diachrysia zosimi en Finlande"
+    },
+    {
+      "url": "https://www.hnp.hu/hu/szervezeti-egyseg/termeszetvedelem/natura2000/fajtar/verfu-aranybagoly",
+      "title": "Diachrysia zosimi — Parc national de Hortobágy"
+    }
+  ]
+}

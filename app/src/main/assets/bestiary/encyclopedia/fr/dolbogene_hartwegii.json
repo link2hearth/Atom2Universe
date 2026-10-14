@@ -1,0 +1,26 @@
+{
+  "id": "dolbogene_hartwegii",
+  "name": "Sphinx de Hartweg",
+  "scientific": "Dolbogene hartwegii",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le Sphinx de Hartweg est un sphinx du sud-ouest des États-Unis, du Mexique et du Guatemala; la fiche du sphinx Dolba hyloeus, de la même famille, est distincte.",
+    "identification": "Ses ailes antérieures sont brunes, marquées de sombre et de blanc, avec une tache ronde claire; son envergure est d’environ 54 à 61 mm.",
+    "habitat": "Les observations la situent dans le sud-ouest des États-Unis et au Mexique, avec d’autres mentions au Guatemala.",
+    "diet": "Un élevage a identifié Tecoma stans comme plante-hôte larvaire en Arizona et au Mexique.",
+    "behavior": "Des adultes ont été observés en juillet et en août, mais la période de vol pourrait s’étendre au-delà de ces mois.",
+    "reproduction": "La chenille et sa plante-hôte ont été documentées par élevage et observation sur le terrain; les autres détails reproducteurs restent peu connus.",
+    "ecology": "L’association confirmée avec Tecoma est la relation à une plante-hôte la mieux étayée dans les sources consultées.",
+    "conservation": "Les sources consultées ne donnent pas d’évaluation de conservation propre à l’espèce et signalent que relativement peu de spécimens ont été rapportés."
+  },
+  "sources": [
+    {
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=7785&state=SCT",
+      "title": "Sphinx de Hartweg — Moth Photographers Group"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/281094886_Note_sur_les_genres_Ceratomia_Harris_1839_et_Dolbogene_Rothschild_Jordan_1903_au_Mexique_et_description_de_Ceratomia_mooseri_sp_n_et_Ceratomia_paltingi_sp_n_Lepidoptera_Sphingidae",
+      "title": "Note sur Ceratomia et Dolbogene au Mexique — The European Entomologist"
+    }
+  ]
+}

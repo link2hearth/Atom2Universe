@@ -1,0 +1,38 @@
+{
+  "id": "edonis_helena",
+  "name": "Edonis Helena Dragonfly",
+  "scientific": "Edonis helena",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Edonis helena is the sole described species in the dragonfly genus Edonis, with records from Brazil, Paraguay and Argentina.",
+    "identification": "An identification key separates Edonis by a dark basal patch on the hindwing reaching the triangle and two bridge crossveins in the forewing.",
+    "habitat": "Its habitat and larval stages remain unknown in the taxonomic account cited by the literature.",
+    "diet": "Species-specific prey and feeding observations were not found in the sources consulted.",
+    "behavior": "The available regional records are too limited to describe its daily activity or seasonal behaviour.",
+    "reproduction": "No species-specific account of egg-laying or larval development was found; the larva remains undescribed in the cited reference.",
+    "ecology": "The Chaco Odonata review notes that the species is still known from very few collected specimens, including its original description and later Argentine records.",
+    "conservation": "Brazil’s 2014 national assessment listed it as Data Deficient; that regional category is not a global Red List assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.pugetsound.edu/puget-sound-museum-natural-history/biodiversity-resources/insects/dragonflies/world-odonata-list/south-american-odonata",
+      "title": "South American Odonata — University of Puget Sound World Odonata List"
+    },
+    {
+      "url": "https://ri.conicet.gov.ar/bitstream/handle/11336/14417/CONICET_Digital_Nro.17660.pdf?isAllowed=y&sequence=1",
+      "title": "Odonata of the Chaco — International Journal of Odonatology"
+    },
+    {
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/livro_vermelho_2018_vol1.pdf",
+      "title": "Brazilian Red Book of Threatened Fauna — ICMBio"
+    },
+    {
+      "url": "https://www.press.jhu.edu/books/title/8509/dragonfly-genera-new-world",
+      "title": "Dragonfly Genera of the New World — Johns Hopkins University Press"
+    },
+    {
+      "url": "https://www.worlddragonfly.org/s/IJO_233_p239-289_Odonata_of_eembucu_Paraguay-indicator_spp_of_wetland_habitats.pdf",
+      "title": "Odonata of Ñeembucú, Paraguay — International Journal of Odonatology"
+    }
+  ]
+}

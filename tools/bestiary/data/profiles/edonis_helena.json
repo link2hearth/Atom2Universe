@@ -1,0 +1,186 @@
+{
+  "id": "edonis_helena",
+  "scientific": "Edonis helena",
+  "group": "invertebrates",
+  "name": {
+    "en": "Edonis Helena Dragonfly",
+    "fr": "Libellule Edonis helena"
+  },
+  "sections": {
+    "overview": {
+      "en": "Edonis helena is the sole described species in the dragonfly genus Edonis, with records from Brazil, Paraguay and Argentina.",
+      "fr": "Edonis helena est la seule espèce décrite du genre de libellules Edonis; elle est signalée au Brésil, au Paraguay et en Argentine."
+    },
+    "identification": {
+      "en": "An identification key separates Edonis by a dark basal patch on the hindwing reaching the triangle and two bridge crossveins in the forewing.",
+      "fr": "Une clé d’identification distingue Edonis par une tache basale sombre de l’aile postérieure atteignant le triangle et deux nervures transversales de liaison à l’aile antérieure."
+    },
+    "habitat": {
+      "en": "Its habitat and larval stages remain unknown in the taxonomic account cited by the literature.",
+      "fr": "Son habitat et ses stades larvaires restent inconnus dans la source taxonomique citée par la littérature."
+    },
+    "diet": {
+      "en": "Species-specific prey and feeding observations were not found in the sources consulted.",
+      "fr": "Les sources consultées ne décrivent ni proies ni observations alimentaires propres à l’espèce."
+    },
+    "behavior": {
+      "en": "The available regional records are too limited to describe its daily activity or seasonal behaviour.",
+      "fr": "Les données régionales disponibles sont trop limitées pour décrire son activité quotidienne ou saisonnière."
+    },
+    "reproduction": {
+      "en": "No species-specific account of egg-laying or larval development was found; the larva remains undescribed in the cited reference.",
+      "fr": "Aucune description propre à l’espèce de la ponte ou du développement larvaire n’a été trouvée; la larve reste inconnue dans la référence citée."
+    },
+    "ecology": {
+      "en": "The Chaco Odonata review notes that the species is still known from very few collected specimens, including its original description and later Argentine records.",
+      "fr": "La revue des odonates du Chaco indique que l’espèce reste connue par peu de spécimens, ceux de la description originale et des signalements argentins ultérieurs."
+    },
+    "conservation": {
+      "en": "Brazil’s 2014 national assessment listed it as Data Deficient; that regional category is not a global Red List assessment.",
+      "fr": "L’évaluation nationale brésilienne de 2014 l’a classée en données insuffisantes; cette catégorie nationale ne constitue pas une évaluation mondiale de la Liste rouge."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "South American Odonata — University of Puget Sound World Odonata List",
+        "fr": "Odonates d’Amérique du Sud — liste mondiale des odonates, University of Puget Sound"
+      },
+      "url": "https://www.pugetsound.edu/puget-sound-museum-natural-history/biodiversity-resources/insects/dragonflies/world-odonata-list/south-american-odonata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Current regional checklist includes Edonis helena in Brazil, Paraguay and Argentina."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 11,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Odonata of the Chaco — International Journal of Odonatology",
+        "fr": "Odonates du Chaco — International Journal of Odonatology"
+      },
+      "url": "https://ri.conicet.gov.ar/bitstream/handle/11336/14417/CONICET_Digital_Nro.17660.pdf?isAllowed=y&sequence=1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Scientific review reports sparse specimen records, including original Brazilian type series and later Corrientes records."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 78,
+        "notes_words": 15,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Brazilian Red Book of Threatened Fauna — ICMBio",
+        "fr": "Livre rouge brésilien de la faune menacée — ICMBio"
+      },
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/livro_vermelho_2018_vol1.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "2014 national listing for E. helena: Data Deficient (DD)."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 9,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dragonfly Genera of the New World — Johns Hopkins University Press",
+        "fr": "Dragonfly Genera of the New World — Johns Hopkins University Press"
+      },
+      "url": "https://www.press.jhu.edu/books/title/8509/dragonfly-genera-new-world",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Taxonomic treatment cited for the adult morphology and the unknown habitat/larval stages."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 12,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Odonata of Ñeembucú, Paraguay — International Journal of Odonatology",
+        "fr": "Odonates de Ñeembucú, Paraguay — International Journal of Odonatology"
+      },
+      "url": "https://www.worlddragonfly.org/s/IJO_233_p239-289_Odonata_of_eembucu_Paraguay-indicator_spp_of_wetland_habitats.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Scientific identification key distinguishes Edonis helena by hindwing basal patch and forewing crossvein characters."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 14,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-level biological data are exceptionally sparse; no larval description or specific diet and behaviour account was found.",
+    "The Brazilian Data Deficient category dates to 2014 and should not be presented as current global status."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the South American Odonata checklist, an Argentine peer-reviewed regional review, the Brazilian national assessment and the taxonomic monograph. Kept biological sections explicit about the severe data gap."
+}

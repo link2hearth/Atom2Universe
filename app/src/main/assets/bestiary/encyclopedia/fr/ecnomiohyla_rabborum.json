@@ -1,0 +1,30 @@
+{
+  "id": "ecnomiohyla_rabborum",
+  "name": "Rainette de Rabbs à franges",
+  "scientific": "Ecnomiohyla rabborum",
+  "group": "amphibians",
+  "sections": {
+    "overview": "La Rainette de Rabbs à franges est connue des montagnes autour d’El Valle de Antón, dans le centre du Panama.",
+    "identification": "C’est une grande rainette aux mains et aux pieds largement palmés, ce qui lui permet de planer sur de courtes distances.",
+    "habitat": "Elle vit dans les forêts prémontagnardes autour d’El Valle de Antón, vers 900 à 1 150 m d’altitude.",
+    "diet": "La fiche de l’espèce ne fournit pas de liste de proies précise.",
+    "behavior": "Les mâles chantent depuis des cavités d’arbres et gardent les œufs et les têtards.",
+    "reproduction": "Les femelles pondent des grappes d’environ 60 à 200 œufs au-dessus de l’eau dans des cavités d’arbres; les mâles veillent sur les œufs et les têtards.",
+    "ecology": "Une étude acoustique de 2025 n’a trouvé aucun indice de présence; l’UICN relève un déclin continu de l’habitat et des effets possibles d’une maladie.",
+    "conservation": "L’UICN la classe en danger critique (peut-être éteinte); le dernier individu captif connu est mort en 2016."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-1.RLTS.T85341796A54357363.en",
+      "title": "Liste rouge de l’UICN — Ecnomiohyla rabborum"
+    },
+    {
+      "url": "https://doi.org/10.1670/08-025R1.1",
+      "title": "Nouvelle espèce planeuse d’Ecnomiohyla du Panama central — Journal of Herpetology"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/amphibian-and-reptile-science/articles/10.3389/famrs.2025.1736880/full",
+      "title": "Prospections acoustiques de grenouilles menacées au Panama — Frontiers (2025)"
+    }
+  ]
+}

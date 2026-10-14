@@ -1,0 +1,30 @@
+{
+  "id": "dipylidium_caninum",
+  "name": "Flea Tapeworm",
+  "scientific": "Dipylidium caninum",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Dipylidium caninum is a common tapeworm of dogs and cats and only occasionally infects people; it is also called the flea or cucumber tapeworm.",
+    "identification": "The adult is a segmented cestode; gravid segments can pass in stool or emerge near the anus, and each segment can release packets of eggs.",
+    "habitat": "The adult tapeworm lives in the small intestine of its dog or cat definitive host, while immature stages develop in fleas or, less often, chewing lice.",
+    "diet": "The cited veterinary accounts describe an intestinal parasite attached to the host’s gut lining, but do not give a species-specific account of nutrient uptake.",
+    "behavior": "Dogs and cats usually acquire infection by swallowing an infected adult flea while grooming; people can become infected accidentally by swallowing an infected flea or louse.",
+    "reproduction": "Egg packets released from gravid segments are eaten by flea or louse larvae, where the parasite develops to an infective cysticercoid before that insect reaches adulthood.",
+    "ecology": "Its life cycle links a mammal host with flea or louse intermediate hosts, so controlling ectoparasites is central to breaking transmission between pets.",
+    "conservation": "This parasite is managed as a veterinary and occasional zoonotic infection, not through a wildlife conservation assessment; prevention centers on flea control and veterinary treatment."
+  },
+  "sources": [
+    {
+      "url": "https://www.cdc.gov/dpdx/dipylidium/",
+      "title": "DPDx — Dipylidium caninum"
+    },
+    {
+      "url": "https://www.esccap.org/uploads/docs/3vdoc860_1337_ESCCAP_GL1__French_v10_1p.pdf",
+      "title": "Dipylidium caninum — ESCCAP French guideline"
+    },
+    {
+      "url": "https://capcvet.org/guidelines/dipylidium-caninum/",
+      "title": "Dipylidium caninum — Companion Animal Parasite Council"
+    }
+  ]
+}

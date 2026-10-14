@@ -1,0 +1,148 @@
+{
+  "id": "dermacentor_marginatus",
+  "scientific": "Dermacentor marginatus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Ornate Sheep Tick",
+    "fr": "Tique ornée du mouton"
+  },
+  "sections": {
+    "overview": {
+      "en": "The ornate sheep tick ranges from northern Africa across Europe into Central Asia.",
+      "fr": "La tique ornée du mouton s’étend d’Afrique du Nord à l’Europe et à l’Asie centrale."
+    },
+    "identification": {
+      "en": "For hard ticks, adults are generally the best stage for species-level identification, which relies on diagnostic morphological characters.",
+      "fr": "Chez les tiques dures, les adultes sont généralement le meilleur stade pour l’identification spécifique, fondée sur des caractères morphologiques diagnostiques."
+    },
+    "habitat": {
+      "en": "In southwest Germany, it is associated with sheep in warmer regions.",
+      "fr": "Dans le sud-ouest de l’Allemagne, elle est associée aux moutons des régions les plus chaudes."
+    },
+    "diet": {
+      "en": "Adult ticks are frequently found on sheep in southwest Germany. Larvae and nymphs feed mainly on small mammals.",
+      "fr": "En Allemagne du Sud-Ouest, les adultes sont fréquemment trouvés sur les moutons. Les larves et les nymphes parasitent surtout de petits mammifères."
+    },
+    "behavior": {
+      "en": "Adults are active in spring, early summer and autumn.",
+      "fr": "Les adultes sont actifs au printemps, au début de l’été et en automne."
+    },
+    "reproduction": {
+      "en": "It takes three blood meals. In warm sites, a generation may develop within one growing season.",
+      "fr": "Elle prend trois repas sanguins. Dans les sites chauds, une génération peut se développer en une saison de croissance."
+    },
+    "ecology": {
+      "en": "It can carry spotted-fever rickettsiae and Coxiella burnetii, the Q-fever agent.",
+      "fr": "Elle peut porter des rickettsies du groupe des fièvres boutonneuses et Coxiella burnetii, l’agent de la fièvre Q."
+    },
+    "conservation": {
+      "en": "The German study discusses possible northward expansion under climate warming, not population decline.",
+      "fr": "L’étude allemande évoque une possible extension vers le nord avec le réchauffement, sans décrire de déclin de population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The ecological niche of Dermacentor marginatus in Germany",
+        "fr": "La niche écologique de Dermacentor marginatus en Allemagne"
+      },
+      "url": "https://link.springer.com/article/10.1007/s00436-016-4958-9",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Peer-reviewed study describes the tick’s range, three meals, seasonal activity, pathogens and projected range changes."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 15,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Occurrence and ecology of medically and veterinary important ticks in Germany",
+        "fr": "Présence et écologie de tiques d’importance médicale et vétérinaire en Allemagne"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1439-0418.1976.tb03354.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "German and English abstracts describe D. marginatus as associated with sheep in warmer southwestern German regions."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 16,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tick lifecycles — U.S. Centers for Disease Control and Prevention",
+        "fr": "Cycles de vie des tiques — Centres américains de contrôle et de prévention des maladies"
+      },
+      "url": "https://www.cdc.gov/ticks/about/tick-lifecycles.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "CDC describes hard-tick life stages, blood meals and host changes; the species-specific cycle is sourced to the ecological study."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 19,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The one-season development estimate describes suitable warm locations and should not be generalized to the species’ entire range; the sources reviewed do not supply a conservation assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used a peer-reviewed ecological study and German-language literature for species-specific range, host and vector facts, with CDC material only for general hard-tick context."
+}

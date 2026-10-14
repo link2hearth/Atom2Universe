@@ -1,0 +1,179 @@
+{
+  "id": "dicrurus_macrocercus",
+  "scientific": "Dicrurus macrocercus",
+  "group": "birds",
+  "name": {
+    "en": "Black Drongo",
+    "fr": "Drongo royal"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Black Drongo is a widespread resident of tropical South and Southeast Asia, with records extending from southwestern Iran to Indonesia.",
+      "fr": "Le Drongo royal est un résident largement répandu dans l’Asie tropicale du Sud et du Sud-Est, avec une aire allant du sud-ouest de l’Iran à l’Indonésie."
+    },
+    "identification": {
+      "en": "It is a glossy black bird about 28 cm long, with a conspicuously broad, deeply forked tail.",
+      "fr": "C’est un oiseau noir brillant d’environ 28 cm, reconnaissable à sa queue très fourchue et largement échancrée."
+    },
+    "habitat": {
+      "en": "It uses open agricultural country and forest edges, often perching conspicuously on bare branches or utility wires.",
+      "fr": "Il fréquente les espaces agricoles ouverts et les lisières forestières, se perchant souvent bien en vue sur des branches nues ou des fils."
+    },
+    "diet": {
+      "en": "Its diet is mainly insects, including grasshoppers, termites, beetles and dragonflies, which it captures around open ground and vegetation.",
+      "fr": "Son régime est principalement insectivore : il capture notamment sauterelles, termites, coléoptères et libellules près du sol et de la végétation."
+    },
+    "behavior": {
+      "en": "The Bangladesh Red List records it as active by day and at twilight.",
+      "fr": "La Liste rouge du Bangladesh le signale actif le jour et au crépuscule."
+    },
+    "reproduction": {
+      "en": "In India, breeding timing varies geographically: it is reported mainly in February and March in the south, and may continue until August elsewhere; both sexes help build a stick cup nest.",
+      "fr": "En Inde, la période de reproduction varie selon les régions : elle est surtout signalée en février et mars dans le sud et peut se prolonger jusqu’en août ailleurs ; les deux sexes construisent un nid en coupe de brindilles."
+    },
+    "ecology": {
+      "en": "Its insect-eating habits make it a familiar bird of farmland and open habitats; the India assessment reports stable recent annual trend but an inconclusive long-term trend nationally.",
+      "fr": "Son régime insectivore en fait un oiseau fréquent des terres agricoles et des milieux ouverts ; l’évaluation indienne indique une tendance annuelle récente stable, mais une tendance nationale à long terme inconclusive."
+    },
+    "conservation": {
+      "en": "The global Red List category is Least Concern, while the 2025 Indian factsheet notes that national long-term trend estimates remain inconclusive.",
+      "fr": "La catégorie mondiale de la Liste rouge est « Préoccupation mineure », tandis que la fiche indienne de 2025 juge encore inconclusive la tendance nationale à long terme."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Black Drongo — CSIR-NEERI Biodiversity Portal",
+        "fr": "Drongo royal — portail de biodiversité CSIR-NEERI"
+      },
+      "url": "https://neeriathome.neeri.res.in/biodiversity/blackdrongo.php",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Indian biodiversity account describes size, distribution, habitat, insect prey, assertive behavior, breeding timing and nest."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Black Drongo — State of India’s Birds 2025",
+        "fr": "Drongo royal — State of India’s Birds 2025"
+      },
+      "url": "https://stateofindiasbirds.in/species/one-bladro1/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "India assessment states resident/local migrant, global Least Concern and inconclusive long-term national trend."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Dicrurus macrocercus — Bangladesh Red List of Birds",
+        "fr": "Dicrurus macrocercus — Liste rouge des oiseaux du Bangladesh"
+      },
+      "url": "https://sufal.bforest.gov.bd/redlist/wp-content/uploads/2023/03/Volume-3-Birds-Full-Book.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "behavior",
+        "behavior"
+      ],
+      "facts": [
+        "Bangladesh Red List treats the species as a resident and reports the country-level assessment as Least Concern."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "No close Dicrurus profile occurs in the current catalogue; conservation trend statements are explicitly limited to India, not generalized to the full range."
+}

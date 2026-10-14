@@ -1,0 +1,139 @@
+{
+  "id": "dolba_hyloeus",
+  "scientific": "Dolba hyloeus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Pawpaw Sphinx",
+    "fr": "Sphinx du pawpaw"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Pawpaw Sphinx is an eastern North American hawkmoth; Hartweg’s Sphinx, Dolbogene hartwegii, is another sphingid in a separate genus.",
+      "fr": "Le Sphinx du pawpaw est un sphinx d’Amérique du Nord orientale; le Sphinx de Hartweg, Dolbogene hartwegii, est un autre sphingidé d’un genre distinct."
+    },
+    "identification": {
+      "en": "Adults have dark brown forewings dusted with pale scales and span about 50–68 mm.",
+      "fr": "Les adultes ont des ailes antérieures brun foncé poudrées d’écailles pâles et une envergure d’environ 50 à 68 mm."
+    },
+    "habitat": {
+      "en": "The species ranges from southeastern Canada through the eastern United States, south to Florida and eastern Texas.",
+      "fr": "L’espèce s’étend du sud-est du Canada à l’est des États-Unis, vers le sud jusqu’en Floride et à l’est du Texas."
+    },
+    "diet": {
+      "en": "Caterpillars use pawpaw, sweetfern, alder and deciduous hollies; adults take nectar from flowers.",
+      "fr": "Les chenilles consomment notamment le pawpaw, le sweetfern, l’aulne et des houx caducs; les adultes prennent le nectar des fleurs."
+    },
+    "behavior": {
+      "en": "Several broods occur along the Gulf Coast, while farther north the species generally has one annual brood.",
+      "fr": "Plusieurs générations se succèdent sur la côte du golfe du Mexique, tandis que plus au nord l’espèce n’a généralement qu’une génération annuelle."
+    },
+    "reproduction": {
+      "en": "Mature caterpillars pupate in underground burrows and overwinter there.",
+      "fr": "Les chenilles mûres se nymphosent dans des terriers souterrains, où elles passent l’hiver."
+    },
+    "ecology": {
+      "en": "Its larvae feed on several native woody plants, with pawpaw among the best-known hosts.",
+      "fr": "Ses larves se nourrissent de plusieurs plantes ligneuses indigènes, dont le pawpaw, son hôte le plus connu."
+    },
+    "conservation": {
+      "en": "The North American species account rates it G5, globally secure.",
+      "fr": "La fiche nord-américaine attribue à l’espèce le rang G5, soit « sécurisée » à l’échelle mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pawpaw Sphinx — Moth Photographers Group",
+        "fr": "Sphinx du pawpaw — Moth Photographers Group"
+      },
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?phylo=890100&state=ECT",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Regional range, seasonal broods, wingspan and host-plant records."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 8,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pawpaw Sphinx — Butterflies and Moths of North America",
+        "fr": "Sphinx du pawpaw — Butterflies and Moths of North America"
+      },
+      "url": "https://www.butterfliesandmoths.org/species/Dolba-hyloeus?quicktabs_8=0",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Adult nectar, host plants, pupation and global rank."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 8,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dolba hyloeus host-plant records — North Carolina Biodiversity Project",
+        "fr": "Plantes-hôtes de Dolba hyloeus — North Carolina Biodiversity Project"
+      },
+      "url": "https://nc-biodiversity.com/sites/default/files/publications/Final%20Report%2C%202022-12-10%2C%20minus%20appendixes.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "State biodiversity report lists pawpaw among documented host genera."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 9,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the regional moth account with BAMONA and the North Carolina biodiversity host-plant report. The reciprocal reference to Dolbogene hartwegii indicates shared sphingid family, not a same-genus relationship."
+}

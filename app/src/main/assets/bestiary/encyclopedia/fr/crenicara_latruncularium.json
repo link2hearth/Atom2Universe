@@ -10,7 +10,7 @@
     "diet": "Les sources utilisées n’établissent pas de liste de proies propre à l’espèce ; mieux vaut donc ne pas décrire son régime que l’inférer à partir de nourriture en captivité.",
     "behavior": "Dans les observations en aquarium de la description originale, le mâle défend un territoire où plusieurs femelles maintiennent chacune leur territoire de ponte.",
     "reproduction": "Les femelles pondent sur une surface verticale et prennent soin de la ponte puis des larves, qu’elles déplacent après l’éclosion vers une petite cuvette préparée.",
-    "ecology": "FishBase le décrit comme un poisson dulçaquicole benthopélagique des eaux tropicales, signalé dans le bassin Guaporé–Mamoré.",
+    "ecology": "FishBase le décrit comme un poisson dulçaquicole benthopélagique des eaux tropicales, signalé dans le bassin Guaporé–Mamoré. Une phylogénie de 2005 place Crenicara avec Dicrossus dans le clade crenicarine ; voir Dicrossus maculatus.",
     "conservation": "FishBase relaie une évaluation mondiale UICN en préoccupation mineure, mais les sources examinées ne donnent pas de tendance détaillée des populations."
   },
   "sources": [
@@ -25,6 +25,10 @@
     {
       "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=37604",
       "title": "Crenicara punctulata — catalogue des poissons d’Eschmeyer"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.2005.00209.x",
+      "title": "Morphologie, molécules et congruence des caractères dans la phylogénie des cichlidés géophages sud-américains"
     }
   ]
 }

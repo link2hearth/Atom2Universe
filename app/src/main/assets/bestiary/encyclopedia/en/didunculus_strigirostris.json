@@ -1,0 +1,34 @@
+{
+  "id": "didunculus_strigirostris",
+  "name": "Tooth-billed Pigeon (Manumea)",
+  "scientific": "Didunculus strigirostris",
+  "group": "birds",
+  "sections": {
+    "overview": "The Manumea is a Samoan endemic pigeon now known from the islands of Upolu and Savai‘i, where it persists in very small numbers and is difficult to detect.",
+    "identification": "Its distinctive heavy bill has tooth-like projections on the lower mandible, an unusual feature among pigeons that gives the species its English name.",
+    "habitat": "The recovery plan reports it within and along the edges of mature native forest; forest retention is central to the species’ survival.",
+    "diet": "The French species account reports fruits, including hard fruits of Dysoxylum that the bird can open with its strong bill; detailed dietary studies remain limited.",
+    "behavior": "Traditional ecological knowledge describes the pigeon as cryptic and difficult to observe, and notes that it may be confused in the field with the Pacific Pigeon.",
+    "reproduction": "The recovery literature emphasizes major gaps in basic life-history knowledge, so breeding details should be treated as poorly established rather than assumed from other pigeons.",
+    "ecology": "As the only living species in Didunculus, this forest pigeon represents a distinctive Samoan lineage; its restricted island range makes forest loss and introduced predators especially consequential.",
+    "conservation": "The IUCN assessment lists it as Critically Endangered; the Samoa recovery plan prioritizes forest protection, invasive-predator management and improved population knowledge."
+  },
+  "sources": [
+    {
+      "url": "https://samoaconservationsociety.com/wp-content/uploads/2024/12/recovery-plan_tooth-billed-pigeon-final-compressed.pdf",
+      "title": "Tooth-billed Pigeon / Manumea Recovery Plan 2020–2029"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/bird-conservation-international/article/traditional-ecological-knowledge-of-the-critically-endangered-toothbilled-pigeon-didunculus-strigirostris-endemic-to-samoa/90773A514E89F8924CB023DC2AC1BEDB",
+      "title": "Traditional ecological knowledge of the critically endangered tooth-billed pigeon"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/diduncule.strigirostre.html",
+      "title": "Diduncule strigirostre — Oiseaux.net"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22691890A156841404.en",
+      "title": "Tooth-billed Pigeon — IUCN Red List"
+    }
+  ]
+}

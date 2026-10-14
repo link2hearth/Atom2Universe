@@ -1,0 +1,30 @@
+{
+  "id": "dorcadion_scopolii",
+  "name": "Scopoli’s Dorcadion",
+  "scientific": "Dorcadion scopolii",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Dorcadion scopolii is a flightless longhorn beetle in the family Cerambycidae, recorded across parts of central and eastern Europe.",
+    "identification": "Adults are about 10–13 mm long; the species is placed in the subgenus Cribridorcadion.",
+    "habitat": "Records and regional accounts place it in low vegetation and grassland settings, including Hungarian steppe meadows.",
+    "diet": "The species account lists grass roots as a food resource, without detailing the diet by life stage.",
+    "behavior": "Adults are reported from April to June and are usually found walking among low vegetation rather than flying.",
+    "reproduction": "The species has a one-year life cycle in the regional account; the finer details of mating and egg-laying were not established by the sources consulted.",
+    "ecology": "As a grass-associated beetle, it is linked to open ground vegetation; the consulted sources do not establish a narrower ecological requirement.",
+    "conservation": "The consulted species accounts provide no global conservation category; regional occurrence records should not be treated as a global status assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.cerambyx.uochb.cz/dorcadion_scopolii.php",
+      "title": "Dorcadion scopolii — Cerambyx beetle guide"
+    },
+    {
+      "url": "https://lamiinae.org/dorcadion-scopolii.group-44676.html",
+      "title": "Dorcadion scopolii — Lamiinae.org"
+    },
+    {
+      "url": "https://www.hnp.hu/uploads/files/igazgatosag/The%20invertebrate%20fauna%20of%20the%20Hortobagy.pdf",
+      "title": "Invertebrate fauna of Hortobágy National Park"
+    }
+  ]
+}

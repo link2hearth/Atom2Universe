@@ -1,0 +1,30 @@
+{
+  "id": "dendrocopos_moluccensis",
+  "name": "Sunda Pygmy Woodpecker",
+  "scientific": "Dendrocopos moluccensis",
+  "group": "birds",
+  "sections": {
+    "overview": "The Sunda Pygmy Woodpecker is a very small resident of the Thai-Malay Peninsula, Borneo and the Sunda Islands; many current lists use Yungipicus moluccensis.",
+    "identification": "It has brown upperparts marked with white and pale, dark-streaked underparts; a red streak on the male’s hindcrown can be difficult to see.",
+    "habitat": "In Singapore, it uses coastal parks and gardens in urban areas.",
+    "diet": "It gleans and probes bark on slender dead branches and twigs for insects and other small invertebrates; it also forages on trees favored for food.",
+    "behavior": "It is usually encountered alone or in pairs and moves slowly while searching along bark and branches.",
+    "reproduction": "Like other woodpeckers, it nests in tree cavities; Singapore’s parks authority installed nest boxes because natural nesting holes can be limited.",
+    "ecology": "It can persist in modified urban landscapes where suitable trees remain.",
+    "conservation": "The Singapore Red Data Book lists the native species as Least Concern locally; that national category is not a substitute for a global assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.nparks.gov.sg/-/media/nparks-real-content/about-us/publications/garden_bird_watch_lowres.pdf",
+      "title": "Sunda Pygmy Woodpecker — NParks Garden Bird Watch"
+    },
+    {
+      "url": "https://singaporebirds.com/species/sunda-pygmy-woodpecker/",
+      "title": "Sunda Pygmy Woodpecker — Birds of Singapore"
+    },
+    {
+      "url": "https://www.nparks.gov.sg/nature/species-list/birds",
+      "title": "Birds of Singapore — NParks species list"
+    }
+  ]
+}

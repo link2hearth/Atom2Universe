@@ -1,0 +1,146 @@
+{
+  "id": "dicrocoelium_dendriticum",
+  "scientific": "Dicrocoelium dendriticum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Lancet Liver Fluke",
+    "fr": "Petite douve du foie"
+  },
+  "sections": {
+    "overview": {
+      "en": "Dicrocoelium dendriticum is a parasitic flatworm, commonly called the lancet fluke, living as an adult in mammalian bile ducts.",
+      "fr": "Dicrocoelium dendriticum est un ver plat parasite, appelé petite douve du foie, qui vit adulte dans les voies biliaires des mammifères."
+    },
+    "identification": {
+      "en": "Adults taper at both ends; thick-shelled eggs pass already embryonated in faeces.",
+      "fr": "Les adultes sont effilés aux deux extrémités; les œufs à coque épaisse sont embryonnés dans les fèces."
+    },
+    "habitat": {
+      "en": "Adults inhabit the bile ducts of definitive hosts, usually grazing ruminants; the immature stages develop in terrestrial snails and ants.",
+      "fr": "Les adultes vivent dans les voies biliaires des hôtes définitifs, généralement des ruminants pâturant; les stades immatures se développent chez des escargots terrestres et des fourmis."
+    },
+    "diet": {
+      "en": "It is parasitic: adults occupy bile ducts, while larvae develop inside intermediate hosts.",
+      "fr": "Il est parasite : les adultes occupent les voies biliaires et les larves se développent dans des hôtes intermédiaires."
+    },
+    "behavior": {
+      "en": "Transmission depends on an infected ant being eaten by a definitive host; humans can become accidental hosts after swallowing infected ants on contaminated food.",
+      "fr": "La transmission nécessite qu’une fourmi infectée soit mangée par un hôte définitif; l’humain peut devenir un hôte accidentel en avalant des fourmis sur un aliment contaminé."
+    },
+    "reproduction": {
+      "en": "Eggs leave an infected mammal in faeces, are taken up by a land snail, and pass through larval stages before reaching an ant and then another grazing host.",
+      "fr": "Les œufs quittent un mammifère infecté dans ses fèces, sont ingérés par un escargot terrestre, puis passent par des stades larvaires avant d’atteindre une fourmi puis un ruminant."
+    },
+    "ecology": {
+      "en": "The life cycle links pasture food webs across three hosts: a ruminant, a land snail and an ant, with Formica among common ant hosts.",
+      "fr": "Le cycle relie les réseaux alimentaires des pâturages par trois hôtes : un ruminant, un escargot terrestre et une fourmi, notamment du genre Formica."
+    },
+    "conservation": {
+      "en": "Heavy infections may cause biliary or liver complications, while most infections with few flukes have no overt symptoms.",
+      "fr": "Les infestations importantes peuvent provoquer des complications biliaires ou hépatiques, tandis que la plupart des infections légères restent sans symptôme évident."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "DPDx — Dicrocoeliasis",
+        "fr": "DPDx — Dicrocoeliose"
+      },
+      "url": "https://www.cdc.gov/dpdx/dicrocoeliasis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "CDC summarizes hosts, the life cycle, morphology and symptoms."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 9,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dicrocoelid eggs — French National Museum of Natural History",
+        "fr": "Œufs de Dicrocoeliidae — Muséum national d’histoire naturelle"
+      },
+      "url": "https://www.mnhn.fr/fr/oeufs-de-dicrocoeliidae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "French museum account describes the snail-to-ant-to-sheep life cycle and the infected ant attached to a grass blade, increasing chances of ingestion."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 21,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Liver flukes: the small liver fluke — French Ministry of Agriculture",
+        "fr": "Les douves du foie : la petite douve — ministère français de l’Agriculture"
+      },
+      "url": "https://agriculture.gouv.fr/telecharger/150979",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "French ministry factsheet calls D. dendriticum the small liver fluke, diagrams its snail and ant stages, and notes occasional human infection."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 21,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The CDC page was last reviewed in 2019; host details and life-cycle facts are retained at the species level, while no conservation status is inferred."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the U.S. CDC parasitology account with French National Museum and Ministry materials; preserved the distinction between accidental human infection and normal ruminant hosts."
+}
