@@ -1,0 +1,38 @@
+{
+  "id": "allenopithecus_nigroviridis",
+  "name": "Allen's swamp monkey",
+  "scientific": "Allenopithecus nigroviridis",
+  "group": "mammals",
+  "sections": {
+    "overview": "Allen's swamp monkey is the only living species in the genus Allenopithecus, a member of the Old World monkey family Cercopithecidae. Its range is centered on flooded forests in the central Congo Basin, chiefly in the Democratic Republic of the Congo and the Republic of the Congo. The IUCN assessment also records it in the Central African Republic.",
+    "identification": "It is a robust, short-limbed monkey with a dark olive-gray to nearly black coat and paler underparts. The face is dark, with pale eyelids and chin; long cheek fur forms a rounded ruff, the crown looks flattened, and the hands and feet are broad. The Handbook of the Mammals of the World gives adult males a head-body length of 45–50 cm, a 51 cm tail and a mass of 5.9–6.1 kg; females measure 40–45 cm, have a 36 cm tail and weigh 3.2–3.7 kg. The sources provide no standardized standing height or body-width measurement.",
+    "habitat": "It lives in swamp forest and along rivers, especially where seasonal floods leave the forest floor wet or submerged. Dense swamp woods and gallery forests are both reported as habitat.",
+    "diet": "It is an omnivore that usually forages on the ground and in shallow water. Its diet includes fruit, seeds, young leaves and small invertebrates; the IUCN review estimates that animal matter supplies about one fifth of the diet.",
+    "behavior": "It is active by day and moves on all fours through dense vegetation, on the ground and in trees. Field reports describe groups of up to 57 animals and individuals sleeping in trees beside or over water.",
+    "reproduction": "Females generally give birth to one infant at a time. Young are reported to nurse for about two and a half months, but species-specific breeding timing is poorly documented.",
+    "ecology": "Its lowland forest niche is shaped by seasonal flooding; historic field surveys located the monkey in regularly inundated parts of the Congo Basin.",
+    "conservation": "The 2019 global IUCN assessment lists the species as Least Concern but suspects a decline from bushmeat hunting; the scale of the impact remains uncertain."
+  },
+  "sources": [
+    {
+      "url": "https://zenodo.org/records/6863243",
+      "title": "Allenopithecus nigroviridis — Handbook of the Mammals of the World, vol. 3: Primates"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T865A17952193.en",
+      "title": "Allenopithecus nigroviridis — The IUCN Red List of Threatened Species"
+    },
+    {
+      "url": "https://www.futura-sciences.com/planete/definitions/zoologie-cercopitheque-marais-10480/",
+      "title": "Cercopithèque des marais — Futura, zoology reference"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Allenopithecus_nigroviridis/",
+      "title": "Allenopithecus nigroviridis — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.persee.fr/doc/revec_0249-7395_1985_num_40_3_5288",
+      "title": "Ecological characteristics of the swamp monkey — Revue d’Écologie (Persée)"
+    }
+  ]
+}

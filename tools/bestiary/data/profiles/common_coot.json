@@ -72,9 +72,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 191,
-        "notes_words": 5,
-        "total": 196,
+        "derived_prose_en_fr": 184,
+        "notes_words": 11,
+        "total": 195,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -116,9 +116,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 171,
+        "derived_prose_en_fr": 186,
         "notes_words": 6,
-        "total": 177,
+        "total": 192,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -155,9 +155,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 189,
+        "derived_prose_en_fr": 185,
         "notes_words": 6,
-        "total": 195,
+        "total": 191,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -307,9 +307,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 163,
-        "notes_words": 8,
-        "total": 171,
+        "derived_prose_en_fr": 193,
+        "notes_words": 3,
+        "total": 196,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },

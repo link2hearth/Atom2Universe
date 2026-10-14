@@ -240,7 +240,14 @@
       "prose_claims": [
         "identification.en.4",
         "identification.fr.4"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 16,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Small yellow-brown fly with red compound eyes, dark abdominal bands, six legs, one clear wing pair and visible knob-like halteres; avoid tephritid fruit flies.",

@@ -437,7 +437,14 @@
         "identification.fr.5",
         "identification.fr.6",
         "identification.fr.7"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 8,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Adult Mallard (Anas platyrhynchos), naturalistic full-body field-guide view isolated on a PURE WHITE background. Show an adult male in breeding plumage with iridescent green head, narrow white collar, chestnut breast, grey flanks, blue-violet white-bordered speculum, curled black tail feathers, yellow bill and orange legs. Preserve realistic proportions and feather texture. No landscape, water, props, text, shadowed or colored background, extra birds, or domestic colour variants.",

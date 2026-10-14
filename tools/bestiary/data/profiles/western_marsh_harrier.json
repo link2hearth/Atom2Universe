@@ -12,8 +12,8 @@
       "fr": "Le busard des roseaux est le plus grand des busards et un oiseau des roselières et des marais. En Grande-Bretagne, il avait disparu comme nicheur en 1899, puis il est revenu à partir de 1927 et s’est depuis fortement rétabli."
     },
     "identification": {
-      "en": "A large, bulky raptor, larger and stockier than a hen harrier, with broad wings held in a shallow V when gliding. Adults average about 600 g; females are larger than males. The male is brown above and chestnut below, with tri-coloured wings of brown, grey and black tips. The female is chocolate brown with creamy patches on the throat and crown, and juveniles look much like her. There is no white rump, and the legs are yellow.",
-      "fr": "Grand rapace massif, plus grand et plus trapu que le busard Saint-Martin, aux ailes larges tenues en V peu ouvert lors du plané. Les adultes pèsent environ 600 g; les femelles sont plus grandes que les mâles. Le mâle est brun dessus et roux dessous, avec des ailes tricolores : brun, gris et bouts noirs. La femelle est brun chocolat, avec des plaques crème sur la gorge et le sommet de la tête, et les jeunes lui ressemblent beaucoup. Il n’y a pas de croupion blanc, et les pattes sont jaunes."
+      "en": "A large, bulky raptor, larger and stockier than a hen harrier, with broad wings held in a shallow V when gliding. Adults measure 48–56 cm long with a 115–130 cm wingspan; males weigh about 400–660 g and females 540–800 g. The male is brown above and chestnut below, with tri-coloured wings of brown, grey and black tips. The female is chocolate brown with creamy patches on the throat and crown, and juveniles look much like her. There is no white rump, and the legs are yellow.",
+      "fr": "Grand rapace massif, plus grand et plus trapu que le busard Saint-Martin, aux ailes larges tenues en V peu ouvert lors du plané. L’adulte mesure 48 à 56 cm de long et 115 à 130 cm d’envergure ; le mâle pèse environ 400 à 660 g et la femelle 540 à 800 g. Le mâle est brun dessus et roux dessous, avec des ailes tricolores : brun, gris et bouts noirs. La femelle est brun chocolat, avec des plaques crème sur la gorge et le sommet de la tête, et les jeunes lui ressemblent beaucoup. Il n’y a pas de croupion blanc, et les pattes sont jaunes."
     },
     "habitat": {
       "en": "It nests and hunts in reedbeds and marshes, and also uses farmland and open countryside. In England it breeds mainly in East Anglia, Somerset and the south-east, and is increasingly seen in winter around estuaries and marshes.",
@@ -48,7 +48,14 @@
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/marsh-harrier",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Weight 602.5 g; clutch 4–5 (3–10); incubation 31–38 days; fledging 35–40 days; breeds from age 3; typical life about 6 years, record 13 years 3 months.",
         "UK 590 pairs (2016), +271% 1995–2024; extinct 1899, one pair in 1971; UK Amber, Schedule 1; IUCN Least Concern."
@@ -61,9 +68,16 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/marsh-harrier",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
       "facts": [
-        "Largest harrier; male brown and chestnut with tri-coloured wings, female chocolate brown with creamy throat and crown; yellow legs; sky dance with talon locking.",
+        "Largest harrier; length 48–56 cm, wingspan 115–130 cm; males weigh 400–660 g, females 540–800 g. Male brown/chestnut with tri-coloured wings, female chocolate brown with creamy throat and crown; yellow legs; sky dance with talon locking.",
         "About 700 UK pairs; migrant returning to Africa, many now winter in the UK; Amber list and Schedule 1."
       ]
     }

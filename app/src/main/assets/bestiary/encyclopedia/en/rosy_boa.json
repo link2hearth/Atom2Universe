@@ -5,7 +5,7 @@
   "group": "reptiles",
   "sections": {
     "overview": "The desert rosy boa, Lichanura trivirgata, is a small boa native to the southwestern United States and northwestern Mexico.",
-    "identification": "Females are generally larger than males. Arizona individuals reach 95 centimetres; three dark lengthwise bands and vertical oval pupils are characteristic. The head is small and the tail relatively blunt. A stout body usually has a pale grey background with brown or orange bands.",
+    "identification": "Females are generally larger than males. Arizona individuals reach 95 centimetres; three dark lengthwise bands and vertical oval pupils are characteristic. The head is small and the tail relatively blunt. A stout body usually has a pale grey background with brown or orange bands. AnAge lists 450 g as adult mean mass, rated acceptable from a small sample, without separating sexes.",
     "habitat": "Its range covers western Arizona, Sonora and most of Baja California; California records are limited to far southern San Diego County. It shelters in rocky desert foothills, scrub and canyon crevices, and may use burrows where surface cover is scarce. Coastal California populations formerly grouped with this boa are now treated as Lichanura orcutti.",
     "diet": "Small mammals and birds are its main prey. It subdues them by constriction, wrapping its body around the animal.",
     "behavior": "Usually solitary, it moves slowly and stays sheltered under rocks, in crevices or inside burrows. In Arizona it is mostly nocturnal or crepuscular, yet may move on spring mornings and on mild or overcast days.",
@@ -33,6 +33,10 @@
     {
       "url": "https://fr.wikipedia.org/wiki/Lichanura_trivirgata",
       "title": "Lichanura trivirgata — Wikipédia"
+    },
+    {
+      "url": "https://genomics.senescence.info/species/entry.php?species=Lichanura_trivirgata",
+      "title": "Lichanura trivirgata — AnAge: Animal Ageing and Longevity Database"
     }
   ]
 }

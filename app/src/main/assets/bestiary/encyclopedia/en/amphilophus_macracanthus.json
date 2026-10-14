@@ -1,0 +1,34 @@
+{
+  "id": "amphilophus_macracanthus",
+  "name": "Blackthroat cichlid",
+  "scientific": "Amphilophus macracanthus",
+  "group": "fish",
+  "sections": {
+    "overview": "This Pacific-slope Central American cichlid is known in Spanish as mojarra negra or mojarra de Guamuchal. Although the tree retains Amphilophus macracanthus, current catalogues accept Astatheros macracanthus.",
+    "identification": "It is a robust, deep-bodied grey fish with five dark bars; the first and some middle bars may fork into Y shapes, with dark flank blotches beneath them. The breeding male develops a black throat patch that can extend down the belly. FishBase gives a maximum of 25 cm standard length. A Salvadoran report lists 20 cm but does not specify the length type. Reliable height, width, mass or sex-specific size ranges were not located.",
+    "habitat": "It occurs on the Pacific slope from southern Mexico through Guatemala to El Salvador, in streams, rivers, lakes and coastal lagoons. It uses freshwater and brackish reaches, often over soft sand or mud, in warm water around 26–30 °C.",
+    "diet": "FishBase classifies it as a benthic omnivore. It sifts the bottom for small animal prey and plant material; a reliable, detailed wild prey inventory was not located.",
+    "behavior": "The species is bottom-oriented and feeds close to the substrate. The dark throat of a breeding male is a useful field clue, but the sources consulted do not establish a sex-specific difference in body size.",
+    "reproduction": "FishBase reports breeding from April to August. Detailed wild courtship, nest and clutch-size data were not found in the consulted scientific sources, so a more exact account would be speculative.",
+    "ecology": "It is a Pacific-slope fish that can enter brackish coastal waters as well as rivers and lakes. A Salvadoran biodiversity survey documented a specimen from the Río Paz in 2019.",
+    "conservation": "The IUCN assessment lists Astatheros macracanthus as Least Concern (LC), assessed in 2018. That category is a global assessment and should not be read as a measurement of abundance at every local site."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=37541",
+      "title": "Eschmeyer's Catalog of Fishes — Astatheros macracanthus"
+    },
+    {
+      "url": "https://biogeodb.stri.si.edu/sftep/en/thefishes/species/5464",
+      "title": "Astatheros macracanthus — Shorefishes of the Eastern Pacific, Smithsonian Tropical Research Institute"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Astatheros_macracanthus.html",
+      "title": "Astatheros macracanthus — FishBase species summary"
+    },
+    {
+      "url": "https://www.aecid.sv/wp-content/uploads/2022/09/Producto_2_Estudio_de_Biodiversidad.pdf",
+      "title": "Biodiversity survey of El Salvador — species account 5.2, Mojarra negra"
+    }
+  ]
+}

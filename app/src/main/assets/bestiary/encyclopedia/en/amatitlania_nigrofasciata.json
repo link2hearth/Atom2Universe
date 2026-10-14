@@ -1,0 +1,46 @@
+{
+  "id": "amatitlania_nigrofasciata",
+  "name": "Convict cichlid",
+  "scientific": "Amatitlania nigrofasciata",
+  "group": "fish",
+  "sections": {
+    "overview": "The convict cichlid is a Central American freshwater fish in the family Cichlidae, also called zebra cichlid or convict in English. Its native range follows Pacific-slope rivers from El Salvador to Guatemala and Atlantic-slope rivers from Honduras to Guatemala; southern populations belong to related species.",
+    "identification": "It has a short, deep, laterally compressed body with dark vertical bars over gray or bluish sides. FishBase reports a maximum standard length of 10 cm for a male or unsexed specimen; no standard height, body width or sex-specific body mass was found. Adult males are generally slightly larger with longer pointed fins, while females are smaller and often show an orange-yellow lower belly.",
+    "habitat": "In its native range it inhabits creeks, streams and shallow river reaches, sheltering among rocks, crevices, roots and debris. It is also recorded in warm spring pools, while introduced populations may occupy reservoirs and drainage channels.",
+    "diet": "It is an adaptable omnivore that eats worms, crustaceans, aquatic insects, small fish and plant material. A Brazilian study found introduced fish were predominantly adult and insectivorous, a local result rather than a range-wide diet study.",
+    "behavior": "It is a diurnal, strongly territorial fish that commonly forms breeding pairs. Adults defend a small area around their chosen nesting shelter against intruders.",
+    "reproduction": "The female lays on a cleaned rock or other firm surface, often in a cavity; a clutch usually contains about 100–150 eggs. Both parents fan and guard the eggs, transfer larvae to pits in the substrate, and protect the free-swimming young. In an introduced Okinawan sample, females first matured at about 32 mm standard length and half were mature by about 37 mm; spawning occurred year-round, with a spring peak.",
+    "ecology": "The convict cichlid uses structured river margins for shelter and spawning. It has established outside Central America, where introduced populations can affect native freshwater communities.",
+    "conservation": "The global IUCN category is Data Deficient, meaning information is insufficient for a range-wide assessment. A 2025 U.S. Fish and Wildlife Service review reports established introduced populations and concerns about effects on native fishes; these local invasion effects are separate from its status in the native range."
+  },
+  "sources": [
+    {
+      "url": "https://www.mapress.com/zootaxa/2007f/z01603p078f.pdf",
+      "title": "A systematic revision of the genus Archocentrus — Zootaxa, 2007"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Cichlasoma_nigrofasciatum.html",
+      "title": "Amatitlania nigrofasciata — FishBase species summary"
+    },
+    {
+      "url": "https://www.fishipedia.fr/fr/poissons/amatitlania-nigrofasciata",
+      "title": "Nigro — Fishipedia species account"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10641-010-9641-x",
+      "title": "Life history of the nonnative convict cichlid in the Haebaru Reservoir, Okinawa — Environmental Biology of Fishes"
+    },
+    {
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=036&genusname=Amatitlania&speciesname=nigrofasciata",
+      "title": "Amatitlania nigrofasciata — FishBase field guide"
+    },
+    {
+      "url": "https://doi.org/10.1002/rra.3612",
+      "title": "Bioecology of introduced Amatitlania in semiarid northeastern Brazil — River Research and Applications"
+    },
+    {
+      "url": "https://www.fws.gov/sites/default/files/documents/2025-06/ecological-risk-screening-summary-convict-cichlid-june-2025.pdf",
+      "title": "Ecological Risk Screening Summary: Convict Cichlid — U.S. Fish and Wildlife Service, 2025"
+    }
+  ]
+}

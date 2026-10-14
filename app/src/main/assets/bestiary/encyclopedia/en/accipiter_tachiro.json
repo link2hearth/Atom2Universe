@@ -5,7 +5,7 @@
   "group": "birds",
   "sections": {
     "overview": "The African goshawk is a medium-sized forest hawk widespread across sub-Saharan Africa. It is an ambush predator that waits in dense cover and darts out to catch birds, but it also takes mammals, reptiles and other small animals. The species is now often listed as Aerospiza tachiro rather than Accipiter tachiro; this profile retains the name used by the project and notes the current alternative genus.",
-    "identification": "The adult male is slate-grey above with pale underparts barred rufous or brown, yellow eyes and legs, and a long, barred tail. The larger female is browner above and has broader, darker barring below; juveniles are browner still and spotted or streaked on the breast. A dark melanistic form also occurs. Regional reference measurements give a total length of roughly 35–40 cm, an approximate wingspan near 70 cm and a mass range of about 160–230 g. The female is substantially larger than the male, but the sources reviewed do not provide dependable sex-specific weight ranges. Body height and width are not normally used for bird identification and no figures were found. The grey hood, rufous barring and long tail separate typical adults from the smaller African sparrowhawks, but plumage varies widely across subspecies.",
+    "identification": "The adult male is slate-grey above with pale underparts barred rufous or brown, yellow eyes and legs, and a long, barred tail. The larger female is browner above and has broader, darker barring below; juveniles are browner still and spotted or streaked on the breast. A dark melanistic form also occurs. A French regional account gives a total length of roughly 35–40 cm and a wingspan near 70 cm. A Zimbabwe sample in the CRC mass handbook recorded four males at 192–218 g (mean 202 g) and one female at 381 g; this supports female-biased mass but is too small to define species-wide sex-specific ranges. Body height and width were not found. The grey hood, rufous barring and long tail separate typical adults from the smaller African sparrowhawks, but plumage varies widely across subspecies.",
     "habitat": "It lives in a broad range of wooded habitats, including evergreen and deciduous forest, gallery forest, wooded savanna, mangroves, plantations and some tree-rich urban areas. It is resident and largely sedentary in much of its range, although young birds disperse after independence. It occurs from eastern Africa south to South Africa, with regional subspecies extending westward into central Africa.",
     "diet": "Birds are its principal prey, taken in flight or at nests, from small songbirds to larger birds such as francolins and chickens. It also catches bats, rodents, squirrels and lizards, and more occasionally snakes, frogs, insects and earthworms. It generally ambushes prey from a concealed perch; pairs may rarely hunt together at concentrated food sources such as bat roosts.",
     "behavior": "It often remains motionless in dense vegetation during the day and hunts most actively around dawn and dusk. It may also circle above the canopy in a display flight, giving a repeated clicking call. Courtship can include an undulating flight by one or both partners, sometimes ending in a steep dive. It is territorial around the nest and usually nests as a solitary pair.",
@@ -29,6 +29,10 @@
     {
       "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=1253616",
       "title": "Aerospiza tachiro — Integrated Taxonomic Information System"
+    },
+    {
+      "url": "https://api.pageplace.de/preview/DT0400.9781420064452_A24698246/preview-9781420064452_A24698246.pdf",
+      "title": "CRC Handbook of Avian Body Masses, second edition"
     }
   ]
 }

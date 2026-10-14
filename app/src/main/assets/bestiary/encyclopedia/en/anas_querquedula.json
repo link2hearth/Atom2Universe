@@ -1,0 +1,42 @@
+{
+  "id": "anas_querquedula",
+  "name": "Garganey",
+  "scientific": "Anas querquedula",
+  "group": "birds",
+  "sections": {
+    "overview": "The garganey is a small migratory dabbling duck breeding across temperate Eurasia and wintering mainly in sub-Saharan Africa and South Asia. Some current classifications use the genus Spatula, but this tree-linked entry retains Anas querquedula.",
+    "identification": "The breeding male has a broad white crescent above the eye, grey head, finely patterned grey body and pale-blue forewing. The female is mottled brown with a pale face and dark eye stripe, resembling other small dabbling ducks. Adults are about 37–41 cm long, span 66–73 cm and weigh roughly 330–600 g; males average slightly larger, but the published ranges combine sexes.",
+    "habitat": "During breeding it uses shallow freshwater marshes, wet meadows and small pools with dense vegetation. On migration and in winter it frequents flooded grassland, lagoons and other shallow wetlands.",
+    "diet": "It takes seeds and small aquatic invertebrates from the water surface and muddy shallows. Like other dabbling ducks, it grazes and tips forward rather than diving for most of its food.",
+    "behavior": "Garganeys are strongly migratory and often travel in small flocks. They tend to remain quiet and unobtrusive in vegetated wetlands, where their mottled plumage provides camouflage.",
+    "reproduction": "Pairs form on the wintering grounds or during migration. The female nests on the ground among vegetation near water and raises the brood alone after laying; clutch and timing vary across the broad breeding range.",
+    "ecology": "Each year, its long-distance migration links breeding marshes across Eurasia with wintering wetlands in Africa and southern Asia.",
+    "conservation": "BirdLife lists the species as Least Concern globally, while wetland loss remains a documented pressure on suitable habitat."
+  },
+  "sources": [
+    {
+      "url": "https://www.audubon.org/field-guide/bird/garganey",
+      "title": "Garganey — Audubon Field Guide"
+    },
+    {
+      "url": "https://www.wildlifetrusts.org/wildlife-explorer/birds/waterfowl/garganey",
+      "title": "Garganey — The Wildlife Trusts"
+    },
+    {
+      "url": "https://birdlifedata.blob.core.windows.net/sub-global/460_spatula_querquedula.pdf",
+      "title": "Garganey — BirdLife International European Red List of Birds, 2021"
+    },
+    {
+      "url": "https://es.wikipedia.org/wiki/Anas_querquedula",
+      "title": "Garganey — Spanish Wikipedia species entry"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/garganey/",
+      "title": "Garganey — RSPB species guide"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/garganey",
+      "title": "Garganey — British Trust for Ornithology BirdFacts"
+    }
+  ]
+}

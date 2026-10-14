@@ -79,8 +79,8 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 167,
-        "notes_words": 7,
-        "total": 174,
+        "notes_words": 13,
+        "total": 180,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -154,8 +154,8 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 146,
-        "notes_words": 6,
-        "total": 152,
+        "notes_words": 19,
+        "total": 165,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },

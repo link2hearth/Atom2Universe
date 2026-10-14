@@ -1,0 +1,38 @@
+{
+  "id": "alcedo_meninting",
+  "name": "Martin-pêcheur méninting",
+  "scientific": "Alcedo meninting",
+  "group": "birds",
+  "sections": {
+    "overview": "Le martin-pêcheur méninting est un petit représentant de la famille des Alcédinidés. Il vit du sous-continent indien à l’Asie du Sud-Est continentale et insulaire, notamment en Indonésie.",
+    "identification": "Ce martin-pêcheur compact a le dessus bleu profond et brillant, une bande plus claire le long du dos et le dessous roux-orangé. On remarque une petite tache rousse devant l’œil, des touffes blanches sur les côtés du cou, le menton et la gorge crème, ainsi qu’un bec sombre et pointu. Oiseaux.net indique une longueur adulte d’environ 17 cm et une masse de 20,4 g; la source ne donne ni fourchette par sexe, ni envergure, hauteur standard ou largeur du corps. Le mâle a un bec sombre à base brun-rouge, tandis que la mandibule inférieure de la femelle est plus largement rougeâtre; le jeune est plus terne et porte des joues et couvertures auriculaires rousses qui peuvent rappeler le martin-pêcheur d’Europe.",
+    "habitat": "Il fréquente surtout les ruisseaux et mares ombragés des forêts denses sempervirentes, où des branches au-dessus de l’eau lui servent de postes d’affût. Il utilise aussi les mangroves, les bambouseraies et d’autres milieux végétalisés lorsque l’eau et le couvert sont disponibles.",
+    "diet": "Il capture de petits poissons, des crustacés et des insectes aquatiques, puis plonge depuis un perchoir bas au bord de l’eau pour saisir ses proies.",
+    "behavior": "Il chasse généralement seul depuis une branche basse au-dessus d’un ruisseau ombragé et plonge vivement dès qu’une proie apparaît. Des observations locales le décrivent comme discret et sédentaire; il file souvent d’un perchoir riverain à l’autre.",
+    "reproduction": "Dans l’ouest de l’Inde, la reproduction a été observée de juin à septembre. Les deux adultes creusent un tunnel dans une berge de terre; une étude locale a relevé des pontes généralement de six œufs, une incubation de 20 à 23 jours et un envol après environ 20 à 27 jours.",
+    "ecology": "Dans la zone de restauration de Riau, en Indonésie, il fait partie des espèces de martins-pêcheurs recensées le long des rivières. Sa fréquentation des eaux ombragées et des berges couvertes le lie à la végétation riveraine.",
+    "conservation": "La fiche indonésienne Biodiversitas Nusantara classe l’espèce en préoccupation mineure. Cette observation locale ne permet pas d’établir une tendance à l’échelle de son aire de répartition."
+  },
+  "sources": [
+    {
+      "url": "https://ebird.org/species/blekin1?siteLanguage=en_IN",
+      "title": "Martin-pêcheur méninting — eBird, laboratoire d’ornithologie de Cornell"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/martin-pecheur.meninting.html",
+      "title": "Martin-pêcheur méninting — Oiseaux.net"
+    },
+    {
+      "url": "https://indianbirds.in/pdfs/IB_11_4_Palkar_BlueearedKingfisher.pdf",
+      "title": "Nidification du martin-pêcheur méninting dans l’ouest de l’Inde — Indian Birds"
+    },
+    {
+      "url": "https://www.rekoforest.org/id/warta-lapangan/hidupan-liar-rer-raja-udang-meningting/",
+      "title": "Raja-udang meninting — compte rendu de terrain de Riau Ecosystem Restoration"
+    },
+    {
+      "url": "https://www.gbif.co.id/spesies/alcedo-meninting",
+      "title": "Alcedo meninting — fiche Biodiversitas Nusantara"
+    }
+  ]
+}

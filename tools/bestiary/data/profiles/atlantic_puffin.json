@@ -521,7 +521,14 @@
       "prose_claims": [
         "identification.en.3",
         "identification.fr.3"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 19,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": {

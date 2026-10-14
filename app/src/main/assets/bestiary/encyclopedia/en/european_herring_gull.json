@@ -5,7 +5,7 @@
   "group": "birds",
   "sections": {
     "overview": "The herring gull is the classic large seaside gull of Europe. Originally a cliff-nesting coastal bird, it has adapted to towns and cities, nesting on rooftops, but its numbers in Britain have fallen sharply.",
-    "identification": "A large gull of 54–60 cm. In Britain, adults average about 970 g with a wing of 415 mm. Adults have a pale grey back, white underparts, black wingtips with white spots, pink legs and a heavy yellow bill with a red spot. First-year birds are mottled brown.",
+    "identification": "Adult males measure about 60–66 cm and weigh 1.05–1.25 kg; females are smaller at 56–62 cm and 0.80–0.98 kg, with overlapping ranges. In Britain, all-adult mean wing length is about 415 mm. The adult has a pale grey back, white underparts, black wingtips with white spots, pink legs and a heavy yellow bill with a red spot. First-year birds are mottled brown.",
     "habitat": "Breeding birds are most frequent on open shores and cliffs, but some nest on buildings in towns. Outside the breeding season it is widespread across lowland Britain, mostly near the coast, and inland around rubbish tips, fields, reservoirs and lakes.",
     "diet": "It feeds mainly on marine animals, the green shore crab being a particular favourite, and also on fish, insects, carrion and refuse. It is an opportunist; it even stamps its feet to imitate rain and bring earthworms to the surface.",
     "behavior": "Herring gulls forage in large flocks at refuse sites and are highly defensive of their nests and young. Pairs are often lifelong partners and return to the same nest site each year. In towns, rooftop nesting gives them plenty of food and fewer predators.",
@@ -21,6 +21,10 @@
     {
       "url": "https://www.rspb.org.uk/birds-and-wildlife/herring-gull",
       "title": "Herring Gull — RSPB"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Larus_argentatus/",
+      "title": "Larus argentatus (Herring Gull) — Animal Diversity Web, University of Michigan"
     }
   ]
 }

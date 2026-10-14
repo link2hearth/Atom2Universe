@@ -5,7 +5,7 @@
   "group": "reptiles",
   "sections": {
     "overview": "Le boa rosé du désert, Lichanura trivirgata, est un petit boa du sud-ouest des États-Unis et du nord-ouest du Mexique.",
-    "identification": "Les femelles sont généralement plus grandes que les mâles. En Arizona, il atteint 95 centimètres ; ses trois bandes sombres et ses pupilles ovales verticales sont caractéristiques. La tête est petite et la queue relativement arrondie. Son corps trapu présente généralement un fond gris clair avec des bandes marron ou orangées.",
+    "identification": "Les femelles sont généralement plus grandes que les mâles. En Arizona, il atteint 95 centimètres ; ses trois bandes sombres et ses pupilles ovales verticales sont caractéristiques. La tête est petite et la queue relativement arrondie. Son corps trapu présente généralement un fond gris clair avec des bandes marron ou orangées. AnAge indique une masse adulte moyenne de 450 g, jugée acceptable malgré un petit échantillon, sans distinguer les sexes.",
     "habitat": "Son aire comprend l’ouest de l’Arizona, le Sonora et la Basse-Californie ; en Californie, il atteint seulement l’extrême sud du comté de San Diego. Il s’abrite dans les piémonts rocheux et les fissures de canyon, et peut gagner un terrier quand les abris de surface manquent. Les populations côtières autrefois regroupées avec ce boa sont maintenant classées comme Lichanura orcutti.",
     "diet": "Ses principales proies sont les petits mammifères et les oiseaux. Il les maîtrise par constriction, en les enserrant de ses anneaux.",
     "behavior": "Généralement solitaire, il se déplace lentement et reste à l’abri sous les rochers, dans les fissures ou les terriers. En Arizona, il est surtout nocturne ou crépusculaire, mais peut sortir les matins de printemps et lors des journées douces ou couvertes.",
@@ -33,6 +33,10 @@
     {
       "url": "https://fr.wikipedia.org/wiki/Lichanura_trivirgata",
       "title": "Lichanura trivirgata — Wikipédia"
+    },
+    {
+      "url": "https://genomics.senescence.info/species/entry.php?species=Lichanura_trivirgata",
+      "title": "Lichanura trivirgata — AnAge : base de données sur l’âge et la longévité des animaux"
     }
   ]
 }

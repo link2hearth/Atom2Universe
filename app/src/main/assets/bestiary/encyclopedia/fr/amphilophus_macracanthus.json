@@ -1,0 +1,34 @@
+{
+  "id": "amphilophus_macracanthus",
+  "name": "Cichlidé à gorge noire",
+  "scientific": "Amphilophus macracanthus",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce Cichlidé d’Amérique centrale du versant pacifique est appelé en espagnol mojarra negra ou mojarra de Guamuchal. L’arbre conserve Amphilophus macracanthus, mais les catalogues actuels retiennent Astatheros macracanthus.",
+    "identification": "C’est un poisson gris, robuste et haut de corps, marqué de cinq barres sombres; la première et certaines barres médianes peuvent se diviser en Y, avec des taches latérales dessous. En période de reproduction, le mâle développe une gorge noire qui peut s’étendre au ventre. FishBase indique un maximum de 25 cm de longueur standard. Une étude salvadorienne indique 20 cm sans préciser le type de longueur. Aucune hauteur, largeur, masse ou taille par sexe fiable n’a été trouvée.",
+    "habitat": "Il vit sur le versant pacifique, du sud du Mexique au Salvador en passant par le Guatemala, dans les ruisseaux, rivières, lacs et lagunes côtières. Il fréquente l’eau douce et saumâtre, souvent sur des fonds meubles de sable ou de vase, dans une eau chaude de 26–30 °C.",
+    "diet": "FishBase le classe comme omnivore benthique. Il fouille le fond à la recherche de petites proies et de matière végétale; aucune liste détaillée et fiable de ses aliments sauvages n’a été trouvée.",
+    "behavior": "L’espèce vit près du fond et se nourrit au contact du substrat. La gorge sombre du mâle reproducteur est un bon indice d’identification, mais les sources consultées n’établissent pas de différence de taille corporelle entre les sexes.",
+    "reproduction": "FishBase signale une reproduction d’avril à août. Les sources scientifiques consultées ne donnent pas de détails fiables sur la parade, le nid ou le nombre d’œufs dans la nature; les préciser serait spéculatif.",
+    "ecology": "Ce poisson du versant pacifique fréquente aussi bien les rivières et les lacs que des eaux côtières saumâtres. Une étude salvadorienne sur la biodiversité a documenté un spécimen du Río Paz en 2019.",
+    "conservation": "L’évaluation de l’UICN classe Astatheros macracanthus en « préoccupation mineure » (LC), évaluation de 2018. Cette catégorie est mondiale et ne mesure pas l’abondance de l’espèce sur chaque site."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=37541",
+      "title": "Catalog of Fishes d’Eschmeyer — Astatheros macracanthus"
+    },
+    {
+      "url": "https://biogeodb.stri.si.edu/sftep/en/thefishes/species/5464",
+      "title": "Astatheros macracanthus — Shorefishes of the Eastern Pacific, Smithsonian Tropical Research Institute"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Astatheros_macracanthus.html",
+      "title": "Astatheros macracanthus — notice FishBase"
+    },
+    {
+      "url": "https://www.aecid.sv/wp-content/uploads/2022/09/Producto_2_Estudio_de_Biodiversidad.pdf",
+      "title": "Étude de biodiversité du Salvador — notice 5.2, mojarra negra"
+    }
+  ]
+}

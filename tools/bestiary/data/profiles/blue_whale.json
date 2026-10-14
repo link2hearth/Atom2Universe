@@ -55,16 +55,14 @@
         "overview"
       ],
       "facts": [
-        "NOAA summarizes appearance, range, feeding, reproduction and current threats."
+        "NOAA: Northern blue whales to 90 ft/>100,000 lb; Antarctic to 110 ft/>330,000 lb; females larger."
       ],
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 184,
-        "derived_prose_en": 76,
-        "derived_prose_fr": 101,
-        "notes_words": 9,
-        "total": 193,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "notes_words": 15,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "conservation.en.7",
@@ -94,11 +92,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 171,
-        "derived_prose_en": 80,
-        "derived_prose_fr": 94,
         "notes_words": 10,
         "total": 181,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "diet.en.1",
@@ -130,11 +126,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 175,
-        "derived_prose_en": 80,
-        "derived_prose_fr": 93,
         "notes_words": 11,
         "total": 186,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "diet.en.2",
@@ -164,11 +158,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 79,
-        "derived_prose_en": 37,
-        "derived_prose_fr": 41,
         "notes_words": 12,
         "total": 91,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "behavior.en.2",
@@ -194,11 +186,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 163,
-        "derived_prose_en": 76,
-        "derived_prose_fr": 85,
         "notes_words": 9,
         "total": 172,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "behavior.en.1",
@@ -227,11 +217,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 21,
-        "derived_prose_en": 10,
-        "derived_prose_fr": 9,
         "notes_words": 11,
         "total": 32,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "conservation.en.5",
@@ -254,11 +242,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 29,
-        "derived_prose_en": 12,
-        "derived_prose_fr": 15,
         "notes_words": 11,
         "total": 40,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "conservation.en.6",
@@ -281,11 +267,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 177,
-        "derived_prose_en": 79,
-        "derived_prose_fr": 98,
         "notes_words": 11,
         "total": 188,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "reproduction.en.1",
@@ -320,11 +304,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 79,
-        "derived_prose_en": 39,
-        "derived_prose_fr": 40,
         "notes_words": 12,
         "total": 91,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -349,11 +331,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 87,
-        "derived_prose_en": 40,
-        "derived_prose_fr": 47,
         "notes_words": 11,
         "total": 98,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -381,11 +361,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 133,
-        "derived_prose_en": 61,
-        "derived_prose_fr": 71,
         "notes_words": 16,
         "total": 149,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "accessible_copy": "https://physalus.github.io/files/pubs/Oestreich%20et%20al.%20-%202020%20-%20Animal-Borne%20Metrics%20Enable%20Acoustic%20Detection%20of%20Blue%20Whale%20Migration.pdf"
     },
@@ -411,11 +389,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 91,
-        "derived_prose_en": 47,
-        "derived_prose_fr": 53,
         "notes_words": 11,
         "total": 102,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -438,11 +414,9 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 38,
-        "derived_prose_en": 17,
-        "derived_prose_fr": 21,
         "notes_words": 11,
         "total": 49,
-        "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     }
   ],

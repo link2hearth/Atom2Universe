@@ -12,8 +12,8 @@
       "fr": "La Salangane de Mayr est une salangane peu connue des archipels Bismarck et Salomon, signalée en Nouvelle-Irlande et à Guadalcanal. Elle appartient au genre Aerodramus, dont les espèces utilisent l’écholocation, et se nourrit probablement d’insectes capturés en vol. Elle est classée en données insuffisantes à l’échelle mondiale, car les informations sur sa population et son écologie manquent ; de nombreux détails connus chez des salanganes mieux étudiées ne doivent donc pas lui être attribués sans vérification."
     },
     "identification": {
-      "en": "The French Oiseaux.net account reports a length of about 13–14 cm and a mass of 13.4 g. These are compiled species-level values without sex-specific measurements; no dependable body height, width, wingspan or male–female difference was found. Like other swiftlets, it has a compact body, long narrow wings, a short bill and a shallowly forked tail. Field identification relies on its appearance together with the island and habitat: New Ireland and Guadalcanal populations are assigned to two subspecies, and the taxon may be confused with other dark swiftlets occurring across Melanesia. The available sources do not provide a sufficiently detailed diagnostic plumage description to claim subtle field marks confidently.",
-      "fr": "La fiche française d’Oiseaux.net indique une longueur d’environ 13 à 14 cm et une masse de 13,4 g. Ce sont des valeurs compilées à l’échelle de l’espèce, sans mensurations distinctes selon le sexe ; aucune hauteur, largeur, envergure ou différence mâle-femelle fiable n’a été trouvée. Comme les autres salanganes, elle a un corps compact, de longues ailes étroites, un bec court et une queue faiblement échancrée. L’identification s’appuie sur l’apparence et la provenance : les populations de Nouvelle-Irlande et de Guadalcanal sont attribuées à deux sous-espèces, et l’espèce peut être confondue avec d’autres salanganes sombres de Mélanésie. Les sources disponibles ne donnent pas une description assez détaillée du plumage pour affirmer des critères subtils avec assurance."
+      "en": "The French Oiseaux.net account compiles a length of about 13–14 cm and a mass of 13.4 g, but these are not secure diagnostic measurements: a 2018 reassessment notes that the taxon rests on very few specimens whose wing lengths overlap with Uniform Swiftlet. The mass is a single compiled value, not a sex-specific range; no dependable body height, width, or male–female difference was found. Like other swiftlets, it has a compact body, long narrow wings, a short bill and a shallowly forked tail. Field identification relies on appearance together with island and habitat, but the available evidence does not support confident separation from other dark swiftlets across Melanesia.",
+      "fr": "La fiche française d’Oiseaux.net compile une longueur d’environ 13 à 14 cm et une masse de 13,4 g, mais ces valeurs ne constituent pas des mesures diagnostiques sûres : une réévaluation de 2018 souligne que le taxon repose sur très peu de spécimens, dont la longueur d’aile recoupe celle de la Salangane uniforme. La masse est une valeur compilée isolée, et non une plage selon le sexe ; aucune hauteur, largeur corporelle ou différence mâle-femelle fiable n’a été trouvée. Comme les autres salanganes, elle a un corps compact, de longues ailes étroites, un bec court et une queue faiblement échancrée. L’identification s’appuie sur l’apparence et l’île d’origine, mais les données disponibles ne permettent pas de la séparer sûrement des autres salanganes sombres de Mélanésie."
     },
     "habitat": {
       "en": "Its documented range is highly restricted to Guadalcanal in the Solomon Islands and central New Ireland in Papua New Guinea. It is treated as a resident, non-migratory species by compiled ornithological datasets. Species-specific habitat descriptions are sparse; other Aerodramus swiftlets commonly forage over forest and open areas and roost or nest in caves, but those genus-level habits should be regarded as expectations rather than well-documented facts for Mayr's swiftlet.",
@@ -72,7 +72,7 @@
         "conservation"
       ],
       "facts": [
-        "French-language account gives a mass of 13.4 g, lists Data Deficient, describes two subspecies on Guadalcanal and New Ireland, and summarizes resident status and restricted range; its species information is compiled from ornithological datasets."
+        "French-language account compiles body length of about 13–14 cm and mass of 13.4 g, lists Data Deficient, describes forms on Guadalcanal and New Ireland, and summarizes resident status and restricted range; its species information is compiled from ornithological datasets."
       ]
     },
     {
@@ -116,10 +116,11 @@
       "consulted": "2026-10-14",
       "supports": [
         "overview",
-        "habitat"
+        "habitat",
+        "identification"
       ],
       "facts": [
-        "Field note documents a specimen of Mayr's swiftlet collected on Guadalcanal, Solomon Islands, and summarizes its taxonomic recognition as Aerodramus orientalis."
+        "Reassessment notes that the taxon was described from two specimens, with only three skins compared; their wing lengths overlap with Uniform Swiftlet, and the author recommends including it in A. vanikorensis."
       ]
     }
   ],
@@ -127,7 +128,7 @@
   "uncertainties": [
     "BirdLife's retrieved factsheet has blank assessment fields, while secondary sources list Data Deficient; the exact assessment date could not be confirmed.",
     "Species-specific descriptions of diet, nesting, breeding and detailed plumage are sparse; genus-level swiftlet traits are marked as expectations rather than confirmed facts.",
-    "The available mass estimate (13.4 g) is a compiled value without sex-specific data; body length is given as 13–14 cm in the account's subspecies data."
+    "The 13–14 cm length and 13.4 g mass are secondary compiled values; an ornithological reassessment based on very few specimens argues that the taxon may belong within Aerodramus vanikorensis, so these figures should not be treated as secure species-level diagnostic ranges or sex-specific measurements."
   ],
   "reviewed": true,
   "review_note": "Used French ornithological data alongside a specialist avian systematics checklist, ITIS, BirdLife's incomplete factsheet and a field ornithology record; avoided filling species-specific gaps with assumptions from congeners."

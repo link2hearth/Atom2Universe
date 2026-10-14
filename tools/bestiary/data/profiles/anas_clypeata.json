@@ -1,0 +1,227 @@
+{
+  "id": "anas_clypeata",
+  "scientific": "Anas clypeata",
+  "group": "birds",
+  "name": {
+    "en": "Northern shoveler",
+    "fr": "Canard souchet"
+  },
+  "sections": {
+    "overview": {
+      "en": "The northern shoveler is a widespread dabbling duck that breeds across northern Eurasia and North America and winters farther south. Modern taxonomies often place it in Spatula, while this catalogue retains the tree-linked name Anas clypeata.",
+      "fr": "Le Canard souchet est un canard de surface largement réparti, qui niche dans le nord de l’Eurasie et de l’Amérique du Nord et hiverne plus au sud. Les classifications récentes le placent souvent dans le genre Spatula; ce catalogue conserve le nom Anas clypeata lié à l’arbre."
+    },
+    "identification": {
+      "en": "Both sexes have an oversized spatula-shaped bill with comb-like edges for filtering food. Breeding males show a green head, white breast, chestnut sides and pale-blue forewing; females are mottled brown with a broad orange-edged bill. Adults measure about 45–55 cm long, span 70–85 cm and weigh 410–1,100 g; sexes differ strongly in plumage, while the cited range is pooled.",
+      "fr": "Les deux sexes portent un grand bec en spatule, aux bords lamellés pour filtrer la nourriture. En plumage nuptial, le mâle a la tête verte, la poitrine blanche, les flancs roux et l’avant-aile bleu pâle; la femelle est brun moucheté, avec un large bec bordé d’orange. L’adulte mesure environ 45–55 cm, pour 70–85 cm d’envergure et 410–1 100 g; les sexes diffèrent surtout par le plumage et la fourchette de masse est commune."
+    },
+    "habitat": {
+      "en": "It breeds in shallow marshes and pools with dense emergent cover and nearby dry nesting ground. Outside the breeding season it uses freshwater marshes, flooded fields, lagoons and sheltered coastal wetlands.",
+      "fr": "Il niche dans des marais et mares peu profonds, riches en végétation émergente et proches de zones sèches pour le nid. Hors reproduction, il fréquente les marais d’eau douce, champs inondés, lagunes et zones humides côtières abritées."
+    },
+    "diet": {
+      "en": "The broad bill strains seeds, small crustaceans and aquatic invertebrates from the surface or just below it. The bird often swims with its bill sweeping side to side, filtering water through fine comb-like lamellae.",
+      "fr": "Son large bec filtre les graines, petits crustacés et invertébrés aquatiques à la surface ou juste dessous. L’oiseau nage souvent en balayant l’eau de son bec, tandis que des lamelles fines retiennent les aliments."
+    },
+    "behavior": {
+      "en": "Shovelers commonly feed in loose groups, swimming with the bill lowered or dabbling head-down. They migrate between northern breeding wetlands and wintering areas in Africa, southern Asia and the Americas.",
+      "fr": "Les souchets se nourrissent souvent en groupes lâches, le bec dans l’eau ou le corps basculé vers l’avant. Ils migrent entre les zones humides nordiques de reproduction et leurs quartiers d’hiver en Afrique, en Asie méridionale et dans les Amériques."
+    },
+    "reproduction": {
+      "en": "The female nests on the ground near shallow water, usually concealed in grass or other cover, and incubates the clutch. Ducklings leave the nest soon after hatching and feed themselves under maternal guidance.",
+      "fr": "La femelle niche au sol près de l’eau peu profonde, généralement cachée dans l’herbe ou une autre couverture, puis couve la ponte. Les canetons quittent le nid peu après l’éclosion et s’alimentent eux-mêmes sous la conduite de leur mère."
+    },
+    "ecology": {
+      "en": "Its specialised bill filters small prey and seeds from shallow water, where fine suspended food is concentrated.",
+      "fr": "Son bec filtre petites proies et graines dans les eaux peu profondes, où se concentrent les particules alimentaires fines."
+    },
+    "conservation": {
+      "en": "Cornell reports a broad range and stable North American breeding numbers between 1966 and 2019, while wetland loss remains a local habitat pressure.",
+      "fr": "Cornell signale une vaste aire et des effectifs nicheurs nord-américains stables de 1966 à 2019, tandis que la perte de zones humides reste une pression locale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Northern Shoveler — eBird species account",
+        "fr": "Canard souchet — fiche eBird"
+      },
+      "url": "https://ebird.org/species/norsho",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "Cornell eBird: diagnostic bill and sex-specific plumage; filtering behaviour."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 9,
+        "total": 104,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anas clypeata Northern Shoveler — New Zealand Birds Online species account",
+        "fr": "Anas clypeata, Canard souchet — fiche New Zealand Birds Online"
+      },
+      "url": "https://www.nzbirdsonline.org.nz/assets/95597/1691920522-032_northern-20shoveler.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Identification reference reports 45–55 cm length, 70–85 cm span and 410–1,100 g."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 12,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Northern Shoveler — Animal Diversity Web",
+        "fr": "Canard souchet — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Anas_clypeata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Range, wetlands, nesting, migration and feeding account."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 7,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Northern Shoveler — Cornell Lab All About Birds",
+        "fr": "Canard souchet — Cornell Lab All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Northern_Shoveler/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell species account describes filter feeding and conservation category."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 9,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Northern Shoveler — U.S. Fish & Wildlife Service",
+        "fr": "Canard souchet — U.S. Fish & Wildlife Service"
+      },
+      "url": "https://www.fws.gov/species/northern-shoveler-anas-clypeata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "North American breeding and winter habitat."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 6,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Northern Shoveler — IUCN Red List of Bangladesh, 2015",
+        "fr": "Canard souchet — Liste rouge du Bangladesh de l’UICN, 2015"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-549.3-003-v.3.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Regional assessment records Least Concern and notes the former Anas placement."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 11,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the species’ extremely broad spoon-shaped bill on both sexes; male in breeding plumage has green head, white breast, chestnut flanks and pale-blue forewing, female is mottled brown.",
+  "uncertainties": [
+    "The catalogue uses Anas clypeata to match the linked tree; many contemporary sources use Spatula clypeata.",
+    "The listed adult mass range is pooled rather than separated by sex."
+  ],
+  "reviewed": true,
+  "review_note": "Measurements and plumage are cross-checked against a bird identification reference and Cornell; the profile records the current genus-name difference from the linked tree."
+}

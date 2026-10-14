@@ -1,0 +1,42 @@
+{
+  "id": "anas_clypeata",
+  "name": "Canard souchet",
+  "scientific": "Anas clypeata",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Canard souchet est un canard de surface largement réparti, qui niche dans le nord de l’Eurasie et de l’Amérique du Nord et hiverne plus au sud. Les classifications récentes le placent souvent dans le genre Spatula; ce catalogue conserve le nom Anas clypeata lié à l’arbre.",
+    "identification": "Les deux sexes portent un grand bec en spatule, aux bords lamellés pour filtrer la nourriture. En plumage nuptial, le mâle a la tête verte, la poitrine blanche, les flancs roux et l’avant-aile bleu pâle; la femelle est brun moucheté, avec un large bec bordé d’orange. L’adulte mesure environ 45–55 cm, pour 70–85 cm d’envergure et 410–1 100 g; les sexes diffèrent surtout par le plumage et la fourchette de masse est commune.",
+    "habitat": "Il niche dans des marais et mares peu profonds, riches en végétation émergente et proches de zones sèches pour le nid. Hors reproduction, il fréquente les marais d’eau douce, champs inondés, lagunes et zones humides côtières abritées.",
+    "diet": "Son large bec filtre les graines, petits crustacés et invertébrés aquatiques à la surface ou juste dessous. L’oiseau nage souvent en balayant l’eau de son bec, tandis que des lamelles fines retiennent les aliments.",
+    "behavior": "Les souchets se nourrissent souvent en groupes lâches, le bec dans l’eau ou le corps basculé vers l’avant. Ils migrent entre les zones humides nordiques de reproduction et leurs quartiers d’hiver en Afrique, en Asie méridionale et dans les Amériques.",
+    "reproduction": "La femelle niche au sol près de l’eau peu profonde, généralement cachée dans l’herbe ou une autre couverture, puis couve la ponte. Les canetons quittent le nid peu après l’éclosion et s’alimentent eux-mêmes sous la conduite de leur mère.",
+    "ecology": "Son bec filtre petites proies et graines dans les eaux peu profondes, où se concentrent les particules alimentaires fines.",
+    "conservation": "Cornell signale une vaste aire et des effectifs nicheurs nord-américains stables de 1966 à 2019, tandis que la perte de zones humides reste une pression locale."
+  },
+  "sources": [
+    {
+      "url": "https://ebird.org/species/norsho",
+      "title": "Canard souchet — fiche eBird"
+    },
+    {
+      "url": "https://www.nzbirdsonline.org.nz/assets/95597/1691920522-032_northern-20shoveler.pdf",
+      "title": "Anas clypeata, Canard souchet — fiche New Zealand Birds Online"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Anas_clypeata/",
+      "title": "Canard souchet — Animal Diversity Web"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Northern_Shoveler/",
+      "title": "Canard souchet — Cornell Lab All About Birds"
+    },
+    {
+      "url": "https://www.fws.gov/species/northern-shoveler-anas-clypeata",
+      "title": "Canard souchet — U.S. Fish & Wildlife Service"
+    },
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-549.3-003-v.3.pdf",
+      "title": "Canard souchet — Liste rouge du Bangladesh de l’UICN, 2015"
+    }
+  ]
+}

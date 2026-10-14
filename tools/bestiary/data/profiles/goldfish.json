@@ -245,7 +245,14 @@
         "identification.en.6",
         "identification.fr.5",
         "identification.fr.6"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 27,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Show one ordinary domesticated goldfish, streamlined with single forked tail and normal fins, orange scales, visible opercula, anatomically realistic head and gills. Adult, sex unspecified, three-quarter side view on a pure white background; no water, aquarium, text or watermark.",

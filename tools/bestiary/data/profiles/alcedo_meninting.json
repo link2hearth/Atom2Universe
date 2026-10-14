@@ -1,0 +1,212 @@
+{
+  "id": "alcedo_meninting",
+  "scientific": "Alcedo meninting",
+  "group": "birds",
+  "name": {
+    "en": "Blue-eared kingfisher",
+    "fr": "Martin-pêcheur méninting"
+  },
+  "sections": {
+    "overview": {
+      "en": "The blue-eared kingfisher is a small member of the kingfisher family, Alcedinidae. It ranges from the Indian subcontinent through mainland and island Southeast Asia, including Indonesia.",
+      "fr": "Le martin-pêcheur méninting est un petit représentant de la famille des Alcédinidés. Il vit du sous-continent indien à l’Asie du Sud-Est continentale et insulaire, notamment en Indonésie."
+    },
+    "identification": {
+      "en": "This compact kingfisher has glossy deep-blue upperparts, a brighter blue stripe down the back, and rich rufous-orange underparts. Look for a small orange spot in front of the eye, white ear tufts on the sides of the neck, a creamy-white chin and throat, and a dark, pointed bill. Oiseaux.net reports an adult length of about 17 cm and a mass of 20.4 g; the source gives no adult sex-specific range, wingspan, standard height or body width. Males have a dark bill with a reddish-brown base, while the female’s lower mandible is more extensively reddish; juveniles are duller, with rufous cheek and ear-coverts that can recall a common kingfisher.",
+      "fr": "Ce martin-pêcheur compact a le dessus bleu profond et brillant, une bande plus claire le long du dos et le dessous roux-orangé. On remarque une petite tache rousse devant l’œil, des touffes blanches sur les côtés du cou, le menton et la gorge crème, ainsi qu’un bec sombre et pointu. Oiseaux.net indique une longueur adulte d’environ 17 cm et une masse de 20,4 g; la source ne donne ni fourchette par sexe, ni envergure, hauteur standard ou largeur du corps. Le mâle a un bec sombre à base brun-rouge, tandis que la mandibule inférieure de la femelle est plus largement rougeâtre; le jeune est plus terne et porte des joues et couvertures auriculaires rousses qui peuvent rappeler le martin-pêcheur d’Europe."
+    },
+    "habitat": {
+      "en": "It is most at home beside shaded streams and pools in dense, evergreen forest, where overhanging branches provide hunting perches. It also uses mangroves, bamboo and other green habitats when water and cover are available.",
+      "fr": "Il fréquente surtout les ruisseaux et mares ombragés des forêts denses sempervirentes, où des branches au-dessus de l’eau lui servent de postes d’affût. Il utilise aussi les mangroves, les bambouseraies et d’autres milieux végétalisés lorsque l’eau et le couvert sont disponibles."
+    },
+    "diet": {
+      "en": "It takes small fish, crustaceans and aquatic insects, diving from a low waterside perch to seize prey.",
+      "fr": "Il capture de petits poissons, des crustacés et des insectes aquatiques, puis plonge depuis un perchoir bas au bord de l’eau pour saisir ses proies."
+    },
+    "behavior": {
+      "en": "It usually hunts alone from a low branch over a shaded stream, making a rapid plunge when prey appears. Local observations describe it as shy and resident; it often darts quickly between waterside perches.",
+      "fr": "Il chasse généralement seul depuis une branche basse au-dessus d’un ruisseau ombragé et plonge vivement dès qu’une proie apparaît. Des observations locales le décrivent comme discret et sédentaire; il file souvent d’un perchoir riverain à l’autre."
+    },
+    "reproduction": {
+      "en": "Breeding in western India has been recorded from June to September. Both adults excavate a tunnel in an earthen bank; a study there found typical clutches of six eggs, incubation of 20–23 days and fledging after about 20–27 days.",
+      "fr": "Dans l’ouest de l’Inde, la reproduction a été observée de juin à septembre. Les deux adultes creusent un tunnel dans une berge de terre; une étude locale a relevé des pontes généralement de six œufs, une incubation de 20 à 23 jours et un envol après environ 20 à 27 jours."
+    },
+    "ecology": {
+      "en": "In Indonesia’s Riau restoration area, it is one of several kingfisher species recorded along rivers. Its use of shaded water and covered banks ties it to riparian vegetation.",
+      "fr": "Dans la zone de restauration de Riau, en Indonésie, il fait partie des espèces de martins-pêcheurs recensées le long des rivières. Sa fréquentation des eaux ombragées et des berges couvertes le lie à la végétation riveraine."
+    },
+    "conservation": {
+      "en": "The Indonesian Biodiversitas Nusantara record lists the species as Least Concern. This local record cannot establish a population trend across its range.",
+      "fr": "La fiche indonésienne Biodiversitas Nusantara classe l’espèce en préoccupation mineure. Cette observation locale ne permet pas d’établir une tendance à l’échelle de son aire de répartition."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Blue-eared Kingfisher — eBird, Cornell Lab of Ornithology",
+        "fr": "Martin-pêcheur méninting — eBird, laboratoire d’ornithologie de Cornell"
+      },
+      "url": "https://ebird.org/species/blekin1?siteLanguage=en_IN",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "eBird field-guide description."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.4",
+        "identification.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 193,
+        "notes_words": 3,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blue-eared Kingfisher — Oiseaux.net",
+        "fr": "Martin-pêcheur méninting — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/martin-pecheur.meninting.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "French species account reports 17 cm and 20.4 g, but no sex-specific range, wingspan or body-width measure."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 17,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nesting of the Blue-eared Kingfisher in western India — Indian Birds",
+        "fr": "Nidification du martin-pêcheur méninting dans l’ouest de l’Inde — Indian Birds"
+      },
+      "url": "https://indianbirds.in/pdfs/IB_11_4_Palkar_BlueearedKingfisher.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "A western Indian study monitored 13 clutches from four pairs in 2012–2015; its dates and measurements apply to that study area."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 21,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Raja-udang meninting — Riau Ecosystem Restoration field account",
+        "fr": "Raja-udang meninting — compte rendu de terrain de Riau Ecosystem Restoration"
+      },
+      "url": "https://www.rekoforest.org/id/warta-lapangan/hidupan-liar-rer-raja-udang-meningting/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Indonesian field account of the bird in Riau."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 250,
+        "derived_prose_en_fr": 198,
+        "notes_words": 8,
+        "total": 206,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Alcedo meninting — Biodiversitas Nusantara, species record",
+        "fr": "Alcedo meninting — fiche Biodiversitas Nusantara"
+      },
+      "url": "https://www.gbif.co.id/spesies/alcedo-meninting",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Species record gives the Indonesian name and conservation category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 9,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult Blue-eared Kingfisher (Alcedo meninting), isolated full-body naturalistic field-guide view on a pure white background: compact tiny kingfisher perched upright; glossy deep ultramarine and cobalt upperparts with fine darker barring on crown, bright sky-blue central back/rump stripe, rich rusty-orange underparts, cream-white chin and throat, conspicuous small rufous spot before eye, white ear tuft/patch on side of neck, long straight dark pointed bill with subtle reddish base, short coral-red feet. Keep the upperparts darker and less green than common kingfisher; do not give it cerulean kingfisher's white belly or narrow chest band, broad orange ear patch, oversized crest, or long legs. Accurate bird anatomy.",
+  "uncertainties": [
+    "Oiseaux.net reports 17 cm and a single mass value of 20.4 g; an Indonesian restoration account gives an overall size of about 16 cm. Measurements vary by source, and no consistent adult mass range split by sex was located.",
+    "No standard wingspan, body height or width was available in the consulted species accounts; body-length values should not be confused with height.",
+    "The breeding details from Indian Birds concern four western Indian nests monitored in 2012–2015; other studies and regions report different timings and tunnel lengths.",
+    "The local Riau restoration record is not a global population or trend estimate."
+  ],
+  "source_audit_version": 1,
+  "reviewed": true,
+  "review_note": "Bilingual profile checked against Cornell eBird, French Oiseaux.net, a western Indian nesting study and Indonesian restoration/biodiversity sources; variable regional breeding and measurements are labeled."
+}

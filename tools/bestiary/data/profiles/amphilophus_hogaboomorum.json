@@ -1,0 +1,186 @@
+{
+  "id": "amphilophus_hogaboomorum",
+  "scientific": "Amphilophus hogaboomorum",
+  "group": "fish",
+  "name": {
+    "en": "Choluteca cichlid",
+    "fr": "Mojarra de Choluteca"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Central American cichlid is endemic to the Pacific slope of southern Honduras. Its scientific name commemorates brothers George and Peter Hogaboom, who helped collect the type series.",
+      "fr": "Ce Cichlidé d’Amérique centrale est endémique au versant pacifique du sud du Honduras. Son nom scientifique rend hommage aux frères George et Peter Hogaboom, qui participèrent à la collecte de la série type."
+    },
+    "identification": {
+      "en": "Greyish flanks bear seven black bars, a fainter head bar and a rounded spot at the tail base; juveniles may have a spot within the fourth bar. FishBase reports 15 cm standard length for a male or unsexed fish. No dependable height, width, mass or sex-specific length was found.",
+      "fr": "Les flancs grisâtres portent sept barres noires, une barre céphalique discrète et une tache arrondie à la base de la queue; les jeunes peuvent avoir une tache dans la quatrième barre. FishBase indique 15 cm de longueur standard pour un mâle ou un individu non sexé. Aucune hauteur, largeur, masse ou longueur par sexe fiable n’a été trouvée."
+    },
+    "habitat": {
+      "en": "It occurs in the Choluteca and Negro river drainages on Honduras’s Pacific slope. FishBase records freshwater and brackish-water occurrence in a tropical climate.",
+      "fr": "Il vit dans les bassins des rivières Choluteca et Negro, sur le versant pacifique du Honduras. FishBase signale l’espèce en eau douce et saumâtre, dans un climat tropical."
+    },
+    "diet": {
+      "en": "The original account reports no prey or stomach analyses, so the wild diet remains poorly documented.",
+      "fr": "La description originale ne rapporte ni proies ni analyses stomacales; le régime sauvage reste donc mal documenté."
+    },
+    "behavior": {
+      "en": "Field observers watched three pairs guard young over nests and actively protect fry in clear, flowing water.",
+      "fr": "Des observateurs ont vu trois couples garder leurs jeunes au-dessus des nids et défendre les alevins dans une eau claire et courante."
+    },
+    "reproduction": {
+      "en": "Roe was well developed in January–May. In April, pairs guarded young above cleared nests among rounded stones, in a clear current 1.8–3 m deep.",
+      "fr": "Les ovaires étaient développés de janvier à mai. En avril, des couples gardaient leurs jeunes au-dessus de nids déblayés entre des pierres, dans un courant clair de 1,8 à 3 m de profondeur."
+    },
+    "ecology": {
+      "en": "The 2009 Honduran checklist extended its documented range beyond the lower Choluteca to the Río Negro, but still found it only in this Pacific-slope region. The original paper described it as moderately abundant in several settings where water was sufficiently deep.",
+      "fr": "La liste hondurienne de 2009 a étendu son aire connue au Río Negro, au-delà du bas Choluteca, mais l’espèce demeure signalée uniquement dans cette région du versant pacifique. L’article original la décrit comme modérément abondante dans plusieurs milieux où l’eau est suffisamment profonde."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists Amphilophus hogaboomorum as Data Deficient (DD), assessed in 2020. Its restricted Honduran range is clear, but the available assessment status does not support assigning a more precise level of extinction risk here.",
+      "fr": "L’évaluation mondiale de l’UICN classe Amphilophus hogaboomorum dans la catégorie « données insuffisantes » (DD), en 2020. Son aire hondurienne restreinte est établie, mais ce statut ne permet pas ici de préciser davantage son risque d’extinction."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The fishes of the Choluteca drainage of southern Honduras — Carr & Giovannoli, 1950",
+        "fr": "Les poissons du bassin du Choluteca, sud du Honduras — Carr et Giovannoli, 1950"
+      },
+      "url": "https://www.nativefishlab.net/library/textpdf/17442.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Original description and field observations of breeding."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 7,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amphilophus hogaboomorum — FishBase species summary",
+        "fr": "Amphilophus hogaboomorum — notice FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Amphilophus-hogaboomorum.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists size, range, salinity and global IUCN DD status assessed in 2020."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.2",
+        "identification.fr.3",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 13,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Annotated checklist of the freshwater fishes of continental and insular Honduras — Zootaxa, 2009",
+        "fr": "Liste annotée des poissons d’eau douce du Honduras continental et insulaire — Zootaxa, 2009"
+      },
+      "url": "https://www.biotaxa.org/Zootaxa/article/download/zootaxa.2307.1.1/50330",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The checklist records endemic range in the Choluteca and Negro drainages."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 11,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ETYFish Project — Cichlidae, part 6",
+        "fr": "Projet ETYFish — Cichlidae, partie 6"
+      },
+      "url": "https://etyfish.org/cichlidae6/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The etymological reference explains the plural commemorative ending and honors the Hogaboom brothers for helping collect the type."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 18,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show an adult Amphilophus hogaboomorum from the side with a greyish body, seven clear black flank bars and an indistinct head bar; accent the rounded black spot at the caudal-fin base. Keep sex unspecified and avoid invented size proportions, brilliant gold coloration or aquarium props.",
+  "uncertainties": [
+    "The 15 cm figure is FishBase’s standard length for a male or unsexed fish; the 1950 type series was smaller and does not establish an adult maximum.",
+    "No dependable body height, width, body mass or sex-specific length measurements were located.",
+    "The original description includes direct nest-guarding observations but does not document diet; no prey list is inferred.",
+    "The 2020 IUCN category is Data Deficient; no finer threat assessment is claimed."
+  ],
+  "reviewed": true,
+  "review_note": "Bilingual account uses the original species description, a peer-reviewed Honduran fish checklist, FishBase and its linked IUCN status. It distinguishes standard length from the type-series range and states where body measurements or diet data are unavailable."
+}

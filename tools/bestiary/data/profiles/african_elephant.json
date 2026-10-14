@@ -601,7 +601,14 @@
         "identification.en.9",
         "identification.fr.8",
         "identification.fr.9"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 20,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Show an adult African savanna elephant with very large triangular ears, a concave back, grey folded skin and tusks, on a pure white background. Keep proportions and tusks realistic; do not depict the compact, round-eared African forest elephant.",

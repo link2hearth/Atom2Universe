@@ -1,0 +1,269 @@
+{
+  "id": "amatitlania_nigrofasciata",
+  "scientific": "Amatitlania nigrofasciata",
+  "group": "fish",
+  "name": {
+    "en": "Convict cichlid",
+    "fr": "Cichlidé zèbre"
+  },
+  "sections": {
+    "overview": {
+      "en": "The convict cichlid is a Central American freshwater fish in the family Cichlidae, also called zebra cichlid or convict in English. Its native range follows Pacific-slope rivers from El Salvador to Guatemala and Atlantic-slope rivers from Honduras to Guatemala; southern populations belong to related species.",
+      "fr": "Le cichlidé zèbre est un poisson d’eau douce d’Amérique centrale, de la famille des Cichlidés, également appelé nigro en aquariophilie. Son aire naturelle suit les cours d’eau du versant Pacifique, du Salvador au Guatemala, et du versant Atlantique, du Honduras au Guatemala; les populations plus méridionales appartiennent à des espèces proches."
+    },
+    "identification": {
+      "en": "It has a short, deep, laterally compressed body with dark vertical bars over gray or bluish sides. FishBase reports a maximum standard length of 10 cm for a male or unsexed specimen; no standard height, body width or sex-specific body mass was found. Adult males are generally slightly larger with longer pointed fins, while females are smaller and often show an orange-yellow lower belly.",
+      "fr": "Son corps court, haut et comprimé latéralement porte des bandes verticales sombres sur des flancs gris ou bleutés. FishBase indique une longueur standard maximale de 10 cm pour un mâle ou un individu de sexe non précisé; aucune hauteur standard, largeur corporelle ni masse par sexe n’a été trouvée. Les mâles adultes sont généralement un peu plus grands et ont des nageoires plus effilées, tandis que les femelles sont plus petites et présentent souvent un ventre inférieur jaune orangé."
+    },
+    "habitat": {
+      "en": "In its native range it inhabits creeks, streams and shallow river reaches, sheltering among rocks, crevices, roots and debris. It is also recorded in warm spring pools, while introduced populations may occupy reservoirs and drainage channels.",
+      "fr": "Dans son aire naturelle, il fréquente les ruisseaux, les cours d’eau et les zones peu profondes des rivières, où il s’abrite parmi les rochers, fissures, racines et débris. Il est aussi signalé dans des bassins de sources chaudes; les populations introduites peuvent occuper des réservoirs et des canaux de drainage."
+    },
+    "diet": {
+      "en": "It is an adaptable omnivore that eats worms, crustaceans, aquatic insects, small fish and plant material. A Brazilian study found introduced fish were predominantly adult and insectivorous, a local result rather than a range-wide diet study.",
+      "fr": "C’est un omnivore adaptable qui mange des vers, des crustacés, des insectes aquatiques, de petits poissons et des matières végétales. Une étude brésilienne a trouvé des poissons introduits majoritairement adultes et insectivores; ce résultat local ne constitue pas une étude du régime sur toute l’aire."
+    },
+    "behavior": {
+      "en": "It is a diurnal, strongly territorial fish that commonly forms breeding pairs. Adults defend a small area around their chosen nesting shelter against intruders.",
+      "fr": "C’est un poisson diurne et très territorial qui forme souvent des couples reproducteurs. Les adultes défendent contre les intrus un petit secteur autour de l’abri choisi pour nicher."
+    },
+    "reproduction": {
+      "en": "The female lays on a cleaned rock or other firm surface, often in a cavity; a clutch usually contains about 100–150 eggs. Both parents fan and guard the eggs, transfer larvae to pits in the substrate, and protect the free-swimming young. In an introduced Okinawan sample, females first matured at about 32 mm standard length and half were mature by about 37 mm; spawning occurred year-round, with a spring peak.",
+      "fr": "La femelle pond sur une pierre nettoyée ou une autre surface solide, souvent dans une cavité; une ponte compte généralement environ 100 à 150 œufs. Les deux parents ventilent et défendent les œufs, déplacent les larves vers des cuvettes du substrat et protègent les jeunes nageant librement. Dans un échantillon introduit à Okinawa, les femelles atteignaient leur première maturité vers 32 mm de longueur standard et la moitié était mature vers 37 mm; les pontes avaient lieu toute l’année, avec un pic printanier."
+    },
+    "ecology": {
+      "en": "The convict cichlid uses structured river margins for shelter and spawning. It has established outside Central America, where introduced populations can affect native freshwater communities.",
+      "fr": "Le cichlidé zèbre utilise les rives structurées des cours d’eau pour s’abriter et pondre. Il s’est établi hors d’Amérique centrale, où les populations introduites peuvent affecter les communautés aquatiques locales."
+    },
+    "conservation": {
+      "en": "The global IUCN category is Data Deficient, meaning information is insufficient for a range-wide assessment. A 2025 U.S. Fish and Wildlife Service review reports established introduced populations and concerns about effects on native fishes; these local invasion effects are separate from its status in the native range.",
+      "fr": "La catégorie mondiale de l’UICN est « données insuffisantes » : les informations ne permettent pas d’évaluer l’ensemble de l’aire. Une synthèse de 2025 du U.S. Fish and Wildlife Service signale des populations introduites établies et des préoccupations sur leurs effets envers les poissons indigènes; ces impacts locaux sont distincts de son statut dans l’aire naturelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A systematic revision of the genus Archocentrus — Zootaxa, 2007",
+        "fr": "Révision systématique du genre Archocentrus — Zootaxa, 2007"
+      },
+      "url": "https://www.mapress.com/zootaxa/2007f/z01603p078f.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Schmitter-Soto’s revision establishes the genus and diagnoses A. nigrofasciata relative to its close congeners."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 14,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amatitlania nigrofasciata — FishBase species summary",
+        "fr": "Amatitlania nigrofasciata — notice FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Cichlasoma_nigrofasciatum.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the current native range, 10 cm maximum standard length for male/unsexed fish, habitat, food items, 100–150 eggs, parental care and global IUCN Data Deficient status."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.2",
+        "identification.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 27,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nigro — Fishipedia species account",
+        "fr": "Nigro — fiche espèce Fishipedia"
+      },
+      "url": "https://www.fishipedia.fr/fr/poissons/amatitlania-nigrofasciata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Fishipedia covers morphology, sex differences, habitat, diet, territoriality and reproductive behavior."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 11,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Life history of the nonnative convict cichlid in the Haebaru Reservoir, Okinawa — Environmental Biology of Fishes",
+        "fr": "Cycle biologique du cichlidé zébré introduit dans le réservoir Haebaru, Okinawa — Environmental Biology of Fishes"
+      },
+      "url": "https://doi.org/10.1007/s10641-010-9641-x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Ishikawa and Tachihara studied 437 introduced fish; female maturity and spawning season reported here are specific to Okinawa."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 18,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amatitlania nigrofasciata — FishBase field guide",
+        "fr": "Amatitlania nigrofasciata — guide de terrain FishBase"
+      },
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=036&genusname=Amatitlania&speciesname=nigrofasciata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "FishBase field guide confirms the habitat and bottom-associated ecology summarized in this profile."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 13,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bioecology of introduced Amatitlania in semiarid northeastern Brazil — River Research and Applications",
+        "fr": "Bioécologie d’Amatitlania introduit dans le Nordeste semi-aride du Brésil — River Research and Applications"
+      },
+      "url": "https://doi.org/10.1002/rra.3612",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The study identifies A. nigrofasciata in an introduced Brazilian stream population and reports mostly adult, insectivorous fish and successful local establishment."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 21,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecological Risk Screening Summary: Convict Cichlid — U.S. Fish and Wildlife Service, 2025",
+        "fr": "Synthèse de dépistage du risque écologique : cichlidé zébré — U.S. Fish and Wildlife Service, 2025"
+      },
+      "url": "https://www.fws.gov/sites/default/files/documents/2025-06/ecological-risk-screening-summary-convict-cichlid-june-2025.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The report summarizes introduced, established populations and documented concerns about effects on native freshwater fishes in several regions."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 18,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show an adult Amatitlania nigrofasciata, naturalistic field-guide side view: compact deep oval silver-gray to bluish body, 8–9 dark vertical bars, rounded caudal fin, dorsal and anal fins; if female, a small orange-yellow patch on the lower abdomen, while male may be slightly larger with more pointed fins. Avoid other Amatitlania species' red throat or yellow body, ornamental pink morphs, aquarium decor or labels.",
+  "uncertainties": [
+    "The maximum standard length in FishBase is male/unsexed, not a female-specific maximum; standard length excludes the caudal fin, while the Fishipedia captive maximum is not clearly defined by measurement method.",
+    "No dependable species-specific body-mass or body-width range by sex was found in the consulted references, so none is estimated from aquarium specimens.",
+    "The Okinawa reproduction calendar and Brazilian diet observations describe introduced populations and should not be generalized as fixed values throughout the native range.",
+    "The IUCN Data Deficient category is global; invasion risk outside the native range is a separate conservation issue."
+  ],
+  "source_audit_version": 1,
+  "reviewed": true,
+  "review_note": "Bilingual species account checked against FishBase, French Fishipedia, a Japanese life-history study, a Brazilian field study and the 2025 U.S. Fish and Wildlife Service review; length definitions, sex limits and non-native-population context are explicit."
+}

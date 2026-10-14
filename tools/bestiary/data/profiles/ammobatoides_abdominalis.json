@@ -1,0 +1,201 @@
+{
+  "id": "ammobatoides_abdominalis",
+  "scientific": "Ammobatoides abdominalis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Steppe cuckoo bee",
+    "fr": "Abeille coucou des steppes"
+  },
+  "sections": {
+    "overview": {
+      "en": "Ammobatoides abdominalis is a solitary cuckoo bee in the family Apidae. It is a brood parasite of other bees rather than a pollen-collecting nest builder.",
+      "fr": "Ammobatoides abdominalis est une abeille coucou solitaire de la famille des Apidés. C’est un parasite de couvées d’autres abeilles, et non une bâtisseuse de nid qui récolte du pollen."
+    },
+    "identification": {
+      "en": "Adults are about 10–12 mm long; no dependable height, body width or mass figures were found. Females have red front abdominal segments and hind legs against a mostly black body, while males are black with conspicuously large eyes and pale hair bands; these contrasting patterns make the sexes recognizable in the field.",
+      "fr": "Les adultes mesurent environ 10 à 12 mm de long; aucune donnée fiable de hauteur, de largeur corporelle ou de masse n’a été trouvée. Les femelles ont les premiers segments de l’abdomen et les pattes arrière rouges sur un corps surtout noir, tandis que les mâles sont noirs, avec de très grands yeux et des bandes de poils clairs; ces motifs contrastés permettent de reconnaître les sexes sur le terrain."
+    },
+    "habitat": {
+      "en": "The species is recorded across much of central and eastern Europe and western to central Asia, reaching Xinjiang in China.",
+      "fr": "L’espèce est signalée dans une grande partie de l’Europe centrale et orientale et de l’Asie occidentale à centrale, jusqu’au Xinjiang en Chine."
+    },
+    "diet": {
+      "en": "Adults visit flowers for nectar; records include thyme, white sweet-clover and knapweeds, among other plants.",
+      "fr": "Les adultes visitent les fleurs pour leur nectar; des observations mentionnent des thyms, le mélilot blanc et des centaurées, entre autres plantes."
+    },
+    "behavior": {
+      "en": "Both sexes have been observed gripping grass stems or similar supports with their mandibles while sleeping.",
+      "fr": "Les deux sexes ont été observés accrochés par les mandibules aux tiges d’herbe ou à d’autres supports pour dormir."
+    },
+    "reproduction": {
+      "en": "The female lays in nests of Melitturga bees; Melitturga clavicornis is recorded as the host in central Europe, and other Melitturga species are reported elsewhere in its range. The exact egg-laying behavior is unknown.",
+      "fr": "La femelle pond dans les nids d’abeilles du genre Melitturga; Melitturga clavicornis est signalée comme hôte en Europe centrale, et d’autres espèces de Melitturga sont mentionnées ailleurs dans son aire. Le comportement exact de ponte est inconnu."
+    },
+    "ecology": {
+      "en": "The species has one generation each year and is active in summer, with adults generally flying from June into August.",
+      "fr": "L’espèce produit une génération par an et est active en été; les adultes volent généralement de juin à août."
+    },
+    "conservation": {
+      "en": "The European Red List classifies it as Endangered (EN) in Europe and the EU 27. Germany lists it as extinct or lost, with the last documented observation in 1959; this is a national status and does not mean the species is globally extinct.",
+      "fr": "La Liste rouge européenne la classe « en danger » (EN) en Europe et dans l’Union européenne à 27. L’Allemagne la considère éteinte ou disparue, avec une dernière observation documentée en 1959; il s’agit d’un statut national qui ne signifie pas que l’espèce soit éteinte dans le monde."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apidae 5 — Fauna Helvetica 20, identification key (French edition)",
+        "fr": "Apidae 5 — Fauna Helvetica 20, clé de détermination (édition française)"
+      },
+      "url": "https://geonature.arb-idf.fr/sites/default/files/articles/documents/ClefIdent/Hymenopteres/e-fh20_apidae_5.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "French key documents sex-specific diagnostic traits, 11–12 mm length and parasitic biology."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 12,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ammobatoides abdominalis — Wildbienen.info species profile (German)",
+        "fr": "Ammobatoides abdominalis — fiche Wildbienen.info (allemand)"
+      },
+      "url": "https://wildbienen.info/steckbriefe/ammobatoides_abdominalis.php",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Specialist profile documents hosts, flight season, nectar plants and sleeping behavior; egg placement is unknown."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 15,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Notes on the genera Ammobatoides and Melitturga in Europe — Journal of Melittology, 2025",
+        "fr": "Notes sur les genres Ammobatoides et Melitturga en Europe — Journal of Melittology, 2025"
+      },
+      "url": "https://repository.naturalis.nl/pub/801057/Wood-2025-Notes-on-the-genera-Ammobatoides-A.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "A 2025 taxonomic paper records A. abdominalis across Europe and western/central Asia through Xinjiang, China, and adds a record from Greece."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 21,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Red List of Bees — IUCN, 2014",
+        "fr": "Liste rouge européenne des abeilles — UICN, 2014"
+      },
+      "url": "https://www.arthropologia.org/association/ressources/liste-rouge-europeenne-abeilles/Liste%20Rouge%20abeilles%20EUROPE.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The table gives Endangered (EN) for Europe and EU 27, with criteria B2ab(i,v)."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 13,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ammobatoides abdominalis — German Red List Centre",
+        "fr": "Ammobatoides abdominalis — Centre allemand des listes rouges"
+      },
+      "url": "https://www.rote-liste-zentrum.de/en/detailseite/?species_uuid=15e324d7-7936-4de9-b7ea-70b7be886386",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The German national species account reports extinct or lost in Germany and gives 1959 as the last observation."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 18,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a life-size field-guide side view of Ammobatoides abdominalis. Female: mostly black head and thorax, reddish front abdominal segments and hind legs, black abdomen tip, pale hair bands. Male: black body, pale hairs on head/thorax and first abdominal segment, pale abdominal fringes and notably large eyes. Do not depict pollen baskets, a worker caste, a honeybee nest, or oversized dimensions.",
+  "uncertainties": [
+    "Adult size is reported as 10–12 mm body length; source measurements do not supply height, width or mass.",
+    "Specific oviposition behavior is unknown; egg placement in a brood-cell wall has been proposed from anatomy but remains a hypothesis.",
+    "The association with host bees is regional: Melitturga clavicornis is recorded in central Europe, while other hosts are reported in other regions.",
+    "The European Red List category and German national status describe different geographic scales; neither is a global extinction assessment."
+  ],
+  "reviewed": true,
+  "review_note": "Bilingual species account checked against a French identification key, a German specialist species profile, a 2025 taxonomy/distribution paper and European and German conservation references; sex differences and geographic scope are explicit."
+}

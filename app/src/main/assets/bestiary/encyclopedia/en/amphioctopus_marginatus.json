@@ -1,0 +1,34 @@
+{
+  "id": "amphioctopus_marginatus",
+  "name": "Veined octopus",
+  "scientific": "Amphioctopus marginatus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The veined octopus is a small, bottom-living octopus of tropical coastal waters. Its famous use of coconut shells is one of the clearest documented examples of tool carrying by a marine invertebrate.",
+    "identification": "The oval mantle is brown to orange and marked with pale, dark-edged reticulations that resemble veins; large suckers near the arm bases may look bluish. Published maxima vary: one species account gives 80 mm mantle length and 400 g, while a survey cites 90 mm; these are maxima, not typical adult measurements.",
+    "habitat": "It shelters in holes in soft sand or mud in very shallow water near the coast.",
+    "diet": "Stomach observations indicate prawns and fish, although many examined guts were empty or held only traces.",
+    "behavior": "When travelling over exposed sand, it can walk on two arms with a rolling gait while the other six curl around the body, disguising its outline as a floating coconut or debris. It also carries paired coconut-shell halves and assembles them as a shelter when threatened.",
+    "reproduction": "Field observations document mating, but do not establish a reliable species-wide breeding season or clutch-size range.",
+    "ecology": "This benthic predator carries shells that become useful only when assembled as a shelter, so it pays a locomotion cost while transporting them.",
+    "conservation": "The cited sources describe local fishery catches and field observations but do not provide a global population trend or threat assessment across the Indo-Pacific range."
+  },
+  "sources": [
+    {
+      "url": "https://keralamarinelife.in/Journals/Vol1-12/18%20Sreeja%20V.pdf",
+      "title": "Species diversity and basic biology of octopus from Maharashtra waters — Journal of Aquatic Biology & Fisheries, 2013"
+    },
+    {
+      "url": "https://doi.org/10.1126/science.1109616",
+      "title": "Underwater bipedal locomotion by octopuses in disguise — Science, 2005"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.cub.2009.10.052",
+      "title": "Defensive tool use in a coconut-carrying octopus — Current Biology, 2009"
+    },
+    {
+      "url": "https://threatenedtaxa.org/index.php/JoTT/article/download/893/1601/1688",
+      "title": "Field observations of mating in Octopus tetricus and Amphioctopus marginatus — Journal of Threatened Taxa, 2013"
+    }
+  ]
+}

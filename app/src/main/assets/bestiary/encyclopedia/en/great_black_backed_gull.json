@@ -5,7 +5,7 @@
   "group": "birds",
   "sections": {
     "overview": "The great black-backed gull is the largest gull in the world, a powerful, aggressive seabird of rocky coasts in the North Atlantic. It is an opportunistic predator and scavenger that chases other gulls to steal their food.",
-    "identification": "About 64–79 cm long, a British adult averages 1.56 kg with a wing length near 474 mm. Adults have a white head, body and tail, a slate-black back and wings with white tips, pink legs, and a heavy yellow bill with a red spot; they look blacker than a lesser black-backed gull. Young birds are brown and white speckled and take about three years to gain adult plumage.",
+    "identification": "About 64–79 cm long, a British adult averages 1.56 kg with a wing length near 474 mm. Adults have a white head, body and tail, a slate-black back and wings with white tips, pink legs, and a heavy yellow bill with a red spot; they look blacker than a lesser black-backed gull. Young birds are brown and white speckled and take about three years to gain adult plumage. In one Welsh island sample, males were significantly larger than females in every measurement.",
     "habitat": "It breeds mainly on coasts, on cliff ledges, rock outcrops and small islands, with only a few pairs at inland colonies. In winter it also moves to estuaries, lakes and lowland inland sites, and birds from Scandinavia join those of Britain and Ireland.",
     "diet": "It is omnivorous and opportunistic, eating fish, shellfish, crustaceans, small mammals, birds and eggs, and carrion. It follows fishing boats and is thought to out-compete other gulls at scavenging fishery discards and offal.",
     "behavior": "It is aggressive towards other gulls, fighting them off and chasing them to steal food. It has a heavy flight, looks hunched when perched and gives a loud barking call. It is often solitary but gathers at food, on migration and when breeding.",
@@ -25,6 +25,10 @@
     {
       "url": "https://animaldiversity.org/accounts/Larus_marinus/",
       "title": "Larus marinus — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.britishbirds.co.uk/journal/article/measurements-and-weights-great-black-backed-gulls",
+      "title": "Measurements and Weights of Great Black-backed Gulls"
     }
   ]
 }

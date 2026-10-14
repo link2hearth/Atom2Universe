@@ -12,8 +12,8 @@
       "fr": "La tortue d'Hermann est une tortue terrestre originaire du pourtour méditerranéen et des régions voisines du sud-est de l'Europe, du nord-est de l'Espagne aux Balkans. La checklist spécialisée actuelle reconnaît Testudo hermanni hermanni à l'ouest et Testudo hermanni boettgeri à l'est comme des sous-espèces."
     },
     "identification": {
-      "en": "The domed, oval shell is usually yellow to yellow-orange with dark marks, and its plastron, the shell's underside, often has two black bands whose pattern varies by region. A horny claw at the tail tip and a supracaudal scale above the tail that is almost always divided help identify it. Unlike Testudo graeca, it lacks prominent spurs on the inner thighs; unlike Testudo marginata, its rear shell edge does not flare. In the Var, females can reach 20–25 centimetres in shell length. Males are smaller, with a longer, thicker tail and a slightly concave plastron. Across western populations, adult females average about 15–18 centimetres and males 13–15 centimetres in straight carapace length; Balkan adults are generally larger.",
-      "fr": "La carapace bombée et ovale est généralement jaune à jaune orangé, avec des marques sombres ; son plastron, la face ventrale de la carapace, porte souvent deux bandes noires dont le motif varie selon les régions. Une griffe cornée au bout de la queue et une écaille sus-caudale au-dessus de celle-ci, presque toujours divisée, aident à reconnaître l'espèce. Contrairement à Testudo graeca, elle n'a pas d'éperons marqués sur la face interne des cuisses ; contrairement à Testudo marginata, le bord arrière de sa carapace ne s'évase pas. Dans le Var, les femelles peuvent atteindre 20 à 25 centimètres de longueur de carapace. Les mâles sont plus petits, avec une queue plus longue et épaisse et un plastron légèrement concave. Dans les populations occidentales, la longueur droite moyenne de la carapace est d'environ 15 à 18 centimètres chez les femelles et de 13 à 15 chez les mâles ; les adultes des Balkans sont généralement plus grands."
+      "en": "The domed, oval shell is usually yellow to yellow-orange with dark marks, and its plastron, the shell's underside, often has two black bands whose pattern varies by region. A horny claw at the tail tip and a supracaudal scale above the tail that is almost always divided help identify it. Unlike Testudo graeca, it lacks prominent spurs on the inner thighs; unlike Testudo marginata, its rear shell edge does not flare. In the Var, females can reach 20–25 centimetres in shell length. Males are smaller, with a longer, thicker tail and a slightly concave plastron. Across western populations, adult females average about 15–18 centimetres and males 13–15 centimetres in straight carapace length; Balkan adults are generally larger. In an Albanian Balkan sample, adult males averaged 735 g and females 1,129 g; mean straight carapace length was 15.1 cm for males and 17.2 cm for females.",
+      "fr": "La carapace bombée et ovale est généralement jaune à jaune orangé, avec des marques sombres ; son plastron, la face ventrale de la carapace, porte souvent deux bandes noires dont le motif varie selon les régions. Une griffe cornée au bout de la queue et une écaille sus-caudale au-dessus de celle-ci, presque toujours divisée, aident à reconnaître l'espèce. Contrairement à Testudo graeca, elle n'a pas d'éperons marqués sur la face interne des cuisses ; contrairement à Testudo marginata, le bord arrière de sa carapace ne s'évase pas. Dans le Var, les femelles peuvent atteindre 20 à 25 centimètres de longueur de carapace. Les mâles sont plus petits, avec une queue plus longue et épaisse et un plastron légèrement concave. Dans les populations occidentales, la longueur droite moyenne de la carapace est d'environ 15 à 18 centimètres chez les femelles et de 13 à 15 chez les mâles ; les adultes des Balkans sont généralement plus grands. Dans un échantillon des Balkans en Albanie, les adultes pesaient en moyenne 735 g chez les mâles et 1 129 g chez les femelles, la longueur droite moyenne de la carapace était de 15,1 cm chez les mâles et de 17,2 cm chez les femelles."
     },
     "habitat": {
       "en": "Hermann's tortoise uses a patchwork of Mediterranean vegetation, from coastal lowlands to inland hills. At a central Italian site, tortoises selected small patches where bare ground lay beside dense plant cover and several favored plant species.",
@@ -68,8 +68,8 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 183,
-        "notes_words": 6,
-        "total": 189,
+        "notes_words": 15,
+        "total": 198,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -340,6 +340,31 @@
         "limit": 200,
         "derived_prose_en_fr": 87,
         "notes_words": 13,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Morphological Divergence of Hermann’s Tortoise (Testudo hermanni boettgeri) in Albania",
+        "fr": "Divergence morphologique de la tortue d’Hermann (Testudo hermanni boettgeri) en Albanie"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7827169/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "In 188 adult Albanian tortoises, mean mass was 735 g for males and 1,129 g for females; mean straight carapace lengths were 15.1 and 17.2 cm, respectively."
+      ],
+      "prose_claims": [
+        "identification.en.7",
+        "identification.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 27,
         "total": 100,
         "method": "Complete referenced bilingual sentences and factual notes."
       }

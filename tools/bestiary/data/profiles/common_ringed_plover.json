@@ -12,8 +12,8 @@
       "fr": "Le pluvier grand-gravelot est un petit limicole ramassé qui niche à découvert sur les plages. Ses œufs et ses poussins sont si bien camouflés que les oiseaux sont facilement dérangés, et la fréquentation des plages est l’une des grandes causes de son déclin en Grande-Bretagne."
     },
     "identification": {
-      "en": "The upperparts are greyish-brown and the underparts white, with a white collar and forehead. In summer it has a black breast band and a black “bandit” mask across the eyes, which fade to brown in winter. The bill is blunt, orange with a black tip, and the legs are bright orange. Adults weigh about 54–82 g.",
-      "fr": "Le dessus est gris-brun et le dessous blanc, avec un collier et un front blancs. En été, il porte un plastron noir et un masque noir de « bandit » sur les yeux, qui virent au brun en hiver. Le bec est court, orange à pointe noire, et les pattes sont orange vif. Les adultes pèsent environ 54 à 82 g."
+      "en": "Adults are 18–20 cm long, with a 35–41 cm wingspan, and weigh about 54–82 g. The sexes look alike; BTO ringing data give almost identical adult wing lengths (about 135.7–135.8 mm) and mean masses (67.5 g in females, 68.7 g in males). The upperparts are greyish-brown and the underparts white, with a white collar and forehead. In summer it has a black breast band and a black “bandit” mask across the eyes, which fade to brown in winter. The bill is blunt, orange with a black tip, and the legs are bright orange.",
+      "fr": "L’adulte mesure 18 à 20 cm de long, avec une envergure de 35 à 41 cm, et pèse environ 54 à 82 g. Les sexes se ressemblent ; les données de baguage du BTO indiquent une longueur d’aile presque identique chez l’adulte (environ 135,7 à 135,8 mm) et des masses moyennes de 67,5 g chez la femelle et 68,7 g chez le mâle. Le dessus est gris-brun et le dessous blanc, avec un collier et un front blancs. En été, il porte un plastron noir et un masque noir de « bandit » sur les yeux, qui virent au brun en hiver. Le bec est court, orange à pointe noire, et les pattes sont orange vif."
     },
     "habitat": {
       "en": "It breeds mainly on the coast, especially on sandy and shingle beaches, and in the Uists on machair. Inland it also uses gravel pits, river margins, lochsides and wet meadows. In the UK, resident birds stay all year and migrants from the north pass through.",
@@ -48,9 +48,16 @@
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/ringed-plover",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
-        "Adults 54–82 g; clutch typically 4, incubation 23–25 days, fledging 23–25 days; typically 2 broods; first clutch about 14 May.",
+        "Adults 54–82 g; BTO biometrics: adult wing length 135.2 ± 4.2 mm overall, 135.7 mm females and 135.8 mm males; mean mass 67.5 g females and 68.7 g males; clutch typically 4, incubation 23–25 days, fledging 23–25 days; typically 2 broods; first clutch about 14 May.",
         "UK 5,450 pairs (2007), −37% 1984–2007; Red-listed; IUCN Least Concern; disturbance, hedgehogs; record age almost 22 years."
       ]
     },
@@ -61,7 +68,14 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/ringed-plover",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "behavior", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Black bandit mask and breast band in summer, orange bill with black tip, orange legs; displays: tail fanning, butterfly flights, scrape ceremony.",
         "Nests in a scrape on beaches; Red-listed with more than one in three lost since 1984."
@@ -74,10 +88,26 @@
       },
       "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130587",
       "consulted": "2026-10-12",
-      "supports": ["diet"],
+      "supports": [
+        "diet"
+      ],
       "facts": [
         "Eats terrestrial and coastal invertebrates (beetles, polychaetes, amphipods, isopods, molluscs, spiders).",
         "Feeds by running, stopping and pecking; may use foot-trembling."
+      ]
+    },
+    {
+      "title": {
+        "en": "Common Ringed Plover — Audubon Field Guide",
+        "fr": "Pluvier grand-gravelot — guide de terrain Audubon"
+      },
+      "url": "https://www.audubon.org/field-guide/bird/common-ringed-plover",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Sexes similar; length 18–20 cm, wingspan 35–41 cm and mass 45–70 g."
       ]
     }
   ],

@@ -12,8 +12,8 @@
       "fr": "Indigène dans une grande partie de l’Europe et de l’Eurasie occidentale, la martre des pins varie fortement en abondance et en aire locale. Elle grimpe et cherche aussi souvent sa nourriture au sol."
     },
     "identification": {
-      "en": "Adults have rich brown fur, a yellow to orange bib on the throat and chest, pale-edged ears and a long, bushy tail. The bib’s colour and outline vary among populations and individuals. Males average larger than females; European samples report adult masses of about 0.8–2.4 kilograms for males and 0.6–1.5 kilograms for females, with ranges varying among studies. The beech marten usually has a white bib that forks toward the forelegs and a pale nose; the pine marten usually has a yellowish bib and dark nose.",
-      "fr": "L’adulte porte une fourrure brun soutenu, une bavette jaune à orangée sur la gorge et la poitrine, des oreilles au bord clair et une longue queue touffue. La couleur et le contour de la bavette varient selon les populations et les individus. Les mâles sont en moyenne plus grands ; les échantillons européens indiquent des masses adultes d’environ 0,8 à 2,4 kilogrammes chez les mâles et 0,6 à 1,5 kilogramme chez les femelles, avec des plages variables selon les études. La fouine porte généralement une bavette blanche qui se divise vers les pattes avant et un nez clair ; la martre des pins a plutôt la bavette jaunâtre et le nez sombre."
+      "en": "Adults have rich brown fur, a yellow to orange bib on the throat and chest, pale-edged ears and a long, bushy tail. The bib’s colour and outline vary among populations and individuals. Males average larger than females; European samples report adult masses of about 0.8–2.4 kilograms for males and 0.6–1.5 kilograms for females, with ranges varying among studies. Across European studies, males have head–body lengths of 38–57 cm and tails of 18–30 cm; females measure 34.5–50 cm with tails of 18–28 cm. Shoulder height is about 15 cm. The beech marten usually has a white bib that forks toward the forelegs and a pale nose; the pine marten usually has a yellowish bib and dark nose.",
+      "fr": "L’adulte porte une fourrure brun soutenu, une bavette jaune à orangée sur la gorge et la poitrine, des oreilles au bord clair et une longue queue touffue. La couleur et le contour de la bavette varient selon les populations et les individus. Les mâles sont en moyenne plus grands ; les échantillons européens indiquent des masses adultes d’environ 0,8 à 2,4 kilogrammes chez les mâles et 0,6 à 1,5 kilogramme chez les femelles, avec des plages variables selon les études. Les études européennes donnent 38 à 57 cm de longueur tête-corps et 18 à 30 cm de queue chez les mâles, contre 34,5 à 50 cm et 18 à 28 cm chez les femelles. La hauteur au garrot est d’environ 15 cm. La fouine porte généralement une bavette blanche qui se divise vers les pattes avant et un nez clair ; la martre des pins a plutôt la bavette jaunâtre et le nez sombre."
     },
     "habitat": {
       "en": "The species uses coniferous, deciduous and mixed forests; mature stands are valuable where they provide canopy cover and cavities in old trees or standing deadwood. These structures offer cover and secure resting or breeding sites. In an Irish landscape with few tree cavities, monitored martens also denned in caves, rock crevices, stone walls and wood debris, while avoiding most immature plantations.",
@@ -52,7 +52,7 @@
         "identification"
       ],
       "facts": [
-        "Western Eurasian range, body form, sex size difference, variable bib."
+        "European studies report sex-specific head–body, tail and body-mass ranges; shoulder height is about 15 cm."
       ],
       "prose_claims": [
         "identification.en.1",
@@ -60,13 +60,17 @@
         "identification.en.3",
         "identification.fr.1",
         "identification.fr.2",
-        "identification.fr.3"
+        "identification.fr.3",
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.5",
+        "identification.fr.6"
       ],
       "budget": {
-        "limit": 200,
-        "derived_prose_en_fr": 138,
-        "notes_words": 10,
-        "total": 148,
+        "limit": 250,
+        "derived_prose_en_fr": 212,
+        "notes_words": 15,
+        "total": 227,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -89,9 +93,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 60,
+        "derived_prose_en_fr": 58,
         "notes_words": 11,
-        "total": 71,
+        "total": 69,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },

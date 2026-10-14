@@ -1,0 +1,42 @@
+{
+  "id": "amphilophus_zaliosus",
+  "name": "Mojarra flèche",
+  "scientific": "Amphilophus zaliosus",
+  "group": "fish",
+  "sections": {
+    "overview": "La mojarra flèche, appelée mojarra flecha en espagnol, est un Cichlidé présent uniquement dans le lac volcanique Apoyo, au Nicaragua. Elle appartient au groupe endémique des Cichlidés Midas du lac.",
+    "identification": "Son corps mince en forme de flèche, son pédoncule caudal étroit et ses flancs gris argenté le distinguent des Amphilophus plus hauts de corps et benthiques du même lac. Sept taches sombres forment une ligne discontinue, puis des barres pendant la reproduction; les deux sexes s’assombrissent alors. FishBase indique 20 cm de longueur totale. Les adultes reproducteurs mesuraient en moyenne 23,6 ± 0,5 cm chez les mâles et 20,1 ± 0,4 cm chez les femelles; le type de longueur n’est pas précisé et l’écart n’était pas significatif (p = 0,06). Aucune hauteur, largeur ou masse adulte fiable n’a été trouvée.",
+    "habitat": "Il est adapté à l’eau libre plutôt qu’au fond et s’éloigne davantage des rives et de la zone benthique que ses parents du lac, plus hauts de corps.",
+    "diet": "Les analyses stomacales ont trouvé des insectes ailés chez tous les spécimens étudiés; la mojarra flèche et le Cichlidé Midas benthique consommaient aussi du biofilm. L’espèce est en partie piscivore, mais les proportions détaillées des proies restent peu documentées.",
+    "behavior": "Les adultes reproducteurs établissent et défendent des territoires fixes, et soignent généralement ensemble leur couvée près du nid.",
+    "reproduction": "Les parents gardent les jeunes, et les soins des deux adultes durent environ un mois après le début de la nage libre.",
+    "ecology": "Sa forme allongée est liée à la nage en eau libre, contrairement aux espèces benthiques plus compactes et hautes de corps qui cohabitent avec lui. Les Cichlidés Midas du lac Apoyo sont étudiés comme exemple de diversification écologique dans un lac isolé.",
+    "conservation": "L’UICN le classe « en danger critique » (CR), évaluation de 2019. Toute son aire connue se limite au lac Apoyo, dont l’étendue d’occurrence et la zone d’occupation sont estimées à 22 km² au plus; des poissons introduits menacent l’habitat et les jeunes poissons indigènes."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T169382A149120216.en",
+      "title": "Amphilophus zaliosus — évaluation de la Liste rouge de l’UICN, 2020"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/12324",
+      "title": "Amphilophus zaliosus — notice FishBase"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0030064",
+      "title": "Naïveté comportementale face à un prédateur de couvée chez un poisson de lac de cratère — PLOS ONE, 2012"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2871887/",
+      "title": "Variation locale et évolution parallèle chez les Cichlidés des lacs de cratère — Proceedings of the Royal Society B, 2010"
+    },
+    {
+      "url": "https://www.marena.gob.ni/wp-content/uploads/2023/08/33-Plan-de-Manejo-Reserva-Natural-Laguna-Apoyo.pdf",
+      "title": "Plan de gestion de la réserve naturelle Laguna de Apoyo — MARENA, Nicaragua"
+    },
+    {
+      "url": "https://doi.org/10.1038/nature04325",
+      "title": "Spéciation sympatrique chez les Cichlidés des lacs de cratère nicaraguayens — Nature, 2006"
+    }
+  ]
+}

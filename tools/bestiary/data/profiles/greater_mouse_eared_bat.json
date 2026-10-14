@@ -12,7 +12,7 @@
       "fr": "Le Grand murin est l’une des plus grandes chauves-souris d’Europe et appartient à la famille des Vespertilionidés. Dans une grande partie de l’Europe continentale, les femelles se réunissent l’été dans des gîtes de mise bas chauds, souvent de grands bâtiments ; les grottes sont importantes en région méditerranéenne. La nuit, il recherche des arthropodes près du sol. Son cycle annuel relie gîtes d’été, accouplement automnal, hibernation et courte période d’élevage des jeunes."
     },
     "identification": {
-      "en": "Adults measure about 65–80 mm from head to body, weigh roughly 24–40 g and have a wingspan of 365–450 mm. The back is brown or sandy-brown, the underside pale; the bare face and long ears are pinkish. Its elongated muzzle and prominent tragus help with identification. The related lesser mouse-eared bat (Myotis blythii) can look very similar; field separation is improved by combining several measurements rather than relying on one trait. It has broad wings and flies slowly, close to the ground.",
+      "en": "Adults measure about 65–80 mm from head to body, weigh roughly 24–40 g and have a wingspan of 365–450 mm. The back is brown or sandy-brown, the underside pale; the bare face and long ears are pinkish. Its elongated muzzle and prominent tragus help with identification. The related lesser mouse-eared bat (Myotis blythii) can look very similar; field separation is improved by combining several measurements rather than relying on one trait. In one European sample, females were significantly larger and heavier than males: mean forearm 62.92 vs 59.85 mm and mass 28.93 vs 24.18 g. It has broad wings and flies slowly, close to the ground.",
       "fr": "Les adultes mesurent environ 65 à 80 mm de la tête au corps, pèsent environ 24 à 40 g et présentent une envergure de 365 à 450 mm. Le dos est brun ou brun sable, le dessous pâle ; le museau nu et les longues oreilles sont rosés. Son museau allongé et son tragus bien visible aident à l’identification. Le Petit murin proche (Myotis blythii) peut lui ressembler ; pour les distinguer sur le terrain, plusieurs mesures sont plus fiables qu’un seul caractère. Ses ailes sont larges ; son vol est lent et proche du sol."
     },
     "habitat": {
@@ -256,6 +256,20 @@
       ],
       "facts": [
         "Species account lists global IUCN Least Concern and summarizes family, morphology, roost and feeding habitats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Low seasonal variation in greater mouse-eared bat (Myotis myotis) blood parameters",
+        "fr": "Faible variation saisonnière des paramètres sanguins chez le grand murin (Myotis myotis)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7340307/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "In a sample of 96 adults, females averaged 62.92 mm forearm length and 28.93 g; males averaged 59.85 mm and 24.18 g; females were significantly larger and heavier."
       ]
     }
   ],

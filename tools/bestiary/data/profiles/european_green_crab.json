@@ -230,7 +230,14 @@
         "identification.en.6",
         "identification.fr.5",
         "identification.fr.6"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 27,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "No illustration requested; image work is handled separately.",

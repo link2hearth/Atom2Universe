@@ -68,9 +68,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 195,
+        "derived_prose_en_fr": 180,
         "notes_words": 4,
-        "total": 199,
+        "total": 184,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -102,9 +102,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 153,
-        "notes_words": 7,
-        "total": 160,
+        "derived_prose_en_fr": 170,
+        "notes_words": 25,
+        "total": 195,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -172,9 +172,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 171,
+        "derived_prose_en_fr": 181,
         "notes_words": 9,
-        "total": 180,
+        "total": 190,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -387,7 +387,14 @@
       "prose_claims": [
         "conservation.en.1",
         "conservation.fr.1"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 8,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Adult in profile with full creamy-white facial field, black head and neck, blue-grey barred back, white belly and short black bill. Include a smaller Canada Goose comparison inset showing only the white chinstrap. For Arctic nesting, distinguish cliff-ledged colonies from ground or island nests; do not depict cliff-jumping as universal.",

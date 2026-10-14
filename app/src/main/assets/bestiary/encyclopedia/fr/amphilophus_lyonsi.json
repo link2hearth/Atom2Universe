@@ -1,0 +1,34 @@
+{
+  "id": "amphilophus_lyonsi",
+  "name": "Mojarra de Lyons",
+  "scientific": "Amphilophus lyonsi",
+  "group": "fish",
+  "sections": {
+    "overview": "La mojarra de Lyons est un poisson d’eau douce de la famille des Cichlidés, limité au versant pacifique du sud du Costa Rica et de l’ouest du Panama. Son aire est petite et fragmentée entre plusieurs bassins.",
+    "identification": "Les adultes montrent sept barres sombres et environ huit taches latérales, souvent bordées de turquoise, sur des flancs gris-brun, vert-brun ou jaunâtres. La clé espagnole le distingue de l’Amphilophus labiatus aux lèvres épaisses par ses lèvres moins saillantes, sa nageoire pectorale plus courte et ses barres diffuses. Les femelles ont une tache sombre à la base de la dorsale. FishBase indique 15 cm de longueur standard; à cette longueur, les proportions corporelles impliquent 5,6–7,5 cm de hauteur et 2,6–3,1 cm de largeur, tandis que le modèle de masse estime environ 130 g, sans fourchette selon le sexe.",
+    "habitat": "Il vit dans des rivières et mares de basse altitude, sur des fonds sableux ou limoneux, avec un courant modéré à très lent. Les sites confirmés sont chauds, autour de 26–29 °C, au sud du Costa Rica et à l’ouest du Panama.",
+    "diet": "Il consomme des graines, des insectes aquatiques et terrestres, des crustacés et des détritus du fond. Une analyse stomacale de 2022 ne portait que sur deux poissons conservés: les insectes aquatiques et les détritus dominaient, mais ces proportions restent indicatives.",
+    "behavior": "Les deux parents ventilent les œufs, gardent les jeunes et transportent les alevins vers des fosses creusées dans le substrat, souvent dans des cavités sombres.",
+    "reproduction": "Les œufs sont déposés sur des rochers ou branches nettoyés, généralement une ou deux fois par an, parfois jusqu’à six; aucune taille de ponte fiable n’est publiée.",
+    "ecology": "Redécouvert au Costa Rica en 2022 après l’absence de données vérifiées depuis 1973, il a été trouvé dans trois des quinze sites étudiés et décrit comme rare à localement peu commun.",
+    "conservation": "L’UICN le classe « en danger » (EN), évaluation de 2019: son aire estimée couvre environ 2 077 km² et moins de cinq sites. L’évaluation cite la déforestation, la pollution agricole et le dragage des rivières comme pressions sur l’habitat; l’effectif reste inconnu."
+  },
+  "sources": [
+    {
+      "url": "https://www.mapress.com/zt/article/view/zootaxa.5182.6.2",
+      "title": "Redécouverte d’Amphilophus lyonsi, espèce menacée — Zootaxa, 2022"
+    },
+    {
+      "url": "https://revistas.uned.ac.cr/index.php/cuadernos/article/download/4029/5868",
+      "title": "Amphilophus lyonsi — clé d’identification des poissons d’eau douce du Costa Rica, Revista de Investigación UNED, 2022"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/26737",
+      "title": "Amphilophus lyonsi — notice FishBase"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T150122865A150123332.en",
+      "title": "Amphilophus lyonsi — évaluation de la Liste rouge de l’UICN, 2020"
+    }
+  ]
+}

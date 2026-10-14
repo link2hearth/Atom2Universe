@@ -1,0 +1,172 @@
+{
+  "id": "amphioctopus_marginatus",
+  "scientific": "Amphioctopus marginatus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Veined octopus",
+    "fr": "Poulpe noix de coco"
+  },
+  "sections": {
+    "overview": {
+      "en": "The veined octopus is a small, bottom-living octopus of tropical coastal waters. Its famous use of coconut shells is one of the clearest documented examples of tool carrying by a marine invertebrate.",
+      "fr": "Le poulpe veiné est un petit octopode benthique des eaux côtières tropicales. Son transport de coques de noix de coco constitue l’un des exemples les plus nets d’outil transporté par un invertébré marin."
+    },
+    "identification": {
+      "en": "The oval mantle is brown to orange and marked with pale, dark-edged reticulations that resemble veins; large suckers near the arm bases may look bluish. Published maxima vary: one species account gives 80 mm mantle length and 400 g, while a survey cites 90 mm; these are maxima, not typical adult measurements.",
+      "fr": "Son manteau ovale brun-orangé porte un réseau de marques pâles bordées de sombre, d’où l’aspect veiné; de gros ventouses près de la base des bras peuvent paraître bleutées. Les maxima publiés varient: une fiche indique 80 mm de longueur du manteau et 400 g, une autre 90 mm; ce ne sont pas des tailles moyennes."
+    },
+    "habitat": {
+      "en": "It shelters in holes in soft sand or mud in very shallow water near the coast.",
+      "fr": "Il s’abrite dans des trous de sable ou de vase, en eau très peu profonde près de la côte."
+    },
+    "diet": {
+      "en": "Stomach observations indicate prawns and fish, although many examined guts were empty or held only traces.",
+      "fr": "Les observations digestives indiquent des crevettes et poissons, mais de nombreux estomacs examinés étaient vides ou ne contenaient que des traces."
+    },
+    "behavior": {
+      "en": "When travelling over exposed sand, it can walk on two arms with a rolling gait while the other six curl around the body, disguising its outline as a floating coconut or debris. It also carries paired coconut-shell halves and assembles them as a shelter when threatened.",
+      "fr": "Sur le sable découvert, il peut avancer sur deux bras par une démarche roulante, tandis que les six autres entourent le corps et brouillent sa silhouette en imitant une noix de coco ou un débris. Il transporte aussi des moitiés de coque et les assemble en abri lorsqu’il est menacé."
+    },
+    "reproduction": {
+      "en": "Field observations document mating, but do not establish a reliable species-wide breeding season or clutch-size range.",
+      "fr": "Les observations de terrain documentent l’accouplement, mais ne déterminent ni saison de reproduction ni taille de ponte fiables pour toute l’espèce."
+    },
+    "ecology": {
+      "en": "This benthic predator carries shells that become useful only when assembled as a shelter, so it pays a locomotion cost while transporting them.",
+      "fr": "Ce prédateur benthique transporte des coques qui ne deviennent utiles qu’une fois assemblées en abri, ce qui alourdit ses déplacements."
+    },
+    "conservation": {
+      "en": "The cited sources describe local fishery catches and field observations but do not provide a global population trend or threat assessment across the Indo-Pacific range.",
+      "fr": "Les sources citées décrivent des prises locales et des observations de terrain, sans tendance globale des effectifs ni évaluation des menaces dans l’aire indo-pacifique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Species diversity and basic biology of octopus from Maharashtra waters — Journal of Aquatic Biology & Fisheries, 2013",
+        "fr": "Diversité et biologie de base des poulpes des eaux du Maharashtra — Journal of Aquatic Biology & Fisheries, 2013"
+      },
+      "url": "https://keralamarinelife.in/Journals/Vol1-12/18%20Sreeja%20V.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Survey reports 50–90 mm mantle lengths, maximum 90 mm, shallow habitat and prey observations."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 14,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Underwater bipedal locomotion by octopuses in disguise — Science, 2005",
+        "fr": "Locomotion bipède sous-marine chez des poulpes déguisés — Science, 2005"
+      },
+      "url": "https://doi.org/10.1126/science.1109616",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Underwater footage documents walking on two alternating arms and coconut-like camouflage."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 67,
+        "notes_words": 11,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Defensive tool use in a coconut-carrying octopus — Current Biology, 2009",
+        "fr": "Usage défensif d’outils chez un poulpe transportant des coques — Current Biology, 2009"
+      },
+      "url": "https://doi.org/10.1016/j.cub.2009.10.052",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Repeated observations document shell halves carried and assembled as shelters."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 113,
+        "notes_words": 10,
+        "total": 123,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Field observations of mating in Octopus tetricus and Amphioctopus marginatus — Journal of Threatened Taxa, 2013",
+        "fr": "Observations de terrain de l’accouplement d’Octopus tetricus et Amphioctopus marginatus — Journal of Threatened Taxa, 2013"
+      },
+      "url": "https://threatenedtaxa.org/index.php/JoTT/article/download/893/1601/1688",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Field paper reports mating observations and fisheries records, not global status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 11,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a small benthic octopus on open sand with an oval orange-brown mantle bearing pale reticulated, dark-edged markings. Arms may be curled around coconut-shell halves, but do not portray shell-carrying as a permanent body feature.",
+  "uncertainties": [
+    "Reported maximum mantle lengths differ between sources (80 versus 90 mm), and the 400 g maximum is not a sex-specific or typical weight.",
+    "Species-wide reproductive timing and clutch-size data were not established by the consulted sources."
+  ],
+  "reviewed": true,
+  "review_note": "Profile separates field-study size observations from reported maxima and sources the distinctive locomotion and shell-carrying behaviours to the original scientific papers."
+}

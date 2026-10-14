@@ -70,7 +70,8 @@
         "limit": 200,
         "derived_prose_en_fr": 136,
         "notes_words": 7,
-        "total": 143
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -101,7 +102,8 @@
         "limit": 200,
         "derived_prose_en_fr": 169,
         "notes_words": 6,
-        "total": 175
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -131,7 +133,8 @@
         "limit": 200,
         "derived_prose_en_fr": 149,
         "notes_words": 6,
-        "total": 155
+        "total": 155,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -156,7 +159,8 @@
         "limit": 200,
         "derived_prose_en_fr": 36,
         "notes_words": 6,
-        "total": 42
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -183,7 +187,8 @@
         "limit": 200,
         "derived_prose_en_fr": 80,
         "notes_words": 8,
-        "total": 88
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -209,7 +214,8 @@
         "limit": 200,
         "derived_prose_en_fr": 57,
         "notes_words": 5,
-        "total": 62
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -235,7 +241,8 @@
         "limit": 200,
         "derived_prose_en_fr": 73,
         "notes_words": 5,
-        "total": 78
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -261,7 +268,8 @@
         "limit": 200,
         "derived_prose_en_fr": 92,
         "notes_words": 5,
-        "total": 97
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -285,7 +293,8 @@
         "limit": 200,
         "derived_prose_en_fr": 46,
         "notes_words": 6,
-        "total": 52
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -313,9 +322,10 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 84,
-        "notes_words": 8,
-        "total": 92
+        "derived_prose_en_fr": 127,
+        "notes_words": 27,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -339,7 +349,8 @@
         "limit": 200,
         "derived_prose_en_fr": 44,
         "notes_words": 8,
-        "total": 52
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -363,7 +374,8 @@
         "limit": 200,
         "derived_prose_en_fr": 46,
         "notes_words": 6,
-        "total": 52
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -391,7 +403,8 @@
         "limit": 200,
         "derived_prose_en_fr": 106,
         "notes_words": 3,
-        "total": 109
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -419,7 +432,8 @@
         "limit": 200,
         "derived_prose_en_fr": 141,
         "notes_words": 7,
-        "total": 148
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -443,7 +457,8 @@
         "limit": 200,
         "derived_prose_en_fr": 56,
         "notes_words": 5,
-        "total": 61
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -467,7 +482,8 @@
         "limit": 200,
         "derived_prose_en_fr": 40,
         "notes_words": 6,
-        "total": 46
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -491,7 +507,8 @@
         "limit": 200,
         "derived_prose_en_fr": 38,
         "notes_words": 5,
-        "total": 43
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     }
   ],

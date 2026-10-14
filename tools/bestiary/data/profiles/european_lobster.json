@@ -224,7 +224,14 @@
         "identification.en.7",
         "identification.fr.6",
         "identification.fr.7"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 28,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Blue living adult, asymmetrical crushing and cutting claws, ten walking limbs including claws, long antennae, segmented abdomen and tail fan on white background.",

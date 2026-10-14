@@ -1,0 +1,38 @@
+{
+  "id": "amatitlania_siquia",
+  "name": "Cichlidé du Siquia",
+  "scientific": "Amatitlania siquia",
+  "group": "fish",
+  "sections": {
+    "overview": "Amatitlania siquia est un Cichlidé d’eau douce d’Amérique centrale. Il appartient au groupe des cichlidés zébrés, dont les limites entre espèces restent à l’étude.",
+    "identification": "Son corps relativement haut et comprimé latéralement porte généralement environ six bandes sombres diffuses, dont la troisième est plus marquée et forme une tache ovale; la première bande n’est pas bifide. FishBase indique une longueur standard maximale de 7,9 cm pour un mâle ou un individu de sexe non précisé. Un article sur une réserve costaricienne illustre une femelle adulte d’environ 6,4 cm et un mâle d’environ 5,3 cm de longueur standard : ce sont des exemples locaux, pas des maxima propres à chaque sexe. Aucune donnée fiable sur la hauteur, la largeur ou la masse corporelle n’a été trouvée.",
+    "habitat": "Son aire signalée s’étend de l’est du Honduras au centre du Costa Rica, en passant par le Nicaragua; au Costa Rica, elle couvre les versants Atlantique et Pacifique. Il fréquente les bassins d’eau douce et les lacs; des poissons reproducteurs ont été étudiés au lac Xiloá, au Nicaragua.",
+    "diet": "Les références taxonomiques et études de terrain examinées ne fournissent pas d’observations alimentaires propres à l’espèce; son régime détaillé reste donc non décrit ici.",
+    "behavior": "Les poissons reproducteurs occupent et défendent des territoires de nidification; des expériences au lac Xiloá ont montré que les couples ajustent leurs limites territoriales selon les repères voisins.",
+    "reproduction": "Les couples s’occupent des œufs puis des jeunes nageant librement; dans une étude de terrain menée en 2025 au lac Xiloá, les pontes avec deux parents étaient moins souvent laissées seules et formaient des bancs plus resserrés que celles gardées par un seul parent.",
+    "ecology": "L’espèce est signalée dans plusieurs bassins d’Amérique centrale, mais son aire précise dépend de l’attribution des populations à ce taxon.",
+    "conservation": "L’UICN la classe dans la catégorie « données insuffisantes » en raison des incertitudes taxonomiques; l’évaluation mentionne des menaces locales liées à la déforestation, aux pollutions et aux interactions avec des espèces introduites, sans preuve d’un fort déclin à l’échelle de toute l’aire à cette date."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/amatitlania-siquia",
+      "title": "Amatitlania siquia — notice FishBase"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T150106872A150107062.en",
+      "title": "Amatitlania siquia — évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://doi.org/10.15560/13.5.683",
+      "title": "Poissons de la réserve biologique de Tirimbina, Costa Rica — Check List, 2017"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4013695/",
+      "title": "Effets des repères sur la taille et la forme des territoires : étude de terrain — Biology Letters, 2014"
+    },
+    {
+      "url": "https://www.mdpi.com/2673-9917/4/2/14",
+      "title": "Limites de défense des parents seuls chez un Cichlidé biparental : étude de terrain — Diversity, 2025"
+    }
+  ]
+}

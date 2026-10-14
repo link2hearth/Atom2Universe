@@ -1,0 +1,38 @@
+{
+  "id": "alcedo_meninting",
+  "name": "Blue-eared kingfisher",
+  "scientific": "Alcedo meninting",
+  "group": "birds",
+  "sections": {
+    "overview": "The blue-eared kingfisher is a small member of the kingfisher family, Alcedinidae. It ranges from the Indian subcontinent through mainland and island Southeast Asia, including Indonesia.",
+    "identification": "This compact kingfisher has glossy deep-blue upperparts, a brighter blue stripe down the back, and rich rufous-orange underparts. Look for a small orange spot in front of the eye, white ear tufts on the sides of the neck, a creamy-white chin and throat, and a dark, pointed bill. Oiseaux.net reports an adult length of about 17 cm and a mass of 20.4 g; the source gives no adult sex-specific range, wingspan, standard height or body width. Males have a dark bill with a reddish-brown base, while the female’s lower mandible is more extensively reddish; juveniles are duller, with rufous cheek and ear-coverts that can recall a common kingfisher.",
+    "habitat": "It is most at home beside shaded streams and pools in dense, evergreen forest, where overhanging branches provide hunting perches. It also uses mangroves, bamboo and other green habitats when water and cover are available.",
+    "diet": "It takes small fish, crustaceans and aquatic insects, diving from a low waterside perch to seize prey.",
+    "behavior": "It usually hunts alone from a low branch over a shaded stream, making a rapid plunge when prey appears. Local observations describe it as shy and resident; it often darts quickly between waterside perches.",
+    "reproduction": "Breeding in western India has been recorded from June to September. Both adults excavate a tunnel in an earthen bank; a study there found typical clutches of six eggs, incubation of 20–23 days and fledging after about 20–27 days.",
+    "ecology": "In Indonesia’s Riau restoration area, it is one of several kingfisher species recorded along rivers. Its use of shaded water and covered banks ties it to riparian vegetation.",
+    "conservation": "The Indonesian Biodiversitas Nusantara record lists the species as Least Concern. This local record cannot establish a population trend across its range."
+  },
+  "sources": [
+    {
+      "url": "https://ebird.org/species/blekin1?siteLanguage=en_IN",
+      "title": "Blue-eared Kingfisher — eBird, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/martin-pecheur.meninting.html",
+      "title": "Blue-eared Kingfisher — Oiseaux.net"
+    },
+    {
+      "url": "https://indianbirds.in/pdfs/IB_11_4_Palkar_BlueearedKingfisher.pdf",
+      "title": "Nesting of the Blue-eared Kingfisher in western India — Indian Birds"
+    },
+    {
+      "url": "https://www.rekoforest.org/id/warta-lapangan/hidupan-liar-rer-raja-udang-meningting/",
+      "title": "Raja-udang meninting — Riau Ecosystem Restoration field account"
+    },
+    {
+      "url": "https://www.gbif.co.id/spesies/alcedo-meninting",
+      "title": "Alcedo meninting — Biodiversitas Nusantara, species record"
+    }
+  ]
+}

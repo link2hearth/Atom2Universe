@@ -73,8 +73,8 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 145,
-        "notes_words": 11,
-        "total": 156,
+        "notes_words": 22,
+        "total": 167,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -511,7 +511,14 @@
         "identification.en.8",
         "identification.fr.7",
         "identification.fr.8"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 26,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Show a single adult great white shark in accurate natural proportions, side three-quarter view: spindle-shaped body, conical snout, pointed triangular dorsal fin, crescent tail, dark grey back sharply separated from pale underside, and subtle pectoral axil mark. Sex unspecified. Plain white background only; no water, props, labels, border or watermark.",

@@ -1,0 +1,42 @@
+{
+  "id": "amphilophus_calobrensis",
+  "name": "Cichlidé à points rouges",
+  "scientific": "Amphilophus calobrensis",
+  "group": "fish",
+  "sections": {
+    "overview": "Le nom de l’arbre, Amphilophus calobrensis, est une combinaison ancienne; les catalogues ichtyologiques actuels retiennent Darienheros calobrensis. Ce Cichlidé d’eau douce est originaire du versant pacifique du Panama.",
+    "identification": "Les adultes ont des lèvres épaisses, un long museau devant l’œil, les yeux placés haut et une bouche légèrement tournée vers le bas; les bandes sombres se fragmentent en taches irrégulières plutôt que de rester uniformément divisées. FishBase indique jusqu’à 25 cm de longueur totale pour un mâle ou un individu de sexe non précisé. Des notices aquariophiles décrivent souvent les mâles adultes comme plus grands et plus hauts de corps, les femelles étant plus petites et moins colorées. Aucune donnée fiable de hauteur, de largeur ou de masse corporelle n’a été trouvée.",
+    "habitat": "L’espèce est signalée en eau douce sur le versant pacifique du Panama. Elle fréquente les lacs, étangs et secteurs calmes des cours d’eau, notamment près des berges rocheuses immergées et de leurs fissures.",
+    "diet": "Aucune étude détaillée de son alimentation dans la nature n’a été trouvée; les références aquariophiles la décrivent comme omnivore adaptable, sans que ces observations captives mesurent son régime sauvage.",
+    "behavior": "Les notices aquariophiles décrivent un comportement territorial et des fouilles actives du substrat, surtout près d’un site de ponte; aucune observation de terrain comparable dans la nature n’a été trouvée.",
+    "reproduction": "En captivité, un couple pond sur une surface solide et les deux parents protègent les œufs puis les alevins.",
+    "ecology": "Son aire connue se concentre dans une région du versant pacifique panaméen; l’état de ces bassins d’eau douce est donc important pour le maintien de l’espèce.",
+    "conservation": "L’évaluation de l’UICN classe Darienheros calobrensis comme « vulnérable » (VU), selon le critère B1ab(iii), en 2019."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=16421",
+      "title": "Catalog of Fishes — Darienheros calobrensis"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Darienheros-calobrensis.html",
+      "title": "Darienheros calobrensis — notice FishBase"
+    },
+    {
+      "url": "https://www.senckenberg.de/wp-content/uploads/2019/08/01_vertebrate_zoology_66-1_rican_1-102.pdf",
+      "title": "Diversité et évolution des Cichlidés d’Amérique centrale avec classification révisée — Vertebrate Zoology, 2016"
+    },
+    {
+      "url": "https://www.svenkullander.se/publications/Kullander_Cichlidae_2003.pdf",
+      "title": "Cichlidés d’Amérique centrale — Sven Kullander, 2003"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/amphilophus-calobrensis",
+      "title": "Darienheros calobrensis — notice Seriously Fish"
+    },
+    {
+      "url": "https://cichlidamerique.fr/darienheros-calobrensis-article-n1-generalites-taxonomie-description",
+      "title": "Darienheros calobrensis — fiche Cichlidamerique"
+    }
+  ]
+}

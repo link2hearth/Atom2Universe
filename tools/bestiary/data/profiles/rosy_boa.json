@@ -12,8 +12,8 @@
       "fr": "Le boa rosé du désert, Lichanura trivirgata, est un petit boa du sud-ouest des États-Unis et du nord-ouest du Mexique."
     },
     "identification": {
-      "en": "Females are generally larger than males. Arizona individuals reach 95 centimetres; three dark lengthwise bands and vertical oval pupils are characteristic. The head is small and the tail relatively blunt. A stout body usually has a pale grey background with brown or orange bands.",
-      "fr": "Les femelles sont généralement plus grandes que les mâles. En Arizona, il atteint 95 centimètres ; ses trois bandes sombres et ses pupilles ovales verticales sont caractéristiques. La tête est petite et la queue relativement arrondie. Son corps trapu présente généralement un fond gris clair avec des bandes marron ou orangées."
+      "en": "Females are generally larger than males. Arizona individuals reach 95 centimetres; three dark lengthwise bands and vertical oval pupils are characteristic. The head is small and the tail relatively blunt. A stout body usually has a pale grey background with brown or orange bands. AnAge lists 450 g as adult mean mass, rated acceptable from a small sample, without separating sexes.",
+      "fr": "Les femelles sont généralement plus grandes que les mâles. En Arizona, il atteint 95 centimètres ; ses trois bandes sombres et ses pupilles ovales verticales sont caractéristiques. La tête est petite et la queue relativement arrondie. Son corps trapu présente généralement un fond gris clair avec des bandes marron ou orangées. AnAge indique une masse adulte moyenne de 450 g, jugée acceptable malgré un petit échantillon, sans distinguer les sexes."
     },
     "habitat": {
       "en": "Its range covers western Arizona, Sonora and most of Baja California; California records are limited to far southern San Diego County. It shelters in rocky desert foothills, scrub and canyon crevices, and may use burrows where surface cover is scarce. Coastal California populations formerly grouped with this boa are now treated as Lichanura orcutti.",
@@ -203,6 +203,21 @@
         "total": 38,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Lichanura trivirgata — AnAge: Animal Ageing and Longevity Database",
+        "fr": "Lichanura trivirgata — AnAge : base de données sur l’âge et la longévité des animaux"
+      },
+      "url": "https://genomics.senescence.info/species/entry.php?species=Lichanura_trivirgata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "AnAge lists 450 g adult mass for Lichanura trivirgata; the record has a small sample, acceptable data quality and no observations."
+      ],
+      "prose_claims": ["identification.en.5", "identification.fr.5"]
     }
   ],
   "illustration_notes": "Show one adult desert rosy boa with a stout, smooth-scaled body, small head, short blunt tail, vertical pupils and three dark lengthwise stripes on a pale ground. Use a neutral side-three-quarter pose on white; do not depict the coastal rosy boa Lichanura orcutti.",

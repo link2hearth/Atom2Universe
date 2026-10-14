@@ -1,0 +1,42 @@
+{
+  "id": "alcedo_coerulescens",
+  "name": "Martin-pêcheur aigue-marine",
+  "scientific": "Alcedo coerulescens",
+  "group": "birds",
+  "sections": {
+    "overview": "Le martin-pêcheur aigue-marine est un très petit représentant de la famille des Alcédinidés. Son aire naturelle est limitée à l’Indonésie, notamment au sud de Sumatra, à Java, Bali et aux îles orientales jusqu’à Flores.",
+    "identification": "Ce minuscule martin-pêcheur compact a le dessus bleu vif à turquoise, une étroite bande bleue sur la poitrine, la gorge, des taches faciales et le dessous blancs. Son bec sombre est long et pointu; ses pattes sont brun-rouge. L’adulte mesure environ 13 à 14 cm et pèse autour de 35 g; les sources ne donnent pas d’envergure, de hauteur ou de largeur corporelle standard. Le mâle est généralement plus bleu, tandis que la femelle tire davantage sur le vert avec une bande pectorale plus étroite; le jeune est plus terne et grisâtre, avec une bande parfois peu visible. Ces différences aident à le distinguer du martin-pêcheur méninting, plus sombre, et du martin-pêcheur d’Europe, plus grand, blanc et orangé.",
+    "habitat": "Il vit au bord des marais côtiers, mangroves, estuaires, petits cours d’eau, canaux, étangs et bassins piscicoles, en eau douce comme saumâtre. Les observations s’étendent du sud de Sumatra et de Java à Bali et aux petites îles de la Sonde, avec des mentions jusqu’à Flores.",
+    "diet": "Il capture de petits poissons, des insectes aquatiques et des crustacés. Il guette depuis un perchoir près de l’eau puis plonge sur sa proie; au-dessus des eaux dégagées, il peut brièvement faire du surplace avant de piquer.",
+    "behavior": "Il se perche souvent sur une branche basse ou un piquet au bord de l’eau, puis plonge rapidement sur sa proie. Des observations à Java décrivent aussi de brefs plongeons après un vol stationnaire, parfois à environ 2–4 m au-dessus de l’eau; cette technique est documentée localement et ne signifie pas qu’il plane en permanence.",
+    "reproduction": "À Java, des reproductions ont été relevées d’avril à juin, en août et en octobre; les données disponibles n’indiquent donc pas une seule courte saison valable partout. Le couple creuse un tunnel incliné dans une berge terreuse; les pontes signalées comptent trois à six œufs blancs.",
+    "ecology": "Sur la côte nord de Java, des observations l’ont vu chasser depuis des perchoirs près des ruisseaux de mangrove, vasières et bassins piscicoles, puis brièvement faire du surplace et plonger sur des proies aquatiques.",
+    "conservation": "La fiche indonésienne de biodiversité classe l’espèce en préoccupation mineure, et un guide faunistique indonésien cite un résumé de 2019 indiquant cette catégorie avec une tendance stable. Cette évaluation générale et datée ne détermine pas la tendance de chaque population locale de zone humide."
+  },
+  "sources": [
+    {
+      "url": "https://ebird.org/species/smbkin1?siteLanguage=en_IN",
+      "title": "Martin-pêcheur aigue-marine — eBird, laboratoire d’ornithologie de Cornell"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/martin-pecheur.aigue-marine.html",
+      "title": "Martin-pêcheur aigue-marine — Oiseaux.net"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/236856372_Hovering_Cerulean_Kingfishers",
+      "title": "Vol stationnaire du martin-pêcheur aigue-marine — Forktail"
+    },
+    {
+      "url": "https://www.cirebonpower.co.id/wp-content/uploads/Buku-Fauna-CEP-2019.pdf",
+      "title": "Martin-pêcheur bleu — guide faunistique de Cirebon Power"
+    },
+    {
+      "url": "https://ayoketaman.com/web/satwa/b0ZsRWI5dWZDdmE2TzB1R09ySW9Sdz09",
+      "title": "Raja-udang biru — fiche biodiversité Ayo Ketaman"
+    },
+    {
+      "url": "https://www.gbif.co.id/spesies/alcedo-coerulescens",
+      "title": "Alcedo coerulescens — fiche Biodiversitas Nusantara"
+    }
+  ]
+}

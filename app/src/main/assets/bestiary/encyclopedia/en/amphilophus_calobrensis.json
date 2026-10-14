@@ -1,0 +1,42 @@
+{
+  "id": "amphilophus_calobrensis",
+  "name": "Redspot cichlid",
+  "scientific": "Amphilophus calobrensis",
+  "group": "fish",
+  "sections": {
+    "overview": "The tree’s name, Amphilophus calobrensis, is an older combination; current ichthyological catalogues accept Darienheros calobrensis. This freshwater cichlid is native to Panama’s Pacific slope.",
+    "identification": "Adults have thick lips, a long snout before the eye, eyes set high on the head and a slightly downward-facing mouth; dark bars break into irregular blotches rather than remaining evenly divided. FishBase reports up to 25 cm total length for a male or unsexed fish. Aquarium accounts describe mature males as often larger and deeper-bodied, with females smaller and less colorful. No dependable height, width or body-mass figures were located.",
+    "habitat": "The species is recorded in freshwater on Panama’s Pacific slope. It is reported from lakes, ponds and slower river reaches, especially around submerged rocky banks and crevices.",
+    "diet": "Detailed field studies of its diet were not located; aquarium references call it an adaptable omnivore, so those captive feeding notes should not be treated as a measured wild diet.",
+    "behavior": "Aquarium accounts describe territorial behavior and active digging in the substrate, especially around a potential spawning site; comparable wild field observations were not found.",
+    "reproduction": "Captive accounts report substrate spawning: a pair lays eggs on a firm surface and both parents guard them and the fry.",
+    "ecology": "Its known distribution is concentrated in one Panamanian Pacific-slope region, so the condition of those freshwater basins is relevant to the species’ persistence.",
+    "conservation": "The IUCN assessment lists Darienheros calobrensis as Vulnerable (VU), under criterion B1ab(iii), assessed in 2019."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=16421",
+      "title": "Catalog of Fishes — Darienheros calobrensis"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Darienheros-calobrensis.html",
+      "title": "Darienheros calobrensis — FishBase species summary"
+    },
+    {
+      "url": "https://www.senckenberg.de/wp-content/uploads/2019/08/01_vertebrate_zoology_66-1_rican_1-102.pdf",
+      "title": "Diversity and evolution of the Middle American cichlid fishes with revised classification — Vertebrate Zoology, 2016"
+    },
+    {
+      "url": "https://www.svenkullander.se/publications/Kullander_Cichlidae_2003.pdf",
+      "title": "Cichlidae of Middle America — Sven Kullander, 2003"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/amphilophus-calobrensis",
+      "title": "Darienheros calobrensis — Seriously Fish species account"
+    },
+    {
+      "url": "https://cichlidamerique.fr/darienheros-calobrensis-article-n1-generalites-taxonomie-description",
+      "title": "Darienheros calobrensis — Cichlidamerique account (French)"
+    }
+  ]
+}

@@ -69,9 +69,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 169,
+        "derived_prose_en_fr": 128,
         "notes_words": 13,
-        "total": 182,
+        "total": 141,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -447,9 +447,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 72,
-        "notes_words": 10,
-        "total": 82,
+        "derived_prose_en_fr": 113,
+        "notes_words": 27,
+        "total": 140,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -524,7 +524,14 @@
       "prose_claims": [
         "identification.en.7",
         "identification.fr.6"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 19,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Adult Alligator mississippiensis, accurate full-body naturalistic field-guide illustration isolated on a pure white background. Dark armored body with embedded osteoderms, broad rounded U-shaped snout, eyes and nostrils high on head, flattened muscular tail, four short limbs. Forefeet have five digits and hind feet four; only three inner digits per foot have claws, the outer digits are unwebbed or partly webbed and clawless. Avoid extra claws, crocodile-like narrow V snout, visible lower fourth tooth when jaws closed, or mammalian features.",

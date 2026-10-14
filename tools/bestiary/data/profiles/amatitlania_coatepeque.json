@@ -1,0 +1,207 @@
+{
+  "id": "amatitlania_coatepeque",
+  "scientific": "Amatitlania coatepeque",
+  "group": "fish",
+  "name": {
+    "en": "Coatepeque convict cichlid",
+    "fr": "Cichlidé zébré de Coatepeque"
+  },
+  "sections": {
+    "overview": {
+      "en": "Amatitlania coatepeque is a small Central American cichlid described from Lake Coatepeque, a volcanic lake in western El Salvador. Its taxonomic rank is disputed: the current Catalog of Fishes lists it as valid, while a 2014 molecular and morphological study treated the lake population as part of A. nigrofasciata.",
+      "fr": "Amatitlania coatepeque est un petit cichlidé d’Amérique centrale décrit du lac Coatepeque, un lac volcanique de l’ouest du Salvador. Son rang taxonomique est discuté : le Catalog of Fishes le considère actuellement comme valide, tandis qu’une étude moléculaire et morphologique de 2014 a rattaché la population lacustre à A. nigrofasciata."
+    },
+    "identification": {
+      "en": "It has the short, deep-bodied form and dark vertical bars typical of the convict-cichlid group. The original diagnosis emphasized a possible Y-shaped joining of the fourth and fifth flank bars, but later sampling found that pattern variable and not unique to this population. FishBase reports a maximum standard length of 9.1 cm for a male or unsexed specimen; no comparable female range, body mass, body width or standard height is published in the consulted references. Standard length is measured from the snout to the base of the tail, not to its tip.",
+      "fr": "Il présente le corps court et haut ainsi que les barres verticales sombres typiques du groupe des cichlidés zébrés. La description originale mettait en avant une possible jonction en Y des quatrième et cinquième barres du flanc, mais des prélèvements ultérieurs ont montré que ce motif varie et n’est pas propre à cette population. FishBase indique une longueur standard maximale de 9,1 cm pour un spécimen mâle ou de sexe non précisé; les références consultées ne publient ni plage comparable chez les femelles, ni masse, ni largeur corporelle, ni hauteur standard. La longueur standard va du museau à la base de la queue, sans inclure celle-ci."
+    },
+    "habitat": {
+      "en": "FishBase records it only in Lake Coatepeque, among rocks in clear water and down to 6 m depth.",
+      "fr": "FishBase ne le signale que dans le lac Coatepeque, parmi les rochers, en eau claire, jusqu’à 6 m de profondeur."
+    },
+    "diet": {
+      "en": "FishBase contains no diet entry for this species, so its prey and feeding proportions remain undocumented.",
+      "fr": "FishBase ne donne aucune donnée alimentaire pour cette espèce; ses proies et leurs proportions restent donc inconnues."
+    },
+    "behavior": {
+      "en": "FishBase provides no published field observations of social behavior or daily activity for this population.",
+      "fr": "FishBase ne fournit aucune observation de terrain sur le comportement social ou le rythme d’activité de cette population."
+    },
+    "reproduction": {
+      "en": "The FishBase species account lists no breeding season, clutch size or parental-care observations for the Coatepeque fish.",
+      "fr": "La notice FishBase ne mentionne ni saison de reproduction, ni taille de ponte, ni soins parentaux chez les poissons de Coatepeque."
+    },
+    "ecology": {
+      "en": "It occupies a freshwater lake-bottom niche; the Coatepeque population is geographically isolated whether treated as a species or as A. nigrofasciata.",
+      "fr": "Il occupe une niche benthique d’eau douce; la population de Coatepeque est isolée, qu’on la classe comme espèce ou comme A. nigrofasciata."
+    },
+    "conservation": {
+      "en": "FishBase reports that the species has not been evaluated on the IUCN Red List. McMahan and colleagues noted substantial shoreline alteration and recommended monitoring the lake’s convict-cichlid population; this is a conservation concern for the isolated population, not evidence of a quantified decline or a formal threatened category.",
+      "fr": "FishBase indique que l’espèce n’a pas été évaluée par la Liste rouge mondiale. McMahan et ses collègues ont signalé une forte transformation des rives et recommandé le suivi de la population de cichlidés zébrés du lac; c’est un enjeu de conservation pour cette population isolée, non la preuve d’un déclin quantifié ou d’une catégorie officielle de menace."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A systematic revision of the genus Archocentrus — Zootaxa 1603, original description of Amatitlania coatepeque",
+        "fr": "Révision systématique du genre Archocentrus — Zootaxa 1603, description originale d’Amatitlania coatepeque"
+      },
+      "url": "https://www.mapress.com/zootaxa/2007f/z01603p078f.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Juan J. Schmitter-Soto’s 2007 taxonomic revision established the name and described the putative diagnostic flank bars."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 16,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase species summary — Amatitlania coatepeque",
+        "fr": "Notice FishBase — Amatitlania coatepeque"
+      },
+      "url": "https://www.fishbase.se/FieldGuide/FieldGuideSummary.php?c_code=222&genusname=Amatitlania&speciesname=coatepeque",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Reports a 9.1 cm maximum standard length for a male or unsexed specimen."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 13,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taxonomic Status of the Lago Coatepeque Endemic Convict Cichlid — Copeia 2014",
+        "fr": "Statut taxonomique du cichlidé zébré endémique du lac Coatepeque — Copeia 2014"
+      },
+      "url": "https://doi.org/10.1643/CI-13-153",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Study found the lake fish within A. nigrofasciata and recommended monitoring after shoreline alteration."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 14,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase species summary — Amatitlania coatepeque",
+        "fr": "Notice FishBase — Amatitlania coatepeque"
+      },
+      "url": "https://www.fishbase.se/summary/Amatitlania-coatepeque",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The species page has no populated species-specific fields for diet, field behavior or reproduction; it reports habitat, depth and IUCN status."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 21,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eschmeyer's Catalog of Fishes — Amatitlania coatepeque",
+        "fr": "Catalog of Fishes d’Eschmeyer — Amatitlania coatepeque"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=69809",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Current online catalog lists Amatitlania coatepeque as valid and cites the competing 2014 synonymy."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 14,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Small deep-bodied convict-group cichlid in naturalistic scientific side view, light gray to bluish ground color with dark vertical bars; optionally show a subtle, variable Y-like joining of flank bars four and five, but do not make it a guaranteed diagnostic trait. Modest fins, realistic cichlid proportions. No aquarium, labels or scenery.",
+  "uncertainties": [
+    "Taxonomic treatment is unsettled: the California Academy of Sciences Catalog of Fishes currently accepts the species, while McMahan et al. (2014) found it nested within A. nigrofasciata and synonymized it.",
+    "The 9.1 cm value is a maximum standard length for a male or unsexed specimen, not a typical size or total length; sex-specific female measurements and mass were not found.",
+    "Published behavior, diet and reproduction data specific to the Lake Coatepeque population are sparse; related-species observations were not substituted for direct evidence.",
+    "The shoreline-alteration concern comes from the 2014 study and is not a recent population assessment; no current trend was identified."
+  ],
+  "source_audit_version": 1,
+  "reviewed": true,
+  "review_note": "Profile assembled from the original 2007 description, FishBase, the author-posted 2014 Copeia study and the current Catalog of Fishes; the taxonomic disagreement and species-specific evidence gaps are clearly stated."
+}

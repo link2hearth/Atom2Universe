@@ -213,7 +213,14 @@
       "prose_claims": [
         "identification.en.3",
         "identification.fr.3"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 17,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Adult male common pheasant; show long barred tail, iridescent green head, red facial skin and a typical white neck ring, while noting ring variation.",

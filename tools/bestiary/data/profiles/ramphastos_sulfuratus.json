@@ -12,8 +12,8 @@
       "fr": "Le toucan à carène est un oiseau sédentaire de la canopée des forêts humides, du sud du Mexique à l’Amérique centrale et au nord-ouest de l’Amérique du Sud. Son grand bec multicolore lui vaut aussi le nom de toucan arc-en-ciel. Dans un paysage mexicain dominé par les pâturages, les oiseaux suivis choisissaient les fragments forestiers tout en utilisant plusieurs milieux boisés et agricoles."
     },
     "identification": {
-      "en": "Adults are about 50 cm long. The body is black with a yellow throat and chest, white rump, red undertail feathers, blue eye skin and blue feet. The sexes look alike, though males may be slightly larger. The oversized green bill has orange, red and blue accents and can approach a third of body length. A species sheet describes a lightweight honeycomb-like core under a keratin covering; direct mechanical tests used the related toco toucan. Two toes point forward and two back to grip branches.",
-      "fr": "L’adulte mesure environ 50 cm. Le corps est noir, avec la gorge et la poitrine jaunes, le croupion blanc, les plumes sous-caudales rouges, la peau autour des yeux et les pieds bleus. Les sexes se ressemblent, bien que le mâle puisse être un peu plus grand. Le grand bec vert, marqué d’orange, de rouge et de bleu, approche le tiers de la longueur du corps. Une fiche sur l’espèce décrit un cœur léger en nid d’abeilles sous une enveloppe de kératine ; les essais mécaniques directs ont porté sur le toucan toco, une espèce apparentée. Deux doigts vers l’avant et deux vers l’arrière agrippent les branches."
+      "en": "Adults are about 50–52 cm long and average about 400 g; males are slightly larger. The body is black with a yellow throat and chest, white rump, red undertail feathers, blue eye skin and blue feet. The oversized green bill has orange, red and blue accents and can approach a third of body length. A species sheet describes a lightweight honeycomb-like core under a keratin covering; direct mechanical tests used the related toco toucan. Two toes point forward and two back to grip branches.",
+      "fr": "L’adulte mesure environ 50 à 52 cm et pèse en moyenne près de 400 g ; le mâle est légèrement plus grand. Le corps est noir, avec la gorge et la poitrine jaunes, le croupion blanc, les plumes sous-caudales rouges, la peau autour des yeux et les pieds bleus. Le grand bec vert, marqué d’orange, de rouge et de bleu, approche le tiers de la longueur du corps. Une fiche sur l’espèce décrit un cœur léger en nid d’abeilles sous une enveloppe de kératine ; les essais mécaniques directs ont porté sur le toucan toco, une espèce apparentée. Deux doigts vers l’avant et deux vers l’arrière agrippent les branches."
     },
     "habitat": {
       "en": "The species occupies humid tropical forest, mainly in the middle and upper canopy. It also visits edges, secondary growth and trees retained in pasture or cropland. In Los Tuxtlas, Mexico, six birds followed for 349 hours preferred forest remnants at both landscape and local scales. Their activities were similar among habitat types, suggesting some altered patches still supplied resources. This regional result does not mean open land replaces intact forest across the range.",
@@ -82,12 +82,15 @@
       "url": "https://animaldiversity.org/accounts/Ramphastos_sulfuratus/",
       "consulted": "2026-10-11",
       "supports": [
+        "identification",
         "reproduction"
       ],
       "facts": [
         "Species account reports 2–4 eggs, biparental incubation/feeding, 16–20-day incubation and 8–9-week nest period.",
-        "It is a 2001 account drawing partly on older natural-history references."
-      ]
+        "It is a 2001 account drawing partly on older natural-history references.",
+        "About 52 cm long and 400 g average mass; male slightly larger; sexes otherwise share plumage and bill colours."
+      ],
+      "prose_claims": []
     },
     {
       "title": {

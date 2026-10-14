@@ -97,9 +97,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 27,
+        "derived_prose_en_fr": 73,
         "notes_words": 7,
-        "total": 34,
+        "total": 80,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -428,7 +428,14 @@
       ],
       "prose_claims": [
         "identification.en.7"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 39,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Use the existing fire salamander illustration; show the black body with distinct yellow markings and short limbs, without flames or fire effects.",

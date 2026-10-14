@@ -62,7 +62,7 @@
         "derived_prose_en_fr": 145,
         "notes_words": 8,
         "total": 153,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "diet.en.2",
@@ -91,7 +91,7 @@
         "derived_prose_en_fr": 34,
         "notes_words": 9,
         "total": 43,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "habitat.en.3",
@@ -117,7 +117,7 @@
         "derived_prose_en_fr": 51,
         "notes_words": 10,
         "total": 61,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "overview.en.2",
@@ -142,7 +142,7 @@
         "derived_prose_en_fr": 19,
         "notes_words": 9,
         "total": 28,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "overview.en.3",
@@ -167,7 +167,7 @@
         "derived_prose_en_fr": 115,
         "notes_words": 9,
         "total": 124,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "identification.en.1",
@@ -195,7 +195,7 @@
         "derived_prose_en_fr": 103,
         "notes_words": 9,
         "total": 112,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "conservation.en.2",
@@ -222,7 +222,7 @@
         "derived_prose_en_fr": 40,
         "notes_words": 10,
         "total": 50,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "diet.en.5",
@@ -247,7 +247,7 @@
         "derived_prose_en_fr": 55,
         "notes_words": 9,
         "total": 64,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "diet.en.3",
@@ -272,7 +272,7 @@
         "derived_prose_en_fr": 45,
         "notes_words": 8,
         "total": 53,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "diet.en.4",
@@ -298,7 +298,7 @@
         "derived_prose_en_fr": 76,
         "notes_words": 8,
         "total": 84,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "behavior.en.1",
@@ -325,7 +325,7 @@
         "derived_prose_en_fr": 55,
         "notes_words": 8,
         "total": 63,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "behavior.en.2",
@@ -350,7 +350,7 @@
         "derived_prose_en_fr": 90,
         "notes_words": 7,
         "total": 97,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "behavior.en.3",
@@ -379,7 +379,7 @@
         "derived_prose_en_fr": 52,
         "notes_words": 8,
         "total": 60,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "behavior.en.6",
@@ -404,7 +404,7 @@
         "derived_prose_en_fr": 111,
         "notes_words": 10,
         "total": 121,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "reproduction.en.2",
@@ -431,7 +431,7 @@
         "derived_prose_en_fr": 164,
         "notes_words": 8,
         "total": 172,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "ecology.en.1",
@@ -464,7 +464,7 @@
         "derived_prose_en_fr": 58,
         "notes_words": 7,
         "total": 65,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       },
       "prose_claims": [
         "conservation.en.1",
@@ -501,7 +501,7 @@
         "derived_prose_en_fr": 117,
         "notes_words": 8,
         "total": 125,
-        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+        "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
     {
@@ -524,7 +524,14 @@
         "identification.fr.4",
         "identification.fr.5",
         "identification.fr.6"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 31,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Show one adult Tursiops truncatus with anatomically accurate robust grey body, pale underside, short thick rostrum, curved dorsal fin, pectoral flippers and horizontal tail flukes. Natural proportions and skin texture, sex unspecified, side three-quarter view. Pure white background; no water, scenery, props, text, border or watermark.",

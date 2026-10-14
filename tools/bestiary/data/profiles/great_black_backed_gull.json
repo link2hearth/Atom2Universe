@@ -12,8 +12,8 @@
       "fr": "Le goéland marin est le plus grand goéland du monde, un puissant oiseau de mer agressif des côtes rocheuses de l’Atlantique Nord. C’est un prédateur et charognard opportuniste qui poursuit les autres goélands pour leur voler leur nourriture."
     },
     "identification": {
-      "en": "About 64–79 cm long, a British adult averages 1.56 kg with a wing length near 474 mm. Adults have a white head, body and tail, a slate-black back and wings with white tips, pink legs, and a heavy yellow bill with a red spot; they look blacker than a lesser black-backed gull. Young birds are brown and white speckled and take about three years to gain adult plumage.",
-      "fr": "Long d’environ 64 à 79 cm, l’adulte britannique pèse en moyenne 1,56 kg, avec une aile d’environ 474 mm. Les adultes ont la tête, le corps et la queue blancs, le dos et les ailes noir ardoise aux extrémités blanches, des pattes roses et un gros bec jaune à tache rouge; ils paraissent plus noirs que le goéland brun. Les jeunes sont tachetés de brun et de blanc et mettent environ trois ans à acquérir le plumage adulte."
+      "en": "About 64–79 cm long, a British adult averages 1.56 kg with a wing length near 474 mm. Adults have a white head, body and tail, a slate-black back and wings with white tips, pink legs, and a heavy yellow bill with a red spot; they look blacker than a lesser black-backed gull. Young birds are brown and white speckled and take about three years to gain adult plumage. In one Welsh island sample, males were significantly larger than females in every measurement.",
+      "fr": "Long d’environ 64 à 79 cm, l’adulte britannique pèse en moyenne 1,56 kg, avec une aile d’environ 474 mm. Les adultes ont la tête, le corps et la queue blancs, le dos et les ailes noir ardoise aux extrémités blanches, des pattes roses et un gros bec jaune à tache rouge; ils paraissent plus noirs que le goéland brun. Les jeunes sont tachetés de brun et de blanc et mettent environ trois ans à acquérir le plumage adulte. Dans un échantillon d’îles galloises, les mâles étaient significativement plus grands que les femelles pour toutes les mesures."
     },
     "habitat": {
       "en": "It breeds mainly on coasts, on cliff ledges, rock outcrops and small islands, with only a few pairs at inland colonies. In winter it also moves to estuaries, lakes and lowland inland sites, and birds from Scandinavia join those of Britain and Ireland.",
@@ -98,6 +98,20 @@
       "facts": [
         "Length 64–79 cm; young are brown and white and gain adult plumage over their first three winters; omnivorous, kleptoparasitic; no known natural predators, cannibalism causes much chick mortality.",
         "Oil pollution a major cause of death; used as an indicator in beached-bird surveys."
+      ]
+    },
+    {
+      "title": {
+        "en": "Measurements and Weights of Great Black-backed Gulls",
+        "fr": "Mesures et poids des goélands marins"
+      },
+      "url": "https://www.britishbirds.co.uk/journal/article/measurements-and-weights-great-black-backed-gulls",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "A Welsh island sample found adult males significantly larger in all measurements; the study identifies one population and 1960s methods."
       ]
     }
   ],

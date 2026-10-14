@@ -241,7 +241,15 @@
       ],
       "facts": [
         "Adults are 84–90 cm long, wingspan 130–160 cm, mass 2.6–3.7 kg; males are about 5–10% longer and up to 20% heavier."
-      ]
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 21,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Large black cormorant with hooked bill, white breeding-season thigh patches, fully webbed feet; show wings spread drying beside shallow water.",

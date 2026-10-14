@@ -5,7 +5,7 @@
   "group": "birds",
   "sections": {
     "overview": "Le goéland argenté est le grand goéland typique des côtes d’Europe. À l’origine oiseau côtier nichant sur les falaises, il s’est adapté aux villes, nichant sur les toits, mais ses effectifs ont fortement diminué en Grande-Bretagne.",
-    "identification": "Un grand goéland de 54 à 60 cm. En Grande-Bretagne, les adultes pèsent en moyenne environ 970 g, avec une aile de 415 mm. Les adultes ont le dos gris clair, le dessous blanc, le bout des ailes noir tacheté de blanc, des pattes roses et un gros bec jaune portant une tache rouge. Les oiseaux de première année sont brun moucheté.",
+    "identification": "Les mâles adultes mesurent environ 60 à 66 cm et pèsent 1,05 à 1,25 kg ; les femelles sont plus petites, avec 56 à 62 cm et 0,80 à 0,98 kg, malgré un chevauchement des plages. En Grande-Bretagne, la longueur moyenne de l’aile de l’ensemble des adultes est d’environ 415 mm. L’adulte a le dos gris clair, le dessous blanc, le bout des ailes noir tacheté de blanc, des pattes roses et un gros bec jaune portant une tache rouge. Les oiseaux de première année sont brun moucheté.",
     "habitat": "Les nicheurs sont surtout fréquents sur les rivages ouverts et les falaises, mais certains nichent sur les bâtiments en ville. Hors saison de reproduction, il est répandu dans les basses terres de Grande-Bretagne, surtout près de la côte, et à l’intérieur des terres autour des décharges, des champs, des réservoirs et des lacs.",
     "diet": "Il se nourrit surtout d’animaux marins, le crabe vert étant l’un de ses favoris, ainsi que de poissons, d’insectes, de charognes et de déchets. C’est un opportuniste ; il piétine même le sol pour imiter la pluie et faire remonter les vers de terre.",
     "behavior": "Les goélands argentés se nourrissent en grands groupes sur les décharges et défendent vivement leurs nids et leurs jeunes. Les couples restent souvent unis toute la vie et reviennent chaque année au même site de nid. En ville, la nidification sur les toits leur offre beaucoup de nourriture et moins de prédateurs.",
@@ -21,6 +21,10 @@
     {
       "url": "https://www.rspb.org.uk/birds-and-wildlife/herring-gull",
       "title": "Goéland argenté — RSPB"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Larus_argentatus/",
+      "title": "Larus argentatus (Goéland argenté) — Animal Diversity Web, université du Michigan"
     }
   ]
 }

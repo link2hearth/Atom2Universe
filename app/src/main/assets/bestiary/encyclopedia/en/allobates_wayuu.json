@@ -1,0 +1,42 @@
+{
+  "id": "allobates_wayuu",
+  "name": "Wayuu frog",
+  "scientific": "Allobates wayuu",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Allobates wayuu is a tiny ground-dwelling frog in the family Aromobatidae; it was originally described as Colostethus wayuu. It is known only from the Serranía de la Macuira in La Guajira, northern Colombia, and is endemic to that country.",
+    "identification": "The smooth body is brown, with cream limbs and lips, darker flanks, pale dorsolateral stripes and a cream belly flecked gray-brown; the hind limbs have dark bars. The original description reports snout-to-vent lengths of 13.6–16.1 mm in males and 15.8–19.7 mm in females; the ranges overlap. These are body lengths, not standing heights; no standard width or body mass is reported for either sex. Toe discs are expanded and toes partly webbed, while the fingers are unwebbed.",
+    "habitat": "Records place it between 210 and 780 m elevation around its type locality in Macuira National Natural Park. The mountain range contains a patchwork of dry tropical, thorn, gallery, deciduous and low-elevation cloud forests; the species is associated with dry and subhumid forest settings, but its precise microhabitat is not well mapped.",
+    "diet": "A Colombian biodiversity collection describes it as insectivorous, feeding on small invertebrates. No species-specific prey inventory was available in the sources consulted, so more detailed claims about preferred prey would be uncertain.",
+    "behavior": "The species is described as terrestrial and diurnal. Its brown, pale-striped pattern is generally cryptic against leaf litter, while a Colombian review reports that males darken overall during calling and that the pale dorsolateral stripes become more conspicuous; that color change is based on field observations rather than a dedicated experiment.",
+    "reproduction": "It lays eggs on land among leaf litter or near small pools. After hatching, the male carries roughly four to ten tadpoles on his back to water, where they continue development; these details come from Colombian natural-history records, and the species’ breeding calendar remains poorly documented.",
+    "ecology": "Its known range lies within a protected mountain landscape that links dry forest, gallery forest and cloud-forest patches. The park authority lists A. wayuu among the reserve’s endemic amphibians, but this designation should not be read as proof that every suitable habitat patch has been surveyed.",
+    "conservation": "The 2017 IUCN assessment changed its global category from Vulnerable to Least Concern; the assessment table records that category change. Despite that status, its documented range remains exceptionally restricted to the Macuira area, and the available sources do not establish a current population trend or a measured threat level."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Dendrobatoidea/Aromobatidae/Allobatinae/Allobates/Allobates-wayuu",
+      "title": "Allobates wayuu — Amphibian Species of the World, American Museum of Natural History"
+    },
+    {
+      "url": "https://www.accefyn.com/revista/Vol_23/supl/225-230.pdf",
+      "title": "Una nueva especie de Colostethus de la región Caribe de Colombia — Revista de la Academia Colombiana de Ciencias, 1999"
+    },
+    {
+      "url": "https://www.parquesnacionales.gov.co/nuestros-parques/pnn-macuira/",
+      "title": "Parque Nacional Natural Macuira — Parques Nacionales Naturales de Colombia"
+    },
+    {
+      "url": "https://babel.banrepcultural.org/digital/collection/p17054coll33/id/1421/",
+      "title": "Allobates wayuu — Juan Manuel Renjifo biodiversity photograph collection, Banco de la República"
+    },
+    {
+      "url": "https://doi.org/10.19053/978-958-660-341-6.6",
+      "title": "Visual communication and reproductive ecology in amphibians and reptiles of northern Colombia’s tropical dry forest — UPTC, 2019"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T55166A85889561.en",
+      "title": "Allobates wayuu — The IUCN Red List of Threatened Species, 2017 assessment"
+    }
+  ]
+}

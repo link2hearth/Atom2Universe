@@ -147,9 +147,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 13,
+        "derived_prose_en_fr": 58,
         "notes_words": 10,
-        "total": 23,
+        "total": 68,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -653,7 +653,14 @@
       ],
       "prose_claims": [
         "identification.en.7"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 22,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Accurate adult Ambystoma mexicanum in natural dark mottled wild-type coloration, full body isolated on white. Show aquatic paedomorphic anatomy: three pairs of branched external gills, broad head, four short limbs with slender digits, long laterally compressed tail and continuous low dorsal/caudal fin. Do not depict the popular pink leucistic captive morph as the wild norm; no clothes, props, or other species.",

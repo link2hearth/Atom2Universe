@@ -5,7 +5,7 @@
   "group": "birds",
   "sections": {
     "overview": "Le pluvier grand-gravelot est un petit limicole ramassé qui niche à découvert sur les plages. Ses œufs et ses poussins sont si bien camouflés que les oiseaux sont facilement dérangés, et la fréquentation des plages est l’une des grandes causes de son déclin en Grande-Bretagne.",
-    "identification": "Le dessus est gris-brun et le dessous blanc, avec un collier et un front blancs. En été, il porte un plastron noir et un masque noir de « bandit » sur les yeux, qui virent au brun en hiver. Le bec est court, orange à pointe noire, et les pattes sont orange vif. Les adultes pèsent environ 54 à 82 g.",
+    "identification": "L’adulte mesure 18 à 20 cm de long, avec une envergure de 35 à 41 cm, et pèse environ 54 à 82 g. Les sexes se ressemblent ; les données de baguage du BTO indiquent une longueur d’aile presque identique chez l’adulte (environ 135,7 à 135,8 mm) et des masses moyennes de 67,5 g chez la femelle et 68,7 g chez le mâle. Le dessus est gris-brun et le dessous blanc, avec un collier et un front blancs. En été, il porte un plastron noir et un masque noir de « bandit » sur les yeux, qui virent au brun en hiver. Le bec est court, orange à pointe noire, et les pattes sont orange vif.",
     "habitat": "Il se reproduit surtout sur la côte, en particulier sur les plages de sable et de galets, et sur le machair dans les Uist. À l’intérieur, il utilise aussi les gravières, les berges, les rives de lochs et les prairies humides. Au Royaume-Uni, des oiseaux résidents restent toute l’année et des migrateurs venus du nord y transitent.",
     "diet": "Il se nourrit d’invertébrés côtiers et terrestres : coléoptères, vers marins, amphipodes, isopodes, mollusques et araignées. Il chasse à vue, en courant, s’arrêtant et picorant, et fait parfois trembler une patte sur le sable pour faire sortir les proies.",
     "behavior": "Les mâles défendent leur territoire par des déploiements de queue, des passes d’armes et des poursuites, et l’annoncent par de lents vols « papillon ». Le mâle creuse une cuvette dans les galets et la présente à la femelle lors d’une « cérémonie du nid ». Les adultes simulent une aile cassée pour détourner les prédateurs, et les poussins se tapissent et se cachent.",
@@ -25,6 +25,10 @@
     {
       "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130587",
       "title": "Charadrius hiaticula — fiche espèce Birds of Europe, Naturalis Biodiversity Center"
+    },
+    {
+      "url": "https://www.audubon.org/field-guide/bird/common-ringed-plover",
+      "title": "Pluvier grand-gravelot — guide de terrain Audubon"
     }
   ]
 }

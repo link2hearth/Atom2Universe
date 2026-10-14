@@ -1,0 +1,237 @@
+{
+  "id": "amphilophus_zaliosus",
+  "scientific": "Amphilophus zaliosus",
+  "group": "fish",
+  "name": {
+    "en": "Arrow cichlid",
+    "fr": "Mojarra flèche"
+  },
+  "sections": {
+    "overview": {
+      "en": "The arrow cichlid, called mojarra flecha in Spanish, is a cichlid found only in Nicaragua’s volcanic Lake Apoyo. It is one member of the lake’s endemic Midas-cichlid flock.",
+      "fr": "La mojarra flèche, appelée mojarra flecha en espagnol, est un Cichlidé présent uniquement dans le lac volcanique Apoyo, au Nicaragua. Elle appartient au groupe endémique des Cichlidés Midas du lac."
+    },
+    "identification": {
+      "en": "Its slim, arrow-shaped body, narrow tail stalk and silvery-grey sides distinguish it from deeper-bodied, bottom-oriented Amphilophus in the lake. Seven dark flank blotches form a broken stripe and fuse into bars during breeding, when both sexes darken. FishBase lists 20 cm total length. Breeding residents averaged 23.6 ± 0.5 cm for males and 20.1 ± 0.4 cm for females; length type is unstated and the difference was not significant (p = 0.06). No reliable adult height, width or mass range was found.",
+      "fr": "Son corps mince en forme de flèche, son pédoncule caudal étroit et ses flancs gris argenté le distinguent des Amphilophus plus hauts de corps et benthiques du même lac. Sept taches sombres forment une ligne discontinue, puis des barres pendant la reproduction; les deux sexes s’assombrissent alors. FishBase indique 20 cm de longueur totale. Les adultes reproducteurs mesuraient en moyenne 23,6 ± 0,5 cm chez les mâles et 20,1 ± 0,4 cm chez les femelles; le type de longueur n’est pas précisé et l’écart n’était pas significatif (p = 0,06). Aucune hauteur, largeur ou masse adulte fiable n’a été trouvée."
+    },
+    "habitat": {
+      "en": "It is adapted to open water rather than the bottom, swimming away from shore and the benthic zone more often than its high-bodied lake relatives.",
+      "fr": "Il est adapté à l’eau libre plutôt qu’au fond et s’éloigne davantage des rives et de la zone benthique que ses parents du lac, plus hauts de corps."
+    },
+    "diet": {
+      "en": "Stomach-content analyses found winged insects in every sampled arrow cichlid, while both it and the bottom-feeding Midas cichlid consumed biofilm. It is partly piscivorous, but detailed prey proportions remain sparse.",
+      "fr": "Les analyses stomacales ont trouvé des insectes ailés chez tous les spécimens étudiés; la mojarra flèche et le Cichlidé Midas benthique consommaient aussi du biofilm. L’espèce est en partie piscivore, mais les proportions détaillées des proies restent peu documentées."
+    },
+    "behavior": {
+      "en": "Breeding adults establish and defend fixed territories, usually caring for broods together around the nesting site.",
+      "fr": "Les adultes reproducteurs établissent et défendent des territoires fixes, et soignent généralement ensemble leur couvée près du nid."
+    },
+    "reproduction": {
+      "en": "Parents guard young, and biparental care continues for about a month after fry begin swimming freely.",
+      "fr": "Les parents gardent les jeunes, et les soins des deux adultes durent environ un mois après le début de la nage libre."
+    },
+    "ecology": {
+      "en": "Its elongated shape is linked to open-water swimming, unlike the compact, high-bodied benthic species living alongside it. The Lake Apoyo Midas cichlids are studied as an example of ecological diversification within one isolated lake.",
+      "fr": "Sa forme allongée est liée à la nage en eau libre, contrairement aux espèces benthiques plus compactes et hautes de corps qui cohabitent avec lui. Les Cichlidés Midas du lac Apoyo sont étudiés comme exemple de diversification écologique dans un lac isolé."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Critically Endangered (CR), assessed in 2019. Its entire known range is Lake Apoyo, with an estimated extent of occurrence and area of occupancy no greater than 22 km²; invasive fishes threaten habitat and young native fish.",
+      "fr": "L’UICN le classe « en danger critique » (CR), évaluation de 2019. Toute son aire connue se limite au lac Apoyo, dont l’étendue d’occurrence et la zone d’occupation sont estimées à 22 km² au plus; des poissons introduits menacent l’habitat et les jeunes poissons indigènes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Amphilophus zaliosus — IUCN Red List assessment, 2020",
+        "fr": "Amphilophus zaliosus — évaluation de la Liste rouge de l’UICN, 2020"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T169382A149120216.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment: endemic range, CR status and threats."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 8,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amphilophus zaliosus — FishBase species summary",
+        "fr": "Amphilophus zaliosus — notice FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/12324",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists a 20 cm TL maximum and Lake Apoyo range."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 11,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Behavioural naivety towards a brood predator in a crater lake fish — PLOS ONE, 2012",
+        "fr": "Naïveté comportementale face à un prédateur de couvée chez un poisson de lac de cratère — PLOS ONE, 2012"
+      },
+      "url": "https://doi.org/10.1371/journal.pone.0030064",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Field study: sizes, coloration and brood care."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 7,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Local variation and parallel evolution across crater-lake cichlids — Proceedings of the Royal Society B, 2010",
+        "fr": "Variation locale et évolution parallèle chez les Cichlidés des lacs de cratère — Proceedings of the Royal Society B, 2010"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2871887/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Comparative study: shape and habitat."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 5,
+        "total": 182,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Plan de Manejo de la Reserva Natural Laguna de Apoyo — MARENA, Nicaragua",
+        "fr": "Plan de gestion de la réserve naturelle Laguna de Apoyo — MARENA, Nicaragua"
+      },
+      "url": "https://www.marena.gob.ni/wp-content/uploads/2023/08/33-Plan-de-Manejo-Reserva-Natural-Laguna-Apoyo.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish national management plan identifies this endemic mojarra flecha."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 9,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sympatric speciation in Nicaraguan crater-lake cichlid fish — Nature, 2006",
+        "fr": "Spéciation sympatrique chez les Cichlidés des lacs de cratère nicaraguayens — Nature, 2006"
+      },
+      "url": "https://doi.org/10.1038/nature04325",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Stomach-content analyses found winged insects in all sampled A. zaliosus; both lake species fed on biofilm, with distinct diets and body shapes."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 22,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict an adult Amphilophus zaliosus in a side view in Lake Apoyo open water: slender, arrow-like silvery-grey body, narrow caudal peduncle and seven dark flank blotches or broken stripe. For breeding coloration, show the spots fused into dark bars and the body nearly black. Avoid golden Midas-cichlid coloration, a deep body or aquarium props.",
+  "uncertainties": [
+    "FishBase lists 20 cm total length, while one field study reports breeding residents averaging 23.6 cm for males and 20.1 cm for females. Its table does not state measurement type; the difference between the sexes was not significant at p = 0.06, so these are sample means rather than sex-specific maximum lengths.",
+    "The consulted studies describe a very narrow body but do not provide dependable adult height, width or body-mass ranges.",
+    "Detailed stomach-content data and species-specific clutch-size estimates were not located.",
+    "The IUCN category reflects a 2019 global assessment; the population trend was described as decreasing, but total population size was not evaluated in detail."
+  ],
+  "reviewed": true,
+  "review_note": "Profile combines the IUCN assessment, FishBase, field research on brood defence and sex-specific resident lengths, a comparative morphology paper, and Nicaragua’s Spanish-language protected-area plan. Conflicting size sources and missing adult body dimensions are explicit."
+}

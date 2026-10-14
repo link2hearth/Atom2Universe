@@ -1,0 +1,212 @@
+{
+  "id": "allenopithecus_nigroviridis",
+  "scientific": "Allenopithecus nigroviridis",
+  "group": "mammals",
+  "name": {
+    "en": "Allen's swamp monkey",
+    "fr": "Cercopithèque de Allen"
+  },
+  "sections": {
+    "overview": {
+      "en": "Allen's swamp monkey is the only living species in the genus Allenopithecus, a member of the Old World monkey family Cercopithecidae. Its range is centered on flooded forests in the central Congo Basin, chiefly in the Democratic Republic of the Congo and the Republic of the Congo. The IUCN assessment also records it in the Central African Republic.",
+      "fr": "Le cercopithèque de Allen est l’unique espèce actuelle du genre Allenopithecus, dans la famille des cercopithécidés. Son aire se concentre dans les forêts inondées du bassin central du Congo, surtout en République démocratique du Congo et en République du Congo. L’évaluation de l’UICN le signale aussi en République centrafricaine."
+    },
+    "identification": {
+      "en": "It is a robust, short-limbed monkey with a dark olive-gray to nearly black coat and paler underparts. The face is dark, with pale eyelids and chin; long cheek fur forms a rounded ruff, the crown looks flattened, and the hands and feet are broad. The Handbook of the Mammals of the World gives adult males a head-body length of 45–50 cm, a 51 cm tail and a mass of 5.9–6.1 kg; females measure 40–45 cm, have a 36 cm tail and weigh 3.2–3.7 kg. The sources provide no standardized standing height or body-width measurement.",
+      "fr": "C’est un singe robuste aux membres courts, au pelage gris olive à presque noir et au dessous plus clair. Son visage sombre porte des paupières et un menton pâles; les longs poils des joues forment une collerette arrondie, la calotte paraît aplatie et les mains comme les pieds sont larges. Le Handbook of the Mammals of the World donne aux mâles adultes une longueur tête-corps de 45 à 50 cm, une queue de 51 cm et une masse de 5,9 à 6,1 kg; les femelles mesurent 40 à 45 cm, ont une queue de 36 cm et pèsent de 3,2 à 3,7 kg. Les sources ne fournissent pas de mesure standard de la hauteur debout ni de la largeur du corps."
+    },
+    "habitat": {
+      "en": "It lives in swamp forest and along rivers, especially where seasonal floods leave the forest floor wet or submerged. Dense swamp woods and gallery forests are both reported as habitat.",
+      "fr": "Il vit dans les forêts marécageuses et le long des cours d’eau, surtout là où les crues saisonnières laissent le sol humide ou submergé. Des forêts marécageuses denses et des forêts-galeries sont signalées parmi ses habitats."
+    },
+    "diet": {
+      "en": "It is an omnivore that usually forages on the ground and in shallow water. Its diet includes fruit, seeds, young leaves and small invertebrates; the IUCN review estimates that animal matter supplies about one fifth of the diet.",
+      "fr": "Omnivore, il cherche généralement sa nourriture au sol et dans les eaux peu profondes. Son régime comprend des fruits, des graines, de jeunes feuilles et de petits invertébrés; selon l’évaluation de l’UICN, les aliments d’origine animale représentent environ un cinquième de son alimentation."
+    },
+    "behavior": {
+      "en": "It is active by day and moves on all fours through dense vegetation, on the ground and in trees. Field reports describe groups of up to 57 animals and individuals sleeping in trees beside or over water.",
+      "fr": "Il est actif le jour et se déplace à quatre pattes dans la végétation dense, au sol comme dans les arbres. Des groupes allant jusqu’à 57 individus ont été signalés, ainsi que des animaux dormant dans des arbres au bord de l’eau ou au-dessus."
+    },
+    "reproduction": {
+      "en": "Females generally give birth to one infant at a time. Young are reported to nurse for about two and a half months, but species-specific breeding timing is poorly documented.",
+      "fr": "Les femelles mettent généralement au monde un seul petit à la fois. Les jeunes seraient allaités pendant environ deux mois et demi, mais la période de reproduction propre à l’espèce est mal documentée."
+    },
+    "ecology": {
+      "en": "Its lowland forest niche is shaped by seasonal flooding; historic field surveys located the monkey in regularly inundated parts of the Congo Basin.",
+      "fr": "Son habitat forestier de basse altitude est façonné par les crues saisonnières; des relevés anciens situent le singe dans les secteurs régulièrement inondés du bassin du Congo."
+    },
+    "conservation": {
+      "en": "The 2019 global IUCN assessment lists the species as Least Concern but suspects a decline from bushmeat hunting; the scale of the impact remains uncertain.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2019 classe l’espèce en préoccupation mineure, mais soupçonne un déclin lié à la chasse pour la viande de brousse; l’ampleur de cet impact reste incertaine."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Allenopithecus nigroviridis — Handbook of the Mammals of the World, vol. 3: Primates",
+        "fr": "Allenopithecus nigroviridis — Handbook of the Mammals of the World, vol. 3 : Primates"
+      },
+      "url": "https://zenodo.org/records/6863243",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Sex-specific measurements from Mittermeier et al."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 6,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Allenopithecus nigroviridis — The IUCN Red List of Threatened Species",
+        "fr": "Allenopithecus nigroviridis — Liste rouge de l’UICN des espèces menacées"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T865A17952193.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment by Maisels et al. (2019)."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 7,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cercopithèque des marais — Futura, zoology reference",
+        "fr": "Cercopithèque des marais — Futura, dossier zoologie"
+      },
+      "url": "https://www.futura-sciences.com/planete/definitions/zoologie-cercopitheque-marais-10480/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "French species reference; heading contains a scientific-name typo."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 8,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Allenopithecus nigroviridis — Animal Diversity Web, University of Michigan",
+        "fr": "Allenopithecus nigroviridis — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Allenopithecus_nigroviridis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "University species account; species-specific field knowledge remains limited."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 8,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecological characteristics of the swamp monkey — Revue d’Écologie (Persée)",
+        "fr": "Quelques caractéristiques écologiques du singe des marais — Revue d’Écologie (Persée)"
+      },
+      "url": "https://www.persee.fr/doc/revec_0249-7395_1985_num_40_3_5288",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Jean-Pierre Gautier’s 1985 French field study of flooded-forest ecology and range."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 11,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult Allen's swamp monkey (Allenopithecus nigroviridis), isolated full-body naturalistic field-guide view on a pure white background: sturdy medium-sized guenon with short limbs, dark olive-gray to nearly black upper coat and paler gray-white underside; rounded dark face with distinct pale eyelids and chin; longer cheek fur forming a rounded ruff, flattened crown, small pointed ears, broad hands and feet, long tail. Show one adult male with the male's larger build; do not add baboon muzzle, bright red facial skin, exaggerated mane, or webbed fingers. Accurate primate anatomy.",
+  "uncertainties": [
+    "The IUCN assessment notes that its population trend is decreasing but that the magnitude of change and the impact of hunting have not been quantified adequately.",
+    "Size figures are from the Handbook of the Mammals of the World: male and female head-body length, tail length and mass are reported separately; standard standing height and body width were not available in consulted sources.",
+    "Social-group sizes and organization vary among reports and locations; the species is difficult to study in dense, flooded forest.",
+    "Some older secondary references give a broader range than the IUCN assessment; this profile follows the assessment and specialist mammal treatment for current range claims."
+  ],
+  "source_audit_version": 1,
+  "reviewed": true,
+  "review_note": "Bilingual profile checked against the IUCN assessment, a specialist mammal handbook, a French field study and university/zoology species accounts; sex-specific measurements and gaps are made explicit."
+}

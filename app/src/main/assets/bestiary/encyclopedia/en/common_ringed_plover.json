@@ -5,7 +5,7 @@
   "group": "birds",
   "sections": {
     "overview": "The common ringed plover is a small, dumpy wader that nests in the open on beaches. Its eggs and chicks are so well camouflaged that the birds are easily disturbed, and people on beaches are a major cause of its decline in Britain.",
-    "identification": "The upperparts are greyish-brown and the underparts white, with a white collar and forehead. In summer it has a black breast band and a black “bandit” mask across the eyes, which fade to brown in winter. The bill is blunt, orange with a black tip, and the legs are bright orange. Adults weigh about 54–82 g.",
+    "identification": "Adults are 18–20 cm long, with a 35–41 cm wingspan, and weigh about 54–82 g. The sexes look alike; BTO ringing data give almost identical adult wing lengths (about 135.7–135.8 mm) and mean masses (67.5 g in females, 68.7 g in males). The upperparts are greyish-brown and the underparts white, with a white collar and forehead. In summer it has a black breast band and a black “bandit” mask across the eyes, which fade to brown in winter. The bill is blunt, orange with a black tip, and the legs are bright orange.",
     "habitat": "It breeds mainly on the coast, especially on sandy and shingle beaches, and in the Uists on machair. Inland it also uses gravel pits, river margins, lochsides and wet meadows. In the UK, resident birds stay all year and migrants from the north pass through.",
     "diet": "It feeds on coastal and terrestrial invertebrates such as beetles, marine worms, amphipods, isopods, molluscs and spiders. It hunts by sight, running, stopping and pecking, and sometimes trembles a foot on the sand to draw prey out.",
     "behavior": "Males defend territories with tail-fanning, sparring and chases, and advertise them with slow “butterfly” flights. A male makes a shallow scrape in the shingle and shows it to the female in a “scrape ceremony”. Adults feign a broken wing to lure predators away, and the chicks crouch and hide.",
@@ -25,6 +25,10 @@
     {
       "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130587",
       "title": "Charadrius hiaticula — Birds of Europe species page, Naturalis Biodiversity Center"
+    },
+    {
+      "url": "https://www.audubon.org/field-guide/bird/common-ringed-plover",
+      "title": "Common Ringed Plover — Audubon Field Guide"
     }
   ]
 }

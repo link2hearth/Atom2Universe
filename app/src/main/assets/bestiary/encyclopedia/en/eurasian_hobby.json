@@ -5,7 +5,7 @@
   "group": "birds",
   "sections": {
     "overview": "The Eurasian hobby is a small falcon and a superb aerial hunter. It chases dragonflies and even swallows through the air with fast, agile flight, and spends the winter in Africa.",
-    "identification": "About the size of a kestrel, 29–36 cm long with a wingspan of 74–84 cm; British adults weigh around 211 g. The upperparts are slate-grey, the underparts whitish with dark streaks, with white cheeks, a black moustache and rufous thighs and undertail. In flight the long, pointed wings look scythe-shaped, like a large swift. Juveniles are browner and lack the red.",
+    "identification": "About the size of a kestrel, 29–36 cm long with a wingspan of 74–84 cm; British adults weigh around 211 g; females are slightly larger than males but otherwise similar in plumage. The upperparts are slate-grey, the underparts whitish with dark streaks, with white cheeks, a black moustache and rufous thighs and undertail. In flight the long, pointed wings look scythe-shaped, like a large swift. Juveniles are browner and lack the red.",
     "habitat": "It lives in open countryside such as lowland farmland, wetlands and heathland, often with scattered small woods. In Britain it was once mostly a bird of southern England but is spreading northwards.",
     "diet": "It eats large flying insects such as dragonflies, and small birds, especially swallows and martins. It often eats small prey on the wing, passing it from its talons to its beak in flight.",
     "behavior": "The hobby hunts in fast, high-speed aerial chases and can accelerate quickly, and it often soars high. It is relatively secretive when breeding. It is a summer visitor to Britain, usually arriving from late April, with the last birds leaving in October.",
@@ -25,6 +25,10 @@
     {
       "url": "https://en.wikipedia.org/wiki/Eurasian_hobby",
       "title": "Eurasian hobby — Wikipedia"
+    },
+    {
+      "url": "https://perch.birdweb.org/BIRDWEB/bird/eurasian_hobby",
+      "title": "Eurasian Hobby — BirdWeb, Seattle Audubon"
     }
   ]
 }

@@ -87,18 +87,16 @@
         "University records turkey sizes and predators."
       ],
       "prose_claims": [
-        "identification.en.1",
         "identification.en.2",
         "identification.en.3",
-        "identification.fr.1",
         "identification.fr.2",
         "identification.fr.3"
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 160,
+        "derived_prose_en_fr": 98,
         "notes_words": 6,
-        "total": 166,
+        "total": 104,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -334,6 +332,31 @@
         "derived_prose_en_fr": 81,
         "notes_words": 11,
         "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wild Turkey Fact Sheet — PBS Nature",
+        "fr": "Fiche sur le Dindon sauvage — PBS Nature"
+      },
+      "url": "https://www.pbs.org/wnet/nature/my-life-as-a-turkey-wild-turkey-fact-sheet/7299/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Typical total length is 99–124 cm in males and 76–94 cm in females; it also reports sex-specific mass ranges."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 19,
+        "total": 81,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     }

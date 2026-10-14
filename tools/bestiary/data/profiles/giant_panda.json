@@ -67,8 +67,8 @@
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 128,
-        "notes_words": 10,
-        "total": 138,
+        "notes_words": 31,
+        "total": 159,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },

@@ -5,7 +5,7 @@
   "group": "mammals",
   "sections": {
     "overview": "The greater mouse-eared bat is one of Europe’s largest bats, a member of the vesper-bat family. Across much of continental Europe, females gather in warm summer maternity roosts, often in large buildings; caves are important in the Mediterranean. At night it searches near the ground for arthropods. Its annual cycle links summer roosts, autumn mating, winter hibernation and the short season when females raise young.",
-    "identification": "Adults measure about 65–80 mm from head to body, weigh roughly 24–40 g and have a wingspan of 365–450 mm. The back is brown or sandy-brown, the underside pale; the bare face and long ears are pinkish. Its elongated muzzle and prominent tragus help with identification. The related lesser mouse-eared bat (Myotis blythii) can look very similar; field separation is improved by combining several measurements rather than relying on one trait. It has broad wings and flies slowly, close to the ground.",
+    "identification": "Adults measure about 65–80 mm from head to body, weigh roughly 24–40 g and have a wingspan of 365–450 mm. The back is brown or sandy-brown, the underside pale; the bare face and long ears are pinkish. Its elongated muzzle and prominent tragus help with identification. The related lesser mouse-eared bat (Myotis blythii) can look very similar; field separation is improved by combining several measurements rather than relying on one trait. In one European sample, females were significantly larger and heavier than males: mean forearm 62.92 vs 59.85 mm and mass 28.93 vs 24.18 g. It has broad wings and flies slowly, close to the ground.",
     "habitat": "Day roosts and feeding grounds differ. In Central Europe, maternity colonies often occupy warm, spacious, draught-free roofs of churches or historic buildings; southern colonies also use caves. Winter quarters include caves, tunnels, mines and similar cavities, and bats show fidelity to hibernation sites. Foraging commonly favours mature deciduous or mixed woodland with an open floor, where ground prey is accessible, as well as woodland edges, pastures and recently cut grass. A Bavarian tracking study found a local preference for deciduous forest, not a universal rule.",
     "diet": "This bat often gleans ground-active prey. It flies low, listens for arthropods rustling in leaf litter, then lands briefly to seize them. It continues echolocating as it approaches prey but can lower call strength; echoes from prey can be masked by the forest floor, making passive listening useful. Carabid beetles were the main prey by volume in one Swiss Alpine study, while bush-crickets dominated the diet of M. blythii. Other studies report seasonal changes and locally different prey mixes, so one colony cannot define the species’ diet.",
     "behavior": "After dusk, females from maternity colonies disperse to individual feeding grounds. After hibernation, males usually roost alone while females gather in maternity colonies. Experiments show that background noise can reduce use of feeding areas: bats avoided noisy compartments, especially when playback resembled vegetation movement. Such results show how noise may mask prey sounds, though a laboratory choice test does not measure wild population effects. At six roosts surveyed over two years, males showed fidelity to display spots; females visited from mid-August to mid-September, and repeated copulations were observed. Seasonal movements connect summer roosts with winter quarters.",
@@ -69,6 +69,10 @@
     {
       "url": "https://www.cms.int/species/myotis-myotis",
       "title": "Myotis myotis — Convention on Migratory Species species account"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7340307/",
+      "title": "Low seasonal variation in greater mouse-eared bat (Myotis myotis) blood parameters"
     }
   ]
 }

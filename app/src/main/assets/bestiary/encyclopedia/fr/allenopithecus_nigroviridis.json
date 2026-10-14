@@ -1,0 +1,38 @@
+{
+  "id": "allenopithecus_nigroviridis",
+  "name": "Cercopithèque de Allen",
+  "scientific": "Allenopithecus nigroviridis",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le cercopithèque de Allen est l’unique espèce actuelle du genre Allenopithecus, dans la famille des cercopithécidés. Son aire se concentre dans les forêts inondées du bassin central du Congo, surtout en République démocratique du Congo et en République du Congo. L’évaluation de l’UICN le signale aussi en République centrafricaine.",
+    "identification": "C’est un singe robuste aux membres courts, au pelage gris olive à presque noir et au dessous plus clair. Son visage sombre porte des paupières et un menton pâles; les longs poils des joues forment une collerette arrondie, la calotte paraît aplatie et les mains comme les pieds sont larges. Le Handbook of the Mammals of the World donne aux mâles adultes une longueur tête-corps de 45 à 50 cm, une queue de 51 cm et une masse de 5,9 à 6,1 kg; les femelles mesurent 40 à 45 cm, ont une queue de 36 cm et pèsent de 3,2 à 3,7 kg. Les sources ne fournissent pas de mesure standard de la hauteur debout ni de la largeur du corps.",
+    "habitat": "Il vit dans les forêts marécageuses et le long des cours d’eau, surtout là où les crues saisonnières laissent le sol humide ou submergé. Des forêts marécageuses denses et des forêts-galeries sont signalées parmi ses habitats.",
+    "diet": "Omnivore, il cherche généralement sa nourriture au sol et dans les eaux peu profondes. Son régime comprend des fruits, des graines, de jeunes feuilles et de petits invertébrés; selon l’évaluation de l’UICN, les aliments d’origine animale représentent environ un cinquième de son alimentation.",
+    "behavior": "Il est actif le jour et se déplace à quatre pattes dans la végétation dense, au sol comme dans les arbres. Des groupes allant jusqu’à 57 individus ont été signalés, ainsi que des animaux dormant dans des arbres au bord de l’eau ou au-dessus.",
+    "reproduction": "Les femelles mettent généralement au monde un seul petit à la fois. Les jeunes seraient allaités pendant environ deux mois et demi, mais la période de reproduction propre à l’espèce est mal documentée.",
+    "ecology": "Son habitat forestier de basse altitude est façonné par les crues saisonnières; des relevés anciens situent le singe dans les secteurs régulièrement inondés du bassin du Congo.",
+    "conservation": "L’évaluation mondiale de l’UICN publiée en 2019 classe l’espèce en préoccupation mineure, mais soupçonne un déclin lié à la chasse pour la viande de brousse; l’ampleur de cet impact reste incertaine."
+  },
+  "sources": [
+    {
+      "url": "https://zenodo.org/records/6863243",
+      "title": "Allenopithecus nigroviridis — Handbook of the Mammals of the World, vol. 3 : Primates"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T865A17952193.en",
+      "title": "Allenopithecus nigroviridis — Liste rouge de l’UICN des espèces menacées"
+    },
+    {
+      "url": "https://www.futura-sciences.com/planete/definitions/zoologie-cercopitheque-marais-10480/",
+      "title": "Cercopithèque des marais — Futura, dossier zoologie"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Allenopithecus_nigroviridis/",
+      "title": "Allenopithecus nigroviridis — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://www.persee.fr/doc/revec_0249-7395_1985_num_40_3_5288",
+      "title": "Quelques caractéristiques écologiques du singe des marais — Revue d’Écologie (Persée)"
+    }
+  ]
+}

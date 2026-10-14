@@ -12,8 +12,8 @@
       "fr": "Le goéland argenté est le grand goéland typique des côtes d’Europe. À l’origine oiseau côtier nichant sur les falaises, il s’est adapté aux villes, nichant sur les toits, mais ses effectifs ont fortement diminué en Grande-Bretagne."
     },
     "identification": {
-      "en": "A large gull of 54–60 cm. In Britain, adults average about 970 g with a wing of 415 mm. Adults have a pale grey back, white underparts, black wingtips with white spots, pink legs and a heavy yellow bill with a red spot. First-year birds are mottled brown.",
-      "fr": "Un grand goéland de 54 à 60 cm. En Grande-Bretagne, les adultes pèsent en moyenne environ 970 g, avec une aile de 415 mm. Les adultes ont le dos gris clair, le dessous blanc, le bout des ailes noir tacheté de blanc, des pattes roses et un gros bec jaune portant une tache rouge. Les oiseaux de première année sont brun moucheté."
+      "en": "Adult males measure about 60–66 cm and weigh 1.05–1.25 kg; females are smaller at 56–62 cm and 0.80–0.98 kg, with overlapping ranges. In Britain, all-adult mean wing length is about 415 mm. The adult has a pale grey back, white underparts, black wingtips with white spots, pink legs and a heavy yellow bill with a red spot. First-year birds are mottled brown.",
+      "fr": "Les mâles adultes mesurent environ 60 à 66 cm et pèsent 1,05 à 1,25 kg ; les femelles sont plus petites, avec 56 à 62 cm et 0,80 à 0,98 kg, malgré un chevauchement des plages. En Grande-Bretagne, la longueur moyenne de l’aile de l’ensemble des adultes est d’environ 415 mm. L’adulte a le dos gris clair, le dessous blanc, le bout des ailes noir tacheté de blanc, des pattes roses et un gros bec jaune portant une tache rouge. Les oiseaux de première année sont brun moucheté."
     },
     "habitat": {
       "en": "Breeding birds are most frequent on open shores and cliffs, but some nest on buildings in towns. Outside the breeding season it is widespread across lowland Britain, mostly near the coast, and inland around rubbish tips, fields, reservoirs and lakes.",
@@ -83,6 +83,20 @@
       "facts": [
         "54–60 cm; light grey back, white underparts, black wingtips with white spots, pink legs, yellow bill with red spot; first-year birds mottled brown.",
         "Eats fish, insects, carrion and refuse; stamps feet to bring worms up; chicks peck the red spot; pairs often lifelong, same nest site yearly; rooftop nesting since the 1920s; Red-listed after population declines."
+      ]
+    },
+    {
+      "title": {
+        "en": "Larus argentatus (Herring Gull) — Animal Diversity Web, University of Michigan",
+        "fr": "Larus argentatus (Goéland argenté) — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Larus_argentatus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult males are 60–66 cm and 1,050–1,250 g; females are 56–62 cm and 800–980 g; ranges overlap."
       ]
     }
   ],

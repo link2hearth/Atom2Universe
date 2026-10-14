@@ -1,0 +1,34 @@
+{
+  "id": "anartia_amathea",
+  "name": "Scarlet peacock",
+  "scientific": "Anartia amathea",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Anartia amathea is a Neotropical brush-footed butterfly ranging from Central America through much of South America and several Caribbean islands. It is often seen in open and disturbed places as well as forest edges.",
+    "identification": "The upper wings are dark brown to black with red-orange patches and a band of white spots; the underside repeats the pattern more softly. Males are usually vivid red, while females tend toward orange and are somewhat larger. The Trinidad guide gives an approximate 4 cm wingspan, not a separate male/female range.",
+    "habitat": "Adults use sunny clearings, fields, pastures, gardens and river margins, including disturbed land and secondary growth. Records extend from low elevations to about 1,600 m in parts of its range.",
+    "diet": "Adults drink nectar from flowering plants. Caterpillars feed on host foliage; documented hosts include Acanthaceae, but the full host-plant list remains incomplete.",
+    "behavior": "It is active by day; adults may shelter, feed and mate in the same local areas, but the Trinidad guide reports no structured groups.",
+    "reproduction": "Females lay greenish eggs on host plants; one Trinidad account reports several hundred and a potential total near 800.",
+    "ecology": "Its caterpillars depend on suitable host plants, while nectar-feeding adults use flowering vegetation in open landscapes. Red and orange wing patches differ between sexes and make the butterfly conspicuous in flight.",
+    "conservation": "The species is reported as common in disturbed settings across a broad Neotropical range, but the consulted accounts provide no quantitative population trend."
+  },
+  "sources": [
+    {
+      "url": "https://sta.uwi.edu/fst/lifesciences/sites/default/files/lifesciences/images/Anartia%20amathea%20-%20Scarlet%20Peacock%20Butterfly.pdf",
+      "title": "Anartia amathea — Online Guide to the Animals of Trinidad and Tobago, University of the West Indies"
+    },
+    {
+      "url": "https://www.wildnatureimages.org/Insects/Lepidoptera/Butterflies/Nymphalidae/Nymphalinae/Anartia-amathea.html",
+      "title": "Anartia amathea — Wild Nature Images species account"
+    },
+    {
+      "url": "https://es.wikipedia.org/wiki/Anartia_amathea",
+      "title": "Anartia amathea — Spanish species overview"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/327831056_Quantifying_wing_pattern_sexual_dimorphism_in_the_butterfly_Anartia_amathea_roeselia_Eschscholtz_Lepidoptera_Nymphalidae",
+      "title": "Quantifying wing pattern sexual dimorphism in Anartia amathea roeselia — Lepidoptera, 2018"
+    }
+  ]
+}

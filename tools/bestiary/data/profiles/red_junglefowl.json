@@ -66,9 +66,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 137,
+        "derived_prose_en_fr": 136,
         "notes_words": 11,
-        "total": 148,
+        "total": 147,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -97,9 +97,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 190,
+        "derived_prose_en_fr": 154,
         "notes_words": 8,
-        "total": 198,
+        "total": 162,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -184,9 +184,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 123,
+        "derived_prose_en_fr": 131,
         "notes_words": 13,
-        "total": 136,
+        "total": 144,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -213,9 +213,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 135,
+        "derived_prose_en_fr": 137,
         "notes_words": 11,
-        "total": 146,
+        "total": 148,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -350,9 +350,9 @@
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 59,
+        "derived_prose_en_fr": 85,
         "notes_words": 7,
-        "total": 66,
+        "total": 92,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -425,7 +425,14 @@
         "identification.en.6",
         "identification.en.7",
         "identification.fr.6"
-      ]
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 12,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
     }
   ],
   "illustration_notes": "Illustration: existing adult male red junglefowl image; no new image requested.",
