@@ -1,0 +1,34 @@
+{
+  "id": "caprimulgus_macrurus",
+  "name": "Large-tailed Nightjar",
+  "scientific": "Caprimulgus macrurus",
+  "group": "birds",
+  "sections": {
+    "overview": "This nocturnal nightjar ranges from South and Southeast Asia to northern Australia; in Singapore it remains a resident in forests, scrub and parks.",
+    "identification": "Its mottled brown, grey and black plumage resembles leaf litter and bark, while white patches at the wing and tail tips become conspicuous in flight.",
+    "habitat": "It uses open forest, scrub and wooded parks, resting motionless by day on the ground or lengthwise along a branch where its camouflage is effective.",
+    "diet": "Like other nightjars, it catches insects in flight after dusk; museum stomach records also include worker ants taken on the ground, an unusual supplementary foraging mode.",
+    "behavior": "It is strictly nocturnal, and its cryptic daytime posture makes it easy to overlook even in settled parks.",
+    "reproduction": "In Singapore it lays one or two eggs directly on the ground in a shallow scrape, without building a nest; both sexes have been reported sharing incubation.",
+    "ecology": "It belongs to Caprimulgus, the nightjar genus that also includes the European Nightjar (C. europaeus); the two are relatives with broadly similar nocturnal insect-hunting habits but occupy different regions.",
+    "conservation": "The global assessment lists it as Least Concern; this broad category does not remove the value of local forest and scrub habitat."
+  },
+  "sources": [
+    {
+      "url": "https://biodiversitysg.nparks.gov.sg/our-biodiversity/birds/other-birds/large-tailed-nightjar/",
+      "title": "Large-tailed Nightjar — NParks Biodiversity Singapore"
+    },
+    {
+      "url": "https://birdsqueensland.org.au/sunbird_issues/articles/Vol_30/James_2000_v30_3_89-92.pdf",
+      "title": "Large-tailed Nightjars apparently taking ants from the ground — The Sunbird"
+    },
+    {
+      "url": "https://www.nparks.gov.sg/docs/default-source/sbwr-wetlands-newsletter/wetlands-newsletter--vol-6-no-2-aug-1999.pdf",
+      "title": "Breeding habits and behaviour of Large-tailed Nightjar in Singapore — NParks wetlands newsletter"
+    },
+    {
+      "url": "https://www.iucnredlist.org/species/22725708/94900378",
+      "title": "Caprimulgus macrurus — IUCN Red List (2016 assessment)"
+    }
+  ]
+}

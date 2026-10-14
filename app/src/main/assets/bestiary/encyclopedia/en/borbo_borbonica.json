@@ -1,0 +1,38 @@
+{
+  "id": "borbo_borbonica",
+  "name": "Borbo skipper",
+  "scientific": "Borbo borbonica",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Borbo skipper is a grass-feeding butterfly in the family Hesperiidae, ranging widely through sub-Saharan Africa and nearby islands, with a small European foothold in southern Spain.",
+    "identification": "Dark brown wings carry translucent forewing spots; a Kenyan guide gives a wingspan of 25–30 mm.",
+    "habitat": "In southern Spain it occurs along lake margins and waterways, within a small European foothold far from its broad African range.",
+    "diet": "Larvae eat grasses including sorghum and panic grasses. Polypogon viridis is recorded as a European host.",
+    "behavior": "Adults fly year-round in Africa but only from May to October in Spain, and avoid the hottest part of the day.",
+    "reproduction": "The account notes seasonal adult flight, but gives no comparable brood counts across the range.",
+    "ecology": "Like the related grass skippers Gegenes nostrodamus and G. pumilio, it is tied to open grassy habitats, though Borbo is readily recognized by its translucent forewing spots and has a much broader African range.",
+    "conservation": "The Taita Hills field guide reports Least Concern, and the species remains widespread, although this regional assessment should not be read as a current global population trend."
+  },
+  "sources": [
+    {
+      "url": "https://naturekenya.org/wp-content/uploads/2021/06/A-field-guide-to-Taita-Hills-Butterflies-NMK-JRS-2021.pdf",
+      "title": "A field guide to Taita Hills Butterflies"
+    },
+    {
+      "url": "https://pyrgus.de/Borbo_en.html",
+      "title": "Borbo borbonica — European Lepidoptera and their ecology"
+    },
+    {
+      "url": "https://pyrgus.de/Borbo.html",
+      "title": "Borbo borbonica — Europäische Schmetterlinge und ihre Ökologie"
+    },
+    {
+      "url": "https://lepidoptera.eu/species/6633",
+      "title": "Borbo borbonica — Lepidoptera Mundi"
+    },
+    {
+      "url": "https://abdb-africa.org/species/Borbo_borbonica_borbonica",
+      "title": "Borbo borbonica — African Butterfly Database"
+    }
+  ]
+}

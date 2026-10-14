@@ -1,0 +1,30 @@
+{
+  "id": "calponia_harrisonfordi",
+  "name": "Araignée de Harrison Ford",
+  "scientific": "Calponia harrisonfordi",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette petite araignée caponiide est connue des chaînes côtières de Californie et constitue la seule espèce décrite du genre Calponia.",
+    "identification": "Contrairement à la plupart des caponiides nord-américains, qui n’ont que deux yeux, elle en possède huit disposés en deux rangées, caractère inhabituel qui rappelle l’état ancestral dans la famille.",
+    "habitat": "Elle a été trouvée dans les chênaies des chaînes côtières californiennes, sous des pierres, dans la litière et parmi d’autres débris au sol.",
+    "diet": "Les observations directes de son alimentation sont rares ; les descriptions de la famille indiquent que les caponiides chassent en déplacement et capturent d’autres araignées.",
+    "behavior": "C’est une araignée terrestre qui s’abrite sous des objets, mais son histoire naturelle reste peu documentée comparée à celle des araignées tisseuses de toiles bien connues.",
+    "reproduction": "Les descriptions consultées ne précisent pas le calendrier de la parade, des cocons d’œufs ou du développement des jeunes chez cette araignée.",
+    "ecology": "Le caponiide nord-américain apparenté Orthonops gertschi n’a que deux yeux ; ce caractère offre un contraste frappant entre ces proches parents de la même famille.",
+    "conservation": "Son aire connue est géographiquement restreinte, mais les sources taxonomiques et naturalistes consultées ne donnent pas de catégorie officielle de menace à l’échelle mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://citeseerx.ist.psu.edu/document?doi=58d3be852f0bdd77c34eab1605751ac510711278&repid=rep1&type=pdf",
+      "title": "Un nouveau genre d’araignée caponiide de Californie — American Museum Novitates (anglais)"
+    },
+    {
+      "url": "https://doi.org/10.1525/california/9780520274884.003.0013",
+      "title": "Famille des Caponiidae — Common Spiders of North America, Oxford Academic (anglais)"
+    },
+    {
+      "url": "https://wsc.nmbe.ch/species-list/660/Calponia",
+      "title": "Calponia — catalogue mondial des araignées"
+    }
+  ]
+}

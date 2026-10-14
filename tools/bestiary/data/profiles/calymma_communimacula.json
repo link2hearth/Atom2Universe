@@ -1,0 +1,145 @@
+{
+  "id": "calymma_communimacula",
+  "scientific": "Calymma communimacula",
+  "group": "invertebrates",
+  "name": {
+    "en": "Shielded Beauty Moth",
+    "fr": "Anthophile écussonnée"
+  },
+  "sections": {
+    "overview": {
+      "en": "This locally recorded moth belongs to the noctuid complex traditionally called Eublemmini and ranges from southern Europe across parts of the eastern Mediterranean to western Asia.",
+      "fr": "Cette noctuelle observée localement appartient au groupe traditionnel des Eublemmini et se rencontre du sud de l’Europe à certaines régions de la Méditerranée orientale et de l’Asie occidentale."
+    },
+    "identification": {
+      "en": "It is a small, patterned moth whose grey-brown forewings bear a contrasting pale central mark; its French name, anthophile écussonnée, refers to its shield-like marking.",
+      "fr": "C’est un petit papillon nocturne aux ailes antérieures gris-brun marquées d’un motif central pâle ; son nom français, anthophile écussonnée, évoque cette tache en forme d’écusson."
+    },
+    "habitat": {
+      "en": "Records come from warm, relatively dry Mediterranean and steppe landscapes, including foothills and open scrub; its scattered observations make local habitat use incompletely known.",
+      "fr": "Les observations proviennent de milieux méditerranéens et steppiques chauds et relativement secs, notamment des piémonts et des broussailles ouvertes ; sa répartition ponctuée laisse mal connaître ses usages locaux de l’habitat."
+    },
+    "diet": {
+      "en": "Unlike most familiar caterpillars that chew leaves, its larvae are reported to feed on scale insects living on woody plants, including fruit trees.",
+      "fr": "Contrairement à la plupart des chenilles connues qui mangent des feuilles, ses larves sont signalées comme prédatrices de cochenilles installées sur des plantes ligneuses, notamment des arbres fruitiers."
+    },
+    "behavior": {
+      "en": "Adults are recorded in two seasonal periods in parts of the eastern Mediterranean, with local flight dates varying by region.",
+      "fr": "Dans certaines régions de la Méditerranée orientale, les adultes sont observés durant deux périodes de l’année, dont les dates varient selon la région."
+    },
+    "reproduction": {
+      "en": "Published regional accounts report two generations per year in Israel, with adults flying in late spring to early summer and again in late summer; this schedule should not be generalized to every population.",
+      "fr": "Des comptes rendus régionaux signalent deux générations annuelles en Israël, avec des adultes à la fin du printemps et au début de l’été, puis à la fin de l’été ; ce calendrier ne doit pas être généralisé à toutes les populations."
+    },
+    "ecology": {
+      "en": "Calymma is a genus represented by this species in the consulted European catalogues; it is grouped with small Eublemmini moths, but no close same-genus cousin is available for a direct bestiary comparison.",
+      "fr": "Dans les catalogues européens consultés, le genre Calymma n’est représenté que par cette espèce ; elle est rapprochée des petits papillons du groupe Eublemmini, mais aucune espèce congénère proche n’est disponible pour une comparaison directe dans le bestiaire."
+    },
+    "conservation": {
+      "en": "No global Red List category was found in the consulted sources, and the patchy distribution records do not by themselves justify assigning one.",
+      "fr": "Les sources consultées ne donnent pas de catégorie de Liste rouge mondiale ; les données de répartition fragmentaires ne suffisent pas à en attribuer une."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "L’Anthophile écussonnée — Lepinet, Lépidoptères de France",
+        "fr": "L’Anthophile écussonnée — Lepinet, Lépidoptères de France"
+      },
+      "url": "https://lepinet.fr/especes/nation/lep/?e=lquoi&id=45480",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "French species account gives the vernacular name, French records and scale-insect larval food."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 13,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Contribution to knowledge of the Balkan Lepidoptera III — Ecologica Montenegrina / SHILAP study PDF",
+        "fr": "Contribution à la connaissance des lépidoptères balkaniques III — Ecologica Montenegrina / étude SHILAP (anglais)"
+      },
+      "url": "https://citeseerx.ist.psu.edu/document?doi=ec9d39b167f339e205a2bc4b6d4795c54a88fb2d&repid=rep1&type=pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Peer-reviewed regional account maps the Mediterranean–Iranian range, describes local flight periods and reports scale-insect-feeding larvae."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 15,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Calymma communimacula — LepiForum (German-language specialist reference)",
+        "fr": "Calymma communimacula — LepiForum (référence spécialisée en allemand)"
+      },
+      "url": "https://lepiforum.org/wiki/page/Calymma_communimacula",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "German specialist page gives taxonomic placement, appearance and collated regional occurrence records; it contains no global threat assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 18,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The unusual scale-insect diet is reported in regional lepidopteran literature; older accounts disagree about specific prey, so the entry uses the better-supported broad wording. Two annual generations are documented locally in Israel, not established throughout the range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a French species account with a regional peer-reviewed study and German specialist catalogue; retained locality qualifiers for flight periods and the unusual scale-insect diet."
+}

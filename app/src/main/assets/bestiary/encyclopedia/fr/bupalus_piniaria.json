@@ -1,0 +1,30 @@
+{
+  "id": "bupalus_piniaria",
+  "name": "Phalène du pin",
+  "scientific": "Bupalus piniaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "La phalène du pin est un géométridé des forêts de conifères d’Europe et du nord de l’Eurasie ; ses chenilles mangent les aiguilles et peuvent défolier les bois.",
+    "identification": "Les mâles sont fins et brunâtres, aux antennes pectinées ; les femelles, plus larges et pâles, portent une tache blanche sur l’aile antérieure.",
+    "habitat": "Elle est surtout associée au pin sylvestre, mais les chenilles mangent aussi d’autres conifères comme le pin tordu, l’épicéa et le mélèze.",
+    "diet": "Les chenilles consomment les aiguilles ; les fortes attaques enlèvent le feuillage et peuvent ralentir la croissance ou tuer des arbres affaiblis.",
+    "behavior": "Les populations connaissent parfois des pullulations de plusieurs années, surtout dans les plantations de pins sensibles, où les repas répétés peuvent provoquer une forte défoliation.",
+    "reproduction": "Une génération se développe généralement par an : les œufs sont pondus sur les aiguilles, les chenilles s’alimentent en été et en automne, puis les chrysalides hivernent sous les aiguilles tombées ou les débris.",
+    "ecology": "Ses effets forestiers recoupent ceux de Panolis flammea, autre mangeuse d’aiguilles, bien que les deux diffèrent par leur taxonomie et leur cycle.",
+    "conservation": "Elle n’est généralement pas considérée comme menacée ; lors des pullulations, elle est suivie comme ravageur forestier, les dégâts dépendant de sa densité, de l’état des arbres et du site."
+  },
+  "sources": [
+    {
+      "url": "https://cdn.forestresearch.gov.uk/1987/03/fchb001.pdf",
+      "title": "Insectes forestiers — Forestry Commission Handbook"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5656/",
+      "title": "Bupalus piniaria — Catalogue belge des Lépidoptères"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7909799/",
+      "title": "Reconstitution des pullulations de la phalène du pin — Forests"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "calymma_communimacula",
+  "name": "Anthophile écussonnée",
+  "scientific": "Calymma communimacula",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette noctuelle observée localement appartient au groupe traditionnel des Eublemmini et se rencontre du sud de l’Europe à certaines régions de la Méditerranée orientale et de l’Asie occidentale.",
+    "identification": "C’est un petit papillon nocturne aux ailes antérieures gris-brun marquées d’un motif central pâle ; son nom français, anthophile écussonnée, évoque cette tache en forme d’écusson.",
+    "habitat": "Les observations proviennent de milieux méditerranéens et steppiques chauds et relativement secs, notamment des piémonts et des broussailles ouvertes ; sa répartition ponctuée laisse mal connaître ses usages locaux de l’habitat.",
+    "diet": "Contrairement à la plupart des chenilles connues qui mangent des feuilles, ses larves sont signalées comme prédatrices de cochenilles installées sur des plantes ligneuses, notamment des arbres fruitiers.",
+    "behavior": "Dans certaines régions de la Méditerranée orientale, les adultes sont observés durant deux périodes de l’année, dont les dates varient selon la région.",
+    "reproduction": "Des comptes rendus régionaux signalent deux générations annuelles en Israël, avec des adultes à la fin du printemps et au début de l’été, puis à la fin de l’été ; ce calendrier ne doit pas être généralisé à toutes les populations.",
+    "ecology": "Dans les catalogues européens consultés, le genre Calymma n’est représenté que par cette espèce ; elle est rapprochée des petits papillons du groupe Eublemmini, mais aucune espèce congénère proche n’est disponible pour une comparaison directe dans le bestiaire.",
+    "conservation": "Les sources consultées ne donnent pas de catégorie de Liste rouge mondiale ; les données de répartition fragmentaires ne suffisent pas à en attribuer une."
+  },
+  "sources": [
+    {
+      "url": "https://lepinet.fr/especes/nation/lep/?e=lquoi&id=45480",
+      "title": "L’Anthophile écussonnée — Lepinet, Lépidoptères de France"
+    },
+    {
+      "url": "https://citeseerx.ist.psu.edu/document?doi=ec9d39b167f339e205a2bc4b6d4795c54a88fb2d&repid=rep1&type=pdf",
+      "title": "Contribution à la connaissance des lépidoptères balkaniques III — Ecologica Montenegrina / étude SHILAP (anglais)"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Calymma_communimacula",
+      "title": "Calymma communimacula — LepiForum (référence spécialisée en allemand)"
+    }
+  ]
+}

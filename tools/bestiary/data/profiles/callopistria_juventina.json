@@ -1,0 +1,144 @@
+{
+  "id": "callopistria_juventina",
+  "scientific": "Callopistria juventina",
+  "group": "invertebrates",
+  "name": {
+    "en": "Latin Moth",
+    "fr": "Noctuelle de la fougère"
+  },
+  "sections": {
+    "overview": {
+      "en": "This fern-feeding noctuid moth occurs across parts of southern and central Europe and eastward through western Asia; records are local rather than uniformly common.",
+      "fr": "Cette noctuelle associée aux fougères vit dans certaines régions du sud et du centre de l’Europe, avec une aire qui s’étend vers l’Asie occidentale ; ses observations sont locales et l’espèce n’est pas uniformément commune."
+    },
+    "identification": {
+      "en": "Adults have a wingspan of about 34–38 mm and patterned brown forewings; its names in several European languages refer to bracken, its characteristic larval food plant.",
+      "fr": "L’adulte a une envergure d’environ 34 à 38 mm et des ailes antérieures brunes et dessinées ; plusieurs noms européens font référence à la fougère aigle, sa plante nourricière caractéristique au stade larvaire."
+    },
+    "habitat": {
+      "en": "It is recorded in deciduous and mixed woodland where bracken grows, including warm, fern-rich clearings and woodland margins.",
+      "fr": "On l’observe dans les forêts de feuillus et les bois mixtes où pousse la fougère aigle, notamment dans les clairières chaudes et les lisières riches en fougères."
+    },
+    "diet": {
+      "en": "The caterpillars feed on bracken (Pteridium aquilinum), rather than on the broad range of flowering plants used by many moth larvae.",
+      "fr": "Les chenilles se nourrissent de fougère aigle (Pteridium aquilinum), plutôt que de la grande diversité de plantes à fleurs consommées par bien des chenilles de papillons nocturnes."
+    },
+    "behavior": {
+      "en": "Adults fly mainly in early summer and may come to artificial light; in Britain it is only an occasional migrant, not a confirmed breeding resident.",
+      "fr": "Les adultes volent surtout au début de l’été et peuvent être attirés par les lumières artificielles ; en Grande-Bretagne, l’espèce n’est qu’une migratrice occasionnelle et n’y niche pas de façon confirmée."
+    },
+    "reproduction": {
+      "en": "In northern European accounts there is one summer generation, and the fully grown larva overwinters before pupating the following spring.",
+      "fr": "Dans les observations d’Europe septentrionale, l’espèce produit une génération estivale ; la chenille arrivée à maturité hiverne avant de se nymphoser au printemps suivant."
+    },
+    "ecology": {
+      "en": "Its specialised use of bracken links it to other fern-feeding Callopistria moths, but the consulted sources do not establish a particularly close sister species in the local bestiary.",
+      "fr": "Sa spécialisation sur la fougère aigle la rapproche d’autres Callopistria dont les chenilles mangent des fougères, mais les sources consultées ne permettent pas d’identifier dans le bestiaire une espèce sœur particulièrement proche."
+    },
+    "conservation": {
+      "en": "A Belgian regional assessment lists it as Near Threatened in Flanders; that local category should not be mistaken for a global IUCN assessment.",
+      "fr": "Une évaluation régionale belge la classe « quasi menacée » en Flandre ; cette catégorie locale ne doit pas être confondue avec une évaluation mondiale de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Callopistria juventina — Lepidoptera Mundi",
+        "fr": "Callopistria juventina — Lepidoptera Mundi (site multilingue)"
+      },
+      "url": "https://lepidoptera.eu/species/941",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Lepidoptera Mundi gives a multilingual name list, European range, woodland habitat, wingspan and bracken host plant."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 16,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Callopistria juventina — Belgian Biodiversity Platform, Lepidoptera of Belgium",
+        "fr": "Callopistria juventina — Plateforme belge de la biodiversité, Lépidoptères de Belgique"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5667/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Belgian account gives the Flanders regional category, adult season and overwintering larval stage."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 13,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Latin — UKMoths",
+        "fr": "The Latin — UKMoths (papillon nocturne de la fougère)"
+      },
+      "url": "https://www.ukmoths.org.uk/species/callopistria-juventina/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "overview"
+      ],
+      "facts": [
+        "UK account confirms bracken as larval food and describes the species as a rare immigrant in Britain."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 17,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Near Threatened category is specific to Flanders, and seasonal details can differ across the species’ range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a multilingual European species account with Belgian regional assessment and British records; made the limited regional scope of conservation status explicit."
+}

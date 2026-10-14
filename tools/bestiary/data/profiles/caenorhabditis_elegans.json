@@ -1,0 +1,142 @@
+{
+  "id": "caenorhabditis_elegans",
+  "scientific": "Caenorhabditis elegans",
+  "group": "invertebrates",
+  "name": {
+    "en": "Nematode Worm",
+    "fr": "Nématode Caenorhabditis elegans"
+  },
+  "sections": {
+    "overview": {
+      "en": "Caenorhabditis elegans is a tiny, transparent free-living nematode and a major laboratory model for development, genetics, neurons and ageing.",
+      "fr": "Caenorhabditis elegans est un minuscule nématode transparent et libre, modèle de laboratoire pour étudier le développement, la génétique, les neurones et le vieillissement."
+    },
+    "identification": {
+      "en": "Adults are about a millimetre long; most are self-fertilizing hermaphrodites, while rare males have a specialized mating tail.",
+      "fr": "Les adultes mesurent environ un millimètre ; la plupart sont hermaphrodites autofécondants, tandis que les rares mâles ont une queue spécialisée pour l’accouplement."
+    },
+    "habitat": {
+      "en": "In nature it is often found in moist, bacteria-rich rotting plant matter such as compost or decaying fruit, not simply as a permanent soil dweller.",
+      "fr": "Dans la nature, il vit souvent dans des matières végétales humides et riches en bactéries, comme compost ou fruits pourris, et non simplement dans le sol en permanence."
+    },
+    "diet": {
+      "en": "It eats bacteria, including Escherichia coli in laboratory culture; food supply and crowding can alter development.",
+      "fr": "Il mange des bactéries, dont Escherichia coli en laboratoire ; nourriture et densité peuvent modifier son développement."
+    },
+    "behavior": {
+      "en": "When food is depleted or conditions crowded, larvae can enter the stress-resistant dauer stage, survive for months and disperse.",
+      "fr": "Quand la nourriture manque ou que la densité augmente, les larves peuvent entrer au stade dauer résistant, survivre des mois et se disperser."
+    },
+    "reproduction": {
+      "en": "At 25 °C its egg-to-egg cycle can take about three days; hermaphrodites self-fertilize, although males permit outcrossing.",
+      "fr": "À 25 °C, son cycle de l’œuf à la ponte dure environ trois jours ; les hermaphrodites s’autofécondent, mais les mâles permettent le brassage génétique."
+    },
+    "ecology": {
+      "en": "It is one of many Caenorhabditis species; relatives such as C. briggsae share the hermaphrodite-male system, but findings do not automatically generalize across the genus.",
+      "fr": "C’est une des nombreuses espèces de Caenorhabditis ; des proches comme C. briggsae partagent le système hermaphrodite-mâle, mais les résultats ne se généralisent pas automatiquement."
+    },
+    "conservation": {
+      "en": "It is not assessed as threatened wildlife; laboratory strains dominate research while natural populations are patchy and hard to find.",
+      "fr": "Il n’est pas évalué comme espèce sauvage menacée ; les souches de laboratoire dominent la recherche, les populations naturelles étant localisées et difficiles à trouver."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A Transparent Window into Biology — WormBook/NCBI",
+        "fr": "Une fenêtre transparente sur la biologie — WormBook/NCBI"
+      },
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK299460/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Reviewed primer describes transparency, model-organism use and the bacterial habitat context."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 11,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecology of Caenorhabditis species — WormBook/NCBI",
+        "fr": "Écologie des espèces de Caenorhabditis — WormBook/NCBI"
+      },
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK19723/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Genus review discusses natural substrates, dauer biology and food-associated development."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 10,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Life history in Caenorhabditis elegans — PMC",
+        "fr": "Histoire de vie de Caenorhabditis elegans — PMC"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11538407/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Recent review places C. elegans life history among nematodes and congeners."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 11,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Natural ecology is less understood than laboratory biology; substrate reports vary with sampling and region.",
+    "Comparable French-language species detail was not found; authoritative reviews consulted are in English."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked WormBook reviews on species biology and genus ecology with a recent life-history synthesis. C. briggsae is a carefully qualified comparison."
+}

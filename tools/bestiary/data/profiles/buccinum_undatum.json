@@ -1,0 +1,142 @@
+{
+  "id": "buccinum_undatum",
+  "scientific": "Buccinum undatum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common Whelk",
+    "fr": "Buccin commun"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large predatory sea snail is common in cold North Atlantic waters; French names include buccin commun, bulot and bourgot.",
+      "fr": "Ce grand escargot marin prédateur vit dans les eaux froides de l’Atlantique Nord ; ses noms français comprennent buccin commun, bulot et bourgot."
+    },
+    "identification": {
+      "en": "Its heavy shell has a pointed spire, seven or eight rounded whorls, spiral ridges and a short siphonal canal; colour varies geographically.",
+      "fr": "Sa coquille robuste a une spire pointue, sept ou huit tours arrondis, des côtes spirales et un court canal siphonal ; sa couleur varie selon les régions."
+    },
+    "habitat": {
+      "en": "It inhabits mud, sand, gravel and rocky seabeds from the shore to deeper shelf waters, and can partly bury itself in soft sediment.",
+      "fr": "Il fréquente vase, sable, gravier et fonds rocheux du littoral aux eaux plus profondes du plateau ; il peut s’enfouir dans les sédiments meubles."
+    },
+    "diet": {
+      "en": "It scavenges dead animals and preys on worms and other bottom invertebrates, detecting food through chemical traces in water.",
+      "fr": "Il consomme des animaux morts et capture des vers et d’autres invertébrés benthiques, repérant la nourriture grâce aux substances chimiques dans l’eau."
+    },
+    "behavior": {
+      "en": "Adults move slowly, often partly buried with the siphon exposed, but crawl toward food or away from disturbance.",
+      "fr": "Les adultes se déplacent lentement, souvent à demi enfouis avec le siphon exposé, mais rampent vers la nourriture ou pour fuir."
+    },
+    "reproduction": {
+      "en": "Sexes are separate and fertilization internal; females attach egg capsules to firm objects, and young hatch without a planktonic larval stage.",
+      "fr": "Les sexes sont séparés et la fécondation interne ; les femelles fixent les capsules d’œufs à des supports solides et les jeunes éclosent sans stade larvaire planctonique."
+    },
+    "ecology": {
+      "en": "Buccinum includes other northern whelks; several congeners occur in the Gulf of St Lawrence, so “whelk” alone may not identify one species.",
+      "fr": "Buccinum comprend d’autres buccins nordiques ; plusieurs congénères vivent dans le golfe du Saint-Laurent, aussi « bulot » ne désigne pas toujours une espèce précise."
+    },
+    "conservation": {
+      "en": "Slow growth, late maturity and low mobility make local populations vulnerable to concentrated fishing; management rules vary regionally.",
+      "fr": "Sa croissance lente, sa maturité tardive et sa faible mobilité rendent les populations locales vulnérables à la pêche ; les règles varient régionalement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Integrated Fisheries Management Plan for Whelk — Fisheries and Oceans Canada",
+        "fr": "Plan de gestion intégrée de la pêche du buccin — Pêches et Océans Canada"
+      },
+      "url": "https://www.dfo-mpo.gc.ca/fisheries-peches/ifmp-gmp/whelk-buccin/2025/index-fra.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The bilingual Canadian plan documents North Atlantic range, habitat, feeding and local fishery vulnerability."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 14,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Whelk — Marine and Freshwater Research Institute, Iceland",
+        "fr": "Buccin commun — Institut islandais de recherche marine"
+      },
+      "url": "https://www.hafogvatn.is/static/extras/images/45_buc_2026_1_techreport_en.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The Icelandic report provides shell, feeding and egg development data."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 10,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Buccinum undatum — DORIS, FFESSM",
+        "fr": "Buccinum undatum — DORIS, FFESSM"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Buccinum-undatum-Buccin-commun-860",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French account confirms French common-name variants and seasonal observations."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 9,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Depth, maturity size and growth differ among regions; Canadian measurements should not be generalized throughout the Atlantic.",
+    "Le rapport islandais décrit des stocks locaux, pas un calendrier universel."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Canada’s fisheries plan in French and English with Icelandic fisheries science and French DORIS; kept genus and species claims distinct."
+}

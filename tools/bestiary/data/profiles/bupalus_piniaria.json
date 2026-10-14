@@ -1,0 +1,142 @@
+{
+  "id": "bupalus_piniaria",
+  "scientific": "Bupalus piniaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Pine Looper",
+    "fr": "Phalène du pin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The pine looper is a geometrid moth of European and northern Eurasian conifer forests; caterpillars eat pine needles and can periodically defoliate woodland.",
+      "fr": "La phalène du pin est un géométridé des forêts de conifères d’Europe et du nord de l’Eurasie ; ses chenilles mangent les aiguilles et peuvent défolier les bois."
+    },
+    "identification": {
+      "en": "Males are slender and brownish with comb-like antennae; broader females are paler and bear a white forewing patch.",
+      "fr": "Les mâles sont fins et brunâtres, aux antennes pectinées ; les femelles, plus larges et pâles, portent une tache blanche sur l’aile antérieure."
+    },
+    "habitat": {
+      "en": "It is associated chiefly with Scots pine, though larvae also feed on other conifers such as lodgepole pine, spruce and larch.",
+      "fr": "Elle est surtout associée au pin sylvestre, mais les chenilles mangent aussi d’autres conifères comme le pin tordu, l’épicéa et le mélèze."
+    },
+    "diet": {
+      "en": "Caterpillars consume needles; severe feeding removes foliage and can reduce growth or kill weakened trees.",
+      "fr": "Les chenilles consomment les aiguilles ; les fortes attaques enlèvent le feuillage et peuvent ralentir la croissance ou tuer des arbres affaiblis."
+    },
+    "behavior": {
+      "en": "Populations sometimes undergo multi-year outbreaks, particularly in susceptible pine plantations, where repeated feeding can cause extensive defoliation.",
+      "fr": "Les populations connaissent parfois des pullulations de plusieurs années, surtout dans les plantations de pins sensibles, où les repas répétés peuvent provoquer une forte défoliation."
+    },
+    "reproduction": {
+      "en": "Usually one generation develops annually: eggs are laid on needles, larvae feed in summer and autumn, and pupae overwinter among fallen needles or debris.",
+      "fr": "Une génération se développe généralement par an : les œufs sont pondus sur les aiguilles, les chenilles s’alimentent en été et en automne, puis les chrysalides hivernent sous les aiguilles tombées ou les débris."
+    },
+    "ecology": {
+      "en": "Its forestry impacts overlap with Panolis flammea, another pine-needle feeder, although the two differ taxonomically and in life cycle.",
+      "fr": "Ses effets forestiers recoupent ceux de Panolis flammea, autre mangeuse d’aiguilles, bien que les deux diffèrent par leur taxonomie et leur cycle."
+    },
+    "conservation": {
+      "en": "It is not generally considered threatened; during outbreaks it is monitored as a forest pest, with damage depending on moth density, tree condition and site.",
+      "fr": "Elle n’est généralement pas considérée comme menacée ; lors des pullulations, elle est suivie comme ravageur forestier, les dégâts dépendant de sa densité, de l’état des arbres et du site."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Forest Insects — Forestry Commission Handbook",
+        "fr": "Insectes forestiers — Forestry Commission Handbook"
+      },
+      "url": "https://cdn.forestresearch.gov.uk/1987/03/fchb001.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The forestry handbook documents pine feeding, seasonality, host stands and damaging outbreaks."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 12,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bupalus piniaria — Belgian Lepidoptera Catalogue",
+        "fr": "Bupalus piniaria — Catalogue belge des Lépidoptères"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5656/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The Belgian catalogue confirms taxonomy and pupal overwintering among fallen needles."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 11,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pine Looper Outbreaks Reconstruction — Forests",
+        "fr": "Reconstitution des pullulations de la phalène du pin — Forests"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7909799/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Peer-reviewed research describes mass defoliation and outbreak dynamics."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 8,
+        "total": 104,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Adult colour patterns and flight dates vary by latitude; no single regional schedule is given.",
+    "A reliable French or Spanish detailed species account was not located; biology relies on English sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a Forestry Commission handbook, Belgian Lepidoptera catalogue and peer-reviewed outbreak research; Panolis flammea is an ecological comparator, not a congener."
+}

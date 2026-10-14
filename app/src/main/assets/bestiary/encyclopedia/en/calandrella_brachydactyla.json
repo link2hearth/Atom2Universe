@@ -1,0 +1,30 @@
+{
+  "id": "calandrella_brachydactyla",
+  "name": "Greater Short-toed Lark",
+  "scientific": "Calandrella brachydactyla",
+  "group": "birds",
+  "sections": {
+    "overview": "The Greater Short-toed Lark is a small migrant breeding in open warm regions of southern Europe, North Africa and temperate Asia, then wintering farther south.",
+    "identification": "At about 13–14 cm, it has sandy streaked upperparts, pale underparts, a short conical bill and dark breast-side spots; it lacks the Skylark’s crest.",
+    "habitat": "It favours warm, dry open ground with sparse low vegetation and bare patches, including steppe, sandy or stony fields and fallow land.",
+    "diet": "It forages on the ground for seeds and small invertebrates, taking more insect prey in breeding season.",
+    "behavior": "It occurs in pairs while breeding and gathers into flocks during migration and winter, sometimes with other larks.",
+    "reproduction": "It nests in a shallow ground scrape concealed among sparse vegetation; brood number varies with conditions.",
+    "ecology": "It is compared with the Lesser Short-toed Lark (Alaudala rufescens, formerly Calandrella): this species has a larger bill and less breast streaking, and may resemble Alauda arvensis.",
+    "conservation": "It is globally Least Concern, though conversion and intensification of dry open grasslands can remove habitat locally."
+  },
+  "sources": [
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/3649",
+      "title": "Calandrella brachydactyla — FAUNA/INPN species account"
+    },
+    {
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130795",
+      "title": "Calandrella brachydactyla — Birds of Europe, Naturalis"
+    },
+    {
+      "url": "https://pre.iepnb.es/areas-tematicas/especies-silvestres/eidos/10734/Calandrella%20brachydactyla",
+      "title": "Terrera común — Spanish biodiversity inventory"
+    }
+  ]
+}

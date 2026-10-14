@@ -1,0 +1,148 @@
+{
+  "id": "brachyistius_frenatus",
+  "scientific": "Brachyistius frenatus",
+  "group": "fish",
+  "name": {
+    "en": "Kelp perch",
+    "fr": "Perche des laminaires"
+  },
+  "sections": {
+    "overview": {
+      "en": "The kelp perch is a viviparous surfperch (family Embiotocidae) of the northeastern Pacific. Its range extends from British Columbia to Baja California.",
+      "fr": "La perche des laminaires est un surfperche vivipare de la famille des Embiotocidae, présent dans le Pacifique nord-est. Son aire s’étend de la Colombie-Britannique à la Basse-Californie."
+    },
+    "identification": {
+      "en": "It may reach about 22 cm total length and is olive-brown to coppery above the lateral line, often with dark pigment beneath individual scales and a paler lower flank.",
+      "fr": "Elle peut atteindre environ 22 cm de longueur totale ; son dos est brun olive à cuivré au-dessus de la ligne latérale, avec souvent des pigments sombres sous les écailles et des flancs plus pâles en dessous."
+    },
+    "habitat": {
+      "en": "It lives among giant kelp, especially Macrocystis, and also uses eelgrass, surfgrass, rocky bottoms and sand channels, most often in shallow water.",
+      "fr": "Elle vit parmi les grandes laminaires, surtout Macrocystis, et fréquente aussi les zostères, les herbiers de surfgrass, les fonds rocheux et les chenaux sableux, le plus souvent en eau peu profonde."
+    },
+    "diet": {
+      "en": "It takes small mobile invertebrates, especially crustaceans living on kelp, and may pick external parasites from other fishes.",
+      "fr": "Elle capture de petits invertébrés mobiles, notamment des crustacés vivant sur les laminaires, et peut retirer des parasites externes sur d’autres poissons."
+    },
+    "behavior": {
+      "en": "Young fish gather in schools just below the kelp canopy, whereas older fish are more dispersed along the kelp fronds; summer aggregations are also reported.",
+      "fr": "Les jeunes se regroupent juste sous la canopée des laminaires, tandis que les individus plus âgés sont davantage dispersés le long des frondes ; des rassemblements estivaux sont également signalés."
+    },
+    "reproduction": {
+      "en": "Like other surfperches, it gives birth to live young after internal fertilization, rather than releasing free eggs for external fertilization.",
+      "fr": "Comme les autres Embiotocidae, elle met bas des petits vivants après une fécondation interne, plutôt que de libérer des œufs fécondés dans l’eau."
+    },
+    "ecology": {
+      "en": "It is one of several kelp-associated surfperches, alongside Embiotoca lateralis and other Embiotocidae; those family relatives share live birth, but differ in body markings and preferred microhabitats.",
+      "fr": "C’est l’un des surfperches associés aux laminaires, avec Embiotoca lateralis et d’autres Embiotocidae ; ces parents partagent la mise bas, mais diffèrent par leurs motifs et leurs microhabitats préférés."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Data Deficient: kelp declines are documented across parts of its range, but the effects on this fish’s total population remain poorly measured.",
+      "fr": "L’UICN le classe en Données insuffisantes : le recul des laminaires est documenté dans une partie de son aire, mais ses effets sur la population totale de ce poisson restent mal mesurés."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Brachyistius frenatus — IUCN Red List",
+        "fr": "Brachyistius frenatus — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T141481252A141781353.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN describes its range, kelp habitat, schooling and category."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 185,
+        "notes_words": 9,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Brachyistius frenatus — FishBase",
+        "fr": "Brachyistius frenatus — FishBase (fiche multilingue)"
+      },
+      "url": "https://fishbase.se/summary/Brachyistius-frenatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase reports taxonomy, maximum length, colour, kelp association, small crustacean prey and cleaner behaviour."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 14,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Surfperches — California Department of Fish and Wildlife",
+        "fr": "Les surfperches — Département californien de la faune et de la flore"
+      },
+      "url": "https://wildlife.ca.gov/Conservation/Marine/Surf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "The agency groups kelp-associated perches in Embiotocidae and explains internal fertilization and live birth across surfperches."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 16,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "IUCN assessment is dated 2018 and published in 2020; its Data Deficient status reflects uncertainty, not proof that the species is declining."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked IUCN, FishBase and California agency sources; compared it with Embiotoca and other surfperches. No close-genus profile is currently in the catalogue."
+}

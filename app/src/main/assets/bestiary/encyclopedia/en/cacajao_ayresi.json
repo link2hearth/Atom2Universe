@@ -1,0 +1,30 @@
+{
+  "id": "cacajao_ayresi",
+  "name": "Ayres’s Black Uakari",
+  "scientific": "Cacajao ayresi",
+  "group": "mammals",
+  "sections": {
+    "overview": "Ayres’s black uakari is an Amazonian monkey known from a restricted area of Brazil’s Amazonas State between the Curuduri and Araçá rivers.",
+    "identification": "It is a dark-coated, robust-bodied, short-tailed Cacajao; field records and measurements remain sparse, so descriptions of individual variation are still limited.",
+    "habitat": "A few confirmed sightings come from primary forest, including flooded igapó and terra-firme forest mosaics in the Araçá basin.",
+    "diet": "Species-specific feeding data are lacking; the fruit-and-seed diet of other uakaris cannot be assumed for this species.",
+    "behavior": "Group size, ranging, activity and tolerance of disturbance remain unknown because the species is rarely seen in the wild.",
+    "reproduction": "Maturity, gestation and birth interval are unknown; estimates from other Cacajao are not secure species-specific values.",
+    "ecology": "A 2008 taxonomic revision separated C. ayresi and C. hosomi from the broader C. melanocephalus concept, so older sources may use other names.",
+    "conservation": "ICMBio reports Data Deficient nationally and Vulnerable globally; suspected hunting for fish bait, low density and no protected-area records are concerns."
+  },
+  "sources": [
+    {
+      "url": "https://www.gov.br/icmbio/pt-br/assuntos/centros-de-pesquisa/primatas-brasileiros/arquivos/fichas_primatas/PITHECIIDAE/ficha_cacajao_ayresi.pdf",
+      "title": "Cacajao ayresi — Brazilian Primates, ICMBio"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10764-008-9288-6",
+      "title": "Taxonomic reassessment of black uakaris — International Journal of Primatology"
+    },
+    {
+      "url": "https://www.iucnredlist.org/species/136917/4305998",
+      "title": "Cacajao ayresi — IUCN Red List and ICMBio"
+    }
+  ]
+}

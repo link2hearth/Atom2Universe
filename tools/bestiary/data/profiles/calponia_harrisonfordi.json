@@ -1,0 +1,144 @@
+{
+  "id": "calponia_harrisonfordi",
+  "scientific": "Calponia harrisonfordi",
+  "group": "invertebrates",
+  "name": {
+    "en": "Harrison Ford’s Spider",
+    "fr": "Araignée de Harrison Ford"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small caponiid spider is known from California’s Coast Ranges and is the sole described species of the genus Calponia.",
+      "fr": "Cette petite araignée caponiide est connue des chaînes côtières de Californie et constitue la seule espèce décrite du genre Calponia."
+    },
+    "identification": {
+      "en": "Unlike most North American caponiids, which have only two eyes, it retains eight eyes arranged in two rows, an unusual ancestral-looking trait within the family.",
+      "fr": "Contrairement à la plupart des caponiides nord-américains, qui n’ont que deux yeux, elle en possède huit disposés en deux rangées, caractère inhabituel qui rappelle l’état ancestral dans la famille."
+    },
+    "habitat": {
+      "en": "It has been found in oak woodland beneath rocks, leaf litter and other ground debris in the California Coast Ranges.",
+      "fr": "Elle a été trouvée dans les chênaies des chaînes côtières californiennes, sous des pierres, dans la litière et parmi d’autres débris au sol."
+    },
+    "diet": {
+      "en": "Direct observations of this species’ feeding are scarce; family-level accounts describe caponiids as wandering hunters that prey on other spiders.",
+      "fr": "Les observations directes de son alimentation sont rares ; les descriptions de la famille indiquent que les caponiides chassent en déplacement et capturent d’autres araignées."
+    },
+    "behavior": {
+      "en": "It is a ground-dwelling spider that shelters under cover, but its natural history remains poorly documented compared with familiar web-building spiders.",
+      "fr": "C’est une araignée terrestre qui s’abrite sous des objets, mais son histoire naturelle reste peu documentée comparée à celle des araignées tisseuses de toiles bien connues."
+    },
+    "reproduction": {
+      "en": "The consulted species descriptions do not establish detailed courtship, egg-sac or juvenile-development schedules for this spider.",
+      "fr": "Les descriptions consultées ne précisent pas le calendrier de la parade, des cocons d’œufs ou du développement des jeunes chez cette araignée."
+    },
+    "ecology": {
+      "en": "The related North American caponiid Orthonops gertschi has only two eyes, making eye number a striking contrast between these family relatives.",
+      "fr": "Le caponiide nord-américain apparenté Orthonops gertschi n’a que deux yeux ; ce caractère offre un contraste frappant entre ces proches parents de la même famille."
+    },
+    "conservation": {
+      "en": "Its known range is geographically restricted, but the consulted taxonomic and natural-history sources provide no formal global threat category.",
+      "fr": "Son aire connue est géographiquement restreinte, mais les sources taxonomiques et naturalistes consultées ne donnent pas de catégorie officielle de menace à l’échelle mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A New Genus of the Spider Family Caponiidae from California — American Museum Novitates",
+        "fr": "Un nouveau genre d’araignée caponiide de Californie — American Museum Novitates (anglais)"
+      },
+      "url": "https://citeseerx.ist.psu.edu/document?doi=58d3be852f0bdd77c34eab1605751ac510711278&repid=rep1&type=pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Platnick’s original 1993 description names Calponia harrisonfordi and discusses the unusual eight eyes and family relationships."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 16,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Family Caponiidae — Common Spiders of North America, Oxford Academic",
+        "fr": "Famille des Caponiidae — Common Spiders of North America, Oxford Academic (anglais)"
+      },
+      "url": "https://doi.org/10.1525/california/9780520274884.003.0013",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Regional spider guide compares eight-eyed Calponia with two-eyed Orthonops and describes California oak woodland, ground cover and family-level predation."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 19,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Calponia — World Spider Catalog",
+        "fr": "Calponia — catalogue mondial des araignées"
+      },
+      "url": "https://wsc.nmbe.ch/species-list/660/Calponia",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The World Spider Catalog lists Calponia as a single-species genus."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 83,
+        "notes_words": 10,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-level feeding and reproductive observations are sparse; family-level feeding biology is clearly identified as such. No formal global threat assessment was found."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the original species description, an Oxford family account and ITIS taxonomy; distinguished species-level facts from family-level inference and compared it with O. gertschi."
+}

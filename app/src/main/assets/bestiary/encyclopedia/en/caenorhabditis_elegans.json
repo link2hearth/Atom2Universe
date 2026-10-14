@@ -1,0 +1,30 @@
+{
+  "id": "caenorhabditis_elegans",
+  "name": "Nematode Worm",
+  "scientific": "Caenorhabditis elegans",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Caenorhabditis elegans is a tiny, transparent free-living nematode and a major laboratory model for development, genetics, neurons and ageing.",
+    "identification": "Adults are about a millimetre long; most are self-fertilizing hermaphrodites, while rare males have a specialized mating tail.",
+    "habitat": "In nature it is often found in moist, bacteria-rich rotting plant matter such as compost or decaying fruit, not simply as a permanent soil dweller.",
+    "diet": "It eats bacteria, including Escherichia coli in laboratory culture; food supply and crowding can alter development.",
+    "behavior": "When food is depleted or conditions crowded, larvae can enter the stress-resistant dauer stage, survive for months and disperse.",
+    "reproduction": "At 25 °C its egg-to-egg cycle can take about three days; hermaphrodites self-fertilize, although males permit outcrossing.",
+    "ecology": "It is one of many Caenorhabditis species; relatives such as C. briggsae share the hermaphrodite-male system, but findings do not automatically generalize across the genus.",
+    "conservation": "It is not assessed as threatened wildlife; laboratory strains dominate research while natural populations are patchy and hard to find."
+  },
+  "sources": [
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK299460/",
+      "title": "A Transparent Window into Biology — WormBook/NCBI"
+    },
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK19723/",
+      "title": "Ecology of Caenorhabditis species — WormBook/NCBI"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11538407/",
+      "title": "Life history in Caenorhabditis elegans — PMC"
+    }
+  ]
+}

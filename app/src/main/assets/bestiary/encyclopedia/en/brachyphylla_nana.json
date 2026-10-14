@@ -1,0 +1,38 @@
+{
+  "id": "brachyphylla_nana",
+  "name": "Cuban fruit-eating bat",
+  "scientific": "Brachyphylla nana",
+  "group": "mammals",
+  "sections": {
+    "overview": "The Cuban fruit-eating bat is a medium-sized phyllostomid of the Greater Antilles, found on Cuba, Hispaniola, Grand Cayman and Middle Caicos; fossil remains are known from Jamaica.",
+    "identification": "Its short, pig-like muzzle and reduced noseleaf help distinguish it from the sympatric Cuban flower bat Phyllonycteris poeyi, which has a conspicuous uropatagial spur.",
+    "habitat": "It roosts in caves; in Cuba it often occupies deep, warm and humid chambers, while in Middle Caicos it uses a wider range of cooler caves where deep caverns are scarce.",
+    "diet": "It is an omnivorous flower visitor whose diet includes pollen, nectar, fruits, seeds and insects. A Cuban study found that flower-visiting bat species partition floral resources, with diets and visitation rates differing among species.",
+    "behavior": "It forms cave-roosting colonies and uses echolocation when flying; research on Cuban colonies has also documented social distress calls and responses to them.",
+    "reproduction": "Females form maternity groups and usually give birth to one young; reported birth periods extend across winter and spring, although timing varies among islands.",
+    "ecology": "It shares its genus with the larger B. cavernarum, found from Puerto Rico through the Lesser Antilles; within Cuban cave communities it overlaps with nectar-feeding relatives such as Phyllonycteris poeyi but differs in diet breadth.",
+    "conservation": "Mammal Diversity Database and the Cuban species account report Least Concern; cave disturbance and colony counts nevertheless deserve monitoring because many individuals can depend on a small number of roosts."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Brachyphylla_nana/",
+      "title": "Brachyphylla nana — Animal Diversity Web"
+    },
+    {
+      "url": "https://digitalcommons.unl.edu/museummammalogy/183/",
+      "title": "Revision of the Antillean Bats of the Genus Brachyphylla — University of Nebraska"
+    },
+    {
+      "url": "https://doi.org/10.1111/btp.12118",
+      "title": "Morphology, Diet and Flower-visiting by Phyllostomid Bats in Cuba — Biotropica"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2022.907751/full",
+      "title": "Assessing the Structure and Function of Distress Calls in Cuban Fruit-Eating Bats — Frontiers in Ecology and Evolution"
+    },
+    {
+      "url": "https://www.relcomlatinoamerica.net/images/AICOMS/SICOMS2018/S-CU-003.pdf",
+      "title": "Murciélago hocico de cerdo — RELCOM regional bat account"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "id": "calandrella_brachydactyla",
+  "scientific": "Calandrella brachydactyla",
+  "group": "birds",
+  "name": {
+    "en": "Greater Short-toed Lark",
+    "fr": "Alouette calandrelle"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Greater Short-toed Lark is a small migrant breeding in open warm regions of southern Europe, North Africa and temperate Asia, then wintering farther south.",
+      "fr": "L’Alouette calandrelle est une petite migratrice qui niche dans les régions ouvertes et chaudes du sud de l’Europe, d’Afrique du Nord et d’Asie tempérée, puis hiverne plus au sud."
+    },
+    "identification": {
+      "en": "At about 13–14 cm, it has sandy streaked upperparts, pale underparts, a short conical bill and dark breast-side spots; it lacks the Skylark’s crest.",
+      "fr": "Longue d’environ 13 à 14 cm, elle a le dessus sable strié, le dessous pâle, un bec court conique et des taches sombres à la poitrine ; elle n’a pas la huppe de l’Alouette des champs."
+    },
+    "habitat": {
+      "en": "It favours warm, dry open ground with sparse low vegetation and bare patches, including steppe, sandy or stony fields and fallow land.",
+      "fr": "Elle préfère les terrains ouverts, chauds et secs, à végétation basse clairsemée avec plages nues : steppe, champs sableux ou caillouteux et friches."
+    },
+    "diet": {
+      "en": "It forages on the ground for seeds and small invertebrates, taking more insect prey in breeding season.",
+      "fr": "Elle cherche au sol graines et petits invertébrés, avec davantage de proies insectes pendant la reproduction."
+    },
+    "behavior": {
+      "en": "It occurs in pairs while breeding and gathers into flocks during migration and winter, sometimes with other larks.",
+      "fr": "Elle vit en couple pendant la reproduction et se rassemble en bandes durant les migrations et l’hiver, parfois avec d’autres alouettes."
+    },
+    "reproduction": {
+      "en": "It nests in a shallow ground scrape concealed among sparse vegetation; brood number varies with conditions.",
+      "fr": "Elle niche dans une petite cuvette au sol dissimulée dans la végétation clairsemée ; le nombre de nichées varie selon les conditions."
+    },
+    "ecology": {
+      "en": "It is compared with the Lesser Short-toed Lark (Alaudala rufescens, formerly Calandrella): this species has a larger bill and less breast streaking, and may resemble Alauda arvensis.",
+      "fr": "On la compare à l’Alouette pispolette (Alaudala rufescens, anciennement Calandrella) : la calandrelle a le bec plus fort et la poitrine moins striée, et peut rappeler Alauda arvensis."
+    },
+    "conservation": {
+      "en": "It is globally Least Concern, though conversion and intensification of dry open grasslands can remove habitat locally.",
+      "fr": "Elle est classée en préoccupation mineure mondiale, même si la conversion et l’intensification des prairies sèches ouvertes peuvent détruire son habitat localement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Calandrella brachydactyla — FAUNA/INPN species account",
+        "fr": "Calandrella brachydactyla — Fiche FAUNA/INPN"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/3649",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "French biodiversity record gives size, field diagnosis and dry open habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 11,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Calandrella brachydactyla — Birds of Europe, Naturalis",
+        "fr": "Calandrella brachydactyla — Birds of Europe, Naturalis"
+      },
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130795",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "European field account describes feeding, flocking, nesting and similar larks."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 10,
+        "total": 120,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Terrera común — Spanish biodiversity inventory",
+        "fr": "Terrera común — Inventaire espagnol de la biodiversité"
+      },
+      "url": "https://pre.iepnb.es/areas-tematicas/especies-silvestres/eidos/10734/Calandrella%20brachydactyla",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish government record documents Palaearctic range and status context."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 9,
+        "total": 103,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Some taxonomies transfer the Lesser Short-toed Lark to Alaudala rufescens; older sources retain Calandrella rufescens.",
+    "Nest details and brood number vary geographically."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked French FAUNA/INPN, a Naturalis European field account and Spain’s national biodiversity inventory. Named the Lesser Short-toed Lark and Skylark as comparisons."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "calidris_ruficollis",
+  "name": "Bécasseau à cou roux",
+  "scientific": "Calidris ruficollis",
+  "group": "birds",
+  "sections": {
+    "overview": "Ce minuscule bécasseau migrateur niche dans le nord de la Sibérie et hiverne de l’Asie du Sud-Est à l’Australie et à la Nouvelle-Zélande ; au Japon, il passe surtout en migration.",
+    "identification": "Long d’environ 14 à 15 cm, c’est l’un des plus petits Calidris ; en plumage nuptial, sa tête et sa poitrine rousses contrastent avec le dos tacheté de sombre, tandis que son bec court et ses pattes foncées aident à le distinguer d’autres petits bécasseaux.",
+    "habitat": "En migration et en hiver, il fréquente les vasières intertidales, les estuaires abrités et les lagunes, mais aussi les plages sableuses et parfois les lacs intérieurs ou les champs inondés.",
+    "diet": "Il sonde la vase et les eaux peu profondes à la recherche de petits invertébrés, notamment des vers, des insectes et des crustacés ; certains comptes rendus mentionnent aussi des matières végétales.",
+    "behavior": "Hors période de reproduction, il est très grégaire et s’alimente ou se repose souvent en groupes denses mêlés à d’autres petits limicoles.",
+    "reproduction": "Il niche dans la toundra septentrionale ; après la reproduction, les adultes gagnent le sud en suivant la voie migratoire est-asiatique et australasienne, entre les sites arctiques et les zones humides côtières méridionales.",
+    "ecology": "Il partage le genre Calidris avec le Bécasseau de l’Anadyr (C. tenuirostris), beaucoup plus grand et décrit dans la fiche voisine ; leur taille et leurs niches alimentaires contrastées facilitent la comparaison, mais tous deux dépendent de vasières fonctionnelles pendant la migration.",
+    "conservation": "L’évaluation de BirdLife publiée en 2024 le classe « quasi menacé », en raison du déclin continu associé aux pressions sur les habitats intertidaux de sa voie migratoire."
+  },
+  "sources": [
+    {
+      "url": "https://www.biodic.go.jp/birdRinging/atlas/Calidris_ruficollis/Calidris_ruficollis_wamei.html",
+      "title": "Fiche du トウネン (Biodiversity Center, ministère japonais de l’Environnement; japonais)"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/shorebird-plan-background.pdf",
+      "title": "Document de référence sur les limicoles migrateurs — gouvernement australien"
+    },
+    {
+      "url": "https://waders.org.au/red-necked-stint/",
+      "title": "Calidris ruficollis — groupe d’étude des limicoles du Queensland (anglais)"
+    }
+  ]
+}

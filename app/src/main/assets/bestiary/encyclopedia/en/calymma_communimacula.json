@@ -1,0 +1,30 @@
+{
+  "id": "calymma_communimacula",
+  "name": "Shielded Beauty Moth",
+  "scientific": "Calymma communimacula",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This locally recorded moth belongs to the noctuid complex traditionally called Eublemmini and ranges from southern Europe across parts of the eastern Mediterranean to western Asia.",
+    "identification": "It is a small, patterned moth whose grey-brown forewings bear a contrasting pale central mark; its French name, anthophile écussonnée, refers to its shield-like marking.",
+    "habitat": "Records come from warm, relatively dry Mediterranean and steppe landscapes, including foothills and open scrub; its scattered observations make local habitat use incompletely known.",
+    "diet": "Unlike most familiar caterpillars that chew leaves, its larvae are reported to feed on scale insects living on woody plants, including fruit trees.",
+    "behavior": "Adults are recorded in two seasonal periods in parts of the eastern Mediterranean, with local flight dates varying by region.",
+    "reproduction": "Published regional accounts report two generations per year in Israel, with adults flying in late spring to early summer and again in late summer; this schedule should not be generalized to every population.",
+    "ecology": "Calymma is a genus represented by this species in the consulted European catalogues; it is grouped with small Eublemmini moths, but no close same-genus cousin is available for a direct bestiary comparison.",
+    "conservation": "No global Red List category was found in the consulted sources, and the patchy distribution records do not by themselves justify assigning one."
+  },
+  "sources": [
+    {
+      "url": "https://lepinet.fr/especes/nation/lep/?e=lquoi&id=45480",
+      "title": "L’Anthophile écussonnée — Lepinet, Lépidoptères de France"
+    },
+    {
+      "url": "https://citeseerx.ist.psu.edu/document?doi=ec9d39b167f339e205a2bc4b6d4795c54a88fb2d&repid=rep1&type=pdf",
+      "title": "Contribution to knowledge of the Balkan Lepidoptera III — Ecologica Montenegrina / SHILAP study PDF"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Calymma_communimacula",
+      "title": "Calymma communimacula — LepiForum (German-language specialist reference)"
+    }
+  ]
+}

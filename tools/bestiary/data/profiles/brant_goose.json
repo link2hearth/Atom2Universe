@@ -1,0 +1,142 @@
+{
+  "id": "brant_goose",
+  "scientific": "Branta bernicla",
+  "group": "birds",
+  "name": {
+    "en": "Brant",
+    "fr": "Bernache cravant"
+  },
+  "sections": {
+    "overview": {
+      "en": "The brant, called Brent Goose in Europe, is a small Arctic-breeding goose that winters on coasts in Europe, Asia and North America.",
+      "fr": "La bernache cravant, appelée Brent Goose en anglais européen, est une petite oie qui niche dans l’Arctique et hiverne sur les côtes d’Europe, d’Asie et d’Amérique du Nord."
+    },
+    "identification": {
+      "en": "It is compact, with dark head and neck, a white neck patch, brownish back and pale undertail; markings vary among populations.",
+      "fr": "Elle est compacte, avec tête et cou sombres, une tache blanche au cou, un dos brunâtre et le dessous de queue clair ; les motifs varient selon les populations."
+    },
+    "habitat": {
+      "en": "It nests in Arctic tundra wetlands and winters on sheltered bays, estuaries, lagoons and salt marshes.",
+      "fr": "Elle niche dans les zones humides de la toundra arctique et hiverne dans les baies abritées, estuaires, lagunes et marais salés."
+    },
+    "diet": {
+      "en": "In winter it eats mainly eelgrass and other aquatic plants, sometimes shifting to algae or salt-marsh grasses when usual food is scarce.",
+      "fr": "En hiver, elle mange surtout de la zostère et d’autres plantes aquatiques, parfois des algues ou des plantes de prés salés lorsque sa nourriture manque."
+    },
+    "behavior": {
+      "en": "It forms sociable flocks outside breeding; routes and wintering grounds differ among dark-bellied, pale-bellied and Pacific populations.",
+      "fr": "Hors reproduction, elle forme des groupes grégaires ; routes et quartiers d’hiver diffèrent entre populations à ventre sombre, pâle et du Pacifique."
+    },
+    "reproduction": {
+      "en": "Pairs nest on the ground in the Arctic, often in small colonies near water; the female incubates as the male guards.",
+      "fr": "Les couples nichent au sol dans l’Arctique, souvent en petites colonies près de l’eau ; la femelle couve tandis que le mâle monte la garde."
+    },
+    "ecology": {
+      "en": "It is related to the Canada Goose (Branta canadensis) and Barnacle Goose (B. leucopsis); brants are smaller and especially tied to coastal eelgrass in winter.",
+      "fr": "Elle est apparentée à la Bernache du Canada (Branta canadensis) et à la Bernache nonnette (B. leucopsis) ; plus petite, elle dépend des zostères côtières en hiver."
+    },
+    "conservation": {
+      "en": "It is globally Least Concern, though regional populations have fluctuated with food supply, habitat change and hunting history.",
+      "fr": "Elle est classée en préoccupation mineure mondiale, même si des populations régionales ont fluctué selon les ressources, l’habitat et l’histoire de la chasse."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Brant — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Bernache cravant — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Brant/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Cornell describes field marks, Arctic breeding, coastal wintering and population variation."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 11,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "La bernache cravant — Réserve naturelle de la baie de Saint-Brieuc",
+        "fr": "La bernache cravant — Réserve naturelle de la baie de Saint-Brieuc"
+      },
+      "url": "https://www.reservebaiedesaintbrieuc.com/decouvrir/la-faune/oiseaux/la-bernache-cravant",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The French reserve account summarizes subspecies, diet, migration, flocking and breeding."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 11,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Brent Goose — British Trust for Ornithology",
+        "fr": "Bernache cravant — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/brent-goose",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "BTO outlines wintering populations and multinational common names."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 8,
+        "total": 101,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Brant populations have been split into three or four subspecies depending on taxonomic treatment.",
+    "La catégorie mondiale ne garantit pas la stabilité de chaque population migratrice."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Cornell, a French reserve and BTO; compared Branta canadensis and B. leucopsis without assuming identical ecology."
+}

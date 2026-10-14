@@ -1,0 +1,165 @@
+{
+  "id": "caprimulgus_macrurus",
+  "scientific": "Caprimulgus macrurus",
+  "group": "birds",
+  "name": {
+    "en": "Large-tailed Nightjar",
+    "fr": "Engoulevent à longue queue"
+  },
+  "sections": {
+    "overview": {
+      "en": "This nocturnal nightjar ranges from South and Southeast Asia to northern Australia; in Singapore it remains a resident in forests, scrub and parks.",
+      "fr": "Cet engoulevent nocturne vit de l’Asie du Sud et du Sud-Est jusqu’au nord de l’Australie ; à Singapour, il est résident dans les forêts, les broussailles et les parcs."
+    },
+    "identification": {
+      "en": "Its mottled brown, grey and black plumage resembles leaf litter and bark, while white patches at the wing and tail tips become conspicuous in flight.",
+      "fr": "Son plumage marbré brun, gris et noir rappelle les feuilles mortes et l’écorce, tandis que des taches blanches aux extrémités des ailes et de la queue deviennent visibles en vol."
+    },
+    "habitat": {
+      "en": "It uses open forest, scrub and wooded parks, resting motionless by day on the ground or lengthwise along a branch where its camouflage is effective.",
+      "fr": "Il fréquente les forêts ouvertes, les broussailles et les parcs arborés ; le jour, il reste immobile au sol ou posé dans le sens d’une branche, où son camouflage le dissimule."
+    },
+    "diet": {
+      "en": "Like other nightjars, it catches insects in flight after dusk; museum stomach records also include worker ants taken on the ground, an unusual supplementary foraging mode.",
+      "fr": "Comme les autres engoulevents, il capture des insectes en vol après le crépuscule ; des contenus stomacaux de musée révèlent aussi des fourmis ouvrières prises au sol, mode de recherche inhabituel et complémentaire."
+    },
+    "behavior": {
+      "en": "It is strictly nocturnal, and its cryptic daytime posture makes it easy to overlook even in settled parks.",
+      "fr": "Il est strictement nocturne et sa posture diurne cryptique le rend facile à manquer, même dans les parcs habités."
+    },
+    "reproduction": {
+      "en": "In Singapore it lays one or two eggs directly on the ground in a shallow scrape, without building a nest; both sexes have been reported sharing incubation.",
+      "fr": "À Singapour, il pond un ou deux œufs directement au sol, dans une petite dépression sans construire de nid ; les deux sexes participeraient à l’incubation."
+    },
+    "ecology": {
+      "en": "It belongs to Caprimulgus, the nightjar genus that also includes the European Nightjar (C. europaeus); the two are relatives with broadly similar nocturnal insect-hunting habits but occupy different regions.",
+      "fr": "Il appartient au genre Caprimulgus, celui de l’Engoulevent d’Europe (C. europaeus) ; ces deux parents ont des habitudes nocturnes de chasse aux insectes assez proches, mais vivent dans des régions différentes."
+    },
+    "conservation": {
+      "en": "The global assessment lists it as Least Concern; this broad category does not remove the value of local forest and scrub habitat.",
+      "fr": "L’évaluation mondiale le classe en « préoccupation mineure » ; cette catégorie générale n’enlève rien à l’importance des habitats forestiers et broussailleux locaux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Large-tailed Nightjar — NParks Biodiversity Singapore",
+        "fr": "Engoulevent à longue queue — biodiversité de Singapour, NParks"
+      },
+      "url": "https://biodiversitysg.nparks.gov.sg/our-biodiversity/birds/other-birds/large-tailed-nightjar/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "Singapore National Parks account updated in 2026 gives residency, habitat, cryptic plumage and diurnal roosting behaviour."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 16,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Large-tailed Nightjars apparently taking ants from the ground — The Sunbird",
+        "fr": "Engoulevents à longue queue observés prenant des fourmis au sol — The Sunbird (anglais)"
+      },
+      "url": "https://birdsqueensland.org.au/sunbird_issues/articles/Vol_30/James_2000_v30_3_89-92.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Australian museum-specimen examination reports worker ants in Large-tailed Nightjar stomachs."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 10,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Breeding habits and behaviour of Large-tailed Nightjar in Singapore — NParks wetlands newsletter",
+        "fr": "Reproduction et comportement de l’engoulevent à longue queue à Singapour — bulletin de NParks (anglais)"
+      },
+      "url": "https://www.nparks.gov.sg/docs/default-source/sbwr-wetlands-newsletter/wetlands-newsletter--vol-6-no-2-aug-1999.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Singapore field observations report ground-laid eggs and shared incubation."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 9,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Caprimulgus macrurus — IUCN Red List (2016 assessment)",
+        "fr": "Caprimulgus macrurus — Liste rouge de l’UICN (évaluation 2016)"
+      },
+      "url": "https://www.iucnredlist.org/species/22725708/94900378",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The global Red List status is Least Concern; assessment is older than the 2026 NParks account."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 16,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The available formal global Red List assessment is from 2016; local Singapore ecology is supported by newer NParks material. The ground-ant diet evidence comes from a museum stomach-content paper and should be read as an additional observation."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked recent Singapore government species information, a museum-based diet paper, field observations of nesting and the global Red List assessment; used the European nightjar only as a broad genus comparator."
+}

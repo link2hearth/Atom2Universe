@@ -43,17 +43,28 @@ def main():
     illustrated_manifest = json.loads(
         (ROOT / "tools/bestiary/illustrated_species.json").read_text(encoding="utf-8"))
     illustrated_by_scientific = {r["scientific_name"]: r for r in illustrated_manifest["species"]}
+    unresolved_lineages = 0
     for animal in inventory:
         ancestors = []
         node = animal["node"]
         while node:
-            ancestors.append(by_id[node][2])
-            node = by_id[node][1]
+            taxon = by_id.get(node)
+            if taxon is None:
+                # The external inventory can outlive a taxonomy-tree refresh.
+                # Preserve its last reviewed group when an OTT node was retired.
+                unresolved_lineages += 1
+                break
+            ancestors.append(taxon[2])
+            node = taxon[1]
         # Sauropsida includes birds: check Aves first. Non-tetrapod vertebrates
         # include jawless fishes, which must not become invertebrates.
-        animal["group"] = next((group for clade, group in (
+        derived_group = next((group for clade, group in (
             ("Mammalia", "mammals"), ("Aves", "birds"), ("Amphibia", "amphibians"),
-            ("Sauropsida", "reptiles"), ("Vertebrata", "fish")) if clade in ancestors), "invertebrates")
+            ("Sauropsida", "reptiles"), ("Vertebrata", "fish")) if clade in ancestors), None)
+        if derived_group is not None:
+            animal["group"] = derived_group
+        elif not animal.get("group"):
+            animal["group"] = "invertebrates"
         scientific = animal["scientific"]
         if scientific in extended:
             animal.update(status="integrated_encyclopedia", id=extended[scientific]["id"])
@@ -177,7 +188,7 @@ def main():
     else:
         text = text.replace("## Résultat\n", section + "## Résultat du premier lot\n", 1)
     progress.write_text(text, encoding="utf-8")
-    print(f"Tracking: {len(catalog_ids)} illustrated profiles; {len(reviewed)} encyclopedia articles; {len(inventory)} animals in inventory")
+    print(f"Tracking: {len(catalog_ids)} illustrated profiles; {len(reviewed)} encyclopedia articles; {len(inventory)} animals in inventory; {unresolved_lineages} inventory entries used their previously reviewed group because a taxonomy node was retired")
 
 
 def write_illustration_wave_tracking(destination, root, initial_by_scientific, enriched,

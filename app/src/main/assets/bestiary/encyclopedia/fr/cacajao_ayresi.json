@@ -1,0 +1,30 @@
+{
+  "id": "cacajao_ayresi",
+  "name": "Uakari noir d’Ayres",
+  "scientific": "Cacajao ayresi",
+  "group": "mammals",
+  "sections": {
+    "overview": "L’uakari noir d’Ayres est un singe amazonien connu d’une aire restreinte de l’État brésilien d’Amazonas, entre les rios Curuduri et Araçá.",
+    "identification": "C’est un Cacajao au pelage sombre, au corps robuste et à la queue courte ; observations et mesures restent rares, ce qui limite encore la description des variations individuelles.",
+    "habitat": "Quelques observations confirmées proviennent de forêt primaire, notamment d’igapó inondé et de mosaïques de terre ferme dans le bassin de l’Araçá.",
+    "diet": "Les données alimentaires propres à l’espèce manquent ; le régime de fruits et graines d’autres uakaris ne peut lui être attribué sans preuve.",
+    "behavior": "Taille des groupes, déplacements, activité et tolérance aux perturbations restent inconnus, car l’espèce est rarement observée dans la nature.",
+    "reproduction": "Maturité, gestation et intervalle entre naissances sont inconnus ; les estimations d’autres Cacajao ne sont pas des valeurs fiables propres à l’espèce.",
+    "ecology": "Une révision taxonomique de 2008 a distingué C. ayresi et C. hosomi du concept large de C. melanocephalus ; les sources anciennes peuvent donc employer d’autres noms.",
+    "conservation": "L’ICMBio indique « données insuffisantes » au Brésil et « vulnérable » mondialement ; chasse présumée pour appât, faible densité et absence de présence connue en aire protégée sont préoccupantes."
+  },
+  "sources": [
+    {
+      "url": "https://www.gov.br/icmbio/pt-br/assuntos/centros-de-pesquisa/primatas-brasileiros/arquivos/fichas_primatas/PITHECIIDAE/ficha_cacajao_ayresi.pdf",
+      "title": "Cacajao ayresi — Primates du Brésil, ICMBio"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10764-008-9288-6",
+      "title": "Révision taxonomique des uakaris noirs — International Journal of Primatology"
+    },
+    {
+      "url": "https://www.iucnredlist.org/species/136917/4305998",
+      "title": "Cacajao ayresi — Liste rouge de l’UICN et ICMBio"
+    }
+  ]
+}

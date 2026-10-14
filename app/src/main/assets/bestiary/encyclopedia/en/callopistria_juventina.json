@@ -1,0 +1,30 @@
+{
+  "id": "callopistria_juventina",
+  "name": "Latin Moth",
+  "scientific": "Callopistria juventina",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This fern-feeding noctuid moth occurs across parts of southern and central Europe and eastward through western Asia; records are local rather than uniformly common.",
+    "identification": "Adults have a wingspan of about 34–38 mm and patterned brown forewings; its names in several European languages refer to bracken, its characteristic larval food plant.",
+    "habitat": "It is recorded in deciduous and mixed woodland where bracken grows, including warm, fern-rich clearings and woodland margins.",
+    "diet": "The caterpillars feed on bracken (Pteridium aquilinum), rather than on the broad range of flowering plants used by many moth larvae.",
+    "behavior": "Adults fly mainly in early summer and may come to artificial light; in Britain it is only an occasional migrant, not a confirmed breeding resident.",
+    "reproduction": "In northern European accounts there is one summer generation, and the fully grown larva overwinters before pupating the following spring.",
+    "ecology": "Its specialised use of bracken links it to other fern-feeding Callopistria moths, but the consulted sources do not establish a particularly close sister species in the local bestiary.",
+    "conservation": "A Belgian regional assessment lists it as Near Threatened in Flanders; that local category should not be mistaken for a global IUCN assessment."
+  },
+  "sources": [
+    {
+      "url": "https://lepidoptera.eu/species/941",
+      "title": "Callopistria juventina — Lepidoptera Mundi"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5667/",
+      "title": "Callopistria juventina — Belgian Biodiversity Platform, Lepidoptera of Belgium"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/callopistria-juventina/",
+      "title": "The Latin — UKMoths"
+    }
+  ]
+}

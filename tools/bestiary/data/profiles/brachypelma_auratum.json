@@ -1,0 +1,150 @@
+{
+  "id": "brachypelma_auratum",
+  "scientific": "Brachypelma auratum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Mexican flameknee tarantula",
+    "fr": "Mygale mexicaine à genoux de feu"
+  },
+  "sections": {
+    "overview": {
+      "en": "It is a Mexican tarantula. Its natural range is inland parts of Guerrero, Michoacán and nearby states on the Pacific side of the Sierra Madre del Sur.",
+      "fr": "C’est une mygale mexicaine. Son aire naturelle couvre les parties intérieures du Guerrero et du Michoacán, ainsi que les régions voisines du versant pacifique de la Sierra Madre del Sur."
+    },
+    "identification": {
+      "en": "Adult body length is about 70 mm in females and 60 mm in males, on average. The CITES identification guide distinguishes it from B. boehmei: auratum has a flame-shaped orange-red mark on otherwise dark legs, while boehmei has orange-red patellae, tibiae and metatarsi.",
+      "fr": "La longueur du corps adulte est d’environ 70 mm chez les femelles et 60 mm chez les mâles. Le guide d’identification CITES le distingue de B. boehmei : auratum porte une marque rouge orangé en forme de flamme sur des pattes sombres, tandis que boehmei a les patellas, tibias et métatarses rouge orangé."
+    },
+    "habitat": {
+      "en": "It lives in dry forest and thorn scrub, sheltering in shallow burrows under rocks and roots.",
+      "fr": "Elle vit en forêt sèche et dans les broussailles, dans des terriers sous pierres et racines."
+    },
+    "diet": {
+      "en": "At night it hunts ground arthropods and occasionally small vertebrates around the entrance to its shallow burrow.",
+      "fr": "La nuit, elle chasse autour du terrier des arthropodes du sol et parfois de petits vertébrés."
+    },
+    "behavior": {
+      "en": "It hides by day, then waits at the burrow entrance after dusk to catch passing prey.",
+      "fr": "Elle se cache le jour et guette les proies près de l’entrée du terrier après le crépuscule."
+    },
+    "reproduction": {
+      "en": "Males search for females from late rains into the dry season, roughly August through January.",
+      "fr": "Les mâles recherchent les femelles de la fin des pluies à la saison sèche, vers août à janvier."
+    },
+    "ecology": {
+      "en": "It is closely related to other Mexican red-legged Brachypelma, including B. hamorii and B. smithi, which are more coastal; compared with those relatives, its narrow coastal or inland range makes the local forest belt especially important.",
+      "fr": "Elle est apparentée à d’autres Brachypelma mexicaines aux pattes colorées, notamment B. hamorii et B. smithi, davantage côtières ; son aire côtière ou intérieure restreinte rend particulièrement importante la conservation des forêts locales."
+    },
+    "conservation": {
+      "en": "It is listed in CITES Appendix II, which regulates international trade in the genus; the listing is a trade control rather than a ban on all keeping.",
+      "fr": "Elle figure à l’Annexe II de la CITES, qui encadre le commerce international du genre ; cette inscription réglemente les échanges sans interdire toute détention."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Species conservation profiles of tarantula spiders listed on CITES — Biodiversity Data Journal",
+        "fr": "Profils de conservation des mygales inscrites à la CITES — Biodiversity Data Journal"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6858399/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation",
+        "identification"
+      ],
+      "facts": [
+        "Reports body length: 70 mm female; 60 mm male."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 9,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Guide to CITES Tarantulas",
+        "fr": "Guide CITES des mygales (versions anglaise, française et espagnole)"
+      },
+      "url": "https://cites.org/sites/default/files/vc-files/files/Guide-to-CITES-Tarantulas.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "CITES guide supplies species diagnostic comparisons and Appendix II trade controls."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 11,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Brachypelma auratum — World Spider Catalog",
+        "fr": "Brachypelma auratum — catalogue mondial des araignées"
+      },
+      "url": "https://wsc.nmbe.ch/spec-data/43873",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The World Spider Catalog recognizes the current species name and Mexican distribution."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 12,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Published adult body-size measurements are not directly comparable across the consulted sources; no single figure is stated."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the species-level conservation account, CITES multilingual identification guide and World Spider Catalog; related Brachypelma are named for comparison. No matching close-genus profile is currently in the catalogue."
+}
