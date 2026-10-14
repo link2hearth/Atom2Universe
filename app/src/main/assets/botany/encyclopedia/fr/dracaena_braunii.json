@@ -1,15 +1,38 @@
 {
   "id": "dracaena_braunii",
   "sections": [
-    {"title": "Port et répartition", "text": "Dracaena braunii est une petite herbe vivace à tiges fines, parfois légèrement ligneuse, originaire d’Afrique centrale et occidentale. Elle mesure généralement 10 à 30 cm, et peut atteindre environ 50 cm."},
-    {"title": "Feuilles et floraison", "text": "Ses feuilles sont étroites et disposées le long de tiges grêles. Les inflorescences portent de petites fleurs, puis des baies. Cette espèce botanique ne doit pas être confondue avec D. sanderiana, le « lucky bamboo » souvent vendu en tiges dressées."},
-    {"title": "Comestibilité", "text": "Aucun usage alimentaire fiable n’est établi dans les sources consultées."}
+    {
+      "title": "Port et répartition",
+      "text": "Dracaena braunii est une petite herbe vivace à tiges fines, parfois légèrement ligneuse, originaire d’Afrique centrale et occidentale. Elle mesure généralement 10 à 30 cm, et peut atteindre environ 50 cm."
+    },
+    {
+      "title": "Feuilles et floraison",
+      "text": "Ses feuilles sont étroites et disposées le long de tiges grêles. Les inflorescences portent de petites fleurs, puis des baies. Cette espèce botanique ne doit pas être confondue avec D. sanderiana, le « lucky bamboo » souvent vendu en tiges dressées."
+    },
+    {
+      "title": "Comestibilité",
+      "text": "Aucun usage alimentaire fiable n’est établi dans les sources consultées."
+    }
   ],
   "sources": [
-    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A534129-1/general-information"},
-    {"title": "Damen & Fischer, 2011 — A revision of Dracaena in West Africa", "url": "https://doi.org/10.3417/2009138"},
-    {"title": "Blumea — taxonomic revision (PDF)", "url": "https://repository.naturalis.nl/pub/650130/BLUM2018063001005.pdf"},
-    {"title": "World Flora Online", "url": "https://www.worldfloraonline.org/taxon/wfo-0000765694"}
+    {
+      "title": "Plants of the World Online — Kew",
+      "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A534129-1/general-information"
+    },
+    {
+      "title": "Damen & Fischer, 2011 — A revision of Dracaena in West Africa",
+      "url": "https://doi.org/10.3417/2009138"
+    },
+    {
+      "title": "Blumea — taxonomic revision (PDF)",
+      "url": "https://repository.naturalis.nl/pub/650130/BLUM2018063001005.pdf"
+    },
+    {
+      "title": "World Flora Online",
+      "url": "https://www.worldfloraonline.org/taxon/wfo-0000765694"
+    }
   ],
-  "related": []
+  "related": [
+    "sansevieria_kirkii"
+  ]
 }

@@ -1,0 +1,36 @@
+{
+  "id": "sambucus",
+  "sections": [
+    {
+      "title": "Genre et port",
+      "text": "Le genre Sambucus comprend des arbustes caducs, de petits arbres et des plantes herbacées vivaces. La planche représente un sureau à feuilles pennées, aux larges bouquets de fleurs pâles et aux fruits noirs mûrs, ce qui correspond au sureau noir, S. nigra ; le nom générique seul ne précise pas l’espèce."
+    },
+    {
+      "title": "Fleurs et baies",
+      "text": "Chez le sureau noir, les bouquets de fleurs parfumées peuvent mesurer environ 10 à 20 cm et les baies sombres et brillantes environ 3 à 5 mm. Les autres sureaux peuvent différer, notamment par la couleur des fruits."
+    },
+    {
+      "title": "Comestibilité et toxicité",
+      "text": "Chez S. nigra, les fleurs et les baies bien mûres sont utilisées en alimentation, les baies étant cuites avant consommation. Les fruits immatures, les feuilles, l’écorce et d’autres parties peuvent provoquer des troubles ; on ne doit pas supposer que les sureaux à fruits rouges ou d’autres espèces partagent le même usage alimentaire."
+    }
+  ],
+  "sources": [
+    {
+      "title": "RHS — Sambucus nigra",
+      "url": "https://www.rhs.org.uk/plants/16391/sambucus-nigra/details"
+    },
+    {
+      "title": "European Atlas of Forest Tree Species — Sambucus nigra",
+      "url": "https://ies-ows.jrc.ec.europa.eu/efdac/download/Atlas/pdf/Sambucus_nigra.pdf"
+    },
+    {
+      "title": "Black elder (Sambucus nigra) in Sweden — review (PMC)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11548546/"
+    },
+    {
+      "title": "Woodland Trust — Elder",
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/british-trees/a-z-of-british-trees/elder/"
+    }
+  ],
+  "related": []
+}

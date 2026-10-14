@@ -1,0 +1,36 @@
+{
+  "id": "saponaria_officinalis",
+  "sections": [
+    {
+      "title": "Habit and leaves",
+      "text": "Common soapwort is a rhizomatous perennial, usually about 30–90 cm tall, that can form colonies. Its opposite, lance-shaped leaves are about 5–10 cm long; the plate shows the erect stems and pale pink, five-petalled flowers."
+    },
+    {
+      "title": "Flowers and roots",
+      "text": "Flowers are borne in clusters above the foliage. Creeping underground rhizomes and fleshy roots help the plant spread."
+    },
+    {
+      "title": "Saponins and caution",
+      "text": "The roots and other tissues contain saponins that foam in water and have been used as a washing agent. Ingestion can be harmful; veterinary toxicology sources report gastrointestinal effects, so soapwort is not a food plant."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Kew — Plants of the World Online, Saponaria officinalis",
+      "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A156627-1/general-information"
+    },
+    {
+      "title": "World Flora Online — Saponaria officinalis",
+      "url": "https://www.worldfloraonline.org/taxon/wfo-0000438211"
+    },
+    {
+      "title": "IVIS — Saponaria species (soapwort), toxicology",
+      "url": "https://www.ivis.org/library/guide-to-poisonous-house-and-garden-plants/saponaria-species-soapwort"
+    },
+    {
+      "title": "South Dakota State University — Saponaria officinalis",
+      "url": "https://openprairie.sdstate.edu/nativeplant/487/"
+    }
+  ],
+  "related": []
+}

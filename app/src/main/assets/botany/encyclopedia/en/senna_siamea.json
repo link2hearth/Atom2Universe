@@ -1,0 +1,14 @@
+{
+  "id": "senna_siamea",
+  "sections": [
+    {"title": "Tree and pods", "text": "Kassod tree is an evergreen tropical tree with a dense, rounded crown, growing to about 20 m. Its pinnate leaves bear many paired leaflets; clusters of yellow flowers are followed by long, flat pods, about 15–30 cm long."},
+    {"title": "Food and toxicity", "text": "Leaves, flowers and young pods are traditionally eaten in some Southeast Asian dishes, usually after preparation. This does not make every plant part safe: the tree contains barakol and related compounds, and extracts have been linked to liver injury; leaves, flowers and pods are also reported highly toxic to pigs and poultry. Avoid medicinal or animal-feed use without reliable guidance."}
+  ],
+  "sources": [
+    {"title": "NParks Flora and Fauna Web — Senna siamea", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/3/1/3118"},
+    {"title": "PROSEA — Senna siamea", "url": "https://prosea.prota4u.org/view.aspx?id=3043"},
+    {"title": "Hong Kong Hospital Authority — Atlas of Poisonous Plants: Senna siamea", "url": "https://www3.ha.org.hk/toxicplant/hk/senna_siamea.html"},
+    {"title": "The medicinal plants of Myanmar — Senna siamea", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6033956/"}
+  ],
+  "related": ["senna_italica"]
+}

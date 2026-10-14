@@ -1,0 +1,14 @@
+{
+  "id": "senna_siamea",
+  "sections": [
+    {"title": "Arbre et gousses", "text": "Le cassier de Siam est un arbre tropical sempervirent à couronne dense et arrondie, pouvant atteindre environ 20 m. Ses feuilles pennées portent de nombreuses paires de folioles ; des grappes de fleurs jaunes sont suivies de longues gousses plates d’environ 15–30 cm."},
+    {"title": "Alimentation et toxicité", "text": "Les feuilles, les fleurs et les jeunes gousses sont consommées traditionnellement dans certains plats d’Asie du Sud-Est, après préparation. Cela ne rend pas toutes les parties sûres : l’arbre contient du barakol et des composés apparentés, et des extraits ont été associés à des lésions hépatiques ; feuilles, fleurs et gousses sont également signalées comme très toxiques pour les porcs et les volailles. Éviter tout usage médicinal ou fourrager sans conseil fiable."}
+  ],
+  "sources": [
+    {"title": "NParks Flora and Fauna Web — Senna siamea", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/3/1/3118"},
+    {"title": "PROSEA — Senna siamea", "url": "https://prosea.prota4u.org/view.aspx?id=3043"},
+    {"title": "Hong Kong Hospital Authority — Atlas des plantes toxiques : Senna siamea", "url": "https://www3.ha.org.hk/toxicplant/hk/senna_siamea.html"},
+    {"title": "The medicinal plants of Myanmar — Senna siamea", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6033956/"}
+  ],
+  "related": ["senna_italica"]
+}

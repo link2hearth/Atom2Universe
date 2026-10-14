@@ -1,0 +1,13 @@
+{
+  "id": "sequoiadendron",
+  "sections": [
+    {"title": "Giant sequoia", "text": "This plate represents Sequoiadendron giganteum, the giant sequoia, an evergreen conifer native to groves on the western slopes of California’s Sierra Nevada. Mature trees commonly reach about 76 m tall and 3–6 m in trunk diameter above the basal swell; the tallest recorded is 94.5 m. It is the largest tree by trunk volume, while the related coast redwood grows taller."},
+    {"title": "Bark, cones and life cycle", "text": "The massive, fluted trunk has reddish fibrous bark. The short, awl-like leaves clasp the shoots, and the ovoid cones are about 4–7 cm long. The species is long-lived and fire-adapted; no food use is established in the cited sources."}
+  ],
+  "sources": [
+    {"title": "USDA Forest Service — Sequoiadendron giganteum", "url": "https://www.srs.fs.usda.gov/pubs/misc/ag_654/volume_1/sequoiadendron/giganteum.htm"},
+    {"title": "USDA Forest Service FEIS — Giant sequoia", "url": "https://research.fs.usda.gov/feis/species-reviews/seqgig"},
+    {"title": "U.S. National Park Service — Coast Redwood", "url": "https://www.nps.gov/articles/000/coast-redwood.htm"}
+  ],
+  "related": ["sequoia"]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "sequoia",
+  "sections": [
+    {"title": "Séquoia côtier", "text": "Cette planche représente Sequoia sempervirens, le séquoia côtier, un conifère sempervirent originaire de la côte pacifique de Californie et du sud de l’Oregon. Son tronc droit brun rougeâtre peut dépasser 100 m de haut et 6 m de diamètre près de la base. Son feuillage aplati en deux rangs et ses petits cônes ligneux le distinguent du séquoia géant."},
+    {"title": "Écologie et usages", "text": "Le séquoia côtier est l’espèce d’arbre la plus haute ; sa longévité peut dépasser deux millénaires. Il est largement planté comme ornement et son bois durable est recherché. Les sources citées ne décrivent pas d’usage alimentaire."}
+  ],
+  "sources": [
+    {"title": "U.S. National Park Service — séquoia côtier", "url": "https://www.nps.gov/articles/000/coast-redwood.htm"},
+    {"title": "Redwood National and State Parks — guide du visiteur 2025", "url": "https://www.nps.gov/redw/learn/news/upload/REDW-Visitor-Guide-v-0-20_508-2.pdf"},
+    {"title": "USDA Forest Service — comparaison du séquoia côtier et du séquoia géant", "url": "https://www.fs.usda.gov/media/231631"},
+    {"title": "Oregon State University — Sequoia sempervirens", "url": "https://landscapeplants.oregonstate.edu/plants/sequoia-sempervirens"}
+  ],
+  "related": ["sequoiadendron", "metasequoia_glyptostroboides"]
+}

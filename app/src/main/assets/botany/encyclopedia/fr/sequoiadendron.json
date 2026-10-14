@@ -1,0 +1,13 @@
+{
+  "id": "sequoiadendron",
+  "sections": [
+    {"title": "Séquoia géant", "text": "Cette planche représente Sequoiadendron giganteum, le séquoia géant, un conifère sempervirent originaire des bosquets des versants occidentaux de la Sierra Nevada, en Californie. Les arbres adultes atteignent couramment environ 76 m de haut et 3–6 m de diamètre au-dessus de l’empattement ; le plus haut mesuré atteint 94,5 m. C’est l’arbre le plus volumineux par le tronc, tandis que le séquoia côtier apparenté est plus haut."},
+    {"title": "Écorce, cônes et cycle de vie", "text": "Son tronc massif et cannelé porte une écorce fibreuse rougeâtre. Les feuilles courtes en alêne entourent les rameaux et les cônes ovoïdes mesurent environ 4–7 cm. L’espèce vit longtemps et est adaptée au feu ; les sources citées n’établissent pas d’usage alimentaire."}
+  ],
+  "sources": [
+    {"title": "USDA Forest Service — Sequoiadendron giganteum", "url": "https://www.srs.fs.usda.gov/pubs/misc/ag_654/volume_1/sequoiadendron/giganteum.htm"},
+    {"title": "USDA Forest Service FEIS — séquoia géant", "url": "https://research.fs.usda.gov/feis/species-reviews/seqgig"},
+    {"title": "U.S. National Park Service — séquoia côtier", "url": "https://www.nps.gov/articles/000/coast-redwood.htm"}
+  ],
+  "related": ["sequoia"]
+}

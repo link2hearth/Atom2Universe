@@ -1,0 +1,30 @@
+{
+  "id": "sansevieria_kirkii",
+  "sections": [
+    {
+      "title": "Name and growth",
+      "text": "The plate is labelled Sansevieria kirkii, a name Kew treats as a synonym of Dracaena pethera. This rhizomatous perennial from tropical Africa forms a basal rosette of broad, thick, wavy-edged leaves."
+    },
+    {
+      "title": "Leaves and flowers",
+      "text": "The pictured leaves have mottled dark markings and reddish margins; the plant also bears a tall flower stalk with pale tubular flowers and round berries. The illustration is consistent with the species description under its accepted name."
+    },
+    {
+      "title": "Uses and caution",
+      "text": "The sources consulted document its identity and morphology but do not establish a food use or a human edibility profile."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Kew — Plants of the World Online, Dracaena pethera",
+      "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A77182814-1/general-information"
+    },
+    {
+      "title": "Kew — Plants of the World Online, Sansevieria kirkii (synonym record)",
+      "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A429859-1"
+    }
+  ],
+  "related": [
+    "dracaena_braunii"
+  ]
+}

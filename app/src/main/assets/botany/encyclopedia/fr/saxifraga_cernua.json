@@ -1,0 +1,32 @@
+{
+  "id": "saxifraga_cernua",
+  "sections": [
+    {
+      "title": "Petite plante arctique et alpine",
+      "text": "La saxifrage penchée croît dans les milieux frais et humides, tels que la toundra, les berges moussues et les névés tardifs. Ses feuilles basales, arrondies à réniformes et peu lobées, mesurent seulement environ 3 à 20 mm."
+    },
+    {
+      "title": "Fleurs et bulbilles",
+      "text": "La hampe florale peut atteindre 30 cm ; ses pétales blancs mesurent environ 5 à 12 mm. Les fleurs sont penchées au stade du bouton et certaines sont souvent remplacées par des bulbilles végétatives, comme le suggèrent les structures rouge sombre de la planche."
+    },
+    {
+      "title": "Alimentation et précautions",
+      "text": "Les flores consultées décrivent son habitat et sa reproduction, sans établir d’usage alimentaire ni de profil de toxicité."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Flora of North America — Saxifraga cernua",
+      "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200010231"
+    },
+    {
+      "title": "Canadian Museum of Nature — Flora of the Canadian Arctic Archipelago, Saxifraga cernua",
+      "url": "https://nature.ca/aaflora/data/www/sxsxcn.htm"
+    },
+    {
+      "title": "Newfoundland and Labrador Flora — Saxifraga comparison chart",
+      "url": "https://newfoundland-labradorflora.ca/documents/assets/uploads/files/en/saxifraga_key-traits-charts_apr15-2022.pdf"
+    }
+  ],
+  "related": []
+}

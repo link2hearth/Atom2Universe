@@ -1,0 +1,35 @@
+{
+  "id": "salix_repens",
+  "sections": [
+    {
+      "title": "Habit and habitat",
+      "text": "Creeping willow is a low, deciduous shrub of European dunes, heaths and other open habitats. Its stems often spread close to the ground and it is usually no more than about 1 m tall."
+    },
+    {
+      "title": "Leaves and catkins",
+      "text": "The small, oval to oblong leaves vary in hairiness. Like other willows, it bears separate male and female catkins, typically up to about 2–2.5 cm long. The plate shows its creeping branches, narrow leaves and upright catkins."
+    },
+    {
+      "title": "Uses and caution",
+      "text": "The consulted botanical sources do not establish a food use or a species-specific toxicity profile for this willow."
+    }
+  ],
+  "sources": [
+    {
+      "title": "RHS — Salix repens",
+      "url": "https://www.rhs.org.uk/plants/16282/salix-repens/details"
+    },
+    {
+      "title": "Kew — Plants of the World Online, Salix repens",
+      "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A305835-2"
+    },
+    {
+      "title": "NatureSpot — Creeping Willow",
+      "url": "https://www.naturespot.org/species/creeping-willow"
+    }
+  ],
+  "related": [
+    "salix_alba",
+    "salix_caprea"
+  ]
+}

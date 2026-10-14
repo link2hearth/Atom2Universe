@@ -1,0 +1,36 @@
+{
+  "id": "sambucus",
+  "sections": [
+    {
+      "title": "Genus and form",
+      "text": "Sambucus includes deciduous shrubs, small trees and herbaceous perennials. The plate depicts an elder with pinnate leaves, flat clusters of pale flowers and black ripe fruit, matching the familiar black elder, S. nigra; the genus name alone does not specify that species."
+    },
+    {
+      "title": "Flowers and berries",
+      "text": "In black elder, fragrant flower clusters may span about 10–20 cm and the glossy dark berries are about 3–5 mm wide. Other elder species can differ, including in fruit colour."
+    },
+    {
+      "title": "Edibility and toxicity",
+      "text": "For S. nigra, flowers and fully ripe berries are used as food, with berries cooked before eating. Unripe berries and leaves, bark and other plant parts can cause illness; red-berried or other Sambucus species should not be assumed to share the same food use."
+    }
+  ],
+  "sources": [
+    {
+      "title": "RHS — Sambucus nigra",
+      "url": "https://www.rhs.org.uk/plants/16391/sambucus-nigra/details"
+    },
+    {
+      "title": "European Atlas of Forest Tree Species — Sambucus nigra",
+      "url": "https://ies-ows.jrc.ec.europa.eu/efdac/download/Atlas/pdf/Sambucus_nigra.pdf"
+    },
+    {
+      "title": "Black elder (Sambucus nigra) in Sweden — review (PMC)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11548546/"
+    },
+    {
+      "title": "Woodland Trust — Elder",
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/british-trees/a-z-of-british-trees/elder/"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "secale_cereale",
+  "sections": [
+    {"title": "Growth and identification", "text": "Rye is a tuft-forming annual grass, usually 60–150 cm tall. Its narrow leaf blades are about 10–20 cm long and 5–10 mm wide. The flowering stem bears a single narrow spike with paired spikelets; the mature grain is an 8–10 mm caryopsis."},
+    {"title": "Grain and uses", "text": "Rye is a domesticated cereal cultivated for its edible grain, used for flour and bread, malt and animal feed. Grain contaminated by ergot fungus can be poisonous; that risk comes from contamination rather than normal rye grain."}
+  ],
+  "sources": [
+    {"title": "Kew Plants of the World Online — Secale cereale", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:421164-1/general-information"},
+    {"title": "University of California Sustainable Agriculture Research and Education Program — Cereal rye", "url": "https://sarep.ucdavis.edu/covercrop/cerealrye"},
+    {"title": "Tudzynski et al. — Biology, Genetics, and Management of Ergot in Rye and Other Cereals", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4379517/"}
+  ],
+  "related": []
+}

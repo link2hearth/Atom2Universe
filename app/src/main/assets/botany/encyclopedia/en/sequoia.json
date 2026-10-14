@@ -1,0 +1,14 @@
+{
+  "id": "sequoia",
+  "sections": [
+    {"title": "Coast redwood", "text": "This plate represents Sequoia sempervirens, the coast redwood, an evergreen conifer native to the Pacific coast of California and southern Oregon. Its straight reddish-brown trunk can exceed 100 m in height and 6 m in diameter near the base. Flattened, two-ranked foliage and small woody cones distinguish it from the giant sequoia."},
+    {"title": "Ecology and uses", "text": "Coast redwood is the tallest tree species; its longevity can exceed two millennia. It is widely planted as an ornamental and valued for durable timber. The cited sources describe no food use."}
+  ],
+  "sources": [
+    {"title": "U.S. National Park Service — Coast Redwood", "url": "https://www.nps.gov/articles/000/coast-redwood.htm"},
+    {"title": "Redwood National and State Parks — 2025 visitor guide", "url": "https://www.nps.gov/redw/learn/news/upload/REDW-Visitor-Guide-v-0-20_508-2.pdf"},
+    {"title": "USDA Forest Service — Coastal redwood and giant sequoia comparison", "url": "https://www.fs.usda.gov/media/231631"},
+    {"title": "Oregon State University — Sequoia sempervirens", "url": "https://landscapeplants.oregonstate.edu/plants/sequoia-sempervirens"}
+  ],
+  "related": ["sequoiadendron", "metasequoia_glyptostroboides"]
+}
