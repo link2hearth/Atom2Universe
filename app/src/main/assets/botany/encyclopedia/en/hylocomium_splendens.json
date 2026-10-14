@@ -1,0 +1,13 @@
+{
+  "id": "hylocomium_splendens",
+  "sections": [
+    {"title": "Form and habitat", "text": "A circumboreal moss of cool, moist forests, tundra and alpine habitats. It forms mats on soil, humus, dead wood and sometimes rocks; stems reach about 20 cm."},
+    {"title": "Branches and sporophytes", "text": "The branches form flattened annual tiers, often 2–5 cm wide. Like other mosses, it produces neither flowers nor fruit; capsules on setae may appear."},
+    {"title": "Edibility", "text": "No food use is documented."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Hylocomium splendens", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200002578"},
+    {"title": "U.S. Forest Service — FEIS", "url": "https://research.fs.usda.gov/feis/species-reviews/hylspl"}
+  ],
+  "related": []
+}

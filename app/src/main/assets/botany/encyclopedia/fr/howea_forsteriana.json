@@ -1,0 +1,14 @@
+{
+  "id": "howea_forsteriana",
+  "sections": [
+    {"title": "Port et habitat", "text": "Palmier solitaire endémique de l’île Lord Howe, où il pousse sur des sols coralliens ou basaltiques du niveau de la mer à environ 300 m. Il peut atteindre 20 m."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles pennées mesurent environ 3 à 5 m. Les inflorescences sont pendantes et ramifiées; les drupes mûrissent au rouge et mesurent environ 3 à 5 cm."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire n’est documenté pour cette espèce ornementale."}
+  ],
+  "sources": [
+    {"title": "PlantNET — NSW Flora Online", "url": "https://plantnettest.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?lvl=sp&name=Howea~forsteriana&page=nswfl"},
+    {"title": "University of Florida IFAS Extension", "url": "https://ask.ifas.ufl.edu/publication/ST297"},
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A667434-1/general-information"}
+  ],
+  "related": ["hyophorbe_amaricaulis"]
+}

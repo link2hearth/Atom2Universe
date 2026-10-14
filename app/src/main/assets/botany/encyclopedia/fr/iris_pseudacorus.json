@@ -1,0 +1,14 @@
+{
+  "id": "iris_pseudacorus",
+  "sections": [
+    {"title": "Port et habitat", "text": "Iris vivace des marais, berges et fossés, aux tiges émergées hautes d’environ 0,5 à 1,5 m. Il peut former des peuplements denses dans les eaux peu profondes."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles en forme de glaive encadrent de grandes fleurs jaune vif, dont les sépales pendants portent souvent des marques brunes. Le fruit est une capsule contenant des graines."},
+    {"title": "Toxicité", "text": "Les feuilles et les rhizomes contiennent des substances toxiques et peuvent provoquer des troubles digestifs. Aucune partie n’est à consommer."}
+  ],
+  "sources": [
+    {"title": "U.S. Geological Survey — Yellow flag iris", "url": "https://nas.er.usgs.gov/queries/factsheet.aspx?speciesid=1115"},
+    {"title": "U.S. Forest Service — Iris pseudacorus review", "url": "https://research.fs.usda.gov/feis/species-reviews/iripse"},
+    {"title": "Invasive Plant Science and Management — Biology of Iris pseudacorus", "url": "https://www.cambridge.org/core/journals/invasive-plant-science-and-management/article/biology-of-invasive-plants-7-iris-pseudacorus-l-iridaceae/B68A2388EA4A74F4D2E86CF7C4D2CF4C"}
+  ],
+  "related": []
+}

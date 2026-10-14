@@ -1,0 +1,14 @@
+{
+  "id": "juglans_regia",
+  "sections": [
+    {"title": "Form and range", "text": "A large deciduous tree native from western Asia to the western Himalaya and long cultivated elsewhere. It can reach about 25 m and develops a broad crown."},
+    {"title": "Leaves, flowers and nuts", "text": "The leaves are compound and pinnate with a terminal leaflet. Male flowers form hanging catkins; female flowers develop into a fruit with a green husk enclosing a woody nut 4–6 cm long."},
+    {"title": "Edibility", "text": "The kernel of the ripe walnut is edible; the outer husk is not the usual food portion."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/442427-1"},
+    {"title": "Flora of China — Juglans regia", "url": "https://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200006112"},
+    {"title": "NC State Extension — English walnut", "url": "https://plants.ces.ncsu.edu/plants/juglans-regia/"}
+  ],
+  "related": []
+}

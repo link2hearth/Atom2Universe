@@ -1,0 +1,14 @@
+{
+  "id": "howea_forsteriana",
+  "sections": [
+    {"title": "Form and habitat", "text": "A solitary palm endemic to Lord Howe Island, where it grows on coral or basalt soils from sea level to about 300 m. It can reach 20 m."},
+    {"title": "Leaves, flowers and fruit", "text": "The pinnate leaves are about 3–5 m long. The inflorescences are branched and pendulous; the drupes ripen red and are about 3–5 cm long."},
+    {"title": "Edibility", "text": "No food use is documented for this ornamental species."}
+  ],
+  "sources": [
+    {"title": "PlantNET — NSW Flora Online", "url": "https://plantnettest.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?lvl=sp&name=Howea~forsteriana&page=nswfl"},
+    {"title": "University of Florida IFAS Extension", "url": "https://ask.ifas.ufl.edu/publication/ST297"},
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A667434-1/general-information"}
+  ],
+  "related": ["hyophorbe_amaricaulis"]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "illicium_anisatum",
+  "sections": [
+    {"title": "Port et répartition", "text": "Arbuste ou petit arbre persistant d’Asie orientale, présent dans les forêts tempérées chaudes du Japon et de Corée du Sud."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles sont luisantes; les fleurs pâles apparaissent au printemps. Le fruit est un assemblage étoilé de follicules qui mûrit en automne ou en hiver."},
+    {"title": "Toxicité", "text": "Toutes les parties sont toxiques, particulièrement les fruits et graines, qui contiennent notamment de l’anisatine neurotoxique. Ne pas confondre avec l’anis étoilé comestible (Illicium verum); l’espèce illustrée ne doit pas servir d’épice."}
+  ],
+  "sources": [
+    {"title": "Tokyo Metropolitan Government — Poisonous plants", "url": "https://www.hokeniryo1.metro.tokyo.lg.jp/shokuhin/eng/dokusou/11.html"},
+    {"title": "Ecological Research — Illicium anisatum", "url": "https://doi.org/10.1007/s11284-018-1564-6"},
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A554492-1/general-information"}
+  ],
+  "related": []
+}

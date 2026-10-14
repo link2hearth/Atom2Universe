@@ -1,0 +1,13 @@
+{
+  "id": "hibiscus_trionum",
+  "sections": [
+    {"title": "Life cycle and range", "text": "An annual or biennial native from southern and eastern Europe through the Mediterranean to the western Himalaya, and naturalized elsewhere. It reaches about 60 cm and sometimes 1 m."},
+    {"title": "Flowers and fruit", "text": "The cream, white or yellow flowers are about 2.5–4 cm across and have a purple centre. The inflated calyx encloses a globose, hairy capsule 10–14 mm long."},
+    {"title": "Edibility", "text": "The botanical sources consulted do not confirm reliable food use."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A122028-2/general-information"},
+    {"title": "Flora of North America — Hibiscus trionum", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=200013734"}
+  ],
+  "related": ["hibiscus_fragilis", "hibiscus_insularis"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ipomoea_pulcherrima",
+  "sections": [
+    {"title": "Form and range", "text": "Ipomoea pulcherrima is an upright shrub or small tree endemic to Peru, known in particular from the Apurímac Valley. The accessible references do not provide a reliable height."},
+    {"title": "Leaves and flowers", "text": "The plate shows a shrub-like habit and leaves compatible with available descriptions. The illustrated pink-purple flower colour is not confirmed by a reliable source and should not be treated as an established feature."},
+    {"title": "Edibility", "text": "No reliable food use is documented."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A129629-2"},
+    {"title": "Revista Peruana de Biología — Ipomoea pulcherrima", "url": "https://www.scielo.org.pe/scielo.php?pid=S1727-99332006000200042&script=sci_arttext"}
+  ],
+  "related": ["ipomoea_alba", "ipomoea_batatas"]
+}

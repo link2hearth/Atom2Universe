@@ -1,0 +1,13 @@
+{
+  "id": "ipomoea_pulcherrima",
+  "sections": [
+    {"title": "Port et répartition", "text": "Ipomoea pulcherrima est un arbuste ou petit arbre dressé endémique du Pérou, connu notamment de la vallée de l’Apurímac. Les références accessibles ne fournissent pas de hauteur fiable."},
+    {"title": "Feuilles et fleurs", "text": "La planche montre un port arbustif et des feuilles compatibles avec les descriptions disponibles. La couleur rose violacé des fleurs illustrées n’est pas confirmée par une source fiable; elle ne doit pas être tenue pour une caractéristique établie."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire fiable n’est documenté."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A129629-2"},
+    {"title": "Revista Peruana de Biología — Ipomoea pulcherrima", "url": "https://www.scielo.org.pe/scielo.php?pid=S1727-99332006000200042&script=sci_arttext"}
+  ],
+  "related": ["ipomoea_alba", "ipomoea_batatas"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "hyparrhenia",
+  "sections": [
+    {"title": "Diversité et habitat", "text": "Hyparrhenia est un genre d’environ 55 espèces de graminées, surtout africaines. Les espèces sont annuelles ou vivaces en touffes et occupent des habitats variés; la planche illustre une graminée de ce genre, pas une espèce unique."},
+    {"title": "Inflorescences", "text": "Les inflorescences typiques associent des paires de racèmes et d’épillets, souvent réunies en panicules feuillées. La taille et les détails des épis varient selon l’espèce."},
+    {"title": "Comestibilité", "text": "Le genre étant diversifié, les sources consultées ne permettent pas une affirmation générale sur la comestibilité ou la toxicité."}
+  ],
+  "sources": [
+    {"title": "PlantNET — NSW Flora Online: Hyparrhenia", "url": "https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?lvl=gn&name=Hyparrhenia&page=nswfl"},
+    {"title": "Plants of the World Online — Kew (exemple d’espèce du genre)", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A405483-1/general-information"}
+  ],
+  "related": []
+}

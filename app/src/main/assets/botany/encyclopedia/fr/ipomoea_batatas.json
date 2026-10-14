@@ -1,0 +1,14 @@
+{
+  "id": "ipomoea_batatas",
+  "sections": [
+    {"title": "Port et répartition", "text": "Liane vivace cultivée dans les régions chaudes, originaire d’Amérique tropicale. Ses tiges rampantes ou grimpantes portent des feuilles très variables, souvent de 4 à 14 × 4 à 16 cm."},
+    {"title": "Racines et fleurs", "text": "Les racines de réserve tubérisées sont comestibles; ce sont des racines, non des tubercules de tige. Les fleurs en entonnoir sont généralement lilas."},
+    {"title": "Comestibilité", "text": "Les racines se consomment cuites; les jeunes feuilles sont aussi mangées comme légume dans certaines régions."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A1101088-2/general-information"},
+    {"title": "NParks Flora & Fauna Web", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/1/4/1423"},
+    {"title": "Japan International Research Center for Agricultural Sciences", "url": "https://www.jircas.go.jp/en/database/thaivege/060"}
+  ],
+  "related": ["ipomoea_alba", "ipomoea_pulcherrima"]
+}

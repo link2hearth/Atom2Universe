@@ -1,0 +1,13 @@
+{
+  "id": "hibiscus_trionum",
+  "sections": [
+    {"title": "Cycle et répartition", "text": "Annuelle ou bisannuelle de l’Europe méridionale et orientale, du bassin méditerranéen jusqu’à l’Himalaya occidental; naturalisée ailleurs. Elle atteint environ 60 cm, parfois 1 m."},
+    {"title": "Fleurs et fruits", "text": "Les fleurs crème, blanches ou jaunes mesurent environ 2,5 à 4 cm et portent un centre pourpre. Le calice gonflé entoure une capsule globuleuse et velue de 10 à 14 mm."},
+    {"title": "Comestibilité", "text": "Les sources botaniques consultées ne confirment pas d’usage alimentaire fiable."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A122028-2/general-information"},
+    {"title": "Flora of North America — Hibiscus trionum", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=200013734"}
+  ],
+  "related": ["hibiscus_fragilis", "hibiscus_insularis"]
+}

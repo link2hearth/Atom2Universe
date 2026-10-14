@@ -1,0 +1,15 @@
+{
+  "id": "indigofera_spicata",
+  "sections": [
+    {"title": "Form and range", "text": "A creeping or ascending perennial herb native to Africa and nearby islands, now found in several tropical regions. It reaches about 0.5 m tall and may spread 1 m wide."},
+    {"title": "Leaves and flowers", "text": "The compound leaves usually have five to seven leaflets. Small pink flowers grow in clusters and are followed by narrow pods."},
+    {"title": "Toxicity", "text": "Severe poisonings have been reported in horses and other livestock. Sources sometimes note confusion with I. hendecaphylla; do not use this plant as fodder or consume it."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A500027-1"},
+    {"title": "NParks Flora & Fauna Web", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/5/9/5969"},
+    {"title": "Veterinary toxicology study — PMC", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9230839/"},
+    {"title": "Tropical Forages — Indigofera spicata", "url": "https://www.tropicalforages.info/text/entities/indigofera_spicata.htm"}
+  ],
+  "related": []
+}

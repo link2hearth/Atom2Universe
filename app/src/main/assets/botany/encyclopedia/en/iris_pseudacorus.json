@@ -1,0 +1,14 @@
+{
+  "id": "iris_pseudacorus",
+  "sections": [
+    {"title": "Form and habitat", "text": "A perennial iris of marshes, stream banks and ditches, with emergent stems about 0.5–1.5 m tall. It can form dense stands in shallow water."},
+    {"title": "Leaves, flowers and fruit", "text": "Sword-shaped leaves frame large bright yellow flowers; the drooping sepals often have brown markings. The fruit is a capsule containing seeds."},
+    {"title": "Toxicity", "text": "The leaves and rhizomes contain toxic compounds and can cause digestive illness. No part should be eaten."}
+  ],
+  "sources": [
+    {"title": "U.S. Geological Survey — Yellow flag iris", "url": "https://nas.er.usgs.gov/queries/factsheet.aspx?speciesid=1115"},
+    {"title": "U.S. Forest Service — Iris pseudacorus review", "url": "https://research.fs.usda.gov/feis/species-reviews/iripse"},
+    {"title": "Invasive Plant Science and Management — Biology of Iris pseudacorus", "url": "https://www.cambridge.org/core/journals/invasive-plant-science-and-management/article/biology-of-invasive-plants-7-iris-pseudacorus-l-iridaceae/B68A2388EA4A74F4D2E86CF7C4D2CF4C"}
+  ],
+  "related": []
+}

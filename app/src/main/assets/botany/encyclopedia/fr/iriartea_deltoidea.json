@@ -1,0 +1,14 @@
+{
+  "id": "iriartea_deltoidea",
+  "sections": [
+    {"title": "Port et habitat", "text": "Palmier solitaire des forêts humides néotropicales, pouvant atteindre environ 25 m. Son stipe repose sur un cône de racines échasses pouvant mesurer jusqu’à 3 m; les feuilles pennées atteignent 3 à 4,5 m."},
+    {"title": "Inflorescences et fruits", "text": "L’inflorescence pendante peut atteindre environ 2 m. Les drupes mûres sont décrites comme vert jaunâtre, de forme sphérique et d’environ 2 à 3 cm. Leur mésocarpe est signalé comme consommé dans certaines sources."},
+    {"title": "Planche et comestibilité", "text": "La planche du catalogue montre des fruits bleu-noir, en désaccord avec la couleur vert jaunâtre décrite dans les sources; elle n’est donc pas affichée. L’usage alimentaire rapporté concerne le mésocarpe du fruit et ne permet pas de conclure à la sécurité des autres parties."}
+  ],
+  "sources": [
+    {"title": "New York Botanical Garden — World Flora Monographs", "url": "https://sweetgum.nybg.org/science/world-flora/monographs-details/?irn=19076"},
+    {"title": "Universidad Nacional de Colombia — Iriartea deltoidea", "url": "https://medellin.unal.edu.co/egresados/26-egresados/723-iriartea-deltoidea.html"},
+    {"title": "FAO — Non-wood forest products", "url": "https://www.fao.org/4/x0451e/x0451e.pdf"}
+  ],
+  "related": []
+}

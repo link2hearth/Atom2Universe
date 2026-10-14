@@ -1,0 +1,14 @@
+{
+  "id": "hordeum_vulgare",
+  "sections": [
+    {"title": "Life cycle and form", "text": "Barley is a domesticated annual cereal, usually 0.5–1.3 m tall depending on cultivar and growing conditions."},
+    {"title": "Spike and grain", "text": "The leaves are linear; the dense terminal spike bears the grains, often with long awns. Some cultivars are awnless."},
+    {"title": "Edibility", "text": "Mature grains are edible and are used for food, malt and brewing."}
+  ],
+  "sources": [
+    {"title": "USDA Plant Guide — Hordeum vulgare", "url": "https://plants.usda.gov/DocumentLibrary/plantguide/pdf/pg_hovu.pdf"},
+    {"title": "World Flora Online — Flora of China", "url": "https://www.worldfloraonline.org/taxon/wfo-0000875054"},
+    {"title": "KPU Plant Database — Hordeum", "url": "https://plantdatabase.kpu.ca/PlantPrint/hord"}
+  ],
+  "related": []
+}
