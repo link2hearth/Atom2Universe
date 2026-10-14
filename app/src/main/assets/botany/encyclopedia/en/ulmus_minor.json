@@ -1,0 +1,28 @@
+{
+  "id": "ulmus_minor",
+  "sections": [
+    {
+      "title": "Tree and identifying features",
+      "text": "Field elm is a deciduous tree that may reach around 30 m, though smaller forms are common. Its oval, doubly toothed leaves have an uneven leaf base; clusters of small flowers open before the leaves, followed by flat, roundish winged fruits (samaras). The plate matches these features."
+    },
+    {
+      "title": "Range and food",
+      "text": "It is native from Europe across parts of Central Asia and North Africa. Young samaras have been eaten locally, but this is not a general food recommendation; no toxicological safety claim is made here."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Plants of the World Online — Ulmus minor",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:856890-1/general-information"
+    },
+    {
+      "title": "FLORA UniUd — Ulmus minor",
+      "url": "https://flora.uniud.it/scheda.php?id=108"
+    },
+    {
+      "title": "North Carolina Extension — Ulmus minor",
+      "url": "https://plants.ces.ncsu.edu/plants/ulmus-minor/"
+    }
+  ],
+  "related": []
+}

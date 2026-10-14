@@ -1,0 +1,12 @@
+{
+  "id": "viburnum",
+  "sections": [
+    {"title": "Un genre varié", "text": "Viburnum regroupe des arbustes ligneux et de petits arbres indigènes surtout des régions tempérées et subtropicales de l’hémisphère Nord, avec des espèces jusque dans les Andes et l’Asie tropicale. La forme des feuilles, l’organisation des grappes florales et la couleur des fruits varient selon les espèces ; beaucoup ont des feuilles simples opposées et de petites fleurs groupées."},
+    {"title": "Fleurs et fruits", "text": "Les fruits des Viburnum sont des drupes charnues, rouges, noires, bleues ou jaunes à maturité ; comestibilité et innocuité dépendent de l’espèce, le seul nom du genre ne suffit donc pas à déterminer si un fruit est sûr. La planche semble représenter Viburnum opulus : ses feuilles palmées et lobées, ses inflorescences plates aux fleurs périphériques agrandies et ses fruits rouges ne caractérisent pas toutes les espèces du genre."}
+  ],
+  "sources": [
+    {"title": "Kew Science — profil du genre Viburnum", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30000738-2"},
+    {"title": "Hajian-Forooshani et al. — syndromes des fruits chez Viburnum", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6956505/"}
+  ],
+  "related": ["viburnum_lantana"]
+}

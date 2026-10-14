@@ -1,0 +1,31 @@
+{
+  "id": "turbinicarpus_saueri",
+  "sections": [
+    {
+      "title": "Plant form and flowers",
+      "text": "A small, tuberculate Mexican cactus with a compact globose stem and pale pink flowers. The plate’s stout body, white radial spines and pink flower are consistent with the species; a dependable general size was not available."
+    },
+    {
+      "title": "Range and conservation",
+      "text": "Native to Tamaulipas and San Luis Potosí in northeastern Mexico, in desert or dry shrubland. Kew reports it as Vulnerable. Its spines are not food; no edible use is documented."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Plants of the World Online — Turbinicarpus saueri",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:286473-2/general-information"
+    },
+    {
+      "title": "USDA GRIN Taxonomy — Turbinicarpus saueri",
+      "url": "https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomydetail?id=319743"
+    },
+    {
+      "title": "Kew — CITES Cactaceae Checklist",
+      "url": "https://www.kew.org/sites/default/files/2019-02/CITES%20Cactaceae%20Checklist%20Third%20Edition.pdf"
+    }
+  ],
+  "related": [
+    "turbinicarpus_alonsoi",
+    "turbinicarpus_gielsdorfianus"
+  ]
+}

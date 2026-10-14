@@ -1,0 +1,34 @@
+{
+  "id": "urtica_urens",
+  "sections": [
+    {
+      "title": "Annual nettle",
+      "text": "Urtica urens is an annual nettle, usually about 60 cm tall and up to roughly 75 cm. It has stinging hairs and toothed leaves; unlike the common perennial nettle, its leaf base is usually not heart-shaped. The plate’s compact, toothed plant and small flowers fit."
+    },
+    {
+      "title": "Sting and food use",
+      "text": "Its hairs cause the characteristic nettle sting. Kew records this species as used for food, and young leaves are described as edible after cooking; raw contact can still irritate, so handling and eating are different concerns."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Plants of the World Online — Urtica urens",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:857987-1/general-information"
+    },
+    {
+      "title": "British and Irish Botanical Society — Urtica urens",
+      "url": "https://fermanagh.bsbi.org/urtica-urens-l"
+    },
+    {
+      "title": "Peer-reviewed genome paper — Urtica urens",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11612553/"
+    },
+    {
+      "title": "University of Florida IFAS — nettle sting and species comparison",
+      "url": "https://edis.ifas.ufl.edu/publication/HB002/pdf"
+    }
+  ],
+  "related": [
+    "urtica"
+  ]
+}

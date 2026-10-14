@@ -1,0 +1,31 @@
+{
+  "id": "turbinicarpus_alonsoi",
+  "sections": [
+    {
+      "title": "Plant form and flowers",
+      "text": "A compact Mexican cactus with a flattened, nearly spherical stem about 6–9 cm across, mostly at or below ground level. The plate’s pink flowers and dense white spines match the published descriptions."
+    },
+    {
+      "title": "Habitat and protection",
+      "text": "Native to a restricted area of Guanajuato and San Luis Potosí, Mexico, in dry habitats. Kew records it as critically endangered; international trade in this cactus is regulated. No food use is documented."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Plants of the World Online — Turbinicarpus alonsoi",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:315102-2/general-information"
+    },
+    {
+      "title": "LLIFLE — Turbinicarpus alonsoi",
+      "url": "https://www.llifle.com/Encyclopedia/CACTI/Family/Cactaceae/11705/Turbinicarpus_alonsoi"
+    },
+    {
+      "title": "CITES — Appendices I, II and III",
+      "url": "https://cites.org/eng/app/appendices.php"
+    }
+  ],
+  "related": [
+    "turbinicarpus_gielsdorfianus",
+    "turbinicarpus_saueri"
+  ]
+}

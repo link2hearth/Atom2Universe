@@ -1,0 +1,31 @@
+{
+  "id": "turbinicarpus_saueri",
+  "sections": [
+    {
+      "title": "Port et fleurs",
+      "text": "Petit cactus mexicain tuberculé, à tige globuleuse compacte et fleurs rose pâle. Le corps trapu, les aiguillons radiaux blancs et la fleur rose de la planche concordent avec l’espèce ; aucune taille générale suffisamment fiable n’a été trouvée."
+    },
+    {
+      "title": "Répartition et conservation",
+      "text": "Originaire du Tamaulipas et du San Luis Potosí, dans le nord-est du Mexique, en milieu désertique ou broussailleux sec. Kew le classe vulnérable. Ses aiguillons ne sont pas comestibles ; aucun usage alimentaire n’est documenté."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Plants of the World Online — Turbinicarpus saueri",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:286473-2/general-information"
+    },
+    {
+      "title": "USDA GRIN Taxonomy — Turbinicarpus saueri",
+      "url": "https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomydetail?id=319743"
+    },
+    {
+      "title": "Kew — CITES Cactaceae Checklist",
+      "url": "https://www.kew.org/sites/default/files/2019-02/CITES%20Cactaceae%20Checklist%20Third%20Edition.pdf"
+    }
+  ],
+  "related": [
+    "turbinicarpus_alonsoi",
+    "turbinicarpus_gielsdorfianus"
+  ]
+}

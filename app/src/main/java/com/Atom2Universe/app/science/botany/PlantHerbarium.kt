@@ -93,8 +93,9 @@ internal object PlantHerbarium {
     // N. inermis depicts a prominent pitcher rim, unlike its nearly absent peristome;
     // P. usta depicts a self-rooted plant with red cones, unlike the parasitic species;
     // S. alatum depicts broad toothed leaves, unlike the species' narrow, divided lower leaves;
-    // T. funalis depicts flattened pads and a mismatching flower and fruit.
-    private val mismatchedPlates = setOf("dracaena_braunii", "iriartea_deltoidea", "nepenthes_inermis", "parasitaxus_usta", "sesamum_alatum", "tacinga_funalis")
+    // T. funalis depicts flattened pads and a mismatching flower and fruit;
+    // V. lantana depicts pinnate leaves instead of the species' simple, opposite leaves.
+    private val mismatchedPlates = setOf("dracaena_braunii", "iriartea_deltoidea", "nepenthes_inermis", "parasitaxus_usta", "sesamum_alatum", "tacinga_funalis", "viburnum_lantana")
 
     fun hasPlate(id: String) = id in speciesIds && id !in mismatchedPlates
 

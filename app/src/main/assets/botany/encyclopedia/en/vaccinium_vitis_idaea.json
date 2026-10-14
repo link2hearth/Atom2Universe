@@ -1,0 +1,12 @@
+{
+  "id": "vaccinium_vitis_idaea",
+  "sections": [
+    {"title": "Low evergreen shrub", "text": "Lingonberry is a mat-forming, evergreen shrub of boreal heaths, bog margins and rocky openings. Its small, leathery leaves are about 5–18 mm long; the plant usually spreads through creeping shoots rather than forming a tall bush."},
+    {"title": "Flowers and food", "text": "Short clusters of pinkish-white, bell-shaped flowers produce round red berries about 8–10 mm across. The tart fruit is eaten raw or cooked and commonly made into preserves and sauces. The plate shows the evergreen foliage, pale bells and red berries."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Vaccinium vitis-idaea", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=200016732"},
+    {"title": "US National Phenology Network — Lingonberry", "url": "https://mynpn.usanpn.org/npnapps/species/Vaccinium/vitis-idaea"}
+  ],
+  "related": ["vaccinium_corymbosum", "vaccinium_ovalifolium"]
+}

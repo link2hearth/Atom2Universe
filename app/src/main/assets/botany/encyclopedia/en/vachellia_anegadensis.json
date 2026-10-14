@@ -1,0 +1,12 @@
+{
+  "id": "vachellia_anegadensis",
+  "sections": [
+    {"title": "A spiny island tree", "text": "Poke-me-boy is an exceptionally thorny shrub or small tree endemic to the British Virgin Islands, known from Anegada and Fallen Jerusalem. Its finely divided leaves have up to four pairs of pinnae; small yellow flower heads form bright pompons, followed by curved seed pods."},
+    {"title": "Conservation", "text": "The species grows mainly on Anegada’s limestone and faces severe habitat pressure, including coastal flooding risk. Kew reports Critically Endangered status under IUCN criteria. The plate’s thorny branches, yellow globes and curved pod agree with the botanical description."}
+  ],
+  "sources": [
+    {"title": "Kew Science — Vachellia anegadensis species profile", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:60441188-2/general-information"},
+    {"title": "Clubbe et al. — Conservation and ecology of the British Virgin Islands endemic tree Vachellia anegadensis", "url": "https://doi.org/10.1017/S0030605320001234"}
+  ],
+  "related": ["vachellia_tortilis"]
+}

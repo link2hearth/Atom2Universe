@@ -1,0 +1,32 @@
+{
+  "id": "vaccinium",
+  "sections": [
+    {
+      "title": "Un genre varié de petits fruits",
+      "text": "Vaccinium comprend des plantes rampantes, des sous-arbrisseaux, des arbustes plus hauts et même de petits arbres. La planche montre un type de myrtille bas, au feuillage persistant, avec des feuilles dentées et des baies bleues ; les espèces du genre varient beaucoup par leur port, leur feuillage et la couleur des fruits."
+    },
+    {
+      "title": "Fruits et identification",
+      "text": "Myrtilles, airelles, canneberges et atocas sont des espèces comestibles connues, mais la couleur seule ne permet pas d’identifier ni de déclarer comestible une baie sauvage inconnue. Il faut déterminer l’espèce avant consommation ; aucune propriété alimentaire ou toxicologique ne s’applique uniformément à tout le genre."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Plants of the World Online — Vaccinium",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30000401-2/general-information"
+    },
+    {
+      "title": "Flora of North America — Vaccinium",
+      "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=134285"
+    },
+    {
+      "title": "US Forest Service — Vaccinium species and size table",
+      "url": "https://www.fs.usda.gov/nsl/Wpsm/Vaccinium.pdf"
+    },
+    {
+      "title": "Kew — Vaccinium corymbosum profile and fruit use",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:261823-2/general-information"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "vestia_foetida",
+  "sections": [
+    {"title": "Arbuste chilien", "text": "Vestia foetida est un arbuste persistant endémique du centre et du sud du Chili. En culture, il atteint environ 1,5 à 2,5 m de haut et 1 à 1,5 m de large. Ses feuilles étroites et luisantes dégagent une odeur désagréable ; ses fleurs jaunes pendantes en tube mesurent environ 2,5 à 3 cm, puis viennent des capsules sèches."},
+    {"title": "Toxicité", "text": "Ne pas la considérer comme une plante alimentaire ou médicinale : des observations vétérinaires rapportent des intoxications mortelles de bovins après broutage du feuillage, et des travaux identifient des composés hépatotoxiques chez cette espèce. La planche correspond aux fleurs tubulaires jaunes, aux feuilles étroites et à la capsule."}
+  ],
+  "sources": [
+    {"title": "Royal Horticultural Society — Vestia foetida", "url": "https://www.rhs.org.uk/plants/18876/vestia-foetida/details"},
+    {"title": "Brevis et al. — Intoxication bovine par le huévil (Vestia foetida) au Chili", "url": "https://doi.org/10.1136/vr.156.14.452"},
+    {"title": "Herbario Digital de Chile — Vestia foetida", "url": "https://www.herbariodigital.cl/catalog/details/7079/"}
+  ],
+  "related": []
+}

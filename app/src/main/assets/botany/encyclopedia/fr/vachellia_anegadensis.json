@@ -1,0 +1,12 @@
+{
+  "id": "vachellia_anegadensis",
+  "sections": [
+    {"title": "Arbre insulaire épineux", "text": "Le « poke-me-boy » est un arbuste ou petit arbre particulièrement épineux, endémique des îles Vierges britanniques et connu à Anegada et Fallen Jerusalem. Ses feuilles finement divisées portent jusqu’à quatre paires de pennes ; de petites têtes florales jaunes forment des pompons, puis viennent des gousses incurvées."},
+    {"title": "Conservation", "text": "L’espèce pousse surtout sur les calcaires d’Anegada et subit une forte pression sur son habitat, notamment le risque d’inondation côtière. Kew indique le statut « en danger critique » selon les critères de l’UICN. La planche montre bien les rameaux épineux, les glomérules jaunes et la gousse courbe décrits par les sources."}
+  ],
+  "sources": [
+    {"title": "Kew Science — profil de Vachellia anegadensis", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:60441188-2/general-information"},
+    {"title": "Clubbe et al. — Conservation et écologie de l’arbre endémique Vachellia anegadensis des îles Vierges britanniques", "url": "https://doi.org/10.1017/S0030605320001234"}
+  ],
+  "related": ["vachellia_tortilis"]
+}

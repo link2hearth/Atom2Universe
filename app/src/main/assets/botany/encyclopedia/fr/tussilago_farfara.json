@@ -1,0 +1,28 @@
+{
+  "id": "tussilago_farfara",
+  "sections": [
+    {
+      "title": "Fleurs printanières et feuilles tardives",
+      "text": "Le tussilage est une vivace à rhizome. Ses capitules jaunes, semblables à ceux du pissenlit, apparaissent sur des tiges écailleuses avant les grandes feuilles cordiformes, souvent larges de 5 à 18 cm. La planche montre bien cette succession inhabituelle."
+    },
+    {
+      "title": "Prudence",
+      "text": "Le tussilage contient des alcaloïdes pyrrolizidiniques susceptibles d’endommager le foie ; son usage médicinal ne permet pas de le considérer comme une plante à manger ou à infuser sans risque. Éviter l’ingestion, en particulier des préparations non contrôlées."
+    }
+  ],
+  "sources": [
+    {
+      "title": "USDA Forest Service FEIS — Tussilago farfara",
+      "url": "https://research.fs.usda.gov/feis/species-reviews/tusfar"
+    },
+    {
+      "title": "RHS — Tussilago farfara",
+      "url": "https://www.rhs.org.uk/plants/18563/tussilago-farfara/details"
+    },
+    {
+      "title": "Review of ethnobotanical value and toxicity (peer-reviewed, PMC)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7561605/"
+    }
+  ],
+  "related": []
+}

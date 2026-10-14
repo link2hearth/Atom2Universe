@@ -1,0 +1,12 @@
+{
+  "id": "vanda_coerulea",
+  "sections": [
+    {"title": "Epiphytic orchid", "text": "The blue vanda is an epiphytic orchid native from northeastern India and Nepal through mainland Southeast Asia to southern China. In the wild it grows on exposed trees, chiefly oaks, at roughly 900–1,500 m. Its strap-shaped, leathery leaves grow along a short stem with exposed aerial roots."},
+    {"title": "Flowers and conservation", "text": "Large, flat blue to violet flowers are about 13 cm across, with a comparatively small lip around 2 cm long; several spikes can carry 20–30 flowers per plant. The pictured roots, strap leaves and blue, net-patterned blooms fit the species. International trade is regulated under CITES Appendix I; this is not an edible plant."}
+  ],
+  "sources": [
+    {"title": "Kew Science — Vanda coerulea species profile", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:660987-1/general-information"},
+    {"title": "CITES — Vanda coerulea trade review", "url": "https://cites.org/sites/default/files/eng/cop/13/inf/E13i-20A.pdf"}
+  ],
+  "related": []
+}

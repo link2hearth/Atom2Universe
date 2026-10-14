@@ -1,0 +1,12 @@
+{
+  "id": "vaccinium_corymbosum",
+  "sections": [
+    {"title": "Arbuste et fleurs", "text": "La grande myrtille est un arbuste caduc et dressé, souvent haut d’environ 1 à 2 m en culture. Ses feuilles dentées précèdent des grappes pendantes de petites fleurs en urne, blanches à rosées."},
+    {"title": "Fruits et alimentation", "text": "Les baies rondes mûrissent du vert au violet rougeâtre, puis au bleu-noir couvert d’une pruine ; elles atteignent environ 12 mm de diamètre. Les fruits mûrs sont comestibles et consommés frais ou cuits. La planche montre l’arbuste, les fleurs en urne et les baies bleues mûres."}
+  ],
+  "sources": [
+    {"title": "Kew Science — profil de Vaccinium corymbosum", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:261823-2/general-information"},
+    {"title": "University of Maryland Extension — culture des myrtilles au jardin", "url": "https://www.extension.umd.edu/resource/growing-blueberries-home-garden"}
+  ],
+  "related": ["vaccinium_ovalifolium", "vaccinium_vitis_idaea"]
+}

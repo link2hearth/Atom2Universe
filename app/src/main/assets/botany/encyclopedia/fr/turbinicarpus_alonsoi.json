@@ -1,0 +1,31 @@
+{
+  "id": "turbinicarpus_alonsoi",
+  "sections": [
+    {
+      "title": "Port et fleurs",
+      "text": "Petit cactus mexicain à tige aplatie et presque sphérique, d’environ 6 à 9 cm de diamètre, en grande partie au ras ou sous le sol. Les fleurs roses et les aiguillons blancs de la planche concordent avec les descriptions."
+    },
+    {
+      "title": "Habitat et protection",
+      "text": "Originaire d’une aire restreinte du Guanajuato et du San Luis Potosí, au Mexique, dans des milieux secs. Kew le signale comme en danger critique ; son commerce international est réglementé. Aucun usage alimentaire n’est documenté."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Plants of the World Online — Turbinicarpus alonsoi",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:315102-2/general-information"
+    },
+    {
+      "title": "LLIFLE — Turbinicarpus alonsoi",
+      "url": "https://www.llifle.com/Encyclopedia/CACTI/Family/Cactaceae/11705/Turbinicarpus_alonsoi"
+    },
+    {
+      "title": "CITES — Appendices I, II and III",
+      "url": "https://cites.org/eng/app/appendices.php"
+    }
+  ],
+  "related": [
+    "turbinicarpus_gielsdorfianus",
+    "turbinicarpus_saueri"
+  ]
+}

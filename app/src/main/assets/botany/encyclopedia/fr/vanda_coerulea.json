@@ -1,0 +1,12 @@
+{
+  "id": "vanda_coerulea",
+  "sections": [
+    {"title": "Orchidée épiphyte", "text": "La vanda bleue est une orchidée épiphyte indigène du nord-est de l’Inde et du Népal jusqu’à la Chine méridionale, en passant par l’Asie du Sud-Est continentale. À l’état sauvage, elle pousse sur des arbres exposés, surtout des chênes, vers 900 à 1 500 m d’altitude. Ses feuilles coriaces en lanières longent une courte tige portant des racines aériennes."},
+    {"title": "Fleurs et conservation", "text": "Ses grandes fleurs plates bleues à violettes font environ 13 cm de diamètre ; le labelle, relativement petit, mesure autour de 2 cm. Plusieurs hampes peuvent porter 20 à 30 fleurs par plante. Les racines visibles, les feuilles en lanières et les fleurs bleues réticulées correspondent à l’espèce. Son commerce international est réglementé par l’Annexe I de la CITES ; ce n’est pas une plante alimentaire."}
+  ],
+  "sources": [
+    {"title": "Kew Science — profil de Vanda coerulea", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:660987-1/general-information"},
+    {"title": "CITES — étude du commerce de Vanda coerulea", "url": "https://cites.org/sites/default/files/eng/cop/13/inf/E13i-20A.pdf"}
+  ],
+  "related": []
+}

@@ -1,0 +1,31 @@
+{
+  "id": "turbinicarpus_gielsdorfianus",
+  "sections": [
+    {
+      "title": "Plant form and flowers",
+      "text": "A small Mexican Turbinicarpus cactus with a globose to short cylindrical, tuberculate stem and pale flowers. The plate’s rounded, strongly ribbed body and white-to-pink flower fit this species; exact adult dimensions vary among accounts, so no fixed size is given."
+    },
+    {
+      "title": "Habitat and protection",
+      "text": "Native to San Luis Potosí, Mexico, where it grows in dry, rocky sites. It is a cactus with spines; no edible use is documented. Wild collection and trade in cacti are regulated under CITES."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Plants of the World Online — Turbinicarpus gielsdorfianus",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:941976-1/general-information"
+    },
+    {
+      "title": "USDA GRIN Taxonomy — Turbinicarpus gielsdorfianus",
+      "url": "https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomydetail?id=319734"
+    },
+    {
+      "title": "CITES — Appendices I, II and III",
+      "url": "https://cites.org/eng/app/appendices.php"
+    }
+  ],
+  "related": [
+    "turbinicarpus_alonsoi",
+    "turbinicarpus_saueri"
+  ]
+}
