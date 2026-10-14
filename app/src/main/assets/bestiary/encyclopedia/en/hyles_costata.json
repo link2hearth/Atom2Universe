@@ -1,0 +1,26 @@
+{
+  "id": "hyles_costata",
+  "name": "Steppe Hawk-moth",
+  "scientific": "Hyles costata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Sphingidae Taxonomic Inventory accepts Hyles costata as a valid hawk-moth species.",
+    "identification": "The Amur account gives a 64–75 mm wingspan, pale forewing bands and a reddish hindwing field.",
+    "habitat": "In Amur it occupies dry meadows and steppe.",
+    "diet": "Euphorbia is reported as a larval host in Amur.",
+    "behavior": "Adults fly at dusk and night; Amur records span mid-June to early August.",
+    "reproduction": "Two annual generations are reported in Amur.",
+    "ecology": "Its taxonomic history includes treatment as a form of H. euphorbiae, but the specialist inventory records its reinstatement as a distinct species in 1993.",
+    "conservation": "The regional Red Book notes low local numbers and habitat loss."
+  },
+  "sources": [
+    {
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/1292",
+      "title": "Hyles costata — Sphingidae Taxonomic Inventory"
+    },
+    {
+      "url": "https://cicon.ru/hylescostata-amur.html",
+      "title": "Steppe hawk-moth — Red Book of Amur Oblast"
+    }
+  ]
+}

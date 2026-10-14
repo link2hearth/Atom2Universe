@@ -1,0 +1,34 @@
+{
+  "id": "icosteus_aenigmaticus",
+  "name": "Ragfish",
+  "scientific": "Icosteus aenigmaticus",
+  "group": "fish",
+  "sections": {
+    "overview": "The Ragfish is a North Pacific fish in the family Icosteidae.",
+    "identification": "It can exceed two metres and has soft muscles and a cartilaginous skeleton.",
+    "habitat": "It ranges from Japan to Alaska and California, from the surface to 1420 m.",
+    "diet": "Reported prey include jellyfish, fish, squid and octopuses.",
+    "behavior": "Adults occur near the bottom; juveniles stay shallower.",
+    "reproduction": "Egg and larval records exist, but adult reproduction is poorly documented.",
+    "ecology": "Larvae have pelvic fins that disappear as adults develop a deeper body.",
+    "conservation": "FishBase lists no global IUCN status. Adult biology remains poorly studied."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Icosteus_aenigmaticus.html",
+      "title": "Icosteus aenigmaticus — FishBase"
+    },
+    {
+      "url": "https://spo.nmfs.noaa.gov/sites/default/files/pdf-content/MFR/mfr634/mfr6341.pdf",
+      "title": "The Ragfish, Icosteus aenigmaticus: a synthesis of historical and recent records — NOAA Marine Fisheries Review"
+    },
+    {
+      "url": "https://apps-afsc.fisheries.noaa.gov/ichthyo/LHDataELH.php?GSID=Icosteus%21aenigmaticus",
+      "title": "Early Life History Description: Icosteus aenigmaticus — NOAA Alaska Fisheries Science Center"
+    },
+    {
+      "url": "https://www.afs-oc.org/wp-content/uploads/2025/06/Names-of-Fishes-8-Table1.pdf",
+      "title": "Names of Fishes — American Fisheries Society, English, Spanish and French common names"
+    }
+  ]
+}

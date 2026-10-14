@@ -1,0 +1,34 @@
+{
+  "id": "hyladelphys_kalinowskii",
+  "name": "Kalinowski's Mouse Opossum",
+  "scientific": "Hyladelphys kalinowskii",
+  "group": "mammals",
+  "sections": {
+    "overview": "This small didelphid marsupial is the sole living species in the genus Hyladelphys; it was originally placed in Gracilinanus.",
+    "identification": "Adults are about 67–85 mm in head-and-body length and weigh 13–18 g.",
+    "habitat": "It has been trapped in humid evergreen forest, including primary forest near streams in Peru.",
+    "diet": "Its feeding habits have not been documented in the species account consulted.",
+    "behavior": "It is elusive and likely nocturnal and arboreal; very little behavior has been observed directly.",
+    "reproduction": "The available species account provides no confirmed details of its reproductive cycle.",
+    "ecology": "Only scattered localities are documented, and the apparent gaps may reflect the difficulty of trapping this small, rarely collected opossum.",
+    "conservation": "The IUCN Red List assesses the species as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Hyladelphys_kalinowskii/",
+      "title": "Kalinowski's mouse opossum — Animal Diversity Web"
+    },
+    {
+      "url": "https://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?id=10400062",
+      "title": "Hyladelphys — Mammal Species of the World"
+    },
+    {
+      "url": "https://kwata.net/wp-content/uploads/2024/05/LIVRE_marsupiaux-et-rongeurs-de-guyane_WEB.pdf",
+      "title": "Marsupiaux et rongeurs de Guyane — Kwata"
+    },
+    {
+      "url": "https://www.iucnredlist.org/species/9422/197309523",
+      "title": "Hyladelphys kalinowskii — IUCN Red List"
+    }
+  ]
+}

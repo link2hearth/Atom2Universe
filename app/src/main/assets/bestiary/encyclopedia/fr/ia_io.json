@@ -1,0 +1,30 @@
+{
+  "id": "ia_io",
+  "name": "Ia io",
+  "scientific": "Ia io",
+  "group": "mammals",
+  "sections": {
+    "overview": "Ia io est présente du nord-est de l’Inde et du Népal jusqu’au sud de la Chine et à l’Asie du Sud-Est continentale.",
+    "identification": "Elle compte parmi les plus grandes vespertilionidés, avec un dos gris-noir, un ventre plus brun et de larges oreilles sur un visage glabre.",
+    "habitat": "L’espèce est associée aux forêts tropicales humides et se repose dans des grottes, y compris sur des sites de haute altitude.",
+    "diet": "Elle peut chasser des oiseaux : une étude par métabarcodage a identifié 22 espèces de passereaux dans son régime. D’autres travaux de terrain ont aussi signalé des insectes parmi ses proies.",
+    "behavior": "Les recherches documentent des attaques en vol et le glanage comme stratégies possibles pour capturer de petits passereaux, sans établir que chaque capture se déroule ainsi.",
+    "reproduction": "Un ancien échantillon du Sichuan relevait 83 % de femelles gestantes le 25 avril, chacune avec un embryon; il s’agit d’un prélèvement daté, pas d’un calendrier reproducteur complet.",
+    "ecology": "Contrairement à de nombreuses chauves-souris, elle mange des oiseaux et se repose dans des grottes.",
+    "conservation": "L’UICN l’a évaluée quasi menacée en 2018, en citant la perte des forêts et l’aménagement des grottes."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T10755A21993508.en",
+      "title": "Grande chauve-souris du soir — Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.bio.bris.ac.uk/research/bats/China%20bats/iaio.htm",
+      "title": "Ia io — recherches sur les chauves-souris, université de Bristol"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8258197/",
+      "title": "Qui est au menu ? Diversité des oiseaux-proies de Ia io — Ecology and Evolution"
+    }
+  ]
+}

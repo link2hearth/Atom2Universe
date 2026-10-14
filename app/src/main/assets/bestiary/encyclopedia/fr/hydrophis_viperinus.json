@@ -1,0 +1,30 @@
+{
+  "id": "hydrophis_viperinus",
+  "name": "Hydrophis vipérine",
+  "scientific": "Hydrophis viperinus",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Cet élapidé marin vit dans l’Indo-Pacifique occidental. Des publications anciennes emploient aussi des noms comme Thalassophis viperina et Praescutata viperina.",
+    "identification": "SeaLifeBase indique une longueur totale maximale de 78 cm chez les mâles ou les individus de sexe non précisé.",
+    "habitat": "Elle est signalée dans les eaux tropicales côtières associées aux récifs, à des profondeurs de 15–40 m.",
+    "diet": "L’espèce se nourrit de poissons selon les données disponibles.",
+    "behavior": "Sur la côte indienne, les observations publiées restent rares et comprennent des échouages et des prises accessoires de pêche.",
+    "reproduction": "The Reptile Database la décrit comme ovovivipare.",
+    "ecology": "Son écologie est peu documentée ; une synthèse récente souligne d’importantes lacunes de connaissances sur la côte indienne.",
+    "conservation": "SeaLifeBase rapporte une évaluation mondiale en préoccupation mineure datée du 15 février 2009."
+  },
+  "sources": [
+    {
+      "url": "https://www.sealifebase.ca/summary/83975",
+      "title": "Hydrophis viperinus — SeaLifeBase"
+    },
+    {
+      "url": "https://reptile-database.reptarium.cz/Hydrophis/viperinus",
+      "title": "Hydrophis viperinus — The Reptile Database"
+    },
+    {
+      "url": "https://scm.niscair.res.in/index.php/IJMS/article/view/7060",
+      "title": "Données sur le rare Hydrophis vipérine — Indian Journal of Geo-Marine Sciences"
+    }
+  ]
+}

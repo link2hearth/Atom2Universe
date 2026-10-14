@@ -1,0 +1,34 @@
+{
+  "id": "hylotrupes_bajulus",
+  "name": "Old House Borer",
+  "scientific": "Hylotrupes bajulus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This longhorn beetle is chiefly known as a pest of structural softwood timber.",
+    "identification": "The French building guide gives adults as 10–20 mm long and cream-colored larvae as 20–25 mm.",
+    "habitat": "Larvae develop in seasoned conifer wood, especially pine and spruce used in buildings.",
+    "diet": "Larvae tunnel through the wood; adults do not feed, according to the Argentine pest-monitoring account.",
+    "behavior": "Adults are short-lived and can walk or fly after emerging from the wood.",
+    "reproduction": "Females lay eggs in cracks in wood or bark, from which the wood-boring larvae hatch.",
+    "ecology": "The larval galleries weaken timber; the insect was historically a forest species but is now mainly associated with buildings.",
+    "conservation": "The consulted sources treat it as a timber pest and provide no wild-species conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://extension.psu.edu/old-house-borer",
+      "title": "Hylotrupes bajulus — Penn State Extension"
+    },
+    {
+      "url": "https://www.centre-val-de-loire.developpement-durable.gouv.fr/IMG/pdf/Guide_Termites_dans_batiments_neufs_-_septembre_2011_cle7153b7.pdf",
+      "title": "Guía de insectos de la madera — DREAL Centre-Val de Loire"
+    },
+    {
+      "url": "https://www.sinavimo.gob.ar/plaga/hylotrupes-bajulus",
+      "title": "Hylotrupes bajulus — SINAVIMO"
+    },
+    {
+      "url": "https://gd.eppo.int/taxon/HYLTBA",
+      "title": "Hylotrupes bajulus — EPPO Global Database"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "homo_sapiens",
+  "name": "Humain",
+  "scientific": "Homo sapiens",
+  "group": "mammals",
+  "sections": {
+    "overview": "Homo sapiens est apparu en Afrique il y a environ 300,000 ans. C’est la seule espèce humaine vivante.",
+    "identification": "Par rapport aux humains plus anciens, son squelette est généralement plus gracile et son crâne présente une voûte haute et arrondie, un front presque vertical, des arcades sourcilières réduites ainsi que des mâchoires et des dents plus petites.",
+    "habitat": "L’espèce est née en Afrique et vit aujourd’hui dans le monde entier, dans une gamme exceptionnellement vaste de milieux terrestres et côtiers.",
+    "diet": "L’être humain a un régime généraliste : les populations ont cueilli, chassé, pêché et consommé des aliments végétaux et animaux variés, avant que beaucoup adoptent ensuite la production alimentaire.",
+    "behavior": "Son histoire comprend la fabrication d’outils, des réseaux sociaux complexes et des activités symboliques.",
+    "reproduction": "Les enfants restent dépendants des adultes pendant une période exceptionnellement longue après le sevrage.",
+    "ecology": "Homo sapiens est apparenté à des espèces humaines éteintes comme Néandertal, avec laquelle il s’est métissé ; les données génomiques révèlent encore une ascendance néandertalienne chez de nombreuses populations actuelles.",
+    "conservation": "Les activités humaines ont transformé les milieux et créé de nouveaux défis de survie pour d’autres espèces."
+  },
+  "sources": [
+    {
+      "url": "https://humanorigins.si.edu/evidence/human-fossils/species/homo-sapiens",
+      "title": "Homo sapiens — programme Human Origins du Smithsonian"
+    },
+    {
+      "url": "https://www.mnhn.fr/fr/tout-savoir-sur-homo-sapiens-notre-espece",
+      "title": "Tout savoir sur Homo sapiens — Muséum national d’Histoire naturelle"
+    },
+    {
+      "url": "https://www.nature.com/articles/s41559-018-0735-8",
+      "title": "Épisodes multiples de métissage entre Néandertal et les humains modernes"
+    },
+    {
+      "url": "https://www.nhm.ac.uk/discover/modern-humans-homo-sapiens-when-where-how-did-we-evolve.html",
+      "title": "Les humains modernes, Homo sapiens — Natural History Museum, Londres"
+    },
+    {
+      "url": "https://www.si.edu/stories/human-origins-facts",
+      "title": "Repères sur les origines humaines — Smithsonian Institution"
+    }
+  ]
+}

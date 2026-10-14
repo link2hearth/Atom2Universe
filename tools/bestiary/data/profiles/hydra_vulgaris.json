@@ -1,0 +1,25 @@
+{
+  "id": "hydra_vulgaris",
+  "scientific": "Hydra vulgaris",
+  "group": "invertebrates",
+  "name": {"en": "Freshwater Hydra", "fr": "Hydre d’eau douce"},
+  "sections": {
+    "overview": {"en": "Hydra vulgaris is a small freshwater hydrozoan polyp, an important laboratory model for studying development, feeding and regeneration.", "fr": "Hydra vulgaris est un petit polype hydrozoaire d’eau douce, utilisé comme modèle de laboratoire pour étudier le développement, l’alimentation et la régénération."},
+    "identification": {"en": "The attached body is a simple tube with a basal disc and a crown of tentacles around the mouth; in H. vulgaris the tentacles can extend well beyond body length.", "fr": "Le corps fixé est un tube simple muni d’un disque basal et d’une couronne de tentacules autour de la bouche ; chez H. vulgaris, les tentacules peuvent dépasser largement la longueur du corps."},
+    "habitat": {"en": "It lives attached to plants or other surfaces in freshwater.", "fr": "Elle vit fixée aux plantes ou à d’autres supports en eau douce."},
+    "diet": {"en": "It captures small animals such as water fleas with stinging cells on its tentacles, then brings prey to the mouth for ingestion.", "fr": "Elle capture de petits animaux comme les puces d’eau grâce aux cellules urticantes de ses tentacules, puis amène la proie à la bouche pour l’ingérer."},
+    "behavior": {"en": "The polyp extends its tentacles to intercept prey, and laboratory studies use its feeding response to investigate sensory signaling.", "fr": "Le polype déploie ses tentacules pour intercepter les proies, et les études en laboratoire utilisent sa réponse alimentaire pour étudier la signalisation sensorielle."},
+    "reproduction": {"en": "It can reproduce asexually by budding and can also form eggs under laboratory conditions.", "fr": "Elle peut se reproduire de façon asexuée par bourgeonnement et aussi former des œufs en conditions de laboratoire."},
+    "ecology": {"en": "It belongs to a genus of freshwater polyps with several close species, including green Hydra viridissima, which has symbiotic algae and should not be confused with H. vulgaris.", "fr": "Elle appartient à un genre de polypes d’eau douce comprenant plusieurs espèces proches, dont Hydra viridissima, verte grâce à ses algues symbiotiques et à ne pas confondre avec H. vulgaris."},
+    "conservation": {"en": "The species is widely used in biological research, but the sources consulted do not provide a formal conservation assessment or a global threat category.", "fr": "L’espèce est largement utilisée en recherche biologique, mais les sources consultées ne donnent ni évaluation formelle de conservation ni catégorie mondiale de menace."}
+  },
+  "sources": [
+    {"title": {"en": "Hydra sp. — DORIS, FFESSM", "fr": "Hydra sp. — DORIS, FFESSM"}, "url": "https://doris.ffessm.fr/Especes/Hydra-sp.-Hydre-d-eau-douce-525/%28rOffset%29/16", "consulted": "2026-10-14", "supports": ["identification", "habitat", "diet", "ecology"], "facts": ["French account describes hydra form, feeding and relatives."], "prose_claims": [{"section": "identification", "en_sentence_ids": [1], "fr_sentence_ids": [1]}, {"section": "habitat", "en_sentence_ids": [1], "fr_sentence_ids": [1]}, {"section": "diet", "en_sentence_ids": [1], "fr_sentence_ids": [1]}, {"section": "ecology", "en_sentence_ids": [1], "fr_sentence_ids": [1]}]},
+    {"title": {"en": "Hydra vulgaris egg production and model biology — Frontiers", "fr": "Production des œufs et biologie modèle d’Hydra vulgaris — Frontiers"}, "url": "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2026.1761812/full", "consulted": "2026-10-14", "supports": ["overview", "reproduction", "conservation"], "facts": ["Recent study describes H. vulgaris as a freshwater cnidarian model and documents laboratory egg production."], "prose_claims": [{"section": "overview", "en_sentence_ids": [1], "fr_sentence_ids": [1]}, {"section": "reproduction", "en_sentence_ids": [1], "fr_sentence_ids": [1]}, {"section": "conservation", "en_sentence_ids": [1], "fr_sentence_ids": [1]}]},
+    {"title": {"en": "Hydra vulgaris sensory response to feeding — peer-reviewed study", "fr": "Réponse sensorielle à l’alimentation chez Hydra vulgaris — étude scientifique"}, "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6793700/", "consulted": "2026-10-14", "supports": ["behavior"], "facts": ["Species-specific study describes tentacle movements and mouth opening in the feeding response to Artemia prey."], "prose_claims": [{"section": "behavior", "en_sentence_ids": [1], "fr_sentence_ids": [1]}]}
+  ],
+  "uncertainties": ["DORIS covers several freshwater Hydra species and notes that they can be difficult to distinguish in field photographs; details are genus-level unless specified.", "Laboratory strains and protocols do not fully represent wild ecology; no formal conservation status was found in the consulted accounts."],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "H. viridissima is a close congener distinguished by its green algal symbiosis; exact phylogenetic proximity is not asserted."
+}

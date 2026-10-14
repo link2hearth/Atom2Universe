@@ -1,0 +1,38 @@
+{
+  "id": "homo_sapiens",
+  "name": "Human",
+  "scientific": "Homo sapiens",
+  "group": "mammals",
+  "sections": {
+    "overview": "Homo sapiens evolved in Africa about 300,000 years ago. It is the only human species alive today.",
+    "identification": "Compared with earlier humans, its skeleton is generally lighter, and its skull has a high rounded vault, a near-vertical forehead, reduced brow ridges and smaller jaws and teeth.",
+    "habitat": "The species originated in Africa and now occurs worldwide, occupying an exceptionally broad range of terrestrial and coastal environments.",
+    "diet": "Humans are dietary generalists: populations have gathered, hunted, fished and eaten diverse plant and animal foods, and many later adopted food production.",
+    "behavior": "Its history includes toolmaking, complex social networks and symbolic activities.",
+    "reproduction": "Children remain dependent on adult care for an unusually prolonged period after weaning.",
+    "ecology": "Homo sapiens is closely related to extinct human species such as Neanderthals, with which it interbred; genomic evidence also shows the persistence of Neanderthal ancestry in many living populations.",
+    "conservation": "Human activity has transformed environments and created new survival challenges for other species."
+  },
+  "sources": [
+    {
+      "url": "https://humanorigins.si.edu/evidence/human-fossils/species/homo-sapiens",
+      "title": "Homo sapiens — Smithsonian Human Origins Program"
+    },
+    {
+      "url": "https://www.mnhn.fr/fr/tout-savoir-sur-homo-sapiens-notre-espece",
+      "title": "Tout savoir sur Homo sapiens — Muséum national d’Histoire naturelle"
+    },
+    {
+      "url": "https://www.nature.com/articles/s41559-018-0735-8",
+      "title": "Multiple episodes of interbreeding between Neanderthal and modern humans"
+    },
+    {
+      "url": "https://www.nhm.ac.uk/discover/modern-humans-homo-sapiens-when-where-how-did-we-evolve.html",
+      "title": "Modern humans, Homo sapiens — Natural History Museum, London"
+    },
+    {
+      "url": "https://www.si.edu/stories/human-origins-facts",
+      "title": "Human origins facts — Smithsonian Institution"
+    }
+  ]
+}

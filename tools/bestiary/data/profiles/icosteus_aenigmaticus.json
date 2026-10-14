@@ -1,0 +1,167 @@
+{
+  "id": "icosteus_aenigmaticus",
+  "scientific": "Icosteus aenigmaticus",
+  "group": "fish",
+  "name": {
+    "en": "Ragfish",
+    "fr": "Torchon mou"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Ragfish is a North Pacific fish in the family Icosteidae.",
+      "fr": "Le Torchon mou est un poisson du Pacifique Nord de la famille des Icosteidés."
+    },
+    "identification": {
+      "en": "It can exceed two metres and has soft muscles and a cartilaginous skeleton.",
+      "fr": "Il peut dépasser deux mètres et possède une musculature molle et un squelette cartilagineux."
+    },
+    "habitat": {
+      "en": "It ranges from Japan to Alaska and California, from the surface to 1420 m.",
+      "fr": "Son aire va du Japon à l’Alaska et à la Californie, de la surface jusqu’à 1 420 m."
+    },
+    "diet": {
+      "en": "Reported prey include jellyfish, fish, squid and octopuses.",
+      "fr": "Ses proies signalées comprennent des méduses, des poissons, des calmars et des poulpes."
+    },
+    "behavior": {
+      "en": "Adults occur near the bottom; juveniles stay shallower.",
+      "fr": "Les adultes vivent près du fond; les jeunes restent en eaux moins profondes."
+    },
+    "reproduction": {
+      "en": "Egg and larval records exist, but adult reproduction is poorly documented.",
+      "fr": "Des données sur les œufs et les larves existent, mais la reproduction adulte reste peu documentée."
+    },
+    "ecology": {
+      "en": "Larvae have pelvic fins that disappear as adults develop a deeper body.",
+      "fr": "Les larves ont des nageoires pelviennes qui disparaissent tandis que le corps adulte s’approfondit."
+    },
+    "conservation": {
+      "en": "FishBase lists no global IUCN status. Adult biology remains poorly studied.",
+      "fr": "FishBase n’indique pas de statut mondial dans la Liste rouge. La biologie adulte demeure peu étudiée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Icosteus aenigmaticus — FishBase",
+        "fr": "Icosteus aenigmaticus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Icosteus_aenigmaticus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports North Pacific range, depths to 1,420 m, diet including jellyfish and cephalopods, adults near bottom, juveniles in shallow water, and no global IUCN evaluation."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 26,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Ragfish, Icosteus aenigmaticus: a synthesis of historical and recent records — NOAA Marine Fisheries Review",
+        "fr": "Le Ragfish, Icosteus aenigmaticus : synthèse des observations historiques et récentes — NOAA Marine Fisheries Review"
+      },
+      "url": "https://spo.nmfs.noaa.gov/sites/default/files/pdf-content/MFR/mfr634/mfr6341.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Peer-reviewed review describes soft musculature and cartilaginous skeleton, notes sparse adult reproductive data, and calls adult biology poorly studied."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 19,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Early Life History Description: Icosteus aenigmaticus — NOAA Alaska Fisheries Science Center",
+        "fr": "Description du début du cycle vital d’Icosteus aenigmaticus — NOAA Alaska Fisheries Science Center"
+      },
+      "url": "https://apps-afsc.fisheries.noaa.gov/ichthyo/LHDataELH.php?GSID=Icosteus%21aenigmaticus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "NOAA developmental records state that pelvic fins occur in larvae and are lost in adults, as the body changes from elongate to deep."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 23,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Names of Fishes — American Fisheries Society, English, Spanish and French common names",
+        "fr": "Noms des poissons — American Fisheries Society, noms communs anglais, espagnols et français"
+      },
+      "url": "https://www.afs-oc.org/wp-content/uploads/2025/06/Names-of-Fishes-8-Table1.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The multilingual American Fisheries Society list records the French common name torchon mou for Icosteus aenigmaticus."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Adult reproductive biology and abundance remain poorly known; a missing global IUCN evaluation is not evidence of low risk."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase range and trophic data with NOAA early-life-history records and a peer-reviewed synthesis; retained uncertainty about adult biology and verified the French name in the AFS multilingual list."
+}

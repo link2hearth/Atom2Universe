@@ -1,0 +1,30 @@
+{
+  "id": "hispidoberyx_ambagiosus",
+  "name": "Bristlyskin",
+  "scientific": "Hispidoberyx ambagiosus",
+  "group": "fish",
+  "sections": {
+    "overview": "Hispidoberyx ambagiosus est un poisson profond rarement collecté et la seule espèce décrite de la famille des Hispidoberycidae.",
+    "identification": "Son corps est fuselé et comprimé latéralement, avec des écailles épineuses marquées ; sa morphologie détaillée a été redécrite à partir de spécimens taïwanais.",
+    "habitat": "Les observations disponibles le situent en eaux marines profondes, de l’océan Indien oriental et de la mer de Chine méridionale jusqu’au nord-est de Taïwan, vers 560–1,019 m de profondeur.",
+    "diet": "FishBase signale des crevettes dans son régime, mais cette indication repose sur très peu de spécimens et ne décrit pas en détail son écologie alimentaire.",
+    "behavior": "Son comportement est mal connu ; l’espèce est décrite comme probablement benthopélagique, sans routine quotidienne bien documentée.",
+    "reproduction": "Les sources consultées ne décrivent pas, à l’échelle de l’espèce, la parade, la ponte ou les soins parentaux.",
+    "ecology": "Les sources actuelles présentent sa famille comme monotypique, sans congénère décrit pour une comparaison directe. La redescription taïwanaise repousse la limite septentrionale connue de l’espèce.",
+    "conservation": "FishBase reprend une évaluation en préoccupation mineure datée du 22 décembre 2019, mais la rareté des spécimens collectés laisse incertains plusieurs aspects de sa biologie."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Hispidoberyx&SpeciesName=ambagiosus&pda=1&sps=",
+      "title": "Hispidoberyx ambagiosus — FishBase"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/fishes/bristlyskin-hispidoberyx-ambagiosus/",
+      "title": "Bristlyskin — Australian Museum"
+    },
+    {
+      "url": "https://doi.org/10.3897/zookeys.1182.111296",
+      "title": "Redescription de Hispidoberyx ambagiosus de Taïwan — ZooKeys"
+    }
+  ]
+}

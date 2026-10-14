@@ -1,0 +1,30 @@
+{
+  "id": "ia_io",
+  "name": "Great Evening Bat",
+  "scientific": "Ia io",
+  "group": "mammals",
+  "sections": {
+    "overview": "The Great Evening Bat occurs from northeastern India and Nepal to southern China and mainland Southeast Asia.",
+    "identification": "It is among the largest vespertilionids, with grey-black dorsal fur, a browner underside and broad ears on a bare face.",
+    "habitat": "The species is associated with tropical moist forests and roosts in caves, including records from high-elevation sites.",
+    "diet": "It can prey on birds: DNA metabarcoding identified 22 passerine species in one study. Other field work also reported insects among its prey.",
+    "behavior": "Research documents both aerial attacks and gleaning as possible ways it takes small songbirds, but the study does not establish that every prey capture uses either method.",
+    "reproduction": "A historical Sichuan sample found 83% of females collected on 25 April pregnant, each with one embryo; this is a single dated sample, not a full breeding calendar.",
+    "ecology": "Unlike many bats, it eats birds and roosts in caves.",
+    "conservation": "IUCN assessed it as Near Threatened in 2018, citing forest loss and cave development."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T10755A21993508.en",
+      "title": "Great Evening Bat — IUCN Red List"
+    },
+    {
+      "url": "https://www.bio.bris.ac.uk/research/bats/China%20bats/iaio.htm",
+      "title": "Ia io — Bristol Bat Research"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8258197/",
+      "title": "Who’s for dinner? Bird prey diversity and choice in the great evening bat, Ia io — Ecology and Evolution"
+    }
+  ]
+}

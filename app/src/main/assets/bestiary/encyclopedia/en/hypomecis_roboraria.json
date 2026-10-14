@@ -1,0 +1,34 @@
+{
+  "id": "hypomecis_roboraria",
+  "name": "Great Oak Beauty",
+  "scientific": "Hypomecis roboraria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Great Oak Beauty is a geometrid moth of oak woodland, recorded in southern England and Wales.",
+    "identification": "UKMoths gives a 40–50 mm wingspan; its cryptic brown pattern blends with bark and twigs.",
+    "habitat": "It inhabits oak woodland. In southern England, it is especially associated with ancient and mature woods.",
+    "diet": "The caterpillar feeds on oak. A Hampshire account specifies pedunculate oak.",
+    "behavior": "Adults fly mainly in June and July and come to light; resting caterpillars resemble twigs.",
+    "reproduction": "The larva overwinters; the sources give no complete mating or egg-laying schedule.",
+    "ecology": "It is associated with oak as a larval food plant; the related Pale Oak Beauty, Hypomecis punctinalis, can be confused with it but has a ring-shaped hindwing mark.",
+    "conservation": "Hampshire and Isle of Wight records report local declines linked to habitat destruction, but this regional account is not a global assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/hypomecis-roboraria/larva/",
+      "title": "Great Oak Beauty — UKMoths"
+    },
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=70.267",
+      "title": "Hypomecis roboraria — Hantsmoths"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Hypomecis_punctinalis",
+      "title": "Hypomecis punctinalis — LepiWiki (German-language identification notes)"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/3974/",
+      "title": "Belgian Lepidoptera catalogue — Hypomecis roboraria"
+    }
+  ]
+}

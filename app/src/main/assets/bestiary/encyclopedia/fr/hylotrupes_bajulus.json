@@ -1,0 +1,34 @@
+{
+  "id": "hylotrupes_bajulus",
+  "name": "Capricorne des maisons",
+  "scientific": "Hylotrupes bajulus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ce coléoptère longicorne est surtout connu comme ravageur des bois résineux de construction.",
+    "identification": "Le guide français du bâtiment indique des adultes de 10–20 mm et des larves blanc crème de 20–25 mm.",
+    "habitat": "Les larves se développent dans le bois résineux sec, notamment le pin et l’épicéa employés dans les bâtiments.",
+    "diet": "Les larves creusent le bois ; les adultes ne s’alimentent pas, selon la fiche argentine de surveillance phytosanitaire.",
+    "behavior": "Les adultes vivent peu de temps et peuvent marcher ou voler après leur sortie du bois.",
+    "reproduction": "Les femelles pondent dans les fissures du bois ou de l’écorce, où éclosent les larves xylophages.",
+    "ecology": "Les galeries larvaires fragilisent le bois ; autrefois forestier, l’insecte est maintenant surtout associé aux bâtiments.",
+    "conservation": "Les sources consultées le traitent comme un ravageur du bois et ne donnent pas d’évaluation de conservation des populations sauvages."
+  },
+  "sources": [
+    {
+      "url": "https://extension.psu.edu/old-house-borer",
+      "title": "Hylotrupes bajulus — Penn State Extension"
+    },
+    {
+      "url": "https://www.centre-val-de-loire.developpement-durable.gouv.fr/IMG/pdf/Guide_Termites_dans_batiments_neufs_-_septembre_2011_cle7153b7.pdf",
+      "title": "Guide des insectes du bois — DREAL Centre-Val de Loire"
+    },
+    {
+      "url": "https://www.sinavimo.gob.ar/plaga/hylotrupes-bajulus",
+      "title": "Hylotrupes bajulus — SINAVIMO"
+    },
+    {
+      "url": "https://gd.eppo.int/taxon/HYLTBA",
+      "title": "Hylotrupes bajulus — Base de données mondiale de l’OEPP"
+    }
+  ]
+}

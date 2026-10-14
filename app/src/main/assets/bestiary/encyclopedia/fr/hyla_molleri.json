@@ -1,0 +1,34 @@
+{
+  "id": "hyla_molleri",
+  "name": "Rainette ibérique",
+  "scientific": "Hyla molleri",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Amphibian Species of the World reconnaît Hyla molleri dans la péninsule Ibérique et jusqu’au sud-ouest de la France. Sa distinction de H. arborea reste débattue, certaines études jugeant les preuves morphologiques et vocales peu concluantes.",
+    "identification": "Une bande sombre part de la narine, traverse l’œil et longe le flanc ; les doigts portent des disques adhésifs.",
+    "habitat": "Elle fréquente les zones humides végétalisées, bords de cours d’eau, mares temporaires, lagunes et prairies humides.",
+    "diet": "Les données disponibles indiquent que les adultes mangent surtout des fourmis, ainsi que des coléoptères et araignées ; les têtards broutent des végétaux et du périphyton.",
+    "behavior": "Les adultes sont surtout crépusculaires ou nocturnes et passent une grande partie de l’année dans la végétation riveraine plutôt que dans l’eau.",
+    "reproduction": "La reproduction a généralement lieu de mars ou avril à mai ou juin ; les œufs sont fixés aux plantes aquatiques dans des mares stables et végétalisées.",
+    "ecology": "Sa bande latérale continue la distingue de la rainette méridionale, H. meridionalis, une espèce proche.",
+    "conservation": "L’inventaire espagnol de la biodiversité indique une préoccupation mineure mondiale en 2022, tandis que les évaluations régionales et les rapports sur l’habitat varient."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Hylinae/Hyla/Hyla-molleri",
+      "title": "Hyla molleri — Amphibian Species of the World"
+    },
+    {
+      "url": "https://www.vertebradosibericos.org/anfibios/hylmol.html",
+      "title": "Rainette de San Antonio — Encyclopédie virtuelle des vertébrés espagnols"
+    },
+    {
+      "url": "https://iepnb.gob.es/eu/areas-tematicas/especies-silvestres/eidos/16222",
+      "title": "Hyla molleri — Inventaire espagnol du patrimoine naturel et de la biodiversité"
+    },
+    {
+      "url": "https://museubiodiversidade.uevora.pt/elenco-de-especies/biodiversidade-actual/animais/cordados/anfibios/hyla-molleri/",
+      "title": "Hyla molleri — Musée virtuel de la biodiversité, Université d’Évora"
+    }
+  ]
+}

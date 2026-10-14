@@ -1,0 +1,165 @@
+{
+  "id": "hyla_molleri",
+  "scientific": "Hyla molleri",
+  "group": "amphibians",
+  "name": {
+    "en": "Iberian Tree Frog",
+    "fr": "Rainette ibérique"
+  },
+  "sections": {
+    "overview": {
+      "en": "Amphibian Species of the World recognizes Hyla molleri across the Iberian Peninsula and into southwestern France. Its separation from H. arborea has been debated because morphological and call evidence is inconclusive in some studies.",
+      "fr": "Amphibian Species of the World reconnaît Hyla molleri dans la péninsule Ibérique et jusqu’au sud-ouest de la France. Sa distinction de H. arborea reste débattue, certaines études jugeant les preuves morphologiques et vocales peu concluantes."
+    },
+    "identification": {
+      "en": "A dark stripe runs from the nostril, across the eye and down the flank; the toes have adhesive discs.",
+      "fr": "Une bande sombre part de la narine, traverse l’œil et longe le flanc ; les doigts portent des disques adhésifs."
+    },
+    "habitat": {
+      "en": "It uses vegetated wetlands, stream margins, temporary ponds, lagoons and wet meadows.",
+      "fr": "Elle fréquente les zones humides végétalisées, bords de cours d’eau, mares temporaires, lagunes et prairies humides."
+    },
+    "diet": {
+      "en": "Available records indicate that adults eat mainly ants, with beetles and spiders also recorded; tadpoles graze plant matter and periphyton.",
+      "fr": "Les données disponibles indiquent que les adultes mangent surtout des fourmis, ainsi que des coléoptères et araignées ; les têtards broutent des végétaux et du périphyton."
+    },
+    "behavior": {
+      "en": "Adults are mainly crepuscular or nocturnal and spend much of the year among riparian vegetation rather than in water.",
+      "fr": "Les adultes sont surtout crépusculaires ou nocturnes et passent une grande partie de l’année dans la végétation riveraine plutôt que dans l’eau."
+    },
+    "reproduction": {
+      "en": "Breeding usually runs from March or April to May or June, with eggs attached to aquatic plants in stable, vegetated ponds.",
+      "fr": "La reproduction a généralement lieu de mars ou avril à mai ou juin ; les œufs sont fixés aux plantes aquatiques dans des mares stables et végétalisées."
+    },
+    "ecology": {
+      "en": "The continuous flank stripe distinguishes it from the related Mediterranean tree frog, H. meridionalis.",
+      "fr": "Sa bande latérale continue la distingue de la rainette méridionale, H. meridionalis, une espèce proche."
+    },
+    "conservation": {
+      "en": "The Spanish biodiversity inventory lists global Least Concern in 2022, while regional assessments and habitat reports differ.",
+      "fr": "L’inventaire espagnol de la biodiversité indique une préoccupation mineure mondiale en 2022, tandis que les évaluations régionales et les rapports sur l’habitat varient."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hyla molleri — Amphibian Species of the World",
+        "fr": "Hyla molleri — Amphibian Species of the World"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Hylinae/Hyla/Hyla-molleri",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "AMNH taxonomic account accepts the species, gives its range and summarizes the continuing debate over separation from H. arborea."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 19,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ranita de San Antonio — Enciclopedia Virtual de los Vertebrados Españoles",
+        "fr": "Rainette de San Antonio — Encyclopédie virtuelle des vertébrés espagnols"
+      },
+      "url": "https://www.vertebradosibericos.org/anfibios/hylmol.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The Spanish species account describes adult and tadpole food, activity periods and breeding season."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 14,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hyla molleri — Inventario Español del Patrimonio Natural y la Biodiversidad",
+        "fr": "Hyla molleri — Inventaire espagnol du patrimoine naturel et de la biodiversité"
+      },
+      "url": "https://iepnb.gob.es/eu/areas-tematicas/especies-silvestres/eidos/16222",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Spanish national inventory reports global LC in 2022 and separately lists Spanish and regional assessments."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 15,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hyla molleri — Museu Virtual da Biodiversidade, University of Évora",
+        "fr": "Hyla molleri — Musée virtuel de la biodiversité, Université d’Évora"
+      },
+      "url": "https://museubiodiversidade.uevora.pt/elenco-de-especies/biodiversidade-actual/animais/cordados/anfibios/hyla-molleri/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The Portuguese species account describes its flank stripe, adhesive toe discs and vegetated wetland habitats, and distinguishes it from H. meridionalis."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 21,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species boundary with H. arborea has been debated; this profile follows the accepted taxon treatment in the requested checklist. Spanish conservation categories vary by scope and region."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Included the taxonomic debate and kept global and regional conservation assessments separate."
+}

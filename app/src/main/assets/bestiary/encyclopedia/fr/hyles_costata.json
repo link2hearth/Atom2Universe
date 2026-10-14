@@ -1,0 +1,26 @@
+{
+  "id": "hyles_costata",
+  "name": "Sphinx de la steppe",
+  "scientific": "Hyles costata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le Sphingidae Taxonomic Inventory reconnaît Hyles costata comme une espèce valide de sphinx.",
+    "identification": "La fiche de l’Amour donne une envergure de 64–75 mm, des bandes pâles sur l’aile antérieure et un champ rougeâtre sur l’aile postérieure.",
+    "habitat": "Dans l’Amour, elle fréquente les prairies sèches et la steppe.",
+    "diet": "Euphorbia est signalée comme plante-hôte larvaire dans l’Amour.",
+    "behavior": "Les adultes volent au crépuscule et la nuit ; dans l’Amour, les observations vont de la mi-juin au début août.",
+    "reproduction": "Deux générations annuelles sont signalées dans l’Amour.",
+    "ecology": "Son histoire taxonomique comprend un ancien rattachement à H. euphorbiae, mais l’inventaire spécialisé indique son rétablissement comme espèce distincte en 1993.",
+    "conservation": "Le Livre rouge régional signale de faibles effectifs locaux et une perte d’habitat."
+  },
+  "sources": [
+    {
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/1292",
+      "title": "Hyles costata — Inventaire taxonomique des Sphingidae"
+    },
+    {
+      "url": "https://cicon.ru/hylescostata-amur.html",
+      "title": "Sphinx de la steppe — Livre rouge de l’oblast de l’Amour"
+    }
+  ]
+}

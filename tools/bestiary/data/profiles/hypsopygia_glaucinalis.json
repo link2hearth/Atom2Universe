@@ -1,0 +1,119 @@
+{
+  "id": "hypsopygia_glaucinalis",
+  "scientific": "Hypsopygia glaucinalis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Double-striped Tabby",
+    "fr": "Hypsopygia glaucinalis"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Double-striped Tabby is a European pyralid moth, recorded in Britain as locally common in southern counties.",
+      "fr": "Le Double-striped Tabby est un pyralidé européen, observé en Grande-Bretagne comme localement commun dans les comtés du sud."
+    },
+    "identification": {
+      "en": "Its wingspan is 23–30 mm.",
+      "fr": "Son envergure est de 23 à 30 mm."
+    },
+    "habitat": {
+      "en": "Adults visit haystacks and thatched buildings.",
+      "fr": "Les adultes fréquentent les meules de foin et les bâtiments couverts de chaume."
+    },
+    "diet": {
+      "en": "Larvae feed in hay, thatch and other dry plant matter.",
+      "fr": "Les chenilles se nourrissent dans le foin, le chaume et d’autres matières végétales sèches."
+    },
+    "behavior": {
+      "en": "Adults fly in July and August and come to light.",
+      "fr": "Les adultes volent en juillet et août et viennent à la lumière."
+    },
+    "reproduction": {
+      "en": "The cited account describes larvae but gives no full breeding schedule.",
+      "fr": "La fiche citée décrit les chenilles, mais ne donne pas de calendrier reproducteur complet."
+    },
+    "ecology": {
+      "en": "Bird nests are also reported as larval feeding sites.",
+      "fr": "Les nids d’oiseaux sont également signalés comme sites alimentaires des chenilles."
+    },
+    "conservation": {
+      "en": "UKMoths suggests local numbers are decreasing in southern England.",
+      "fr": "UKMoths estime que les effectifs déclinent localement dans le sud de l’Angleterre."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Double-striped Tabby — UKMoths",
+        "fr": "Double-striped Tabby — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/hypsopygia-glaucinalis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The British page gives distribution, size, habitat, flight season, larval food and a local decline."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 15,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hypsopygia glaucinalis — LepiWiki",
+        "fr": "Hypsopygia glaucinalis — LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/page/Hypsopygia_Glaucinalis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "German-language LepiWiki records the taxon and European occurrence, complementing the regional British account."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "No established French vernacular name or detailed reproductive account was located; the French entry therefore uses the scientific name."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the species-specific British account and checked the taxon against German-language LepiWiki; kept local abundance claims geographically limited and avoided inventing reproductive details."
+}

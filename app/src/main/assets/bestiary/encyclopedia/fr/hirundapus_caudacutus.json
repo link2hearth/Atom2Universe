@@ -1,0 +1,34 @@
+{
+  "id": "hirundapus_caudacutus",
+  "name": "Martinet épineux",
+  "scientific": "Hirundapus caudacutus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Martinet épineux est un grand martinet migrateur d’Asie orientale et d’Australie, appelé White-throated Needletail en anglais.",
+    "identification": "Il a de longues ailes courbes et pointues, un plumage brun gris à reflets verts, la gorge et le dessous de la queue blancs, et une courte queue dont les rachis saillants évoquent des aiguilles.",
+    "habitat": "En dehors de la saison de reproduction, il passe presque tout son temps en vol au-dessus de milieux variés, des forêts aux espaces ouverts et aux zones côtières.",
+    "diet": "Il capture en vol des insectes comme les termites, fourmis, coléoptères et mouches, souvent dans les courants ascendants près des fronts orageux ou des incendies.",
+    "behavior": "Il passe une grande partie de sa vie en vol et se pose principalement pour se reproduire et se reposer.",
+    "reproduction": "Il se reproduit dans le nord-est de l’Asie durant l’été boréal et migre vers le sud jusqu’en Australie pour la saison hors reproduction.",
+    "ecology": "Il appartient au genre Hirundapus, qui comprend d’autres martinets épineux comme le Martinet géant H. giganteus, plus grand ; sa gorge et son dessous de queue blancs aident à le reconnaître en vol.",
+    "conservation": "L’espèce séjourne en Australie hors de la période de reproduction et y fait l’objet d’une détermination régionale d’espèce menacée ; ce statut local n’est pas une évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/birds/white-throated-needletail/",
+      "title": "Martinet épineux — Australian Museum"
+    },
+    {
+      "url": "https://www.act.gov.au/environment/animals-and-plants/act-threatened-species/white-throated-needletail-hirundapus-caudacutus",
+      "title": "Martinet épineux — Gouvernement du Territoire de la capitale australienne"
+    },
+    {
+      "url": "https://www.nzbirdsonline.org.nz/species/white-throated-needletail",
+      "title": "Martinet épineux — New Zealand Birds Online"
+    },
+    {
+      "url": "https://www.oiseaux-birds.com/fiche-martinet-epineux.html",
+      "title": "Martinet épineux — Oiseaux-Birds"
+    }
+  ]
+}

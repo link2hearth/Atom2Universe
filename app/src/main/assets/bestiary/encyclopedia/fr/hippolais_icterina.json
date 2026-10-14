@@ -1,0 +1,34 @@
+{
+  "id": "hippolais_icterina",
+  "name": "Hypolaïs ictérine",
+  "scientific": "Hippolais icterina",
+  "group": "birds",
+  "sections": {
+    "overview": "L’Hypolaïs ictérine est un passereau migrateur d’Eurasie qui niche dans le nord et l’est de l’Europe ainsi qu’en Sibérie occidentale, puis hiverne en Afrique subsaharienne.",
+    "identification": "Elle présente un dessus verdâtre, un dessous jaune, une courte plage alaire claire et une silhouette élancée à tête pointue ; elle peut être difficile à distinguer de l’Hypolaïs polyglotte, qui lui ressemble.",
+    "habitat": "Pour nicher, elle privilégie un couvert arbustif dense mais discontinu dans des milieux frais, souvent humides, notamment les lisières boisées, vallées fluviales, plantations et jardins.",
+    "diet": "Elle glane des insectes sur les feuilles et les herbes hautes, et peut aussi capturer des proies en vol ; la fiche de l’UICN indique qu’elle consomme également des fruits et des baies en été.",
+    "behavior": "Sa migration transsaharienne la conduit vers des quartiers d’hivernage africains situés surtout au sud de l’équateur.",
+    "reproduction": "Elle niche à la fin du printemps et en été. Une ponte habituelle comprend quatre à cinq œufs.",
+    "ecology": "L’Hypolaïs polyglotte H. polyglotta est une proche congénère et lui ressemble beaucoup, mais son aire est plus méridionale ; le chant et les proportions des ailes aident à les distinguer là où leurs aires se rencontrent.",
+    "conservation": "La fiche mondiale de l’UICN classe l’espèce en préoccupation mineure. Le document français décrit son recul durable dans une grande partie de son ancienne aire nationale."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-1.RLTS.T22714916A111100735.en",
+      "title": "Hypolaïs ictérine — Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Hypolais-icterine.pdf",
+      "title": "Hypolaïs ictérine — Cahiers d’Habitat, MNHN/INPN"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/icterine-warbler",
+      "title": "Hypolaïs ictérine — British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/hypolais.icterine.html",
+      "title": "Hypolaïs ictérine — Oiseaux.net"
+    }
+  ]
+}

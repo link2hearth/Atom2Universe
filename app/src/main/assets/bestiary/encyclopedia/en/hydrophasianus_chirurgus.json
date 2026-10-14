@@ -1,0 +1,26 @@
+{
+  "id": "hydrophasianus_chirurgus",
+  "name": "Pheasant-tailed Jacana",
+  "scientific": "Hydrophasianus chirurgus",
+  "group": "birds",
+  "sections": {
+    "overview": "BirdLife treats this Asian jacana as a full migrant across an exceptionally broad range.",
+    "identification": "In breeding plumage, the male has two elongated central tail feathers; the female is slightly larger.",
+    "habitat": "It uses freshwater wetlands, including lakes, rice fields and marshes.",
+    "diet": "It eats aquatic plants, seeds and small invertebrates.",
+    "behavior": "Long toes help it walk on floating vegetation.",
+    "reproduction": "Females mate with several males; males incubate eggs and tend chicks.",
+    "ecology": "Males place nests among emergent plants, often water lilies.",
+    "conservation": "BirdLife lists the species as globally Least Concern in its 2024 assessment; its population trend is unknown."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/pheasant-tailed-jacana-hydrophasianus-chirurgus",
+      "title": "Pheasant-tailed Jacana — BirdLife DataZone"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/jacana.a.longue.queue.html",
+      "title": "Jacana à longue queue — Oiseaux.net"
+    }
+  ]
+}

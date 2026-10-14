@@ -1,0 +1,34 @@
+{
+  "id": "hetaerina_americana",
+  "name": "American Rubyspot",
+  "scientific": "Hetaerina americana",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This conspicuous American damselfly ranges from southern Canada through the United States to Honduras, making it the most widespread North American species in its genus.",
+    "identification": "Males have a bright red patch at the base of each wing, while the rest of the body is metallic green; females are less vividly marked.",
+    "habitat": "Adults perch beside gently flowing, sunny streams and rivers, often on vegetation overhanging the banks.",
+    "diet": "Adults catch small flying insects from a perch, and the aquatic larvae prey on smaller invertebrates.",
+    "behavior": "Males defend streamside territories that provide perches and access to females; territoriality has been studied directly in this species.",
+    "reproduction": "After mating, females insert eggs into submerged vegetation in flowing water, where the young develop as aquatic larvae.",
+    "ecology": "The smoky rubyspot Hetaerina titia is a congener with darker wings. Genetic work also finds deep lineage structure within H. americana.",
+    "conservation": "Genetic differentiation between watersheds suggests conservation planning should consider variation across its broad range."
+  },
+  "sources": [
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2018.pdf",
+      "title": "A Checklist of North American Odonata"
+    },
+    {
+      "url": "https://www.unsm-ento.unl.edu/Odonata/heam.html",
+      "title": "Hetaerina americana — Nebraska Odonata Survey"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10287145/",
+      "title": "Reference genome for the American rubyspot damselfly"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/canadian-entomologist/article/abs/description-of-territorial-behavior-and-a-quantitative-study-of-its-function-in-males-of-hetaerina-americana-fabricius-odonata-agriidae/58C0E8BF152D206C3DCE1AB0EBF22B1B",
+      "title": "Territorial behavior in Hetaerina americana"
+    }
+  ]
+}

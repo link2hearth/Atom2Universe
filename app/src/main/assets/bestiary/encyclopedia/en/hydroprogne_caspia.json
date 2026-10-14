@@ -1,0 +1,30 @@
+{
+  "id": "hydroprogne_caspia",
+  "name": "Caspian Tern",
+  "scientific": "Hydroprogne caspia",
+  "group": "birds",
+  "sections": {
+    "overview": "This widespread tern belongs to the family Laridae.",
+    "identification": "At 47–54 cm long with a 126–128 cm wingspan, it is the largest and heaviest tern.",
+    "habitat": "It nests on open, sparsely vegetated islands or shores near shallow water.",
+    "diet": "It feeds mostly on fish.",
+    "behavior": "It may forage as far as 60 km from its breeding colony.",
+    "reproduction": "It nests in colonies, small groups or pairs, in a shallow scrape.",
+    "ecology": "Older sources use Sterna caspia; the current name is Hydroprogne caspia.",
+    "conservation": "The 2018 global assessment lists it as Least Concern and reports an increasing population trend."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T22694524A155509311.en",
+      "title": "Hydroprogne caspia — IUCN Red List assessment"
+    },
+    {
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec/fiches-especes-fauniques/sterne-caspienne",
+      "title": "Sterne caspienne — Gouvernement du Québec"
+    },
+    {
+      "url": "https://www.cms.int/species/hydroprogne-caspia",
+      "title": "Hydroprogne caspia — Convention on Migratory Species"
+    }
+  ]
+}
