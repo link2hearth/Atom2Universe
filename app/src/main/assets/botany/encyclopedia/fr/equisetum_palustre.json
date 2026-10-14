@@ -1,0 +1,14 @@
+{
+  "id": "equisetum_palustre",
+  "sections": [
+    {"title": "Port et habitat", "text": "Prêle vivace à rhizomes des prairies mouilleuses, marais et fossés. Ses tiges fertiles dressées mesurent généralement 10 à 60 cm, parfois jusqu’à 1 m, et portent des rameaux verticillés."},
+    {"title": "Reproduction", "text": "Comme les autres prêles, elle ne produit ni fleurs ni fruits : les spores sont réunies dans un épi terminal sur certaines tiges."},
+    {"title": "Toxicité", "text": "La plante peut intoxiquer les animaux d’élevage, notamment les chevaux et les bovins. La teneur en alcaloïdes varie selon les conditions et le stade de croissance; ne pas la donner comme fourrage."}
+  ],
+  "sources": [
+    {"title": "UBC E-Flora — Equisetum palustre", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Equisetum+palustre"},
+    {"title": "Parc naturel régional du Haut-Jura", "url": "https://biodiversite.parc-haut-jura.fr/espece/96534"},
+    {"title": "Étude toxicologique — PMC", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7696233/"}
+  ],
+  "related": []
+}

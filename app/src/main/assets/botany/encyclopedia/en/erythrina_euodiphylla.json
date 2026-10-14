@@ -1,0 +1,13 @@
+{
+  "id": "erythrina_euodiphylla",
+  "sections": [
+    {"title": "Form and range", "text": "A tree native to eastern Java and the Lesser Sunda Islands. The taxonomic sources consulted do not establish a reliable adult height."},
+    {"title": "Leaves, flowers and fruit", "text": "The terminal leaflets are broadly transverse, about 4.5–9 × 5–13 cm. Flowers are about 2.5–3.5 × 2–3 cm; the 5.5–10 cm pod is constricted between its purple seeds. This distinguishes it from E. tahitensis, which has red seeds."},
+    {"title": "Edibility", "text": "The references consulted do not document safe food use or a particular toxicity."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A494419-1/general-information"},
+    {"title": "Adema — A revision of Erythrina (Blumea, 1996)", "url": "https://repository.naturalis.nl/pub/526117/BLUM1996041002018.pdf"}
+  ],
+  "related": ["erythrina_atitlanensis"]
+}

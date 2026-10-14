@@ -1,0 +1,13 @@
+{
+  "id": "erythronium_citrinum",
+  "sections": [
+    {"title": "Form and habitat", "text": "A bulbous perennial of western North America, found in southwestern Oregon and northern California. It grows in dry woods and brushy slopes, often on serpentine soils."},
+    {"title": "Leaves and flowers", "text": "Its two leaves, 9–15 cm long, are often mottled. A 12–35 cm stalk bears one to three cream or pinkish flowers, usually yellow at the base; the capsule is 2–5 cm long."},
+    {"title": "Edibility", "text": "The sources consulted do not establish food use or species-specific toxicity."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Erythronium citrinum (SEINet)", "url": "https://swbiodiversity.org/seinet/taxa/index.php?taxon=83593"},
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A96815-2"}
+  ],
+  "related": ["erythronium_pluriflorum"]
+}

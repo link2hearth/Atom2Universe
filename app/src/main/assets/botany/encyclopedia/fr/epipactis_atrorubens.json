@@ -1,0 +1,14 @@
+{
+  "id": "epipactis_atrorubens",
+  "sections": [
+    {"title": "Port et habitat", "text": "Orchidée vivace d’Europe et d’Asie, haute de 25 à 80 cm. Elle pousse dans les pinèdes claires et les pelouses maigres, souvent sur des sols calcaires."},
+    {"title": "Feuilles et fleurs", "text": "Les feuilles sont disposées en deux rangs le long de la tige. La grappe, souvent tournée d’un côté, porte des fleurs rouge brun à pourpre dégageant parfois un parfum de vanille. Le fruit est une capsule."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire n’est documenté dans les sources consultées."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A20010355-1"},
+    {"title": "Flora of Vienna — Epipactis atrorubens", "url": "https://flora.nhm-wien.ac.at/Seiten-Arten/Epipactis-atrorubens.htm"},
+    {"title": "Orchids.de — Epipactis atrorubens", "url": "https://www.orchids.de/sites/epipactis_atrorubens.php"}
+  ],
+  "related": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "euphorbia_cyparissias",
+  "sections": [
+    {"title": "Form and habitat", "text": "A rhizomatous perennial spurge, 10–50 cm tall. It colonizes fields, roadsides and disturbed ground."},
+    {"title": "Leaves and flowers", "text": "Its narrow leaves are about 5–30 × 0.5–3 mm. The cyathia are surrounded by yellow-green bracts; the small capsule is about 2.5–4 mm long."},
+    {"title": "Toxicity", "text": "The sap can irritate skin and eyes; all parts are toxic if swallowed. Like the other spurges in these entries, it is not for consumption."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Euphorbia cyparissias", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=242416541"},
+    {"title": "NC State Extension — Cypress spurge", "url": "https://plants.ces.ncsu.edu/plants/euphorbia-cyparissias/common-name/cypress-spurge/"},
+    {"title": "U.S. Forest Service — Species review", "url": "https://research.fs.usda.gov/feis/species-reviews/eupcyp"}
+  ],
+  "related": ["euphorbia_abdelkuri", "euphorbia_dulcis"]
+}

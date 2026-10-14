@@ -1,0 +1,14 @@
+{
+  "id": "erica_cinerea",
+  "sections": [
+    {"title": "Port et habitat", "text": "Sous-arbrisseau persistant d’Europe occidentale, haut d’environ 20 à 60 cm. Il pousse dans les landes sèches et acides, en terrain ouvert."},
+    {"title": "Feuilles et floraison", "text": "Ses minuscules feuilles étroites sont souvent groupées par trois. En été, les rameaux portent des bouquets de clochettes pourpres ou magenta; cette espèce donne une idée de la diversité du genre Erica."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire fiable n’est établi dans les sources consultées."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/328424-1"},
+    {"title": "Royal Horticultural Society — Erica cinerea", "url": "https://www.rhs.org.uk/plants/6607/erica-cinerea/details"},
+    {"title": "FloraWeb — Germany", "url": "https://www.floraweb.de/php/artenhome.php?name-use-id=2162"}
+  ],
+  "related": ["erica"]
+}

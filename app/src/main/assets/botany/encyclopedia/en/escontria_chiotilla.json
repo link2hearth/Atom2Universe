@@ -1,0 +1,14 @@
+{
+  "id": "escontria_chiotilla",
+  "sections": [
+    {"title": "Form and range", "text": "A branched, tree-like cactus endemic to southern Mexico, reaching about 4–7 m. Its upright branches bear small yellow flowers near their tips."},
+    {"title": "Fruit", "text": "The fleshy, purple fruits are covered with scales and measure about 5 cm. Their sweet pulp is eaten locally."},
+    {"title": "Edibility", "text": "Documented food use concerns the ripe fruit; it does not establish that other parts are edible."}
+  ],
+  "sources": [
+    {"title": "Britton & Rose — The Cactaceae, vol. II", "url": "https://macrogonus.com/the-cactaceae-volume-ii.pdf"},
+    {"title": "Fruit study — Fruits journal", "url": "https://doi.org/10.1051/fruits/2015013"},
+    {"title": "Seed and food-use study — BioCiencias", "url": "https://revistabiociencias.uan.edu.mx/index.php/BIOCIENCIAS/article/download/230/273?inline=1"}
+  ],
+  "related": ["echinocereus_dasyacanthus"]
+}

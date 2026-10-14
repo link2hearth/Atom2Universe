@@ -1,0 +1,13 @@
+{
+  "id": "erythronium_pluriflorum",
+  "sections": [
+    {"title": "Form and range", "text": "A bulbous perennial endemic to a restricted area of the central Sierra Nevada in California. It grows in open montane conifer forest at about 2,300–2,600 m."},
+    {"title": "Flowering and fruit", "text": "The 8–35 cm stalk bears one to ten yellow flowers with tepals 15–28 mm long. The capsule is 2–4 cm long. It differs from E. citrinum in its yellow flowers and higher montane habitat."},
+    {"title": "Edibility", "text": "The sources consulted do not document reliable food use."}
+  ],
+  "sources": [
+    {"title": "Flora of North America", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=242101600"},
+    {"title": "Calflora — Erythronium pluriflorum", "url": "https://www.calflora.org/app/taxon?crn=3506"}
+  ],
+  "related": ["erythronium_citrinum"]
+}

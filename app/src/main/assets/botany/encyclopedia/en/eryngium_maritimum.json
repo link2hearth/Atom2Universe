@@ -1,0 +1,14 @@
+{
+  "id": "eryngium_maritimum",
+  "sections": [
+    {"title": "Form and habitat", "text": "A perennial of European beaches, dunes and sandy shores. Its leathery rosette and 15–60 cm stems are glaucous and spiny; a taproot anchors it in sand."},
+    {"title": "Flowers and fruit", "text": "Flowers are grouped in heads surrounded by spiny bracts and are often pale blue. The fruit is dry and splits into two mericarps; it is not a berry."},
+    {"title": "Edibility", "text": "The sources consulted describe mainly historical non-food uses and do not establish safe consumption."}
+  ],
+  "sources": [
+    {"title": "Journal of Ecology — biology and ecology of Eryngium maritimum", "url": "https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/1365-2745.12243"},
+    {"title": "Royal Horticultural Society — Sea holly", "url": "https://www.rhs.org.uk/plants/6787/eryngium-maritimum/details"},
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A841903-1/general-information"}
+  ],
+  "related": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "eryngium_maritimum",
+  "sections": [
+    {"title": "Port et habitat", "text": "Vivace des plages, dunes et grèves sableuses d’Europe. Sa rosette coriace et ses tiges de 15 à 60 cm sont glauques et épineuses; une racine pivotante l’ancre dans le sable."},
+    {"title": "Fleurs et fruits", "text": "Les fleurs sont groupées en capitules entourés de bractées épineuses, souvent bleu pâle. Le fruit est sec et se sépare en deux méricarpes, ce n’est pas une baie."},
+    {"title": "Comestibilité", "text": "Les sources consultées décrivent surtout des usages historiques non alimentaires; elles n’établissent pas de consommation sûre."}
+  ],
+  "sources": [
+    {"title": "Journal of Ecology — biologie et écologie d’Eryngium maritimum", "url": "https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/1365-2745.12243"},
+    {"title": "Royal Horticultural Society — Sea holly", "url": "https://www.rhs.org.uk/plants/6787/eryngium-maritimum/details"},
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A841903-1/general-information"}
+  ],
+  "related": []
+}

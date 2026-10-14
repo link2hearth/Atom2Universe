@@ -1,0 +1,14 @@
+{
+  "id": "escobaria_missouriensis",
+  "sections": [
+    {"title": "Port et répartition", "text": "Petit cactus cespiteux des prairies sèches et affleurements rocheux du centre des États-Unis. Le nom Escobaria missouriensis est ancien; Kew traite aujourd’hui l’espèce sous le nom Pelecyphora missouriensis."},
+    {"title": "Fleurs et fruits", "text": "Les tiges sphériques de 5 à 8 cm forment des touffes pouvant approcher 30 cm de haut et de large. Les fleurs printanières sont verdâtres à bronze; les fruits deviennent rougeâtres."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire fiable n’est établi par les sources consultées."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew (Pelecyphora missouriensis)", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A77248958-1/general-information"},
+    {"title": "U.S. National Park Service — Missouri foxtail cactus", "url": "https://www.nps.gov/articles/000/missouri-foxtail-cactus.htm"},
+    {"title": "Colorado National Monument — Missouri pincushion", "url": "https://www.nps.gov/colm/learn/nature/missouri-pincushion.htm"}
+  ],
+  "related": ["echinocactus_horizonthalonius"]
+}

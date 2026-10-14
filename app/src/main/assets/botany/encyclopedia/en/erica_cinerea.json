@@ -1,0 +1,14 @@
+{
+  "id": "erica_cinerea",
+  "sections": [
+    {"title": "Form and habitat", "text": "An evergreen subshrub of western Europe, about 20–60 cm tall. It grows in dry, acidic heathland and other open ground."},
+    {"title": "Leaves and flowering", "text": "Its tiny, narrow leaves are often arranged in whorls of three. In summer, the branches carry clusters of purple or magenta bells; this species illustrates the diversity of the genus Erica."},
+    {"title": "Edibility", "text": "No reliable food use is established in the sources consulted."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/328424-1"},
+    {"title": "Royal Horticultural Society — Erica cinerea", "url": "https://www.rhs.org.uk/plants/6607/erica-cinerea/details"},
+    {"title": "FloraWeb — Germany", "url": "https://www.floraweb.de/php/artenhome.php?name-use-id=2162"}
+  ],
+  "related": ["erica"]
+}

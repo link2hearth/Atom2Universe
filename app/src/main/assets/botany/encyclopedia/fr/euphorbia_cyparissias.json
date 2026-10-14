@@ -1,0 +1,14 @@
+{
+  "id": "euphorbia_cyparissias",
+  "sections": [
+    {"title": "Port et habitat", "text": "Euphorbe vivace à rhizomes, haute de 10 à 50 cm. Elle colonise champs, bords de route et terrains perturbés."},
+    {"title": "Feuilles et fleurs", "text": "Ses feuilles étroites mesurent environ 5 à 30 × 0,5 à 3 mm. Les cyathes sont entourés de bractées jaune verdâtre; la petite capsule mesure environ 2,5 à 4 mm."},
+    {"title": "Toxicité", "text": "La sève peut irriter la peau et les yeux; toutes les parties sont toxiques si elles sont ingérées. Comme les autres euphorbes de ces fiches, elle ne se consomme pas."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Euphorbia cyparissias", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=242416541"},
+    {"title": "NC State Extension — Cypress spurge", "url": "https://plants.ces.ncsu.edu/plants/euphorbia-cyparissias/common-name/cypress-spurge/"},
+    {"title": "U.S. Forest Service — Species review", "url": "https://research.fs.usda.gov/feis/species-reviews/eupcyp"}
+  ],
+  "related": ["euphorbia_abdelkuri", "euphorbia_dulcis"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "euphorbia_abdelkuri",
+  "sections": [
+    {"title": "Form and range", "text": "A shrubby succulent euphorbia endemic to Abd al Kuri Island in the Socotra Archipelago. Clumps are often about 1 m tall and 1.5 m wide; larger individuals are reported."},
+    {"title": "Stems and flowers", "text": "The thick, greyish, branched stems bear small inflorescences characteristic of euphorbias, called cyathia."},
+    {"title": "Caution", "text": "The yellow latex is reported as toxic by the horticultural sources consulted. Avoid contact with eyes or mouth; no part should be eaten."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A60463195-2/general-information"},
+    {"title": "Succulentes.net — Euphorbia abdelkuri", "url": "https://succulentes.net/en/euphorbiaceae/euphorbia/abdelkuri/"}
+  ],
+  "related": ["euphorbia_cyparissias", "euphorbia_dulcis"]
+}
