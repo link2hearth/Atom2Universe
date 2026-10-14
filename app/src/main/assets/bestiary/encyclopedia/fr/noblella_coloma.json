@@ -1,0 +1,30 @@
+{
+  "id": "noblella_coloma",
+  "name": "Grenouille pygmée de Coloma",
+  "scientific": "Noblella coloma",
+  "group": "amphibians",
+  "sections": {
+    "overview": "La grenouille pygmée de Coloma a été décrite dans les Andes occidentales de l’Équateur ; Amphibian Species of the World la répertorie désormais comme Phyllonastes coloma.",
+    "identification": "La description originale la distingue par son ventre orange vif et l’absence des barres et chevrons dorsaux présents chez certains proches parents.",
+    "habitat": "L’espèce est connue des forêts montagnardes humides du versant pacifique de la Cordillère occidentale équatorienne, vers 1283 à 2215 m.",
+    "diet": "Les sources taxonomiques et de répartition citées ne précisent pas de régime alimentaire propre à l’espèce.",
+    "behavior": "La description primaire disponible repose sur des spécimens collectés et donne peu de détails sur le comportement dans la nature.",
+    "reproduction": "Les sources consultées ne fournissent pas de description vérifiée de sa reproduction ou de son développement.",
+    "ecology": "Son classement générique a changé : l’article original utilisait Noblella, tandis que la révision de 2025 et la fiche actuelle d’ASW emploient Phyllonastes.",
+    "conservation": "Les sources consultées ne donnent pas de tendance actuelle de population pour cette grenouille."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Brachycephaloidea/Craugastoridae/Holoadeninae/Phyllonastes/Phyllonastes-coloma",
+      "title": "Phyllonastes coloma — Amphibian Species of the World, American Museum of Natural History"
+    },
+    {
+      "url": "https://multimedia20stg.blob.core.windows.net/publicaciones/2009_Guayasamin%26Teran_Noblella_coloma.pdf",
+      "title": "Nouvelle espèce de Noblella des versants occidentaux des Andes équatoriennes — Zootaxa"
+    },
+    {
+      "url": "https://doi.org/10.1093/zoolinnean/zlae162",
+      "title": "Systématique de petites grenouilles strabomantides anciennement placées dans Noblella — Zoological Journal of the Linnean Society"
+    }
+  ]
+}

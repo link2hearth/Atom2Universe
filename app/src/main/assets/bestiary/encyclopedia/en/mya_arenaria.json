@@ -1,0 +1,34 @@
+{
+  "id": "mya_arenaria",
+  "name": "Soft-shell clam",
+  "scientific": "Mya arenaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Mya arenaria is a burrowing marine bivalve native to the northwest Atlantic and now established on many European coasts and elsewhere after human transport.",
+    "identification": "Its thin, elongated oval shell remains gaping at both ends, and two long siphons reach the sediment surface while the animal stays buried.",
+    "habitat": "It buries itself in sand or mud on tidal shores, estuaries and lagoons, from the intertidal into shallow subtidal water, and tolerates a broad range of salinities.",
+    "diet": "Water drawn through its inhalant siphon supplies suspended food, especially phytoplankton and other organic particles, before leaving through the exhalant siphon.",
+    "behavior": "It lives mostly buried in a mucus-lined vertical burrow and extends its paired siphons through the sediment to feed and exchange water.",
+    "reproduction": "The sexes are separate and release gametes into the water for external fertilization; planktonic larvae later settle onto the seabed.",
+    "ecology": "As a suspension feeder it recycles planktonic production and is prey for fish, crabs and shorebirds; abundant introduced populations can compete with native bivalves.",
+    "conservation": "SeaLifeBase lists the global IUCN Red List category as Not Evaluated; this differs from the documented ecological effects of introduced populations in some regions."
+  },
+  "sources": [
+    {
+      "url": "https://doris.ffessm.fr/Especes/Mya-arenaria-Mye-des-sables-2048",
+      "title": "Mya arenaria — DORIS, FFESSM"
+    },
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/1404",
+      "title": "Sand gaper — Marine Life Information Network"
+    },
+    {
+      "url": "https://invasions.si.edu/nemesis/species_summary/-60",
+      "title": "Mya arenaria — Smithsonian NEMESIS species summary"
+    },
+    {
+      "url": "https://www.sealifebase.ca/summary/Mya-arenaria",
+      "title": "Mya arenaria — SeaLifeBase"
+    }
+  ]
+}

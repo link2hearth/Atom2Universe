@@ -10,7 +10,7 @@
     "diet": "Les fiches de l’espèce signalent les petits invertébrés et les larves d’insectes parmi ses aliments naturels importants. Cela correspond à un petit cichlidé qui recherche sa nourriture dans la végétation des eaux peu profondes, mais les sources ne donnent pas de répartition mesurée des proies ni de régime saisonnier.",
     "behavior": "Les descriptions d’habitat associent le poisson à des eaux peu profondes, lentes ou stagnantes. Les résumés publiés consultés pour cette fiche contiennent peu d’observations directes de son activité quotidienne, de sa structure sociale ou de sa territorialité à l’état sauvage ; ces traits ne sont donc pas extrapolés à partir de cichlidés d’aquarium mieux étudiés.",
     "reproduction": "FishBase indique que l’espèce pond jusqu’à une centaine d’œufs, déposés au plafond d’une petite cavité ou à découvert. La femelle garde les œufs et les jeunes ; la source ne décrit pas de rôle de garde comparable chez le mâle. Cette fiche fournit un schéma documenté, sans établir les variations de ponte ou de site de nidification dans toute l’aire restreinte de l’espèce.",
-    "ecology": "Petit cichlidé consommant des invertébrés aquatiques, il fait partie du réseau alimentaire des ruisseaux forestiers et des marges marécageuses. Aucune source examinée ici ne quantifie son rôle écologique, ses prédateurs ou ses interactions avec d’autres poissons ; sa répartition connue étant étroite, les informations sur les sites précis sont particulièrement utiles.",
+    "ecology": "Petit cichlidé consommant des invertébrés aquatiques, il fait partie du réseau alimentaire des ruisseaux forestiers et des marges marécageuses. Aucune source examinée ici ne quantifie son rôle écologique, ses prédateurs ou ses interactions avec d’autres poissons ; sa répartition connue étant étroite, les informations sur les sites précis sont particulièrement utiles. Sa fiche compare son aire restreinte du bassin de l’Approuague à celle, plus vaste, de Nannacara anomala, signalé au Guyana, au Suriname et en Guyane française ; voir cette autre fiche pour le renvoi inverse.",
     "conservation": "FishBase rapporte une évaluation mondiale de l’UICN en préoccupation mineure datée du 28 décembre 2020. Une fiche spécialisée plus ancienne indique encore que l’espèce n’avait pas été évaluée, signe que certaines pages n’ont pas été mises à jour. Cette catégorie est datée et ne prouve pas la stabilité de chaque habitat ou population locale ; aucune tendance de population n’a été vérifiée ici."
   },
   "sources": [
@@ -25,6 +25,10 @@
     {
       "url": "https://www.fishbase.se/summary/47072",
       "title": "Nannacara aureocephalus — FishBase"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=21213",
+      "title": "Nannacara anomala — Catalogue des poissons d’Eschmeyer, California Academy of Sciences"
     }
   ]
 }

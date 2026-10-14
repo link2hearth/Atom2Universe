@@ -1,0 +1,30 @@
+{
+  "id": "nannocharax_macropterus",
+  "name": "Nannocharax macropterus",
+  "scientific": "Nannocharax macropterus",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce petit poisson africain appartient à la famille des Distichodontidae.",
+    "identification": "Une clé de la FAO en français le distingue de Nannocharax procatopus par un nombre supérieur d’écailles sur la ligne latérale, 40–42+3–4.",
+    "habitat": "Il est présent dans les bassins du Congo, de l’Okavango et du Kafue.",
+    "diet": "Il prélève de petits insectes et invertébrés sur les plantes des rives.",
+    "behavior": "Il vit dans les eaux courantes, parmi la végétation riveraine.",
+    "reproduction": "La ponte et les soins parentaux propres à l’espèce ne sont pas documentés dans les sources consultées.",
+    "ecology": "Certaines mentions du haut Zambèze et du Kafue ont été réattribuées au proche Nannocharax dageti.",
+    "conservation": "L’évaluation de l’UICN relayée par FishBase indique une préoccupation mineure, en 2009."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Nannocharax-macropterus",
+      "title": "Nannocharax macropterus — fiche d’espèce FishBase"
+    },
+    {
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?print_version=PRT&search_topic=TSN&search_value=641464&source=to_print",
+      "title": "Nannocharax macropterus — ITIS"
+    },
+    {
+      "url": "https://www.fao.org/4/b1501f/B1501F03.htm",
+      "title": "Clé d’identification des poissons d’eau douce — FAO"
+    }
+  ]
+}

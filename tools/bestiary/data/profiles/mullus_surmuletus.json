@@ -12,8 +12,8 @@
       "fr": "Le rouget-barbet de roche est un mullidé de l’Atlantique nord-est et de la Méditerranée. Comme tous les rougets, il porte deux barbillons sous le menton, qu’il utilise pour trouver sa nourriture dans le sédiment. C’est une espèce tempérée chaude qui atteint sa limite nord en mer du Nord."
     },
     "identification": {
-      "en": "The body is marked with longitudinal red and brown stripes, and the first dorsal fin has dark markings. The barbels are longer than the pectoral fin and fold into a groove on the throat. In the North Sea it may reach 40 cm and 1 kg; in the Mediterranean males reach about 23 cm and females about 34 cm.",
-      "fr": "Le corps est marqué de rayures longitudinales rouges et brunes, et la première nageoire dorsale porte des marques sombres. Les barbillons sont plus longs que la nageoire pectorale et se replient dans un sillon de la gorge. En mer du Nord, il peut atteindre 40 cm et 1 kg; en Méditerranée, les mâles atteignent environ 23 cm et les femelles environ 34 cm."
+      "en": "The body is marked with longitudinal red and brown stripes, and the first dorsal fin has dark markings. The barbels are longer than the pectoral fin and fold into a groove on the throat. In the North Sea it may reach 40 cm and 1 kg; in the Mediterranean males reach about 23 cm and females about 34 cm. Compared with the red mullet (Mullus barbatus), the striped red mullet has a less steep forehead and two, rather than three, scales below the eye; see the red-mullet profile for the reciprocal comparison.",
+      "fr": "Le corps est marqué de rayures longitudinales rouges et brunes, et la première nageoire dorsale porte des marques sombres. Les barbillons sont plus longs que la nageoire pectorale et se replient dans un sillon de la gorge. En mer du Nord, il peut atteindre 40 cm et 1 kg; en Méditerranée, les mâles atteignent environ 23 cm et les femelles environ 34 cm. Par rapport au rouget de vase (Mullus barbatus), le rouget-barbet de roche a le front moins busqué et deux écailles sous l’œil, contre trois ; voir la fiche du rouget de vase pour la comparaison réciproque."
     },
     "habitat": {
       "en": "It ranges from western Norway and the English Channel south to Senegal and the Canary Islands, and through the Mediterranean and Black Sea. In the Channel and North Sea it lives at 3–90 m on sandy or muddy bottoms, sometimes on rock; in the western Mediterranean it is found mainly at 10–50 m on rough bottoms.",
@@ -48,7 +48,14 @@
       },
       "url": "https://www.fishbase.se/summary/Mullus-surmuletus.html",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "reproduction", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Barbels longer than the pectoral fin; red and brown stripes; first dorsal fin with dark markings; max 40 cm SL and 1 kg; range Norway to Dakar, Canaries, Mediterranean, Black Sea; benthic diet.",
         "IUCN Least Concern, assessed 14 July 2014."
@@ -61,7 +68,16 @@
       },
       "url": "https://www.ices.dk/about-ICES/projects/EU-RFP/EU%20Repository/ICES%20FIshMap/ICES%20FishMap%20species%20factsheet-redmullet.pdf",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Depth 3–90 m in the Channel and North Sea; spring entry into the southern North Sea and autumn return; barbels used to find food and dig pits; spawning May–June (Brittany), May–July (Plymouth); mature after one year; pelagic early juveniles move to the coast at about 5 cm.",
         "Winter catches in the North Sea increased since the late 1980s; valuable commercial fish in the southern Bay of Biscay and Iberian waters."
@@ -74,9 +90,25 @@
       },
       "url": "https://hrcak.srce.hr/en/152250",
       "consulted": "2026-10-12",
-      "supports": ["reproduction"],
+      "supports": [
+        "reproduction"
+      ],
       "facts": [
         "520 fish studied in 2009–2010; spawning mainly April–September with a peak in July."
+      ]
+    },
+    {
+      "title": {
+        "en": "Striped red mullet — DORIS / FFESSM",
+        "fr": "Rouget-barbet de roche — DORIS / FFESSM"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Mullus-surmuletus-Rouget-barbet-de-roche-500",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "DORIS distinguishes Mullus barbatus from M. surmuletus by a steeper forehead and three rather than two suborbital scales; red markings are also more typical of M. surmuletus."
       ]
     }
   ],

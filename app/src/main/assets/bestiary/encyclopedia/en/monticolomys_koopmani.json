@@ -1,0 +1,30 @@
+{
+  "id": "monticolomys_koopmani",
+  "name": "Koopman’s forest mouse",
+  "scientific": "Monticolomys koopmani",
+  "group": "mammals",
+  "sections": {
+    "overview": "Monticolomys koopmani is a Malagasy rodent in the endemic family Nesomyidae, known from the central and southern highlands.",
+    "identification": "The taxonomic accounts consulted establish its identity as a nesomyid rodent but do not provide a concise field description or diagnostic measurements.",
+    "habitat": "Mammal Species of the World records it in scattered sclerophyllous montane forest at about 1.6–2 km in eastern Madagascar; its type locality is at about 1.8 km.",
+    "diet": "The taxonomic and distribution sources reviewed do not document a species-specific diet, so particular foods are left unspecified.",
+    "behavior": "The sources reviewed do not establish its daily activity pattern or locomotion, so these behaviours remain undescribed here.",
+    "reproduction": "The sources reviewed provide no verified breeding dates, litter size or gestation data for this species.",
+    "ecology": "Molecular phylogenies consistently place Monticolomys as the sister genus of Macrotarsomys, another Malagasy nesomyine lineage.",
+    "conservation": "The American Society of Mammalogists’ Mammal Diversity Database reports the IUCN category Least Concern, citing the 2024 Red List record."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003761/",
+      "title": "Monticolomys koopmani — Mammal Diversity Database, American Society of Mammalogists"
+    },
+    {
+      "url": "https://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?id=13000140",
+      "title": "Monticolomys koopmani — Mammal Species of the World, 3rd edition"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8815910/",
+      "title": "Skull morphological evolution in Malagasy endemic Nesomyinae rodents — peer-reviewed study"
+    }
+  ]
+}

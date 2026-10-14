@@ -1,0 +1,166 @@
+{
+  "id": "mullus_barbatus",
+  "scientific": "Mullus barbatus",
+  "group": "fish",
+  "name": {
+    "en": "Red mullet",
+    "fr": "Rouget de vase"
+  },
+  "sections": {
+    "overview": {
+      "en": "Mullus barbatus is a pink goatfish of the eastern Atlantic and Mediterranean; compare the striped red mullet, Mullus surmuletus, in its profile.",
+      "fr": "Mullus barbatus est un rouget-barbet rose de l’Atlantique oriental et de la Méditerranée ; voir aussi la fiche de son cousin rayé, Mullus surmuletus."
+    },
+    "identification": {
+      "en": "It has a steep head profile, two barbels beneath the mouth and no conspicuous stripes, unlike the striped Mullus surmuletus.",
+      "fr": "Il a le profil de la tête abrupt, deux barbillons sous la bouche et pas de rayures marquées, contrairement à Mullus surmuletus, qui est rayé."
+    },
+    "habitat": {
+      "en": "It is demersal over shelf bottoms of mud, sand or gravel; the Adriatic species account reports mainly muddy habitat at about 5–250 m.",
+      "fr": "Il vit sur le fond du plateau continental, sur vase, sable ou gravier ; la fiche adriatique signale surtout les fonds vaseux vers 5–250 m."
+    },
+    "diet": {
+      "en": "It feeds on small bottom-dwelling crustaceans, worms and molluscs.",
+      "fr": "Il mange de petits crustacés benthiques, des vers et des mollusques."
+    },
+    "behavior": {
+      "en": "In parts of the Adriatic, juveniles move offshore and adults make seasonal movements toward spawning areas; the pattern varies by locality.",
+      "fr": "Dans certaines parties de l’Adriatique, les jeunes gagnent le large et les adultes se déplacent selon les saisons vers les zones de ponte ; ce schéma varie selon les lieux."
+    },
+    "reproduction": {
+      "en": "The FAO AdriaMed account reports Adriatic spawning in late spring and summer, with females spawning from April to May in the cited studies.",
+      "fr": "Le compte rendu FAO AdriaMed indique une ponte adriatique à la fin du printemps et en été ; les études citées situent celle des femelles d’avril à mai."
+    },
+    "ecology": {
+      "en": "It searches the seabed for prey with sensory chin barbels, which it shares with Mullus surmuletus.",
+      "fr": "Il cherche ses proies sur le fond grâce à ses barbillons sensoriels, qu’il partage avec Mullus surmuletus."
+    },
+    "conservation": {
+      "en": "It is commercially important in the Mediterranean; FishBase lists an IUCN field linked to the 2025-2 global assessment, but I did not verify the category.",
+      "fr": "Il a une importance commerciale en Méditerranée ; FishBase affiche un champ UICN associé à l’évaluation mondiale 2025-2, mais la catégorie n’a pas été vérifiée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mullus barbatus — FAO AdriaMed, fish species account",
+        "fr": "Mullus barbatus — FAO AdriaMed, fiche espèce"
+      },
+      "url": "https://www.faoadriamed.org/italy/html/Species/MullusBarbatus.html",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "FAO-AdriaMed reports eastern Atlantic and Mediterranean range; regional Adriatic movements; late-spring/summer spawning, with female spawning April–May in cited studies."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 19,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mullus barbatus — FishBase species summary",
+        "fr": "Mullus barbatus — résumé d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.org/Summary/Mullus-barbatus",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports shelf mud, sand and gravel; benthic prey; sensory chin barbels; and an IUCN field for assessment version 2025-2."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 20,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red mullet fishery and species profile — European Commission fish names database",
+        "fr": "Profil de pêche et d’espèce du rouget de vase — base des noms commerciaux des poissons de la Commission européenne"
+      },
+      "url": "https://fish-commercial-names.ec.europa.eu/fish-names/species/mullus-barbatus-barbatus_en",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "European Commission account notes a steep head and no conspicuous stripes on body or fins."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 15,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mullus surmuletus, Striped red mullet — existing bestiary profile and FishBase",
+        "fr": "Mullus surmuletus, rouget-barbet de roche — fiche existante du bestiaire et FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Mullus-surmuletus.html",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The existing bestiary profile describes longitudinal red and brown stripes and the sensory chin barbels of M. surmuletus."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 18,
+        "total": 18,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Adriatic habitat, movement and spawning details are regional and should not be extrapolated to the whole range.",
+    "FishBase shows an IUCN field for assessment version 2025-2, but the exact category was not verified independently for this draft."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the FAO AdriaMed biological account, FishBase and the European Commission fish-name entry; added the reciprocal species comparison to the prose for the existing Mullus surmuletus profile is still needed."
+}

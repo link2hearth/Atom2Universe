@@ -1,0 +1,165 @@
+{
+  "id": "nemopilema_nomurai",
+  "scientific": "Nemopilema nomurai",
+  "group": "invertebrates",
+  "name": {
+    "en": "Nomura jellyfish",
+    "fr": "Méduse de Nomura"
+  },
+  "sections": {
+    "overview": {
+      "en": "Nomura jellyfish is a large scyphozoan in the family Rhizostomatidae.",
+      "fr": "La méduse de Nomura est un grand scyphozoaire de la famille des Rhizostomatidae."
+    },
+    "identification": {
+      "en": "It can reach about 2 metres in bell diameter and 200 kilograms in wet mass, although such maxima are exceptional.",
+      "fr": "Elle peut atteindre environ 2 mètres de diamètre de cloche et 200 kilogrammes de masse humide, même si ces maxima sont exceptionnels."
+    },
+    "habitat": {
+      "en": "Its range includes the Bohai, Yellow, East China and Japan seas; currents can carry medusae from spawning areas toward Japan and Korea.",
+      "fr": "Son aire comprend les mers de Bohai, Jaune, de Chine orientale et du Japon ; les courants peuvent transporter les méduses depuis leurs zones de ponte vers le Japon et la Corée."
+    },
+    "diet": {
+      "en": "Korean fisheries information reports that it consumes zooplankton and fish eggs, but the relative importance of these foods is not quantified there.",
+      "fr": "Les informations halieutiques coréennes indiquent qu’elle consomme du zooplancton et des œufs de poissons, sans quantifier l’importance relative de ces aliments."
+    },
+    "behavior": {
+      "en": "At one Japan Sea study site, most observed medusae stayed above roughly 40 metres during daytime; this result is local, not a universal depth limit.",
+      "fr": "Sur un site étudié en mer du Japon, la plupart des méduses observées restaient au-dessus d’environ 40 mètres durant la journée ; ce résultat local ne constitue pas une limite de profondeur générale."
+    },
+    "reproduction": {
+      "en": "Benthic polyps release young medusae seasonally, with April–June release reported in the Yellow and East China seas.",
+      "fr": "Les polypes benthiques libèrent des jeunes méduses de façon saisonnière ; cette libération est rapportée d’avril à juin dans les mers Jaune et de Chine orientale."
+    },
+    "ecology": {
+      "en": "Its mass appearances are irregular, and drifting blooms can obstruct fishing gear and damage fisheries across East Asia.",
+      "fr": "Ses apparitions massives sont irrégulières, et les essaims dérivants peuvent obstruer les engins de pêche et nuire aux pêcheries d’Asie orientale."
+    },
+    "conservation": {
+      "en": "The Korean national marine species list does not mark it as a marine protected species; this says nothing about its status in other countries.",
+      "fr": "La liste marine nationale coréenne ne la désigne pas comme espèce marine protégée ; cela ne renseigne pas sur son statut dans les autres pays."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Blooms of the giant jellyfish Nemopilema nomurai — Plankton and Benthos Research",
+        "fr": "Essaims de la méduse géante Nemopilema nomurai — Plankton and Benthos Research"
+      },
+      "url": "https://doi.org/10.3800/pbr.3.125",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The review gives the species' East Asian marginal-sea range, maximum bell diameter of about 2 m and wet mass of about 200 kg, polyp release from April to June in the Yellow and East China seas, current-driven dispersal, and impacts of blooms on fisheries."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 44,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biological Information System for Marine Life — JAMSTEC",
+        "fr": "Système d’information biologique pour la vie marine — JAMSTEC"
+      },
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9015020",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "The Japanese marine-life database gives the accepted name Nemopilema nomurai, Japanese name Echizen kurage, and taxonomic placement in Rhizostomatidae."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 19,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nomura jellyfish — Korean National Institute of Fisheries Science",
+        "fr": "Méduse de Nomura — Institut national coréen des sciences halieutiques"
+      },
+      "url": "https://www.nifs.go.kr/portal/bt/frctA/actionSpeciesSearchView.do?taxonId=11013",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The Korean species account notes occurrence in the country's east, west and south seas, describes a seasonal appearance from May into early winter, reports zooplankton and fish eggs as food, and discusses interference with fisheries."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 35,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vertical distribution survey of the giant jellyfish Nemopilema nomurai — Japanese Society of Fisheries Science",
+        "fr": "Étude de la répartition verticale de la méduse géante Nemopilema nomurai — Société japonaise des sciences halieutiques"
+      },
+      "url": "https://doi.org/10.2331/suisan.73.1042",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "A daytime survey about 100 km off the Noto Peninsula found almost all observed animals shallower than approximately 40 m at that site."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 23,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Bloom frequency and distribution vary by year; proposed environmental drivers are not established as a single cause. The shallow daytime observation is site-specific, and maximum body size should not be read as typical size."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English-language fisheries research with Japanese JAMSTEC and fisheries-journal records and the Korean National Institute of Fisheries Science account. Kept the local depth observation and upper body-size values qualified."
+}

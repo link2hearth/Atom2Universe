@@ -1,0 +1,143 @@
+{
+  "id": "neolebias_lozii",
+  "scientific": "Neolebias lozii",
+  "group": "fish",
+  "name": {
+    "en": "Banded neolebias",
+    "fr": "Neolebias lozii"
+  },
+  "sections": {
+    "overview": {
+      "en": "Neolebias lozii is a very small freshwater fish known only from Zambia’s Upper Zambezi drainage.",
+      "fr": "Neolebias lozii est un très petit poisson d’eau douce connu uniquement du bassin supérieur du Zambèze, en Zambie."
+    },
+    "identification": {
+      "en": "The recorded maximum is 1.8 centimetres standard length.",
+      "fr": "La longueur standard maximale rapportée est de 1,8 centimètre."
+    },
+    "habitat": {
+      "en": "It occurs in small streams associated with seasonally flooded plains and dense submerged or emergent vegetation.",
+      "fr": "Elle vit dans de petits cours d’eau liés à des plaines inondées saisonnièrement, parmi une végétation aquatique dense, submergée ou émergée."
+    },
+    "diet": {
+      "en": "FishBase reports that it feeds on tiny aquatic invertebrates.",
+      "fr": "FishBase indique qu’elle se nourrit de minuscules invertébrés aquatiques."
+    },
+    "behavior": {
+      "en": "Its small size and association with dense stream-margin plants are documented, but other species-specific behavior remains poorly known.",
+      "fr": "Sa petite taille et son association avec la végétation dense des berges sont documentées, mais les autres comportements propres à l’espèce restent mal connus."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide a reliable species-specific account of its breeding cycle.",
+      "fr": "Les sources consultées ne donnent pas de description fiable du cycle de reproduction propre à l’espèce."
+    },
+    "ecology": {
+      "en": "The fish is restricted to a few tributaries on the eastern side of Zambia’s Barotse Floodplain, where maintaining stream flow and riparian vegetation is important.",
+      "fr": "Ce poisson est limité à quelques affluents du côté est de la plaine inondable de Barotse, en Zambie ; le maintien du débit et de la végétation riveraine y est important."
+    },
+    "conservation": {
+      "en": "FishBase reports a Critically Endangered IUCN assessment from 2007; the assessment highlights its extremely restricted range and habitat vulnerability.",
+      "fr": "FishBase rapporte une évaluation UICN de 2007 classant l’espèce en danger critique ; l’évaluation souligne son aire extrêmement restreinte et la vulnérabilité de son habitat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Neolebias lozii field guide — FishBase",
+        "fr": "Guide de terrain de Neolebias lozii — FishBase"
+      },
+      "url": "https://fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Neolebias&SpeciesName=lozii&pda=1&sps=",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "FishBase reports a maximum of 1.8 cm standard length, occurrence in small streams of seasonally flooded plains with dense aquatic macrophytes, tiny aquatic invertebrates as food, and a Critically Endangered IUCN assessment dated 1 March 2007."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 36,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Neolebias lozii — Eschmeyer’s Catalog of Fishes, California Academy of Sciences",
+        "fr": "Neolebias lozii — Catalogue des poissons d’Eschmeyer, Académie des sciences de Californie"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=60485",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "The Academy’s catalogue accepts Neolebias lozii as a valid species in Distichodontidae and gives Zambia as its distribution."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 18,
+        "total": 18,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Status and Distribution of Freshwater Biodiversity in Southern Africa — IUCN report",
+        "fr": "État et répartition de la biodiversité d’eau douce en Afrique australe — rapport de l’UICN"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-68-003.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The regional IUCN report says N. lozii is apparently restricted to the Kataba River and Sianda tributary on the eastern Barotse Floodplain and recommends maintaining stream flow and emergent and riparian vegetation."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 32,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species is rarely collected and its population size, reproductive biology and current trends are poorly known; the Red List assessment dates to 2007."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase and the California Academy of Sciences taxonomy catalogue against an IUCN regional freshwater assessment. Kept reproductive biology and population details explicitly uncertain."
+}

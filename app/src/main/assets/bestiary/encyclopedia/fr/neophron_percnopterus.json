@@ -1,0 +1,34 @@
+{
+  "id": "neophron_percnopterus",
+  "name": "Vautour percnoptère",
+  "scientific": "Neophron percnopterus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Vautour percnoptère appartient à la famille des vautours Accipitridae ; son nom anglais est Egyptian Vulture.",
+    "identification": "L’adulte a la tête et la gorge jaunes et dénudées, le corps pâle et les rémiges sombres contrastées.",
+    "habitat": "Il fréquente les milieux ouverts, les pentes rocheuses et les escarpements, de l’Europe du Sud-Ouest et de l’Afrique jusqu’en Asie.",
+    "diet": "La charogne est au cœur de son régime, mais il consomme aussi de petites proies, des œufs, des insectes et d’autres aliments.",
+    "behavior": "Il est connu pour utiliser des pierres afin de casser de gros œufs, un exemple rare d’usage d’outils chez les oiseaux.",
+    "reproduction": "Les synthèses régionales et de conservation consultées ici ne donnent pas assez de détails pour décrire fiablement son cycle de reproduction.",
+    "ecology": "Relativement petit pour un vautour, il peut exploiter de petits restes et des ressources variées laissés par les espèces plus grandes.",
+    "conservation": "La Liste rouge de l’UICN le classe En danger, en raison notamment de déclins liés aux empoisonnements, aux persécutions et à d’autres pressions dans une partie de son aire."
+  },
+  "sources": [
+    {
+      "url": "https://www.ead.gov.ae/en/Discover-Our-Biodiversity/Birds/Egyptian-Vulture",
+      "title": "Vautour percnoptère — Environment Agency Abu Dhabi"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rapaces/vautour-percnoptere",
+      "title": "Vautour percnoptère — LPO"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T22695180A118600142.en",
+      "title": "Vautour percnoptère — Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://4vultures.org/es/vultures/egyptian-vulture/",
+      "title": "Vautour percnoptère — Vulture Conservation Foundation"
+    }
+  ]
+}

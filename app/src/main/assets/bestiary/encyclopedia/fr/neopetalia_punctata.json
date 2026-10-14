@@ -1,0 +1,30 @@
+{
+  "id": "neopetalia_punctata",
+  "name": "Néopétalie ponctuée",
+  "scientific": "Neopetalia punctata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Neopetalia punctata est une libellule de la famille sud-américaine singulière des Neopetaliidae.",
+    "identification": "C’est le seul représentant vivant de sa famille ; sa larve a contribué à établir qu’elle n’appartient pas aux Aeshnoidea.",
+    "habitat": "Les publications associent l’espèce aux cours d’eau tempérés du Chili et d’Argentine.",
+    "diet": "Les références consultées ne décrivent pas les proies propres à l’espèce.",
+    "behavior": "Sa larve aquatique a été décrite dans une étude taxonomique, mais les sources consultées donnent peu de détails sur le comportement des adultes.",
+    "reproduction": "Le stade larvaire est connu, mais les références consultées ne décrivent pas en détail la ponte ni le développement.",
+    "ecology": "Cette lignée relique est associée aux eaux courantes tempérées des Andes méridionales ; les sources consultées n’établissent pas l’étendue de ses populations.",
+    "conservation": "Les sources consultées n’établissent ni catégorie de conservation ni tendance démographique à l’échelle de l’espèce."
+  },
+  "sources": [
+    {
+      "url": "https://www.researchgate.net/publication/254243590_Critical_species_of_Odonata_in_the_Neotropics",
+      "title": "Espèces d’Odonates néotropicaux préoccupantes — International Journal of Odonatology"
+    },
+    {
+      "url": "https://biostor.org/issn/0013-8797/year/reference/56725",
+      "title": "La larve de Neopetalia punctata et la création des Austropetaliidae — Proceedings of the Entomological Society of Washington"
+    },
+    {
+      "url": "https://doi.org/10.54830/bmnhn.v56.2007.265",
+      "title": "État des connaissances sur les Odonates du Chili — Musée national d’histoire naturelle du Chili"
+    }
+  ]
+}

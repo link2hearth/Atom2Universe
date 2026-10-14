@@ -32,8 +32,8 @@
       "fr": "FishBase indique que l’espèce pond jusqu’à une centaine d’œufs, déposés au plafond d’une petite cavité ou à découvert. La femelle garde les œufs et les jeunes ; la source ne décrit pas de rôle de garde comparable chez le mâle. Cette fiche fournit un schéma documenté, sans établir les variations de ponte ou de site de nidification dans toute l’aire restreinte de l’espèce."
     },
     "ecology": {
-      "en": "As a small cichlid feeding on aquatic invertebrates, it is part of the food web of forest streams and swamp margins. No source reviewed here quantifies its ecological role, predators or interactions with other fish, and its narrow known range makes site-specific habitat information especially relevant.",
-      "fr": "Petit cichlidé consommant des invertébrés aquatiques, il fait partie du réseau alimentaire des ruisseaux forestiers et des marges marécageuses. Aucune source examinée ici ne quantifie son rôle écologique, ses prédateurs ou ses interactions avec d’autres poissons ; sa répartition connue étant étroite, les informations sur les sites précis sont particulièrement utiles."
+      "en": "As a small cichlid feeding on aquatic invertebrates, it is part of the food web of forest streams and swamp margins. No source reviewed here quantifies its ecological role, predators or interactions with other fish, and its narrow known range makes site-specific habitat information especially relevant. Its profile contrasts its narrow Approuague-basin range with the broader range reported for Nannacara anomala across Guyana, Suriname and French Guiana; see that profile for the reverse comparison.",
+      "fr": "Petit cichlidé consommant des invertébrés aquatiques, il fait partie du réseau alimentaire des ruisseaux forestiers et des marges marécageuses. Aucune source examinée ici ne quantifie son rôle écologique, ses prédateurs ou ses interactions avec d’autres poissons ; sa répartition connue étant étroite, les informations sur les sites précis sont particulièrement utiles. Sa fiche compare son aire restreinte du bassin de l’Approuague à celle, plus vaste, de Nannacara anomala, signalé au Guyana, au Suriname et en Guyane française ; voir cette autre fiche pour le renvoi inverse."
     },
     "conservation": {
       "en": "FishBase reports an IUCN global assessment of Least Concern dated 28 December 2020. An older specialist account still says the species had not been assessed, illustrating that some pages have not been updated. The category is dated and does not establish that every local habitat or population is stable; no population trend was verified here.",
@@ -96,6 +96,20 @@
       ],
       "facts": [
         "Species summary gives sex-specific size information; records the Approuague basin, shallow sheltered swamp and forest-creek habitat, up to about 100 eggs with female guarding, and Least Concern assessment dated 2020-12-28."
+      ]
+    },
+    {
+      "title": {
+        "en": "Nannacara anomala — Eschmeyer’s Catalog of Fishes, California Academy of Sciences",
+        "fr": "Nannacara anomala — Catalogue des poissons d’Eschmeyer, California Academy of Sciences"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=21213",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The catalog records Nannacara anomala from freshwater rivers in Guyana, Suriname and French Guiana, supporting a range comparison with N. aureocephalus in the Approuague basin."
       ]
     }
   ],

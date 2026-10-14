@@ -1,0 +1,34 @@
+{
+  "id": "neophron_percnopterus",
+  "name": "Egyptian Vulture",
+  "scientific": "Neophron percnopterus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Egyptian Vulture is a member of the vulture family Accipitridae; its French name is Vautour percnoptère.",
+    "identification": "Adults have a bare yellow head and throat, pale body plumage and contrasting dark flight feathers.",
+    "habitat": "It uses open country, rocky slopes and escarpments across a range extending from southwestern Europe and Africa into Asia.",
+    "diet": "Carrion is central to its diet, but it also takes small prey, eggs, insects and other food.",
+    "behavior": "It is known to use stones to crack large eggs, a rare example of tool use in birds.",
+    "reproduction": "The regional and conservation summaries consulted here do not provide enough detail for a reliable account of its breeding cycle.",
+    "ecology": "As a relatively small vulture, it can feed on small remains and varied resources that larger carcass-feeders may leave behind.",
+    "conservation": "The IUCN Red List lists it as Endangered, with declines linked to poisoning, persecution and other pressures across parts of its range."
+  },
+  "sources": [
+    {
+      "url": "https://www.ead.gov.ae/en/Discover-Our-Biodiversity/Birds/Egyptian-Vulture",
+      "title": "Egyptian Vulture — Environment Agency Abu Dhabi"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rapaces/vautour-percnoptere",
+      "title": "Vautour percnoptère — LPO"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T22695180A118600142.en",
+      "title": "Egyptian Vulture — IUCN Red List"
+    },
+    {
+      "url": "https://4vultures.org/es/vultures/egyptian-vulture/",
+      "title": "Egyptian Vulture — Vulture Conservation Foundation"
+    }
+  ]
+}

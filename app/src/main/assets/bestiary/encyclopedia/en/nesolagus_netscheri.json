@@ -1,0 +1,34 @@
+{
+  "id": "nesolagus_netscheri",
+  "name": "Sumatran striped rabbit",
+  "scientific": "Nesolagus netscheri",
+  "group": "mammals",
+  "sections": {
+    "overview": "The Sumatran striped rabbit is a rarely observed lagomorph endemic to the Indonesian island of Sumatra.",
+    "identification": "Its distinctive longitudinal stripes separate it from the introduced European rabbit, but sightings are too scarce for a fuller field description here.",
+    "habitat": "Records concentrate in the Barisan mountain forests, including Bukit Barisan Selatan and Kerinci Seblat, with some reports from lower elevations.",
+    "diet": "Its diet has not been established well enough in the research sources consulted to describe confidently.",
+    "behavior": "Indonesian conservation notes describe it as elusive and mainly nocturnal; camera traps have recorded it moving along forest trails at night.",
+    "reproduction": "Reliable field information on its reproduction remains very limited.",
+    "ecology": "Its closest living relative is the Annamite striped rabbit (Nesolagus timminsi); the two are sister species within the genus.",
+    "conservation": "Deforestation and encroachment threaten known forest refuges, while the species remains too poorly surveyed for a confident population trend."
+  },
+  "sources": [
+    {
+      "url": "https://www.cambridge.org/core/journals/oryx/article/using-camera-trap-photos-and-direct-sightings-to-identify-possible-refugia-for-the-vulnerable-sumatran-striped-rabbit-nesolagus-netscheri/6B35A83B9C3B126A0FEB36DB68B46949",
+      "title": "Using camera-trap photos and direct sightings to identify possible refugia for the Vulnerable Sumatran striped rabbit — Oryx"
+    },
+    {
+      "url": "https://ksdae.kehutanan.go.id/publikasi/artikel/temuan-kelinci-belang-langka-di-rimba-sriwijaya-lQvoZMrU/",
+      "title": "Temuan Kelinci Belang Langka di Rimba Sriwijaya — Indonesian Ministry of Environment and Forestry"
+    },
+    {
+      "url": "https://www.internationaltigerproject.org/static/media/uploads/pdf/Sumatran_Mammals_FZS_ebook_2020.pdf",
+      "title": "Sumatran Mammals — Fauna & Flora International / Frankfurt Zoological Society"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Nesolagus_timminsi/",
+      "title": "Annamite striped rabbit — Animal Diversity Web"
+    }
+  ]
+}

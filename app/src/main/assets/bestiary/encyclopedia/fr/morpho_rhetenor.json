@@ -1,0 +1,30 @@
+{
+  "id": "morpho_rhetenor",
+  "name": "Morpho rhéténor",
+  "scientific": "Morpho rhetenor",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Morpho rhetenor est un papillon néotropical de la famille des Nymphalidés, signalé dans la région amazonienne et en Guyana.",
+    "identification": "Le dessus des ailes du mâle est d’un bleu éclatant produit par une coloration structurelle ; la notice muséale de cette espèce décrit un revers plus terne chez le mâle.",
+    "habitat": "Une étude de 2025 sur les papillons amazoniens a surtout observé M. rhetenor dans la canopée aux sites étudiés ; ce résultat décrit ces sites, pas toutes les populations.",
+    "diet": "Aucune source alimentaire propre aux adultes de cette espèce n’a été confirmée dans les références examinées ; le régime reste donc indéterminé plutôt que déduit de celui d’autres morphos bleus.",
+    "behavior": "Les observations en canopée de l’étude amazonienne indiquent où les adultes étaient actifs sur les sites étudiés, sans établir une hauteur de vol valable partout.",
+    "reproduction": "Un compte rendu entomologique français cite la légumineuse Macrolobium bifolium comme plante-hôte larvaire ; les sources examinées ne donnent ni nombre fiable d’œufs ni nombre de générations.",
+    "ecology": "Le bleu des ailes du mâle est structurel et non pigmentaire : ce phénomène de réflexion de la lumière est décrit pour cette espèce par un musée japonais.",
+    "conservation": "Les sources retenues pour cette fiche documentent des spécimens et l’histoire naturelle, mais n’établissent pas d’évaluation actuelle du risque d’extinction à l’échelle de l’espèce."
+  },
+  "sources": [
+    {
+      "url": "https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1002/oik.11567",
+      "title": "Observations de Morpho rhetenor dans la canopée amazonienne — Oikos, 2025"
+    },
+    {
+      "url": "https://www.bunka.pref.mie.lg.jp/MieMu/82984046671.htm",
+      "title": "Morpho rhéténor — Musée préfectoral de Mie"
+    },
+    {
+      "url": "https://www.archentoflor.com/Papillons_Nymphalidae_Morphinae.html",
+      "title": "Morpho rhetenor — ArchEntoFlor, compte rendu entomologique de langue française"
+    }
+  ]
+}

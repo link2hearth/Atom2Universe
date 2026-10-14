@@ -1,0 +1,145 @@
+{
+  "id": "noblella_coloma",
+  "scientific": "Noblella coloma",
+  "group": "amphibians",
+  "name": {
+    "en": "Coloma's pygmy frog",
+    "fr": "Grenouille pygmée de Coloma"
+  },
+  "sections": {
+    "overview": {
+      "en": "Coloma’s pygmy frog was described from Ecuador’s western Andes; current Amphibian Species of the World lists it as Phyllonastes coloma.",
+      "fr": "La grenouille pygmée de Coloma a été décrite dans les Andes occidentales de l’Équateur ; Amphibian Species of the World la répertorie désormais comme Phyllonastes coloma."
+    },
+    "identification": {
+      "en": "The original description distinguishes it by a bright orange underside and the absence of the dorsal bars and chevrons found in some close frogs.",
+      "fr": "La description originale la distingue par son ventre orange vif et l’absence des barres et chevrons dorsaux présents chez certains proches parents."
+    },
+    "habitat": {
+      "en": "The species is known from humid montane forest on the Pacific slopes of Ecuador’s western Cordillera, at roughly 1283–2215 m.",
+      "fr": "L’espèce est connue des forêts montagnardes humides du versant pacifique de la Cordillère occidentale équatorienne, vers 1283 à 2215 m."
+    },
+    "diet": {
+      "en": "The cited taxonomic and distribution accounts do not establish a species-specific diet.",
+      "fr": "Les sources taxonomiques et de répartition citées ne précisent pas de régime alimentaire propre à l’espèce."
+    },
+    "behavior": {
+      "en": "The available primary description is based on collected specimens and gives little detail about behavior in the wild.",
+      "fr": "La description primaire disponible repose sur des spécimens collectés et donne peu de détails sur le comportement dans la nature."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide a verified account of its breeding or development.",
+      "fr": "Les sources consultées ne fournissent pas de description vérifiée de sa reproduction ou de son développement."
+    },
+    "ecology": {
+      "en": "Its generic placement has changed: the original paper used Noblella, whereas the 2025 revision and current ASW account use Phyllonastes.",
+      "fr": "Son classement générique a changé : l’article original utilisait Noblella, tandis que la révision de 2025 et la fiche actuelle d’ASW emploient Phyllonastes."
+    },
+    "conservation": {
+      "en": "The accounts consulted do not provide a current population trend for this frog.",
+      "fr": "Les sources consultées ne donnent pas de tendance actuelle de population pour cette grenouille."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Phyllonastes coloma — Amphibian Species of the World, American Museum of Natural History",
+        "fr": "Phyllonastes coloma — Amphibian Species of the World, American Museum of Natural History"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Brachycephaloidea/Craugastoridae/Holoadeninae/Phyllonastes/Phyllonastes-coloma",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The current authoritative species account uses Phyllonastes coloma, records its Ecuadorian Pacific-slope distribution at 1,283–2,215 m, and summarizes identification and conservati"
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 113,
+        "notes_words": 21,
+        "total": 134,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A new species of Noblella from the western slopes of the Andes of Ecuador — Zootaxa",
+        "fr": "Nouvelle espèce de Noblella des versants occidentaux des Andes équatoriennes — Zootaxa"
+      },
+      "url": "https://multimedia20stg.blob.core.windows.net/publicaciones/2009_Guayasamin%26Teran_Noblella_coloma.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "The original description names Noblella coloma, gives the Río Guajalito type locality at 1,800–2,000 m, describes its orange venter and lack of dorsal marks, and focuses on collect"
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 28,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Systematics of minute strabomantid frogs formerly allocated to Noblella — Zoological Journal of the Linnean Society",
+        "fr": "Systématique de petites grenouilles strabomantides anciennement placées dans Noblella — Zoological Journal of the Linnean Society"
+      },
+      "url": "https://doi.org/10.1093/zoolinnean/zlae162",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The 2025 phylogenetic revision resurrects Phyllonastes for the northern clade and discusses taxonomic limits in the former broad genus Noblella."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 20,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The catalogue’s inventory name remains Noblella coloma, while current Amphibian Species of the World and the 2024 revision use Phyllonastes coloma.",
+    "Species-specific feeding, breeding and population-trend data are sparse in the consulted references."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the 2009 species description with the 2025 phylogenetic revision and the current AMNH Amphibian Species of the World entry; retained the catalogue label while stating the updated genus."
+}

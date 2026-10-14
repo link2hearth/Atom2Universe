@@ -1,0 +1,30 @@
+{
+  "id": "neamblysomus_gunningi",
+  "name": "Taupe dorée de Gunning",
+  "scientific": "Neamblysomus gunningi",
+  "group": "mammals",
+  "sections": {
+    "overview": "La taupe dorée de Gunning est un représentant sud-africain de la famille des taupes dorées, les Chrysochloridae.",
+    "identification": "C’est l’une des deux espèces du genre Neamblysomus ; les descriptions détaillées propres à cette espèce sont rares.",
+    "habitat": "L’espèce est connue de la province du Limpopo, dans le nord-est de l’Afrique du Sud, où elle fréquente les forêts et prairies de montagne.",
+    "diet": "Les sources consultées apportent trop peu de données propres à l’espèce pour décrire son régime alimentaire avec fiabilité.",
+    "behavior": "Comme les autres taupes dorées, elle est adaptée à un mode de vie largement souterrain et fouisseur.",
+    "reproduction": "Les sources consultées ne permettent pas d’établir des observations propres à sa reproduction.",
+    "ecology": "Son aire restreinte associe l’espèce aux milieux montagnards d’une région où les taupes dorées subissent une dégradation croissante de leur habitat.",
+    "conservation": "La Mammal Diversity Database rapporte une évaluation UICN de 2024 classant l’espèce En danger ; son aire limitée rend les changements d’habitat préoccupants pour sa conservation."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000473/",
+      "title": "Neamblysomus gunningi — Base de données sur la diversité des mammifères"
+    },
+    {
+      "url": "https://afrotheria.net/golden_moles/",
+      "title": "Taupes dorées — Groupe de spécialistes Afrotheria de l’UICN/SSC"
+    },
+    {
+      "url": "https://api.pageplace.de/preview/DT0400.9781107299559_A23760665/preview-9781107299559_A23760665.pdf",
+      "title": "Les mammifères de la sous-région d’Afrique australe — Cambridge University Press"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "mya_arenaria",
+  "name": "Mye des sables",
+  "scientific": "Mya arenaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Mya arenaria est un bivalve marin fouisseur, originaire du nord-ouest de l’Atlantique et désormais établi sur de nombreuses côtes européennes et ailleurs à la suite de transports humains.",
+    "identification": "Sa coquille mince et allongée reste béante aux deux extrémités, tandis que deux longs siphons atteignent la surface du sédiment où l’animal est enfoui.",
+    "habitat": "Elle s’enfouit dans le sable ou la vase des estrans, estuaires et lagunes, de la zone intertidale aux eaux subtidales peu profondes, et tolère une large gamme de salinités.",
+    "diet": "L’eau aspirée par son siphon inhalant lui apporte des aliments en suspension, notamment du phytoplancton et d’autres particules organiques, avant de ressortir par le siphon exhalant.",
+    "behavior": "Elle vit généralement enfouie dans un terrier vertical tapissé de mucus et fait dépasser ses deux siphons du sédiment pour se nourrir et renouveler l’eau.",
+    "reproduction": "Les sexes sont séparés et libèrent leurs gamètes dans l’eau où la fécondation est externe ; les larves planctoniques se déposent ensuite sur le fond.",
+    "ecology": "En filtrant l’eau, elle exploite la production planctonique et nourrit poissons, crabes et oiseaux littoraux ; des populations introduites abondantes peuvent concurrencer les bivalves indigènes.",
+    "conservation": "SeaLifeBase indique que l’espèce n’est pas évaluée sur la Liste rouge mondiale de l’UICN ; cela diffère des effets écologiques documentés de populations introduites dans certaines régions."
+  },
+  "sources": [
+    {
+      "url": "https://doris.ffessm.fr/Especes/Mya-arenaria-Mye-des-sables-2048",
+      "title": "Mya arenaria — DORIS, FFESSM"
+    },
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/1404",
+      "title": "Mye des sables — Marine Life Information Network"
+    },
+    {
+      "url": "https://invasions.si.edu/nemesis/species_summary/-60",
+      "title": "Mya arenaria — synthèse Smithsonian NEMESIS"
+    },
+    {
+      "url": "https://www.sealifebase.ca/summary/Mya-arenaria",
+      "title": "Mya arenaria — SeaLifeBase"
+    }
+  ]
+}

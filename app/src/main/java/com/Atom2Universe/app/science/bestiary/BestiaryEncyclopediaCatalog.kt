@@ -4722,6 +4722,14 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "monticola_cinclorhyncha"
         ),
         AnimalSpecies(
+            id = "monticolomys_koopmani", scientific = "Monticolomys koopmani",
+            name = R.string.be_encyclopedia_placeholder, group = "mammals",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "monticolomys_koopmani"
+        ),
+        AnimalSpecies(
             id = "moon_jellyfish", scientific = "Aurelia aurita",
             name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
@@ -4738,12 +4746,44 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "moose"
         ),
         AnimalSpecies(
+            id = "morpho_rhetenor", scientific = "Morpho rhetenor",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "morpho_rhetenor"
+        ),
+        AnimalSpecies(
+            id = "motacilla_alba", scientific = "Motacilla alba",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "motacilla_alba"
+        ),
+        AnimalSpecies(
+            id = "motacilla_flava", scientific = "Motacilla flava",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "motacilla_flava"
+        ),
+        AnimalSpecies(
             id = "mugger_crocodile", scientific = "Crocodylus palustris",
             name = R.string.be_encyclopedia_placeholder, group = "reptiles",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
             sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "mugger_crocodile"
+        ),
+        AnimalSpecies(
+            id = "mullus_barbatus", scientific = "Mullus barbatus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "mullus_barbatus"
         ),
         AnimalSpecies(
             id = "mullus_surmuletus", scientific = "Mullus surmuletus",
@@ -4794,12 +4834,47 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "mute_swan"
         ),
         AnimalSpecies(
+            id = "mya_arenaria", scientific = "Mya arenaria",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "mya_arenaria"
+        ),
+        AnimalSpecies(
+            id = "myrmecophaga_tridactyla", scientific = "Myrmecophaga tridactyla",
+            name = R.string.be_encyclopedia_placeholder, group = "mammals",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "myrmecophaga_tridactyla"
+        ),
+    )
+
+    private fun batch15(): List<AnimalSpecies> = listOf(
+        AnimalSpecies(
             id = "mytilus_edulis", scientific = "Mytilus edulis",
             name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
             sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "mytilus_edulis"
+        ),
+        AnimalSpecies(
+            id = "myxobolus_cerebralis", scientific = "Myxobolus cerebralis",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "myxobolus_cerebralis"
+        ),
+        AnimalSpecies(
+            id = "nannacara_anomala", scientific = "Nannacara anomala",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "nannacara_anomala"
         ),
         AnimalSpecies(
             id = "nannacara_aureocephalus", scientific = "Nannacara aureocephalus",
@@ -4810,6 +4885,30 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "nannacara_aureocephalus"
         ),
         AnimalSpecies(
+            id = "nannocharax_macropterus", scientific = "Nannocharax macropterus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "nannocharax_macropterus"
+        ),
+        AnimalSpecies(
+            id = "neamblysomus_gunningi", scientific = "Neamblysomus gunningi",
+            name = R.string.be_encyclopedia_placeholder, group = "mammals",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "neamblysomus_gunningi"
+        ),
+        AnimalSpecies(
+            id = "nemopilema_nomurai", scientific = "Nemopilema nomurai",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "nemopilema_nomurai"
+        ),
+        AnimalSpecies(
             id = "neofelis_nebulosa", scientific = "Neofelis nebulosa",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
@@ -4818,12 +4917,76 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "neofelis_nebulosa"
         ),
         AnimalSpecies(
+            id = "neolamprologus_brichardi", scientific = "Neolamprologus brichardi",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "neolamprologus_brichardi"
+        ),
+        AnimalSpecies(
+            id = "neolebias_lozii", scientific = "Neolebias lozii",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "neolebias_lozii"
+        ),
+        AnimalSpecies(
+            id = "neopetalia_punctata", scientific = "Neopetalia punctata",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "neopetalia_punctata"
+        ),
+        AnimalSpecies(
+            id = "neophron_percnopterus", scientific = "Neophron percnopterus",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "neophron_percnopterus"
+        ),
+        AnimalSpecies(
+            id = "nephele_comma", scientific = "Nephele comma",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "nephele_comma"
+        ),
+        AnimalSpecies(
+            id = "nesolagus_netscheri", scientific = "Nesolagus netscheri",
+            name = R.string.be_encyclopedia_placeholder, group = "mammals",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "nesolagus_netscheri"
+        ),
+        AnimalSpecies(
             id = "nile_crocodile", scientific = "Crocodylus niloticus",
             name = R.string.be_encyclopedia_placeholder, group = "reptiles",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
             sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "nile_crocodile"
+        ),
+        AnimalSpecies(
+            id = "noblella_coloma", scientific = "Noblella coloma",
+            name = R.string.be_encyclopedia_placeholder, group = "amphibians",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "noblella_coloma"
+        ),
+        AnimalSpecies(
+            id = "noctua_interposita", scientific = "Noctua interposita",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "noctua_interposita"
         ),
         AnimalSpecies(
             id = "northern_fulmar", scientific = "Fulmarus glacialis",
@@ -4849,9 +5012,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "northern_lapwing"
         ),
-    )
-
-    private fun batch15(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "northern_pintail", scientific = "Anas acuta",
             name = R.string.be_encyclopedia_placeholder, group = "birds",
@@ -5012,6 +5172,9 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "pieris_brassicae"
         ),
+    )
+
+    private fun batch16(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "pine_marten", scientific = "Martes martes",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
@@ -5172,9 +5335,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "red_knot"
         ),
-    )
-
-    private fun batch16(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "red_squirrel", scientific = "Sciurus vulgaris",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
@@ -5335,6 +5495,9 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "siamese_fighting_fish"
         ),
+    )
+
+    private fun batch17(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "snowshoe_hare", scientific = "Lepus americanus",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
@@ -5495,9 +5658,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "turdus_philomelos"
         ),
-    )
-
-    private fun batch17(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "uria_aalge", scientific = "Uria aalge",
             name = R.string.be_encyclopedia_placeholder, group = "birds",
@@ -6242,19 +6402,39 @@ internal object BestiaryEncyclopediaCatalog {
         "monopis_obviella" to "Yellow-backed Detritus Moth",
         "montastraea_cavernosa" to "Great star coral",
         "monticola_cinclorhyncha" to "Blue-capped Rock Thrush",
+        "monticolomys_koopmani" to "Koopman’s forest mouse",
         "moon_jellyfish" to "Moon jellyfish",
         "moose" to "Moose",
+        "morpho_rhetenor" to "Rhetenor blue morpho",
+        "motacilla_alba" to "White Wagtail",
+        "motacilla_flava" to "Yellow Wagtail",
         "mugger_crocodile" to "Mugger crocodile",
+        "mullus_barbatus" to "Red mullet",
         "mullus_surmuletus" to "Striped Red Mullet",
         "murray_cod" to "Murray cod",
         "muscicapa_striata" to "Spotted Flycatcher",
         "muskrat" to "Muskrat",
         "mustela_lutreola" to "European Mink",
         "mute_swan" to "Mute Swan",
+        "mya_arenaria" to "Soft-shell clam",
+        "myrmecophaga_tridactyla" to "Giant anteater",
         "mytilus_edulis" to "Blue Mussel",
+        "myxobolus_cerebralis" to "Whirling disease myxozoan",
+        "nannacara_anomala" to "Goldeneye cichlid",
         "nannacara_aureocephalus" to "Goldenhead dwarf acara",
+        "nannocharax_macropterus" to "Broad-barred citharine",
+        "neamblysomus_gunningi" to "Gunning’s golden mole",
+        "nemopilema_nomurai" to "Nomura jellyfish",
         "neofelis_nebulosa" to "Mainland clouded leopard",
+        "neolamprologus_brichardi" to "Princess cichlid",
+        "neolebias_lozii" to "Banded neolebias",
+        "neopetalia_punctata" to "Spotted neopetaliid dragonfly",
+        "neophron_percnopterus" to "Egyptian Vulture",
+        "nephele_comma" to "Comma nephele hawkmoth",
+        "nesolagus_netscheri" to "Sumatran striped rabbit",
         "nile_crocodile" to "Nile crocodile",
+        "noblella_coloma" to "Coloma's pygmy frog",
+        "noctua_interposita" to "Sarmatian yellow underwing",
         "northern_fulmar" to "Northern Fulmar",
         "northern_gannet" to "Northern gannet",
         "northern_lapwing" to "Northern Lapwing",
@@ -6278,6 +6458,9 @@ internal object BestiaryEncyclopediaCatalog {
         "phalanger_mimicus" to "Southern Common Cuscus",
         "pied_flycatcher" to "Pied Flycatcher",
         "pieris_brassicae" to "Large White",
+    )
+
+    private fun namesEn8(): Map<String, String> = mapOf(
         "pine_marten" to "European pine marten",
         "platypus" to "Platypus",
         "pleuronectes_platessa" to "European Plaice",
@@ -6298,9 +6481,6 @@ internal object BestiaryEncyclopediaCatalog {
         "red_junglefowl" to "Red junglefowl",
         "red_kangaroo" to "Red kangaroo",
         "red_knot" to "Red Knot",
-    )
-
-    private fun namesEn8(): Map<String, String> = mapOf(
         "red_squirrel" to "Red squirrel",
         "red_tailed_green_ratsnake" to "Red-tailed green ratsnake",
         "reed_bunting" to "Reed Bunting",
@@ -6968,19 +7148,39 @@ internal object BestiaryEncyclopediaCatalog {
         "monopis_obviella" to "Teigne détriticole à dos jaune",
         "montastraea_cavernosa" to "Grand corail étoilé",
         "monticola_cinclorhyncha" to "Monticole à croupion roux",
+        "monticolomys_koopmani" to "Monticolomys de Koopman",
         "moon_jellyfish" to "Méduse lune",
         "moose" to "Élan",
+        "morpho_rhetenor" to "Morpho rhéténor",
+        "motacilla_alba" to "Bergeronnette grise",
+        "motacilla_flava" to "Bergeronnette printanière",
         "mugger_crocodile" to "Crocodile des marais",
+        "mullus_barbatus" to "Rouget de vase",
         "mullus_surmuletus" to "Rouget-barbet de roche",
         "murray_cod" to "Morue de Murray",
         "muscicapa_striata" to "Gobemouche gris",
         "muskrat" to "Rat musqué",
         "mustela_lutreola" to "Vison d’Europe",
         "mute_swan" to "Cygne tuberculé",
+        "mya_arenaria" to "Mye des sables",
+        "myrmecophaga_tridactyla" to "Fourmilier géant",
         "mytilus_edulis" to "Moule commune",
+        "myxobolus_cerebralis" to "Myxobolus cerebralis",
+        "nannacara_anomala" to "Nannacara doré",
         "nannacara_aureocephalus" to "Acara nain à tête dorée",
+        "nannocharax_macropterus" to "Nannocharax macropterus",
+        "neamblysomus_gunningi" to "Taupe dorée de Gunning",
+        "nemopilema_nomurai" to "Méduse de Nomura",
         "neofelis_nebulosa" to "Panthère nébuleuse",
+        "neolamprologus_brichardi" to "Neolamprologus brichardi",
+        "neolebias_lozii" to "Neolebias lozii",
+        "neopetalia_punctata" to "Néopétalie ponctuée",
+        "neophron_percnopterus" to "Vautour percnoptère",
+        "nephele_comma" to "Sphinx néphélé virgule",
+        "nesolagus_netscheri" to "Lapin rayé de Sumatra",
         "nile_crocodile" to "Crocodile du Nil",
+        "noblella_coloma" to "Grenouille pygmée de Coloma",
+        "noctua_interposita" to "Triphène sarmate",
         "northern_fulmar" to "Fulmar boréal",
         "northern_gannet" to "Fou de Bassan",
         "northern_lapwing" to "Vanneau huppé",
@@ -7004,6 +7204,9 @@ internal object BestiaryEncyclopediaCatalog {
         "phalanger_mimicus" to "Couscous commun du Sud",
         "pied_flycatcher" to "Gobemouche noir",
         "pieris_brassicae" to "Piéride du chou",
+    )
+
+    private fun namesFr8(): Map<String, String> = mapOf(
         "pine_marten" to "Martre des pins",
         "platypus" to "Ornithorynque",
         "pleuronectes_platessa" to "Plie",
@@ -7024,9 +7227,6 @@ internal object BestiaryEncyclopediaCatalog {
         "red_junglefowl" to "Coq bankiva",
         "red_kangaroo" to "Kangourou roux",
         "red_knot" to "Bécasseau maubèche",
-    )
-
-    private fun namesFr8(): Map<String, String> = mapOf(
         "red_squirrel" to "Écureuil roux",
         "red_tailed_green_ratsnake" to "Serpent ratier vert à queue rouge",
         "reed_bunting" to "Bruant des roseaux",

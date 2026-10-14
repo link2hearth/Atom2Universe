@@ -1,0 +1,141 @@
+{
+  "id": "neolamprologus_brichardi",
+  "scientific": "Neolamprologus brichardi",
+  "group": "fish",
+  "name": {
+    "en": "Princess cichlid",
+    "fr": "Neolamprologus brichardi"
+  },
+  "sections": {
+    "overview": {
+      "en": "Neolamprologus brichardi is a small cichlid endemic to northern Lake Tanganyika in East Africa.",
+      "fr": "Neolamprologus brichardi est un petit cichlidé endémique du nord du lac Tanganyika, en Afrique de l’Est."
+    },
+    "identification": {
+      "en": "FishBase records a maximum total length of 9 centimetres.",
+      "fr": "FishBase indique une longueur totale maximale de 9 centimètres."
+    },
+    "habitat": {
+      "en": "It lives in the northern part of Lake Tanganyika, a large rift lake shared by several East African countries.",
+      "fr": "Elle vit dans la partie nord du lac Tanganyika, un grand lac du Rift partagé entre plusieurs pays d’Afrique de l’Est."
+    },
+    "diet": {
+      "en": "FishBase classifies it as a plankton feeder; detailed species-specific diet measurements were not found in the sources consulted.",
+      "fr": "FishBase la décrit comme planctonophage ; les sources consultées ne fournissent pas de mesures détaillées de son régime alimentaire."
+    },
+    "behavior": {
+      "en": "Breeding pairs jointly defend their territory, and young helpers can take part in brood care and territory defense.",
+      "fr": "Les couples reproducteurs défendent leur territoire ensemble, et de jeunes auxiliaires peuvent participer aux soins de la ponte et à la défense du territoire."
+    },
+    "reproduction": {
+      "en": "It lays eggs in a sheltered breeding site; parents and helpers tend the developing brood.",
+      "fr": "Elle pond dans un abri ; les parents et les auxiliaires prennent soin de la ponte en développement."
+    },
+    "ecology": {
+      "en": "Cooperative breeding is well studied in this fish, making it a notable example of social behavior among cichlids.",
+      "fr": "Sa reproduction coopérative est bien étudiée, ce qui en fait un exemple notable de comportement social chez les cichlidés."
+    },
+    "conservation": {
+      "en": "FishBase reports a 2025 IUCN assessment of Least Concern; the species is also collected for the aquarium trade.",
+      "fr": "FishBase rapporte une évaluation UICN de 2025 classant l’espèce en préoccupation mineure ; elle est également prélevée pour l’aquariophilie."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Neolamprologus brichardi summary — FishBase",
+        "fr": "Fiche Neolamprologus brichardi — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/8652",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives northern Lake Tanganyika as the native range, a maximum length of 9 cm total length, plankton-feeding biology, joint pair territory defense, aquarium use and a Least Concern IUCN status assessed on 2 March 2025."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 36,
+        "total": 128,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mating and Parental Care in Lake Tanganyika’s Cichlids — Peer-reviewed review",
+        "fr": "Accouplement et soins parentaux chez les cichlidés du lac Tanganyika — revue scientifique"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3142683/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The review describes social groups with breeders and helpers, egg and larval care by breeders and helpers, and joint territorial defense in the N. brichardi/N. pulcher study literature."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 28,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Neolamprologus brichardi — B-Aqua French fish database",
+        "fr": "Neolamprologus brichardi — base de données aquariophile B-Aqua"
+      },
+      "url": "https://www.b-aqua.com/pages/fiche.aspx?id=2402",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The French fish profile uses the common name Princesse du Burundi and describes the species as endemic to Lake Tanganyika, occurring through much of its northern half."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 27,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The detailed feeding ecology is less well documented in the references consulted than its cooperative breeding and territorial behavior. Some studies use N. brichardi and N. pulcher in closely related taxonomic contexts; this profile does not assume they are universally interchangeable names."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase and a French fish database against peer-reviewed work on Tanganyika cichlid parental care. Avoided treating the contested brichardi/pulcher usage in older research as an unconditional synonymy."
+}

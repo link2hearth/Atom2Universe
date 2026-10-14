@@ -1,0 +1,187 @@
+{
+  "id": "motacilla_flava",
+  "scientific": "Motacilla flava",
+  "group": "birds",
+  "name": {
+    "en": "Yellow Wagtail",
+    "fr": "Bergeronnette printanière"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Yellow Wagtail is a strongly migratory wagtail of open country; it is smaller and more yellow below than the White Wagtail described in the neighbouring profile.",
+      "fr": "La Bergeronnette printanière est une bergeronnette migratrice des espaces ouverts ; elle est plus petite et plus jaune dessous que la Bergeronnette grise décrite dans la fiche voisine."
+    },
+    "identification": {
+      "en": "Males are generally yellow below and greenish above, but head pattern varies widely among subspecies; females and juveniles are less distinctive.",
+      "fr": "Les mâles sont généralement jaunes dessous et verdâtres dessus, mais le dessin de la tête varie fortement entre sous-espèces ; femelles et jeunes sont moins distinctifs."
+    },
+    "habitat": {
+      "en": "It breeds in wet grassland, pastures and hay meadows, and also uses arable farmland; outside the breeding season it winters in sub-Saharan Africa.",
+      "fr": "Elle niche dans les prairies humides, les pâtures et les prés de fauche, ainsi que dans les terres agricoles ; hors reproduction, elle hiverne en Afrique subsaharienne."
+    },
+    "diet": {
+      "en": "It forages on the ground for insects, often in grassland or near livestock.",
+      "fr": "Elle cherche des insectes au sol, souvent dans les prairies ou à proximité du bétail."
+    },
+    "behavior": {
+      "en": "This is a long-distance migrant, returning to European breeding grounds in spring and moving south to Africa for winter.",
+      "fr": "C’est une migratrice au long cours, qui revient sur ses sites de reproduction européens au printemps et gagne l’Afrique pour hiverner."
+    },
+    "reproduction": {
+      "en": "In the UK account, it nests on the ground and can raise two broods where suitable habitat is available.",
+      "fr": "Dans les données britanniques, elle niche au sol et peut élever deux nichées lorsque l’habitat s’y prête."
+    },
+    "ecology": {
+      "en": "Its yellow underside and smaller size distinguish it from the larger black, white and grey White Wagtail; head pattern within Yellow Wagtails varies with subspecies.",
+      "fr": "Son dessous jaune et sa taille plus petite la distinguent de la Bergeronnette grise, plus grande et grise, noire et blanche ; le motif de la tête varie selon la sous-espèce."
+    },
+    "conservation": {
+      "en": "The RSPB places the UK population on its Red List after serious breeding declines; this regional trend is linked to farmland change and is not a global category.",
+      "fr": "La RSPB place la population britannique sur sa liste rouge après de forts déclins nicheurs ; cette tendance régionale est liée à l’évolution des terres agricoles et ne constitue pas une catégorie mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Motacilla flava — Cahiers d’Habitat Oiseaux, French ministry and MNHN",
+        "fr": "Motacilla flava — Cahiers d’Habitat Oiseaux, ministère français et MNHN"
+      },
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Bergeronnette-printaniere.pdf",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The French national habitat account describes the species as long-tailed and slim, yellow below, with male head pattern differing among subspecies and females paler; it records European breeding subspecies."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 29,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Yellow Wagtail — British Trust for Ornithology",
+        "fr": "Bergeronnette printanière — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/yellow-wagtail",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The BTO account describes strong migration, sub-Saharan wintering and UK breeding in grassy habitats, often near cattle."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 17,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Yellow Wagtail — Royal Society for the Protection of Birds",
+        "fr": "Bergeronnette printanière — Royal Society for the Protection of Birds"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/yellow-wagtail?i=1",
+      "supports": [
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The RSPB reports serious UK breeding declines and Red List status; its farmer advice says it nests on the ground and can produce two broods where suitable habitat exists."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 29,
+        "total": 126,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Motacilla alba — Birds of Europe 3.1, Naturalis Biodiversity Center",
+        "fr": "Motacilla alba — Birds of Europe 3.1, Centre de biodiversité Naturalis"
+      },
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=130829",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The comparative account describes White Wagtail as about 18 cm, larger than Yellow Wagtail, and without yellow plumage."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 18,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Yellow Wagtail — Oiseaux.net",
+        "fr": "Bergeronnette printanière — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux-birds.com/fiche-bergeronnette-printaniere.html",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The species account characterizes the Yellow Wagtail as mainly insectivorous."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 10,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The RSPB conservation category and trends concern the United Kingdom; population trends differ geographically.",
+    "The head pattern described varies among subspecies, and field identification can be difficult for females, juveniles and hybrids."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used French national habitat material and British ornithological sources; explicitly scoped local breeding and conservation details, with reciprocal comparison to Motacilla alba."
+}

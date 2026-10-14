@@ -1,0 +1,144 @@
+{
+  "id": "nannocharax_macropterus",
+  "scientific": "Nannocharax macropterus",
+  "group": "fish",
+  "name": {
+    "en": "Broad-barred citharine",
+    "fr": "Nannocharax macropterus"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small African fish belongs to the family Distichodontidae.",
+      "fr": "Ce petit poisson africain appartient à la famille des Distichodontidae."
+    },
+    "identification": {
+      "en": "A French FAO key separates it from Nannocharax procatopus by its higher lateral-line scale count, 40–42+3–4.",
+      "fr": "Une clé de la FAO en français le distingue de Nannocharax procatopus par un nombre supérieur d’écailles sur la ligne latérale, 40–42+3–4."
+    },
+    "habitat": {
+      "en": "It occurs in the Congo, Okavango and Kafue river systems.",
+      "fr": "Il est présent dans les bassins du Congo, de l’Okavango et du Kafue."
+    },
+    "diet": {
+      "en": "It picks small insects and other invertebrates from riverbank plants.",
+      "fr": "Il prélève de petits insectes et invertébrés sur les plantes des rives."
+    },
+    "behavior": {
+      "en": "It occurs in flowing water among marginal vegetation.",
+      "fr": "Il vit dans les eaux courantes, parmi la végétation riveraine."
+    },
+    "reproduction": {
+      "en": "Species-specific spawning and parental care remain undocumented in the sources consulted.",
+      "fr": "La ponte et les soins parentaux propres à l’espèce ne sont pas documentés dans les sources consultées."
+    },
+    "ecology": {
+      "en": "Some upper Zambezi and Kafue records were reassigned to the relative Nannocharax dageti.",
+      "fr": "Certaines mentions du haut Zambèze et du Kafue ont été réattribuées au proche Nannocharax dageti."
+    },
+    "conservation": {
+      "en": "The IUCN assessment relayed by FishBase is Least Concern, dated 2009.",
+      "fr": "L’évaluation de l’UICN relayée par FishBase indique une préoccupation mineure, en 2009."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nannocharax macropterus — FishBase species summary",
+        "fr": "Nannocharax macropterus — fiche d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Nannocharax-macropterus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase reports African basins, habits, status and misidentified records."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 9,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nannocharax macropterus — ITIS",
+        "fr": "Nannocharax macropterus — ITIS"
+      },
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?print_version=PRT&search_topic=TSN&search_value=641464&source=to_print",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "ITIS lists the species name as valid and verifies its taxonomic identity."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Freshwater fish identification key — FAO",
+        "fr": "Clé d’identification des poissons d’eau douce — FAO"
+      },
+      "url": "https://www.fao.org/4/b1501f/B1501F03.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French-language key distinguishes Nannocharax macropterus by 40–42+3–4 lateral-line scales, versus 38–40+3 in N. procatopus."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 14,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The listed IUCN assessment dates from 2009; species-specific population trends and reproductive observations were not located.",
+    "Some older locality records are misidentifications of Nannocharax dageti and are excluded from the range summary."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept the species account concise because the accessible evidence is limited; checked FishBase biology against ITIS nomenclature and the French FAO identification key."
+}

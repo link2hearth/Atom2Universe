@@ -1,0 +1,30 @@
+{
+  "id": "myrmecophaga_tridactyla",
+  "name": "Giant anteater",
+  "scientific": "Myrmecophaga tridactyla",
+  "group": "mammals",
+  "sections": {
+    "overview": "The giant anteater is the largest living anteater, native to Central and South America.",
+    "identification": "A tubular snout, bushy tail and strong foreclaws distinguish this ground-dwelling species.",
+    "habitat": "It uses forests, wetlands, savannas and other open habitats across its range.",
+    "diet": "It feeds mainly on ants and termites, collected with its long sticky tongue.",
+    "behavior": "It is usually solitary and diurnal, walking on its knuckles to protect its claws.",
+    "reproduction": "After roughly six months, a female usually gives birth to one young that rides on her back.",
+    "ecology": "By eating ants and termites, it influences local insect communities.",
+    "conservation": "The IUCN Anteater, Sloth and Armadillo Specialist Group reports the species as Vulnerable, citing habitat loss and fragmentation, fires and road deaths among its threats."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Myrmecophaga_tridactyla/",
+      "title": "Giant anteater — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://xenarthrans.org/pt/tamanduas/tamandua-bandeira-myrmecophaga-tridactyla/",
+      "title": "Tamanduá-bandeira — IUCN SSC Anteater, Sloth and Armadillo Specialist Group"
+    },
+    {
+      "url": "https://xenarthrans.org/es/datos-sobre-el-hormiguero-gigante-para-ninos/",
+      "title": "Giant anteater — IUCN SSC species facts (Spanish edition)"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "nephele_comma",
+  "name": "Comma nephele hawkmoth",
+  "scientific": "Nephele comma",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Comma Nephele is an African hawkmoth in the family Sphingidae.",
+    "identification": "Its forewing commonly bears a small pale, comma-shaped mark, although the reported form derasa lacks it.",
+    "habitat": "Regional species records place it widely across sub-Saharan Africa and nearby islands.",
+    "diet": "The caterpillars feed on several woody plants, including species of Carissa and Landolphia.",
+    "behavior": "The sources consulted document its appearance and range more clearly than its daily behavior.",
+    "reproduction": "The species accounts consulted do not provide enough verified detail to summarize its breeding cycle.",
+    "ecology": "It belongs to a diverse African genus; no close relative with a completed profile in this catalogue was found for a direct comparison.",
+    "conservation": "The sources reviewed do not establish a global population trend or conservation category for this species."
+  },
+  "sources": [
+    {
+      "url": "https://africanmoths.com/pages/SPHINGIIDAE/MACROGLOSSIDAE/nephele%20comma.htm",
+      "title": "Nephele comma — African Moths"
+    },
+    {
+      "url": "https://www.rwandaflora.com/speciesdata/insect-display.php?insect_species_id=400780",
+      "title": "Nephele comma — Flora of Rwanda"
+    },
+    {
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/1998",
+      "title": "Comma Nephele — Sphingidae Taxonomic Inventory"
+    }
+  ]
+}

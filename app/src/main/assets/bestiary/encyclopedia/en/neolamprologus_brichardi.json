@@ -1,0 +1,30 @@
+{
+  "id": "neolamprologus_brichardi",
+  "name": "Princess cichlid",
+  "scientific": "Neolamprologus brichardi",
+  "group": "fish",
+  "sections": {
+    "overview": "Neolamprologus brichardi is a small cichlid endemic to northern Lake Tanganyika in East Africa.",
+    "identification": "FishBase records a maximum total length of 9 centimetres.",
+    "habitat": "It lives in the northern part of Lake Tanganyika, a large rift lake shared by several East African countries.",
+    "diet": "FishBase classifies it as a plankton feeder; detailed species-specific diet measurements were not found in the sources consulted.",
+    "behavior": "Breeding pairs jointly defend their territory, and young helpers can take part in brood care and territory defense.",
+    "reproduction": "It lays eggs in a sheltered breeding site; parents and helpers tend the developing brood.",
+    "ecology": "Cooperative breeding is well studied in this fish, making it a notable example of social behavior among cichlids.",
+    "conservation": "FishBase reports a 2025 IUCN assessment of Least Concern; the species is also collected for the aquarium trade."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/8652",
+      "title": "Neolamprologus brichardi summary — FishBase"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3142683/",
+      "title": "Mating and Parental Care in Lake Tanganyika’s Cichlids — Peer-reviewed review"
+    },
+    {
+      "url": "https://www.b-aqua.com/pages/fiche.aspx?id=2402",
+      "title": "Neolamprologus brichardi — B-Aqua French fish database"
+    }
+  ]
+}

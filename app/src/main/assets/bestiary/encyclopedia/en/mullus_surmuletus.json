@@ -5,7 +5,7 @@
   "group": "fish",
   "sections": {
     "overview": "The striped red mullet is a goatfish of the north-eastern Atlantic and the Mediterranean. Like all goatfishes it has two barbels under the chin, which it uses to find food in the sediment. It is a warm-temperate species that reaches its northern limit in the North Sea.",
-    "identification": "The body is marked with longitudinal red and brown stripes, and the first dorsal fin has dark markings. The barbels are longer than the pectoral fin and fold into a groove on the throat. In the North Sea it may reach 40 cm and 1 kg; in the Mediterranean males reach about 23 cm and females about 34 cm.",
+    "identification": "The body is marked with longitudinal red and brown stripes, and the first dorsal fin has dark markings. The barbels are longer than the pectoral fin and fold into a groove on the throat. In the North Sea it may reach 40 cm and 1 kg; in the Mediterranean males reach about 23 cm and females about 34 cm. Compared with the red mullet (Mullus barbatus), the striped red mullet has a less steep forehead and two, rather than three, scales below the eye; see the red-mullet profile for the reciprocal comparison.",
     "habitat": "It ranges from western Norway and the English Channel south to Senegal and the Canary Islands, and through the Mediterranean and Black Sea. In the Channel and North Sea it lives at 3–90 m on sandy or muddy bottoms, sometimes on rock; in the western Mediterranean it is found mainly at 10–50 m on rough bottoms.",
     "diet": "It uses its barbels to detect food in soft bottoms and may dig a pit with its mouth to seize prey. Its food is almost entirely bottom-living animals: shrimps, amphipods, polychaete worms, molluscs and small bottom fishes.",
     "behavior": "In the north it is a seasonal visitor: it enters the southern North Sea through the Channel in spring, travels along the continental coast as far as the Skagerrak and Kattegat, and returns to the Channel in autumn. Young fish live at the surface, then move to the coast and take up a bottom-living life.",
@@ -25,6 +25,10 @@
     {
       "url": "https://hrcak.srce.hr/en/152250",
       "title": "Some biological parameters of the striped red mullet from the Bay of Edremit (northern Aegean Sea, Turkey) — Acta Adriatica, 2015"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Mullus-surmuletus-Rouget-barbet-de-roche-500",
+      "title": "Striped red mullet — DORIS / FFESSM"
     }
   ]
 }

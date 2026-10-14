@@ -1,0 +1,144 @@
+{
+  "id": "nephele_comma",
+  "scientific": "Nephele comma",
+  "group": "invertebrates",
+  "name": {
+    "en": "Comma nephele hawkmoth",
+    "fr": "Sphinx néphélé virgule"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Comma Nephele is an African hawkmoth in the family Sphingidae.",
+      "fr": "Le Sphinx néphélé virgule est un sphinx africain de la famille des Sphingidae."
+    },
+    "identification": {
+      "en": "Its forewing commonly bears a small pale, comma-shaped mark, although the reported form derasa lacks it.",
+      "fr": "Son aile antérieure porte souvent une petite marque claire en forme de virgule, mais la forme derasa en est dépourvue."
+    },
+    "habitat": {
+      "en": "Regional species records place it widely across sub-Saharan Africa and nearby islands.",
+      "fr": "Les relevés régionaux situent largement l’espèce en Afrique subsaharienne et dans les îles voisines."
+    },
+    "diet": {
+      "en": "The caterpillars feed on several woody plants, including species of Carissa and Landolphia.",
+      "fr": "Les chenilles consomment plusieurs plantes ligneuses, notamment des espèces de Carissa et de Landolphia."
+    },
+    "behavior": {
+      "en": "The sources consulted document its appearance and range more clearly than its daily behavior.",
+      "fr": "Les sources consultées documentent mieux son apparence et sa répartition que son comportement quotidien."
+    },
+    "reproduction": {
+      "en": "The species accounts consulted do not provide enough verified detail to summarize its breeding cycle.",
+      "fr": "Les fiches consultées ne donnent pas assez de détails vérifiés pour résumer son cycle de reproduction."
+    },
+    "ecology": {
+      "en": "It belongs to a diverse African genus; no close relative with a completed profile in this catalogue was found for a direct comparison.",
+      "fr": "Il appartient à un genre africain diversifié ; aucune fiche achevée d’un proche parent n’a été trouvée dans ce catalogue pour permettre une comparaison directe."
+    },
+    "conservation": {
+      "en": "The sources reviewed do not establish a global population trend or conservation category for this species.",
+      "fr": "Les sources examinées n’établissent ni tendance mondiale de population ni catégorie de conservation pour cette espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nephele comma — African Moths",
+        "fr": "Nephele comma — African Moths"
+      },
+      "url": "https://africanmoths.com/pages/SPHINGIIDAE/MACROGLOSSIDAE/nephele%20comma.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The specialist African moth account places the species across many sub-Saharan countries and lists larval host plants including Carissa spp. and Landolphia spp."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 23,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nephele comma — Flora of Rwanda",
+        "fr": "Nephele comma — Flora of Rwanda"
+      },
+      "url": "https://www.rwandaflora.com/speciesdata/insect-display.php?insect_species_id=400780",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The Rwanda flora account describes a largely green-and-brown hawkmoth with a pale comma mark, notes the markless form derasa, a broad sub-Saharan range and Carissa spinarum as a fo"
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 29,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Comma Nephele — Sphingidae Taxonomic Inventory",
+        "fr": "Sphinx néphélé virgule — inventaire taxonomique des Sphingidae"
+      },
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/1998",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The taxonomic inventory confirms the species entry and family placement"
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 10,
+        "total": 101,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Natural-history and conservation information is sparse in the consulted species accounts; no global status or trend is inferred."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared specialist Afrotropical moth and Rwanda flora accounts; retained only host-plant and range details repeated by regional records."
+}

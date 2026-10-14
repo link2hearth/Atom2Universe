@@ -1,0 +1,142 @@
+{
+  "id": "morpho_rhetenor",
+  "scientific": "Morpho rhetenor",
+  "group": "invertebrates",
+  "name": {
+    "en": "Rhetenor blue morpho",
+    "fr": "Morpho rhéténor"
+  },
+  "sections": {
+    "overview": {
+      "en": "Morpho rhetenor is a Neotropical nymphalid butterfly with records from the Amazon region and Guyana.",
+      "fr": "Morpho rhetenor est un papillon néotropical de la famille des Nymphalidés, signalé dans la région amazonienne et en Guyana."
+    },
+    "identification": {
+      "en": "The male’s brilliant blue upper wings show structural colour, while a museum account of this species’ male records a comparatively subdued underside.",
+      "fr": "Le dessus des ailes du mâle est d’un bleu éclatant produit par une coloration structurelle ; la notice muséale de cette espèce décrit un revers plus terne chez le mâle."
+    },
+    "habitat": {
+      "en": "A 2025 study of Amazonian butterfly activity recorded M. rhetenor most often in the forest canopy at its sampled sites; that result describes those sites, not every population.",
+      "fr": "Une étude de 2025 sur les papillons amazoniens a surtout observé M. rhetenor dans la canopée aux sites étudiés ; ce résultat décrit ces sites, pas toutes les populations."
+    },
+    "diet": {
+      "en": "No species-specific adult food source was confirmed in the references reviewed, so the diet is left open rather than inferred from other blue morphos.",
+      "fr": "Aucune source alimentaire propre aux adultes de cette espèce n’a été confirmée dans les références examinées ; le régime reste donc indéterminé plutôt que déduit de celui d’autres morphos bleus."
+    },
+    "behavior": {
+      "en": "The canopy observations in the Amazonian study indicate where adults were active at those sampled sites, but do not establish a universal flight height.",
+      "fr": "Les observations en canopée de l’étude amazonienne indiquent où les adultes étaient actifs sur les sites étudiés, sans établir une hauteur de vol valable partout."
+    },
+    "reproduction": {
+      "en": "A French entomological account lists the legume Macrolobium bifolium as a larval host plant; the reviewed sources give no reliable clutch or generation count.",
+      "fr": "Un compte rendu entomologique français cite la légumineuse Macrolobium bifolium comme plante-hôte larvaire ; les sources examinées ne donnent ni nombre fiable d’œufs ni nombre de générations."
+    },
+    "ecology": {
+      "en": "The male wing’s blue is structural rather than pigmentary, a light-reflecting surface effect documented for this species by a Japanese museum.",
+      "fr": "Le bleu des ailes du mâle est structurel et non pigmentaire : ce phénomène de réflexion de la lumière est décrit pour cette espèce par un musée japonais."
+    },
+    "conservation": {
+      "en": "The sources found for this draft document specimens and natural history but do not establish a current species-level conservation assessment.",
+      "fr": "Les sources retenues pour cette fiche documentent des spécimens et l’histoire naturelle, mais n’établissent pas d’évaluation actuelle du risque d’extinction à l’échelle de l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Morpho rhetenor observations in the Amazonian canopy — Oikos, 2025",
+        "fr": "Observations de Morpho rhetenor dans la canopée amazonienne — Oikos, 2025"
+      },
+      "url": "https://nsojournals.onlinelibrary.wiley.com/doi/full/10.1002/oik.11567",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The study reports Morpho rhetenor among sampled Amazonian canopy butterflies and records males most frequently in the canopy at the study sites."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 22,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rhetenor Morpho — Mie Prefectural Museum",
+        "fr": "Morpho rhéténor — Musée préfectoral de Mie"
+      },
+      "url": "https://www.bunka.pref.mie.lg.jp/MieMu/82984046671.htm",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The museum’s Morpho rhetenor eusebes specimen is a male; it describes its metallic blue appearance as structural colour produced by wing scales rather than blue pigment and notes a subdued underside."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 31,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Morpho rhetenor — ArchEntoFlor, French entomological natural-history account",
+        "fr": "Morpho rhetenor — ArchEntoFlor, compte rendu entomologique de langue française"
+      },
+      "url": "https://www.archentoflor.com/Papillons_Nymphalidae_Morphinae.html",
+      "supports": [
+        "reproduction",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "The species account lists Macrolobium bifolium as a larval host and contains no clutch or generation count or conservation assessment; it does not establish the adult diet."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 27,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Canopy use is based on one Amazonian field study and should not be generalized to the whole range.",
+    "Larval host information is drawn from a natural-history account; clutch size and generation timing were not verified."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the species-specific museum account with a recent peer-reviewed field study; avoided transferring general “blue morpho” facts to this species."
+}

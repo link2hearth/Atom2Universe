@@ -1,0 +1,30 @@
+{
+  "id": "neopetalia_punctata",
+  "name": "Spotted neopetaliid dragonfly",
+  "scientific": "Neopetalia punctata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Neopetalia punctata is a dragonfly in the distinctive South American family Neopetaliidae.",
+    "identification": "It is the sole living representative of its family; its larva helped clarify that it is not an aeshnoid dragonfly.",
+    "habitat": "Published accounts associate it with temperate streams in Chile and Argentina.",
+    "diet": "The references consulted do not provide a species-specific account of its prey.",
+    "behavior": "Its aquatic larva was described in a taxonomic study, but the sources consulted give little detail on adult behavior.",
+    "reproduction": "The larval stage is known, while detailed observations of egg-laying and development were not found in the references consulted.",
+    "ecology": "This relict lineage is associated with temperate running water in the southern Andes; the extent of its populations is not established by the sources consulted.",
+    "conservation": "No species-level conservation category or population trend was established in the sources consulted."
+  },
+  "sources": [
+    {
+      "url": "https://www.researchgate.net/publication/254243590_Critical_species_of_Odonata_in_the_Neotropics",
+      "title": "Critical Species of Odonata in the Neotropics — International Journal of Odonatology"
+    },
+    {
+      "url": "https://biostor.org/issn/0013-8797/year/reference/56725",
+      "title": "The larva of Neopetalia punctata and establishment of Austropetaliidae — Proceedings of the Entomological Society of Washington"
+    },
+    {
+      "url": "https://doi.org/10.54830/bmnhn.v56.2007.265",
+      "title": "State of knowledge of Chilean Odonata — National Museum of Natural History of Chile"
+    }
+  ]
+}

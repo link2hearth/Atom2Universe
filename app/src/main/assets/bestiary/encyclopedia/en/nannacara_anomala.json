@@ -1,0 +1,34 @@
+{
+  "id": "nannacara_anomala",
+  "name": "Goldeneye cichlid",
+  "scientific": "Nannacara anomala",
+  "group": "fish",
+  "sections": {
+    "overview": "Nannacara anomala is a small Guianan freshwater cichlid known both from coastal river systems in northeastern South America and the aquarium trade.",
+    "identification": "Adult males grow larger and develop brighter colours and longer unpaired fins, while females are smaller and show a dark lateral stripe that becomes a checkerboard pattern when spawning.",
+    "habitat": "It inhabits freshwater rivers of Guyana, Suriname and French Guiana and is often recorded in seasonally flooded coastal savannas.",
+    "diet": "Species summaries report a varied small-prey diet including worms, crustaceans and insects.",
+    "behavior": "In social groups males form a dominance hierarchy, while a breeding female can become strongly territorial around her eggs and fry.",
+    "reproduction": "The female deposits up to about 300 eggs on a cleaned surface and guards both eggs and fry, a form of substrate brood care documented in laboratory studies.",
+    "ecology": "This species belongs to the same genus as Nannacara aureocephalus, whose profile covers a more restricted French Guianan range; N. anomala is recorded across several Guianan river systems.",
+    "conservation": "FishBase relays a global IUCN Least Concern assessment dated 12 March 2023; that category does not establish that every local habitat is unchanged."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=21213",
+      "title": "Nannacara anomala — Eschmeyer's Catalog of Fishes"
+    },
+    {
+      "url": "https://www.scielo.br/j/ni/a/ggLCVLM4Kfk4wtYbLkTfXSp/?lang=en",
+      "title": "Early development and allometric growth in Nannacara anomala — Neotropical Ichthyology"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Nannacara-anomala.html",
+      "title": "Nannacara anomala — FishBase"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Nannacara-aureocephalus.html",
+      "title": "Nannacara aureocephalus — FishBase"
+    }
+  ]
+}

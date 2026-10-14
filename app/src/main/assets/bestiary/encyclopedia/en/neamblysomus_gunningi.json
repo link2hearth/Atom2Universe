@@ -1,0 +1,30 @@
+{
+  "id": "neamblysomus_gunningi",
+  "name": "Gunning’s golden mole",
+  "scientific": "Neamblysomus gunningi",
+  "group": "mammals",
+  "sections": {
+    "overview": "Gunning’s golden mole is a South African member of the golden mole family, Chrysochloridae.",
+    "identification": "It is one of two species in the genus Neamblysomus; published species-specific descriptions are sparse.",
+    "habitat": "The species is known from Limpopo Province in northeastern South Africa, where it inhabits montane forest and grassland.",
+    "diet": "The sources consulted provide too little species-specific evidence to describe its diet reliably.",
+    "behavior": "Like other golden moles, it is adapted to a largely subterranean, burrowing way of life.",
+    "reproduction": "Species-specific reproductive observations were not established in the sources consulted.",
+    "ecology": "Its restricted range links the species to montane habitats in a region where golden moles face increasing habitat degradation.",
+    "conservation": "The Mammal Diversity Database reports an Endangered IUCN assessment from 2024; the limited range makes habitat change a conservation concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000473/",
+      "title": "Neamblysomus gunningi — Mammal Diversity Database"
+    },
+    {
+      "url": "https://afrotheria.net/golden_moles/",
+      "title": "Golden Moles — IUCN/SSC Afrotheria Specialist Group"
+    },
+    {
+      "url": "https://api.pageplace.de/preview/DT0400.9781107299559_A23760665/preview-9781107299559_A23760665.pdf",
+      "title": "The Mammals of the Southern African Subregion — Cambridge University Press"
+    }
+  ]
+}
