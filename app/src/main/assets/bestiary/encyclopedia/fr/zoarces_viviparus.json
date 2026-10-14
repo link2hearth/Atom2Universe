@@ -1,0 +1,30 @@
+{
+  "id": "zoarces_viviparus",
+  "name": "Blennie vivipare",
+  "scientific": "Zoarces viviparus",
+  "group": "fish",
+  "sections": {
+    "overview": "La Blennie vivipare est un poisson côtier des mers du nord de l’Europe, y compris des eaux saumâtres.",
+    "identification": "Son corps est long et anguilliforme, avec des nageoires dorsale, caudale et anale réunies ; ses os peuvent être verts.",
+    "habitat": "Il vit près du fond dans les eaux côtières peu profondes, surtout parmi les herbiers de zostères ou d’autres végétaux.",
+    "diet": "Il mange de petits animaux du fond, notamment des amphipodes, des mollusques, des escargots et de petits crustacés.",
+    "behavior": "Il est généralement farouche, surtout en eau peu profonde.",
+    "reproduction": "Après une fécondation interne, les femelles mettent bas des petits vivants en hiver au lieu de pondre.",
+    "ecology": "Sa fidélité à un même secteur et sa sensibilité à la pollution en font un indicateur utile des contaminants côtiers.",
+    "conservation": "Fiskepleje signale un fort recul dans les eaux danoises ; il s’agit d’une observation régionale, pas d’un statut mondial."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Zoarces-viviparus.html",
+      "title": "Blennie vivipare — FishBase"
+    },
+    {
+      "url": "https://www.fiskepleje.dk/da/fiskebiologi/aalekvabbe",
+      "title": "Ålekvabbe — Fiskepleje.dk (site danois de gestion des pêches)"
+    },
+    {
+      "url": "https://www.naturbasen.dk/art/3121/aalekvabbe",
+      "title": "Ålekvabbe — Naturbasen (base naturaliste danoise)"
+    }
+  ]
+}

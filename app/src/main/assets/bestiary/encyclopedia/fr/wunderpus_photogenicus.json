@@ -1,0 +1,30 @@
+{
+  "id": "wunderpus_photogenicus",
+  "name": "Poulpe Wunderpus",
+  "scientific": "Wunderpus photogenicus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Un poulpe aux longs bras des eaux peu profondes indo-malaises.",
+    "identification": "De petits yeux pédonculés et des barres blanches fixes marquent son corps rougeâtre.",
+    "habitat": "Il vit sur des sédiments meubles peu profonds.",
+    "diet": "Il piège crustacés et poissons enfouis sous ses bras et sa membrane.",
+    "behavior": "Il cherche sa nourriture à l’aube et au crépuscule, sondant les trous de ses bras.",
+    "reproduction": "La description citée ne donne pas de détail reproductif.",
+    "ecology": "Ses motifs s’intensifient lorsqu’il est dérangé ; un rôle d’avertissement reste une hypothèse. Il est proche du poulpe mimétique, Thaumoctopus mimicus ; voir sa fiche.",
+    "conservation": "Il est recherché pour la photographie et les aquariums ; les tendances sauvages ne sont pas évaluées."
+  },
+  "sources": [
+    {
+      "url": "https://www.mapress.com/mrs/article/view/mr.26.3.5",
+      "title": "Molluscan Research — description originale de Wunderpus photogenicus"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2579581/",
+      "title": "PLOS ONE — étude d’identification photographique de Wunderpus photogenicus"
+    },
+    {
+      "url": "https://birdsheadseascape.com/download/research/j.1095-8312.2010.01484.x.pdf",
+      "title": "Biological Journal of the Linnean Society — phylogénie et mimétisme des poulpes"
+    }
+  ]
+}

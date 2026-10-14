@@ -1,0 +1,30 @@
+{
+  "id": "urania_leilus",
+  "name": "Green-banded urania",
+  "scientific": "Urania leilus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Urania leilus is a brightly marked day-flying moth in the family Uraniidae, native to tropical South America.",
+    "identification": "Its black wings bear iridescent green bands, the feature reflected in its English common name.",
+    "habitat": "Its main range is in tropical South America east of the Andes, with records from the Amazon basin and farther south.",
+    "diet": "Larvae of Urania moths use Omphalea plants as food; species-specific host records are not complete in the sources consulted.",
+    "behavior": "Urania moths undertake periodic long-distance migrations, although the timing and routes of this species are not fully described here.",
+    "reproduction": "Research on Urania treats reproductive behavior together with the moths’ Omphalea host plants, but the summaries consulted do not detail this species’ egg-laying.",
+    "ecology": "Smithsonian researchers link Urania migration to changing host-plant suitability: repeated larval feeding can increase defensive alkaloids in Omphalea.",
+    "conservation": "The sources consulted focus on distribution and host-plant ecology and do not provide a conservation category for U. leilus."
+  },
+  "sources": [
+    {
+      "url": "https://www.lillo.org.ar/journals/index.php/acta-zoologica-lilloana/article/view/2225",
+      "title": "Acta Zoológica Lilloana — Confirmed records of Urania leilus in Catamarca"
+    },
+    {
+      "url": "https://stri.si.edu/evolution-and-ecology-migratory-behavior-urania-moths",
+      "title": "Smithsonian Tropical Research Institute — Migration of Urania moths"
+    },
+    {
+      "url": "https://academic.oup.com/book/51140/chapter-abstract/421973369",
+      "title": "Oxford Academic — Reproductive behaviour and ecology of Urania moths"
+    }
+  ]
+}

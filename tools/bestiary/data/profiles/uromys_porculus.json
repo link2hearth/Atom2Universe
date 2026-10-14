@@ -1,0 +1,141 @@
+{
+  "id": "uromys_porculus",
+  "scientific": "Uromys porculus",
+  "group": "mammals",
+  "name": {
+    "en": "Guadalcanal giant rat",
+    "fr": "Rat géant de Guadalcanal"
+  },
+  "sections": {
+    "overview": {
+      "en": "Uromys porculus is a rodent known from Guadalcanal in the Solomon Islands.",
+      "fr": "Uromys porculus est un rongeur connu de Guadalcanal, dans les îles Salomon."
+    },
+    "identification": {
+      "en": "The scarce remains include a narrow, elongated skull; the short tail may indicate a ground-dwelling animal.",
+      "fr": "Les rares restes comprennent un crâne étroit et allongé ; la queue courte pourrait indiquer une espèce terrestre."
+    },
+    "habitat": {
+      "en": "Lowland tropical forest is considered a possible habitat, but this has not been confirmed.",
+      "fr": "La forêt tropicale de basse altitude est proposée comme habitat possible, sans confirmation."
+    },
+    "diet": {
+      "en": "No reliable species-specific diet is documented in the sources consulted.",
+      "fr": "Les sources consultées ne documentent pas de régime alimentaire fiable propre à l’espèce."
+    },
+    "behavior": {
+      "en": "The species has not been confirmed in the wild since the late nineteenth-century collections.",
+      "fr": "L’espèce n’a pas été confirmée dans la nature depuis les collectes de la fin du XIXe siècle."
+    },
+    "reproduction": {
+      "en": "The available historical specimens do not provide a documented account of reproduction.",
+      "fr": "Les spécimens historiques disponibles ne renseignent pas sa reproduction."
+    },
+    "ecology": {
+      "en": "The taxonomic revision notes its morphological similarity to Uromys imperator, another little-known Guadalcanal rat; see that profile.",
+      "fr": "La révision taxonomique note sa ressemblance morphologique avec Uromys imperator, un autre rat de Guadalcanal mal connu ; voir sa fiche."
+    },
+    "conservation": {
+      "en": "Mammal Diversity Database lists it as Critically Endangered; it may already be extinct.",
+      "fr": "La Mammal Diversity Database la classe en danger critique ; l’espèce pourrait déjà être éteinte."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mammal Diversity Database — Uromys porculus",
+        "fr": "Mammal Diversity Database — Uromys porculus"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1003321/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Lists the Solomon Islands distribution and Critically Endangered category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 9,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Re:wild — Guadalcanal Rat",
+        "fr": "Re:wild — Guadalcanal Rat"
+      },
+      "url": "https://www.rewild.org/lost-species/small-mammals",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Reports last records in 1886–1888, an unconfirmed later sighting, and a possible lowland-forest habitat."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 14,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Australian Museum — revision of Uromys",
+        "fr": "Australian Museum — révision du genre Uromys"
+      },
+      "url": "https://journals.australian.museum/media/Uploads/Journals/17810/12_complete.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The revision describes the limited skull material and morphological similarity to other Guadalcanal Uromys."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 14,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Known biology is extremely limited; a single unconfirmed sighting does not establish that the species survives."
+  ],
+  "review_note": "Bilingual draft only; concise statements preserve the limits and regional scope of the cited evidence.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

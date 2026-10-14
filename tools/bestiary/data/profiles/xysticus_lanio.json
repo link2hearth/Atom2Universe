@@ -1,0 +1,119 @@
+{
+  "id": "xysticus_lanio",
+  "scientific": "Xysticus lanio",
+  "group": "invertebrates",
+  "name": {
+    "en": "Reddish crab spider",
+    "fr": "Araignée-crabe roussâtre"
+  },
+  "sections": {
+    "overview": {
+      "en": "Xysticus lanio is a crab spider recorded across Europe and parts of western and central Asia.",
+      "fr": "Xysticus lanio est une araignée-crabe présente en Europe et dans certaines régions d’Asie occidentale et centrale."
+    },
+    "identification": {
+      "en": "Females are pale brown with dark markings; males are darker and reddish, with a patterned abdomen.",
+      "fr": "Les femelles sont brun clair avec des marques sombres ; les mâles sont plus foncés et rougeâtres, avec un abdomen dessiné."
+    },
+    "habitat": {
+      "en": "It is associated mainly with deciduous and mixed woodland, especially oak woods and their edges.",
+      "fr": "Elle est surtout associée aux forêts de feuillus ou mixtes, notamment les chênaies et leurs lisières."
+    },
+    "diet": {
+      "en": "It waits for insects and sometimes smaller spiders, then seizes them with its front legs.",
+      "fr": "Elle attend les insectes et parfois de plus petites araignées, puis les saisit avec ses pattes avant."
+    },
+    "behavior": {
+      "en": "This ambush hunter commonly sits on low branches, shrubs or leaves rather than hunting on the ground.",
+      "fr": "Ce chasseur à l’affût se tient souvent sur des branches basses, des arbustes ou des feuilles plutôt que de chasser au sol."
+    },
+    "reproduction": {
+      "en": "The female guards an egg sac in summer; the young spiders overwinter.",
+      "fr": "La femelle garde un cocon d’œufs en été ; les jeunes araignées passent l’hiver."
+    },
+    "ecology": {
+      "en": "Adults are reported mainly from spring to midsummer in the central-European account.",
+      "fr": "Le profil d’Europe centrale signale surtout des adultes du printemps au milieu de l’été."
+    },
+    "conservation": {
+      "en": "The World Spider Catalog recognizes Xysticus lanio as an accepted species.",
+      "fr": "Le World Spider Catalog reconnaît Xysticus lanio comme espèce acceptée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "World Spider Catalog — Xysticus lanio",
+        "fr": "World Spider Catalog — Xysticus lanio"
+      },
+      "url": "https://wsc.nmbe.ch/spec-data/49086/Xysticus_lanio",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Recognizes the species and documents its broad distribution."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 8,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Natur in NRW — Rötliche Buschkrabbenspinne",
+        "fr": "Natur in NRW — Rötliche Buschkrabbenspinne"
+      },
+      "url": "https://www.natur-in-nrw.de/HTML/Tiere/Spinnen/TSP-613.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "German profile covers appearance, woodland habitat, hunting and reproduction."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 191,
+        "notes_words": 9,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Habitat, season and detailed appearance in the cited field profile refer mainly to central Europe."
+  ],
+  "review_note": "Bilingual draft only; concise statements preserve the limits and regional scope of the cited evidence.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

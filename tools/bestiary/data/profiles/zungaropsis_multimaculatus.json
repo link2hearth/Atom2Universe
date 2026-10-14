@@ -1,0 +1,119 @@
+{
+  "id": "zungaropsis_multimaculatus",
+  "scientific": "Zungaropsis multimaculatus",
+  "group": "fish",
+  "name": {
+    "en": "Many-spotted Zungaropsis",
+    "fr": "Zungaropsis multimaculatus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Zungaropsis multimaculatus is a little-documented tropical freshwater catfish known from Brazil’s Xingu River.",
+      "fr": "Zungaropsis multimaculatus est un poisson-chat tropical d’eau douce peu documenté, connu du fleuve Xingu au Brésil."
+    },
+    "identification": {
+      "en": "Species-specific diagnostic details are sparse in the summaries consulted.",
+      "fr": "Les résumés consultés donnent peu de détails diagnostiques propres à l’espèce."
+    },
+    "habitat": {
+      "en": "FishBase classifies it as a tropical freshwater, bottom-associated fish.",
+      "fr": "FishBase le classe comme un poisson tropical d’eau douce associé au fond."
+    },
+    "diet": {
+      "en": "The species summary consulted does not report a specific diet.",
+      "fr": "Le résumé consulté ne rapporte pas de régime alimentaire spécifique."
+    },
+    "behavior": {
+      "en": "The available species account provides little information on its behaviour.",
+      "fr": "La fiche d’espèce disponible apporte peu d’informations sur son comportement."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not describe its reproductive biology.",
+      "fr": "Les sources consultées ne décrivent pas sa biologie reproductive."
+    },
+    "ecology": {
+      "en": "The only reported locality in FishBase is the Xingu River in South America.",
+      "fr": "La seule localité signalée dans FishBase est le fleuve Xingu, en Amérique du Sud."
+    },
+    "conservation": {
+      "en": "FishBase indicates that the species has not been evaluated for the IUCN Red List.",
+      "fr": "FishBase indique que l’espèce n’a pas été évaluée pour la Liste rouge de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Zungaropsis multimaculatus — FishBase",
+        "fr": "Zungaropsis multimaculatus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/63635",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives Xingu River distribution, freshwater demersal ecology and no IUCN assessment; its species account lacks detailed life-history entries."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 19,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Checklist of catfishes and siluriform primary types — Zootaxa",
+        "fr": "Catalogue des poissons-chats et types primaires des Siluriformes — Zootaxa"
+      },
+      "url": "https://mapress.com/zootaxa/2007f/zt01418p628.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The taxonomic checklist records Zungaropsis multimaculatus and gives the Xingu River as its type locality."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 15,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific biology is poorly documented in the consulted major summary; no diet, reproduction or assessment data are supplied there."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; avoid inferring biology from other pimelodid catfishes."
+}

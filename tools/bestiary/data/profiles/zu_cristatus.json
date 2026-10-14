@@ -1,0 +1,119 @@
+{
+  "id": "zu_cristatus",
+  "scientific": "Zu cristatus",
+  "group": "fish",
+  "name": {
+    "en": "Scalloped ribbonfish",
+    "fr": "Poisson-ruban festonné"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Scalloped Ribbonfish is a rarely encountered ribbon-shaped fish recorded in tropical and temperate oceans worldwide.",
+      "fr": "Le Poisson-ruban festonné est un poisson rubané rarement observé, signalé dans les océans tropicaux et tempérés du monde entier."
+    },
+    "identification": {
+      "en": "Adults have a slender ribbon-like body, reddish dorsal fin and black tail; juveniles are silvery with dark blotches and a scalloped belly edge.",
+      "fr": "Les adultes ont un corps fin en ruban, une nageoire dorsale rougeâtre et une queue noire ; les juvéniles sont argentés, tachés de sombre et ont le ventre festonné."
+    },
+    "habitat": {
+      "en": "It is an open-water fish; adults have been reported swimming vertically, head uppermost.",
+      "fr": "C’est un poisson du large ; des adultes auraient été observés nageant verticalement, la tête vers le haut."
+    },
+    "diet": {
+      "en": "Reported foods for ribbonfishes include fishes, squid and crustaceans.",
+      "fr": "Les aliments rapportés pour les poissons-rubans comprennent des poissons, des calmars et des crustacés."
+    },
+    "behavior": {
+      "en": "Young fish shelter under jellyfish, while adults are oceanic.",
+      "fr": "Les jeunes s’abritent sous des méduses, tandis que les adultes sont océaniques."
+    },
+    "reproduction": {
+      "en": "It is oviparous, with planktonic eggs and larvae.",
+      "fr": "Il est ovipare, avec des œufs et des larves planctoniques."
+    },
+    "ecology": {
+      "en": "It belongs to Trachipteridae, a family of ribbonfishes in which the jaws can protrude markedly during feeding.",
+      "fr": "Il appartient aux Trachipteridae, une famille de poissons-rubans dont les mâchoires peuvent fortement se projeter pendant l’alimentation."
+    },
+    "conservation": {
+      "en": "FishBase reports a global Least Concern assessment from 2013.",
+      "fr": "FishBase rapporte une évaluation mondiale de préoccupation mineure datant de 2013."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Scalloped Ribbonfish — Australian Museum",
+        "fr": "Poisson-ruban festonné — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/fishes/scalloped-ribbonfish-zu-cristatus-bonelli-1820/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Museum account: distribution, appearance, habitat, diet and family traits."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 9,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Zu cristatus — FishBase",
+        "fr": "Zu cristatus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Zu-cristatus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports juvenile association with jellyfish, oviparity and global Least Concern status."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 12,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Some diet and movement notes in the museum account apply to ribbonfishes generally; breeding information remains sparse."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; general family-level diet claims are explicitly identified as such."
+}

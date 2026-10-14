@@ -1,0 +1,26 @@
+{
+  "id": "zosterops_griseovirescens",
+  "name": "Zostérops d’Annobon",
+  "scientific": "Zosterops griseovirescens",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Zostérops d’Annobon est un petit passereau endémique d’Annobón, une île de Guinée équatoriale.",
+    "identification": "Il mesure environ 12 cm, est vert olive dessus, pâle dessous et porte un fin cercle blanc autour de l’œil.",
+    "habitat": "Il fréquente les forêts primaires et secondaires, les plantations et même les petits arbres et buissons des zones cultivées.",
+    "diet": "Il prélève des invertébrés à la surface des feuilles et d’autres végétaux.",
+    "behavior": "Il recherche sa nourriture en petits groupes, généralement de deux à dix oiseaux.",
+    "reproduction": "Les sources consultées indiquent une ponte de deux œufs, mais donnent peu d’autres détails sur le nid.",
+    "ecology": "L’espèce est sédentaire et son aire insulaire est très restreinte.",
+    "conservation": "L’évaluation mondiale de 2021 la classe en préoccupation mineure et indique une tendance stable."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-1.RLTS.T22713989A209532761.en",
+      "title": "Zostérops d’Annobon — évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/zosterops.d.annobon.html",
+      "title": "Zostérops d’Annobon — Oiseaux.net"
+    }
+  ]
+}

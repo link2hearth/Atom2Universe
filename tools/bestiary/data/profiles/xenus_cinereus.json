@@ -1,0 +1,141 @@
+{
+  "id": "xenus_cinereus",
+  "scientific": "Xenus cinereus",
+  "group": "birds",
+  "name": {
+    "en": "Terek sandpiper",
+    "fr": "Chevalier bargette"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Terek sandpiper is a migratory shorebird that breeds in Eurasia and winters farther south.",
+      "fr": "Le chevalier bargette est un limicole migrateur qui niche en Eurasie et hiverne plus au sud."
+    },
+    "identification": {
+      "en": "Its long, slightly upturned bill and short orange-yellow legs are distinctive.",
+      "fr": "Son long bec légèrement retroussé et ses pattes courtes jaune orangé sont caractéristiques."
+    },
+    "habitat": {
+      "en": "Outside the breeding season it uses coastal mudflats, estuaries, beaches and mangroves.",
+      "fr": "Hors de la période de reproduction, il fréquente vasières côtières, estuaires, plages et mangroves."
+    },
+    "diet": {
+      "en": "It pecks or probes in wet mud for insects, small molluscs and crustaceans.",
+      "fr": "Il picore ou sonde la vase humide à la recherche d’insectes, de petits mollusques et de crustacés."
+    },
+    "behavior": {
+      "en": "It migrates over long distances and may gather at high-tide roosts with other waders.",
+      "fr": "Il effectue de longues migrations et peut se regrouper avec d’autres limicoles dans des reposoirs de marée haute."
+    },
+    "reproduction": {
+      "en": "It nests in a shallow ground scrape in northern forest valleys or tundra; breeding occurs in spring and early summer.",
+      "fr": "Il niche dans une simple dépression au sol, dans les vallées forestières du nord ou la toundra ; la reproduction a lieu au printemps et au début de l’été."
+    },
+    "ecology": {
+      "en": "The Singapore account records it as a passage migrant and winter visitor.",
+      "fr": "La fiche de Singapour le signale comme migrateur de passage et visiteur hivernal."
+    },
+    "conservation": {
+      "en": "The 2016 IUCN assessment lists it as Least Concern; loss and change of wetlands are noted pressures.",
+      "fr": "L’évaluation UICN de 2016 le classe en préoccupation mineure ; la perte et la transformation des zones humides sont des pressions signalées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Australian Museum — Terek Sandpiper",
+        "fr": "Australian Museum — chevalier bargette"
+      },
+      "url": "https://australian.museum/learn/animals/birds/terek-sandpiper/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Australian Museum account summarizes range, bill, legs and breeding."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 9,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List — Xenus cinereus",
+        "fr": "Liste rouge UICN — Xenus cinereus"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22693251A155505422.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN account describes coastal habitat, feeding, migration and wetland pressures."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 10,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "National Parks Board Singapore — Xenus cinereus",
+        "fr": "Office des parcs nationaux de Singapour — Xenus cinereus"
+      },
+      "url": "https://www.nparks.gov.sg/florafaunaweb/fauna/3/2/322",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Singapore record identifies the bird as a winter visitor and passage migrant."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 12,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Migration timing and winter range differ among populations and routes."
+  ],
+  "review_note": "Bilingual draft only; concise statements preserve the limits and regional scope of the cited evidence.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

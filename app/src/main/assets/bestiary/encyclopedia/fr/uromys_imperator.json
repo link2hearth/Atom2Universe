@@ -1,0 +1,30 @@
+{
+  "id": "uromys_imperator",
+  "name": "Uromys empereur",
+  "scientific": "Uromys imperator",
+  "group": "mammals",
+  "sections": {
+    "overview": "Uromys imperator est un grand rongeur muridé endémique de Guadalcanal, dans les îles Salomon.",
+    "identification": "Les descriptions historiques signalent un pelage gris foncé et laineux, plus clair dessous, ainsi que des oreilles très courtes.",
+    "habitat": "Les spécimens historiques confirmés proviennent d’Aola, au nord de Guadalcanal ; l’utilisation plus large de son habitat reste incertaine.",
+    "diet": "Aucun régime alimentaire fiable propre à l’espèce n’a été documenté.",
+    "behavior": "Les rares spécimens historiques apportent peu d’informations directes sur son comportement.",
+    "reproduction": "Les sources consultées ne décrivent pas sa biologie reproductive.",
+    "ecology": "La révision ne documente que quelques spécimens historiques ; Uromys porculus, une espèce apparentée, n’est également connue que par de rares données, comme l’explique sa fiche.",
+    "conservation": "L’UICN le classe en danger critique, possiblement éteint ; des témoignages locaux non confirmés ne constituent pas une redécouverte vérifiée."
+  },
+  "sources": [
+    {
+      "url": "https://journals.australian.museum/media/Uploads/Journals/17810/12_complete.pdf",
+      "title": "Australian Museum — révision du genre Uromys"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003319/",
+      "title": "Mammal Diversity Database — Uromys imperator"
+    },
+    {
+      "url": "https://cmsdocs.s3.amazonaws.com/summarystats/2016-1_Summary_Stats_Page_Documents/2016_1_RL_Stats_Table_9.pdf",
+      "title": "UICN — résumé des espèces possiblement éteintes"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "zosterops_griseovirescens",
+  "name": "Annobon White-eye",
+  "scientific": "Zosterops griseovirescens",
+  "group": "birds",
+  "sections": {
+    "overview": "The Annobon White-eye is a small passerine endemic to Annobón, an island of Equatorial Guinea.",
+    "identification": "It is about 12 cm long, olive-green above, pale below and marked by a narrow white eye-ring.",
+    "habitat": "It uses primary and secondary woodland, plantations, and even small trees and shrubs in cultivated areas.",
+    "diet": "It gleans invertebrates from the surfaces of leaves and other vegetation.",
+    "behavior": "It forages in small parties, typically numbering two to ten birds.",
+    "reproduction": "The sources consulted report a clutch of two eggs but provide little further nesting detail.",
+    "ecology": "The species is resident and has a very small island range.",
+    "conservation": "The 2021 global assessment lists it as Least Concern with a stable population trend."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-1.RLTS.T22713989A209532761.en",
+      "title": "Annobon White-eye — IUCN Red List assessment"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/zosterops.d.annobon.html",
+      "title": "Zostérops d’Annobon — Oiseaux.net"
+    }
+  ]
+}

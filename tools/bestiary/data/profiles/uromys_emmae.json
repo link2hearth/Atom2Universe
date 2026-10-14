@@ -1,0 +1,120 @@
+{
+  "id": "uromys_emmae",
+  "scientific": "Uromys emmae",
+  "group": "mammals",
+  "name": {
+    "en": "Emma's giant rat",
+    "fr": "Rat géant d'Emma"
+  },
+  "sections": {
+    "overview": {
+      "en": "Uromys emmae is a giant rat in the family Muridae, known from Owi Island in Papua Province, Indonesia.",
+      "fr": "Uromys emmae est un rat géant de la famille des Muridae, connu de l’île d’Owi, dans la province de Papouasie en Indonésie."
+    },
+    "identification": {
+      "en": "Its formal description rests on one museum specimen, so field identification has not been documented.",
+      "fr": "Sa description scientifique repose sur un seul spécimen de musée ; son identification sur le terrain n’est donc pas documentée."
+    },
+    "habitat": {
+      "en": "The IUCN account presumes tropical moist forest, while noting that the species’ natural history is unknown.",
+      "fr": "La fiche de l’UICN suppose qu’il vit en forêt tropicale humide, tout en précisant que son histoire naturelle demeure inconnue."
+    },
+    "diet": {
+      "en": "No diet has been recorded for this species.",
+      "fr": "Aucun régime alimentaire n’a été documenté pour cette espèce."
+    },
+    "behavior": {
+      "en": "Its behavior is unknown because no natural-history observations are available in the assessment.",
+      "fr": "Son comportement est inconnu, car l’évaluation ne dispose pas d’observations d’histoire naturelle."
+    },
+    "reproduction": {
+      "en": "No reproductive biology has been recorded.",
+      "fr": "Aucune donnée sur sa reproduction n’a été publiée."
+    },
+    "ecology": {
+      "en": "The Australian Museum review records one holotype from Owi Island and notes no later report of the species.",
+      "fr": "La révision de l’Australian Museum mentionne un seul holotype de l’île d’Owi et aucune observation ultérieure de l’espèce."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists it as Critically Endangered, Possibly Extinct, citing its tiny range, continuing habitat decline and failed searches.",
+      "fr": "L’évaluation de l’UICN le classe en danger critique, possiblement éteint, en raison de son aire minuscule, du déclin continu de son habitat et de recherches infructueuses."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "IUCN Red List — Uromys emmae",
+        "fr": "Liste rouge de l’UICN — Uromys emmae"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-2.RLTS.T136470A22447368.en",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The 2016 global assessment presumes moist forest, records no natural history, and lists Critically Endangered (Possibly Extinct)."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 17,
+        "total": 155,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Australian Museum — Revision of the genus Uromys",
+        "fr": "Australian Museum — révision du genre Uromys"
+      },
+      "url": "https://journals.australian.museum/groves-and-flannery-1994-rec-aust-mus-462-145169/",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The taxonomic revision describes the species from one specimen and notes no later report."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 14,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The IUCN assessment dates from 2016; “Possibly Extinct” is a qualifier within Critically Endangered, not confirmed extinction.",
+    "The assessment explicitly states that natural history is unrecorded; unknown diet and reproduction should not be interpreted as proof of absence."
+  ],
+  "review_note": "This species is exceptionally poorly known: the account distinguishes the single-specimen record from the IUCN assessment’s presumed habitat and possible-extinction qualifier.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

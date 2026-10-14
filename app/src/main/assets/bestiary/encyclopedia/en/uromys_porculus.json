@@ -1,0 +1,30 @@
+{
+  "id": "uromys_porculus",
+  "name": "Guadalcanal giant rat",
+  "scientific": "Uromys porculus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Uromys porculus is a rodent known from Guadalcanal in the Solomon Islands.",
+    "identification": "The scarce remains include a narrow, elongated skull; the short tail may indicate a ground-dwelling animal.",
+    "habitat": "Lowland tropical forest is considered a possible habitat, but this has not been confirmed.",
+    "diet": "No reliable species-specific diet is documented in the sources consulted.",
+    "behavior": "The species has not been confirmed in the wild since the late nineteenth-century collections.",
+    "reproduction": "The available historical specimens do not provide a documented account of reproduction.",
+    "ecology": "The taxonomic revision notes its morphological similarity to Uromys imperator, another little-known Guadalcanal rat; see that profile.",
+    "conservation": "Mammal Diversity Database lists it as Critically Endangered; it may already be extinct."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003321/",
+      "title": "Mammal Diversity Database — Uromys porculus"
+    },
+    {
+      "url": "https://www.rewild.org/lost-species/small-mammals",
+      "title": "Re:wild — Guadalcanal Rat"
+    },
+    {
+      "url": "https://journals.australian.museum/media/Uploads/Journals/17810/12_complete.pdf",
+      "title": "Australian Museum — revision of Uromys"
+    }
+  ]
+}

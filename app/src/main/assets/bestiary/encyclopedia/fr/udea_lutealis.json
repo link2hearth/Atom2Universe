@@ -1,0 +1,26 @@
+{
+  "id": "udea_lutealis",
+  "name": "Pyrale paille",
+  "scientific": "Udea lutealis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Udea lutealis est un papillon de nuit de la famille des Crambidae, répandu en Europe et commun en Grande-Bretagne.",
+    "identification": "L’adulte a les ailes antérieures crème pâle, marquées de lignes transversales sombres et de motifs délimités.",
+    "habitat": "On le rencontre dans des milieux ouverts ou semi-ouverts variés, notamment les prairies, lisières de champs et bordures forestières.",
+    "diet": "Les chenilles consomment de nombreuses plantes herbacées, dont la ronce, le plantain, les chardons et l’oseille.",
+    "behavior": "Les adultes volent la nuit, surtout au cœur de l’été.",
+    "reproduction": "Les chenilles sont signalées au printemps ; les sources consultées ne donnent ni nombre fiable d’œufs ni description détaillée de l’accouplement.",
+    "ecology": "Les larves peuvent s’abriter dans une toile légère sous une feuille et enrouler les feuilles étroites en tube.",
+    "conservation": "L’espèce est décrite comme très commune en Grande-Bretagne, mais cette indication régionale ne constitue pas une évaluation mondiale de son état de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/udea-lutealis/",
+      "title": "UKMoths — Udea lutealis"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Udea_lutealis",
+      "title": "LepiWiki — Udea lutealis"
+    }
+  ]
+}

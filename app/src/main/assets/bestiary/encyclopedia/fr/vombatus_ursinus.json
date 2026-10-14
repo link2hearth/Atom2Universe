@@ -1,0 +1,26 @@
+{
+  "id": "vombatus_ursinus",
+  "name": "Wombat à nez nu",
+  "scientific": "Vombatus ursinus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le wombat à nez nu est un marsupial fouisseur originaire du sud-est de l’Australie et de Tasmanie.",
+    "identification": "Son large nez dépourvu de poils et son pelage rude le distinguent des wombats à nez poilu du genre Lasiorhinus.",
+    "habitat": "Il fréquente forêts, boisements, landes et prairies ; il s’abrite dans des terriers creusés dans un sol bien drainé.",
+    "diet": "Il broute surtout des graminées indigènes, des carex et certaines racines.",
+    "behavior": "Il reste dans son terrier le jour et peut le partager avec d’autres wombats.",
+    "reproduction": "La femelle donne généralement naissance à un petit, qui reste environ sept à dix mois dans sa poche tournée vers l’arrière.",
+    "ecology": "Ses terriers étendus lui servent d’abri et jouent un rôle important dans son mode de vie.",
+    "conservation": "L’espèce est classée en préoccupation mineure à l’échelle mondiale, mais la gale et les collisions routières affectent certaines populations."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/mammals/bare-nosed-wombat/",
+      "title": "Australian Museum — Bare-nosed Wombat"
+    },
+    {
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/native-animals/native-animal-facts/land-mammals/wombats",
+      "title": "Gouvernement de Nouvelle-Galles du Sud — Wombats"
+    }
+  ]
+}

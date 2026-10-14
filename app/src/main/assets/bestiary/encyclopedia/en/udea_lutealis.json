@@ -1,0 +1,26 @@
+{
+  "id": "udea_lutealis",
+  "name": "Pale straw pearl",
+  "scientific": "Udea lutealis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Udea lutealis is a crambid moth recorded widely in Europe and common in Britain.",
+    "identification": "The adult has pale cream forewings with darker cross-lines and outlined markings.",
+    "habitat": "It occurs in varied open and semi-open settings, including meadows, field edges and woodland margins.",
+    "diet": "The caterpillars feed on many herbaceous plants, including bramble, plantain, thistles and sorrel.",
+    "behavior": "Adults fly at night, chiefly in midsummer.",
+    "reproduction": "The caterpillars are reported in spring; the consulted accounts do not give a reliable egg count or detailed mating description.",
+    "ecology": "Larvae may shelter in a light web beneath a leaf, and may roll narrow leaves into a tube.",
+    "conservation": "It is described as very common in Britain, but that regional description is not a global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/udea-lutealis/",
+      "title": "UKMoths — Udea lutealis"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Udea_lutealis",
+      "title": "LepiWiki — Udea lutealis"
+    }
+  ]
+}

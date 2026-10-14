@@ -1,0 +1,30 @@
+{
+  "id": "wunderpus_photogenicus",
+  "name": "Wunderpus octopus",
+  "scientific": "Wunderpus photogenicus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "A long-armed octopus of Indo-Malayan shallows.",
+    "identification": "Small stalked eyes and fixed white bars mark its reddish body.",
+    "habitat": "It lives on shallow soft sediments.",
+    "diet": "It traps buried crustaceans and fish beneath its arms and web.",
+    "behavior": "It forages at dawn and dusk, probing holes with its arms.",
+    "reproduction": "The cited description gives no reproductive details.",
+    "ecology": "Its pattern intensifies when disturbed; a warning role is only a hypothesis. It is closely related to the mimic octopus, Thaumoctopus mimicus; see its profile.",
+    "conservation": "It is traded for photography and aquaria; wild trends were not assessed."
+  },
+  "sources": [
+    {
+      "url": "https://www.mapress.com/mrs/article/view/mr.26.3.5",
+      "title": "Molluscan Research — original description of Wunderpus photogenicus"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2579581/",
+      "title": "PLOS ONE — Photo-identification study of Wunderpus photogenicus"
+    },
+    {
+      "url": "https://birdsheadseascape.com/download/research/j.1095-8312.2010.01484.x.pdf",
+      "title": "Biological Journal of the Linnean Society — octopus phylogeny and mimicry"
+    }
+  ]
+}

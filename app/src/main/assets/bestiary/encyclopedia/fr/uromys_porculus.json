@@ -1,0 +1,30 @@
+{
+  "id": "uromys_porculus",
+  "name": "Rat géant de Guadalcanal",
+  "scientific": "Uromys porculus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Uromys porculus est un rongeur connu de Guadalcanal, dans les îles Salomon.",
+    "identification": "Les rares restes comprennent un crâne étroit et allongé ; la queue courte pourrait indiquer une espèce terrestre.",
+    "habitat": "La forêt tropicale de basse altitude est proposée comme habitat possible, sans confirmation.",
+    "diet": "Les sources consultées ne documentent pas de régime alimentaire fiable propre à l’espèce.",
+    "behavior": "L’espèce n’a pas été confirmée dans la nature depuis les collectes de la fin du XIXe siècle.",
+    "reproduction": "Les spécimens historiques disponibles ne renseignent pas sa reproduction.",
+    "ecology": "La révision taxonomique note sa ressemblance morphologique avec Uromys imperator, un autre rat de Guadalcanal mal connu ; voir sa fiche.",
+    "conservation": "La Mammal Diversity Database la classe en danger critique ; l’espèce pourrait déjà être éteinte."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003321/",
+      "title": "Mammal Diversity Database — Uromys porculus"
+    },
+    {
+      "url": "https://www.rewild.org/lost-species/small-mammals",
+      "title": "Re:wild — Guadalcanal Rat"
+    },
+    {
+      "url": "https://journals.australian.museum/media/Uploads/Journals/17810/12_complete.pdf",
+      "title": "Australian Museum — révision du genre Uromys"
+    }
+  ]
+}

@@ -10,7 +10,7 @@
     "diet": "It probes burrows with its arm tips and traps fleeing prey with the web between its arms; the study did not identify prey taxa.",
     "behavior": "The observed octopuses foraged by day in exposed sand, in view of potential fish predators.",
     "reproduction": "The field paper observed adults and did not examine the species’ breeding cycle.",
-    "ecology": "Researchers documented postures resembling local flatfish, lionfish and sea snakes, but the defensive benefit was not experimentally tested.",
+    "ecology": "Researchers documented postures resembling local flatfish, lionfish and sea snakes, but the defensive benefit was not experimentally tested. Its close relative Wunderpus photogenicus has a different documented swimming display; see its profile.",
     "conservation": "SeaLifeBase reports a global IUCN category of Least Concern for this species."
   },
   "sources": [
@@ -33,6 +33,10 @@
     {
       "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9044857",
       "title": "BISMaL — Thaumoctopus mimicus"
+    },
+    {
+      "url": "https://birdsheadseascape.com/download/research/j.1095-8312.2010.01484.x.pdf",
+      "title": "Biological Journal of the Linnean Society — octopus phylogeny and mimicry"
     }
   ]
 }

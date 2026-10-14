@@ -1,0 +1,30 @@
+{
+  "id": "zoarces_viviparus",
+  "name": "Viviparous eelpout",
+  "scientific": "Zoarces viviparus",
+  "group": "fish",
+  "sections": {
+    "overview": "The Viviparous Eelpout is a coastal fish of northern European seas, including brackish waters.",
+    "identification": "Its body is long and eel-like, with a continuous dorsal, caudal and anal fin; its bones can be green.",
+    "habitat": "It stays close to the bottom in shallow coastal waters, especially among eelgrass or other seabed vegetation.",
+    "diet": "It feeds on small bottom-dwelling animals such as amphipods, molluscs, snails and small crustaceans.",
+    "behavior": "It is generally shy, especially in shallow water.",
+    "reproduction": "After internal fertilization, females give birth to live young in winter rather than laying eggs.",
+    "ecology": "Its site fidelity and sensitivity to pollution make it useful in monitoring coastal environmental contaminants.",
+    "conservation": "Fiskepleje reports a marked decline in Danish waters; this is a regional observation, not a global status."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Zoarces-viviparus.html",
+      "title": "Viviparous eelpout — FishBase"
+    },
+    {
+      "url": "https://www.fiskepleje.dk/da/fiskebiologi/aalekvabbe",
+      "title": "Ålekvabbe — Fiskepleje.dk"
+    },
+    {
+      "url": "https://www.naturbasen.dk/art/3121/aalekvabbe",
+      "title": "Ålekvabbe — Naturbasen"
+    }
+  ]
+}

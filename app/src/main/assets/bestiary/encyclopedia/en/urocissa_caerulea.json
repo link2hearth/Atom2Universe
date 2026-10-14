@@ -1,0 +1,26 @@
+{
+  "id": "urocissa_caerulea",
+  "name": "Taiwan Blue Magpie",
+  "scientific": "Urocissa caerulea",
+  "group": "birds",
+  "sections": {
+    "overview": "The Taiwan blue magpie is a corvid endemic to Taiwan.",
+    "identification": "It has a black head, red bill and feet, a blue body, and a very long tail with white tips.",
+    "habitat": "It inhabits broad-leaved and secondary forests at low and middle elevations, including wooded areas near people.",
+    "diet": "It is omnivorous, eating fruit, seeds, insects and small vertebrates.",
+    "behavior": "It often travels in groups, sometimes flying in a conspicuous line of long-tailed birds.",
+    "reproduction": "It nests high in trees and typically lays four to six eggs; other group members may help feed the young.",
+    "ecology": "Its cooperative helpers are a notable part of its social breeding system.",
+    "conservation": "Taiwan’s National Museum describes it as protected; a local scenic-area account identifies habitat disturbance and loss as concerns."
+  },
+  "sources": [
+    {
+      "url": "https://www.ntm.gov.tw/en/News_Content2.aspx?n=5699&s=149475",
+      "title": "National Taiwan Museum — Formosan Blue Magpie"
+    },
+    {
+      "url": "https://www.trimt-nsa.gov.tw/en/ecology/98/",
+      "title": "Tri-Mountain National Scenic Area — Taiwan blue magpie"
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "id": "zanclostomus_javanicus",
+  "scientific": "Zanclostomus javanicus",
+  "group": "birds",
+  "name": {
+    "en": "Red-billed malkoha",
+    "fr": "Malcoha à bec rouge"
+  },
+  "sections": {
+    "overview": {
+      "en": "The red-billed malkoha is a large cuckoo native to mainland and island Southeast Asia.",
+      "fr": "Le malcoha à bec rouge est un grand coucou originaire de l’Asie du Sud-Est continentale et insulaire."
+    },
+    "identification": {
+      "en": "It has a conspicuous red bill and a long tail; it moves through dense vegetation.",
+      "fr": "Il possède un bec rouge remarquable et une longue queue ; il se déplace dans une végétation dense."
+    },
+    "habitat": {
+      "en": "It inhabits forest and scrub, including lowland forest and wooded edges.",
+      "fr": "Il fréquente les forêts et les broussailles, notamment les forêts de plaine et leurs lisières."
+    },
+    "diet": {
+      "en": "Its diet includes large insects and small vertebrates.",
+      "fr": "Son régime comprend de gros insectes et de petits vertébrés."
+    },
+    "behavior": {
+      "en": "It is usually seen moving through the middle or upper vegetation rather than making long flights.",
+      "fr": "On l’observe généralement se déplacer dans les étages moyen ou supérieur de la végétation plutôt que parcourir de longues distances en vol."
+    },
+    "reproduction": {
+      "en": "The field guide gives no species-specific breeding details.",
+      "fr": "Le guide de terrain ne précise pas la reproduction de cette espèce."
+    },
+    "ecology": {
+      "en": "Its distribution includes Brunei, Indonesia, Malaysia, Myanmar and Thailand; Singapore lists it as locally extinct.",
+      "fr": "Sa répartition comprend le Brunei, l’Indonésie, la Malaisie, le Myanmar et la Thaïlande ; Singapour le considère comme localement éteint."
+    },
+    "conservation": {
+      "en": "The 2018 IUCN assessment lists it as Least Concern but reports a decreasing population trend.",
+      "fr": "L’évaluation UICN de 2018 le classe en préoccupation mineure, mais indique une tendance démographique à la baisse."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "IUCN Red List — Zanclostomus javanicus",
+        "fr": "Liste rouge UICN — Zanclostomus javanicus"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22684110A130088567.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment gives range, forest/shrubland habitat, status and trend."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 9,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wildlife of Borneo — Red-billed Malkoha",
+        "fr": "Wildlife of Borneo — Red-billed Malkoha"
+      },
+      "url": "https://www.wildlifeofborneo.com/species/red-billed-malkoha",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Field guide describes appearance, canopy movement, diet and its lack of species-specific breeding details."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 14,
+        "total": 123,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The regional extinction statement applies to Singapore only; it does not describe the global range."
+  ],
+  "review_note": "Bilingual draft only; concise statements preserve the limits and regional scope of the cited evidence.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

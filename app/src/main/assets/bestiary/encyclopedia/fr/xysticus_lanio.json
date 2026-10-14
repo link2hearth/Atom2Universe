@@ -1,0 +1,26 @@
+{
+  "id": "xysticus_lanio",
+  "name": "Araignée-crabe roussâtre",
+  "scientific": "Xysticus lanio",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Xysticus lanio est une araignée-crabe présente en Europe et dans certaines régions d’Asie occidentale et centrale.",
+    "identification": "Les femelles sont brun clair avec des marques sombres ; les mâles sont plus foncés et rougeâtres, avec un abdomen dessiné.",
+    "habitat": "Elle est surtout associée aux forêts de feuillus ou mixtes, notamment les chênaies et leurs lisières.",
+    "diet": "Elle attend les insectes et parfois de plus petites araignées, puis les saisit avec ses pattes avant.",
+    "behavior": "Ce chasseur à l’affût se tient souvent sur des branches basses, des arbustes ou des feuilles plutôt que de chasser au sol.",
+    "reproduction": "La femelle garde un cocon d’œufs en été ; les jeunes araignées passent l’hiver.",
+    "ecology": "Le profil d’Europe centrale signale surtout des adultes du printemps au milieu de l’été.",
+    "conservation": "Le World Spider Catalog reconnaît Xysticus lanio comme espèce acceptée."
+  },
+  "sources": [
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/49086/Xysticus_lanio",
+      "title": "World Spider Catalog — Xysticus lanio"
+    },
+    {
+      "url": "https://www.natur-in-nrw.de/HTML/Tiere/Spinnen/TSP-613.html",
+      "title": "Natur in NRW — Rötliche Buschkrabbenspinne"
+    }
+  ]
+}

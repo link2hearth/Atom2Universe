@@ -1,0 +1,119 @@
+{
+  "id": "zosterops_griseovirescens",
+  "scientific": "Zosterops griseovirescens",
+  "group": "birds",
+  "name": {
+    "en": "Annobon White-eye",
+    "fr": "Zostérops d’Annobon"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Annobon White-eye is a small passerine endemic to Annobón, an island of Equatorial Guinea.",
+      "fr": "Le Zostérops d’Annobon est un petit passereau endémique d’Annobón, une île de Guinée équatoriale."
+    },
+    "identification": {
+      "en": "It is about 12 cm long, olive-green above, pale below and marked by a narrow white eye-ring.",
+      "fr": "Il mesure environ 12 cm, est vert olive dessus, pâle dessous et porte un fin cercle blanc autour de l’œil."
+    },
+    "habitat": {
+      "en": "It uses primary and secondary woodland, plantations, and even small trees and shrubs in cultivated areas.",
+      "fr": "Il fréquente les forêts primaires et secondaires, les plantations et même les petits arbres et buissons des zones cultivées."
+    },
+    "diet": {
+      "en": "It gleans invertebrates from the surfaces of leaves and other vegetation.",
+      "fr": "Il prélève des invertébrés à la surface des feuilles et d’autres végétaux."
+    },
+    "behavior": {
+      "en": "It forages in small parties, typically numbering two to ten birds.",
+      "fr": "Il recherche sa nourriture en petits groupes, généralement de deux à dix oiseaux."
+    },
+    "reproduction": {
+      "en": "The sources consulted report a clutch of two eggs but provide little further nesting detail.",
+      "fr": "Les sources consultées indiquent une ponte de deux œufs, mais donnent peu d’autres détails sur le nid."
+    },
+    "ecology": {
+      "en": "The species is resident and has a very small island range.",
+      "fr": "L’espèce est sédentaire et son aire insulaire est très restreinte."
+    },
+    "conservation": {
+      "en": "The 2021 global assessment lists it as Least Concern with a stable population trend.",
+      "fr": "L’évaluation mondiale de 2021 la classe en préoccupation mineure et indique une tendance stable."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Annobon White-eye — IUCN Red List assessment",
+        "fr": "Zostérops d’Annobon — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-1.RLTS.T22713989A209532761.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment: endemic, olive plumage, wooded habitats, feeding ecology and stable Least Concern status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 14,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Zostérops d’Annobon — Oiseaux.net",
+        "fr": "Zostérops d’Annobon — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/zosterops.d.annobon.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The French account reports a two-egg clutch and sedentary habits."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 10,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The available species account is brief; reproductive detail is limited to clutch size."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; island range, habitat use and assessment are based on species-level sources."
+}

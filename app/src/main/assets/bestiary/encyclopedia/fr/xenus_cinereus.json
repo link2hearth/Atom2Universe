@@ -1,0 +1,30 @@
+{
+  "id": "xenus_cinereus",
+  "name": "Chevalier bargette",
+  "scientific": "Xenus cinereus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le chevalier bargette est un limicole migrateur qui niche en Eurasie et hiverne plus au sud.",
+    "identification": "Son long bec légèrement retroussé et ses pattes courtes jaune orangé sont caractéristiques.",
+    "habitat": "Hors de la période de reproduction, il fréquente vasières côtières, estuaires, plages et mangroves.",
+    "diet": "Il picore ou sonde la vase humide à la recherche d’insectes, de petits mollusques et de crustacés.",
+    "behavior": "Il effectue de longues migrations et peut se regrouper avec d’autres limicoles dans des reposoirs de marée haute.",
+    "reproduction": "Il niche dans une simple dépression au sol, dans les vallées forestières du nord ou la toundra ; la reproduction a lieu au printemps et au début de l’été.",
+    "ecology": "La fiche de Singapour le signale comme migrateur de passage et visiteur hivernal.",
+    "conservation": "L’évaluation UICN de 2016 le classe en préoccupation mineure ; la perte et la transformation des zones humides sont des pressions signalées."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/birds/terek-sandpiper/",
+      "title": "Australian Museum — chevalier bargette"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22693251A155505422.en",
+      "title": "Liste rouge UICN — Xenus cinereus"
+    },
+    {
+      "url": "https://www.nparks.gov.sg/florafaunaweb/fauna/3/2/322",
+      "title": "Office des parcs nationaux de Singapour — Xenus cinereus"
+    }
+  ]
+}

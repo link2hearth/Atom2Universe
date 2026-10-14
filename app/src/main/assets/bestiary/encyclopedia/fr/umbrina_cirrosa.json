@@ -1,0 +1,30 @@
+{
+  "id": "umbrina_cirrosa",
+  "name": "Ombrine côtière",
+  "scientific": "Umbrina cirrosa",
+  "group": "fish",
+  "sections": {
+    "overview": "Umbrina cirrosa est un poisson côtier de la famille des Sciaenidae, présent dans l’Atlantique oriental, en Méditerranée et en mer Noire.",
+    "identification": "Un court barbillon rigide sous le menton et des lignes obliques jaunâtres sur les flancs aident à la distinguer du corb (Sciaena umbra).",
+    "habitat": "Il vit dans les eaux côtières sur des fonds rocheux, sableux ou graveleux ; les jeunes pénètrent souvent dans les estuaires.",
+    "diet": "Il se nourrit surtout de poissons et d’invertébrés benthiques, mais consomme aussi des algues.",
+    "behavior": "Il est généralement décrit comme sédentaire et proche du littoral.",
+    "reproduction": "La reproduction a lieu au printemps et en été.",
+    "ecology": "C’est un poisson côtier exploité par la pêche commerciale et récréative.",
+    "conservation": "Une évaluation italienne cite un classement méditerranéen « Vulnérable » de l’UICN datant de 2013 et mentionne la surpêche et la modification de l’habitat comme préoccupations."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/fishery/docs/CDrom/ARTFIMED/ArtFiWeb/descript/Species/SCIUMCIR.HTML",
+      "title": "FAO — Umbrina cirrosa"
+    },
+    {
+      "url": "https://www.isprambiente.gov.it/it/banche-dati/atlante-delle-specie-marine-protette/animali/vertebrati/osteitti/umbrina-cirrosa-linnaeus-1758",
+      "title": "ISPRA — Umbrina cirrosa, atlas des espèces marines protégées"
+    },
+    {
+      "url": "https://www.isprambiente.gov.it/it/pubblicazioni/manuali-e-linee-guida/resolveuid/b0abdc7780dd4c9abaf9cc9de970cf58",
+      "title": "ISPRA — guide des poissons marins, Umbrina cirrosa"
+    }
+  ]
+}

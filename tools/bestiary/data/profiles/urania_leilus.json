@@ -1,0 +1,142 @@
+{
+  "id": "urania_leilus",
+  "scientific": "Urania leilus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Green-banded urania",
+    "fr": "Chinois vert"
+  },
+  "sections": {
+    "overview": {
+      "en": "Urania leilus is a brightly marked day-flying moth in the family Uraniidae, native to tropical South America.",
+      "fr": "Urania leilus est un papillon de jour vivement coloré de la famille des Uraniidae, originaire de l’Amérique du Sud tropicale."
+    },
+    "identification": {
+      "en": "Its black wings bear iridescent green bands, the feature reflected in its English common name.",
+      "fr": "Ses ailes noires portent des bandes vertes irisées, à l’origine de son nom anglais."
+    },
+    "habitat": {
+      "en": "Its main range is in tropical South America east of the Andes, with records from the Amazon basin and farther south.",
+      "fr": "Son aire principale se trouve dans l’Amérique du Sud tropicale à l’est des Andes, avec des mentions du bassin amazonien et plus au sud."
+    },
+    "diet": {
+      "en": "Larvae of Urania moths use Omphalea plants as food; species-specific host records are not complete in the sources consulted.",
+      "fr": "Les chenilles des Urania se nourrissent de plantes du genre Omphalea ; les sources consultées ne donnent pas une liste complète des plantes hôtes propres à cette espèce."
+    },
+    "behavior": {
+      "en": "Urania moths undertake periodic long-distance migrations, although the timing and routes of this species are not fully described here.",
+      "fr": "Les Urania entreprennent des migrations périodiques sur de longues distances, mais les périodes et itinéraires propres à cette espèce ne sont pas entièrement précisés ici."
+    },
+    "reproduction": {
+      "en": "Research on Urania treats reproductive behavior together with the moths’ Omphalea host plants, but the summaries consulted do not detail this species’ egg-laying.",
+      "fr": "Les études sur les Urania abordent leur comportement reproducteur avec leurs plantes hôtes Omphalea, mais les résumés consultés ne détaillent pas la ponte de cette espèce."
+    },
+    "ecology": {
+      "en": "Smithsonian researchers link Urania migration to changing host-plant suitability: repeated larval feeding can increase defensive alkaloids in Omphalea.",
+      "fr": "Des chercheurs du Smithsonian relient les migrations des Urania à la variation de qualité des plantes hôtes : les attaques répétées des chenilles peuvent accroître les alcaloïdes défensifs d’Omphalea."
+    },
+    "conservation": {
+      "en": "The sources consulted focus on distribution and host-plant ecology and do not provide a conservation category for U. leilus.",
+      "fr": "Les sources consultées portent surtout sur la répartition et l’écologie des plantes hôtes et ne donnent pas de catégorie de conservation pour U. leilus."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Acta Zoológica Lilloana — Confirmed records of Urania leilus in Catamarca",
+        "fr": "Acta Zoológica Lilloana — mentions confirmées d’Urania leilus dans la province de Catamarca"
+      },
+      "url": "https://www.lillo.org.ar/journals/index.php/acta-zoologica-lilloana/article/view/2225",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The Spanish-language paper describes the day-flying moth, black and iridescent green pattern, tropical range and new Argentine records."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 18,
+        "total": 129,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Smithsonian Tropical Research Institute — Migration of Urania moths",
+        "fr": "Smithsonian Tropical Research Institute — migration des papillons Urania"
+      },
+      "url": "https://stri.si.edu/evolution-and-ecology-migratory-behavior-urania-moths",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "STRI describes periodic Central–South American migrations and the link between Omphalea defensive alkaloids and larval feeding in Urania moths."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 19,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oxford Academic — Reproductive behaviour and ecology of Urania moths",
+        "fr": "Oxford Academic — comportement reproducteur et écologie des Urania"
+      },
+      "url": "https://academic.oup.com/book/51140/chapter-abstract/421973369",
+      "supports": [
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The chapter abstract discusses Urania reproductive ecology and Omphalea host plants; no formal conservation category is reported in this research summary."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 21,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Migration and host-plant chemistry are reported for Urania moths as a group; the text avoids assigning a precise migration route or trigger exclusively to U. leilus.",
+    "The consulted sources did not establish a species-specific global conservation assessment."
+  ],
+  "review_note": "The adult identification and South American records are supported by a Spanish-language paper; genus-level migration and host-plant mechanisms are clearly labeled as such.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -32,8 +32,8 @@
       "fr": "L’étude de terrain a observé des adultes sans examiner le cycle reproducteur de l’espèce."
     },
     "ecology": {
-      "en": "Researchers documented postures resembling local flatfish, lionfish and sea snakes, but the defensive benefit was not experimentally tested.",
-      "fr": "Les chercheurs ont décrit des postures évoquant des poissons plats, des rascasses-volantes et des serpents de mer locaux, sans tester expérimentalement leur effet défensif."
+      "en": "Researchers documented postures resembling local flatfish, lionfish and sea snakes, but the defensive benefit was not experimentally tested. Its close relative Wunderpus photogenicus has a different documented swimming display; see its profile.",
+      "fr": "Les chercheurs ont décrit des postures évoquant des poissons plats, des rascasses-volantes et des serpents de mer locaux, sans tester expérimentalement leur effet défensif. Son proche parent Wunderpus photogenicus présente un autre mode de nage documenté ; voir sa fiche."
     },
     "conservation": {
       "en": "SeaLifeBase reports a global IUCN category of Least Concern for this species.",
@@ -172,6 +172,31 @@
         "derived_prose_en_fr": 0,
         "notes_words": 16,
         "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biological Journal of the Linnean Society — octopus phylogeny and mimicry",
+        "fr": "Biological Journal of the Linnean Society — phylogénie et mimétisme des poulpes"
+      },
+      "url": "https://birdsheadseascape.com/download/research/j.1095-8312.2010.01484.x.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The study finds the species close relatives and distinguishes flatfish swimming from Wunderpus dorsoventral swimming."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 15,
+        "total": 45,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     }

@@ -1,0 +1,26 @@
+{
+  "id": "zungaro_jahu",
+  "name": "Jau catfish",
+  "scientific": "Zungaro jahu",
+  "group": "fish",
+  "sections": {
+    "overview": "Jahu is a large South American freshwater catfish native to the Paraná–Paraguay basin.",
+    "identification": "It is a large pimelodid catfish; FishBase records a maximum of 140 cm standard length.",
+    "habitat": "Adults occupy deeper river reaches, while fry are found mainly near the mouths of smaller tributaries.",
+    "diet": "In a hatchery study, captive brood fish were fed live juvenile fishes.",
+    "behavior": "It is migratory and follows seasonal expansion of aquatic habitats during river flooding.",
+    "reproduction": "It is a total spawner; researchers have also induced spawning in hatchery-kept adults.",
+    "ecology": "Dams, overfishing, agriculture, mining, navigation and pollution have contributed to reduced catches in parts of its range.",
+    "conservation": "FishBase reports a global Near Threatened assessment dated 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/zungaro_jahu.html",
+      "title": "Zungaro jahu — FishBase"
+    },
+    {
+      "url": "https://www.scielo.br/j/ni/a/TNCYyDjBqKzCs9KZDKFXVkn/?lang=en",
+      "title": "Induced spawning and early ontogeny in hatchery-reared Zungaro jahu — SciELO"
+    }
+  ]
+}

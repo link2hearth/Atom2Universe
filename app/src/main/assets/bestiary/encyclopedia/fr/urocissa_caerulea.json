@@ -1,0 +1,26 @@
+{
+  "id": "urocissa_caerulea",
+  "name": "Pirolle de Taïwan",
+  "scientific": "Urocissa caerulea",
+  "group": "birds",
+  "sections": {
+    "overview": "La pirolle de Taïwan est un corvidé endémique de Taïwan.",
+    "identification": "Elle a la tête noire, le bec et les pattes rouges, le corps bleu et une très longue queue terminée de blanc.",
+    "habitat": "Elle fréquente les forêts de feuillus et secondaires de basse et moyenne altitude, y compris des zones boisées proches des humains.",
+    "diet": "Elle est omnivore et mange des fruits, des graines, des insectes et de petits vertébrés.",
+    "behavior": "Elle se déplace souvent en groupe, parfois en une file remarquable d’oiseaux à longue queue.",
+    "reproduction": "Elle niche haut dans les arbres et pond généralement quatre à six œufs ; d’autres membres du groupe peuvent aider à nourrir les jeunes.",
+    "ecology": "L’aide apportée par les autres membres du groupe est un aspect notable de son organisation sociale pendant la reproduction.",
+    "conservation": "Le Musée national de Taïwan la décrit comme protégée ; une source d’un parc paysager local cite les perturbations et la perte d’habitat parmi les préoccupations."
+  },
+  "sources": [
+    {
+      "url": "https://www.ntm.gov.tw/en/News_Content2.aspx?n=5699&s=149475",
+      "title": "Musée national de Taïwan — pirolle de Formose"
+    },
+    {
+      "url": "https://www.trimt-nsa.gov.tw/en/ecology/98/",
+      "title": "Parc national paysager des Trois-Montagnes — pirolle de Taïwan"
+    }
+  ]
+}

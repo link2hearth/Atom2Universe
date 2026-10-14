@@ -1,0 +1,26 @@
+{
+  "id": "zu_cristatus",
+  "name": "Poisson-ruban festonné",
+  "scientific": "Zu cristatus",
+  "group": "fish",
+  "sections": {
+    "overview": "Le Poisson-ruban festonné est un poisson rubané rarement observé, signalé dans les océans tropicaux et tempérés du monde entier.",
+    "identification": "Les adultes ont un corps fin en ruban, une nageoire dorsale rougeâtre et une queue noire ; les juvéniles sont argentés, tachés de sombre et ont le ventre festonné.",
+    "habitat": "C’est un poisson du large ; des adultes auraient été observés nageant verticalement, la tête vers le haut.",
+    "diet": "Les aliments rapportés pour les poissons-rubans comprennent des poissons, des calmars et des crustacés.",
+    "behavior": "Les jeunes s’abritent sous des méduses, tandis que les adultes sont océaniques.",
+    "reproduction": "Il est ovipare, avec des œufs et des larves planctoniques.",
+    "ecology": "Il appartient aux Trachipteridae, une famille de poissons-rubans dont les mâchoires peuvent fortement se projeter pendant l’alimentation.",
+    "conservation": "FishBase rapporte une évaluation mondiale de préoccupation mineure datant de 2013."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/fishes/scalloped-ribbonfish-zu-cristatus-bonelli-1820/",
+      "title": "Poisson-ruban festonné — Australian Museum"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Zu-cristatus.html",
+      "title": "Zu cristatus — FishBase"
+    }
+  ]
+}

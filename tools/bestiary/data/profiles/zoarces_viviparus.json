@@ -1,0 +1,142 @@
+{
+  "id": "zoarces_viviparus",
+  "scientific": "Zoarces viviparus",
+  "group": "fish",
+  "name": {
+    "en": "Viviparous eelpout",
+    "fr": "Blennie vivipare"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Viviparous Eelpout is a coastal fish of northern European seas, including brackish waters.",
+      "fr": "La Blennie vivipare est un poisson côtier des mers du nord de l’Europe, y compris des eaux saumâtres."
+    },
+    "identification": {
+      "en": "Its body is long and eel-like, with a continuous dorsal, caudal and anal fin; its bones can be green.",
+      "fr": "Son corps est long et anguilliforme, avec des nageoires dorsale, caudale et anale réunies ; ses os peuvent être verts."
+    },
+    "habitat": {
+      "en": "It stays close to the bottom in shallow coastal waters, especially among eelgrass or other seabed vegetation.",
+      "fr": "Il vit près du fond dans les eaux côtières peu profondes, surtout parmi les herbiers de zostères ou d’autres végétaux."
+    },
+    "diet": {
+      "en": "It feeds on small bottom-dwelling animals such as amphipods, molluscs, snails and small crustaceans.",
+      "fr": "Il mange de petits animaux du fond, notamment des amphipodes, des mollusques, des escargots et de petits crustacés."
+    },
+    "behavior": {
+      "en": "It is generally shy, especially in shallow water.",
+      "fr": "Il est généralement farouche, surtout en eau peu profonde."
+    },
+    "reproduction": {
+      "en": "After internal fertilization, females give birth to live young in winter rather than laying eggs.",
+      "fr": "Après une fécondation interne, les femelles mettent bas des petits vivants en hiver au lieu de pondre."
+    },
+    "ecology": {
+      "en": "Its site fidelity and sensitivity to pollution make it useful in monitoring coastal environmental contaminants.",
+      "fr": "Sa fidélité à un même secteur et sa sensibilité à la pollution en font un indicateur utile des contaminants côtiers."
+    },
+    "conservation": {
+      "en": "Fiskepleje reports a marked decline in Danish waters; this is a regional observation, not a global status.",
+      "fr": "Fiskepleje signale un fort recul dans les eaux danoises ; il s’agit d’une observation régionale, pas d’un statut mondial."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Viviparous eelpout — FishBase",
+        "fr": "Blennie vivipare — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Zoarces-viviparus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "FishBase describes an elongated fish whose bones are green and gives its northern European marine range."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 16,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ålekvabbe — Fiskepleje.dk",
+        "fr": "Ålekvabbe — Fiskepleje.dk (site danois de gestion des pêches)"
+      },
+      "url": "https://www.fiskepleje.dk/da/fiskebiologi/aalekvabbe",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The Danish fisheries resource describes coastal vegetation habitat, diet, site fidelity, live birth, environmental monitoring and Danish population decline."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 19,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ålekvabbe — Naturbasen",
+        "fr": "Ålekvabbe — Naturbasen (base naturaliste danoise)"
+      },
+      "url": "https://www.naturbasen.dk/art/3121/aalekvabbe",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "The account records shy habits and shallow, vegetated habitat."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 17,
+        "notes_words": 9,
+        "total": 26,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The population-decline statement refers specifically to Danish waters."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; regional status is explicitly scoped to Denmark."
+}
