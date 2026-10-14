@@ -1,0 +1,12 @@
+{
+  "id": "cucumis_sativus",
+  "sections": [
+    {"title": "Habit and cultivation", "text": "Cucumber is a trailing or climbing annual with tendrils; its stems can reach about 5 m. It has palmately lobed leaves and yellow flowers. The fleshy fruits are usually elongated but vary among cultivars and are harvested green or ripe."},
+    {"title": "Fruit and comparison", "text": "The fruits are eaten fresh or preserved as pickles. The plate shows cultivated green forms with flowers and tendrils. Like melon, Cucumis melo, cucumber belongs to the genus Cucumis; its fruits are usually harvested green and are less sweet, though forms vary."}
+  ],
+  "sources": [
+    {"title": "Cucumber — Kew Plants", "url": "https://www.kew.org/plants/cucumber"},
+    {"title": "Cucumis sativus — Japan International Research Center for Agricultural Sciences", "url": "https://www.jircas.go.jp/en/database/thaivege/039"},
+    {"title": "Cucumber — Flora & Fauna Web, National Parks Board Singapore", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/3/8/3879"}
+  ], "related": ["cucumis_melo"]
+}

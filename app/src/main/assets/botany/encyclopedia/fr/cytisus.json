@@ -1,0 +1,12 @@
+{
+  "id": "cytisus",
+  "sections": [
+    {"title": "Identification et port", "text": "L’entrée Cytisus désigne ici Cytisus scoparius, le genêt à balais, et non tout le genre. Cet arbuste européen mesure généralement 1 à 1,5 m. Ses rameaux verts sont anguleux et portent de petites feuilles, souvent trifoliolées à la base."},
+    {"title": "Fleurs et toxicité", "text": "Les fleurs jaunes papilionacées donnent des gousses. La planche correspond aux rameaux verts, fleurs et gousses. Toute la plante est toxique à l’ingestion ; ses graines et autres organes ne sont pas des aliments."}
+  ],
+  "sources": [
+    {"title": "Cytisus scoparius — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/5254/cytisus-scoparius/details"},
+    {"title": "Cytisus scoparius — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:489963-1"},
+    {"title": "Gyvel (Cytisus scoparius) — Danish Veterinary and Food Administration", "url": "https://foedevarestyrelsen.dk/kost-og-foedevarer/maerkning-og-markedsfoering-af-foedevarer/nye-foedevarer-og-foedevareingredienser-novel-food/plantelisten-til-erhverv/gyvel"}
+  ], "related": []
+}

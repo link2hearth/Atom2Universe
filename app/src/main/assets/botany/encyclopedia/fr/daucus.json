@@ -1,0 +1,11 @@
+{
+  "id": "daucus",
+  "sections": [
+    {"title": "Identification et port", "text": "L’entrée Daucus décrit ici Daucus carota, la carotte sauvage, et non tout le genre. Cette bisannuelle atteint environ 0,6 à 1,2 m lors de la floraison. Ses feuilles sont finement découpées et ses petites fleurs blanches forment des ombelles souvent entourées de bractées divisées."},
+    {"title": "Racine et prudence", "text": "La grosse racine des formes cultivées de D. carota est consommée ; la planche montre surtout la plante fleurie et ses ombelles, pas la racine de carotte de table. Les ombelles peuvent être confondues avec celles de Apiacées très toxiques, notamment la ciguë aquatique : ne pas récolter une plante sur la seule base d’une image."}
+  ],
+  "sources": [
+    {"title": "Daucus carota — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:841063-1"},
+    {"title": "Queen Anne’s lace (Daucus carota) — University of Wisconsin Extension", "url": "https://hort.extension.wisc.edu/articles/queen-annes-lace-daucus-carota/"}
+  ], "related": ["cicuta_virosa"]
+}

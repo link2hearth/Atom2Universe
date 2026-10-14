@@ -1,0 +1,11 @@
+{
+  "id": "dactylis",
+  "sections": [
+    {"title": "Identification and habitat", "text": "The catalogue entry Dactylis refers to Dactylis glomerata, orchard grass, a perennial bunchgrass about 0.5–1.2 m tall. It grows in meadows, pastures and roadsides and is widely used as forage."},
+    {"title": "Panicle and spikelets", "text": "Its branched panicle bears dense clusters of spikelets, often turned to one side. The plate shows this characteristic arrangement and a close-up of a spikelet. The fruit is a small caryopsis, as in other grasses."}
+  ],
+  "sources": [
+    {"title": "Dactylis glomerata — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:397309-1/general-information"},
+    {"title": "Dactylis glomerata — USDA Forest Service", "url": "https://research.fs.usda.gov/feis/species-reviews/dacglo"}
+  ], "related": []
+}

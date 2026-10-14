@@ -1,0 +1,11 @@
+{
+  "id": "cucumis_melo",
+  "sections": [
+    {"title": "Port et diversité", "text": "Cucumis melo est une annuelle rampante ou grimpante à vrilles, cultivée pour les melons et certaines formes consommées comme légumes. La longueur des tiges et la taille des fruits varient fortement selon les cultivars et les conditions ; les fruits peuvent être petits ou très volumineux, à chair douce ou non."},
+    {"title": "Fruit et image", "text": "La chair mûre se mange et certaines graines sont aussi consommées. La planche illustre une forme de type cantaloup à chair orange, et non toute la diversité de l’espèce ; la tige, les vrilles et les fleurs jaunes sont cohérentes."}
+  ],
+  "sources": [
+    {"title": "Cucumis melo — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A292238-1/general-information"},
+    {"title": "Cucumis melo — Flora & Fauna Web, National Parks Board Singapore", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/6/6/6663"}
+  ], "related": ["cucumis_sativus"]
+}

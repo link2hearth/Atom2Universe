@@ -1,0 +1,8 @@
+{
+  "id": "cuminum_cyminum",
+  "sections": [
+    {"title": "Port et identification", "text": "Le cumin est une annuelle dressée et ramifiée d’environ 15 à 30 cm. Ses feuilles sont finement découpées en segments filiformes ; de petites ombelles portent les fleurs et les fruits secs. Il est cultivé pour son épice."},
+    {"title": "Fruits utilisés comme épice", "text": "Les fruits, souvent appelés graines de cumin en cuisine, mesurent environ 4 à 6 × 2 mm et sont récoltés secs. La planche correspond au feuillage fin, aux ombelles et aux fruits allongés. Il s’agit bien du cumin, distinct du carvi Carum carvi."}
+  ],
+  "sources": [{"title": "Cuminum cyminum — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A840882-1/general-information"}], "related": ["carum_carvi"]
+}

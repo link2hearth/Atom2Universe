@@ -1,0 +1,12 @@
+{
+  "id": "cucumis_sativus",
+  "sections": [
+    {"title": "Port et culture", "text": "Le concombre est une annuelle rampante ou grimpante à vrilles ; ses tiges peuvent atteindre environ 5 m. Ses feuilles sont palmées et ses fleurs jaunes. Les fruits charnus, généralement allongés mais variables selon les cultivars, sont récoltés verts ou mûrs."},
+    {"title": "Fruits et comparaison", "text": "Les fruits se consomment frais ou conservés en cornichons. La planche montre des formes vertes cultivées, avec fleurs et vrilles. Comme Cucumis melo, le melon, le concombre appartient au genre Cucumis ; ses fruits sont habituellement récoltés verts et moins sucrés, mais la forme varie."}
+  ],
+  "sources": [
+    {"title": "Cucumber — Kew Plants", "url": "https://www.kew.org/plants/cucumber"},
+    {"title": "Cucumis sativus — Japan International Research Center for Agricultural Sciences", "url": "https://www.jircas.go.jp/en/database/thaivege/039"},
+    {"title": "Cucumber — Flora & Fauna Web, National Parks Board Singapore", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/3/8/3879"}
+  ], "related": ["cucumis_melo"]
+}

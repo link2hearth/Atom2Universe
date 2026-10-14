@@ -1,0 +1,11 @@
+{
+  "id": "daucus",
+  "sections": [
+    {"title": "Identification and habit", "text": "The catalogue entry Daucus describes Daucus carota, wild carrot, rather than the whole genus. This biennial reaches about 0.6–1.2 m when flowering. Its leaves are finely divided and its small white flowers form umbels often surrounded by divided bracts."},
+    {"title": "Root and caution", "text": "The enlarged root of cultivated forms of D. carota is eaten; the plate chiefly shows the flowering plant and umbels, not a table carrot root. The umbels can be confused with those of highly poisonous Apiaceae, including water hemlock: do not gather a plant based on an illustration alone."}
+  ],
+  "sources": [
+    {"title": "Daucus carota — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:841063-1"},
+    {"title": "Queen Anne’s lace (Daucus carota) — University of Wisconsin Extension", "url": "https://hort.extension.wisc.edu/articles/queen-annes-lace-daucus-carota/"}
+  ], "related": ["cicuta_virosa"]
+}
