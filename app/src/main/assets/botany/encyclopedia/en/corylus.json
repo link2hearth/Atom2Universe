@@ -1,0 +1,11 @@
+{
+  "id": "corylus",
+  "sections": [
+    {"title": "Habit and flowering", "text": "The catalogue entry Corylus refers to Corylus avellana, common hazel, often grown as a multi-stemmed coppice. This deciduous shrub or small tree is usually 3–8 m tall and can exceed 10 m. Male catkins hang in late winter; the tiny female flowers are less conspicuous."},
+    {"title": "Hazelnuts", "text": "The female flowers develop into edible hazelnuts enclosed by a leafy involucre. The plate matches the multi-stemmed habit, catkins and nuts. Corylus colurna, by contrast, is a single-trunk tree with a more deeply divided involucre."}
+  ],
+  "sources": [
+    {"title": "Hazel — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/hazel"},
+    {"title": "Hazel — Woodland Trust", "url": "https://www.woodlandtrust.org.uk/blog/2021/11/british-trees-to-plant-in-your-garden/"}
+  ], "related": ["corylus_colurna"]
+}

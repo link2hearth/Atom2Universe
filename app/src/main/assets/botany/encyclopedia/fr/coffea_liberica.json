@@ -1,0 +1,11 @@
+{
+  "id": "coffea_liberica",
+  "sections": [
+    {"title": "Port et feuilles", "text": "Coffea liberica est un caféier-arbre originaire d’Afrique occidentale, cultivé dans les régions tropicales. Il peut atteindre environ 18 m. Ses grandes feuilles elliptiques sont coriaces et à bord ondulé ; les fleurs sont blanches et parfumées."},
+    {"title": "Fruits et comparaison", "text": "Les fruits mûrs sont des baies d’environ 3 à 3,5 × 1 à 1,5 cm, contenant généralement deux graines qui sont préparées et torréfiées pour faire du café. Le port arboré, les grandes feuilles et les fruits de la planche concordent. Par rapport à Arabica et Robusta, Liberica peut être nettement plus grand, mais la taille dépend de la culture."}
+  ],
+  "sources": [
+    {"title": "Coffea liberica — Flora & Fauna Web, National Parks Board Singapore", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/2/8/2820"},
+    {"title": "Coffea liberica — PROSEA / Pl@ntUse", "url": "https://plantuse.plantnet.org/en/Coffea_liberica_%28PROSEA%29"}
+  ], "related": ["coffea", "coffea_canephora"]
+}

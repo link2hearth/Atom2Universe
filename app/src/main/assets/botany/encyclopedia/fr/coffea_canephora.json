@@ -1,0 +1,11 @@
+{
+  "id": "coffea_canephora",
+  "sections": [
+    {"title": "Port et répartition", "text": "Coffea canephora, souvent appelé robusta, est un arbuste ou petit arbre persistant d’Afrique tropicale occidentale et centrale, mesurant environ 4 à 8 m. Ses feuilles opposées sont épaisses, ses fleurs blanches sont axillaires et ses drupes mûres deviennent rouges."},
+    {"title": "Graines et comparaison", "text": "Les fruits contiennent généralement deux graines, séchées et torréfiées pour produire du café. L’espèce est cultivée sous les tropiques, souvent à plus basse altitude que C. arabica, sans que cette différence soit absolue. La planche montre feuilles, fleurs blanches et baies rouges ; les distinctions visuelles entre espèces peuvent varier."}
+  ],
+  "sources": [
+    {"title": "Coffea canephora — Flora of China, eFloras", "url": "https://efloras.org/florataxon.aspx?flora_id=2&taxon_id=200022077"},
+    {"title": "Coffea canephora — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:747068-1/general-information"}
+  ], "related": ["coffea", "coffea_liberica"]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "coffea",
+  "sections": [
+    {"title": "Espèce et port", "text": "L’entrée Coffea désigne ici Coffea arabica, le caféier arabica, et non tout le genre. Dans la nature, c’est un arbuste ou petit arbre persistant d’environ 2 à 8 m, originaire des forêts humides d’Éthiopie et des régions voisines d’Afrique de l’Est. En culture, il est souvent taillé plus bas."},
+    {"title": "Fruits et café", "text": "Les fruits sont des drupes rouge vif, parfois jaunes ou violettes, généralement avec deux graines. La pulpe est consommée dans certains usages ; les graines séchées, préparées et torréfiées donnent le café et contiennent de la caféine. La planche correspond aux rameaux, baies et graines en coupe."}
+  ],
+  "sources": [{"title": "Coffea arabica — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:747038-1/general-information"}],
+  "related": ["coffea_canephora", "coffea_liberica"]
+}
