@@ -1,0 +1,26 @@
+{
+  "id": "schilbe_mystus",
+  "name": "African butter catfish",
+  "scientific": "Schilbe mystus",
+  "group": "fish",
+  "sections": {
+    "overview": "An African Schilbeidae catfish.",
+    "identification": "Up to 35 cm standard length.",
+    "habitat": "Lakes and medium to large rivers.",
+    "diet": "It eats fish, insects, shrimp, snails, seeds and fruit.",
+    "behavior": "Adults shoal; activity peaks at night.",
+    "reproduction": "It spawns in rainy seasons; eggs are laid on plants.",
+    "ecology": "It is potamodromous; spawning migrations are reported.",
+    "conservation": "Global status: Least Concern (2019)."
+  },
+  "sources": [
+    {
+      "url": "https://fishbase.se/summary/Schilbe-mystus",
+      "title": "Schilbe mystus — FishBase"
+    },
+    {
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/cahiers/hydrobio/00204.pdf",
+      "title": "Meristic characters and biology of Schilbe mystus in Côte d’Ivoire — IRD"
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "id": "steindachneridion_amblyurum",
+  "scientific": "Steindachneridion amblyurum",
+  "group": "fish",
+  "name": {
+    "en": "Jequitinhonha catfish",
+    "fr": "Surubim du Jequitinhonha"
+  },
+  "sections": {
+    "overview": {
+      "en": "A Brazilian catfish recorded from the Jequitinhonha basin.",
+      "fr": "Un silure brésilien signalé dans le bassin du Jequitinhonha."
+    },
+    "identification": {
+      "en": "It is one of six recognized species in Steindachneridion; the genus revision describes shared skeletal and fin characters.",
+      "fr": "C’est l’une des six espèces reconnues du genre Steindachneridion ; la révision du genre décrit des caractères communs du squelette et des nageoires."
+    },
+    "habitat": {
+      "en": "Freshwater and demersal.",
+      "fr": "D’eau douce et démersal."
+    },
+    "diet": {
+      "en": "Diet details are not reported.",
+      "fr": "Le régime n’est pas détaillé."
+    },
+    "behavior": {
+      "en": "Behaviour is poorly documented.",
+      "fr": "Son comportement est peu documenté."
+    },
+    "reproduction": {
+      "en": "Breeding details are not reported.",
+      "fr": "La reproduction n’est pas détaillée."
+    },
+    "ecology": {
+      "en": "It shares a Jequitinhonha record with S. parahybae, also listed from the Paraíba do Sul.",
+      "fr": "Il partage un signalement dans le Jequitinhonha avec S. parahybae, également indiqué dans le Paraíba do Sul."
+    },
+    "conservation": {
+      "en": "FishBase lists it as Vulnerable (2022).",
+      "fr": "FishBase le classe Vulnérable (2022)."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Steindachneridion amblyurum — FishBase",
+        "fr": "Steindachneridion amblyurum — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/48549",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists the Jequitinhonha basin, freshwater demersal habitat and a global Vulnerable assessment dated 18 May 2022; the summary lacks diet and breeding detail."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 24,
+        "total": 120,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Revision of genus Steindachneridion — Neotropical Ichthyology",
+        "fr": "Révision du genre Steindachneridion — Neotropical Ichthyology"
+      },
+      "url": "https://www.scielo.br/j/ni/a/ChSqN5jf3xmWhCCVmxNXSDG/?lang=en",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Garavello’s revision recognizes S. amblyurum among six extant congeners and describes shared anatomical and fin characters."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 16,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Steindachneridion parahybae — FishBase",
+        "fr": "Steindachneridion parahybae — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/48552",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records S. parahybae from the Jequitinhonha and Paraíba do Sul basins."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The available general summaries give limited species-specific biological detail; basin records are used here only to distinguish these congeners."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,34 @@
+{
+  "id": "spialia_phlomidis",
+  "name": "Persian skipper",
+  "scientific": "Spialia phlomidis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Persian skipper occurs from the Balkans across Asia Minor toward Iran and the Caucasus.",
+    "identification": "The Albanian account gives males a forewing length of 14–15 mm and describes the species as larger than Spialia orbifer.",
+    "habitat": "It occurs on open, hot, dry grassland and rocky slopes, from low elevations to mountain sites.",
+    "diet": "The larval host is not firmly established across its range; caterpillars are reported on bindweeds, Convolvulus species.",
+    "behavior": "Adults visit low flowers for nectar, and regional accounts describe them as active in hot, open sites.",
+    "reproduction": "A Bulgarian regional account reports one flight generation in June and July; timing may differ elsewhere.",
+    "ecology": "Populations can be very local; recent surveys in Albania found new sites in the southeast but did not reconfirm some northern records.",
+    "conservation": "The European IUCN assessment lists it as Least Concern in Europe and the EU, but this regional category does not establish its status across the full range."
+  },
+  "sources": [
+    {
+      "url": "https://biodiversity.unitir.edu.al/Albania_Spialia_phlomidis.htm",
+      "title": "Spialia phlomidis — Albania biodiversity species account"
+    },
+    {
+      "url": "https://pensoft.net/J_FILES/2/articles/568/3-0-Chapter-C-General-and-Hesperidae.pdf",
+      "title": "European butterflies: climatic risk atlas — Spialia phlomidis"
+    },
+    {
+      "url": "https://nc.iucnredlist.org/redlist/content/attachment_files/ERL_Pulse_Butterflies_2025.pdf",
+      "title": "European Red List pulse update: butterflies, 2025"
+    },
+    {
+      "url": "https://biodiversity.unitir.edu.al/Chronicles/Albania_Red_List_Review_2025.html",
+      "title": "Albanian Red List review: recent survey results"
+    }
+  ]
+}

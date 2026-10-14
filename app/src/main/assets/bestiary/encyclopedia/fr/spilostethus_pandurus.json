@@ -1,0 +1,38 @@
+{
+  "id": "spilostethus_pandurus",
+  "name": "Punaise méditerranéenne",
+  "scientific": "Spilostethus pandurus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette punaise des graines est largement répandue dans les régions chaudes d’Europe, d’Afrique et d’Asie.",
+    "identification": "Les adultes ont un motif rouge et noir bien visible. Ils possèdent aussi une paire de glandes thoraciques qui produit des sécrétions défensives.",
+    "habitat": "On la trouve souvent sur ses plantes nourricières, notamment des asclépiades comme Calotropis et d’autres plantes à graines.",
+    "diet": "Elle est phytophage et utilise diverses plantes-hôtes. Des observations de terrain décrivent des adultes et des nymphes consommant des graines. Des tests de choix en laboratoire ont montré une préférence pour Calotropis procera.",
+    "behavior": "Cette punaise peut intégrer des glycosides cardiotoniques végétaux à ses sécrétions défensives, qui repoussent les prédateurs.",
+    "reproduction": "Les femelles pondent des œufs qui donnent des nymphes, lesquelles passent par plusieurs stades avant l’âge adulte.",
+    "ecology": "Des observations de terrain montrent que cette punaise se nourrit aussi de plantes cultivées, notamment de cucurbitacées. En France, elle est signalée dans des milieux chauds et secs comme les friches, les bords de route et les dunes.",
+    "conservation": "Le catalogue FAUNA indique que l’espèce n’a pas été évaluée dans une Liste rouge."
+  },
+  "sources": [
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1439-0418.1976.tb03316.x",
+      "title": "Préférences alimentaires et mécanisme de défense chez Spilostethus pandurus"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/259570392_Some_Biological_Parameters_and_Morphological_Descriptions_Study_on_the_Milkweed_Bug_Spilostethus_Pandurus_Scop_Hemiptera_Lygaeidae",
+      "title": "Paramètres biologiques et description morphologique de la punaise à asclépiades"
+    },
+    {
+      "url": "https://www.indianjecol.org/online-first/articles/8/download",
+      "title": "Spilostethus pandurus dans l’Indian Journal of Ecology"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12383896/",
+      "title": "Variation génétique de la punaise Spilostethus pandurus en Thaïlande"
+    },
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/238248",
+      "title": "Fiche espèce Spilostethus pandurus — Observatoire FAUNA"
+    }
+  ]
+}

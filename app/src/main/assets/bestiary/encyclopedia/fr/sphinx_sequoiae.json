@@ -1,0 +1,30 @@
+{
+  "id": "sphinx_sequoiae",
+  "name": "Sphinx sequoiae",
+  "scientific": "Sphinx sequoiae",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ce sphinx de l’ouest nord-américain vit de l’Oregon et de la Californie jusqu’au Sud-Ouest et au nord de la Basse-Californie.",
+    "identification": "Ses ailes antérieures grises sont plus foncées en Oregon et au centre de la Californie, plus pâles dans une grande partie de la zone des genévriers.",
+    "habitat": "Il fréquente les déserts et les boisements de pins pignons et de genévriers, notamment les forêts sèches à genévrier de l’Ouest.",
+    "diet": "Les chenilles mangent des genévriers; les adultes butinent notamment le cerisier de l’Ouest et le marronnier de Californie.",
+    "behavior": "Les adultes sont nocturnes et volent au milieu de l’été; l’espèce est donnée pour une génération annuelle de la fin du printemps à l’été.",
+    "reproduction": "La chenille arrivée à maturité se nymphose dans une galerie souterraine et y passe l’hiver.",
+    "ecology": "La chenille est associée aux Cupressacées, en particulier aux genres Juniperus et Calocedrus.",
+    "conservation": "Son rang mondial NatureServe rapporté est G4, « apparemment sécurisé »."
+  },
+  "sources": [
+    {
+      "url": "https://www.butterfliesandmoths.org/species/Sphinx-sequoiae",
+      "title": "Fiche du sphinx sequoiae — Butterflies and Moths of North America"
+    },
+    {
+      "url": "https://www.fs.usda.gov/foresthealth/technology/pdfs/FHTET_03_11.pdf",
+      "title": "Lépidoptères du Nord-Ouest Pacifique — USDA Forest Service"
+    },
+    {
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?phylo=890125",
+      "title": "Moth Photographers Group : Sphinx sequoiae"
+    }
+  ]
+}

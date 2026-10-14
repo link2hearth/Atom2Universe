@@ -1,0 +1,30 @@
+{
+  "id": "stegobium_paniceum",
+  "name": "Biscuit beetle",
+  "scientific": "Stegobium paniceum",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This small beetle is a widespread pest of stored foods.",
+    "identification": "Adults are reddish brown and about 2–4 mm long.",
+    "habitat": "It is often found in homes, shops, warehouses and kitchens where dry foods are stored.",
+    "diet": "Larvae feed on dry foods, including flour, biscuits and spices.",
+    "behavior": "Larvae tunnel through food and can reach supplies hidden inside packaging.",
+    "reproduction": "It develops through egg, larva, pupa and adult stages; females lay eggs on or near a food source.",
+    "ecology": "Development speed depends on temperature, moisture and food quality.",
+    "conservation": "The references consulted describe it as a stored-food pest rather than provide a conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.nhm.ac.uk/take-part/identify-nature/common-insect-pest-species-in-homes/bread-or-biscuit-beetle-stegobium-paniceum-identification-guide.html",
+      "title": "Biscuit beetle identification and life cycle — Natural History Museum"
+    },
+    {
+      "url": "https://ask.ifas.ufl.edu/publication/IN385",
+      "title": "Drugstore beetle — University of Florida IFAS Extension"
+    },
+    {
+      "url": "https://ephytia.inrae.fr/fr/C/11596/Hypp-encyclopedie-en-protection-des-plantes-Stegobium-paniceum",
+      "title": "Stegobium paniceum — INRAE Ephytia"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "sternula_antillarum",
+  "name": "Least Tern",
+  "scientific": "Sternula antillarum",
+  "group": "birds",
+  "sections": {
+    "overview": "The Least Tern is a small coastal tern that breeds in North America and parts of northern South America.",
+    "identification": "Adults are pale grey above and white below, with a black cap, yellow bill and dark bill tip in breeding plumage.",
+    "habitat": "It nests on open sand or gravel along beaches, estuaries and rivers, often where vegetation is sparse.",
+    "diet": "It catches small fish by hovering briefly and plunging into shallow water.",
+    "behavior": "Adults often defend the nesting area with repeated alarm calls and dives at intruders.",
+    "reproduction": "It lays its eggs in a shallow scrape on bare ground, with little or no nest material.",
+    "ecology": "Its nesting sites can be vulnerable to high tides; a Baja California study tested raising the nesting surface to reduce inundation.",
+    "conservation": "Conservation status varies by region and subspecies; a Mexican study describes local special protection and management of nesting habitat."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Least_Tern/",
+      "title": "Least Tern Overview — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/least-tern-sternula-antillarum",
+      "title": "Least Tern species factsheet — BirdLife DataZone"
+    },
+    {
+      "url": "https://doi.org/10.22201/ib.20078706e.2008.001.501",
+      "title": "Manejo de un sitio de anidación para la conservación de Sternula antillarum"
+    }
+  ]
+}

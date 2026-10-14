@@ -1,0 +1,141 @@
+{
+  "id": "sternula_antillarum",
+  "scientific": "Sternula antillarum",
+  "group": "birds",
+  "name": {
+    "en": "Least Tern",
+    "fr": "Petite Sterne"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Least Tern is a small coastal tern that breeds in North America and parts of northern South America.",
+      "fr": "La petite sterne est une petite sterne côtière qui niche en Amérique du Nord et dans certaines parties du nord de l’Amérique du Sud."
+    },
+    "identification": {
+      "en": "Adults are pale grey above and white below, with a black cap, yellow bill and dark bill tip in breeding plumage.",
+      "fr": "L’adulte est gris pâle dessus et blanc dessous, avec une calotte noire et, en plumage nuptial, un bec jaune à pointe sombre."
+    },
+    "habitat": {
+      "en": "It nests on open sand or gravel along beaches, estuaries and rivers, often where vegetation is sparse.",
+      "fr": "Il niche sur des surfaces dégagées de sable ou de gravier, le long des plages, estuaires et rivières, souvent là où la végétation est rare."
+    },
+    "diet": {
+      "en": "It catches small fish by hovering briefly and plunging into shallow water.",
+      "fr": "Il capture de petits poissons en faisant un bref vol stationnaire avant de plonger dans l’eau peu profonde."
+    },
+    "behavior": {
+      "en": "Adults often defend the nesting area with repeated alarm calls and dives at intruders.",
+      "fr": "Les adultes défendent souvent le site de nidification par des cris répétés et des piqués vers les intrus."
+    },
+    "reproduction": {
+      "en": "It lays its eggs in a shallow scrape on bare ground, with little or no nest material.",
+      "fr": "Il pond ses œufs dans une légère dépression du sol nu, avec peu ou pas de matériaux pour le nid."
+    },
+    "ecology": {
+      "en": "Its nesting sites can be vulnerable to high tides; a Baja California study tested raising the nesting surface to reduce inundation.",
+      "fr": "Ses sites de nidification peuvent être exposés aux marées hautes ; une étude en Basse-Californie a testé le rehaussement du terrain pour limiter l’inondation."
+    },
+    "conservation": {
+      "en": "Conservation status varies by region and subspecies; a Mexican study describes local special protection and management of nesting habitat.",
+      "fr": "Le statut de conservation varie selon les régions et les sous-espèces ; une étude mexicaine décrit une protection locale et la gestion de l’habitat de nidification."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Least Tern Overview — Cornell Lab of Ornithology",
+        "fr": "Présentation de la petite sterne — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Least_Tern/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Cornell describes the species' appearance, coastal range, fish-catching dives and defense of nesting colonies."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 14,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Least Tern species factsheet — BirdLife DataZone",
+        "fr": "Fiche espèce de la petite sterne — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/least-tern-sternula-antillarum",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "BirdLife summarizes the species' breeding ecology and nesting habitat."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 9,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Manejo de un sitio de anidación para la conservación de Sternula antillarum",
+        "fr": "Gestion d’un site de nidification pour la conservation de Sternula antillarum"
+      },
+      "url": "https://doi.org/10.22201/ib.20078706e.2008.001.501",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The Mexican study reports high-tide flooding of some colonies and a locally protected nesting species."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 15,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Nesting habitat and conservation measures differ among coastal and interior populations; the cited Mexican results are local."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; the conservation note avoids generalizing a local legal status to the global species."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "phalangium_opilio",
+  "name": "Common harvestman",
+  "scientific": "Phalangium opilio",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Phalangium opilio, the Common Harvestman, is an arachnid in the order Opiliones; harvestmen are not spiders.",
+    "identification": "It has long legs and a variable pale body pattern; males have a distinctive horn-like projection on the chelicerae.",
+    "habitat": "It lives in open vegetated sites, including field margins, meadows and gardens.",
+    "diet": "It preys on small arthropods, including aphids and insect eggs.",
+    "behavior": "It is mainly active at dusk and night.",
+    "reproduction": "Fertilization is internal; females lay eggs in soil, and no further parental care is reported.",
+    "ecology": "In crops it can prey on pests; laboratory results show diet affects its development and reproduction.",
+    "conservation": "The sources consulted describe it as widespread or abundant in several regions; no global conservation assessment was found for this draft."
+  },
+  "sources": [
+    {
+      "url": "https://harvestmen.fscbiodiversity.uk/harvestmen/resources/species-accounts/phalangium-opilio-description",
+      "title": "Phalangium opilio species description — Harvestmen Recording Scheme"
+    },
+    {
+      "url": "https://natwiss.ph-karlsruhe.de/GARTEN/material/steckbrief/Sortenvielfalt/Weberknecht.pdf",
+      "title": "Phalangium opilio — Karlsruhe University of Education garden species profile"
+    },
+    {
+      "url": "https://academic.oup.com/ee/article/34/1/6/478711",
+      "title": "Effect of Diet on Development and Reproduction of the Harvestman Phalangium opilio — Environmental Entomology"
+    }
+  ]
+}

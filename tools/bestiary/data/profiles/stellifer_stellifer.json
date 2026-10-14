@@ -1,0 +1,141 @@
+{
+  "id": "stellifer_stellifer",
+  "scientific": "Stellifer stellifer",
+  "group": "fish",
+  "name": {
+    "en": "Little croaker",
+    "fr": "Stellifer stellifer"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small sciaenid ranges along the western Atlantic coast from Venezuela to southern Brazil.",
+      "fr": "Ce petit sciaenidé vit le long de la côte ouest de l’Atlantique, du Venezuela jusqu’au sud du Brésil."
+    },
+    "identification": {
+      "en": "It is a small croaker of the genus Stellifer, recorded to about 21 cm total length.",
+      "fr": "C’est un petit tambour du genre Stellifer, dont la longueur totale documentée atteint environ 21 cm."
+    },
+    "habitat": {
+      "en": "It is demersal in shallow estuaries and nearby coastal waters, over muddy or sandy-mud bottoms.",
+      "fr": "Il vit près du fond dans les estuaires peu profonds et les eaux côtières voisines, sur des substrats vaseux ou sablo-vaseux."
+    },
+    "diet": {
+      "en": "A study of three Stellifer species in a Brazilian bay found that all fed mainly on crustaceans.",
+      "fr": "Une étude de trois espèces de Stellifer dans une baie brésilienne a constaté qu’elles se nourrissaient surtout de crustacés."
+    },
+    "behavior": {
+      "en": "In a comparative study, it was caught in shallow waters of Caraguatatuba Bay.",
+      "fr": "Dans une étude comparative, il était capturé dans les eaux peu profondes de la baie de Caraguatatuba."
+    },
+    "reproduction": {
+      "en": "In one southern Brazilian estuary, reproduction was concentrated in spring and summer, with batches of eggs released over the season.",
+      "fr": "Dans un estuaire du sud du Brésil, la reproduction se concentrait au printemps et en été, avec plusieurs pontes au cours de la saison."
+    },
+    "ecology": {
+      "en": "It contributes to estuarine fish communities but is also caught incidentally in shrimp trawls.",
+      "fr": "Il contribue aux communautés de poissons estuariennes, mais il est aussi capturé accidentellement par les chaluts à crevettes."
+    },
+    "conservation": {
+      "en": "The cited 2020 assessment classified it as Data Deficient; this is not a finding that the species is safe from threats.",
+      "fr": "L’évaluation citée de 2020 le classait en données insuffisantes ; cela ne signifie pas que l’espèce est à l’abri des menaces."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Stellifer stellifer — FishBase field guide",
+        "fr": "Stellifer stellifer — guide de terrain FishBase"
+      },
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=740&genusname=Stellifer&speciesname=stellifer",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the western Atlantic range, small size, estuarine bottom habitat and 2020 Data Deficient assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 16,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Life-history traits and population structure of Stellifer stellifer in a subtropical estuary in southern Brazil",
+        "fr": "Life-history traits and population structure of Stellifer stellifer in a subtropical estuary in southern Brazil"
+      },
+      "url": "https://www.scielo.br/j/zool/a/FPc9QjkmNySDDSyccnkHVmd/?lang=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The 2025 Guaratuba Bay study reports seasonal spawning and shrimp-trawl bycatch."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 11,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Population biology and diet of three Stellifer species in Caraguatatuba Bay",
+        "fr": "Biologia populacional e dieta de três espécies de Stellifer na Baía de Caraguatatuba"
+      },
+      "url": "https://teses.usp.br/teses/disponiveis/21/21131/tde-02082011-120452/pt-br.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The Portuguese thesis abstract compares S. stellifer, S. rastrifer and S. brasiliensis and reports crustaceans as their principal food category."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 20,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet and breeding observations are based on specific Brazilian study sites and should not be assumed to describe every population."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; concise claims distinguish species-specific findings from study-site observations."
+}

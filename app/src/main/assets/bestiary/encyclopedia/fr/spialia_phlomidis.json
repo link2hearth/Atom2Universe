@@ -1,0 +1,34 @@
+{
+  "id": "spialia_phlomidis",
+  "name": "Hespérie des Phlomides",
+  "scientific": "Spialia phlomidis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "L’Hespérie des Phlomides est présente des Balkans à l’Asie Mineure, vers l’Iran et le Caucase.",
+    "identification": "Le compte rendu albanais donne aux mâles une longueur d’aile antérieure de 14–15 mm et décrit l’espèce comme plus grande que Spialia orbifer.",
+    "habitat": "Elle fréquente les prairies sèches ouvertes et chaudes ainsi que les pentes rocheuses, des basses altitudes aux sites montagnards.",
+    "diet": "La plante-hôte larvaire n’est pas établie avec certitude dans toute son aire; des chenilles sont signalées sur des liserons du genre Convolvulus.",
+    "behavior": "Les adultes butinent les fleurs basses et les comptes régionaux les décrivent actifs dans des sites chauds et ouverts.",
+    "reproduction": "Un compte régional bulgare rapporte une génération de vol en juin et juillet; la période peut différer ailleurs.",
+    "ecology": "Les populations peuvent être très localisées; des prospections récentes en Albanie ont trouvé de nouveaux sites au sud-est, sans confirmer certains anciens signalements du nord.",
+    "conservation": "L’évaluation UICN européenne la classe en Préoccupation mineure en Europe et dans l’Union européenne, mais cette catégorie régionale ne fixe pas son statut dans toute son aire."
+  },
+  "sources": [
+    {
+      "url": "https://biodiversity.unitir.edu.al/Albania_Spialia_phlomidis.htm",
+      "title": "Spialia phlomidis — fiche albanaise de biodiversité"
+    },
+    {
+      "url": "https://pensoft.net/J_FILES/2/articles/568/3-0-Chapter-C-General-and-Hesperidae.pdf",
+      "title": "Atlas européen du risque climatique des papillons — Spialia phlomidis"
+    },
+    {
+      "url": "https://nc.iucnredlist.org/redlist/content/attachment_files/ERL_Pulse_Butterflies_2025.pdf",
+      "title": "Mise à jour de la Liste rouge européenne : papillons, 2025"
+    },
+    {
+      "url": "https://biodiversity.unitir.edu.al/Chronicles/Albania_Red_List_Review_2025.html",
+      "title": "Révision de la Liste rouge albanaise : résultats des prospections récentes"
+    }
+  ]
+}

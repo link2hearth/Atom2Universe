@@ -1,0 +1,163 @@
+{
+  "id": "steindachneridion_melanodermatum",
+  "scientific": "Steindachneridion melanodermatum",
+  "group": "fish",
+  "name": {
+    "en": "Iguaçu catfish",
+    "fr": "Surubim de l’Iguaçu"
+  },
+  "sections": {
+    "overview": {
+      "en": "A Brazilian pimelodid catfish recorded from the Iguaçu River.",
+      "fr": "Un silure pimélodidé brésilien signalé dans le rio Iguaçu."
+    },
+    "identification": {
+      "en": "It is a described member of Steindachneridion; the genus revision diagnoses the group using shared skeletal and fin characters.",
+      "fr": "C’est une espèce décrite de Steindachneridion ; la révision du genre caractérise le groupe par des traits communs du squelette et des nageoires."
+    },
+    "habitat": {
+      "en": "Freshwater and demersal.",
+      "fr": "D’eau douce et démersal."
+    },
+    "diet": {
+      "en": "Diet details are not reported.",
+      "fr": "Le régime n’est pas détaillé."
+    },
+    "behavior": {
+      "en": "Behaviour is poorly documented.",
+      "fr": "Son comportement est peu documenté."
+    },
+    "reproduction": {
+      "en": "Breeding details are not reported.",
+      "fr": "La reproduction n’est pas détaillée."
+    },
+    "ecology": {
+      "en": "It is a congener of S. doceanum, recorded from the Doce basin.",
+      "fr": "C’est un congénère de S. doceanum, signalé dans le bassin du Doce."
+    },
+    "conservation": {
+      "en": "FishBase lists it as Endangered (2018).",
+      "fr": "FishBase le classe En danger (2018)."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Steindachneridion melanodermatum — FishBase",
+        "fr": "Steindachneridion melanodermatum — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/62703",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists the Iguaçu River, freshwater demersal habitat and a global Endangered assessment dated 7 November 2018; it does not detail diet or reproduction."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 24,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Revision of genus Steindachneridion — Neotropical Ichthyology",
+        "fr": "Révision du genre Steindachneridion — Neotropical Ichthyology"
+      },
+      "url": "https://www.scielo.br/j/ni/a/ChSqN5jf3xmWhCCVmxNXSDG/?lang=en",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The genus revision describes S. melanodermatum and documents shared characters among Steindachneridion species."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 13,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Steindachneridion doceanum — FishBase",
+        "fr": "Steindachneridion doceanum — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/48550",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records S. doceanum from the Doce basin, not the Iguaçu basin listed for S. melanodermatum."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Genetic structure and conservation strategies for S. melanodermatum — Aquatic Conservation",
+        "fr": "Structure génétique et conservation de S. melanodermatum — Aquatic Conservation"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/aqc.70404",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The study identifies S. melanodermatum as an endemic catfish of the Iguaçu basin and describes it as highly threatened."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 19,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific diet, behaviour and reproduction are not described in the consulted summaries."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

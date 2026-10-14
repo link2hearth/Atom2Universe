@@ -1,0 +1,30 @@
+{
+  "id": "saxatilomys_paulinae",
+  "name": "Paulina's limestone rat",
+  "scientific": "Saxatilomys paulinae",
+  "group": "mammals",
+  "sections": {
+    "overview": "Saxatilomys paulinae is a poorly known murid rodent first described from limestone karst in central Laos.",
+    "identification": "It has dark, dense fur with partly spine-like hairs and unusually enlarged pads on its feet.",
+    "habitat": "Records associate it with rocky karst, including limestone forest, scrub and bamboo-covered slopes.",
+    "diet": "Its diet has not been described adequately in the sources consulted.",
+    "behavior": "It is reported as nocturnal, but its movements and social behavior remain unknown.",
+    "reproduction": "The available species accounts provide no reliable details on breeding.",
+    "ecology": "Later surveys recorded it in Vietnam as well as Laos; one study then knew only a handful of sites across this limestone region.",
+    "conservation": "The Mammal Diversity Database lists its IUCN status as Not Evaluated. Field researchers reported trapping and habitat disturbance at known Vietnamese sites."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003678/",
+      "title": "Paulina’s Limestone Rat — Mammal Diversity Database"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4442251/",
+      "title": "New data on Saxatilomys paulinae — Biodiversity Data Journal"
+    },
+    {
+      "url": "https://www.gbif.org/species/197826217",
+      "title": "Saxatilomys paulinae — GBIF species account"
+    }
+  ]
+}

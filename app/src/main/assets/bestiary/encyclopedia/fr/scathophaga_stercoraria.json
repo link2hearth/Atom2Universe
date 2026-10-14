@@ -1,0 +1,30 @@
+{
+  "id": "scathophaga_stercoraria",
+  "name": "Scatophage du fumier",
+  "scientific": "Scathophaga stercoraria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette mouche largement répandue dans l’hémisphère Nord est souvent associée aux excréments de grands mammifères.",
+    "identification": "Les mâles sont jaune orangé et velus; les femelles sont plus verdâtres et moins velues.",
+    "habitat": "Les adultes se rassemblent autour d’excréments frais, souvent dans les pâtures tempérées.",
+    "diet": "Les larves se nourrissent dans les excréments. Les adultes capturent de petits insectes et peuvent aussi prendre du nectar.",
+    "behavior": "Les mâles attendent les femelles sur ou près des excréments frais.",
+    "reproduction": "Les femelles pondent dans les excréments. L’espèce hiverne au stade de pupe.",
+    "ecology": "Ses larves contribuent à décomposer les excréments de mammifères.",
+    "conservation": "La synthèse d’histoire naturelle ne donne pas d’évaluation mondiale de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3014657/",
+      "title": "Natural history of the yellow dung fly — Journal of Insect Science"
+    },
+    {
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/26581092/mouche-doree-du-fumier",
+      "title": "Mouche dorée du fumier — Office québécois de la langue française"
+    },
+    {
+      "url": "https://www.persee.fr/doc/bsef_0037-928x_1923_num_28_13_27193",
+      "title": "Sur le comportement de Scatophaga stercoraria — Bulletin de la Société entomologique de France"
+    }
+  ]
+}

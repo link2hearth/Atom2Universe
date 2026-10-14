@@ -1,0 +1,30 @@
+{
+  "id": "schinia_cognata",
+  "name": "Cognate flower moth",
+  "scientific": "Schinia cognata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This noctuid moth is recorded across parts of southeastern Europe and western Asia.",
+    "identification": "It belongs to Schinia, in the heliothine subfamily of Noctuidae.",
+    "habitat": "It is associated with warm, dry places such as steppe, sandy grassland and dry slopes.",
+    "diet": "The larvae feed on Chondrilla juncea, a plant in the daisy family.",
+    "behavior": "Adults fly by day, usually from late June to mid-August.",
+    "reproduction": "Larvae occur on the host plant’s flowers and fruits in late summer.",
+    "ecology": "A molecular study groups it with S. cardui; both were specialists on the plant tribe Lactuceae in that study.",
+    "conservation": "The Belgian catalogue treats it as an exotic visitor there and records one specimen from 1909."
+  },
+  "sources": [
+    {
+      "url": "https://lepiforum.org/wiki/page/Schinia_Cognata",
+      "title": "Schinia cognata — Lepiforum"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/7839/",
+      "title": "Schinia cognata — Catalogue of the Lepidoptera of Belgium"
+    },
+    {
+      "url": "https://resjournals.onlinelibrary.wiley.com/doi/10.1111/j.1365-3113.2008.00427.x",
+      "title": "Molecular phylogenetics of heliothine moths — Systematic Entomology"
+    }
+  ]
+}

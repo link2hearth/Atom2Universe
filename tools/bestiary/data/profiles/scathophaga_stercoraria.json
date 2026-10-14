@@ -1,0 +1,147 @@
+{
+  "id": "scathophaga_stercoraria",
+  "scientific": "Scathophaga stercoraria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Yellow dung fly",
+    "fr": "Scatophage du fumier"
+  },
+  "sections": {
+    "overview": {
+      "en": "A widespread northern-hemisphere fly, it is often associated with large-mammal dung.",
+      "fr": "Cette mouche largement répandue dans l’hémisphère Nord est souvent associée aux excréments de grands mammifères."
+    },
+    "identification": {
+      "en": "Males are yellow-orange and hairy; females are greener and less hairy.",
+      "fr": "Les mâles sont jaune orangé et velus; les femelles sont plus verdâtres et moins velues."
+    },
+    "habitat": {
+      "en": "Adults gather at fresh dung, often in temperate pastures.",
+      "fr": "Les adultes se rassemblent autour d’excréments frais, souvent dans les pâtures tempérées."
+    },
+    "diet": {
+      "en": "Larvae feed in dung. Adults prey on small insects and may also take nectar.",
+      "fr": "Les larves se nourrissent dans les excréments. Les adultes capturent de petits insectes et peuvent aussi prendre du nectar."
+    },
+    "behavior": {
+      "en": "Males wait on or near fresh dung for females.",
+      "fr": "Les mâles attendent les femelles sur ou près des excréments frais."
+    },
+    "reproduction": {
+      "en": "Females lay eggs in dung. The species overwinters as a pupa.",
+      "fr": "Les femelles pondent dans les excréments. L’espèce hiverne au stade de pupe."
+    },
+    "ecology": {
+      "en": "Its larvae help break down mammal dung.",
+      "fr": "Ses larves contribuent à décomposer les excréments de mammifères."
+    },
+    "conservation": {
+      "en": "The natural-history review gives no global conservation assessment.",
+      "fr": "La synthèse d’histoire naturelle ne donne pas d’évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Natural history of the yellow dung fly — Journal of Insect Science",
+        "fr": "Natural history of the yellow dung fly — Journal of Insect Science"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3014657/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Review of natural history and life cycle."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 7,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mouche dorée du fumier — Office québécois de la langue française",
+        "fr": "Mouche dorée du fumier — Office québécois de la langue française"
+      },
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/26581092/mouche-doree-du-fumier",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "French terminology entry confirms the larval dung-feeding association."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 11,
+        "notes_words": 8,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sur le comportement de Scatophaga stercoraria — Bulletin de la Société entomologique de France",
+        "fr": "Sur le comportement de Scatophaga stercoraria — Bulletin de la Société entomologique de France"
+      },
+      "url": "https://www.persee.fr/doc/bsef_0037-928x_1923_num_28_13_27193",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "French entomological note describes adult predation and egg-laying on dung."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 10,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Season length and number of generations depend strongly on climate and altitude."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Adult predation is separated from larval coprophagy; the French common name follows the project catalogue."
+}

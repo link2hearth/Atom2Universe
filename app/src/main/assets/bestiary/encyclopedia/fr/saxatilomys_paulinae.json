@@ -1,0 +1,30 @@
+{
+  "id": "saxatilomys_paulinae",
+  "name": "Rat des karsts de Paulina",
+  "scientific": "Saxatilomys paulinae",
+  "group": "mammals",
+  "sections": {
+    "overview": "Saxatilomys paulinae est un rongeur muridé peu connu, décrit d’abord dans les karsts calcaires du centre du Laos.",
+    "identification": "Il possède une fourrure sombre et dense, aux poils parfois presque épineux, ainsi que des coussinets plantaires particulièrement développés.",
+    "habitat": "Les observations l’associent aux reliefs karstiques rocheux, notamment aux forêts calcaires et aux pentes couvertes de broussailles et de bambous.",
+    "diet": "Son régime alimentaire n’est pas suffisamment décrit dans les sources consultées.",
+    "behavior": "Il est décrit comme nocturne, mais ses déplacements et son comportement social restent inconnus.",
+    "reproduction": "Les fiches d’espèce disponibles ne donnent pas de renseignements fiables sur sa reproduction.",
+    "ecology": "Des prospections l’ont ensuite recensé au Vietnam comme au Laos ; une étude ne connaissait alors que quelques sites dans cette région calcaire.",
+    "conservation": "La Mammal Diversity Database indique que son statut UICN est « non évalué ». Des chercheurs ont signalé piégeage et perturbation de l’habitat sur les sites vietnamiens connus."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003678/",
+      "title": "Paulina’s Limestone Rat — Mammal Diversity Database"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4442251/",
+      "title": "New data on Saxatilomys paulinae — Biodiversity Data Journal"
+    },
+    {
+      "url": "https://www.gbif.org/species/197826217",
+      "title": "Saxatilomys paulinae — GBIF species account"
+    }
+  ]
+}

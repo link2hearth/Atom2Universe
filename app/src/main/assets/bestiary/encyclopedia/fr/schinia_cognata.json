@@ -1,0 +1,30 @@
+{
+  "id": "schinia_cognata",
+  "name": "Héliothine du laitron",
+  "scientific": "Schinia cognata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette noctuelle est signalée dans certaines régions du sud-est de l’Europe et de l’Asie occidentale.",
+    "identification": "Elle appartient au genre Schinia, dans la sous-famille des Heliothinae (Noctuidae).",
+    "habitat": "Elle est associée aux milieux chauds et secs, comme les steppes, pelouses sableuses et pentes arides.",
+    "diet": "Les chenilles se nourrissent de Chondrilla juncea, une plante de la famille des Astéracées.",
+    "behavior": "Les adultes volent le jour, généralement de la fin juin à la mi-août.",
+    "reproduction": "À la fin de l’été, les chenilles se trouvent sur les fleurs et les fruits de la plante hôte.",
+    "ecology": "Une étude moléculaire la regroupe avec S. cardui ; dans cette étude, les deux espèces étaient spécialisées sur la tribu végétale des Lactuceae.",
+    "conservation": "Le catalogue belge la considère comme visiteuse exotique et mentionne un spécimen de 1909."
+  },
+  "sources": [
+    {
+      "url": "https://lepiforum.org/wiki/page/Schinia_Cognata",
+      "title": "Schinia cognata — Lepiforum"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/7839/",
+      "title": "Schinia cognata — Catalogue des lépidoptères de Belgique"
+    },
+    {
+      "url": "https://resjournals.onlinelibrary.wiley.com/doi/10.1111/j.1365-3113.2008.00427.x",
+      "title": "Phylogénie moléculaire des héliothines — Systematic Entomology"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "sphinx_sequoiae",
+  "name": "Sequoia sphinx",
+  "scientific": "Sphinx sequoiae",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This western North American hawkmoth occurs from Oregon and California into the Southwest and northern Baja California.",
+    "identification": "Its gray forewings are darker in Oregon and central California, paler in much of the juniper belt.",
+    "habitat": "It inhabits desert and pinyon-juniper woodland, including dry forests with western juniper.",
+    "diet": "Caterpillars feed on junipers; adults take nectar from flowers including western chokecherry and California buckeye.",
+    "behavior": "Adults are nocturnal and fly in midsummer; the species is reported in one annual brood from late spring through summer.",
+    "reproduction": "The full-grown caterpillar pupates in an underground burrow and overwinters there.",
+    "ecology": "The caterpillar stage is associated with Cupressaceae, especially Juniperus and Calocedrus.",
+    "conservation": "Its reported global NatureServe rank is G4, Apparently Secure."
+  },
+  "sources": [
+    {
+      "url": "https://www.butterfliesandmoths.org/species/Sphinx-sequoiae",
+      "title": "Sequoia sphinx species account — Butterflies and Moths of North America"
+    },
+    {
+      "url": "https://www.fs.usda.gov/foresthealth/technology/pdfs/FHTET_03_11.pdf",
+      "title": "Lepidoptera of the Pacific Northwest — USDA Forest Service"
+    },
+    {
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?phylo=890125",
+      "title": "Moth Photographers Group: Sphinx sequoiae"
+    }
+  ]
+}

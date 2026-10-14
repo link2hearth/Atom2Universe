@@ -1,0 +1,34 @@
+{
+  "id": "steindachneridion_melanodermatum",
+  "name": "Iguaçu catfish",
+  "scientific": "Steindachneridion melanodermatum",
+  "group": "fish",
+  "sections": {
+    "overview": "A Brazilian pimelodid catfish recorded from the Iguaçu River.",
+    "identification": "It is a described member of Steindachneridion; the genus revision diagnoses the group using shared skeletal and fin characters.",
+    "habitat": "Freshwater and demersal.",
+    "diet": "Diet details are not reported.",
+    "behavior": "Behaviour is poorly documented.",
+    "reproduction": "Breeding details are not reported.",
+    "ecology": "It is a congener of S. doceanum, recorded from the Doce basin.",
+    "conservation": "FishBase lists it as Endangered (2018)."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/62703",
+      "title": "Steindachneridion melanodermatum — FishBase"
+    },
+    {
+      "url": "https://www.scielo.br/j/ni/a/ChSqN5jf3xmWhCCVmxNXSDG/?lang=en",
+      "title": "Revision of genus Steindachneridion — Neotropical Ichthyology"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/48550",
+      "title": "Steindachneridion doceanum — FishBase"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/aqc.70404",
+      "title": "Genetic structure and conservation strategies for S. melanodermatum — Aquatic Conservation"
+    }
+  ]
+}

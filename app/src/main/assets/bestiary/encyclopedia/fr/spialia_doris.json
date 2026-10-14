@@ -1,0 +1,30 @@
+{
+  "id": "spialia_doris",
+  "name": "Hespérie du désert",
+  "scientific": "Spialia doris",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "L’Hespérie du désert est un petit papillon d’Afrique du Nord et orientale, d’Arabie et de régions d’Asie occidentale et méridionale.",
+    "identification": "C’est un hespérie de la famille des Hesperiidae; les comptes taxonomiques distinguent plusieurs formes géographiquement séparées au sein de l’espèce.",
+    "habitat": "Il fréquente les plaines désertiques et semi-désertiques, les piémonts et les milieux secs rocheux.",
+    "diet": "Les chenilles mangent des liserons, notamment des Convolvulus; les adultes butinent des fleurs pour leur nectar.",
+    "behavior": "Les comptes de terrain signalent des adultes sur les fleurs; une observation indienne en décrit un posé sur une inflorescence de graminée dans un milieu aride et rocheux.",
+    "reproduction": "Les périodes de vol varient selon les lieux et certains comptes décrivent plusieurs périodes saisonnières; les premiers stades restent peu documentés.",
+    "ecology": "La forme indienne evanida a été redécouverte dans le désert du Thar après une longue absence de signalements, ce qui illustre le faible suivi de certaines populations régionales.",
+    "conservation": "L’évaluation UICN de la région méditerranéenne classe l’espèce en Préoccupation mineure dans cette région; il ne s’agit pas d’une catégorie mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.metamorphosis.org.za/articlesPDF/1039/045%20Genus%20Spialia%20Swinhoe.pdf",
+      "title": "Genre Spialia : fiche de l’Hespérie du désert"
+    },
+    {
+      "url": "https://www.threatenedtaxa.org/index.php/JoTT/article/view/6348",
+      "title": "Redécouverte de Spialia doris evanida dans le désert du Thar, en Inde"
+    },
+    {
+      "url": "https://www.lepidoptera.life/wp-content/uploads/2020/04/The_status_and_distribution_of_mediterranean_butterflies.pdf",
+      "title": "Statut et répartition des papillons méditerranéens"
+    }
+  ]
+}

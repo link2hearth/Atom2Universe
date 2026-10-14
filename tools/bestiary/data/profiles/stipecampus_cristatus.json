@@ -1,0 +1,119 @@
+{
+  "id": "stipecampus_cristatus",
+  "scientific": "Stipecampus cristatus",
+  "group": "fish",
+  "name": {
+    "en": "Ringback Pipefish",
+    "fr": "Syngnathe à crête"
+  },
+  "sections": {
+    "overview": {
+      "en": "This pipefish is endemic to temperate coastal waters of southern Australia.",
+      "fr": "Ce syngnathe est endémique des eaux côtières tempérées du sud de l’Australie."
+    },
+    "identification": {
+      "en": "Its mottled brown body has pale bars along the back and a raised ridge on the snout.",
+      "fr": "Son corps brun marbré porte des barres pâles sur le dos et une crête relevée sur le museau."
+    },
+    "habitat": {
+      "en": "It shelters in shallow bays and estuaries among seagrass, algae, reef rubble and shell deposits.",
+      "fr": "Il s’abrite dans les baies et estuaires peu profonds, parmi les herbiers, les algues, les débris de récif et les coquilles."
+    },
+    "diet": {
+      "en": "It feeds on small crustaceans.",
+      "fr": "Il se nourrit de petits crustacés."
+    },
+    "behavior": {
+      "en": "In Port Phillip Bay, it appears seasonally in large numbers, probably in connection with breeding.",
+      "fr": "Dans la baie de Port Phillip, il apparaît saisonnièrement en grand nombre, probablement en lien avec la reproduction."
+    },
+    "reproduction": {
+      "en": "The male carries eggs in a brood pouch beneath the tail until the young hatch.",
+      "fr": "Le mâle porte les œufs dans une poche incubatrice sous la queue jusqu’à l’éclosion des jeunes."
+    },
+    "ecology": {
+      "en": "Its small size and use of seagrass and sheltered reefs place it among the coastal pipefishes of southern Australia.",
+      "fr": "Sa petite taille et son usage des herbiers et récifs abrités le rattachent aux syngnathes côtiers du sud de l’Australie."
+    },
+    "conservation": {
+      "en": "Australian sources list it as protected under several state fisheries laws and as marine-listed under the EPBC Act.",
+      "fr": "Les sources australiennes le signalent comme protégé par plusieurs lois halieutiques d’État et inscrit en milieu marin au titre de l’EPBC Act."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ringback Pipefish, Stipecampus cristatus — Fishes of Australia",
+        "fr": "Ringback Pipefish, Stipecampus cristatus — Fishes of Australia"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/3194",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Fishes of Australia documents habitat, diet, breeding and legal protections."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 10,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ringback Pipefish — Australian Museum",
+        "fr": "Syngnathe à crête — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/fishes/ringback-pipefish-stipecampus-cristatus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "The Australian Museum independently confirms the Australian endemic range, brown coloration and pale back bars."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 15,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species account gives a probable breeding explanation for seasonal movement into Port Phillip Bay, rather than a demonstrated cause."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; details are limited to a species-level Australian account and museum summary."
+}

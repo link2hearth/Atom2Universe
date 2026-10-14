@@ -1,0 +1,30 @@
+{
+  "id": "scathophaga_stercoraria",
+  "name": "Yellow dung fly",
+  "scientific": "Scathophaga stercoraria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "A widespread northern-hemisphere fly, it is often associated with large-mammal dung.",
+    "identification": "Males are yellow-orange and hairy; females are greener and less hairy.",
+    "habitat": "Adults gather at fresh dung, often in temperate pastures.",
+    "diet": "Larvae feed in dung. Adults prey on small insects and may also take nectar.",
+    "behavior": "Males wait on or near fresh dung for females.",
+    "reproduction": "Females lay eggs in dung. The species overwinters as a pupa.",
+    "ecology": "Its larvae help break down mammal dung.",
+    "conservation": "The natural-history review gives no global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3014657/",
+      "title": "Natural history of the yellow dung fly — Journal of Insect Science"
+    },
+    {
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/26581092/mouche-doree-du-fumier",
+      "title": "Mouche dorée du fumier — Office québécois de la langue française"
+    },
+    {
+      "url": "https://www.persee.fr/doc/bsef_0037-928x_1923_num_28_13_27193",
+      "title": "Sur le comportement de Scatophaga stercoraria — Bulletin de la Société entomologique de France"
+    }
+  ]
+}
