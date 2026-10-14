@@ -1,0 +1,34 @@
+{
+  "id": "hemiprocne_longipennis",
+  "name": "Hémiprocné longipenne",
+  "scientific": "Hemiprocne longipennis",
+  "group": "birds",
+  "sections": {
+    "overview": "Cet hémiprocné niche de la péninsule Malaise jusqu’à Sulawesi et aux petites îles de la Sonde occidentales.",
+    "identification": "Perché, ses longues pointes d’ailes se croisent au-dessus de sa queue fourchue plus courte ; le mâle a les couvertures auriculaires rousses.",
+    "habitat": "En Indonésie, il est signalé dans les forêts saisonnières et côtières ainsi que les plantations, souvent près de grands arbres.",
+    "diet": "Il capture des insectes en vol lorsqu’il se nourrit dans les airs.",
+    "behavior": "Il se perche à découvert sur de hautes branches et s’élance en vol circulaire pour capturer des insectes.",
+    "reproduction": "Le petit nid est fixé à une branche fine avec de la salive durcie, de la mousse et des plumes ; les deux adultes couvent l’unique œuf.",
+    "ecology": "Le genre Hemiprocne comprend aussi l’hémiprocné à moustaches, l’hémiprocné couronné et l’hémiprocné coiffé.",
+    "conservation": "La fiche indonésienne de l’espèce rapporte la catégorie mondiale UICN « préoccupation mineure »."
+  },
+  "sources": [
+    {
+      "url": "https://www.gbif.co.id/spesies/hemiprocne-longipennis",
+      "title": "Hemiprocne longipennis — répartition IOC/Avibase"
+    },
+    {
+      "url": "https://besgroup.org/2014/02/28/nesting-of-the-grey-rumped-treeswift/",
+      "title": "Nidification de l’hémiprocné longipenne — Bird Ecology Study Group"
+    },
+    {
+      "url": "https://pratapapa81.wordpress.com/wp-content/uploads/2009/11/buku-burung-baluran-2.pdf",
+      "title": "Oiseaux du parc national de Baluran — Hemiprocne longipennis"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/famille.hemiprocnides.html",
+      "title": "Hemiprocnidae — Oiseaux.net"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "long_tailed_duck",
+  "name": "Long-tailed Duck",
+  "scientific": "Clangula hyemalis",
+  "group": "birds",
+  "sections": {
+    "overview": "The Long-tailed Duck is a circumpolar Arctic breeder and a strongly migratory sea duck, wintering on northern marine coasts.",
+    "identification": "The adult male’s exceptionally long central tail feathers give the species its English name; plumage changes markedly through the year.",
+    "habitat": "It nests on Arctic tundra near freshwater pools and lakes, but spends winter at sea, often offshore or in sheltered coastal waters.",
+    "diet": "It dives for marine invertebrates, especially crustaceans and molluscs, with fish and freshwater prey also taken.",
+    "behavior": "It is a capable deep diver and forms large, social feeding and resting flocks outside the breeding season.",
+    "reproduction": "The female lays in a concealed ground nest near water; the male leaves after incubation begins, and young are mobile soon after hatching.",
+    "ecology": "Its seasonal shift from tundra wetlands to marine feeding grounds links Arctic freshwater breeding habitat with coastal food webs.",
+    "conservation": "BirdLife lists it as Vulnerable after a severe decline in Baltic wintering numbers, while trends elsewhere remain less certain."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/long-tailed-duck-clangula-hyemalis",
+      "title": "Long-tailed Duck — BirdLife DataZone"
+    },
+    {
+      "url": "https://wdfw.wa.gov/species-habitats/species/clangula-hyemalis",
+      "title": "Long-tailed Duck — Washington Department of Fish and Wildlife"
+    },
+    {
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130446",
+      "title": "Clangula hyemalis — Birds of Europe, Naturalis Biodiversity Center"
+    },
+    {
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/8359776/harelde-kakawi",
+      "title": "Harelde kakawi — Office québécois de la langue française"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "haplopelma_lividum",
+  "name": "Cobalt blue tarantula",
+  "scientific": "Haplopelma lividum",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The World Spider Catalog now accepts Melopoeus lividus, while Haplopelma lividum is its original combination retained in this catalogue entry.",
+    "identification": "The older name Haplopelma lividum remains useful when consulting literature published before later generic transfers.",
+    "habitat": "Field observations in Thailand describe this tarantula in ground burrows, including burrows in roadside banks.",
+    "diet": "The catalog and field note consulted do not provide a prey list specific to this species.",
+    "behavior": "The field account documents burrow use, but does not quantify activity or social behaviour.",
+    "reproduction": "The sources consulted do not establish the breeding season or reproductive cycle.",
+    "ecology": "The field account confirms the use of ground burrows, including in roadside banks.",
+    "conservation": "The taxonomic and field accounts used here provide no species-level conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/44094/Melopoeus_lividus",
+      "title": "World Spider Catalog: Melopoeus lividus"
+    },
+    {
+      "url": "https://birdspiders.ch/cobalt-blue-tarantula-haplopelma/",
+      "title": "Cobalt Blue Tarantula in the Wild: Melopoeus lividus — birdspidersCH"
+    }
+  ]
+}

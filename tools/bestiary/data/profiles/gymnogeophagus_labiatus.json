@@ -1,0 +1,122 @@
+{
+  "id": "gymnogeophagus_labiatus",
+  "scientific": "Gymnogeophagus labiatus",
+  "group": "fish",
+  "name": {
+    "en": "Thick-lipped eartheater",
+    "fr": "Géophage à grosses lèvres"
+  },
+  "sections": {
+    "overview": {
+      "en": "Gymnogeophagus labiatus is a freshwater cichlid from the Laguna dos Patos and Lagoa Mirim drainages in southern South America. It belongs to the genus mouthbrooder clade, which also includes G. caaguazuensis.",
+      "fr": "Gymnogeophagus labiatus est un cichlidé d’eau douce des bassins de la Laguna dos Patos et de la Lagoa Mirim, dans le sud de l’Amérique méridionale. Il appartient à la lignée incubatrice buccale du genre, qui comprend aussi G. caaguazuensis."
+    },
+    "identification": {
+      "en": "Its notably thick lips distinguish it from many congeners, and recorded males reach about 15.2 cm standard length.",
+      "fr": "Ses lèvres particulièrement épaisses le distinguent de nombreux congénères, et les mâles mesurés atteignent environ 15,2 cm de longueur standard."
+    },
+    "habitat": {
+      "en": "It inhabits freshwater drainages of Laguna dos Patos and Lagoa Mirim in southern Brazil and Uruguay.",
+      "fr": "Il fréquente les bassins d’eau douce de la Laguna dos Patos et de la Lagoa Mirim, dans le sud du Brésil et en Uruguay."
+    },
+    "diet": {
+      "en": "No species-specific diet composition was available in the taxonomic and summary sources consulted.",
+      "fr": "Les sources taxonomiques et synthèses consultées ne donnent pas de composition alimentaire propre à l’espèce."
+    },
+    "behavior": {
+      "en": "The consulted species summary does not describe detailed daily or social behavior.",
+      "fr": "La synthèse consultée ne décrit pas en détail le comportement quotidien ou social de l’espèce."
+    },
+    "reproduction": {
+      "en": "The species belongs to the mouthbrooding lineage of Gymnogeophagus; the female broods larvae orally.",
+      "fr": "L’espèce appartient à la lignée incubatrice buccale de Gymnogeophagus; la femelle porte les larves dans sa bouche."
+    },
+    "ecology": {
+      "en": "Detailed field ecology remains poorly reported.",
+      "fr": "L’écologie de terrain reste peu documentée."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern dated 2018.",
+      "fr": "FishBase rapporte une évaluation mondiale de préoccupation mineure par l’UICN, datée de 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Gymnogeophagus labiatus summary — FishBase",
+        "fr": "Résumé de Gymnogeophagus labiatus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Gymnogeophagus-labiatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the distribution, body length and larvophilous mouthbrooding mode."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 10,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gymnogeophagus mouthbrooder clade — Neotropical Ichthyology",
+        "fr": "Lignée incubatrice buccale de Gymnogeophagus — Neotropical Ichthyology"
+      },
+      "url": "https://www.scielo.br/j/ni/a/5nXYjLpcxvnZSr3bmtSfP8w/?lang=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The peer-reviewed paper treats Gymnogeophagus labiatus and G. caaguazuensis as members of the mouthbrooding clade and describes hypertrophied lips in the genus."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 22,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Detailed diet information and field-level reproductive observations were not included in the consulted summary."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared its southern lagoon distribution and larvophilous mouthbrooding with G. caaguazuensis, following FishBase and the peer-reviewed genus clade treatment."
+}

@@ -1,0 +1,34 @@
+{
+  "id": "guianacara_sphenozona",
+  "name": "Suriname Red-spotted Cichlid",
+  "scientific": "Guianacara sphenozona",
+  "group": "fish",
+  "sections": {
+    "overview": "Described in 1989, this small cichlid is known from the Sipaliwini and middle Corantijn drainages of Suriname, with a possible occurrence in the Essequibo basin. Kullander and Nijssen included it in their 1989 monograph on Suriname cichlids.",
+    "identification": "A dark band through the eye and a marked flank pattern give the species its diagnostic appearance. A Smithsonian paratype record documents a shallow Corantijn tributary locality.",
+    "habitat": "It inhabits warm freshwater streams and river margins in the Guiana Shield. A Smithsonian paratype was collected at 0–1 m depth in a Corantijn stream.",
+    "diet": "A specialist account describes it as a benthic, sand-sifting omnivore; prey details are not established by the species summary.",
+    "behavior": "FishBase classifies it as benthopelagic, a broad habitat label rather than a detailed account of social behaviour.",
+    "reproduction": "An aquarium specialist describes biparental concealed substrate spawning, but this account is not a field study.",
+    "ecology": "It belongs to the Guianacara lineage, distinct from Geophagus; compare the nearby Suriname-basin G. brokopondo and G. winemilleri profiles for related eartheaters with different group placement.",
+    "conservation": "FishBase lists Least Concern, assessed on 28 December 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.net.br/summary/47539",
+      "title": "Guianacara sphenozona — FishBase Portuguese mirror"
+    },
+    {
+      "url": "https://www.svenkullander.se/publications/Kullander_Cichlidae_2003.pdf",
+      "title": "Cichlids of Surinam — Kullander & Nijssen, taxonomic account"
+    },
+    {
+      "url": "https://www.si.edu/es/object/guianacara-sphenozona-kullander-nijssen%3Anmnhvz_5084408",
+      "title": "Guianacara sphenozona paratype — Smithsonian National Museum of Natural History"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/guianacara-sphenozona/",
+      "title": "Guianacara sphenozona — Aquarist Atlas"
+    }
+  ]
+}

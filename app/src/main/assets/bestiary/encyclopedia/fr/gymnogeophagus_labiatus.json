@@ -1,0 +1,26 @@
+{
+  "id": "gymnogeophagus_labiatus",
+  "name": "Géophage à grosses lèvres",
+  "scientific": "Gymnogeophagus labiatus",
+  "group": "fish",
+  "sections": {
+    "overview": "Gymnogeophagus labiatus est un cichlidé d’eau douce des bassins de la Laguna dos Patos et de la Lagoa Mirim, dans le sud de l’Amérique méridionale. Il appartient à la lignée incubatrice buccale du genre, qui comprend aussi G. caaguazuensis.",
+    "identification": "Ses lèvres particulièrement épaisses le distinguent de nombreux congénères, et les mâles mesurés atteignent environ 15,2 cm de longueur standard.",
+    "habitat": "Il fréquente les bassins d’eau douce de la Laguna dos Patos et de la Lagoa Mirim, dans le sud du Brésil et en Uruguay.",
+    "diet": "Les sources taxonomiques et synthèses consultées ne donnent pas de composition alimentaire propre à l’espèce.",
+    "behavior": "La synthèse consultée ne décrit pas en détail le comportement quotidien ou social de l’espèce.",
+    "reproduction": "L’espèce appartient à la lignée incubatrice buccale de Gymnogeophagus; la femelle porte les larves dans sa bouche.",
+    "ecology": "L’écologie de terrain reste peu documentée.",
+    "conservation": "FishBase rapporte une évaluation mondiale de préoccupation mineure par l’UICN, datée de 2018."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Gymnogeophagus-labiatus",
+      "title": "Résumé de Gymnogeophagus labiatus — FishBase"
+    },
+    {
+      "url": "https://www.scielo.br/j/ni/a/5nXYjLpcxvnZSr3bmtSfP8w/?lang=en",
+      "title": "Lignée incubatrice buccale de Gymnogeophagus — Neotropical Ichthyology"
+    }
+  ]
+}

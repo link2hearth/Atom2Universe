@@ -1,0 +1,30 @@
+{
+  "id": "gyptis_mackiei",
+  "name": "Gyptis de Mackie",
+  "scientific": "Gyptis mackiei",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Gyptis mackiei est une espèce acceptée de ver marin polychète, du genre Gyptis et de la famille des Hesionidae. D’autres espèces acceptées du genre lui sont apparentées, mais son écologie propre est peu documentée.",
+    "identification": "Les catalogues consultés confirment le nom et l’auteur de l’espèce, mais ne donnent ni description diagnostique ni taille suffisamment documentées.",
+    "habitat": "Les notices taxonomiques accessibles ne permettent pas d’établir un habitat précis ni une aire géographique pour cette espèce.",
+    "diet": "Aucune observation alimentaire propre à l’espèce n’a été trouvée dans les notices taxonomiques consultées.",
+    "behavior": "Les notices disponibles ne contiennent aucun compte rendu vérifié de locomotion, de comportement social ou de rythme d’activité.",
+    "reproduction": "Les notices consultées ne rapportent pas de données reproductives à l’échelle de l’espèce.",
+    "ecology": "Il est classé parmi les polychètes errants, mais cette position taxonomique générale ne permet pas d’établir son rôle écologique précis.",
+    "conservation": "Les sources ne fournissent ni tendance démographique ni évaluation de conservation propre à Gyptis mackiei."
+  },
+  "sources": [
+    {
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Gyptis",
+      "title": "Gyptis mackiei — Registre mondial des espèces marines"
+    },
+    {
+      "url": "https://www.st.nmfs.noaa.gov/nauplius/media/copepedia/taxa/T4016085/",
+      "title": "Notice COPEPEDIA : Gyptis mackiei"
+    },
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=Hesionidae",
+      "title": "Navigateur taxonomique NCBI : Hesionidae"
+    }
+  ]
+}

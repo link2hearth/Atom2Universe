@@ -1,0 +1,34 @@
+{
+  "id": "gymnogeophagus_caaguazuensis",
+  "name": "Géophage de Caaguazú",
+  "scientific": "Gymnogeophagus caaguazuensis",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce petit cichlidé paraguayen appartient à la lignée buccale de Gymnogeophagus, qui comprend aussi Gymnogeophagus labiatus.",
+    "identification": "Son corps est relativement haut, son pédoncule caudal court et sa taille modeste; les mâles adultes développent une nageoire caudale en lyre. La description originale indique une longueur standard maximale d’environ 8,6 cm.",
+    "habitat": "Il est connu du cours supérieur du río Tebicuary-mí au Paraguay; il occupe des plages sableuses entre les rochers et des mares de petits cours d’eau à l’étiage.",
+    "diet": "Les sources consultées ne rapportent pas de mesure alimentaire propre à l’espèce; il n’est donc pas possible de donner une liste détaillée de proies.",
+    "behavior": "La description originale rapporte que les mâles font vibrer leur bouche pendant la parade, un comportement associé au groupe buccal du genre.",
+    "reproduction": "C’est un incubateur buccal maternel différé : les parents pondent d’abord sur un support, puis la femelle prend les œufs dans sa bouche avant l’éclosion.",
+    "ecology": "À la localité type, il fréquente des fonds sableux parmi les rochers dans de petits ruisseaux, plus courants en saison des pluies et plus calmes à l’étiage.",
+    "conservation": "L’UICN le classe en danger en raison de son aire très restreinte et du déclin de la qualité de son habitat, modifié par l’agriculture."
+  },
+  "sources": [
+    {
+      "url": "https://kinkahobby.weebly.com/uploads/2/0/8/0/20804840/gymnogeophagus_caaguazuensis_sp_n_-_a_new_species_of_cichlid_fish_teleostei_perciformes_cichlida.pdf",
+      "title": "Gymnogeophagus caaguazuensis — description originale"
+    },
+    {
+      "url": "https://ri.conicet.gov.ar/bitstream/handle/11336/217522/CONICET_Digital_Nro.bf483b85-78f0-4cbb-89f1-62550702b958_B.pdf?isAllowed=y&sequence=2",
+      "title": "Gymnogeophagus caaguazuensis — Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.scielo.br/j/ni/a/5nXYjLpcxvnZSr3bmtSfP8w/?lang=en",
+      "title": "Lignée incubatrice buccale de Gymnogeophagus — Neotropical Ichthyology"
+    },
+    {
+      "url": "https://fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Gymnogeophagus&SpeciesName=caaguazuensis&print=&sps=",
+      "title": "Guide de Gymnogeophagus caaguazuensis — FishBase"
+    }
+  ]
+}

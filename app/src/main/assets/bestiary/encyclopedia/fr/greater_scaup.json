@@ -1,0 +1,34 @@
+{
+  "id": "greater_scaup",
+  "name": "Fuligule milouinan",
+  "scientific": "Aythya marila",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Fuligule milouinan est un canard plongeur circumpolaire qui niche dans les zones humides nordiques et hiverne largement sur les côtes. Comme le Fuligule milouin (Aythya ferina), il appartient au genre Aythya. Comparé à ce parent, il hiverne plus souvent en milieu marin.",
+    "identification": "Le mâle est noir et blanc, avec une tête arrondie; les femelles sont brunes, et les deux sexes ont un bec bleu pâle.",
+    "habitat": "Il niche au bord de lacs peu profonds de l’Arctique et du subarctique, tandis que les hivernants se rassemblent dans les baies, estuaires et eaux côtières abritées.",
+    "diet": "Il plonge pour capturer mollusques, crustacés et insectes aquatiques, et consomme aussi plantes et graines, surtout dans les eaux intérieures.",
+    "behavior": "Hors reproduction, il forme de grands rassemblements et se nourrit en plongeant; les groupes hivernaux peuvent se tenir loin au large.",
+    "reproduction": "La femelle construit près de l’eau un nid au sol garni de duvet, couve les œufs et accompagne les canetons nidifuges.",
+    "ecology": "Sa recherche de proies benthiques relie les réseaux alimentaires lacustres et marins, avec un usage des habitats qui varie selon la saison.",
+    "conservation": "Les évaluations mondiales et régionales signalent des baisses dans certaines populations, bien que le suivi reste inégal sur son vaste territoire."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Greater_Scaup/lifehistory",
+      "title": "Fuligule milouinan — All About Birds, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://inpn.mnhn.fr/docs-web/docs/download/440989",
+      "title": "Fuligule milouinan — Cahiers d’Habitat Oiseaux, INPN / MNHN"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/fuligule.milouin.html",
+      "title": "Fuligule milouin — Oiseaux.net"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22680398A132525108.en",
+      "title": "Aythya marila — Liste rouge mondiale de l’UICN"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "id": "halcyon_cyanoventris",
+  "scientific": "Halcyon cyanoventris",
+  "group": "birds",
+  "name": {
+    "en": "Javan kingfisher",
+    "fr": "Martin-chasseur de Java"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Javan kingfisher is an Indonesian endemic known from Java and Bali.",
+      "fr": "Le martin-chasseur de Java est endémique d’Indonésie, où il vit à Java et Bali."
+    },
+    "identification": {
+      "en": "This medium-sized bird is about 25 cm long, with a dark brown head, purple-blue body, bright blue wings, a red bill and legs, and a white wing patch visible in flight.",
+      "fr": "Cet oiseau de taille moyenne mesure environ 25 cm; il a la tête brun foncé, le corps bleu violacé, les ailes bleu vif, le bec et les pattes rouges, ainsi qu’une tache blanche visible en vol."
+    },
+    "habitat": {
+      "en": "It uses open woodland, scrub, fields, gardens, ponds, and other lowland habitats, including places near but not directly over water.",
+      "fr": "Il fréquente les boisements ouverts, broussailles, champs, jardins, étangs et autres milieux de plaine, parfois éloignés des plans d’eau."
+    },
+    "diet": {
+      "en": "Its recorded prey include insects and other small animals such as fish, prawns, and frogs.",
+      "fr": "Ses proies signalées comprennent des insectes et de petits animaux, notamment des poissons, crevettes et grenouilles."
+    },
+    "behavior": {
+      "en": "It is mainly solitary, strongly territorial, and sedentary, staying close to its nesting area.",
+      "fr": "Il est surtout solitaire, très territorial et sédentaire, et reste près de son site de nidification."
+    },
+    "reproduction": {
+      "en": "It nests in a tunnel excavated in an exposed earthen bank; reports give three or four white eggs, with breeding recorded from March to September.",
+      "fr": "Il niche dans un tunnel creusé dans une berge de terre dégagée; des sources signalent trois ou quatre œufs blancs et une reproduction de mars à septembre."
+    },
+    "ecology": {
+      "en": "Its broad prey and use of both wet and dry habitats make it less dependent on aquatic prey than many familiar kingfishers.",
+      "fr": "La diversité de ses proies et l’usage de milieux humides comme secs le rendent moins dépendant des proies aquatiques que beaucoup de martins-pêcheurs."
+    },
+    "conservation": {
+      "en": "The cited Indonesian species account reports the IUCN category as Least Concern; detailed population trends were not provided there.",
+      "fr": "La fiche indonésienne citée indique la catégorie UICN de préoccupation mineure, sans fournir de tendance démographique détaillée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cekakak Jawa — Bali Wildlife (Indonesian species account)",
+        "fr": "Cekakak Jawa — Bali Wildlife (fiche indonésienne)"
+      },
+      "url": "https://baliwildlife.com/id/ensiklopedia/hewan/burung/cekakak-jawa/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The Indonesian species account records prey, territorial sedentary behavior, nesting and an IUCN category."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 14,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Javan Kingfisher — eBird",
+        "fr": "Martin-chasseur de Java — eBird"
+      },
+      "url": "https://ebird.org/species/javkin1/TW",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Cornell eBird/Merlin gives the range context, field marks and varied wet and dry habitat use."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 15,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS report: Halcyon cyanoventris",
+        "fr": "Rapport ITIS : Halcyon cyanoventris"
+      },
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=554587",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS lists the accepted name and common name Javan Kingfisher."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 10,
+        "total": 10,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The breeding months and clutch size are reported by a regional species guide and may not capture all local variation."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Indonesian-language Bali Wildlife account against Cornell eBird/Merlin’s description and ITIS nomenclature; avoided claiming that every individual feeds on fish."
+}

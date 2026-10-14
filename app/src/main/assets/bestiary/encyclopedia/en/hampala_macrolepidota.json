@@ -1,0 +1,26 @@
+{
+  "id": "hampala_macrolepidota",
+  "name": "Hampala barb",
+  "scientific": "Hampala macrolepidota",
+  "group": "fish",
+  "sections": {
+    "overview": "Hampala macrolepidota is a large Southeast Asian cyprinid of the Mekong, Chao Phraya, Malay Peninsula, and Indonesian freshwaters.",
+    "identification": "Adults show a dark flank bar and black-edged orange-red tail; reported maximum standard length is 70 cm, versus a common 35 cm.",
+    "habitat": "It inhabits flowing rivers and streams with clear water and sandy or muddy bottoms, and also enters flooded forest and larger water bodies.",
+    "diet": "It is predatory, but the balance between fish and insect prey varies by locality; aquatic insects can dominate some reservoir samples.",
+    "behavior": "The species is potamodromous, moving within freshwater systems, and enters flooded forest habitats.",
+    "reproduction": "FishBase reports breeding through the rainy season, but no single spawning date or detailed clutch figure is established here.",
+    "ecology": "Its opportunistic predation links riverine and floodplain food webs, while local diet studies show that prey availability changes its feeding profile.",
+    "conservation": "FishBase reports Least Concern in the IUCN assessment dated 2019; the species is also taken in commercial and recreational fisheries."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/hampala-macrolepidota.html",
+      "title": "Hampala macrolepidota summary — FishBase"
+    },
+    {
+      "url": "https://nrm-fishbaselinux01.nrm.se/Ecology/Hampala_macrolepidota",
+      "title": "Ecology summary — Swedish Museum of Natural History FishBase node"
+    }
+  ]
+}

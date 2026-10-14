@@ -1,0 +1,34 @@
+{
+  "id": "common_pochard",
+  "name": "Fuligule milouin",
+  "scientific": "Aythya ferina",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Fuligule milouin est un canard plongeur migrateur largement répandu dans les zones humides d’Eurasie. Il partage le genre Aythya avec le Fuligule milouinan (Aythya marila). Contrairement à ce parent, il fréquente surtout les eaux intérieures végétalisées.",
+    "identification": "En plumage nuptial, le mâle a la tête rousse, la poitrine noire et le corps gris pâle, tandis que la femelle est plus brune.",
+    "habitat": "Il niche sur des lacs et étangs d’eau douce végétalisés, puis hiverne sur de grands plans d’eau douce ou saumâtre.",
+    "diet": "En plongée, il prélève des graines, racines et feuilles aquatiques, ainsi que des mollusques, crustacés, vers et larves d’insectes.",
+    "behavior": "Il migre entre ses sites de reproduction du nord et de l’est et des zones humides d’hivernage plus méridionales, souvent en groupes mixtes de canards.",
+    "reproduction": "La femelle niche dans la végétation riveraine et couve seule la ponte; le mâle part généralement après la ponte.",
+    "ecology": "Sa dépendance aux zones humides productives lie son sort à l’état des milieux d’eau douce situés le long de ses voies migratoires.",
+    "conservation": "L’évaluation mondiale le classe vulnérable et sa population est en baisse; la disparition des zones humides, la chasse et la pollution sont des pressions signalées."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T22680358A205288455.en",
+      "title": "Aythya ferina — Liste rouge mondiale de l’UICN"
+    },
+    {
+      "url": "https://www.birdlife.org/news/2024/10/18/common-pochard/",
+      "title": "Fuligule milouin — BirdLife International"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/fuligule.milouin.html",
+      "title": "Fuligule milouin — Oiseaux.net"
+    },
+    {
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Fuligule-milouin.pdf",
+      "title": "Fuligule milouin — Cahiers d’Habitat Oiseaux, INPN / MNHN"
+    }
+  ]
+}

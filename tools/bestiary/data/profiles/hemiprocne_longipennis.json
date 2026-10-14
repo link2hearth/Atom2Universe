@@ -1,0 +1,191 @@
+{
+  "id": "hemiprocne_longipennis",
+  "scientific": "Hemiprocne longipennis",
+  "group": "birds",
+  "name": {
+    "en": "Grey-rumped Treeswift",
+    "fr": "Hémiprocné longipenne"
+  },
+  "sections": {
+    "overview": {
+      "en": "This treeswift breeds from the Malay Peninsula through Sulawesi and the western Lesser Sunda Islands.",
+      "fr": "Cet hémiprocné niche de la péninsule Malaise jusqu’à Sulawesi et aux petites îles de la Sonde occidentales."
+    },
+    "identification": {
+      "en": "Its long wing tips cross over the shorter forked tail when perched; males have rufous ear coverts.",
+      "fr": "Perché, ses longues pointes d’ailes se croisent au-dessus de sa queue fourchue plus courte ; le mâle a les couvertures auriculaires rousses."
+    },
+    "habitat": {
+      "en": "In Indonesia it is recorded from seasonal and coastal forest as well as plantations, often using tall trees.",
+      "fr": "En Indonésie, il est signalé dans les forêts saisonnières et côtières ainsi que les plantations, souvent près de grands arbres."
+    },
+    "diet": {
+      "en": "It catches flying insects while foraging in the air.",
+      "fr": "Il capture des insectes en vol lorsqu’il se nourrit dans les airs."
+    },
+    "behavior": {
+      "en": "It can perch conspicuously on tall branches and launch into circling flights to catch insects.",
+      "fr": "Il se perche à découvert sur de hautes branches et s’élance en vol circulaire pour capturer des insectes."
+    },
+    "reproduction": {
+      "en": "The small nest is fixed to a slender branch with hardened saliva, moss and feathers; the single egg is incubated by both adults.",
+      "fr": "Le petit nid est fixé à une branche fine avec de la salive durcie, de la mousse et des plumes ; les deux adultes couvent l’unique œuf."
+    },
+    "ecology": {
+      "en": "The genus Hemiprocne also includes the Whiskered, Crested and Moustached treeswifts.",
+      "fr": "Le genre Hemiprocne comprend aussi l’hémiprocné à moustaches, l’hémiprocné couronné et l’hémiprocné coiffé."
+    },
+    "conservation": {
+      "en": "The Indonesian species account reports the global IUCN category Least Concern.",
+      "fr": "La fiche indonésienne de l’espèce rapporte la catégorie mondiale UICN « préoccupation mineure »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hemiprocne longipennis — IOC/Avibase range summary",
+        "fr": "Hemiprocne longipennis — répartition IOC/Avibase"
+      },
+      "url": "https://www.gbif.co.id/spesies/hemiprocne-longipennis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Indonesian bilingual biodiversity summary gives breeding distribution, accepted taxonomy, vernacular names and global LC category."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Nesting of the Grey-rumped Treeswift — Bird Ecology Study Group",
+        "fr": "Nidification de l’hémiprocné longipenne — Bird Ecology Study Group"
+      },
+      "url": "https://besgroup.org/2014/02/28/nesting-of-the-grey-rumped-treeswift/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Singapore natural-history account documents crossed wing tips, sex differences, nest construction, single egg and shared incubation."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Birds of Baluran National Park — Hemiprocne longipennis",
+        "fr": "Oiseaux du parc national de Baluran — Hemiprocne longipennis"
+      },
+      "url": "https://pratapapa81.wordpress.com/wp-content/uploads/2009/11/buku-burung-baluran-2.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Indonesian field guide records seasonal and coastal forest, plantations, tall perches and aerial insect hunting."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Hemiprocnidae — Oiseaux.net",
+        "fr": "Hemiprocnidae — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/famille.hemiprocnides.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "French IOC-based family list distinguishes the four Hemiprocne species and names the Grey-rumped Treeswift."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Descriptions of breeding and habitat vary by local source; the nest details here are based on observations in Singapore."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Indonesian distribution and field observations with Singapore nesting observations and current French/IOC family taxonomy."
+}

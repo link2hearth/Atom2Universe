@@ -1,0 +1,161 @@
+{
+  "id": "haplopelma_lividum",
+  "scientific": "Haplopelma lividum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Cobalt blue tarantula",
+    "fr": "Mygale bleu cobalt"
+  },
+  "sections": {
+    "overview": {
+      "en": "The World Spider Catalog now accepts Melopoeus lividus, while Haplopelma lividum is its original combination retained in this catalogue entry.",
+      "fr": "Le World Spider Catalog accepte désormais Melopoeus lividus ; Haplopelma lividum est la combinaison originale conservée dans cette entrée."
+    },
+    "identification": {
+      "en": "The older name Haplopelma lividum remains useful when consulting literature published before later generic transfers.",
+      "fr": "L’ancien nom Haplopelma lividum reste utile pour consulter les travaux antérieurs aux transferts de genre."
+    },
+    "habitat": {
+      "en": "Field observations in Thailand describe this tarantula in ground burrows, including burrows in roadside banks.",
+      "fr": "Des observations en Thaïlande signalent cette mygale dans des terriers au sol, notamment sur les talus au bord des routes."
+    },
+    "diet": {
+      "en": "The catalog and field note consulted do not provide a prey list specific to this species.",
+      "fr": "Le catalogue et la note de terrain consultés ne fournissent pas de liste de proies propre à cette espèce."
+    },
+    "behavior": {
+      "en": "The field account documents burrow use, but does not quantify activity or social behaviour.",
+      "fr": "Le compte rendu de terrain documente l’usage des terriers, sans préciser l’activité ni le comportement social."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not establish the breeding season or reproductive cycle.",
+      "fr": "Les sources consultées ne précisent ni la saison ni le cycle de reproduction."
+    },
+    "ecology": {
+      "en": "The field account confirms the use of ground burrows, including in roadside banks.",
+      "fr": "Le compte rendu de terrain confirme l’usage de terriers au sol, y compris dans des talus routiers."
+    },
+    "conservation": {
+      "en": "The taxonomic and field accounts used here provide no species-level conservation assessment.",
+      "fr": "Les sources taxonomique et de terrain consultées ne donnent pas d’évaluation de conservation propre à l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "World Spider Catalog: Melopoeus lividus",
+        "fr": "Catalogue mondial des araignées : Melopoeus lividus"
+      },
+      "url": "https://wsc.nmbe.ch/spec-data/44094/Melopoeus_lividus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The WSC records the accepted name Melopoeus lividus, the former Haplopelma combination, and distribution in Myanmar and Thailand."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Cobalt Blue Tarantula in the Wild: Melopoeus lividus — birdspidersCH",
+        "fr": "La mygale bleu cobalt dans la nature : Melopoeus lividus — birdspidersCH"
+      },
+      "url": "https://birdspiders.ch/cobalt-blue-tarantula-haplopelma/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Field account reports burrows in Thai ground and roadside banks; its taxonomy section tracks the former Haplopelma and Cyriopagopus names."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The database ID preserves the legacy combination Haplopelma lividum even though the World Spider Catalog now accepts Melopoeus lividus."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Made the 2026 World Spider Catalog name change explicit while retaining the requested runtime taxon label."
+}

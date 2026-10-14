@@ -1,0 +1,186 @@
+{
+  "id": "hedya_salicella",
+  "scientific": "Hedya salicella",
+  "group": "invertebrates",
+  "name": {
+    "en": "Hedya salicella",
+    "fr": "Hedya salicella"
+  },
+  "sections": {
+    "overview": {
+      "en": "British records place this tortricid mainly in England and Wales. The Belgian catalogue describes it as widespread but rare in that country.",
+      "fr": "Les données britanniques situent surtout ce tortricidé en Angleterre et au pays de Galles. Le catalogue belge le décrit comme largement réparti mais rare dans ce pays."
+    },
+    "identification": {
+      "en": "Adults have a white forewing pattern with chestnut and grey markings and a wingspan of about 19–24 mm.",
+      "fr": "Les adultes ont des ailes antérieures blanches marquées de brun roux et de gris, pour une envergure d’environ 19–24 mm."
+    },
+    "habitat": {
+      "en": "British accounts record it in woodland, gardens, orchards, parks and marshes.",
+      "fr": "Les sources britanniques le signalent dans les bois, jardins, vergers, parcs et marais."
+    },
+    "diet": {
+      "en": "The larvae feed inside spun leaves or shoots of sallows and poplars.",
+      "fr": "Les chenilles se nourrissent à l’intérieur de feuilles ou de pousses enroulées de saules et de peupliers."
+    },
+    "behavior": {
+      "en": "Adults fly in summer and may be attracted to light.",
+      "fr": "Les adultes volent en été et peuvent être attirés par la lumière."
+    },
+    "reproduction": {
+      "en": "The larvae tie leaves or shoots together with silk; the consulted summaries do not detail egg laying.",
+      "fr": "Les chenilles lient des feuilles ou des pousses avec de la soie ; les résumés consultés ne détaillent pas la ponte."
+    },
+    "ecology": {
+      "en": "Its documented larval hosts are woody Salix and Populus, and the caterpillar lives concealed within the spun foliage.",
+      "fr": "Ses plantes-hôtes larvaires documentées sont des Salix et Populus ligneux, et la chenille vit dissimulée dans le feuillage lié par la soie."
+    },
+    "conservation": {
+      "en": "The regional sources describe occurrence and host plants but do not give a global threat category.",
+      "fr": "Les sources régionales décrivent sa présence et ses plantes-hôtes, sans fournir de catégorie mondiale de menace."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hedya salicella — UKMoths",
+        "fr": "Hedya salicella — UKMoths"
+      },
+      "url": "https://www.handeln.ukmoths.org.uk/species/hedya-salicella/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "British species account describes appearance, flight season, light attraction, regional range and larval hosts."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Hedya salicella — Hantsmoths",
+        "fr": "Hedya salicella — Hantsmoths"
+      },
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=49.155",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "County moth account lists woodland, garden, orchard, park and marsh settings and larval feeding between spun shoots."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Hedya salicella — Catalogue of the Lepidoptera of Belgium",
+        "fr": "Hedya salicella — catalogue des lépidoptères de Belgique"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/3901/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Belgian catalogue gives multilingual common names and describes the species as widespread but rare there."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Flight dates and frequency vary by region; British phenology is not generalized to the full European range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used regional status and flight records without presenting them as a global conservation assessment."
+}

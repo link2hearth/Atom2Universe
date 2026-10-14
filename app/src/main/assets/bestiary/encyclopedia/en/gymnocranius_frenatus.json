@@ -1,0 +1,30 @@
+{
+  "id": "gymnocranius_frenatus",
+  "name": "Yellowsnout large-eye bream",
+  "scientific": "Gymnocranius frenatus",
+  "group": "fish",
+  "sections": {
+    "overview": "The yellowsnout large-eye bream is a western Pacific lethrinid congener of the Australian Gymnocranius audleyi.",
+    "identification": "It is silvery with about five to seven narrow, irregular flank bars, a yellow band edged in blue from the eye to the upper lip, and blue cheek stripes. It reaches about 35 cm total length, commonly around 30 cm.",
+    "habitat": "It lives over sand, mud, or rubble, usually at depths of about 20–80 m, in the Indo-Malaysian Archipelago and South China Sea.",
+    "diet": "Small bottom-dwelling gastropods form its main reported food.",
+    "behavior": "The available species accounts describe a reef-associated, non-migratory fish; they provide little detail on social behavior.",
+    "reproduction": "The consulted catalogue does not give species-specific breeding dates or clutch information.",
+    "ecology": "It forages on small benthic snails over unconsolidated seabeds, rather than depending on a single coral substrate.",
+    "conservation": "FishBase reports an IUCN assessment of Least Concern dated 2023."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/4/y0770e/y0770e25.pdf",
+      "title": "FAO species catalogue, Gymnocranius frenatus"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Gymnocranius-frenatus",
+      "title": "Gymnocranius frenatus summary — FishBase"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=0550896",
+      "title": "ITIS report: Gymnocranius frenatus"
+    }
+  ]
+}

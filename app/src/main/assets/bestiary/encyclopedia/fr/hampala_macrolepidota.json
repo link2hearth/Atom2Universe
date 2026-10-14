@@ -1,0 +1,26 @@
+{
+  "id": "hampala_macrolepidota",
+  "name": "Hampala à grandes écailles",
+  "scientific": "Hampala macrolepidota",
+  "group": "fish",
+  "sections": {
+    "overview": "Hampala macrolepidota est un grand cyprinidé d’Asie du Sud-Est, présent au Mékong, au Chao Phraya, en Malaisie péninsulaire et en Indonésie.",
+    "identification": "Les adultes portent une barre latérale sombre et une caudale rouge orangé bordée de noir; la longueur standard maximale rapportée est de 70 cm, contre 35 cm couramment.",
+    "habitat": "Il fréquente les rivières et ruisseaux courants, clairs, aux fonds sableux ou vaseux; il gagne aussi les forêts inondées et les grandes étendues d’eau.",
+    "diet": "C’est un prédateur, mais la part des poissons et des insectes varie selon le lieu; les insectes aquatiques dominent certains échantillons de réservoir.",
+    "behavior": "L’espèce est potamodrome : elle se déplace à l’intérieur des eaux douces et pénètre dans les forêts inondées.",
+    "reproduction": "FishBase indique une reproduction pendant toute la saison des pluies, sans préciser de date de ponte unique ni de taille de ponte détaillée.",
+    "ecology": "Sa prédation opportuniste relie les réseaux alimentaires des rivières et des plaines inondables; les études locales montrent que les proies disponibles modifient son régime.",
+    "conservation": "FishBase rapporte la catégorie de préoccupation mineure dans une évaluation UICN de 2019; l’espèce est également pêchée à des fins commerciales et récréatives."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/hampala-macrolepidota.html",
+      "title": "Résumé de Hampala macrolepidota — FishBase"
+    },
+    {
+      "url": "https://nrm-fishbaselinux01.nrm.se/Ecology/Hampala_macrolepidota",
+      "title": "Synthèse écologique — nœud FishBase du Musée suédois d’histoire naturelle"
+    }
+  ]
+}

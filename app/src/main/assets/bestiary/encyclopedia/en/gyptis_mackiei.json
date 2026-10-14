@@ -1,0 +1,30 @@
+{
+  "id": "gyptis_mackiei",
+  "name": "Mackie’s hesionid worm",
+  "scientific": "Gyptis mackiei",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Gyptis mackiei is an accepted species of marine bristle worm in the genus Gyptis and family Hesionidae. Several other accepted Gyptis species are its taxonomic relatives, but species-level ecology remains poorly documented.",
+    "identification": "The catalogues consulted confirm the species name and authorship but do not provide a dependable diagnostic description or size.",
+    "habitat": "The accessible taxonomic records do not establish a precise habitat or geographic range for this species.",
+    "diet": "No species-specific feeding observations were found in the taxonomic records consulted.",
+    "behavior": "The available records contain no verified account of locomotion, social behavior, or activity patterns.",
+    "reproduction": "Species-level reproductive data were not reported in the catalogue records consulted.",
+    "ecology": "It is classified among errant polychaetes, but that broad taxonomic placement does not establish its specific ecological role.",
+    "conservation": "The sources provide no population trend or conservation assessment specific to Gyptis mackiei."
+  },
+  "sources": [
+    {
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Gyptis",
+      "title": "Gyptis mackiei — World Register of Marine Species"
+    },
+    {
+      "url": "https://www.st.nmfs.noaa.gov/nauplius/media/copepedia/taxa/T4016085/",
+      "title": "COPEPEDIA species record: Gyptis mackiei"
+    },
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=Hesionidae",
+      "title": "NCBI Taxonomy Browser: Hesionidae"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "hemigrammocharax_multifasciatus",
+  "name": "Multibar citharine",
+  "scientific": "Hemigrammocharax multifasciatus",
+  "group": "fish",
+  "sections": {
+    "overview": "The runtime name is Hemigrammocharax multifasciatus, but Eschmeyer’s current catalogue treats Nannocharax multifasciatus as the valid combination. An Angolan survey also recorded it in the upper Okavango system.",
+    "identification": "It has dark vertical bars and a dark spot at the tail base.",
+    "habitat": "It favours vegetated river edges, oxbows and shallow lakes.",
+    "diet": "It takes small invertebrates and epiphyton from plants.",
+    "behavior": "It moves onto floodplains in the rainy season.",
+    "reproduction": "Breeding is reported in the southern African summer.",
+    "ecology": "Its range includes the Okavango and Zambezi basins.",
+    "conservation": "FishBase lists it as Least Concern, assessed on 1 May 2009, as Nannocharax multifasciatus."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=3722",
+      "title": "Eschmeyer’s Catalog of Fishes — Nannocharax multifasciatus"
+    },
+    {
+      "url": "https://fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Nannocharax&SpeciesName=multifasciatus&pda=1&sps=",
+      "title": "Nannocharax multifasciatus — FishBase field guide"
+    },
+    {
+      "url": "https://the-eis.com/elibrary/sites/default/files/downloads/literature/A%20Survey%20of%20the%20Fishes%20of%20Upper%20Okavango%20River%20System%20in%20Angola_2012.pdf",
+      "title": "A survey of the fishes of the upper Okavango River system in Angola"
+    }
+  ]
+}
