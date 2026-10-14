@@ -1,0 +1,13 @@
+{
+  "id": "tacinga_inamoena",
+  "sections": [
+    {"title": "Growth and range", "text": "This Brazilian Caatinga cactus forms low, branching, often decumbent clumps, about 20–30 cm high in one regional flora. Its flat oval stem segments are commonly 5–8 × 4–6.5 cm; tiny glochids occur in the areoles even though long spines are absent. Unlike T. funalis, its segments are not cylindrical; unlike T. saxatilis, it lacks needle-like spines."},
+    {"title": "Flowers and fruit", "text": "Solitary daytime flowers are about 4–5 cm long, with red to orange perianth segments. The oval or rounded berry is about 2–4 cm across and turns yellow to orange. These traits agree with the plate's flat pads, orange-red bloom and yellow-orange fruit."},
+    {"title": "Food and handling", "text": "Brazilian floristic research records the species as food for people and livestock. Glochids are present on the plant and fruit, so the plate's apparently spineless pads should not be handled as harmless."}
+  ],
+  "sources": [
+    {"title": "Flora da APA Serra Branca/Raso da Catarina: Cactaceae — Hoehnea / SciELO", "url": "https://www.scielo.br/j/hoehnea/a/RsVvqkjwYrkfjTkgdxQhwHj/"},
+    {"title": "Tacinga inamoena — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:20005730-1"}
+  ],
+  "related": ["tacinga_funalis", "tacinga_saxatilis"]
+}

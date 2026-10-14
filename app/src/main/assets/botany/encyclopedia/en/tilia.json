@@ -1,0 +1,13 @@
+{
+  "id": "tilia",
+  "sections": [
+    {"title": "The genus", "text": "Tilia is a genus of deciduous trees of temperate regions of the Northern Hemisphere. Species vary in size; the plate shows the broad crown, heart-shaped leaves, hanging flower clusters and wing-like bract typical of limes (lindens)."},
+    {"title": "Flowers and uses", "text": "In European species such as T. platyphyllos, fragrant flowers hang from a pale bract and mature into nut-like fruits. Kew records young leaves as edible and flowers as a traditional infusion. “Lime” here means linden, not the citrus fruit."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Tilia", "url": "https://powo.science.kew.org/taxon/39532-1"},
+    {"title": "Royal Botanic Gardens Victoria — Linden (Tilia), morphology", "url": "https://hortflora.rbg.vic.gov.au/taxon/ad914298-5340-11e7-b82b-005056b0018f"},
+    {"title": "Plants of the World Online — Tilia platyphyllos (uses and description)", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:332109-2/general-information"}
+  ],
+  "related": ["tilia_platyphyllos"]
+}

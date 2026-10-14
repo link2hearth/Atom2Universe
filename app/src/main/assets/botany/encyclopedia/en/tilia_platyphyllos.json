@@ -1,0 +1,13 @@
+{
+  "id": "tilia_platyphyllos",
+  "sections": [
+    {"title": "Tree and leaves", "text": "Large-leaved lime is a deciduous European tree, reaching about 35 m. Its heart-shaped, sharply toothed leaves are generally 6–12 cm long and hairy beneath."},
+    {"title": "Flowers and fruit", "text": "Fragrant flowers, usually 2–6 together, hang from a long pale-green bract; the fruit is a strongly ribbed nut containing 1–3 seeds. Young leaves are eaten as salad and flowers are traditionally infused. The plate’s large leaf and bract-borne cluster fit this species."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Tilia platyphyllos", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:332109-2/general-information"},
+    {"title": "European Atlas of Forest Tree Species — Tilia spp.", "url": "https://ies-ows.jrc.ec.europa.eu/efdac/download/Atlas/pdf/Tilia_spp.pdf"},
+    {"title": "Trees and Shrubs Online — Tilia platyphyllos", "url": "https://www.treesandshrubsonline.org/articles/tilia/tilia-platyphyllos/"}
+  ],
+  "related": ["tilia"]
+}

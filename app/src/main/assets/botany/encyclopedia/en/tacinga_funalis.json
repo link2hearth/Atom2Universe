@@ -1,0 +1,13 @@
+{
+  "id": "tacinga_funalis",
+  "sections": [
+    {"title": "Growth and range", "text": "Tacinga funalis is a Brazilian Caatinga cactus with long, scandent growth and cylindrical stems; published descriptions report shoots reaching up to about 12 m. It differs from the flat-padded T. inamoena and T. saxatilis."},
+    {"title": "Flowers and fruit", "text": "The taxonomic description records pale-green inner flower segments and a bottle-shaped fruit that can mature from green to reddish or purple. The local plate instead shows broad flat pads, a bright red-orange flower and an oval red fruit, so it does not match this species and is not displayed."},
+    {"title": "Food and safety", "text": "The sources consulted do not establish edible parts or a species-specific toxicity profile."}
+  ],
+  "sources": [
+    {"title": "A new tetraploid species of Tacinga (Cactaceae) from Ceará, Northeastern Brazil — Rodriguesia", "url": "https://new.scielo.br/j/rod/a/m3MhCGhh4fCYVpT3fhRWqqx/abstract/?ilang=en&lang=en"},
+    {"title": "CNCFlora — Tacinga funalis", "url": "https://proflora.jbrj.gov.br/html/Tacinga%20funalis_2012.html"}
+  ],
+  "related": ["tacinga_inamoena", "tacinga_saxatilis"]
+}

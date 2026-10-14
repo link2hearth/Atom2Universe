@@ -1,0 +1,13 @@
+{
+  "id": "thymus_vulgaris",
+  "sections": [
+    {"title": "Port et fleurs", "text": "Le thym commun est un sous-arbrisseau méditerranéen persistant, à base ligneuse, haut d’environ 10 à 30 cm et large de 15 à 40 cm. Ses petites feuilles opposées mesurent 3 à 8 mm ; ses fleurs bilabiées, blanches à roses ou violettes, sont réunies en petits bouquets."},
+    {"title": "Herbe aromatique", "text": "Les feuilles parfumées s’emploient fraîches ou sèches pour assaisonner les plats. La planche montre bien son port compact et fleuri."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Thymus vulgaris", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:461765-1/general-information"},
+    {"title": "North Carolina Extension — Common thyme", "url": "https://plants.ces.ncsu.edu/plants/thymus-vulgaris/"},
+    {"title": "NParks Flora & Fauna Web — Thymus vulgaris", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/5/3/5393"}
+  ],
+  "related": []
+}

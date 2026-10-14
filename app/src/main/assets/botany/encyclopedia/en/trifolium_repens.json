@@ -1,0 +1,13 @@
+{
+  "id": "trifolium_repens",
+  "sections": [
+    {"title": "Growth and flowers", "text": "White clover is a creeping perennial. Its runners root at the nodes, making a mat about 10–15 cm tall or less and spreading at least 30 cm. The three leaflets often bear a pale mark; globular flower heads are white, sometimes tinged pink."},
+    {"title": "Food", "text": "Leaves, stems and flowers are edible; young leaves are used raw or cooked, and flowers can be dried for tea. The plate correctly shows both the creeping, rooting runners and white flower heads."}
+  ],
+  "sources": [
+    {"title": "North Carolina Extension — White clover (Trifolium repens)", "url": "https://plants.ces.ncsu.edu/plants/trifolium-repens/common-name/clover/"},
+    {"title": "Iowa State University Extension — Dutch white clover", "url": "https://naturalresources.extension.iastate.edu/encyclopedia/dutch-white-clover"},
+    {"title": "UC Statewide IPM — Clovers", "url": "https://ipm.ucanr.edu/home-and-landscape/clovers/"}
+  ],
+  "related": ["trifolium_pratense"]
+}

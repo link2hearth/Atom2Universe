@@ -1,0 +1,14 @@
+{
+  "id": "taxodium_distichum",
+  "sections": [
+    {"title": "Tree and habitat", "text": "Taxodium distichum, the bald cypress, is a deciduous conifer of the southeastern United States, often growing on wet or seasonally flooded ground. It can reach about 30–46 m in height; mature landscape trees commonly spread 7.6–10.7 m. Its feathery, two-ranked leaves turn brown and fall in autumn, as shown in the plate."},
+    {"title": "Cones and knees", "text": "The globose woody seed cones measure about 1.3–3.6 cm across and turn from green to brownish purple. In swampy sites, roots can form upright woody projections called knees, from a few centimetres to more than 3.7 m high. These characteristic knees are shown around the illustrated trunk."},
+    {"title": "Food and safety", "text": "The sources consulted document timber use but not a reliable human food use or species-specific toxicity profile."}
+  ],
+  "sources": [
+    {"title": "Baldcypress — Silvics of North America, USDA Forest Service", "url": "https://research.fs.usda.gov/silvics/baldcypress"},
+    {"title": "Taxodium distichum — UF/IFAS Extension", "url": "https://ask.ifas.ufl.edu/publication/ST620?downloadOpen=true"},
+    {"title": "Taxodium distichum — USDA Forest Service, Agriculture Handbook 654", "url": "https://www.srs.fs.usda.gov/pubs/misc/ag_654_vol1.pdf"}
+  ],
+  "related": []
+}

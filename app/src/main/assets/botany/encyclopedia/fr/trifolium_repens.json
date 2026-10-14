@@ -1,0 +1,13 @@
+{
+  "id": "trifolium_repens",
+  "sections": [
+    {"title": "Port et fleurs", "text": "Le trèfle blanc est une vivace rampante. Ses stolons s’enracinent aux nœuds et forment un tapis d’environ 10 à 15 cm de haut, qui s’étale sur au moins 30 cm. Les trois folioles portent souvent une marque claire ; les capitules sont blancs, parfois rosés."},
+    {"title": "Alimentation", "text": "Feuilles, tiges et fleurs sont comestibles ; les jeunes feuilles se consomment crues ou cuites et les fleurs peuvent être séchées pour une infusion. La planche montre correctement les stolons enracinés et les capitules blancs."}
+  ],
+  "sources": [
+    {"title": "North Carolina Extension — White clover (Trifolium repens)", "url": "https://plants.ces.ncsu.edu/plants/trifolium-repens/common-name/clover/"},
+    {"title": "Iowa State University Extension — Dutch white clover", "url": "https://naturalresources.extension.iastate.edu/encyclopedia/dutch-white-clover"},
+    {"title": "UC Statewide IPM — Clovers", "url": "https://ipm.ucanr.edu/home-and-landscape/clovers/"}
+  ],
+  "related": ["trifolium_pratense"]
+}

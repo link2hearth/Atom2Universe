@@ -1,0 +1,13 @@
+{
+  "id": "trochetia_boutoniana",
+  "sections": [
+    {"title": "Shrub and flowers", "text": "The Mauritian boucle d’oreille is an endemic shrub about 2–3 m tall, with striking reddish-orange, bell-shaped flowers. It blooms mainly from June to October. The plate’s red pendant bells and oval leaves match the plant."},
+    {"title": "Name and range", "text": "Kew currently accepts this species as Ruizia boutoniana and lists Trochetia boutoniana as a synonym. It is native to Mauritius; the government identifies it as the national flower, declared in 1992. No edible use is established by these sources."}
+  ],
+  "sources": [
+    {"title": "Government of Mauritius — National Flower", "url": "https://www.govmu.org/EN/Pages/National-Flower.aspx/1000"},
+    {"title": "Government of Mauritius (French) — Fleur nationale", "url": "https://www.govmu.org/FR/Pages/Fleur-nationale.aspx"},
+    {"title": "Plants of the World Online — Ruizia boutoniana (syn. Trochetia boutoniana)", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:77217529-1/general-information"}
+  ],
+  "related": ["ruizia_parviflora"]
+}

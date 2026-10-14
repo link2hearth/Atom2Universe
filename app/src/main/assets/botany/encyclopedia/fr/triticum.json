@@ -1,0 +1,13 @@
+{
+  "id": "triticum",
+  "sections": [
+    {"title": "Le genre du blé", "text": "Triticum regroupe des graminées annuelles cultivées comme blés. Les tiges portent des feuilles étroites et un épi terminal composé d’épillets sessiles ; chaque épillet contient plusieurs fleurs qui forment ensuite les grains. La taille et la présence d’arêtes varient beaucoup selon l’espèce et la variété, donc une mesure unique ne décrit pas tout le genre."},
+    {"title": "Grain et alimentation", "text": "Le grain de blé est un fruit sec à une graine (caryopse) et une céréale majeure. Le blé contient du gluten, que les personnes atteintes de maladie cœliaque doivent éviter. La planche montre un épi représentatif, sans identifier une espèce précise de Triticum."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Triticum", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30034910-2/general-information"},
+    {"title": "FAO — Botany of the wheat plant", "url": "https://www.fao.org/4/y4011e/y4011e05.htm"},
+    {"title": "Celiac Disease Foundation — What is gluten?", "url": "https://celiac.org/what-is-gluten/"}
+  ],
+  "related": []
+}

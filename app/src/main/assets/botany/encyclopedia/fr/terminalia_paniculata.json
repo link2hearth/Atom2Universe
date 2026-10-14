@@ -1,0 +1,14 @@
+{
+  "id": "terminalia_paniculata",
+  "sections": [
+    {"title": "Arbre et feuilles", "text": "Terminalia paniculata est un grand arbre caduc originaire de la péninsule indienne, qui peut atteindre environ 33 m. Ses feuilles simples, oblongues, mesurent généralement 9–18 × 4,5–7 cm ; celles du bas peuvent être opposées et celles du haut alternes. La planche montre les larges feuilles et le port arboré."},
+    {"title": "Fleurs et fruit ailé", "text": "Les petites fleurs pâles sont réunies en épis ramifiés. Le fruit est une samare brun rougeâtre à une graine, avec trois ailes inégales, la centrale étant la plus grande. L'épi étroit et le fruit asymétrique ailé de la planche concordent avec cette description."},
+    {"title": "Alimentation et usages", "text": "Cet arbre est signalé comme une essence de bois utile. Les sources consultées ne permettent pas d'établir si son fruit est comestible ou toxique pour l'humain."}
+  ],
+  "sources": [
+    {"title": "Terminalia paniculata — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:171306-1/general-information"},
+    {"title": "Terminalia paniculata — Biotik India", "url": "https://www.biotik.org/india/species/t/termpani/termpani_en.html"},
+    {"title": "Terminalia paniculata — FAO Ecocrop", "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/cropView?id=10348"}
+  ],
+  "related": []
+}
