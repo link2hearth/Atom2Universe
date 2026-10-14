@@ -1,0 +1,12 @@
+{
+  "id": "areca_catechu",
+  "sections": [
+    {"title": "Form and range", "text": "The areca or betel-nut palm is a slender tropical tree native to the Philippines and widely cultivated across South and Southeast Asia and the Pacific. It can exceed 15 m; the crown carries long pinnate leaves. Its orange-red fibrous fruit is about 5 cm long and contains the seed called areca nut."},
+    {"title": "Food and toxicity", "text": "The seed is chewed in some cultural traditions, often with betel leaf (Piper betle), lime and sometimes tobacco. Areca nut itself is carcinogenic to humans (IARC Group 1); betel leaf and the palm's seed are different plants and parts. The plate's palm and fruit correspond to the species."}
+  ],
+  "sources": [
+    {"title": "Areca catechu — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A664107-1/general-information"},
+    {"title": "Areca nut is carcinogenic to humans — IARC/WHO", "url": "https://www.iarc.who.int/faq/iarc-monographs-meeting-128-acrolein-crotonaldehyde-and-arecoline/"},
+    {"title": "Betel-quid and areca-nut chewing — IARC Monographs", "url": "https://publications.iarc.who.int/103"}
+  ], "related": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "artemisia_vulgaris",
+  "sections": [
+    {"title": "Port et répartition", "text": "Vivace rhizomateuse pouvant atteindre environ 2,5 m. Ses feuilles profondément lobées sont vert foncé dessus et blanchâtres ou grises dessous; les petits capitules jaune crème forment des panicules feuillées. L’espèce est indigène d’Eurasie tempérée, d’Afrique du Nord et d’Indochine, et a été introduite ailleurs."},
+    {"title": "Alimentation et précautions", "text": "Les feuilles amères sont consommées ou servent à aromatiser aliments et boissons. Kew enregistre aussi des usages toxiques pour l’espèce, sans préciser doses ni parties; aucune affirmation générale de toxicité humaine n’est faite ici."},
+    {"title": "Armoises proches", "text": "Contrairement à Artemisia absinthium, plus uniformément argentée, A. vulgaris a le dessus des feuilles vert et le revers pâle. A. maritima est une proche espèce plus basse, liée aux marais salés."}
+  ],
+  "sources": [
+    {"title": "Artemisia vulgaris — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/20812-2"},
+    {"title": "Artemisia vulgaris — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/1646/artemisia-vulgaris/details"},
+    {"title": "Artemisia vulgaris — NParks Flora & Fauna Web", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/1/6/1689"}
+  ],
+  "related": ["artemisia_absinthium", "artemisia_maritima"]
+}

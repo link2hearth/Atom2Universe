@@ -1,0 +1,14 @@
+{
+  "id": "arctium_minus",
+  "sections": [
+    {"title": "Port et identification", "text": "La petite bardane est une bisannuelle généralement haute d’environ 60 à 120 cm. Elle porte de grandes feuilles basales et des capitules pourpres d’environ 2 à 3 cm, bractées crochues comprises. Comparée à la grande bardane (A. lappa), ses têtes sont plus petites et souvent portées par des pédoncules plus courts ; les variations et recouvrements interdisent d’en faire une clé d’identification à elle seule."},
+    {"title": "Alimentation et précautions", "text": "Des sources botaniques et horticoles régionales signalent la jeune racine pivotante, les feuilles et les pousses comme aliments. Les minuscules soies des akènes peuvent irriter les yeux, la peau et les voies respiratoires. Les Apiacées ressemblantes et les erreurs d’identification rendent la cueillette improvisée dangereuse."},
+    {"title": "Bardane proche", "text": "Arctium lappa est l’espèce à capitules plus grands, souvent cultivée pour sa racine. Toutes deux produisent des fruits crochus, mais ce sont des espèces distinctes."}
+  ],
+  "sources": [
+    {"title": "Arctium minus — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A178406-1/general-information"},
+    {"title": "Arctium minus — Flora of Iraq, Kew Publishing (via POWO)", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A178406-1/general-information"},
+    {"title": "Petite bardane — NC State Extension Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/arctium-minus/common-name/lesser-burdock/"},
+    {"title": "Arctium minus — Go Botany, Native Plant Trust", "url": "https://gobotany.nativeplanttrust.org/species/arctium/minus/"}
+  ], "related": ["arctium_lappa"]
+}

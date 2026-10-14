@@ -1,0 +1,13 @@
+{
+  "id": "arachis",
+  "sections": [
+    {"title": "Port et culture", "text": "Arachis hypogaea, l’arachide, est une légumineuse annuelle basse, généralement haute d’environ 20 à 60 cm. Après la floraison, le pédoncule s’allonge et enfonce la gousse en formation dans le sol ; celle-ci contient souvent une à quatre graines. Originaire comme plante cultivée de Bolivie, elle est désormais produite dans les régions chaudes du monde."},
+    {"title": "Alimentation et allergie", "text": "Les graines se consomment fraîches, grillées ou bouillies, ou servent à produire de l’huile ; les gousses sont des fruits au sens botanique et non de véritables noix. L’arachide est un allergène alimentaire majeur et peut provoquer des réactions graves chez les personnes allergiques."},
+    {"title": "Note sur l’image", "text": "La planche représente la plante et ses gousses souterraines ; leur nombre, leur taille et la couleur des graines varient selon le cultivar."}
+  ],
+  "sources": [
+    {"title": "Arachis hypogaea — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A318562-2/general-information"},
+    {"title": "L’arachide, allergène alimentaire majeur — U.S. Food and Drug Administration", "url": "https://www.fda.gov/industry/fda-basics-industry/what-major-food-allergen"},
+    {"title": "Arachis hypogaea — Tropical Forages", "url": "https://tropicalforages.info/text/entities/arachis_hypogaea.htm"}
+  ], "related": []
+}

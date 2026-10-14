@@ -1,0 +1,12 @@
+{
+  "id": "artocarpus_altilis",
+  "sections": [
+    {"title": "Port et répartition", "text": "Arbre tropical persistant, généralement haut d’environ 15 m mais pouvant atteindre 26 m. Ses feuilles profondément lobées peuvent mesurer jusqu’à 30 cm. Les inflorescences mâles et femelles sont distinctes; les fleurs femelles fusionnent en un gros fruit composé pouvant atteindre environ 30 cm. Cultigène originaire du nord-ouest du Pacifique, l’arbre à pain est aujourd’hui cultivé sous les tropiques."},
+    {"title": "Alimentation", "text": "Le fruit riche en amidon se mange généralement cuit. Il existe aussi des formes à graines dont les graines sont consommées. L’absence ou la présence de graines ne suffit pas à distinguer une autre espèce."}
+  ],
+  "sources": [
+    {"title": "Artocarpus altilis — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A582598-1/general-information"},
+    {"title": "Artocarpus altilis — Oregon State University Landscape Plants", "url": "https://landscapeplants.oregonstate.edu/plants/artocarpus-altilis"},
+    {"title": "Breadfruit — National Tropical Botanical Garden", "url": "https://ntbg.org/breadfruit/"}
+  ]
+}

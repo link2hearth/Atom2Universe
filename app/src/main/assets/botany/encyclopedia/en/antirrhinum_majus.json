@@ -1,0 +1,12 @@
+{
+  "id": "antirrhinum_majus",
+  "sections": [
+    {"title": "Form and range", "text": "The common snapdragon is a perennial subshrub, often grown as an annual, native to northern Spain and south-central to eastern France. It reaches roughly 20–100 cm in cultivation; its two-lipped flowers have a closed, hinged-looking opening. Flower colour and size vary widely among cultivars."},
+    {"title": "Uses and food", "text": "It is chiefly cultivated as an ornamental. Kew records food use, but this does not establish that every garden cultivar or treated plant is suitable to eat; the plate's vivid colour is not a species-wide trait."},
+    {"title": "Related research plant", "text": "Arabidopsis thaliana belongs to Brassicaceae, whereas snapdragon is Plantaginaceae. Both are used to study flower development, but are distantly related and differ greatly in flower form and plant size."}
+  ],
+  "sources": [
+    {"title": "Antirrhinum majus — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A799180-1/general-information"},
+    {"title": "Antirrhinum majus — NC State Extension Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/antirrhinum-majus/"}
+  ], "related": ["arabidopsis"]
+}

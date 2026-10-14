@@ -1,0 +1,14 @@
+{
+  "id": "artemisia_vulgaris",
+  "sections": [
+    {"title": "Form and range", "text": "A rhizomatous perennial reaching up to about 2.5 m. Its deeply lobed leaves are dark green above and whitish or grey beneath; small creamy-yellow flower heads form leafy panicles. Native to temperate Eurasia, North Africa and Indochina, it has been introduced elsewhere."},
+    {"title": "Food and safety", "text": "The bitter leaves are eaten or used to flavour foods and drinks. Kew also records toxic uses for the species without specifying doses or plant parts; no general claim about human toxicity is made here."},
+    {"title": "Related wormwoods", "text": "Unlike the more uniformly silvery Artemisia absinthium, A. vulgaris has green upper leaf surfaces and pale undersides. A. maritima is a lower-growing relative associated with salt-marsh habitats."}
+  ],
+  "sources": [
+    {"title": "Artemisia vulgaris — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/20812-2"},
+    {"title": "Artemisia vulgaris — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/1646/artemisia-vulgaris/details"},
+    {"title": "Artemisia vulgaris — NParks Flora & Fauna Web", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/1/6/1689"}
+  ],
+  "related": ["artemisia_absinthium", "artemisia_maritima"]
+}

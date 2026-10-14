@@ -1,0 +1,12 @@
+{
+  "id": "antirrhinum_majus",
+  "sections": [
+    {"title": "Port et répartition", "text": "Le muflier à grandes fleurs est un sous-arbrisseau vivace, souvent cultivé comme annuelle, originaire du nord de l’Espagne et du centre-sud à l’est de la France. En culture, il mesure environ 20 à 100 cm ; ses fleurs bilabiées présentent une ouverture qui s’ouvre sous pression. Leur taille et leur couleur varient fortement selon les cultivars."},
+    {"title": "Usages et alimentation", "text": "Il est surtout cultivé comme plante ornementale. Kew mentionne un usage alimentaire, ce qui ne garantit pas que tout cultivar de jardin ou toute plante traitée soit propre à la consommation ; la couleur vive de la planche n’est pas constante dans l’espèce."},
+    {"title": "Plante modèle apparentée", "text": "Arabidopsis thaliana appartient aux Brassicacées, tandis que le muflier relève des Plantaginacées. Toutes deux servent à étudier le développement floral, mais sont éloignées et diffèrent beaucoup par la forme de leurs fleurs et leur taille."}
+  ],
+  "sources": [
+    {"title": "Antirrhinum majus — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A799180-1/general-information"},
+    {"title": "Antirrhinum majus — NC State Extension Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/antirrhinum-majus/"}
+  ], "related": ["arabidopsis"]
+}

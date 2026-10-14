@@ -1,0 +1,13 @@
+{
+  "id": "artemisia_maritima",
+  "sections": [
+    {"title": "Form and habitat", "text": "A low perennial or subshrub, about 20–50 cm tall, native to northern and western Europe. Its finely divided leaves are often densely white-haired, giving the plant a silvery appearance; small yellowish or brownish flower heads form narrow panicles. It grows in drier parts of salt marshes and on coastal banks."},
+    {"title": "Related wormwoods and uses", "text": "Artemisia absinthium is another silvery wormwood but is generally taller and is not specifically tied to salt marshes. No food use is verified in the sources consulted."}
+  ],
+  "sources": [
+    {"title": "Artemisia maritima — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A179785-1"},
+    {"title": "Artemisia maritima — Alpine Garden Society Encyclopedia", "url": "https://encyclopaedia.alpinegardensociety.net/plants/Artemisia/maritima"},
+    {"title": "Artemisia maritima — West Glamorgan Flora", "url": "https://www.westglamorganflora.org.uk/vascular-plants/artemisia-maritima/"}
+  ],
+  "related": ["artemisia_absinthium", "artemisia_vulgaris"]
+}

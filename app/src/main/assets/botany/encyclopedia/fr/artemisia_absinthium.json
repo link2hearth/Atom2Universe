@@ -1,0 +1,14 @@
+{
+  "id": "artemisia_absinthium",
+  "sections": [
+    {"title": "Port et répartition", "text": "Vivace aromatique à base ligneuse, généralement haute d’environ 30–120 cm. Ses feuilles profondément divisées sont argentées et soyeuses; les petits capitules jaunes forment des panicules ramifiées. L’espèce est indigène d’Europe, d’Afrique du Nord et des régions tempérées jusqu’en Sibérie et dans l’ouest de l’Himalaya."},
+    {"title": "Alimentation et précautions", "text": "Cette herbe a des usages culinaires, mais contient de la thuyone, qui peut être neurotoxique à forte dose. Les usages traditionnels et l’aromatisation ne rendent pas les préparations concentrées sûres."},
+    {"title": "Armoises proches", "text": "Artemisia vulgaris a le dessus des feuilles vert et le revers pâle, tandis qu’A. absinthium est plus uniformément argentée. A. maritima est une autre espèce basse et argentée associée aux marais salés."}
+  ],
+  "sources": [
+    {"title": "Artemisia absinthium — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A300106-2/general-information"},
+    {"title": "Assessment report on Artemisia absinthium — European Medicines Agency", "url": "https://www.ema.europa.eu/en/documents/herbal-report/final-assessment-report-artemisia-absinthium-l-herba-revision-1_en.pdf"},
+    {"title": "Artemisia absinthium — flore de Vienne, Muséum d’histoire naturelle de Vienne", "url": "https://flora.nhm-wien.ac.at/Seiten-Arten/Artemisia-absinthium.htm"}
+  ],
+  "related": ["artemisia_vulgaris", "artemisia_maritima"]
+}

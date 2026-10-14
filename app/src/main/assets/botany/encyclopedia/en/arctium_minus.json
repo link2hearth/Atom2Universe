@@ -1,0 +1,14 @@
+{
+  "id": "arctium_minus",
+  "sections": [
+    {"title": "Form and identification", "text": "Lesser burdock is a biennial, usually about 60–120 cm tall. It has large lower leaves and purple flower heads about 2–3 cm across, including their hooked bracts. Compared with greater burdock (A. lappa), its heads are smaller and commonly occur on shorter stalks; overlap and local variation mean this is not a stand-alone identification key."},
+    {"title": "Food and safety", "text": "Regional botanical and extension sources report the young taproot, leaves and shoots as food. The minute bristles on its achenes can irritate eyes, skin and airways. Wild Apiaceae lookalikes and uncertain identification make casual foraging unsafe."},
+    {"title": "Related burdock", "text": "Arctium lappa is the larger-headed relative often grown for its root. Both produce hooked burs, but they are separate species."}
+  ],
+  "sources": [
+    {"title": "Arctium minus — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A178406-1/general-information"},
+    {"title": "Arctium minus — Flora of Iraq, Kew Publishing (via POWO)", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A178406-1/general-information"},
+    {"title": "Lesser burdock — NC State Extension Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/arctium-minus/common-name/lesser-burdock/"},
+    {"title": "Arctium minus — Go Botany, Native Plant Trust", "url": "https://gobotany.nativeplanttrust.org/species/arctium/minus/"}
+  ], "related": ["arctium_lappa"]
+}

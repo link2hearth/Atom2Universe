@@ -1,0 +1,13 @@
+{
+  "id": "arachis",
+  "sections": [
+    {"title": "Form and cultivation", "text": "Arachis hypogaea, the peanut or groundnut, is a low annual legume, generally about 20–60 cm tall. After flowering, its stalk elongates and pushes the developing pod underground; pods usually contain one to four seeds. It originated as a cultigen in Bolivia and is now grown widely in warm regions."},
+    {"title": "Food and allergy", "text": "The seeds are eaten fresh, roasted or boiled, or pressed for oil; pods are botanical fruits, not true nuts. Peanut is a major food allergen and can cause severe reactions in sensitized people."},
+    {"title": "Image note", "text": "The plate depicts the plant and underground pods; pod number, size and seed colour vary by cultivar."}
+  ],
+  "sources": [
+    {"title": "Arachis hypogaea — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A318562-2/general-information"},
+    {"title": "Peanuts are a major food allergen — U.S. Food and Drug Administration", "url": "https://www.fda.gov/industry/fda-basics-industry/what-major-food-allergen"},
+    {"title": "Arachis hypogaea — Tropical Forages", "url": "https://tropicalforages.info/text/entities/arachis_hypogaea.htm"}
+  ], "related": []
+}

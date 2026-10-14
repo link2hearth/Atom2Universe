@@ -1,0 +1,13 @@
+{
+  "id": "armeniaca",
+  "sections": [
+    {"title": "Form and cultivation", "text": "Armeniaca is the catalog name for the apricot, Prunus armeniaca, a small deciduous tree or shrub native from Central Asia to northern and central China. Trees commonly reach about 5–8 m, with spring flowers before or alongside leaf emergence. The fleshy drupe is usually orange-yellow, sometimes red-blushed."},
+    {"title": "Fruit and kernel safety", "text": "The ripe fruit is widely eaten fresh or dried. The hard stone encloses a kernel containing cyanogenic compounds; bitter apricot kernels can release cyanide and are not a safe snack. The plate's blossoms and orange fruit are consistent with apricot, though cultivar features vary."},
+    {"title": "Related fruit trees", "text": "Apricot is a Prunus, like peach (P. persica) and sweet cherry (P. avium); their fruits differ in skin, flesh and stone, despite the shared genus."}
+  ],
+  "sources": [
+    {"title": "Prunus armeniaca — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A729463-1/general-information"},
+    {"title": "Apricot kernels pose risk of cyanide poisoning — European Food Safety Authority", "url": "https://www.efsa.europa.eu/en/press/news/160427"},
+    {"title": "Apricot — Royal Horticultural Society", "url": "https://www.rhs.org.uk/fruit/apricots/grow-your-own"}
+  ], "related": []
+}

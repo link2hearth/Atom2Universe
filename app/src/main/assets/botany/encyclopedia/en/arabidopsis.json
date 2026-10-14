@@ -1,0 +1,13 @@
+{
+  "id": "arabidopsis",
+  "sections": [
+    {"title": "Form and range", "text": "Arabidopsis thaliana, thale cress, is a small annual of the mustard family, native across much of Eurasia and North Africa. Its rosette is only a few centimetres wide; flowering stems often reach about 10–30 cm, though conditions affect size. Tiny white flowers and slender seed pods suit the delicate scale of the plate."},
+    {"title": "Why it is studied", "text": "Its short life cycle, small genome and ease of cultivation made it a major model in genetics and developmental biology; its genome was the first plant genome to be fully sequenced. It is not a crop or a miniature snapdragon."},
+    {"title": "Food and safety", "text": "No meaningful food use was verified for this profile; do not treat a research model or wild plant as an edible salad green without species-specific evidence."}
+  ],
+  "sources": [
+    {"title": "Arabidopsis thaliana — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A277970-1/general-information"},
+    {"title": "The Arabidopsis Information Resource — About Arabidopsis", "url": "https://www.arabidopsis.org/portals/education/aboutarabidopsis.jsp"},
+    {"title": "Arabidopsis genome initiative — Nature", "url": "https://www.nature.com/articles/35048500"}
+  ], "related": ["antirrhinum_majus"]
+}
