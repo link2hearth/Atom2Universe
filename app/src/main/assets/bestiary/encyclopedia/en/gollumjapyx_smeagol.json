@@ -1,0 +1,30 @@
+{
+  "id": "gollumjapyx_smeagol",
+  "name": "Smeagol Cave Japygid",
+  "scientific": "Gollumjapyx smeagol",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Gollumjapyx smeagol is a cave-adapted dipluran described in 2006 from the eastern Iberian Peninsula.",
+    "identification": "It is unpigmented and has elongated appendages and antennae, traits associated with permanent subterranean life.",
+    "habitat": "It is known from limestone caves and deep subterranean spaces in eastern Spain, including localities in Castellón and Tarragona. The Catalan account reports cave-floor temperatures of 14–17 °C.",
+    "diet": "It is a predator of small subterranean arthropods; digestive contents included mites and fragments of cave beetles. The Catalan account also characterizes it as a large predator of mites and beetles.",
+    "behavior": "Its elongated sensory appendages are part of a suite of specializations for darkness, not evidence that it belongs to a different insect order.",
+    "reproduction": "The original description records cave occurrences but does not establish a reproductive cycle.",
+    "ecology": "The original taxonomic authors noted that its unusual characters did not establish a clear relationship to other japygid genera. A later comparative account also discusses its pronounced cave-adapted form.",
+    "conservation": "Catalonia lists it as Vulnerable and identifies cave pollution or alteration and disturbance of surrounding land as threats; this is a regional, not global, assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.biotaxa.org/Zootaxa/article/view/zootaxa.1372.1.4",
+      "title": "Gollumjapyx smeagol, original description — Zootaxa"
+    },
+    {
+      "url": "https://mediambient.gencat.cat/es/05_ambits_dactuacio/patrimoni_natural/fauna-autoctona-protegida/gestio-especies-protegides-amenacades/invertebrats/altres_invertebrats_amenacats/emgollumjapyx-smeagol-em/index.html",
+      "title": "Gollumjapyx smeagol — Generalitat de Catalunya, Spanish account"
+    },
+    {
+      "url": "https://www.zobodat.at/pdf/EJT_0894_0001-0054.pdf",
+      "title": "Cave-adapted japygid Diplura — European Journal of Taxonomy"
+    }
+  ]
+}

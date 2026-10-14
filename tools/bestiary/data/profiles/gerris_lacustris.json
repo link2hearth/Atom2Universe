@@ -1,0 +1,202 @@
+{
+  "id": "gerris_lacustris",
+  "scientific": "Gerris lacustris",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common Pond Skater",
+    "fr": "Gerris lacustre"
+  },
+  "sections": {
+    "overview": {
+      "en": "Gerris lacustris is a widespread European water strider that lives on the surface of still or slow-moving freshwater.",
+      "fr": "Gerris lacustris est une punaise patineuse largement répandue en Europe, vivant à la surface des eaux douces stagnantes ou lentes."
+    },
+    "identification": {
+      "en": "It has a slender dark body and long legs; unlike aquatic insects that swim beneath the surface, its water-repellent leg hairs support it on the surface film.",
+      "fr": "Son corps est fin et sombre et ses pattes sont longues ; contrairement aux insectes qui nagent sous l’eau, leurs poils hydrophobes le maintiennent sur le film de surface."
+    },
+    "habitat": {
+      "en": "It occurs on ponds, lakes and other quiet freshwater surfaces.",
+      "fr": "On le rencontre sur les mares, les lacs et d’autres surfaces d’eau douce calmes."
+    },
+    "diet": {
+      "en": "It is a predator of small animals stranded on the water surface, including insects and other small invertebrates.",
+      "fr": "C’est un prédateur de petits animaux piégés à la surface, notamment des insectes et d’autres petits invertébrés."
+    },
+    "behavior": {
+      "en": "Vibrations at the surface alert it to prey; its middle legs row while the front legs seize the animal.",
+      "fr": "Les vibrations de surface l’alertent de la présence de proies ; ses pattes médianes le propulsent et les antérieures les saisissent."
+    },
+    "reproduction": {
+      "en": "Females lay eggs on submerged vegetation or other objects; the life cycle and wing forms vary with season and local conditions. A field study found two generations per year in most sampled ponds, but also documented local variability.",
+      "fr": "Les femelles pondent sur la végétation immergée ou d’autres supports ; le cycle et les formes ailées varient selon la saison et les conditions locales. Une étude de terrain a observé deux générations annuelles dans la plupart des mares échantillonnées, tout en documentant une variabilité locale."
+    },
+    "ecology": {
+      "en": "The species’ flexible wing and life-history forms help it colonize new ponds; several other pond-skater species can occur in the same region, so “pond skater” is not a species-level identification by itself.",
+      "fr": "La variabilité des ailes et du cycle facilite la colonisation de nouvelles mares ; d’autres patineurs peuvent vivre dans la même région, si bien que « gerris » ne suffit pas à identifier l’espèce."
+    },
+    "conservation": {
+      "en": "The British range-edge assessment treated the species as close to qualifying for a threat category; that is not a global status.",
+      "fr": "L’évaluation de la limite occidentale de son aire britannique la jugeait proche des critères d’une catégorie menacée ; ce statut n’est pas mondial."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Pond Skater — Buglife",
+        "fr": "Common Pond Skater — Buglife"
+      },
+      "url": "https://www.buglife.org.uk/bugs/bug-directory/common-pond-skater/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Buglife describes habitat, prey capture and the seasonal life cycle."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Variability in life history of Gerris lacustris — Ecological Entomology",
+        "fr": "Variability in life history of Gerris lacustris — Ecological Entomology"
+      },
+      "url": "https://resjournals.onlinelibrary.wiley.com/doi/10.1111/j.0307-6946.2006.00763.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Peer-reviewed study documents seasonal life-cycle and wing-form variability at local scales."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Gerris — DORIS, Fédération française d’études et de sports sous-marins",
+        "fr": "Gerris — DORIS, Fédération française d’études et de sports sous-marins"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Gerris-sp.-Gerris-938",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "French account describes lacustris form and wave-based prey detection."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Gerris lacustris in England — Natural England commissioned report NECR188",
+        "fr": "Gerris lacustris en Angleterre — rapport commandé par Natural England NECR188"
+      },
+      "url": "https://publications.naturalengland.org.uk/file/5201066401464320",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Report assesses the species near its western British range edge, not globally."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Conservation status was not found in the species accounts consulted.",
+    "The DORIS page covers the genus and identifies G. lacustris in its comparative description."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "The account distinguishes G. lacustris from other pond skaters at genus level; no named catalogue cousin was found for a direct profile cross-link."
+}

@@ -1,0 +1,187 @@
+{
+  "id": "geophagus_argyrostictus",
+  "scientific": "Geophagus argyrostictus",
+  "group": "fish",
+  "name": {
+    "en": "Xingu eartheater",
+    "fr": "Géophage du Xingu"
+  },
+  "sections": {
+    "overview": {
+      "en": "Described in 1991, this cichlid is known from the upper and lower Xingu basin in Brazil, including the Iriri and Curuá drainages.",
+      "fr": "Décrit en 1991, ce cichlidé est connu des secteurs supérieur et inférieur du bassin du Xingu au Brésil, notamment des bassins de l’Iriri et du Curuá."
+    },
+    "identification": {
+      "en": "The original diagnosis emphasizes reflective silver flank spots and a dark vertical mark below the eye; larger fish develop silvery scales on the front of the flanks.",
+      "fr": "La diagnose originale souligne des taches argentées réfléchissantes sur les flancs et une marque verticale sombre sous l’œil ; les grands individus développent des écailles argentées à l’avant des flancs."
+    },
+    "habitat": {
+      "en": "Records include clear-water, gently sloping marginal habitats with sand, fine gravel or mud, as well as some floodplain lakes.",
+      "fr": "Les observations comprennent des rives en pente douce d’eaux claires, à fond de sable, gravier fin ou vase, ainsi que certains lacs de plaine inondable."
+    },
+    "diet": {
+      "en": "Species-specific prey records are sparse; the genus name refers to substrate feeding, but this profile does not assume a detailed diet for this species.",
+      "fr": "Les données sur ses proies propres à l’espèce sont rares ; le nom du genre évoque l’alimentation dans le substrat, mais cette fiche ne lui attribue pas un régime détaillé sans preuve."
+    },
+    "behavior": {
+      "en": "The original paper records it as the first Geophagus species observed brooding on a substrate, rather than using the mouthbrooding pattern documented in many congeners.",
+      "fr": "L’article original la présente comme la première espèce de Geophagus observée incubant ses œufs sur un substrat, plutôt que selon l’incubation buccale documentée chez de nombreux congénères."
+    },
+    "reproduction": {
+      "en": "The 1991 description reports samples from two parts of the Xingu basin that differ slightly in colour and measurements.",
+      "fr": "La description de 1991 signale des échantillons de deux secteurs du bassin du Xingu qui diffèrent légèrement par la couleur et les mesures."
+    },
+    "ecology": {
+      "en": "Within this lot, it contrasts with G. brokopondo, a Suriname-basin member of the surinamensis group whose breeding mode remains unconfirmed; G. crassilabris is another geographically separate congener from Panama. The original paper further notes slight colour and measurement differences between its upper- and lower-basin samples.",
+      "fr": "Dans ce lot, elle se distingue de G. brokopondo, membre du groupe surinamensis du bassin du Suriname dont le mode de reproduction reste non confirmé ; G. crassilabris est un autre congénère, géographiquement séparé, du Panama. L’article original signale aussi de légères différences de couleur et de mesures entre les échantillons des secteurs amont et aval."
+    },
+    "conservation": {
+      "en": "FishBase reports a global Least Concern assessment dated 7 November 2018; that assessment date should accompany the category.",
+      "fr": "FishBase rapporte une évaluation mondiale en préoccupation mineure datée du 7 novembre 2018 ; cette date doit accompagner la catégorie."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Geophagus argyrostictus — Kullander, 1991, Cybium",
+        "fr": "Geophagus argyrostictus — Kullander, 1991, Cybium"
+      },
+      "url": "https://sfi-cybium.fr/en/geophagus-argyrostictus-new-species-cichlid-fish-rio-xingu-brazil",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The original paper describes localities, diagnostic markings and substrate brooding."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus argyrostictus — Seriously Fish",
+        "fr": "Geophagus argyrostictus — Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/geophagus-argyrostictus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Specialist account reports Xingu habitats and the limits of diet records."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus argyrostictus — FishBase",
+        "fr": "Geophagus argyrostictus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Geophagus-argyrostictus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase includes range, reproduction and dated conservation assessment."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "No species-specific prey list was found; the prose avoids inferring diet from the genus name alone.",
+    "The 1991 original paper provides the strongest evidence for reproductive mode."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-references compare three Geophagus without implying sister-species relationships: argyrostictus is outside the surinamensis group, unlike brokopondo."
+}

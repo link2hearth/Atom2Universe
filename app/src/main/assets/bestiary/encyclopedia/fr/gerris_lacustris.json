@@ -1,0 +1,34 @@
+{
+  "id": "gerris_lacustris",
+  "name": "Gerris lacustre",
+  "scientific": "Gerris lacustris",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Gerris lacustris est une punaise patineuse largement répandue en Europe, vivant à la surface des eaux douces stagnantes ou lentes.",
+    "identification": "Son corps est fin et sombre et ses pattes sont longues ; contrairement aux insectes qui nagent sous l’eau, leurs poils hydrophobes le maintiennent sur le film de surface.",
+    "habitat": "On le rencontre sur les mares, les lacs et d’autres surfaces d’eau douce calmes.",
+    "diet": "C’est un prédateur de petits animaux piégés à la surface, notamment des insectes et d’autres petits invertébrés.",
+    "behavior": "Les vibrations de surface l’alertent de la présence de proies ; ses pattes médianes le propulsent et les antérieures les saisissent.",
+    "reproduction": "Les femelles pondent sur la végétation immergée ou d’autres supports ; le cycle et les formes ailées varient selon la saison et les conditions locales. Une étude de terrain a observé deux générations annuelles dans la plupart des mares échantillonnées, tout en documentant une variabilité locale.",
+    "ecology": "La variabilité des ailes et du cycle facilite la colonisation de nouvelles mares ; d’autres patineurs peuvent vivre dans la même région, si bien que « gerris » ne suffit pas à identifier l’espèce.",
+    "conservation": "L’évaluation de la limite occidentale de son aire britannique la jugeait proche des critères d’une catégorie menacée ; ce statut n’est pas mondial."
+  },
+  "sources": [
+    {
+      "url": "https://www.buglife.org.uk/bugs/bug-directory/common-pond-skater/",
+      "title": "Common Pond Skater — Buglife"
+    },
+    {
+      "url": "https://resjournals.onlinelibrary.wiley.com/doi/10.1111/j.0307-6946.2006.00763.x",
+      "title": "Variability in life history of Gerris lacustris — Ecological Entomology"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Gerris-sp.-Gerris-938",
+      "title": "Gerris — DORIS, Fédération française d’études et de sports sous-marins"
+    },
+    {
+      "url": "https://publications.naturalengland.org.uk/file/5201066401464320",
+      "title": "Gerris lacustris en Angleterre — rapport commandé par Natural England NECR188"
+    }
+  ]
+}

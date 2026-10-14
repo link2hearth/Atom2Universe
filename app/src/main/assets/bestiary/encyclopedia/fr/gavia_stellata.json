@@ -1,0 +1,30 @@
+{
+  "id": "gavia_stellata",
+  "name": "Plongeon catmarin",
+  "scientific": "Gavia stellata",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Plongeon catmarin niche dans les régions arctiques circumpolaires et hiverne surtout le long des côtes nordiques.",
+    "identification": "C’est le plus petit et le plus fin des plongeons régulièrement observés en France ; l’adulte nuptial porte une étroite tache rousse à la gorge et un bec fin légèrement relevé.",
+    "habitat": "Il niche au bord de petites mares d’eau douce de toundra ou de taïga, puis gagne les baies, estuaires et eaux côtières abritées en hiver.",
+    "diet": "Les poissons constituent l’essentiel de son alimentation, mais il capture aussi des crustacés, mollusques et insectes aquatiques.",
+    "behavior": "Il guette, la tête en partie immergée, puis plonge sans éclaboussure pour poursuivre ses proies sous l’eau.",
+    "reproduction": "Les couples pondent généralement deux œufs dans un nid sommaire près de l’eau, et les deux adultes les couvent pendant environ 27 jours.",
+    "ecology": "À la différence des plongeons qui dépendent de grands lacs, cette espèce peut nicher sur de petites mares de toundra et s’alimenter plus loin dans de grandes eaux. ADW décrit également des nids près de l’eau.",
+    "conservation": "Sa catégorie mondiale de Liste rouge est « préoccupation mineure », mais la LPO signale une tendance au déclin et des pressions comme la pollution, le dérangement et le changement climatique."
+  },
+  "sources": [
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/plongeon-catmarin2",
+      "title": "Plongeon catmarin — LPO, fiche espèce"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Red-throated_Loon/lifehistory",
+      "title": "Red-throated Loon Life History — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Gavia_stellata/",
+      "title": "Gavia stellata — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

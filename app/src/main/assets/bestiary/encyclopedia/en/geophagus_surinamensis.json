@@ -1,0 +1,30 @@
+{
+  "id": "geophagus_surinamensis",
+  "name": "Redstriped eartheater",
+  "scientific": "Geophagus surinamensis",
+  "group": "fish",
+  "sections": {
+    "overview": "The accepted species is native to the Saramacca and Suriname rivers and the Marowijne basin of Suriname and French Guiana.",
+    "identification": "The scientific name refers to Suriname, its type locality; “Perle du Suriname” is a French aquarium common name.",
+    "habitat": "Adults are reported from muddy or sandy bottomed canals and quiet cascade zones.",
+    "diet": "It is omnivorous with a tendency toward plant food and searches the substrate by digging with its protrusible mouth.",
+    "behavior": "FishBase reports that it sometimes occurs with G. harreri in quieter parts of cascades.",
+    "reproduction": "It is a larvophilic mouthbrooder: parents take eggs into the mouth after spawning and later shelter larvae there.",
+    "ecology": "It shares quieter cascade reaches with G. harreri, which is also recorded in this basin.",
+    "conservation": "FishBase lists global Least Concern, assessed on 12 March 2023."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.net.br/summary/SpeciesSummary.php?id=4781&lang=french",
+      "title": "Geophagus surinamensis — FishBase French summary"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=16502",
+      "title": "Geophagus surinamensis — Catalog of Fishes"
+    },
+    {
+      "url": "https://www.fishipedia.fr/fr/poissons/geophagus-surinamensis",
+      "title": "Perle du Suriname — Fishipedia"
+    }
+  ]
+}

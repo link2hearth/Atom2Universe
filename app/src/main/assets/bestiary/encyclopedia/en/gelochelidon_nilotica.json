@@ -1,0 +1,30 @@
+{
+  "id": "gelochelidon_nilotica",
+  "name": "Gull-billed Tern",
+  "scientific": "Gelochelidon nilotica",
+  "group": "birds",
+  "sections": {
+    "overview": "The Gull-billed Tern is a widespread tern of warm coasts and inland wetlands, notable for feeding away from open water as well as along shorelines.",
+    "identification": "Its stout black bill, broad wings and short notched tail distinguish it from many slimmer-billed terns; adults wear a black cap in breeding plumage.",
+    "habitat": "It breeds on sandy beaches, saltmarsh islands, shell banks and, in some regions, inland wetlands; outside breeding it also uses coastal lagoons and mudflats. CIESM also records nests on sand or mud near coastal lagoons and saltmarshes.",
+    "diet": "Its broad diet includes flying insects, crustaceans, lizards, amphibians, fish and occasionally small mammals or young birds. CIESM likewise notes insects, small vertebrates and crustaceans, often taken on land.",
+    "behavior": "Unlike many terns, it rarely plunge-dives: it catches insects in flight and picks prey from the ground or water surface.",
+    "reproduction": "Pairs scrape a shallow nest in the ground, often in small colonies; clutches usually contain two or three eggs.",
+    "ecology": "This flexible foraging strategy makes it less dependent on fish than many congeners, and it often searches terrestrial habitats.",
+    "conservation": "Global sources classify it as low concern, while local breeding colonies can be affected by human disturbance and wetland loss. CIESM identifies habitat loss and disturbance at breeding colonies as pressures."
+  },
+  "sources": [
+    {
+      "url": "https://www.oiseaux.net/oiseaux/sterne.hansel.html",
+      "title": "Sterne hansel — Oiseaux.net"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Gull-billed_Tern/lifehistory",
+      "title": "Gull-billed Tern Life History — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://ciesm.org/marine/programs/seabirds/gull-billed-tern/",
+      "title": "Gull-billed tern — CIESM Research on Seabirds"
+    }
+  ]
+}

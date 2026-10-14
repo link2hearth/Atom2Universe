@@ -1,0 +1,30 @@
+{
+  "id": "geophagus_pellegrini",
+  "name": "Géophage à bosse jaune",
+  "scientific": "Geophagus pellegrini",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce géophage colombien est signalé dans les bassins de l’Atrato, du San Juan et du Baudó, dans la région du Chocó.",
+    "identification": "L’espèce a été décrite du Río San Juan à Tadó, dans l’actuel département du Chocó.",
+    "habitat": "Une étude du río Tutunendo a examiné le contenu stomacal de ce poisson, mais le résumé ne décrit pas une préférence complète d’habitat.",
+    "diet": "Dans l’échantillon du Tutunendo, le contenu stomacal indique un régime zooplanctonophage, surtout composé de larves d’insectes aquatiques.",
+    "behavior": "L’étude disponible décrit l’écologie alimentaire plutôt que le comportement social.",
+    "reproduction": "Les résumés d’espèce consultés ne permettent pas d’établir son comportement reproducteur.",
+    "ecology": "Son aire occidentale colombienne est distincte de celles des Geophagus de l’Orénoque et des Guyanes présentés dans ce lot.",
+    "conservation": "FishBase rapporte la catégorie « données insuffisantes », évaluée le 8 octobre 2014."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/geophagus-pellegrini.html",
+      "title": "Geophagus pellegrini — FishBase"
+    },
+    {
+      "url": "https://raccefyn.co/index.php/raccefyn/article/view/2215",
+      "title": "Étude préliminaire des aspects environnementaux et écologiques du río Tutunendo — revue de l’Académie colombienne des sciences"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=16501",
+      "title": "Geophagus — Catalogue des poissons (Catalog of Fishes)"
+    }
+  ]
+}

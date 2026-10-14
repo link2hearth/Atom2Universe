@@ -1,0 +1,187 @@
+{
+  "id": "gavia_stellata",
+  "scientific": "Gavia stellata",
+  "group": "birds",
+  "name": {
+    "en": "Red-throated Loon",
+    "fr": "Plongeon catmarin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Red-throated Loon is a circumpolar Arctic breeder that winters mainly along northern coasts.",
+      "fr": "Le Plongeon catmarin niche dans les régions arctiques circumpolaires et hiverne surtout le long des côtes nordiques."
+    },
+    "identification": {
+      "en": "It is the smallest and slimmest loon regularly seen in France; breeding adults show a narrow rusty throat patch and a fine, slightly upturned bill.",
+      "fr": "C’est le plus petit et le plus fin des plongeons régulièrement observés en France ; l’adulte nuptial porte une étroite tache rousse à la gorge et un bec fin légèrement relevé."
+    },
+    "habitat": {
+      "en": "It nests beside small freshwater ponds in tundra or taiga, then moves to bays, estuaries and sheltered coastal waters for winter.",
+      "fr": "Il niche au bord de petites mares d’eau douce de toundra ou de taïga, puis gagne les baies, estuaires et eaux côtières abritées en hiver."
+    },
+    "diet": {
+      "en": "Fish form most of its food, although it also takes crustaceans, molluscs and aquatic insects.",
+      "fr": "Les poissons constituent l’essentiel de son alimentation, mais il capture aussi des crustacés, mollusques et insectes aquatiques."
+    },
+    "behavior": {
+      "en": "It watches with its head partly submerged, then dives smoothly to pursue prey underwater.",
+      "fr": "Il guette, la tête en partie immergée, puis plonge sans éclaboussure pour poursuivre ses proies sous l’eau."
+    },
+    "reproduction": {
+      "en": "Pairs usually lay two eggs in a simple nest close to water, and both adults incubate them for about 27 days.",
+      "fr": "Les couples pondent généralement deux œufs dans un nid sommaire près de l’eau, et les deux adultes les couvent pendant environ 27 jours."
+    },
+    "ecology": {
+      "en": "Unlike loons that depend on large lakes, this species can breed on small tundra ponds and feed in larger waters some distance away. ADW also describes nests close to water.",
+      "fr": "À la différence des plongeons qui dépendent de grands lacs, cette espèce peut nicher sur de petites mares de toundra et s’alimenter plus loin dans de grandes eaux. ADW décrit également des nids près de l’eau."
+    },
+    "conservation": {
+      "en": "Its global Red List category is Least Concern, but the LPO notes a declining trend and pressures including pollution, disturbance and climate change.",
+      "fr": "Sa catégorie mondiale de Liste rouge est « préoccupation mineure », mais la LPO signale une tendance au déclin et des pressions comme la pollution, le dérangement et le changement climatique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Plongeon catmarin — LPO, fiche espèce",
+        "fr": "Plongeon catmarin — LPO, fiche espèce"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/plongeon-catmarin2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "French LPO species account documents range, field marks, habitats and global status."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Red-throated Loon Life History — Cornell Lab of Ornithology",
+        "fr": "Red-throated Loon Life History — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Red-throated_Loon/lifehistory",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Cornell life-history account describes diet, dives, breeding and small-pond use."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Gavia stellata — Animal Diversity Web, University of Michigan",
+        "fr": "Gavia stellata — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Gavia_stellata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "ADW corroborates nesting near water."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Clutch accounts vary; the prose gives the usual clutch rather than asserting a fixed range.",
+    "The LPO global status and declining trend are distinct from any particular regional population trend."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "LPO supports the French field account; Cornell and ADW support behavior/nesting. The two-egg wording is qualified as usual because published accounts give a range."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "geophagus_dicrozoster",
+  "name": "Geophagus dicrozoster",
+  "scientific": "Geophagus dicrozoster",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce géophage de l’Orénoque est aussi présent dans le Casiquiare et les sources du haut Rio Negro au Venezuela.",
+    "identification": "Une marque sombre devant l’opercule et sept barres latérales parallèles distinguent les spécimens conservés des autres Geophagus marqués.",
+    "habitat": "La description le signale dans les affluents d’eau noire et les cours de l’Orénoque, du Casiquiare et des sources du Rio Negro.",
+    "diet": "En volume, une étude du contenu stomacal de 65 spécimens a mesuré 36,1 % de détritus végétaux et 27,0 % de détritus animaux dans le régime.",
+    "behavior": "La description taxonomique porte sur l’identification et la répartition plutôt que sur le comportement social observé.",
+    "reproduction": "Les sources utilisées ici ne permettent pas d’établir le comportement reproducteur de cette espèce.",
+    "ecology": "Contrairement à G. grammepareius et G. taeniopareius, qui portent une bande sombre de l’œil au préopercule, G. dicrozoster a une marque préoperculaire sans cette bande.",
+    "conservation": "FishBase rapporte une évaluation mondiale en préoccupation mineure datée du 28 octobre 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.biotaxa.org/Zootaxa/article/view/zootaxa.439.1.1",
+      "title": "Geophagus abalios, G. dicrozoster et G. winemilleri : trois espèces nouvelles du Venezuela — Zootaxa"
+    },
+    {
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=862&genusname=Geophagus&speciesname=dicrozoster",
+      "title": "Geophagus dicrozoster — FishBase"
+    },
+    {
+      "url": "https://aquaticecology.tamu.edu/wp-content/uploads/sites/3/2012/07/Lopez-Fernandez-et-al-2012-PlosONE.pdf",
+      "title": "Corrélations entre régime et morphologie chez les cichlidés sud-américains — PLOS ONE"
+    }
+  ]
+}

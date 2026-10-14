@@ -1,0 +1,30 @@
+{
+  "id": "geophagus_winemilleri",
+  "name": "Géophage de Winemiller",
+  "scientific": "Geophagus winemilleri",
+  "group": "fish",
+  "sections": {
+    "overview": "Décrit du Venezuela en 2004, ce géophage vit dans le cours inférieur du Casiquiare et le haut bassin du Negro. FishBase indique une longueur standard maximale de 20 cm.",
+    "identification": "Sa description originale le distingue au sein de Geophagus par une combinaison de caractères d’écaillure et de coloration.",
+    "habitat": "C’est un poisson d’eau douce des réseaux fluviaux tropicaux reliant les bassins de l’Orénoque et du Negro.",
+    "diet": "Les fiches consultées ne fournissaient pas de liste de proies propre à l’espèce ; le nom de géophage ne suffit pas à déduire précisément son régime.",
+    "behavior": "Les fiches aquariophiles décrivent ce cichlidé comme grégaire, mais les données sur son comportement sauvage restent limitées.",
+    "reproduction": "Le résumé FishBase ne donne pas de description de ponte propre à l’espèce ; aucun mode de reproduction n’est affirmé ici.",
+    "ecology": "Seriously Fish le place parmi les géophages du groupe G. surinamensis ; cela le distingue de G. argyrostictus, classé hors de ce groupe, et le rapproche du groupe contenant G. brokopondo. Seriously Fish le place dans le groupe G. surinamensis, contrairement à G. argyrostictus.",
+    "conservation": "FishBase indique la catégorie « préoccupation mineure », évaluée le 28 octobre 2020 ; c’est la date de l’évaluation mondiale affichée dans sa fiche."
+  },
+  "sources": [
+    {
+      "url": "https://www.mapress.com/zootaxa/2004f/z00439f.pdf",
+      "title": "Geophagus abalios, G. dicrozoster and G. winemilleri — original description, Zootaxa"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Geophagus-winemilleri",
+      "title": "Geophagus winemilleri summary — FishBase"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/geophagus-winemilleri",
+      "title": "Geophagus winemilleri — Seriously Fish"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "geophagus_argyrostictus",
+  "name": "Xingu eartheater",
+  "scientific": "Geophagus argyrostictus",
+  "group": "fish",
+  "sections": {
+    "overview": "Described in 1991, this cichlid is known from the upper and lower Xingu basin in Brazil, including the Iriri and Curuá drainages.",
+    "identification": "The original diagnosis emphasizes reflective silver flank spots and a dark vertical mark below the eye; larger fish develop silvery scales on the front of the flanks.",
+    "habitat": "Records include clear-water, gently sloping marginal habitats with sand, fine gravel or mud, as well as some floodplain lakes.",
+    "diet": "Species-specific prey records are sparse; the genus name refers to substrate feeding, but this profile does not assume a detailed diet for this species.",
+    "behavior": "The original paper records it as the first Geophagus species observed brooding on a substrate, rather than using the mouthbrooding pattern documented in many congeners.",
+    "reproduction": "The 1991 description reports samples from two parts of the Xingu basin that differ slightly in colour and measurements.",
+    "ecology": "Within this lot, it contrasts with G. brokopondo, a Suriname-basin member of the surinamensis group whose breeding mode remains unconfirmed; G. crassilabris is another geographically separate congener from Panama. The original paper further notes slight colour and measurement differences between its upper- and lower-basin samples.",
+    "conservation": "FishBase reports a global Least Concern assessment dated 7 November 2018; that assessment date should accompany the category."
+  },
+  "sources": [
+    {
+      "url": "https://sfi-cybium.fr/en/geophagus-argyrostictus-new-species-cichlid-fish-rio-xingu-brazil",
+      "title": "Geophagus argyrostictus — Kullander, 1991, Cybium"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/geophagus-argyrostictus/",
+      "title": "Geophagus argyrostictus — Seriously Fish"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Geophagus-argyrostictus",
+      "title": "Geophagus argyrostictus — FishBase"
+    }
+  ]
+}

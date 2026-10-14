@@ -1,0 +1,34 @@
+{
+  "id": "geotrupes_stercorarius",
+  "name": "Common Earth-boring Dung Beetle",
+  "scientific": "Geotrupes stercorarius",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Geotrupes stercorarius is a European dung beetle that tunnels beneath dung and is often called the common earth-boring dung beetle.",
+    "identification": "It is a robust, dark beetle with a metallic sheen; German accounts give a body length of 15–27 mm and seven strong longitudinal grooves on each elytron. A fresh specimen has a stronger metallic sheen than the similar G. spiniger.",
+    "habitat": "It uses open, sparsely vegetated ground as well as woodland paths and forest, and has been recorded at elevations up to 2,300 m.",
+    "diet": "Adults feed on dung, especially that of cattle and horses.",
+    "behavior": "Adults tunnel and bury dung; a 2026 experiment found that simulated warming altered tunnel depth and dung-burial behaviour.",
+    "reproduction": "In Geotrupes, mated females excavate nesting burrows; the exact details of the species’ life cycle are not fully summarized in the sources consulted.",
+    "ecology": "It is a tunnelling dung beetle, unlike ball-rolling scarabaeine dung beetles; it can be confused with the related G. spiniger, which Italian keys distinguish partly by elevation and underside characters.",
+    "conservation": "A German specialist site reports that it has become scarce in several regions, but this is a regional observation rather than a global assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.dungkaefer.de/familie-geotrupidae-1/arten/geotrupes-stercorarius/",
+      "title": "Geotrupes stercorarius — Dungkäfer Deutschlands"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0031405626000454",
+      "title": "Pre-reproductive behavioural responses to experimental warming in Geotrupes stercorarius — Pedobiologia"
+    },
+    {
+      "url": "https://www.societaentomologicaitaliana.it/Coleotteri%20Scarabeoidea%20d%27Italia%202014/scarabeidi/GEOTRUPES%20STERCORARIUS%20SPSIMILI.htm",
+      "title": "Geotrupes stercorarius and similar species — Società Entomologica Italiana"
+    },
+    {
+      "url": "https://enquetes.shna.fr/espece/10548",
+      "title": "Géotrupe du fumier — Atlas de la faune de Bourgogne"
+    }
+  ]
+}

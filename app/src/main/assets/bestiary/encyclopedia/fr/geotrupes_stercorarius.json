@@ -1,0 +1,34 @@
+{
+  "id": "geotrupes_stercorarius",
+  "name": "Géotrupe du fumier",
+  "scientific": "Geotrupes stercorarius",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Geotrupes stercorarius est un bousier européen qui creuse sous les excréments et est souvent appelé géotrupe du fumier.",
+    "identification": "C’est un coléoptère trapu et sombre aux reflets métalliques ; les fiches allemandes indiquent 15 à 27 mm et sept fortes stries longitudinales sur chaque élytre. Un spécimen frais a des reflets métalliques plus marqués que le proche G. spiniger.",
+    "habitat": "Il fréquente les terrains ouverts peu végétalisés, mais aussi les chemins forestiers et les bois ; il est signalé jusqu’à 2,300 m d’altitude.",
+    "diet": "Les adultes se nourrissent d’excréments, notamment de bouses de bovins et de crottin de cheval.",
+    "behavior": "Les adultes creusent des galeries et enfouissent les excréments ; une expérience de 2026 a montré que le réchauffement simulé modifiait la profondeur des galeries et l’enfouissement.",
+    "reproduction": "Chez Geotrupes, les femelles fécondées creusent des galeries de nidification ; les sources consultées ne résument pas complètement le cycle de vie de cette espèce.",
+    "ecology": "C’est un bousier fouisseur, à la différence des scarabées qui roulent des boules d’excréments ; il peut être confondu avec G. spiniger, que les clés italiennes distinguent notamment par l’altitude et des caractères ventraux.",
+    "conservation": "Un site allemand spécialisé signale sa raréfaction dans plusieurs régions ; il s’agit d’une observation régionale et non d’une évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.dungkaefer.de/familie-geotrupidae-1/arten/geotrupes-stercorarius/",
+      "title": "Geotrupes stercorarius — Dungkäfer Deutschlands"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0031405626000454",
+      "title": "Pre-reproductive behavioural responses to experimental warming in Geotrupes stercorarius — Pedobiologia"
+    },
+    {
+      "url": "https://www.societaentomologicaitaliana.it/Coleotteri%20Scarabeoidea%20d%27Italia%202014/scarabeidi/GEOTRUPES%20STERCORARIUS%20SPSIMILI.htm",
+      "title": "Geotrupes stercorarius and similar species — Società Entomologica Italiana"
+    },
+    {
+      "url": "https://enquetes.shna.fr/espece/10548",
+      "title": "Géotrupe du fumier — Atlas de la faune de Bourgogne"
+    }
+  ]
+}

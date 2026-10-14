@@ -1,0 +1,30 @@
+{
+  "id": "gollumjapyx_smeagol",
+  "name": "Diploure cavernicole Smeagol",
+  "scientific": "Gollumjapyx smeagol",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Gollumjapyx smeagol est un diploure adapté aux grottes, décrit en 2006 dans l’est de la péninsule Ibérique.",
+    "identification": "Il est dépigmenté et possède des appendices et des antennes allongés, caractères associés à une vie souterraine permanente.",
+    "habitat": "Il est connu de grottes calcaires et de milieux souterrains profonds de l’est de l’Espagne, notamment à Castellón et Tarragone. La fiche catalane indique 14 à 17 °C au sol des cavités.",
+    "diet": "C’est un prédateur de petits arthropodes souterrains ; son contenu digestif comprenait des acariens et des fragments de coléoptères cavernicoles. La fiche catalane la décrit aussi comme un grand prédateur d’acariens et de coléoptères.",
+    "behavior": "Ses appendices sensoriels allongés font partie d’un ensemble d’adaptations à l’obscurité, et non d’un indice d’appartenance à un autre ordre d’insectes.",
+    "reproduction": "La description originale rapporte des observations en grotte, mais n’établit pas son cycle de reproduction.",
+    "ecology": "Les auteurs de la description taxonomique ont noté que ses caractères inhabituels ne permettaient pas d’établir clairement ses relations avec les autres genres de Japygidae. Une étude comparative ultérieure décrit également sa forte adaptation au milieu cavernicole.",
+    "conservation": "La Catalogne la classe vulnérable et signale la pollution ou l’altération des cavités et du terrain environnant comme menaces ; il s’agit d’une évaluation régionale, non mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.biotaxa.org/Zootaxa/article/view/zootaxa.1372.1.4",
+      "title": "Gollumjapyx smeagol, original description — Zootaxa"
+    },
+    {
+      "url": "https://mediambient.gencat.cat/es/05_ambits_dactuacio/patrimoni_natural/fauna-autoctona-protegida/gestio-especies-protegides-amenacades/invertebrats/altres_invertebrats_amenacats/emgollumjapyx-smeagol-em/index.html",
+      "title": "Gollumjapyx smeagol — Generalitat de Catalunya, Spanish account"
+    },
+    {
+      "url": "https://www.zobodat.at/pdf/EJT_0894_0001-0054.pdf",
+      "title": "Cave-adapted japygid Diplura — European Journal of Taxonomy"
+    }
+  ]
+}

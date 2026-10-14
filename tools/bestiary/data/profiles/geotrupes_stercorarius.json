@@ -1,0 +1,202 @@
+{
+  "id": "geotrupes_stercorarius",
+  "scientific": "Geotrupes stercorarius",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common Earth-boring Dung Beetle",
+    "fr": "Géotrupe du fumier"
+  },
+  "sections": {
+    "overview": {
+      "en": "Geotrupes stercorarius is a European dung beetle that tunnels beneath dung and is often called the common earth-boring dung beetle.",
+      "fr": "Geotrupes stercorarius est un bousier européen qui creuse sous les excréments et est souvent appelé géotrupe du fumier."
+    },
+    "identification": {
+      "en": "It is a robust, dark beetle with a metallic sheen; German accounts give a body length of 15–27 mm and seven strong longitudinal grooves on each elytron. A fresh specimen has a stronger metallic sheen than the similar G. spiniger.",
+      "fr": "C’est un coléoptère trapu et sombre aux reflets métalliques ; les fiches allemandes indiquent 15 à 27 mm et sept fortes stries longitudinales sur chaque élytre. Un spécimen frais a des reflets métalliques plus marqués que le proche G. spiniger."
+    },
+    "habitat": {
+      "en": "It uses open, sparsely vegetated ground as well as woodland paths and forest, and has been recorded at elevations up to 2,300 m.",
+      "fr": "Il fréquente les terrains ouverts peu végétalisés, mais aussi les chemins forestiers et les bois ; il est signalé jusqu’à 2,300 m d’altitude."
+    },
+    "diet": {
+      "en": "Adults feed on dung, especially that of cattle and horses.",
+      "fr": "Les adultes se nourrissent d’excréments, notamment de bouses de bovins et de crottin de cheval."
+    },
+    "behavior": {
+      "en": "Adults tunnel and bury dung; a 2026 experiment found that simulated warming altered tunnel depth and dung-burial behaviour.",
+      "fr": "Les adultes creusent des galeries et enfouissent les excréments ; une expérience de 2026 a montré que le réchauffement simulé modifiait la profondeur des galeries et l’enfouissement."
+    },
+    "reproduction": {
+      "en": "In Geotrupes, mated females excavate nesting burrows; the exact details of the species’ life cycle are not fully summarized in the sources consulted.",
+      "fr": "Chez Geotrupes, les femelles fécondées creusent des galeries de nidification ; les sources consultées ne résument pas complètement le cycle de vie de cette espèce."
+    },
+    "ecology": {
+      "en": "It is a tunnelling dung beetle, unlike ball-rolling scarabaeine dung beetles; it can be confused with the related G. spiniger, which Italian keys distinguish partly by elevation and underside characters.",
+      "fr": "C’est un bousier fouisseur, à la différence des scarabées qui roulent des boules d’excréments ; il peut être confondu avec G. spiniger, que les clés italiennes distinguent notamment par l’altitude et des caractères ventraux."
+    },
+    "conservation": {
+      "en": "A German specialist site reports that it has become scarce in several regions, but this is a regional observation rather than a global assessment.",
+      "fr": "Un site allemand spécialisé signale sa raréfaction dans plusieurs régions ; il s’agit d’une observation régionale et non d’une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Geotrupes stercorarius — Dungkäfer Deutschlands",
+        "fr": "Geotrupes stercorarius — Dungkäfer Deutschlands"
+      },
+      "url": "https://www.dungkaefer.de/familie-geotrupidae-1/arten/geotrupes-stercorarius/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "habitat",
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "German specialist account describes size, elytral grooves, dung use, range, habitat and local rarity."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Pre-reproductive behavioural responses to experimental warming in Geotrupes stercorarius — Pedobiologia",
+        "fr": "Pre-reproductive behavioural responses to experimental warming in Geotrupes stercorarius — Pedobiologia"
+      },
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0031405626000454",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "2026 experimental paper measures warming effects on tunnel behaviour and dung burial; introduction cites female nest-burrow excavation in Geotrupes."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geotrupes stercorarius and similar species — Società Entomologica Italiana",
+        "fr": "Geotrupes stercorarius and similar species — Società Entomologica Italiana"
+      },
+      "url": "https://www.societaentomologicaitaliana.it/Coleotteri%20Scarabeoidea%20d%27Italia%202014/scarabeidi/GEOTRUPES%20STERCORARIUS%20SPSIMILI.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "Italian key compares G. stercorarius with G. spiniger by elevation and morphological traits."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Géotrupe du fumier — Atlas de la faune de Bourgogne",
+        "fr": "Géotrupe du fumier — Atlas de la faune de Bourgogne"
+      },
+      "url": "https://enquetes.shna.fr/espece/10548",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "French regional atlas observes it in fresh cow dung and other excrement."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The German site’s rarity observation is regional and should not be read as a global trend.",
+    "The source on nesting behaviour describes Geotrupes more broadly; species-specific reproductive details remain limited."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-reference to G. spiniger highlights identification overlap and differences, without treating the species as identical."
+}

@@ -2987,6 +2987,14 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "galerida_cristata"
         ),
         AnimalSpecies(
+            id = "galeus_melastomus", scientific = "Galeus melastomus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "galeus_melastomus"
+        ),
+        AnimalSpecies(
             id = "gallinago_gallinago", scientific = "Gallinago gallinago",
             name = R.string.be_encyclopedia_placeholder, group = "birds",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
@@ -2995,12 +3003,156 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "gallinago_gallinago"
         ),
         AnimalSpecies(
+            id = "garra_menoni", scientific = "Garra menoni",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "garra_menoni"
+        ),
+        AnimalSpecies(
+            id = "garrulax_rufifrons", scientific = "Garrulax rufifrons",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "garrulax_rufifrons"
+        ),
+        AnimalSpecies(
+            id = "gavia_stellata", scientific = "Gavia stellata",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "gavia_stellata"
+        ),
+        AnimalSpecies(
+            id = "gelochelidon_nilotica", scientific = "Gelochelidon nilotica",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "gelochelidon_nilotica"
+        ),
+        AnimalSpecies(
+            id = "geophagus_argyrostictus", scientific = "Geophagus argyrostictus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geophagus_argyrostictus"
+        ),
+        AnimalSpecies(
+            id = "geophagus_brokopondo", scientific = "Geophagus brokopondo",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geophagus_brokopondo"
+        ),
+        AnimalSpecies(
+            id = "geophagus_crassilabris", scientific = "Geophagus crassilabris",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geophagus_crassilabris"
+        ),
+        AnimalSpecies(
+            id = "geophagus_dicrozoster", scientific = "Geophagus dicrozoster",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geophagus_dicrozoster"
+        ),
+        AnimalSpecies(
+            id = "geophagus_gottwaldi", scientific = "Geophagus gottwaldi",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geophagus_gottwaldi"
+        ),
+        AnimalSpecies(
+            id = "geophagus_grammepareius", scientific = "Geophagus grammepareius",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geophagus_grammepareius"
+        ),
+        AnimalSpecies(
+            id = "geophagus_harreri", scientific = "Geophagus harreri",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geophagus_harreri"
+        ),
+        AnimalSpecies(
+            id = "geophagus_pellegrini", scientific = "Geophagus pellegrini",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geophagus_pellegrini"
+        ),
+        AnimalSpecies(
+            id = "geophagus_surinamensis", scientific = "Geophagus surinamensis",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geophagus_surinamensis"
+        ),
+        AnimalSpecies(
+            id = "geophagus_taeniopareius", scientific = "Geophagus taeniopareius",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geophagus_taeniopareius"
+        ),
+        AnimalSpecies(
+            id = "geophagus_winemilleri", scientific = "Geophagus winemilleri",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geophagus_winemilleri"
+        ),
+        AnimalSpecies(
+            id = "geotrupes_stercorarius", scientific = "Geotrupes stercorarius",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "geotrupes_stercorarius"
+        ),
+        AnimalSpecies(
+            id = "gerris_lacustris", scientific = "Gerris lacustris",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "gerris_lacustris"
+        ),
+        AnimalSpecies(
             id = "giant_panda", scientific = "Ailuropoda melanoleuca",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
             sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "giant_panda"
+        ),
+        AnimalSpecies(
+            id = "giraffa_camelopardalis", scientific = "Giraffa camelopardalis",
+            name = R.string.be_encyclopedia_placeholder, group = "mammals",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "giraffa_camelopardalis"
         ),
         AnimalSpecies(
             id = "golden_jackal", scientific = "Canis aureus",
@@ -3017,6 +3169,14 @@ internal object BestiaryEncyclopediaCatalog {
             sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "goldfish"
+        ),
+        AnimalSpecies(
+            id = "gollumjapyx_smeagol", scientific = "Gollumjapyx smeagol",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "gollumjapyx_smeagol"
         ),
         AnimalSpecies(
             id = "great_black_backed_gull", scientific = "Larus marinus",
@@ -3074,6 +3234,9 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "greater_mouse_eared_bat"
         ),
+    )
+
+    private fun batch10(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "green_turtle", scientific = "Chelonia mydas",
             name = R.string.be_encyclopedia_placeholder, group = "reptiles",
@@ -3234,9 +3397,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "hydrobates_pelagicus"
         ),
-    )
-
-    private fun batch10(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "idaea_flaveolaria", scientific = "Idaea flaveolaria",
             name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
@@ -3397,6 +3557,9 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "lowland_paca"
         ),
+    )
+
+    private fun batch11(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "lumbricus_terrestris", scientific = "Lumbricus terrestris",
             name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
@@ -3557,9 +3720,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "northern_fulmar"
         ),
-    )
-
-    private fun batch11(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "northern_gannet", scientific = "Morus bassanus",
             name = R.string.be_encyclopedia_placeholder, group = "birds",
@@ -3720,6 +3880,9 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "phalanger_mimicus"
         ),
+    )
+
+    private fun batch12(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "pied_flycatcher", scientific = "Ficedula hypoleuca",
             name = R.string.be_encyclopedia_placeholder, group = "birds",
@@ -3880,9 +4043,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "red_kangaroo"
         ),
-    )
-
-    private fun batch12(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "red_knot", scientific = "Calidris canutus",
             name = R.string.be_encyclopedia_placeholder, group = "birds",
@@ -4043,6 +4203,9 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "siamese_fighting_fish"
         ),
+    )
+
+    private fun batch13(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "snowshoe_hare", scientific = "Lepus americanus",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
@@ -4203,9 +4366,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "turdus_philomelos"
         ),
-    )
-
-    private fun batch13(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "uria_aalge", scientific = "Uria aalge",
             name = R.string.be_encyclopedia_placeholder, group = "birds",
@@ -4726,10 +4886,30 @@ internal object BestiaryEncyclopediaCatalog {
         "fufius_striatipes" to "Brazilian funnel-web mygalomorph spider",
         "furcifer_lateralis" to "Carpet Chameleon",
         "galerida_cristata" to "Crested Lark",
+        "galeus_melastomus" to "Blackmouth Catshark",
         "gallinago_gallinago" to "Common Snipe",
+        "garra_menoni" to "Menon’s Garra",
+        "garrulax_rufifrons" to "Rufous-fronted Laughingthrush",
+        "gavia_stellata" to "Red-throated Loon",
+        "gelochelidon_nilotica" to "Gull-billed Tern",
+        "geophagus_argyrostictus" to "Xingu eartheater",
+        "geophagus_brokopondo" to "Brokopondo eartheater",
+        "geophagus_crassilabris" to "Panamanian eartheater",
+        "geophagus_dicrozoster" to "Geophagus dicrozoster",
+        "geophagus_gottwaldi" to "Geophagus gottwaldi",
+        "geophagus_grammepareius" to "Geophagus grammepareius",
+        "geophagus_harreri" to "Maroni eartheater",
+        "geophagus_pellegrini" to "Yellowhump eartheater",
+        "geophagus_surinamensis" to "Redstriped eartheater",
+        "geophagus_taeniopareius" to "Cheek-striped eartheater",
+        "geophagus_winemilleri" to "Winemiller’s eartheater",
+        "geotrupes_stercorarius" to "Common Earth-boring Dung Beetle",
+        "gerris_lacustris" to "Common Pond Skater",
         "giant_panda" to "Giant panda",
+        "giraffa_camelopardalis" to "Northern Giraffe",
         "golden_jackal" to "Golden jackal",
         "goldfish" to "Goldfish",
+        "gollumjapyx_smeagol" to "Smeagol Cave Japygid",
         "great_black_backed_gull" to "Great Black-backed Gull",
         "great_cormorant" to "Great cormorant",
         "great_crested_grebe" to "Great Crested Grebe",
@@ -4737,6 +4917,9 @@ internal object BestiaryEncyclopediaCatalog {
         "great_tit" to "Great tit",
         "great_white_shark" to "Great white shark",
         "greater_mouse_eared_bat" to "Greater mouse-eared bat",
+    )
+
+    private fun namesEn5(): Map<String, String> = mapOf(
         "green_turtle" to "Green sea turtle",
         "grey_seal" to "Grey seal",
         "greylag_goose" to "Greylag Goose",
@@ -4757,9 +4940,6 @@ internal object BestiaryEncyclopediaCatalog {
         "house_mouse" to "House mouse",
         "humpback_whale" to "Humpback whale",
         "hydrobates_pelagicus" to "European Storm Petrel",
-    )
-
-    private fun namesEn5(): Map<String, String> = mapOf(
         "idaea_flaveolaria" to "Yellow wave",
         "indian_rhino" to "Greater one-horned rhinoceros",
         "ixodes_ricinus" to "Castor Bean Tick",
@@ -4820,6 +5000,9 @@ internal object BestiaryEncyclopediaCatalog {
         "petrogale_assimilis" to "Allied Rock-wallaby",
         "petromyzon_marinus" to "Sea Lamprey",
         "phalanger_mimicus" to "Southern Common Cuscus",
+    )
+
+    private fun namesEn6(): Map<String, String> = mapOf(
         "pied_flycatcher" to "Pied Flycatcher",
         "pieris_brassicae" to "Large White",
         "pine_marten" to "European pine marten",
@@ -4840,9 +5023,6 @@ internal object BestiaryEncyclopediaCatalog {
         "red_fox" to "Red fox",
         "red_junglefowl" to "Red junglefowl",
         "red_kangaroo" to "Red kangaroo",
-    )
-
-    private fun namesEn6(): Map<String, String> = mapOf(
         "red_knot" to "Red Knot",
         "red_squirrel" to "Red squirrel",
         "red_tailed_green_ratsnake" to "Red-tailed green ratsnake",
@@ -5286,10 +5466,30 @@ internal object BestiaryEncyclopediaCatalog {
         "fufius_striatipes" to "Araignée mygalomorphe brésilienne",
         "furcifer_lateralis" to "Caméléon tapis",
         "galerida_cristata" to "Cochevis huppé",
+        "galeus_melastomus" to "Chien espagnol",
         "gallinago_gallinago" to "Bécassine des marais",
+        "garra_menoni" to "Garra de Menon",
+        "garrulax_rufifrons" to "Garrulaxe à front roux",
+        "gavia_stellata" to "Plongeon catmarin",
+        "gelochelidon_nilotica" to "Sterne hansel",
+        "geophagus_argyrostictus" to "Géophage du Xingu",
+        "geophagus_brokopondo" to "Géophage du Brokopondo",
+        "geophagus_crassilabris" to "Géophage du Panama",
+        "geophagus_dicrozoster" to "Geophagus dicrozoster",
+        "geophagus_gottwaldi" to "Geophagus gottwaldi",
+        "geophagus_grammepareius" to "Geophagus grammepareius",
+        "geophagus_harreri" to "Géophagus de Harrer",
+        "geophagus_pellegrini" to "Géophage à bosse jaune",
+        "geophagus_surinamensis" to "Perle du Suriname",
+        "geophagus_taeniopareius" to "Géophage à joue rayée",
+        "geophagus_winemilleri" to "Géophage de Winemiller",
+        "geotrupes_stercorarius" to "Géotrupe du fumier",
+        "gerris_lacustris" to "Gerris lacustre",
         "giant_panda" to "Panda géant",
+        "giraffa_camelopardalis" to "Girafe du Nord",
         "golden_jackal" to "Chacal doré",
         "goldfish" to "Poisson rouge",
+        "gollumjapyx_smeagol" to "Diploure cavernicole Smeagol",
         "great_black_backed_gull" to "Goéland marin",
         "great_cormorant" to "Grand Cormoran",
         "great_crested_grebe" to "Grèbe huppé",
@@ -5297,6 +5497,9 @@ internal object BestiaryEncyclopediaCatalog {
         "great_tit" to "Mésange charbonnière",
         "great_white_shark" to "Grand requin blanc",
         "greater_mouse_eared_bat" to "Grand murin",
+    )
+
+    private fun namesFr5(): Map<String, String> = mapOf(
         "green_turtle" to "Tortue verte",
         "grey_seal" to "Phoque gris",
         "greylag_goose" to "Oie cendrée",
@@ -5317,9 +5520,6 @@ internal object BestiaryEncyclopediaCatalog {
         "house_mouse" to "Souris domestique",
         "humpback_whale" to "Baleine à bosse",
         "hydrobates_pelagicus" to "Océanite tempête",
-    )
-
-    private fun namesFr5(): Map<String, String> = mapOf(
         "idaea_flaveolaria" to "Acidalie jaune",
         "indian_rhino" to "Rhinocéros indien",
         "ixodes_ricinus" to "Tique du mouton",
@@ -5380,6 +5580,9 @@ internal object BestiaryEncyclopediaCatalog {
         "petrogale_assimilis" to "Petrogale assimilis",
         "petromyzon_marinus" to "Lamproie marine",
         "phalanger_mimicus" to "Couscous commun du Sud",
+    )
+
+    private fun namesFr6(): Map<String, String> = mapOf(
         "pied_flycatcher" to "Gobemouche noir",
         "pieris_brassicae" to "Piéride du chou",
         "pine_marten" to "Martre des pins",
@@ -5400,9 +5603,6 @@ internal object BestiaryEncyclopediaCatalog {
         "red_fox" to "Renard roux",
         "red_junglefowl" to "Coq bankiva",
         "red_kangaroo" to "Kangourou roux",
-    )
-
-    private fun namesFr6(): Map<String, String> = mapOf(
         "red_knot" to "Bécasseau maubèche",
         "red_squirrel" to "Écureuil roux",
         "red_tailed_green_ratsnake" to "Serpent ratier vert à queue rouge",

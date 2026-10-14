@@ -1,0 +1,30 @@
+{
+  "id": "geophagus_gottwaldi",
+  "name": "Geophagus gottwaldi",
+  "scientific": "Geophagus gottwaldi",
+  "group": "fish",
+  "sections": {
+    "overview": "Décrite du Venezuela, cette espèce est connue du bassin supérieur de l’Orénoque, notamment du système du Sipapo. Le référentiel GBIF la classe dans Geophagus et renvoie à sa description originale de l’Orénoque supérieur.",
+    "identification": "Elle porte une bande sombre complète sous l’œil, une tache rectangulaire au milieu du flanc et des points pâles sur toute la nageoire caudale.",
+    "habitat": "FishBase décrit des affluents d’eau noire, à fond sableux dégagé parmi les rochers et à courant parfois fort.",
+    "diet": "Les fiches consultées ne donnent pas de liste de proies propre à l’espèce.",
+    "behavior": "La description d’espèce citée est surtout taxonomique et n’établit pas de répertoire social détaillé.",
+    "reproduction": "FishBase ne présente pas de données confirmées sur la reproduction propre à ce poisson.",
+    "ecology": "Elle partage avec G. taeniopareius une bande jugale complète, mais G. gottwaldi a une tache latérale rectangulaire plus grande et des points caudaux pâles plus grands.",
+    "conservation": "Sa catégorie mondiale UICN est « données insuffisantes », selon l’évaluation du 28 octobre 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Geophagus-gottwaldi",
+      "title": "Geophagus gottwaldi — FishBase"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/267685448_Geophagus_gottwaldi_sp_n_-_a_new_species_of_cichlid_fish_Teleostei_Perciformes_Cichlidae_from_the_drainage_of_the_upper_rio_Orinoco_in_Venezuela",
+      "title": "Geophagus gottwaldi sp. n. — Schindler and Staeck, description originale"
+    },
+    {
+      "url": "https://www.gbif.org/species/5208431",
+      "title": "Geophagus gottwaldi — référentiel taxonomique GBIF"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "garrulax_rufifrons",
+  "name": "Rufous-fronted Laughingthrush",
+  "scientific": "Garrulax rufifrons",
+  "group": "birds",
+  "sections": {
+    "overview": "The Rufous-fronted Laughingthrush is a critically endangered songbird endemic to Java, Indonesia.",
+    "identification": "Its grey plumage and conspicuous rufous forehead patch distinguish it from other laughingthrushes.",
+    "habitat": "It is associated with montane forest on Java; conservation records span highland sites in West Java and Mount Slamet.",
+    "diet": "Detailed wild diet data are scarce; captive guidelines describe a softbill diet with fruit, insects and other foods.",
+    "behavior": "The 2013 conservation note reports few reliable recent records and emphasizes the need for field surveys.",
+    "reproduction": "Breeding biology in the wild remains poorly known; EAZA guidelines document managed captive breeding and husbandry.",
+    "ecology": "Two named subspecies are recognized in conservation sources, including slametensis from Mount Slamet, not recorded in the wild since 1925.",
+    "conservation": "BirdLife assesses the species as Critically Endangered; trapping for the cage-bird trade is identified as a major pressure."
+  },
+  "sources": [
+    {
+      "url": "https://static1.squarespace.com/static/5c1a9e03f407b482a158da87/t/5c2140040e2e726d8bfc7eaf/1545682948591/Rufous-fr-Laughingthrush.pdf",
+      "title": "Notes for the conservation of the Rufous-fronted Laughingthrush — Forktail"
+    },
+    {
+      "url": "https://strapi.eaza.net/uploads/EAZA_Best_practice_guidelines_RFLT_Approved_NV_661b32ad2b.pdf",
+      "title": "EAZA Best Practice Guidelines: Rufous-fronted Laughingthrush"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/rufous-fronted.laughingthrush.html",
+      "title": "Garrulax rufifrons — Oiseaux.net"
+    }
+  ]
+}

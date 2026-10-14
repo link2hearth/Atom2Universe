@@ -1,0 +1,176 @@
+{
+  "id": "geophagus_surinamensis",
+  "scientific": "Geophagus surinamensis",
+  "group": "fish",
+  "name": {
+    "en": "Redstriped eartheater",
+    "fr": "Perle du Suriname"
+  },
+  "sections": {
+    "overview": {
+      "en": "The accepted species is native to the Saramacca and Suriname rivers and the Marowijne basin of Suriname and French Guiana.",
+      "fr": "L’espèce reconnue est native des fleuves Saramacca et Suriname et du bassin du Maroni, au Suriname et en Guyane française."
+    },
+    "identification": {
+      "en": "The scientific name refers to Suriname, its type locality; “Perle du Suriname” is a French aquarium common name.",
+      "fr": "Le nom scientifique renvoie au Suriname, sa localité-type ; « perle du Suriname » est un nom français d’aquariophilie."
+    },
+    "habitat": {
+      "en": "Adults are reported from muddy or sandy bottomed canals and quiet cascade zones.",
+      "fr": "Les adultes sont signalés dans des canaux à fond vaseux ou sableux et dans les zones calmes de cascades."
+    },
+    "diet": {
+      "en": "It is omnivorous with a tendency toward plant food and searches the substrate by digging with its protrusible mouth.",
+      "fr": "Omnivore à tendance végétale, elle fouille le substrat avec sa bouche protractile pour chercher sa nourriture."
+    },
+    "behavior": {
+      "en": "FishBase reports that it sometimes occurs with G. harreri in quieter parts of cascades.",
+      "fr": "FishBase rapporte qu’elle côtoie parfois G. harreri dans les parties plus calmes des cascades."
+    },
+    "reproduction": {
+      "en": "It is a larvophilic mouthbrooder: parents take eggs into the mouth after spawning and later shelter larvae there.",
+      "fr": "C’est une incubatrice buccale larvophile : après la ponte, les parents prennent les œufs en bouche et y abritent ensuite les larves."
+    },
+    "ecology": {
+      "en": "It shares quieter cascade reaches with G. harreri, which is also recorded in this basin.",
+      "fr": "Elle partage des secteurs calmes de cascades avec G. harreri, également signalé dans ce bassin."
+    },
+    "conservation": {
+      "en": "FishBase lists global Least Concern, assessed on 12 March 2023.",
+      "fr": "FishBase indique la catégorie mondiale « préoccupation mineure », évaluée le 12 mars 2023."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Geophagus surinamensis — FishBase French summary",
+        "fr": "Geophagus surinamensis — résumé en français de FishBase"
+      },
+      "url": "https://www.fishbase.net.br/summary/SpeciesSummary.php?id=4781&lang=french",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records range, feeding, mouthbrooding, status and cascade association."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus surinamensis — Catalog of Fishes",
+        "fr": "Geophagus — Catalogue des poissons (Catalog of Fishes)"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=16502",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Catalog of Fishes gives the accepted name and distribution."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Perle du Suriname — Fishipedia",
+        "fr": "Perle du Suriname — Fishipedia"
+      },
+      "url": "https://www.fishipedia.fr/fr/poissons/geophagus-surinamensis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French-language aquarium source records “Perle du Suriname”."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Common-name usage is not taxonomic evidence; aquarium trade use of the name may be broader than the verified species range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-reference to G. harreri reflects sympatry in quieter cascade zones; comparison with G. dicrozoster and G. pellegrini is geographic only."
+}

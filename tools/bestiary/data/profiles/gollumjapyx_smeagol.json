@@ -1,0 +1,207 @@
+{
+  "id": "gollumjapyx_smeagol",
+  "scientific": "Gollumjapyx smeagol",
+  "group": "invertebrates",
+  "name": {
+    "en": "Smeagol Cave Japygid",
+    "fr": "Diploure cavernicole Smeagol"
+  },
+  "sections": {
+    "overview": {
+      "en": "Gollumjapyx smeagol is a cave-adapted dipluran described in 2006 from the eastern Iberian Peninsula.",
+      "fr": "Gollumjapyx smeagol est un diploure adapté aux grottes, décrit en 2006 dans l’est de la péninsule Ibérique."
+    },
+    "identification": {
+      "en": "It is unpigmented and has elongated appendages and antennae, traits associated with permanent subterranean life.",
+      "fr": "Il est dépigmenté et possède des appendices et des antennes allongés, caractères associés à une vie souterraine permanente."
+    },
+    "habitat": {
+      "en": "It is known from limestone caves and deep subterranean spaces in eastern Spain, including localities in Castellón and Tarragona. The Catalan account reports cave-floor temperatures of 14–17 °C.",
+      "fr": "Il est connu de grottes calcaires et de milieux souterrains profonds de l’est de l’Espagne, notamment à Castellón et Tarragone. La fiche catalane indique 14 à 17 °C au sol des cavités."
+    },
+    "diet": {
+      "en": "It is a predator of small subterranean arthropods; digestive contents included mites and fragments of cave beetles. The Catalan account also characterizes it as a large predator of mites and beetles.",
+      "fr": "C’est un prédateur de petits arthropodes souterrains ; son contenu digestif comprenait des acariens et des fragments de coléoptères cavernicoles. La fiche catalane la décrit aussi comme un grand prédateur d’acariens et de coléoptères."
+    },
+    "behavior": {
+      "en": "Its elongated sensory appendages are part of a suite of specializations for darkness, not evidence that it belongs to a different insect order.",
+      "fr": "Ses appendices sensoriels allongés font partie d’un ensemble d’adaptations à l’obscurité, et non d’un indice d’appartenance à un autre ordre d’insectes."
+    },
+    "reproduction": {
+      "en": "The original description records cave occurrences but does not establish a reproductive cycle.",
+      "fr": "La description originale rapporte des observations en grotte, mais n’établit pas son cycle de reproduction."
+    },
+    "ecology": {
+      "en": "The original taxonomic authors noted that its unusual characters did not establish a clear relationship to other japygid genera. A later comparative account also discusses its pronounced cave-adapted form.",
+      "fr": "Les auteurs de la description taxonomique ont noté que ses caractères inhabituels ne permettaient pas d’établir clairement ses relations avec les autres genres de Japygidae. Une étude comparative ultérieure décrit également sa forte adaptation au milieu cavernicole."
+    },
+    "conservation": {
+      "en": "Catalonia lists it as Vulnerable and identifies cave pollution or alteration and disturbance of surrounding land as threats; this is a regional, not global, assessment.",
+      "fr": "La Catalogne la classe vulnérable et signale la pollution ou l’altération des cavités et du terrain environnant comme menaces ; il s’agit d’une évaluation régionale, non mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Gollumjapyx smeagol, original description — Zootaxa",
+        "fr": "Gollumjapyx smeagol, original description — Zootaxa"
+      },
+      "url": "https://www.biotaxa.org/Zootaxa/article/view/zootaxa.1372.1.4",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "habitat",
+        "identification",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Original peer-reviewed description reports troglobiomorphic traits, caves, prey remains and uncertainty about generic relationships."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Gollumjapyx smeagol — Generalitat de Catalunya, Spanish account",
+        "fr": "Gollumjapyx smeagol — Generalitat de Catalunya, Spanish account"
+      },
+      "url": "https://mediambient.gencat.cat/es/05_ambits_dactuacio/patrimoni_natural/fauna-autoctona-protegida/gestio-especies-protegides-amenacades/invertebrats/altres_invertebrats_amenacats/emgollumjapyx-smeagol-em/index.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Catalan authority account gives distribution, cave temperatures, prey and regional status."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Cave-adapted japygid Diplura — European Journal of Taxonomy",
+        "fr": "Cave-adapted japygid Diplura — European Journal of Taxonomy"
+      },
+      "url": "https://www.zobodat.at/pdf/EJT_0894_0001-0054.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Comparative taxonomy discusses troglobiomorphic adaptation in Gollumjapyx and other japygids."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Catalonia’s Vulnerable listing is regional and does not establish a global Red List category.",
+    "No reproductive cycle was found in the original description or regional account."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Original authors say its distinctive morphology does not resolve its closest generic relatives; comparisons remain limited to subterranean japygids."
+}

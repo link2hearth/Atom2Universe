@@ -1,0 +1,186 @@
+{
+  "id": "geophagus_gottwaldi",
+  "scientific": "Geophagus gottwaldi",
+  "group": "fish",
+  "name": {
+    "en": "Geophagus gottwaldi",
+    "fr": "Geophagus gottwaldi"
+  },
+  "sections": {
+    "overview": {
+      "en": "Described from Venezuela, this species is known from the upper Orinoco drainage, including the Sipapo system. The GBIF backbone lists it as a Geophagus species and links the original upper-Orinoco description.",
+      "fr": "Décrite du Venezuela, cette espèce est connue du bassin supérieur de l’Orénoque, notamment du système du Sipapo. Le référentiel GBIF la classe dans Geophagus et renvoie à sa description originale de l’Orénoque supérieur."
+    },
+    "identification": {
+      "en": "It has a complete dark stripe below the eye, a rectangular mid-flank blotch and pale spots across the caudal fin.",
+      "fr": "Elle porte une bande sombre complète sous l’œil, une tache rectangulaire au milieu du flanc et des points pâles sur toute la nageoire caudale."
+    },
+    "habitat": {
+      "en": "FishBase describes blackwater tributaries with bare sandy bottoms among rocks and locally strong current.",
+      "fr": "FishBase décrit des affluents d’eau noire, à fond sableux dégagé parmi les rochers et à courant parfois fort."
+    },
+    "diet": {
+      "en": "A species-specific prey list is not provided in the accounts consulted.",
+      "fr": "Les fiches consultées ne donnent pas de liste de proies propre à l’espèce."
+    },
+    "behavior": {
+      "en": "The cited species description is chiefly taxonomic and does not establish a detailed social repertoire.",
+      "fr": "La description d’espèce citée est surtout taxonomique et n’établit pas de répertoire social détaillé."
+    },
+    "reproduction": {
+      "en": "FishBase has no confirmed species-specific breeding account for this fish.",
+      "fr": "FishBase ne présente pas de données confirmées sur la reproduction propre à ce poisson."
+    },
+    "ecology": {
+      "en": "It resembles G. taeniopareius in the complete cheek stripe, but G. gottwaldi has a larger rectangular flank blotch and larger pale caudal spots.",
+      "fr": "Elle partage avec G. taeniopareius une bande jugale complète, mais G. gottwaldi a une tache latérale rectangulaire plus grande et des points caudaux pâles plus grands."
+    },
+    "conservation": {
+      "en": "Its global IUCN category is Data Deficient, assessed on 28 October 2020.",
+      "fr": "Sa catégorie mondiale UICN est « données insuffisantes », selon l’évaluation du 28 octobre 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Geophagus gottwaldi — FishBase",
+        "fr": "Geophagus gottwaldi — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Geophagus-gottwaldi",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports habitat and dated DD assessment."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus gottwaldi sp. n. — Schindler and Staeck, original description",
+        "fr": "Geophagus gottwaldi sp. n. — Schindler and Staeck, description originale"
+      },
+      "url": "https://www.researchgate.net/publication/267685448_Geophagus_gottwaldi_sp_n_-_a_new_species_of_cichlid_fish_Teleostei_Perciformes_Cichlidae_from_the_drainage_of_the_upper_rio_Orinoco_in_Venezuela",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Original description compares G. gottwaldi with G. taeniopareius."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus gottwaldi — GBIF Backbone Taxonomy",
+        "fr": "Geophagus gottwaldi — référentiel taxonomique GBIF"
+      },
+      "url": "https://www.gbif.org/species/5208431",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "GBIF lists the species in Geophagus and cites the original description from the upper Orinoco drainage."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Published natural-history information is sparse; FishBase trophic estimates are modeled from relatives and are not used as observed diet evidence."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Reciprocal comparison with G. taeniopareius is limited to the diagnostic similarities and differences in the 2006 description."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "geophagus_gottwaldi",
+  "name": "Geophagus gottwaldi",
+  "scientific": "Geophagus gottwaldi",
+  "group": "fish",
+  "sections": {
+    "overview": "Described from Venezuela, this species is known from the upper Orinoco drainage, including the Sipapo system. The GBIF backbone lists it as a Geophagus species and links the original upper-Orinoco description.",
+    "identification": "It has a complete dark stripe below the eye, a rectangular mid-flank blotch and pale spots across the caudal fin.",
+    "habitat": "FishBase describes blackwater tributaries with bare sandy bottoms among rocks and locally strong current.",
+    "diet": "A species-specific prey list is not provided in the accounts consulted.",
+    "behavior": "The cited species description is chiefly taxonomic and does not establish a detailed social repertoire.",
+    "reproduction": "FishBase has no confirmed species-specific breeding account for this fish.",
+    "ecology": "It resembles G. taeniopareius in the complete cheek stripe, but G. gottwaldi has a larger rectangular flank blotch and larger pale caudal spots.",
+    "conservation": "Its global IUCN category is Data Deficient, assessed on 28 October 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Geophagus-gottwaldi",
+      "title": "Geophagus gottwaldi — FishBase"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/267685448_Geophagus_gottwaldi_sp_n_-_a_new_species_of_cichlid_fish_Teleostei_Perciformes_Cichlidae_from_the_drainage_of_the_upper_rio_Orinoco_in_Venezuela",
+      "title": "Geophagus gottwaldi sp. n. — Schindler and Staeck, original description"
+    },
+    {
+      "url": "https://www.gbif.org/species/5208431",
+      "title": "Geophagus gottwaldi — GBIF Backbone Taxonomy"
+    }
+  ]
+}

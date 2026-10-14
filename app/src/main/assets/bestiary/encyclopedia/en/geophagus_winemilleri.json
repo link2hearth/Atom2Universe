@@ -1,0 +1,30 @@
+{
+  "id": "geophagus_winemilleri",
+  "name": "Winemiller’s eartheater",
+  "scientific": "Geophagus winemilleri",
+  "group": "fish",
+  "sections": {
+    "overview": "Described from Venezuela in 2004, this eartheater occurs in the lower Casiquiare and upper Negro drainages. FishBase lists a maximum standard length of 20 cm.",
+    "identification": "Its type description distinguishes it within Geophagus by a combination of scale and colour-pattern characters.",
+    "habitat": "It is a freshwater fish of tropical river systems linking the Orinoco and Negro basins.",
+    "diet": "A species-specific prey list was not present in the accounts consulted; the eartheater genus name alone is not enough to infer its exact diet.",
+    "behavior": "Aquarium accounts describe this cichlid as a schooling or group-living fish, but detailed wild behaviour is limited.",
+    "reproduction": "FishBase gives no species-level spawning account in its summary; no reproductive mode is asserted here.",
+    "ecology": "Seriously Fish places it among the G. surinamensis-group eartheaters; this contrasts with G. argyrostictus, which its account places outside that group, and links it to the group containing G. brokopondo. Seriously Fish places it in the G. surinamensis group, unlike G. argyrostictus.",
+    "conservation": "FishBase lists Least Concern, assessed on 28 October 2020; this is the date of the global assessment shown in its record."
+  },
+  "sources": [
+    {
+      "url": "https://www.mapress.com/zootaxa/2004f/z00439f.pdf",
+      "title": "Geophagus abalios, G. dicrozoster and G. winemilleri — original description, Zootaxa"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Geophagus-winemilleri",
+      "title": "Geophagus winemilleri summary — FishBase"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/geophagus-winemilleri",
+      "title": "Geophagus winemilleri — Seriously Fish"
+    }
+  ]
+}

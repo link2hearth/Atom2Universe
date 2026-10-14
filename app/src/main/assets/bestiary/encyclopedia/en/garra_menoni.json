@@ -1,0 +1,30 @@
+{
+  "id": "garra_menoni",
+  "name": "Menon’s Garra",
+  "scientific": "Garra menoni",
+  "group": "fish",
+  "sections": {
+    "overview": "Garra menoni is a small cyprinid described in 1984 from the Kunthi River in Kerala’s Silent Valley, India. The Catalog of Fishes confirms it as a valid species.",
+    "identification": "The type description notes a developed adhesive mental disc, two pairs of short barbels and 32–36 lateral-line scales.",
+    "habitat": "It inhabits freshwater mountain streams; the original specimens came from the forested Kunthi River in the Western Ghats.",
+    "diet": "The species accounts consulted do not report a diet or prey list specific to G. menoni.",
+    "behavior": "FishBase classifies it as benthopelagic, but detailed species-specific behavior is poorly documented.",
+    "reproduction": "The reviewed species-level sources do not describe spawning or parental care.",
+    "ecology": "The 1984 authors compared it with Garra mullya and G. lissorhynchus, distinguishing the new species by its morphology.",
+    "conservation": "FishBase displays Vulnerable (D2) from a 2010 assessment; this dated category should not be treated as a current reassessment."
+  },
+  "sources": [
+    {
+      "url": "https://faunaofindia.nic.in/PDFVolumes/bulletin/005/02-03/index.pdf",
+      "title": "Garra menoni, a new cyprinid fish from Silent Valley — Zoological Survey of India"
+    },
+    {
+      "url": "https://www.fishbase.org/summary/Garra_menoni.html",
+      "title": "Garra menoni summary — FishBase"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Garra&tbl=species",
+      "title": "Garra menoni — Catalog of Fishes"
+    }
+  ]
+}

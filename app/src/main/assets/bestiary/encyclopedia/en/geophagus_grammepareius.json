@@ -1,0 +1,34 @@
+{
+  "id": "geophagus_grammepareius",
+  "name": "Geophagus grammepareius",
+  "scientific": "Geophagus grammepareius",
+  "group": "fish",
+  "sections": {
+    "overview": "This Venezuelan Orinoco-basin species occurs in the upper Caura and lower Caroní drainages.",
+    "identification": "It is a small eartheater with a dark line running from the eye to the corner of the preopercle.",
+    "habitat": "A Swedish cichlid registry describes sandy river beds, where it filters sediment while feeding.",
+    "diet": "The registry reports sand sifting; it does not identify a species-specific prey list.",
+    "behavior": "Detailed social behaviour is not established in the sources used here.",
+    "reproduction": "The original species account does not provide a confirmed breeding description in the material consulted.",
+    "ecology": "G. taeniopareius shares the eye-to-preopercle stripe, but is recorded in the lower Caura and wider Orinoco system and differs in the original diagnosis. The 2004 description contrasts this complete stripe with G. dicrozoster, which instead has a preopercular mark.",
+    "conservation": "FishBase reports global Least Concern, assessed on 19 May 2017."
+  },
+  "sources": [
+    {
+      "url": "https://cichlidae.com/reference.php?id=1387",
+      "title": "Two new species of Geophagus from the Rio Orinoco drainage in Venezuela — original description"
+    },
+    {
+      "url": "https://www.ciklid.org/artregister/art.php?ID=1481",
+      "title": "Geophagus grammepareius — Nordiska Ciklidsällskapet artregister"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Geophagus-grammepareius",
+      "title": "Geophagus grammepareius — FishBase"
+    },
+    {
+      "url": "https://www.biotaxa.org/Zootaxa/article/view/zootaxa.439.1.1",
+      "title": "Geophagus abalios, G. dicrozoster and G. winemilleri: three new species from Venezuela — Zootaxa"
+    }
+  ]
+}

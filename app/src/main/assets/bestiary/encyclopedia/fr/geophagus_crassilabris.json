@@ -1,0 +1,34 @@
+{
+  "id": "geophagus_crassilabris",
+  "name": "Géophage du Panama",
+  "scientific": "Geophagus crassilabris",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce géophage est le membre géographiquement atypique du genre Geophagus au Panama, signalé sur les versants atlantique et pacifique du centre et de l’est du pays. Le Catalog of Fishes mentionne aussi la Colombie, tandis que FishBase résume l’aire comme panaméenne.",
+    "identification": "L’espèce est valide dans le Catalog of Fishes, bien que certaines fiches spécialisées mettent son nom de genre entre guillemets, car sa position au sein du groupe steindachneri reste incertaine.",
+    "habitat": "FishBase la signale dans des cours d’eau douce à courant modéré ou rapide, sur de petits cailloux, du sable, des roches et des débris de feuilles.",
+    "diet": "Les données propres à ses proies sont limitées ; une fiche spécialisée décrit le tamisage du substrat et les contenus stomacaux du groupe steindachneri au sens large, sans étude alimentaire directe de l’espèce.",
+    "behavior": "Les données écologiques détaillées disponibles concernent surtout le groupe ; les sources utilisées ici n’établissent pas de comportement social propre à l’espèce.",
+    "reproduction": "Une fiche aquariophile spécialisée décrit une incubation buccale maternelle dans le groupe steindachneri, mais il s’agit d’une donnée de groupe et non d’une observation propre à l’espèce solidement établie.",
+    "ecology": "Son aire diffère de celles de G. argyrostictus du Xingu et G. brokopondo du Suriname, décrits dans les fiches associées.",
+    "conservation": "FishBase indique la catégorie mondiale « préoccupation mineure », issue d’une évaluation datée du 2 août 2019."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/geophagus-crassilabris.html",
+      "title": "Geophagus crassilabris — FishBase"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=16494",
+      "title": "Catalog of Fishes — Geophagus crassilabris"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/geophagus-crassilabris",
+      "title": "“Geophagus” crassilabris — Seriously Fish"
+    },
+    {
+      "url": "https://sfi-cybium.fr/en/geophagus-argyrostictus-new-species-cichlid-fish-rio-xingu-brazil",
+      "title": "Geophagus argyrostictus — description originale, Cybium"
+    }
+  ]
+}

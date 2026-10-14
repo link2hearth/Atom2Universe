@@ -1,0 +1,201 @@
+{
+  "id": "geophagus_grammepareius",
+  "scientific": "Geophagus grammepareius",
+  "group": "fish",
+  "name": {
+    "en": "Geophagus grammepareius",
+    "fr": "Geophagus grammepareius"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Venezuelan Orinoco-basin species occurs in the upper Caura and lower Caroní drainages.",
+      "fr": "Cette espèce du bassin vénézuélien de l’Orénoque est présente dans le haut Caura et le bas Caroní."
+    },
+    "identification": {
+      "en": "It is a small eartheater with a dark line running from the eye to the corner of the preopercle.",
+      "fr": "Ce petit géophage porte une ligne sombre allant de l’œil à l’angle du préopercule."
+    },
+    "habitat": {
+      "en": "A Swedish cichlid registry describes sandy river beds, where it filters sediment while feeding.",
+      "fr": "Un registre suédois de cichlidés décrit des lits de rivière sableux, où il filtre le sédiment pour se nourrir."
+    },
+    "diet": {
+      "en": "The registry reports sand sifting; it does not identify a species-specific prey list.",
+      "fr": "Le registre signale le tamisage du sable, sans préciser de liste de proies propre à l’espèce."
+    },
+    "behavior": {
+      "en": "Detailed social behaviour is not established in the sources used here.",
+      "fr": "Les sources utilisées ici ne permettent pas de préciser son comportement social."
+    },
+    "reproduction": {
+      "en": "The original species account does not provide a confirmed breeding description in the material consulted.",
+      "fr": "La description d’origine consultée ne fournit pas de données confirmées sur sa reproduction."
+    },
+    "ecology": {
+      "en": "G. taeniopareius shares the eye-to-preopercle stripe, but is recorded in the lower Caura and wider Orinoco system and differs in the original diagnosis. The 2004 description contrasts this complete stripe with G. dicrozoster, which instead has a preopercular mark.",
+      "fr": "G. taeniopareius partage la bande de l’œil au préopercule, mais est signalé dans le bas Caura et un secteur plus étendu de l’Orénoque ; la diagnose originale les distingue. La description de 2004 oppose cette bande complète à G. dicrozoster, qui porte plutôt une marque préoperculaire."
+    },
+    "conservation": {
+      "en": "FishBase reports global Least Concern, assessed on 19 May 2017.",
+      "fr": "FishBase rapporte la catégorie mondiale « préoccupation mineure », évaluée le 19 mai 2017."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Two new species of Geophagus from the Rio Orinoco drainage in Venezuela — original description",
+        "fr": "Two new species of Geophagus from the Rio Orinoco drainage in Venezuela — description originale"
+      },
+      "url": "https://cichlidae.com/reference.php?id=1387",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The original paper documents range, diagnosis, differences from G. taeniopareius and the scope of the available life-history account."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus grammepareius — Nordiska Ciklidsällskapet artregister",
+        "fr": "Geophagus grammepareius — Nordiska Ciklidsällskapet registre des espèces"
+      },
+      "url": "https://www.ciklid.org/artregister/art.php?ID=1481",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Swedish account reports range and sand-sifting habitat."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus grammepareius — FishBase",
+        "fr": "Geophagus grammepareius — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Geophagus-grammepareius",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the dated LC assessment."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Geophagus abalios, G. dicrozoster and G. winemilleri: three new species from Venezuela — Zootaxa",
+        "fr": "Geophagus abalios, G. dicrozoster et G. winemilleri : trois espèces nouvelles du Venezuela — Zootaxa"
+      },
+      "url": "https://www.biotaxa.org/Zootaxa/article/view/zootaxa.439.1.1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2004 paper contrasts the full infraorbital stripe in G. grammepareius with the reduced or absent stripe in G. dicrozoster."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Detailed species-specific breeding and social observations were not located in the consulted accounts."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Links reciprocally to G. taeniopareius, the companion species in the 1992 paper; diagnostic rather than phylogenetic closeness is stated."
+}

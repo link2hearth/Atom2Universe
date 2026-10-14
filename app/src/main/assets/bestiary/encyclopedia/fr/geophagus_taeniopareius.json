@@ -1,0 +1,38 @@
+{
+  "id": "geophagus_taeniopareius",
+  "name": "Géophage à joue rayée",
+  "scientific": "Geophagus taeniopareius",
+  "group": "fish",
+  "sections": {
+    "overview": "Cette espèce vénézuélienne est présente dans le bas Caura et les cours moyen et supérieur de l’Orénoque.",
+    "identification": "Une bande sombre va de l’œil à l’angle du préopercule ; la description originale la distingue de G. grammepareius par plusieurs caractères anatomiques et de coloration.",
+    "habitat": "Un registre suédois de cichlidés décrit des lits de cours d’eau sableux et des rives peu profondes avec végétation ou débris ligneux.",
+    "diet": "Elle filtre le sable en cherchant sa nourriture, selon la description régionale de son habitat.",
+    "behavior": "Les sources consultées ne détaillent pas son comportement social propre.",
+    "reproduction": "Les fiches consultées ne fournissent pas de description confirmée de la reproduction propre à l’espèce.",
+    "ecology": "G. grammepareius partage la bande jugale, mais se limite au haut Caura et au bas Caroní ; G. dicrozoster porte plutôt une marque préoperculaire et n’a pas la bande complète. G. gottwaldi partage sa bande complète, mais porte une tache latérale rectangulaire plus grande et des points pâles plus grands sur la queue.",
+    "conservation": "FishBase rapporte la catégorie mondiale « préoccupation mineure », évaluée le 28 octobre 2020."
+  },
+  "sources": [
+    {
+      "url": "https://cichlidae.com/reference.php?id=1387",
+      "title": "Two new species of Geophagus from the Rio Orinoco drainage in Venezuela — description originale"
+    },
+    {
+      "url": "https://ciklid.org/artregister/art.php?ID=1487",
+      "title": "Geophagus taeniopareius — Nordiska Ciklidsällskapet registre des espèces"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Geophagus-taeniopareius",
+      "title": "Geophagus taeniopareius — FishBase"
+    },
+    {
+      "url": "https://www.biotaxa.org/Zootaxa/article/view/zootaxa.439.1.1",
+      "title": "Geophagus abalios, G. dicrozoster et G. winemilleri : trois espèces nouvelles du Venezuela — Zootaxa"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/267685448_Geophagus_gottwaldi_sp_n_-_a_new_species_of_cichlid_fish_Teleostei_Perciformes_Cichlidae_from_the_drainage_of_the_upper_rio_Orinoco_in_Venezuela",
+      "title": "Geophagus gottwaldi — description originale de Schindler et Staeck"
+    }
+  ]
+}
