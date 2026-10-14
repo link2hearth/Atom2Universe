@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 class HamletShardShopTest {
     private var time = 1_800_000_000_000L
-    private fun game(sandbox: Boolean = false) = HamletGame({ time }, Random(8)).apply { startNew(sandbox) }
+    private fun game(sandbox: Boolean = false) = HamletGame({ time }, Random(8)).apply { startNew(sandbox) }.withStarters()
     private fun facility(g: HamletGame, type: String, tier: Int) {
         g.objs.values.firstOrNull { it.t == type }?.let { it.tier = tier; return }
         val id = 9000 + g.objs.size
@@ -172,12 +172,10 @@ class HamletShardShopTest {
 
     @Test fun `prix correspondent aux runes et cristaux vraiment gagnes autour des paliers`() {
         fun loot(stage: Int): LongArray {
+            // Le butin d'une étape maîtrisée : on la refait en expédition rapide, sans combat à gagner.
             val g = game(); val a = g.adventure
-            a.heroes.filter { it.owned }.forEach { it.level = 300_000 }
-            a.frontier = stage + 1; a.bag.fill(0)
-            val battle = a.beginBattle(BattleMode.CAMPAIGN, stage, 8)!!; battle.advance(100f)
-            assertEquals("reference encounter stage $stage", BattleOutcome.VICTORY, battle.outcome)
-            assertTrue(a.settle(battle)); return a.bag.clone()
+            a.frontier = stage + 1; a.stars[stage] = 3; a.bag.fill(0); a.bag[AdventureResource.FOOD.ordinal] = 1_000_000
+            assertTrue("reference encounter stage $stage", a.sweep(stage)); return a.bag.clone()
         }
         for (rarity in HeroRarity.entries) {
             val g = game(); val hero = open(g, rarity)

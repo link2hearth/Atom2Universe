@@ -30,7 +30,7 @@
     <string name="hamlet_s_choice">%1$s · +%2$d%% yield</string>
     <string name="hamlet_s_unassign">Clear this duty</string>
     <string name="hamlet_s_expedition_link">Your active combat team also helps expeditions: +%1$d scouting power, −%2$d%% travel time. Travel time is fixed at departure; heroes remain available.</string>
-    <string name="hamlet_s_expedition_loot">Also returns %1$d food, %2$d ore, %3$d books and %4$d invitation(s) for your heroes.</string>
+    <string name="hamlet_s_expedition_loot">Also returns %1$d food, %2$d ore, %3$d books, %4$d crystals and %5$d invitation(s) for your heroes.</string>
     <string name="hamlet_s_facility_open">Manage this building</string>
     <string name="hamlet_s_village_bonus">\nHero duty bonus: +%1$d%% income.</string>
 </resources>

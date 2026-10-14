@@ -4,10 +4,9 @@
     <string name="hamlet_journey_ready">Carnet •</string>
     <string name="hamlet_chapters">Chapitres</string>
     <string name="hamlet_expeditions">Expéditions</string>
-    <string name="hamlet_companions">Compagnons</string>
     <string name="hamlet_research">Recherches</string>
     <string name="hamlet_work">Coups de main</string>
-    <string name="hamlet_chapter_help">Bâtis ton village à ton rythme. Les chapitres ouvrent des bâtiments, des compagnons et des régions. Tes actions précédentes comptent ; les chapitres accomplis restent acquis.</string>
+    <string name="hamlet_chapter_help">Bâtis ton village à ton rythme. Les chapitres ouvrent des bâtiments et des régions, et un chapitre sur deux apporte une invitation. Tes actions précédentes comptent ; les chapitres accomplis restent acquis.</string>
     <string name="hamlet_chapter_title">%1$d · %2$s</string>
     <string name="hamlet_chapter_unlocks">Déblocages : %1$s</string>
     <string name="hamlet_chapter_requirements">Village niveau %1$d · Halle %2$d</string>
@@ -25,13 +24,6 @@
     <string name="hamlet_expedition_collect">Accueillir le retour</string>
     <string name="hamlet_expedition_start">Partir</string>
     <string name="hamlet_region_detail">Chapitre %1$d · Force %2$d\nDurée : %3$s\n%4$d pièces · %5$d provisions\nVoyages accomplis : %6$d</string>
-    <string name="hamlet_companion_help">Trois places dans l’équipe. Chaque rang entraîné ajoute 3 de force et 3%% dans la spécialité du compagnon. Les cultivateurs améliorent champs et élevages, les artisans maisons et ateliers, les éclaireurs raccourcissent les voyages. Force : %1$d.</string>
-    <string name="hamlet_companion_rank">Rang %1$d/5 · Recruté après le chapitre %2$d</string>
-    <string name="hamlet_companion_assigned">Dans l’équipe · Place %1$d</string>
-    <string name="hamlet_companion_assign">Choisir une place</string>
-    <string name="hamlet_party_slot">Place %1$d · %2$s</string>
-    <string name="hamlet_party_empty">Libre</string>
-    <string name="hamlet_training_cost">Entraîner · %1$d pièces + %2$d provisions · Chapitre %3$d</string>
     <string name="hamlet_research_help">Quinze découvertes dans trois branches. Chaque rang donne un bonus permanent immédiat, sans minuterie de recherche. Utilise les provisions rapportées des voyages ; aucune gemme nécessaire.</string>
     <string name="hamlet_research_row">%1$s %2$s · Chapitre %3$d</string>
     <string name="hamlet_research_cost">Rechercher le rang %1$d · %2$d pièces + %3$d provisions</string>
@@ -69,7 +61,7 @@
     <string name="hamlet_chapter_8">Sous les étoiles</string>
     <string name="hamlet_chapter_story_8">Observe le ciel et rapporte des graines rares au village.</string>
     <string name="hamlet_chapter_9">La route des hauteurs</string>
-    <string name="hamlet_chapter_story_9">Entraîne tes compagnons, développe tes ateliers et ouvre les hauts plateaux.</string>
+    <string name="hamlet_chapter_story_9">Entraîne tes héros, développe tes ateliers et ouvre les hauts plateaux.</string>
     <string name="hamlet_chapter_10">L’académie</string>
     <string name="hamlet_chapter_story_10">Partage les découvertes avec une nouvelle génération d’habitants.</string>
     <string name="hamlet_chapter_11">Un village à célébrer</string>
@@ -86,18 +78,6 @@
     <string name="hamlet_region_story_4">Trouve des plantes rares au bord des cours d’eau lumineux.</string>
     <string name="hamlet_region_5">Hauts plateaux</string>
     <string name="hamlet_region_story_5">Le plus grand voyage rapporte de quoi financer les découvertes avancées.</string>
-    <string name="hamlet_companion_0">Lina · Jardinière</string>
-    <string name="hamlet_companion_story_0" formatted="false">Lina partage sa collection de graines. Recettes agricoles +3% par rang.</string>
-    <string name="hamlet_companion_1">Basile · Charpentier</string>
-    <string name="hamlet_companion_story_1" formatted="false">Basile fabrique des étals solides. Recettes des maisons et ateliers +3% par rang.</string>
-    <string name="hamlet_companion_2">Maël · Éclaireur</string>
-    <string name="hamlet_companion_story_2" formatted="false">Maël repère les raccourcis. Durée des expéditions −3% par rang.</string>
-    <string name="hamlet_companion_3">Alba · Herboriste</string>
-    <string name="hamlet_companion_story_3" formatted="false">Alba soigne les animaux et les plantes. Recettes agricoles +3% par rang.</string>
-    <string name="hamlet_companion_4">Rose · Tisserande</string>
-    <string name="hamlet_companion_story_4" formatted="false">Rose apporte des créations colorées. Recettes des maisons et ateliers +3% par rang.</string>
-    <string name="hamlet_companion_5">Orion · Astronome</string>
-    <string name="hamlet_companion_story_5" formatted="false">Orion guide l’équipe grâce aux étoiles. Durée des expéditions −3% par rang.</string>
     <string name="hamlet_research_0">Agriculture</string>
     <string name="hamlet_research_story_0" formatted="false">Chaque rang : +3% de recettes des cultures, élevages et vergers.</string>
     <string name="hamlet_research_1">Artisanat</string>

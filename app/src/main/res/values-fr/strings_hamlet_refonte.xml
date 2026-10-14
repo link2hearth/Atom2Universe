@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_a_call_title">Appel aux voyageurs</string>
+    <string name="hamlet_a_tickets_line">Invitations : %1$d</string>
+    <string name="hamlet_a_collection_title">Tes héros (%1$d)</string>
+    <string name="hamlet_a_collection_help">Les héros que tu n’as pas encore rencontrés restent derrière un point d’interrogation. Touche un héros pour le faire monter de niveau, lui ajouter des étoiles et lui apprendre des compétences. Une carte dorée annonce une légende : suis-la dans le carnet.</string>
+    <string name="hamlet_a_rumor_card">Une légende s’éveille</string>
+    <string name="hamlet_a_unknown">\?</string>
+    <string name="hamlet_a_level_max">Niveau %1$d · maximum</string>
+    <string name="hamlet_a_skill_max">%1$s · niveau %2$d (max)</string>
+    <string name="hamlet_a_stars_hall">Étoile suivante · halle rang %1$d</string>
+    <string name="hamlet_a_stars_hall_help">Les étoiles sont limitées par ta halle. Améliore la halle au village pour mener tes héros plus loin. Une étoile relève aussi le niveau maximal d’un héros.</string>
+    <string name="hamlet_chapter_call">une invitation</string>
+    <string name="hamlet_reveal_new">UN NOUVEAU HÉROS</string>
+    <string name="hamlet_reveal_legend">UNE LÉGENDE ARRIVE</string>
+    <string name="hamlet_reveal_continue">Continuer</string>
+    <string name="hamlet_legends">Légendes</string>
+    <string name="hamlet_legends_help">Les héros légendaires ne répondent jamais à un appel. Une rumeur annonce chacun d’eux un chapitre à l’avance. Construis alors le Cercle de pierres au village et veille trois nuits : chaque nuit demande des pièces, des cristaux et des récoltes tardives de ta grange, puis une vraie attente que rien ne raccourcit. Tu peux tout préparer à l’avance. La dernière légende ne vient que lorsque les trois autres sont à tes côtés.</string>
+    <string name="hamlet_legends_none">Le village est silencieux.</string>
+    <string name="hamlet_legend_done">La légende s’est accomplie.</string>
+    <string name="hamlet_legend_soon">La voie n’est pas encore ouverte.</string>
+    <string name="hamlet_legend_gather">Seulement quand les trois autres seront réunis.</string>
+    <string name="hamlet_legend_night">Nuit %1$d sur %2$d</string>
+    <string name="hamlet_legend_burning">Le feu brûle · %1$s</string>
+    <string name="hamlet_legend_dawn">Saluer l’aube</string>
+    <string name="hamlet_legend_hours">La veillée dure %1$d h</string>
+    <string name="hamlet_legend_light">Allumer la veillée</string>
+    <string name="hamlet_legend_rumor_0">Une lueur sur la colline</string>
+    <string name="hamlet_legend_rumor_story_0">Des voyageurs parlent d’une femme qui marche dans la lumière à la tombée du soir. Les blessures se ferment sur son passage.</string>
+    <string name="hamlet_legend_rumor_1">Le vieux sentier</string>
+    <string name="hamlet_legend_rumor_story_1">Là où un étranger a disparu sur le vieux sentier, on ne retrouve jamais une flèche. Quelqu’un y veille encore.</string>
+    <string name="hamlet_legend_rumor_2">Un marteau dans la nuit</string>
+    <string name="hamlet_legend_rumor_story_2">À chaque nouvelle lune, un marteau résonne depuis une forge que personne n’a jamais vue. La lame qu’il forge ne rouille jamais.</string>
+    <string name="hamlet_legend_rumor_3">De la neige hors saison</string>
+    <string name="hamlet_legend_rumor_story_3">Le givre écrit des noms sur les vitres en plein été. Il attend que trois autres soient réunis.</string>
+    <string name="hamlet_need_coins">%1$,d pièces</string>
+    <string name="hamlet_need_crystal">%1$,d cristaux</string>
+    <string name="hamlet_need_crop">%1$s · %2$d / %3$d</string>
+    <string name="hamlet_crop_stock">grange %1$d</string>
+    <string name="hamlet_granary">Grange</string>
+    <string name="hamlet_granary_help">Chaque récolte range des cultures dans la grange, jusqu’à %1$d de chacune. Les bâtiments s’en servent pour passer au rang suivant, les quêtes en demandent, les légendes aussi. Une halle plus grande agrandit la grange.</string>
+    <string name="hamlet_a_find">Belle trouvaille !</string>
+    <string name="hamlet_a_first_clear">Première victoire !</string>
+</resources>

@@ -254,22 +254,42 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         refreshBadges()
     }
     override fun build(def: Def) { open(HamletModule.VILLAGE); selected = null; village.startPlacing(def) }
-    override fun supplies(chips: List<HamletChip>) = top.supplies(chips)
+    override fun supplies(chips: List<HamletChip>) = top.supplies(commonChips() + chips)
     override fun changed() = onChanged()
 
-    private fun villageChips(): List<HamletChip> {
-        val values = longArrayOf(game.coins.toLong(), game.gems.toLong(), game.population().toLong(), game.happiness().toLong())
-        val glyphs = arrayOf("coin", "gem", "hat", "flower")
-        val descriptions = intArrayOf(R.string.hamlet_ui_coins, R.string.hamlet_ui_gems, R.string.hamlet_ui_people, R.string.hamlet_ui_happiness)
+    /** The banner every module shares: coins and gems always, then the invitations and the camp's resources once the adventure has begun. */
+    private fun commonChips(): List<HamletChip> {
+        val list = ArrayList<HamletChip>()
+        fun add(glyph: String, value: Long, description: String) = list.add(HamletChip(glyph, value, getString(R.string.hamlet_ui_number, value), description))
+        add("coin", game.coins.toLong(), getString(R.string.hamlet_ui_coins, game.coins))
+        add("gem", game.gems.toLong(), getString(R.string.hamlet_ui_gems, game.gems))
+        val a = game.adventure
+        if (a.opened()) {
+            a.advanceProduction()
+            val glyphs = mapOf(AdventureResource.TICKETS to "ticket", AdventureResource.FOOD to "apple", AdventureResource.TIMBER to "wood", AdventureResource.STONE to "ore",
+                AdventureResource.ORE to "gear", AdventureResource.BOOKS to "book", AdventureResource.CRYSTAL to "crystal", AdventureResource.RUNES to "star")
+            for ((resource, glyph) in glyphs) add(glyph, a[resource], getString(R.string.hamlet_ui_resource_amount, stringByName("hamlet_a_resource_${resource.name.lowercase()}"), a[resource]))
+        }
+        return list
+    }
+    private fun villageExtras(): List<HamletChip> {
+        val values = longArrayOf(game.population().toLong(), game.happiness().toLong())
+        val glyphs = arrayOf("hat", "flower")
+        val descriptions = intArrayOf(R.string.hamlet_ui_people, R.string.hamlet_ui_happiness)
         return values.indices.map { i ->
-            HamletChip(glyphs[i], values[i], getString(if (i == 3) R.string.hamlet_ui_percent else R.string.hamlet_ui_number, values[i]), getString(descriptions[i], values[i]))
+            HamletChip(glyphs[i], values[i], getString(if (i == 1) R.string.hamlet_ui_percent else R.string.hamlet_ui_number, values[i]), getString(descriptions[i], values[i]))
         }
     }
     private fun rewardReady() = game.currentQuest()?.let { game.questDone(it) } == true || game.journey.canClaim() ||
-        game.stewardship.hasRewards() || (game.journey.expedition >= 0 && game.journey.expeditionLeft() == 0L)
+        game.stewardship.hasRewards() || (game.journey.expedition >= 0 && game.journey.expeditionLeft() == 0L) || game.legends.attention()
     private fun refreshBadges() {
+        val earned = game.adventure.opened()
+        dock.available(HamletModule.ADVENTURE, earned); dock.available(HamletModule.HEROES, earned)
+        if (!earned && adventurous(module)) { open(HamletModule.VILLAGE); return }
         dock.badge(HamletModule.VILLAGE, if (module != HamletModule.VILLAGE) game.collectableCount() else 0)
-        dock.badge(HamletModule.HEROES, if (game.adventure[AdventureResource.TICKETS] >= 1) -1 else 0)
+        dock.badge(HamletModule.HEROES, if (game.adventure[AdventureResource.TICKETS] >= 1 || game.adventure.heroes.any { it.owned && game.adventure.canPromote(it.id) }) -1 else 0)
+        // un premier héros qui n'a encore jamais combattu : la carte l'attend
+        dock.badge(HamletModule.ADVENTURE, if (module != HamletModule.ADVENTURE && earned && game.adventure.frontier == 0 && game.adventure.fielded() > 0) -1 else 0)
         dock.badge(HamletModule.JOURNAL, if (rewardReady()) -1 else 0)
         dock.badge(HamletModule.NEIGHBORS, game.neighbors.readyCount())
         top.menuBadge(game.giftReady() || (0..2).any { game.dailyClaimed and (1 shl it) == 0 && game.dailyProgress(it) >= HamletLife.dailyTargets[it] })
@@ -313,7 +333,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         top.subtitle(getString(R.string.hamlet_ui_realm_level, realmName, if (creative) getString(R.string.hamlet_ui_creative) else getString(R.string.hamlet_ui_level, game.level())))
         refreshBadges()
         if (module != HamletModule.VILLAGE) return
-        top.supplies(villageChips())
+        top.supplies(commonChips() + villageExtras())
         val browsing = village.mode is HamletMode.Browse
         val o = selected?.takeIf { game.objs[it.id] === it }
         selected = o; village.renderer.selected = if (browsing) o else null
@@ -425,9 +445,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         if (game.hurryCost(o) > 0) addAction(R.string.hamlet_hurry, "hourglass") {
             confirm(getString(R.string.hamlet_hurry), getString(R.string.hamlet_hurry_confirm, game.hurryCost(o)), "hourglass") { game.hurry(o) }
         }
-        if (game.canUpgrade(o)) addAction(R.string.hamlet_upgrade, "star") {
-            confirm(getString(R.string.hamlet_upgrade), getString(R.string.hamlet_upgrade_confirm, o.tier + 1, game.upgradeCost(o)), "star") { game.upgrade(o) }
-        }
+        if (game.canUpgrade(o)) addAction(R.string.hamlet_upgrade, "star") { showUpgrade(o) }
         addAction(R.string.hamlet_info, "book", Weight.QUIET) { showObjectInfo(o) }
         if (o.def.cat != Cat.HALL) {
             addAction(R.string.hamlet_move, "move", Weight.QUIET) { village.startPlacing(o.def, o) }
@@ -448,11 +466,43 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         sheet.top.addView(toggle, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
         for (crop in crops) {
             val name = itemName("c_${crop.id}")
-            val label = HamletUi.tint(getString(R.string.hamlet_crop_choice, name, crop.cost, crop.earn, duration(crop.time * 1000L)), name to HamletUi.INK)
+            val stock = game.stock(crop.id)
+            val label = HamletUi.tint(getString(R.string.hamlet_crop_choice, name, crop.cost, crop.earn, duration(crop.time * 1000L)) +
+                if (stock > 0) getString(R.string.hamlet_ui_dot) + getString(R.string.hamlet_crop_stock, stock) else "", name to HamletUi.INK)
             sheet.body.addView(HamletUi.row(this, label, glyph = "leaf") {
                 sheet.dismiss()
                 if (all) game.plantAll(crop.id) else game.plant(field, crop.id)
             }.apply { isEnabled = game.sandbox || game.coins >= crop.cost }, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(4) })
+        }
+        sheet.show()
+    }
+    /** What a tier costs: coins and the crops it asks for, each shown against what the barn holds. */
+    private fun showUpgrade(o: Obj) {
+        val sheet = HamletSheet(this, getString(R.string.hamlet_upgrade))
+        sheet.body.addView(text(getString(R.string.hamlet_upgrade_confirm, o.tier + 1)))
+        fun line(label: String, met: Boolean) = sheet.body.addView(text(label).apply { setTextColor(if (met) HamletUi.GOOD else HamletUi.BAD); setTypeface(null, Typeface.BOLD) },
+            LinearLayout.LayoutParams(-2, -2).apply { topMargin = dp(4) })
+        val cost = game.upgradeCost(o)
+        line(getString(R.string.hamlet_need_coins, cost), game.sandbox || game.coins >= cost)
+        for (need in game.upgradeNeeds(o)) line(getString(R.string.hamlet_need_crop, itemName("c_${need.crop}"), game.stock(need.crop), need.units),
+            game.sandbox || game.stock(need.crop) >= need.units)
+        val ready = game.canAffordUpgrade(o)
+        sheet.footer(HamletUi.button(this, getString(android.R.string.cancel), Weight.QUIET) { sheet.dismiss() } to 1f,
+            HamletUi.button(this, getString(R.string.hamlet_upgrade), Weight.MAIN, glyph = "star") { if (game.upgrade(o)) sheet.dismiss() }.apply { isEnabled = ready } to 1.6f)
+        sheet.show()
+    }
+    /** The barn: every crop the village grows, with what it holds. The buildings, the legends and the quests draw from it. */
+    private fun showGranary() {
+        val sheet = HamletSheet(this, getString(R.string.hamlet_granary), getString(R.string.hamlet_granary_help, game.pantryCap()), tall = true)
+        for (crop in Hamlet.crops.filter { !it.magic && it.lvl <= game.ulvl() }) {
+            val have = game.stock(crop.id)
+            val box = column().apply { setPadding(dp(12), dp(6), dp(12), dp(8)) }
+            box.addView(TextView(this).apply {
+                text = getString(R.string.hamlet_need_crop, itemName("c_${crop.id}"), have, game.pantryCap()); textSize = HamletUi.TEXT
+                setTextColor(if (have > 0) HamletUi.INK else HamletUi.MUTED); setTypeface(null, if (have > 0) Typeface.BOLD else Typeface.NORMAL)
+            })
+            box.addView(HamletBar(this).apply { set(have.toLong(), game.pantryCap().toLong()) }, LinearLayout.LayoutParams(-1, dp(7)).apply { topMargin = dp(3) })
+            sheet.body.addView(box)
         }
         sheet.show()
     }
@@ -485,6 +535,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         val entries = listOf(
             Entry(R.string.hamlet_daily, "sun", calls = daily) { showDaily() },
             Entry(R.string.hamlet_gift, "gift", game.giftReady(), calls = game.giftReady()) { game.openGift() },
+            Entry(R.string.hamlet_granary, "sack") { showGranary() },
             Entry(R.string.hamlet_land, "map", game.canExpand()) { expandLand() },
             Entry(R.string.hamlet_hall, "castle", canHall) { upgradeHall() },
             Entry(R.string.hamlet_overview, "book") { showOverview() },
@@ -563,7 +614,8 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         val progressValue = game.questProgress(q).coerceAtMost(q.n.toLong())
         sheet.body.addView(HamletBar(this).apply { set(progressValue, q.n.toLong()) }, LinearLayout.LayoutParams(-1, dp(10)).apply { topMargin = dp(8) })
         sheet.body.addView(text(getString(R.string.hamlet_ui_progress, progressValue, q.n)).apply { textSize = HamletUi.SMALL; setTextColor(HamletUi.MUTED) })
-        val reward = getString(R.string.hamlet_ui_reward_pair, q.coins, q.gems)
+        val reward = getString(R.string.hamlet_ui_reward_pair, q.coins, q.gems) +
+            if (q.tickets > 0) getString(R.string.hamlet_ui_dot) + resources.getQuantityString(R.plurals.hamlet_ui_tickets, q.tickets, q.tickets) else ""
         sheet.body.addView(text(HamletUi.tint(getString(R.string.hamlet_ui_reward_line, reward), reward to 0xFFB27A12.toInt())))
         if (done) sheet.footer(button(R.string.hamlet_claim, "gift", Weight.MAIN) { sheet.dismiss(); game.claimQuest() } to 1f)
         else sheet.footer(button(R.string.hamlet_ui_goal_go, "map") { sheet.dismiss(); guideToQuest(q) } to 1f)
@@ -608,13 +660,18 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
             getString(if (creative) R.string.hamlet_progression_world else R.string.hamlet_creative_world), "star") { switchWorld() }
     }
     private fun guideToQuest(q: Quest) {
-        val target = when (q.key) {
-            "planted" -> game.objs.values.firstOrNull { it.def.cat == Cat.FIELD && it.crop == null }
-            "harvested" -> game.objs.values.firstOrNull { game.status(it) == Status.RIPE }
+        val target = when {
+            q.key == "planted" -> game.objs.values.firstOrNull { it.def.cat == Cat.FIELD && it.crop == null }
+            q.key == "harvested" -> game.objs.values.firstOrNull { game.status(it) == Status.RIPE }
                 ?: game.objs.values.firstOrNull { it.def.cat == Cat.FIELD }
-            "taxes" -> game.objs.values.firstOrNull { game.status(it) == Status.TAX }
+            q.key.startsWith("harvest_") -> q.key.removePrefix("harvest_").let { crop ->
+                game.objs.values.firstOrNull { it.def.cat == Cat.FIELD && it.crop == crop && game.status(it) == Status.RIPE }
+                    ?: game.objs.values.firstOrNull { it.def.cat == Cat.FIELD && it.crop == null && game.buildLeft(it) == 0L }
+                    ?: game.objs.values.firstOrNull { it.def.cat == Cat.FIELD }
+            }
+            q.key == "taxes" -> game.objs.values.firstOrNull { game.status(it) == Status.TAX }
                 ?: game.objs.values.firstOrNull { it.def.cat == Cat.HOME }
-            "accepted", "delivered" -> game.objs.values.firstOrNull { it.def.cat == Cat.SHOP && game.status(it) in setOf(Status.ORDER_NEW, Status.ORDER_DONE) }
+            q.key == "accepted" || q.key == "delivered" -> game.objs.values.firstOrNull { it.def.cat == Cat.SHOP && game.status(it) in setOf(Status.ORDER_NEW, Status.ORDER_DONE) }
             else -> null
         }
         if (target != null) {

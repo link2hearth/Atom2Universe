@@ -47,7 +47,9 @@ class HamletGameTest {
         t += 46_000
         assertEquals(Status.RIPE, g.status(f))
         assertTrue(g.harvest(f))
-        assertEquals(before - 5 + 12, g.coins)
+        val corn = Hamlet.cropById.getValue("corn")
+        assertEquals(before - corn.cost + corn.earn, g.coins)
+        assertEquals(HamletEconomy.UNITS_PER_HARVEST, g.stock("corn"))
         assertNull(f.crop)
         assertEquals(1L, g.stats["harvested"])
     }
@@ -313,7 +315,7 @@ class HamletGameTest {
         }
         for (c in Hamlet.crops) needed.add("hamlet_n_c_${c.id}")
         for (i in Hamlet.quests.indices) { needed.add("hamlet_q${i}_t"); needed.add("hamlet_q${i}_d") }
-        for ((type, count) in listOf("chapter" to 12, "region" to 6, "companion" to 6, "research" to 3))
+        for ((type, count) in listOf("chapter" to 12, "region" to 6, "research" to 3))
             for (i in 0 until count) { needed.add("hamlet_${type}_$i"); needed.add("hamlet_${type}_story_$i") }
         for (i in 0..14) needed.add("hamlet_tech_$i")
         val missingEn = needed.filter { it !in en }

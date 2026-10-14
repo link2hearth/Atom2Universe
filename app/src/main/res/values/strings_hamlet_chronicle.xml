@@ -13,4 +13,6 @@
     <string name="hamlet_chronicle_visit">You visited %1$s.</string>
     <string name="hamlet_chronicle_order">You placed an order with %1$s.</string>
     <string name="hamlet_chronicle_pickup">You collected your order from %1$s.</string>
+    <string name="hamlet_chronicle_hero">%1$s has joined your village.</string>
+    <string name="hamlet_chronicle_legend">The legend of %1$s has come true.</string>
 </resources>

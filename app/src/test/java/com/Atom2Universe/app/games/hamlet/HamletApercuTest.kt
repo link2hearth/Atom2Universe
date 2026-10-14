@@ -136,11 +136,9 @@ class HamletApercuTest {
     @Test fun carnetEtAtelier() {
         val controller = ecranDuJeu()
         val activity = controller.get(); val decor = activity.window.decorView
-        val game = activity.game.apply { journey.chapter = 4; workStep = 9 }
-        game.journey.companions[0] = 1; game.journey.companions[1] = 1
-        game.journey.assign(0, 0); game.journey.assign(1, 1)
+        val game = activity.game.apply { journey.chapter = 6; workStep = 9 }
         val onglets = listOf(HamletJournalPage.TODAY to "journal", HamletJournalPage.CHAPTERS to "carnet", HamletJournalPage.EXPEDITIONS to "voyages",
-            HamletJournalPage.COMPANIONS to "compagnons", HamletJournalPage.RESEARCH to "recherches", HamletJournalPage.POSTS to "metiers",
+            HamletJournalPage.LEGENDS to "legendes", HamletJournalPage.RESEARCH to "recherches", HamletJournalPage.POSTS to "metiers",
             HamletJournalPage.WORK to "atelier_gratuit")
         for ((tab, name) in onglets) {
             activity.open(HamletModule.JOURNAL, tab)

@@ -167,6 +167,6 @@ class HamletBuilderTest {
         }
         assertEquals(80L, g.coins); assertEquals(0, g.gems)
         val field = buy(g, "field"); assertTrue(g.plant(field, "corn"))
-        assertEquals(25L, g.coins)
+        assertEquals(80L - Hamlet.byId.getValue("field").cost - Hamlet.cropById.getValue("corn").cost, g.coins)
     }
 }

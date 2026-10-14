@@ -44,7 +44,7 @@ class HamletStewardship(private val g: HamletGame) {
     fun claimChest(): Boolean {
         if (!canClaimChest()) return false
         chestClaimed = true
-        g.adventure.add(AdventureResource.TICKETS, 2)
+        g.adventure.add(AdventureResource.TICKETS, 1)
         g.adventure.add(AdventureResource.CRYSTAL, 8)
         g.workSeconds = (g.workSeconds + 180).coerceAtMost(7200)
         g.reward(null, 200, 40); g.listener?.onChanged(); return true
@@ -109,7 +109,7 @@ class HamletStewardship(private val g: HamletGame) {
     }
     companion object {
         val TARGETS = intArrayOf(6, 3, 2)
-        val TICKETS = longArrayOf(1, 2, 1)
+        val TICKETS = longArrayOf(1, 1, 1)
         private val KEYS = listOf(listOf("harvested", "products", "delivered", "taxes"),
             listOf("battles_won", "adventure_gathered", "expeditions"),
             listOf("hero_upgrades", "hero_recruits", "upgrades", "studies"))

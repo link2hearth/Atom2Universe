@@ -7,7 +7,7 @@
     <string name="hamlet_a_craft">Forge</string>
     <string name="hamlet_a_kingdom">Royaume</string>
     <string name="hamlet_a_challenges">Défis</string>
-    <string name="hamlet_a_help_text">Bâtis ton village et explore avec une équipe de héros. Deux protègent la première ligne ; garde soigneurs et mages à l’arrière. Bosquet contre Forge, Forge contre Aube, Aube contre Bosquet. Les factions communes et les liens entre héros renforcent ta formation.\nAccueille 36 héros avec les invitations gagnées au village, à l’auberge et en aventure. Les tirages ont des garanties de rareté ; les doublons donnent des fragments. Le recrutement ciblé et les fragments permettent de choisir un héros. Les sauvetages de campagne restent disponibles. Améliore niveaux, compétences et ensembles d’équipement pour progresser.\nLe carnet relie métiers du village, tâches quotidiennes facultatives et expéditions. Les héros affectés au village combattent aussi. Pour une courte visite, collecte les produits et les retours d’expédition, puis lance des raids rapides sur les routes maîtrisées à trois étoiles. Pour jouer plus longtemps, combats et cueille librement. Les défaites ne coûtent rien. Aucune énergie ni limite quotidienne de tentatives. La production continue pendant ton absence.</string>
+    <string name="hamlet_a_help_text">Explore avec une équipe de héros. Deux protègent la première ligne ; garde soigneurs et mages à l’arrière. Bosquet contre Forge, Forge contre Aube, Aube contre Bosquet. Les factions communes renforcent ta formation.\nTu commences seul : les quêtes du village et les premières routes de la campagne offrent tes premières invitations, et les trois premiers voyageurs t’attendent déjà. Ensuite chaque invitation est un tirage, et les doublons deviennent des fragments pour les étoiles. Les légendaires se méritent par des veillées (carnet, Légendes). L’équipe compte trois places, une quatrième à la route 10 et une cinquième à la route 40.\nUne nouvelle route donne une belle récompense, une seule fois. La rejouer rapporte peu, et parfois une trouvaille. Pour une courte visite, collecte le camp, récolte et réclame ce qui est prêt. Pour une longue, continue de combattre. Les défaites ne coûtent rien. Ni énergie ni limite quotidienne. Le camp produit pendant ton absence, dans la limite de son stockage.</string>
     <string name="hamlet_a_campaign">Route %1$d · %2$s</string>
     <string name="hamlet_a_explore_help">Force %1$d · %2$d places</string>
     <string name="hamlet_a_previous">Zone précédente</string>
@@ -17,7 +17,6 @@
     <string name="hamlet_a_node_battle">Rencontre</string>
     <string name="hamlet_a_node_gather">Clairière à récolter</string>
     <string name="hamlet_a_node_shrine">Sanctuaire ancien</string>
-    <string name="hamlet_a_node_rescue">Sauvetage d’un héros</string>
     <string name="hamlet_a_node_boss">Boss gardien</string>
     <string name="hamlet_a_loot_preview">Butin de rang %1$d</string>
     <string name="hamlet_a_enemy_hint">Ennemis : %1$s</string>
@@ -27,7 +26,7 @@
     <string name="hamlet_a_prepare">Équipe</string>
     <string name="hamlet_a_map_accessibility">Carte d’aventure. Le sélecteur de route sous la carte remplace le toucher des étapes.</string>
     <string name="hamlet_a_next_unlocks">À venir</string>
-    <string name="hamlet_a_unlock_roadmap">Route 5 : contrats · 10 : cinquième héros, épreuves et première relique · 12 : rivaux solo · 20 : raid et premier familier · 24 : sixième héros. Des héros sont sauvés en chemin ; autres reliques à 30 et 60, familiers à 50 et 80. La route continue après 120.</string>
+    <string name="hamlet_a_unlock_roadmap">Route 5 : contrats · 10 : quatrième place, épreuves et première relique · 12 : rivaux solo · 20 : raid et premier familier · 40 : cinquième place. Autres reliques à 30 et 60, familiers à 50 et 80. La route continue après 120.</string>
     <string name="hamlet_a_gather_help">Touche les ressources qui brillent.</string>
     <string name="hamlet_a_gather_accessibility">Récolter huit ressources. Le bouton Cueillir sous la scène offre une alternative accessible.</string>
     <string name="hamlet_a_gather_done">Matériel récolté</string>
@@ -86,19 +85,15 @@
     <string name="hamlet_a_hero_choice">%1$s · %2$s · Niveau %3$d</string>
     <string name="hamlet_a_remove">Retirer de l’équipe</string>
     <string name="hamlet_a_forge_title">Forge des héros</string>
-    <string name="hamlet_a_forge_help">Fabrique et améliore quatre pièces par héros avec minerai et runes. Le raffinage augmente la rareté grâce aux cristaux. La pièce la plus faible détermine la maîtrise de l’ensemble : un ensemble complet compte. Aucune minuterie de forge.</string>
     <string name="hamlet_a_build_named">Construire : %1$s dans le village</string>
     <string name="hamlet_a_gear_row">%1$s · %2$s · Niveau %3$d</string>
     <string name="hamlet_a_gear_0">Arme</string>
     <string name="hamlet_a_gear_1">Armure</string>
     <string name="hamlet_a_gear_2">Casque</string>
     <string name="hamlet_a_gear_3">Bottes</string>
-    <string name="hamlet_a_forge_cost">Améliorer · %1$d minerai + %2$d runes</string>
-    <string name="hamlet_a_refine_cost">Raffiner · niveau %1$d + %2$d cristaux</string>
-    <string name="hamlet_a_mastery">Maîtrise d’ensemble : niveau %1$d · %2$s</string>
     <string name="hamlet_a_facilities">Bâtiments de l’aventure</string>
     <string name="hamlet_a_facilities_help">Place toi-même ces bâtiments originaux. Les bâtiments terminés améliorent les héros, la production et l’entraînement ; améliore-les depuis les actions du village.</string>
-    <string name="hamlet_a_facility_0">Rapporte des pièces avec les commandes et des invitations pendant ton absence : une toutes les 12 h au rang 1, 9 h 36 au rang 2 ou 8 h au rang 3. Seul le meilleur rang d’auberge terminé compte.</string>
+    <string name="hamlet_a_facility_0">Rapporte des pièces avec les commandes et prépare une invitation pendant ton absence : une toutes les 24 h au rang 1, 19 h 12 au rang 2, 16 h au rang 3. Seule la meilleure auberge terminée compte.</string>
     <string name="hamlet_a_facility_1">Produit des livres, améliore les PV des héros et ouvre les recherches continues.</string>
     <string name="hamlet_a_facility_2">Produit du minerai et permet de fabriquer l’équipement.</string>
     <string name="hamlet_a_facility_3">Augmente la production. Le stockage est illimité et ne peut pas être pillé.</string>
@@ -253,7 +248,6 @@
     <string name="hamlet_a_pity_in">%1$s dans %2$d</string>
     <string name="hamlet_a_hero_kind">%1$s · %2$s</string>
     <string name="hamlet_a_hero_level">Niv. %1$d · %2$d★</string>
-    <string name="hamlet_a_rescue_short">À sauver route %1$d</string>
     <string name="hamlet_a_training_level">Entraînement de l’académie : niveau %1$d</string>
     <string name="hamlet_a_faction_bonus_short">%1$s +%2$d%%</string>
     <string name="hamlet_a_workers_count">Affectés : %1$d / %2$d</string>

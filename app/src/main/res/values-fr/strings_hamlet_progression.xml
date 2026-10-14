@@ -5,7 +5,6 @@
     <string name="hamlet_armory_tab_2">Inventaire</string>
     <string name="hamlet_armory_slot_empty">Aucune pièce fabriquée équipée</string>
     <string name="hamlet_progression_worn">%1$s : %2$s</string>
-    <string name="hamlet_progression_legacy_gear">Entraînement permanent et maîtrise d’équipement</string>
     <string name="hamlet_progression_upgrade_building">Améliorer au rang %1$d · %2$d pièces</string>
     <string name="hamlet_progression_rate">%1$s : %2$.1f par heure</string>
     <string name="hamlet_progression_supply_workshop">Ateliers d’approvisionnement</string>

@@ -11,11 +11,12 @@ object HamletSave {
 
     fun toJson(g: HamletGame): String {
         val root = JSONObject()
-        root.put("version", 5)
+        root.put("version", 6)
         root.put("adventure", HamletAdventureSave.encode(g.adventure))
         root.put("stewardship", g.stewardship.encode())
         root.put("armory", g.armory.encode())
         root.put("shardShop", g.shardShop.encode())
+        root.put("legends", g.legends.encode())
         root.put("neighbors", g.neighbors.encode())
         root.put("recentBuilds", JSONArray(g.buildHistory.recent))
         root.put("chronicle", JSONArray().also { a -> g.chronicle.rows.forEach { e -> a.put(JSONObject()
@@ -26,8 +27,7 @@ object HamletSave {
         } })
         val j = g.journey
         root.put("journey", JSONObject().put("chapter", j.chapter).put("supplies", j.supplies)
-            .put("research", JSONArray(j.research.toList())).put("companions", JSONArray(j.companions.toList()))
-            .put("party", JSONArray(j.party.toList())).put("explored", JSONArray(j.explored.toList()))
+            .put("research", JSONArray(j.research.toList())).put("explored", JSONArray(j.explored.toList()))
             .put("expedition", j.expedition).put("departure", j.departure).put("arrival", j.arrival)
             .put("invitationDay", j.invitationDay).put("invitationsToday", j.invitationsToday))
         root.put("workSeconds", g.workSeconds).put("workStep", g.workStep).put("workTool", g.workTool)
@@ -40,6 +40,9 @@ object HamletSave {
         val stats = JSONObject()
         for ((k, v) in g.stats) stats.put(k, v)
         root.put("stats", stats)
+        val pantry = JSONObject()
+        for ((k, v) in g.pantry) if (v > 0) pantry.put(k, v)
+        root.put("pantry", pantry)
         val land = terrain(g.objs.values, g.paths, g.hall, g.expand)
         root.put("paths", land.getJSONArray("paths")).put("objs", land.getJSONArray("objs"))
         return root.toString()
@@ -79,11 +82,13 @@ object HamletSave {
         g.visitT = candidate.visitT
         g.dailyDay = candidate.dailyDay; g.dailyClaimed = candidate.dailyClaimed
         candidate.dailyBase.copyInto(g.dailyBase)
+        g.pantry.clear(); g.pantry.putAll(candidate.pantry)
         g.journey.copyFrom(candidate.journey)
         g.adventure.copyFrom(candidate.adventure)
         g.stewardship.copyFrom(candidate.stewardship)
         g.armory.copyFrom(candidate.armory)
         g.shardShop.copyFrom(candidate.shardShop)
+        g.legends.copyFrom(candidate.legends)
         g.neighbors.copyFrom(candidate.neighbors)
         g.realms.copyFrom(candidate.realms)
         g.buildHistory.clear()
@@ -98,7 +103,7 @@ object HamletSave {
 
     private fun decodeChecked(g: HamletGame, text: String): Boolean {
         val root = try { JSONObject(text) } catch (e: Exception) { return false }
-        if (root.optInt("version", 1) !in 1..5) return false
+        if (root.optInt("version", 1) !in 1..6) return false
         val arr = root.optJSONArray("objs") ?: return false
         g.objs.clear(); g.stats.clear(); g.paths.fill(0); g.occ.fill(0)
         g.coins = root.optLong("coins").coerceAtLeast(0); g.gems = root.optInt("gems").coerceAtLeast(0); g.xp = root.optLong("xp").coerceAtLeast(0)
@@ -110,6 +115,8 @@ object HamletSave {
         g.dailyDay = root.optLong("dailyDay", -1); g.dailyClaimed = root.optInt("dailyClaimed") and 7
         root.optJSONArray("dailyBase")?.let { b -> for (i in g.dailyBase.indices) g.dailyBase[i] = b.optLong(i).coerceAtLeast(0) }
         root.optJSONObject("stats")?.let { s -> for (k in s.keys()) g.stats[k] = s.optLong(k) }
+        g.pantry.clear()
+        root.optJSONObject("pantry")?.let { p -> for (k in p.keys()) if (k in Hamlet.cropById) g.pantry[k] = p.optInt(k).coerceIn(0, HamletEconomy.pantryCap(Hamlet.halls.size)) }
         val journey = g.journey
         root.optJSONObject("journey")?.let { j ->
             journey.chapter = j.optInt("chapter").coerceIn(0, HamletJourney.chapters.size)
@@ -119,13 +126,7 @@ object HamletSave {
             fun array(key: String, dest: IntArray, lo: Int, hi: Int) {
                 j.optJSONArray(key)?.let { a -> for (i in dest.indices) dest[i] = a.optInt(i, dest[i]).coerceIn(lo, hi) }
             }
-            array("research", journey.research, 0, 5); array("companions", journey.companions, 0, 5)
-            array("party", journey.party, -1, 5); array("explored", journey.explored, 0, 1_000_000)
-            val seen = HashSet<Int>()
-            for (i in journey.party.indices) {
-                val hero = journey.party[i]
-                if (hero >= 0 && (journey.companions[hero] == 0 || !seen.add(hero))) journey.party[i] = -1
-            }
+            array("research", journey.research, 0, 5); array("explored", journey.explored, 0, 1_000_000)
             journey.expedition = j.optInt("expedition", -1).takeIf { it in HamletJourney.regions.indices } ?: -1
             if (journey.expedition >= 0) {
                 journey.departure = j.optLong("departure")
@@ -160,7 +161,7 @@ object HamletSave {
             if (hasOverlap(g, o)) continue
             o.crop = j.optString("c").takeIf { def.cat == Cat.FIELD && Hamlet.cropById[it]?.magic == def.magic }
             o.t0 = j.optLong("t0"); o.b0 = j.optLong("b0"); o.next = j.optLong("n")
-            o.tier = j.optInt("tier", 1).coerceIn(1, 3); o.tended = j.optBoolean("tended") && o.crop != null
+            o.tier = j.optInt("tier", 1).coerceIn(1, HamletEconomy.MAX_TIER); o.tended = j.optBoolean("tended") && o.crop != null
             if (t in HamletLife.produce && def.cat != Cat.RANCH && o.t0 == 0L) o.t0 = g.now()
             if (def.cat == Cat.SHOP) j.optJSONObject("o")?.let { o.order = Order(it.optString("from", Hamlet.visitors[0]), it.optLong("t0")) }
             if (def.cat == Cat.HALL) hasHall = true
@@ -199,9 +200,6 @@ object HamletSave {
             val kind = HamletChronicle.Kind.entries.firstOrNull { it.name == e.optString("kind") } ?: return@mapNotNull null
             HamletChronicle.Entry(kind, e.optLong("at"), e.optString("subject"), e.optString("actor"), e.optLong("amount"))
         }) }
-        if (!root.has("adventure")) g.journey.companions.forEachIndexed { hero, level ->
-            if (level > 0) g.adventure.heroes[hero].owned = true
-        }
         if (g.sandbox) {
             g.adventure.heroes.forEach { it.owned = true }
             for (i in g.adventure.pets.indices) {
@@ -211,6 +209,7 @@ object HamletSave {
         g.stewardship.decode(root.optJSONObject("stewardship"))
         g.armory.decode(root.optJSONObject("armory"))
         g.shardShop.decode(root.optJSONObject("shardShop"))
+        g.legends.decode(root.optJSONObject("legends"))
         g.bump()
         return true
     }

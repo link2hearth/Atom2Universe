@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hamlet_a_frontier_go">Retour à la frontière</string>
-    <string name="hamlet_a_owned_filter">Recrutés seulement · %1$d / %2$d</string>
     <string name="hamlet_a_next_stage">Étape suivante</string>
     <string name="hamlet_collect_direct_hint">Touche une récompense dorée dans le village pour la ramasser directement. Tout récolter se débloque après le chapitre %1$d.</string>
     <string name="hamlet_expedition_invitation_help">Les expéditions donnent une invitation à la première visite et tous les cinq voyages, jusqu’à deux par jour. Les autres provisions restent toujours disponibles.</string>
-    <string name="hamlet_hero_target_cost">Recruter ce héros · %1$d invitations</string>
-    <string name="hamlet_hero_duplicate_cost">Recruter à nouveau · %1$d invitations → %2$d fragment</string>
     <string name="hamlet_hero_focus">Priorité aux fragments de %1$s</string>
     <string name="hamlet_hero_focus_clear">Ne plus privilégier %1$s</string>
     <string name="hamlet_hero_focus_help">La priorité dirige les prochains fragments d’aventure vers ce héros déjà recruté. Les doublons de recrutement donnent toujours les fragments du héros tiré.</string>
     <string name="hamlet_hero_star_preview">Étoile %1$d : +%2$.1f%% de vie et d’attaque</string>
     <string name="hamlet_hero_stars_max">%1$d étoiles : maximum</string>
-    <string name="hamlet_hero_target_short">Dès la route %1$d · chapitre %2$d</string>
 </resources>

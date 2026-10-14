@@ -66,12 +66,15 @@ class HamletGame(
     var dailyClaimed = 0
     val dailyBase = LongArray(3)
     val stats = HashMap<String, Long>()
+    /** Réserve de récoltes : unités de chaque culture, qui servent aux améliorations et aux veillées. */
+    val pantry = HashMap<String, Int>()
     val objs = LinkedHashMap<Int, Obj>()
     val journey = HamletJourney(this)
     val adventure = HamletAdventure(this)
     val stewardship = HamletStewardship(this)
     val armory = HamletArmory(this)
     val shardShop = HamletShardShop(this)
+    val legends = HamletLegends(this)
     val buildHistory = HamletBuildHistory(this)
     val chronicle = HamletChronicle(this)
     /** Travail gratuit mis de côté, plafonné à deux heures ; les gestes du village le remplissent. */
@@ -135,7 +138,9 @@ class HamletGame(
         checkQuest()
     }
 
-    fun reward(o: Obj?, coinsGain: Int, xpGain: Int) {
+    /** Un bâtiment amélioré rapporte plus de pièces (voir [yieldCoins]) et plus d'expérience, du même pourcentage. */
+    fun reward(o: Obj?, coinsGain: Int, baseXp: Int) {
+        val xpGain = if (o == null) baseXp else baseXp * (100 + (o.tier - 1) * 25) / 100
         if (coinsGain > 0) { coins += coinsGain; stat("earned", coinsGain.toLong()) }
         listener?.onReward(o, coinsGain, xpGain, 0)
         addXp(xpGain)
@@ -321,19 +326,34 @@ class HamletGame(
         return (55 + services * 5 + min(20, variety * 2) + min(10, complete.count { it.def.cat == Cat.RANCH } * 2)).coerceAtMost(100)
     }
 
-    /** Améliorer augmente les recettes de 25 %, jusqu'au niveau 3 ; jamais les durées. */
-    fun upgradeCost(o: Obj) = max(30, o.def.cost * (o.tier + 1) / 2)
-    fun canUpgrade(o: Obj) = owns(o) && o.tier < 3 && o.def.gems == 0 && buildLeft(o) == 0L &&
+    /** Améliorer augmente les recettes de 25 % par rang, jusqu'au rang 5 ; jamais les durées. */
+    fun upgradeCost(o: Obj) = HamletEconomy.upgradeCoins(o.def.cost, o.tier)
+    /** Les récoltes demandées en plus des pièces pour passer au rang suivant. */
+    fun upgradeNeeds(o: Obj) = HamletEconomy.upgradeNeeds(o.def, o.tier + 1)
+    fun canUpgrade(o: Obj) = owns(o) && o.tier < HamletEconomy.MAX_TIER && o.def.gems == 0 && buildLeft(o) == 0L &&
         (o.def.cat in setOf(Cat.HOME, Cat.SHOP, Cat.FIELD, Cat.RANCH) || o.t in HamletLife.produce)
+    fun canAffordUpgrade(o: Obj) = canUpgrade(o) && (sandbox || coins >= upgradeCost(o) && upgradeNeeds(o).all { stock(it.crop) >= it.units })
     fun upgrade(o: Obj): Boolean {
+        if (!canAffordUpgrade(o)) return false
         val cost = upgradeCost(o)
-        if (!canUpgrade(o) || !spendCoins(cost)) return false
+        spendCoins(cost)
+        if (!sandbox) for (need in upgradeNeeds(o)) pantry[need.crop] = stock(need.crop) - need.units
         adventure.advanceProduction()
         o.tier++
         o.economicRevision++
         stat("upgrades"); addXp(cost / 15)
         touch(); changed()
         return true
+    }
+
+    // ------------------------------------------------------------------ réserve de récoltes
+
+    fun pantryCap() = HamletEconomy.pantryCap(hall)
+    fun stock(crop: String) = pantry[crop] ?: 0
+    /** Range des unités ; ce qui dépasse la place de la réserve est perdu (les pièces sont déjà versées). */
+    fun addStock(crop: String, units: Int) {
+        if (units <= 0 || crop !in Hamlet.cropById) return
+        pantry[crop] = minOf(pantryCap(), stock(crop) + units)
     }
     fun yieldCoins(o: Obj, base: Int) = base * (100 + (o.tier - 1) * 25 + journey.bonus(o.def.cat) + stewardship.villageBonus(o.def.cat)) / 100
 
@@ -494,6 +514,7 @@ class HamletGame(
         else {
             val gain = yieldCoins(o, c.earn) * (if (o.tended) 120 else 100) / 100
             reward(o, gain, c.xp)
+            addStock(c.id, HamletEconomy.UNITS_PER_HARVEST + if (o.tended) 1 else 0)
             stat("harvested"); stat("harvest_${c.id}")
         }
         o.crop = null
@@ -787,6 +808,8 @@ class HamletGame(
         else c = (Math.round((60 + rng.nextDouble() * 80) * (1 + l * 0.6) / 10) * 10).toInt()
         if (c > 0) { coins += c; stat("earned", c.toLong()) }
         gems += g
+        // Le premier cadeau est une surprise ; les suivants glissent un appel dans le paquet.
+        if ((stats["gifts"] ?: 0L) >= 1) adventure.add(AdventureResource.TICKETS, 1)
         listener?.onReward(null, c, x, g)
         addXp(x)
         stat("gifts")
@@ -832,6 +855,7 @@ class HamletGame(
         questBase = currentQuest()?.let { stats[it.key] ?: 0L } ?: 0L
         coins += q.coins
         gems += q.gems
+        adventure.add(AdventureResource.TICKETS, q.tickets.toLong())
         stat("earned", q.coins.toLong())
         listener?.onReward(null, q.coins, q.xp, q.gems)
         addXp(q.xp)
@@ -876,12 +900,13 @@ class HamletGame(
 
     fun startNew(sandboxMode: Boolean) {
         sandbox = sandboxMode
-        objs.clear(); stats.clear(); paths.fill(0); occ.fill(0)
+        objs.clear(); stats.clear(); pantry.clear(); paths.fill(0); occ.fill(0)
         journey.reset(); workSeconds = 0; workStep = 0; workTool = -1
         adventure.reset()
         stewardship.reset()
         armory.reset()
         shardShop.reset()
+        legends.reset()
         buildHistory.clear(); buildHistory.restoreRecent(emptyList()); realms.reset(); neighbors.reset(); chronicle.reset()
         nextId = 1; quest = 0; questBase = 0; questNoted = -1; expand = 0; hall = 1; xp = 0
         dailyDay = -1; dailyClaimed = 0; dailyBase.fill(0); tickAt = 0; giftT = 0; visitT = 0

@@ -51,15 +51,20 @@ class HamletLifeTest {
         assertFalse(g.tend(f)); assertEquals(before, g.coins)
         time += 5 * 3_600_000
         assertEquals(Status.RIPE, g.status(f)); assertTrue(g.harvest(f))
-        assertEquals(before + 14, g.coins); assertFalse(f.tended)
+        assertEquals(before + Hamlet.cropById.getValue("corn").earn * 120 / 100, g.coins); assertFalse(f.tended)
         assertTrue(g.plant(f, "corn")); assertFalse(f.tended)
     }
     @Test fun `ameliorer a un prix et un plafond sans doubler les recettes`() {
         val g = game().apply { coins = 10_000 }
         val home = g.objs.values.first { it.def.cat == Cat.HOME }
-        assertTrue(g.upgrade(home)); assertEquals(2, home.tier)
-        assertTrue(g.upgrade(home)); assertEquals(3, home.tier)
-        assertFalse(g.upgrade(home)); assertEquals(15, g.yieldCoins(home, 10))
+        // sans les récoltes demandées, rien ne se passe
+        assertFalse(g.canAffordUpgrade(home)); assertFalse(g.upgrade(home)); assertEquals(1, home.tier); assertEquals(10_000L, g.coins)
+        for (tier in 2..5) {
+            for (need in g.upgradeNeeds(home)) g.pantry[need.crop] = need.units
+            assertTrue(g.upgrade(home)); assertEquals(tier, home.tier)
+        }
+        for (need in HamletEconomy.upgradeNeeds(home.def, 5)) g.pantry[need.crop] = 100
+        assertFalse(g.upgrade(home)); assertEquals(20, g.yieldCoins(home, 10))
         g.coins = 0
         assertFalse(g.upgrade(g.objs.values.first { it.def.cat == Cat.FIELD }))
     }
@@ -96,7 +101,9 @@ class HamletLifeTest {
     }
     @Test fun `les nouveaux etats persistent et une lecture invalide est transactionnelle`() {
         val g = game().apply { xp = 10_000; coins = 10_000 }
-        val pen = buy(g, "henyard"); time += 31_000; g.tick(); g.feed(pen); g.upgrade(pen)
+        val pen = buy(g, "henyard"); time += 31_000; g.tick(); g.feed(pen)
+        for (need in g.upgradeNeeds(pen)) g.pantry[need.crop] = 100
+        g.upgrade(pen)
         val field = g.objs.values.first { it.def.cat == Cat.FIELD }; g.plant(field, "oats"); g.tend(field)
         val saved = HamletSave.toJson(g)
         val h = game(); assertTrue(HamletSave.fromJson(h, saved))

@@ -32,6 +32,8 @@ internal class HamletChronicleDialog(private val context: Context, private val g
                 HamletChronicle.Kind.VISIT -> context.getString(R.string.hamlet_chronicle_visit, actor)
                 HamletChronicle.Kind.ORDER -> context.getString(R.string.hamlet_chronicle_order, actor)
                 HamletChronicle.Kind.PICKUP -> context.getString(R.string.hamlet_chronicle_pickup, actor)
+                HamletChronicle.Kind.HERO -> context.getString(R.string.hamlet_chronicle_hero, named("hamlet_a_hero_", entry.subject))
+                HamletChronicle.Kind.LEGEND -> context.getString(R.string.hamlet_chronicle_legend, named("hamlet_a_hero_", entry.subject))
             }
             val card = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL; background = HamletUi.panel(context, 0xFFFFF8E9.toInt(), 12, 0xFFE1D4B8.toInt())
@@ -59,5 +61,7 @@ internal class HamletChronicleDialog(private val context: Context, private val g
         HamletChronicle.Kind.HALL -> "castle"
         HamletChronicle.Kind.REALM -> "ship"
         HamletChronicle.Kind.VISIT, HamletChronicle.Kind.ORDER -> "signpost"
+        HamletChronicle.Kind.HERO -> "hat"
+        HamletChronicle.Kind.LEGEND -> "star"
     }
 }

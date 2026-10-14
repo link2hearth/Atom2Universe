@@ -1,13 +1,14 @@
 package com.Atom2Universe.app.games.hamlet
 
-import org.json.JSONArray
 import org.junit.Assert.*
 import org.junit.Test
 import kotlin.random.Random
 
 class HamletRecruitmentTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(31)).apply { startNew(false) }
+    private fun game(seed: Int = 31) = HamletGame({ time }, Random(seed)).apply { startNew(false) }
+    /** Une équipe de départ pour les tests qui n'ont pas besoin du scénario d'ouverture. */
+    private fun starters(a: HamletAdventure) { for (id in intArrayOf(0, 1, 3, 7)) a.welcome(a.heroes[id]) }
 
     @Test fun `catalogue stable avec tous les roles dans chaque faction`() {
         val defs = HamletHeroes.defs
@@ -17,111 +18,89 @@ class HamletRecruitmentTest {
             assertEquals(12, defs.count { it.faction == faction })
             assertEquals(HeroRole.entries.toSet(), defs.filter { it.faction == faction }.map { it.role }.toSet())
         }
-        assertEquals(4, game().adventure.heroes.count { it.owned })
         assertEquals(defs.size, HamletHeroLooks.size)
         assertEquals(listOf(12, 12, 8, 3, 1), HeroRarity.entries.map { rarity -> defs.count { it.rarity == rarity } })
-        assertTrue(game().adventure.heroes.filter { it.owned }.all { it.def.rarity == HeroRarity.COMMON })
+        assertTrue(HamletHeroes.OPENING.all { defs[it].rarity == HeroRarity.COMMON })
+        assertEquals(defs.filter { it.rarity == HeroRarity.LEGENDARY }.map { it.id }.toSet(), HamletHeroes.LEGENDS.toSet())
+        assertEquals(HeroRarity.MYTHIC, defs[HamletHeroes.MYTHIC].rarity)
     }
 
-    @Test fun `tirages depensent les invitations une fois et echec garde le hasard`() {
+    @Test fun `aucun heros au depart et les tirages depensent les invitations une fois`() {
         val a = game().adventure; val b = game().adventure
-        val tickets = a[AdventureResource.TICKETS]
-        assertTrue(a.summon(10).isEmpty()); assertTrue(a.summon(0).isEmpty())
-        assertEquals(tickets, a[AdventureResource.TICKETS])
+        assertEquals(0, a.ownedCount()); assertTrue(a.heroes.none { it.owned })
+        assertTrue(a.summon(10).isEmpty()); assertTrue(a.summon(0).isEmpty()); assertTrue(a.summon(11).isEmpty())
+        a.add(AdventureResource.TICKETS, 5); b.add(AdventureResource.TICKETS, 5)
+        assertTrue(a.summon(10).isEmpty()); assertEquals(5L, a[AdventureResource.TICKETS])
         assertEquals(b.summon(1), a.summon(1))
-        assertEquals(tickets - 1, a[AdventureResource.TICKETS])
-        assertEquals(1, a.recruitmentPulls)
+        assertEquals(4L, a[AdventureResource.TICKETS]); assertEquals(1, a.recruitmentPulls)
     }
 
-    @Test fun `garanties survivent a la sauvegarde et remise a zero selon rarete`() {
+    @Test fun `les trois premiers appels sont ecrits d'avance puis le hasard commence`() {
+        val a = game().adventure; a.add(AdventureResource.TICKETS, 40)
+        val first = a.summon(3)
+        assertEquals(HamletHeroes.OPENING.toList(), first.map { it.hero })
+        assertTrue(first.all { it.scripted && it.newHero })
+        assertEquals(0, a.scriptedLeft())
+        val rest = (0 until 37).flatMap { a.summon(1) }
+        assertTrue(rest.none { it.scripted })
+        assertTrue("jamais de légende dans un tirage", rest.none { a.heroes[it.hero].def.rarity.ordinal >= HeroRarity.LEGENDARY.ordinal })
+    }
+
+    @Test fun `un rare est garanti au huitieme appel libre et un epique tous les quatre-vingts`() {
+        // Beaucoup de graines : le huitième appel libre donne toujours au moins un rare.
+        for (seed in 0 until 60) {
+            val a = game(seed).adventure; a.add(AdventureResource.TICKETS, 11)
+            a.summon(3)
+            val free = (0 until 8).map { a.summon(1).single() }
+            assertTrue("graine $seed", free.any { a.heroes[it.hero].def.rarity.ordinal >= HeroRarity.RARE.ordinal })
+        }
+        val a = game(5).adventure; a.add(AdventureResource.TICKETS, 3 + 400)
+        a.summon(3)
+        var sinceEpic = 0
+        repeat(400) {
+            val r = a.summon(1).single(); sinceEpic++
+            if (a.heroes[r.hero].def.rarity == HeroRarity.EPIC) sinceEpic = 0
+            assertTrue(sinceEpic < HamletAdventure.PITY_EPIC)
+        }
+    }
+
+    @Test fun `un doublon donne des fragments de son propre heros selon sa rarete`() {
+        val a = game().adventure; a.add(AdventureResource.TICKETS, 200)
+        a.heroes.filter { it.def.rarity.ordinal <= HeroRarity.EPIC.ordinal }.forEach { it.owned = true }
+        val before = a.heroes.sumOf { it.shards }
+        val pulls = a.summon(10)
+        assertTrue(pulls.all { !it.newHero })
+        for (p in pulls) assertEquals(HamletHeroes.duplicateShards(a.heroes[p.hero].def.rarity), p.shards)
+        assertEquals(before + pulls.sumOf { it.shards }, a.heroes.sumOf { it.shards })
+        assertEquals(1L, HamletHeroes.duplicateShards(HeroRarity.COMMON)); assertEquals(2L, HamletHeroes.duplicateShards(HeroRarity.RARE))
+        assertEquals(4L, HamletHeroes.duplicateShards(HeroRarity.EPIC))
+    }
+
+    @Test fun `garanties et compteur survivent a la sauvegarde`() {
         val g = game(); val a = g.adventure
-        a.pityEpic = HamletAdventure.PITY_EPIC - 1; a.pityLegendary = HamletAdventure.PITY_LEGENDARY - 1; a.pityMythic = HamletAdventure.PITY_MYTHIC - 1
-        a.recruitmentPulls = 150; a.recruitmentWork = 7; a.innTicketProgress = 120
+        a.add(AdventureResource.TICKETS, 30); a.summon(10); a.summon(2)
+        a.pityEpic = HamletAdventure.PITY_EPIC - 1; a.recruitmentWork = 7; a.innTicketProgress = 120; a.shardDrip = 5
         val restored = game()
         assertTrue(HamletSave.fromJson(restored, HamletSave.toJson(g)))
         val r = restored.adventure
-        assertEquals(150, r.recruitmentPulls); assertEquals(7L, r.recruitmentWork); assertEquals(120L, r.innTicketProgress)
+        assertEquals(12, r.recruitmentPulls); assertEquals(7L, r.recruitmentWork); assertEquals(120L, r.innTicketProgress); assertEquals(5, r.shardDrip)
+        assertEquals(a.pityRare, r.pityRare)
         val pull = r.summon().single()
-        assertEquals(HeroRarity.MYTHIC, r.heroes[pull.hero].def.rarity)
-        assertTrue(pull.guaranteed)
-        assertEquals(0, r.pityEpic); assertEquals(0, r.pityLegendary); assertEquals(0, r.pityMythic)
-        assertEquals(151, r.recruitmentPulls)
+        assertEquals(HeroRarity.EPIC, r.heroes[pull.hero].def.rarity); assertTrue(pull.guaranteed)
+        assertEquals(0, r.pityEpic)
     }
 
-    @Test fun `tirages en lot respectent tous les compteurs et doublons`() {
-        val a = game().adventure; a.add(AdventureResource.TICKETS, 200)
-        a.heroes.forEach { it.owned = true }
-        repeat(20) {
-            val pulls = a.summon(10)
-            assertEquals(10, pulls.size)
-            assertTrue(pulls.all { !it.newHero && it.shards == 1L })
-            assertTrue(a.pityEpic in 0 until HamletAdventure.PITY_EPIC); assertTrue(a.pityLegendary in 0 until HamletAdventure.PITY_LEGENDARY); assertTrue(a.pityMythic in 0 until HamletAdventure.PITY_MYTHIC)
-        }
-        assertEquals(200L, a.heroes.sumOf { it.shards })
-        assertEquals(200, a.recruitmentPulls)
-        assertEquals(3L, a[AdventureResource.TICKETS])
-    }
-
-    @Test fun `fragments ouvrent un heros sans contourner leur cout`() {
-        val a = game().adventure; val h = a.heroes[10]
-        val cost = a.shardUnlockCost(h.id)
-        h.shards = cost - 1
-        assertFalse(a.recruitShards(h.id)); assertFalse(h.owned)
-        h.shards++
-        assertTrue(a.recruitShards(h.id)); assertTrue(h.owned); assertEquals(0L, h.shards)
-        assertFalse(a.recruitShards(h.id)); assertFalse(a.recruitShards(-1))
-    }
-
-    @Test fun `anciens heros sauves et nouveaux voyageurs ne changent pas les routes`() {
-        val g = game(); val a = g.adventure
-        assertEquals(AdventureNode.RESCUE, a.node(5))
-        assertEquals(AdventureNode.BATTLE, a.node(3)) // Sylva opens targeted recruitment at 4, without changing this route.
-        assertTrue(a.summonPool().any { it.id == 35 })
-        assertFalse(a.focusRecruit(35))
-        a.frontier = 110
-        assertFalse(a.focusRecruit(35))
-        a.frontier = a.recruitFrontier(35); a.add(AdventureResource.TICKETS, 300)
-        assertFalse(a.focusRecruit(35))
-        g.journey.chapter = a.recruitChapter(35)
-        assertTrue(a.focusRecruit(35)); assertTrue(a.heroes[35].owned)
-    }
-
-    @Test fun `migration ajoute les voyageurs sans perdre equipe ou progression`() {
-        val g = game(); val a = g.adventure
-        a.frontier = 80; a.heroes[9].owned = true; a.heroes[9].level = 45
-        val legacy = HamletAdventureSave.encode(a)
-        val oldHeroes = legacy.getJSONArray("heroes")
-        legacy.put("heroes", JSONArray((0 until 12).map { oldHeroes.getJSONObject(it) }))
-        listOf("recruitmentPulls", "pityEpic", "pityLegendary", "pityMythic", "recruitmentWork", "innTicketProgress").forEach { legacy.remove(it) }
-        val restored = game().adventure
-        HamletAdventureSave.decode(restored, legacy)
-        assertEquals(45, restored.heroes[9].level); assertTrue(restored.heroes[9].owned)
-        assertTrue(restored.heroes.drop(12).none { it.owned })
-        assertArrayEquals(a.teams[0], restored.teams[0]); assertEquals(0, restored.recruitmentPulls)
-    }
-
-    @Test fun `expedition rapide reservee aux routes maitrisees et consomme vraiment les vivres`() {
-        val a = game().adventure
-        a.frontier = 1; a.stars[0] = 2
-        assertFalse(a.sweep(0)); assertFalse(a.sweep(-1)); assertFalse(a.sweep(1))
-        a.stars[0] = 3
-        val food = a[AdventureResource.FOOD]; val ore = a[AdventureResource.ORE]
-        assertTrue(a.sweep(0)); assertTrue(a[AdventureResource.FOOD] < food)
-        assertTrue(a[AdventureResource.ORE] > ore); assertEquals(1, a.frontier)
-        a.frontier = 105; a.stars[104] = 3; a.add(AdventureResource.FOOD, 200)
-        val laterFood = a[AdventureResource.FOOD]
-        assertTrue(a.sweep(104)); assertTrue(a[AdventureResource.FOOD] < laterFood)
-        a.bag[AdventureResource.FOOD.ordinal] = 0
-        val before = a.bag.clone(); assertFalse(a.sweep(0)); assertArrayEquals(before, a.bag)
-    }
-
-    @Test fun `le travail au village nourrit le recrutement sans valider des actions nulles`() {
+    @Test fun `le travail au village nourrit les appels mais seulement quelques uns par jour`() {
         val a = game().adventure; val tickets = a[AdventureResource.TICKETS]
-        a.villageAction("harvested", 100); a.villageAction("harvested", 19); assertEquals(tickets, a[AdventureResource.TICKETS])
-        assertEquals(119L, a.recruitmentWork)
-        a.villageAction("products", 0); assertEquals(119L, a.recruitmentWork)
-        a.villageAction("delivered", 1); assertEquals(tickets + 1, a[AdventureResource.TICKETS])
-        assertEquals(2L, a.recruitmentWork)
+        a.villageAction("harvested", 100); a.villageAction("harvested", 99); assertEquals(tickets, a[AdventureResource.TICKETS])
+        assertEquals(199L, a.recruitmentWork)
+        a.villageAction("products", 0); assertEquals(199L, a.recruitmentWork)
+        a.villageAction("delivered", 1); a.villageAction("delivered", 100)
+        assertEquals(tickets + 1, a[AdventureResource.TICKETS])
+        repeat(30) { a.villageAction("delivered", 100) }
+        assertEquals(tickets + HamletAdventure.WORK_TICKETS_PER_DAY, a[AdventureResource.TICKETS])
+        time += Hamlet.DAY_MS; a.villageAction("delivered", 100)
+        assertTrue(a[AdventureResource.TICKETS] > tickets + HamletAdventure.WORK_TICKETS_PER_DAY)
     }
 
     @Test fun `auberge produit pendant absence a partir de la fin du chantier`() {
@@ -132,17 +111,17 @@ class HamletRecruitmentTest {
             .first { (x, y) -> g.canPlace("adventureInn", x, y, false) }
         val inn = g.buy("adventureInn", spot.first, spot.second, false)!!
         val tickets = a[AdventureResource.TICKETS]
-        time = start + inn.def.build * 1000L + 720 * 60_000
+        time = start + inn.def.build * 1000L + 24 * 60 * 60_000L
         a.advanceProduction()
         assertEquals(tickets + 1, a[AdventureResource.TICKETS]); assertEquals(0L, a.innTicketProgress)
         val saved = a.bag.clone(); a.advanceProduction(); assertArrayEquals(saved, a.bag)
     }
 
     @Test fun `formation automatique place defenseurs et soin sans doublons`() {
-        val a = game().adventure
+        val a = game().adventure; starters(a)
         assertTrue(a.autoFormation())
-        val selected = a.teams[a.selectedTeam].take(a.slotCount())
-        assertEquals(4, selected.toSet().size)
+        val selected = a.teams[a.selectedTeam].take(a.slotCount()).filter { it >= 0 }
+        assertEquals(3, selected.size); assertEquals(3, selected.toSet().size)
         assertEquals(HeroRole.GUARDIAN, a.heroes[selected[0]].def.role)
         assertEquals(HeroRole.DUELIST, a.heroes[selected[1]].def.role)
         assertEquals(HeroRole.HEALER, a.heroes[selected[2]].def.role)
@@ -168,6 +147,7 @@ class HamletRecruitmentTest {
     @Test fun `rendement identique chaque minute et hors ligne avec sauvegarde des fractions`() {
         var active = game(); val offline = game()
         for (g in listOf(active, offline)) {
+            starters(g.adventure)
             assertTrue(g.stewardship.assign(0, 0))
             assertTrue(g.stewardship.assign(1, 1))
             assertTrue(g.stewardship.assign(2, 3))
@@ -189,6 +169,21 @@ class HamletRecruitmentTest {
         assertArrayEquals(offline.adventure.productionRemainder, active.adventure.productionRemainder, 0.00000001)
     }
 
+    @Test fun `le camp se remplit pendant douze heures seulement et lentrepot rallonge ce temps`() {
+        val a = game().adventure
+        assertEquals(12 * 60L, a.campCapMinutes())
+        val start = a[AdventureResource.FOOD]
+        time += 10 * 3_600_000L; a.advanceProduction()
+        val tenHours = a[AdventureResource.FOOD] - start
+        val b = game().adventure
+        time += 3 * 24 * 3_600_000L; b.advanceProduction()
+        val threeDays = b[AdventureResource.FOOD] - 180
+        assertTrue(threeDays <= tenHours * 12 / 10 + 5)
+        assertTrue(threeDays > tenHours)
+        assertEquals(720L, b.campFullIn())
+        time += 13 * 3_600_000L; assertEquals(0L, b.campFullIn())
+    }
+
     @Test fun `retour de lhorloge ne compte pas deux fois les minutes deja produites`() {
         val a = game().adventure
         time += 10 * 60_000; a.advanceProduction()
@@ -200,72 +195,39 @@ class HamletRecruitmentTest {
         assertEquals(bag[0] + 4, a[AdventureResource.FOOD])
     }
 
-    @Test fun `une copie vaut un fragment du personnage et dix fragments ameliorent vraiment le starter`() {
-        val a = game().adventure; val h = a.heroes[0]
-        h.level = 400; h.gear.fill(15)
-        val before = HamletHeroes.numbers(h)
-        assertTrue(a.focusRecruit(0)); assertEquals(1L, h.shards)
-        assertEquals(0L, a.heroes[1].shards); assertFalse(a.promote(1))
-        assertFalse(a.promote(0)); a.add(AdventureResource.TICKETS, 27)
-        repeat(9) { assertTrue(a.focusRecruit(0)) }
-        assertEquals(10L, h.shards)
-        assertEquals(10L, a.starCost(0)); assertTrue(a.promote(0))
-        assertEquals(0L, h.shards); assertEquals(1, h.stars)
-        val promoted = HamletHeroes.numbers(h)
-        assertEquals(1.05, promoted.attack / before.attack, 0.000001)
-        assertEquals(1.05, promoted.hp / before.hp, 0.000001)
-        assertEquals(25L, a.starCost(0))
-        a.add(AdventureResource.TICKETS, 75)
-        repeat(24) { assertTrue(a.focusRecruit(0)) }
-        assertFalse(a.promote(0)); assertTrue(a.focusRecruit(0)); assertTrue(a.promote(0))
-        assertEquals(0L, h.shards); assertEquals(50L, a.starCost(0))
-        assertTrue(a.starGainPercent(0) > 4.0)
-        h.stars = HamletHeroes.STAR_CAP; val remaining = h.shards
-        assertFalse(a.promote(0)); assertEquals(remaining, h.shards)
+    @Test fun `le niveau est plafonne par les etoiles et les etoiles par la halle`() {
+        val g = game(); val a = g.adventure; starters(a)
+        a.bag[AdventureResource.FOOD.ordinal] = 1_000_000
+        assertEquals(10, a.levelCap(0))
+        repeat(100) { a.levelUp(0) }
+        assertEquals(10, a.heroes[0].level); assertFalse(a.levelUp(0))
+        a.heroes[0].shards = 10_000
+        assertEquals(HamletHeroes.starLimit(1), a.starLimit())
+        repeat(5) { a.promote(0) }
+        assertEquals(2, a.heroes[0].stars); assertFalse(a.canPromote(0))
+        assertEquals(26, a.levelCap(0))
+        repeat(100) { a.levelUp(0) }
+        assertEquals(26, a.heroes[0].level)
+        g.hall = 3
+        assertTrue(a.promote(0)); assertEquals(3, a.heroes[0].stars)
+        g.hall = 8; repeat(10) { a.promote(0) }; assertEquals(HamletHeroes.STAR_CAP, a.heroes[0].stars)
     }
 
-    @Test fun `ciblage elite ne contourne ni prix ni routes ni chapitres`() {
-        val g = game(); val a = g.adventure
-        a.add(AdventureResource.TICKETS, 1000)
-        for ((id, cost) in listOf(5 to 12L, 8 to 240L, 10 to 600L)) {
-            val wallet = a[AdventureResource.TICKETS]
-            a.frontier = 110; g.journey.chapter = 0
-            assertFalse(a.focusRecruit(id)); assertEquals(wallet, a[AdventureResource.TICKETS])
-            a.frontier = a.recruitFrontier(id); g.journey.chapter = a.recruitChapter(id)
-            assertEquals(cost, a.recruitCost(id)); assertTrue(a.focusRecruit(id))
-            assertEquals(wallet - cost, a[AdventureResource.TICKETS])
-        }
-        assertEquals(600L, a.shardUnlockCost(10)); assertEquals(240L, a.shardUnlockCost(8)); assertEquals(60L, a.shardUnlockCost(5))
-    }
-
-    @Test fun `secours de campagne elite rapporte un fragment sans debloquer le heros`() {
-        val a = game().adventure; a.frontier = 43
-        a.heroes.filter { it.owned }.forEach { it.level = 200 }
-        val fight = a.beginBattle(BattleMode.CAMPAIGN, 43, 9)!!; fight.advance(100f)
-        assertEquals(BattleOutcome.VICTORY, fight.outcome); assertTrue(a.settle(fight))
-        assertFalse(a.heroes[8].owned); assertEquals(1L, a.heroes[8].shards)
-        val retry = a.beginBattle(BattleMode.CAMPAIGN, 43, 9)!!; retry.advance(100f); assertTrue(a.settle(retry))
-        assertFalse(a.heroes[8].owned); assertEquals(1L, a.heroes[8].shards)
-    }
-
-    @Test fun `butin vise le heros possede choisi et replays ne generent pas invitations ou fragments elites`() {
-        val g = game(); val a = g.adventure
-        a.frontier = 10; a.stars[9] = 3
-        assertTrue(a.selectShardFocus(0)); assertFalse(a.selectShardFocus(10))
-        val tickets = a[AdventureResource.TICKETS]
-        assertTrue(a.sweep(9)); assertTrue(a.sweep(9))
-        assertEquals(tickets, a[AdventureResource.TICKETS]); assertEquals(6L, a.heroes[0].shards)
-        assertTrue(a.heroes.filter { !it.owned }.all { it.shards == 0L })
-        val restored = game(); assertTrue(HamletSave.fromJson(restored, HamletSave.toJson(g)))
-        assertEquals(0, restored.adventure.shardFocusHero)
-    }
-
-    @Test fun `aucun empilement auberges ne multiplie la vitesse invitations`() {
-        val g = game(); val a = g.adventure
-        g.objs[9990] = Obj(9990, "adventureInn", 0, 0).apply { tier = 3 }
-        g.objs[9991] = Obj(9991, "adventureInn", 0, 0).apply { tier = 3 }
-        val tickets = a[AdventureResource.TICKETS]
-        time += 8 * 60 * 60_000; a.advanceProduction()
-        assertEquals(tickets + 1, a[AdventureResource.TICKETS])
+    @Test fun `competences traits et recherches ont un plafond qui monte avec les etoiles et les batiments`() {
+        val g = game(); val a = g.adventure; starters(a)
+        a.bag[AdventureResource.BOOKS.ordinal] = 10_000_000
+        assertFalse(a.studySkill(0, 0))
+        a.frontier = HamletAdventure.FOURTH_SLOT
+        repeat(10) { a.studySkill(0, 0) }
+        assertEquals(a.skillCap(0), a.heroes[0].skills[0])
+        a.heroes[0].stars = 5; a.heroes[0].shards = 1_000
+        assertEquals(1, a.traitCap(0)); assertTrue(a.promoteTrait(0, 0)); assertFalse(a.promoteTrait(0, 0))
+        assertFalse(a.research(0))
+        g.coins = 1_000_000; g.xp = 1_000_000
+        val origin = g.realmOrigin()
+        outer@ for (y in origin until origin + g.realmSize()) for (x in origin until origin + g.realmSize())
+            if (g.canPlace("adventureAcademy", x, y, false)) { val o = g.buy("adventureAcademy", x, y, false)!!; time += o.def.build * 1000L + 1; break@outer }
+        repeat(30) { a.research(0) }
+        assertEquals(a.techCap(), a.tech[0])
     }
 }

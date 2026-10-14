@@ -62,8 +62,8 @@ class HamletArmory(private val g: HamletGame) {
     fun unlocked(rarity: EquipmentRarity) = g.sandbox || forgeRank() >= requiredForge(rarity) && g.adventure.frontier >= requiredFrontier(rarity)
     fun craftCost(slot: Int, set: GearSet, rarity: EquipmentRarity): GearCost {
         val tier = rarity.ordinal
-        val ore = longArrayOf(24, 55, 110, 210)[tier] + slot.coerceIn(0, 3) * 3L
-        val runes = longArrayOf(0, 5, 12, 24)[tier]
+        val ore = (longArrayOf(24, 55, 110, 210)[tier] + slot.coerceIn(0, 3) * 3L) * COST_MULT
+        val runes = longArrayOf(0, 5, 12, 24)[tier] * COST_MULT
         val crystal = longArrayOf(0, 0, 6, 18)[tier]
         val material = 6L + tier * 4L
         return GearCost(ore, runes, crystal,
@@ -103,8 +103,8 @@ class HamletArmory(private val g: HamletGame) {
     }
     fun enhanceCost(pieceId: Int): GearCost? = pieces[pieceId]?.let { enhancementCost(it.rarity, it.level) }
     private fun enhancementCost(rarity: EquipmentRarity, level: Int) = GearCost(
-        ore = 10L + (rarity.ordinal + 1) * 6L * level,
-        runes = (rarity.ordinal + 1L) * level,
+        ore = (10L + (rarity.ordinal + 1) * 6L * level) * COST_MULT,
+        runes = (rarity.ordinal + 1L) * level * COST_MULT,
         crystal = if (rarity.ordinal >= 2 && level % 3 == 0) rarity.ordinal.toLong() else 0)
     fun canEnhance(pieceId: Int): Boolean {
         val piece = pieces[pieceId] ?: return false
@@ -124,8 +124,8 @@ class HamletArmory(private val g: HamletGame) {
         for (level in 1 until piece.level) spent += enhancementCost(rarity, level)
         return spent
     }
-    private fun qualitySurcharge(rarity: EquipmentRarity) = GearCost(ore = rarity.ordinal * 12L,
-        runes = rarity.ordinal * 3L, crystal = rarity.ordinal * 2L)
+    private fun qualitySurcharge(rarity: EquipmentRarity) = GearCost(ore = rarity.ordinal * 12L * COST_MULT,
+        runes = rarity.ordinal * 3L * COST_MULT, crystal = rarity.ordinal * 2L)
     /** Pay the difference for both the recipe and every retained enhancement level.
      * Crafting cheaply then upgrading can never bypass the high-quality recipe cost. */
     fun qualityCost(pieceId: Int): GearCost? {
@@ -252,5 +252,9 @@ class HamletArmory(private val g: HamletGame) {
         assignments.clear(); assignments.putAll(other.assignments)
         nextId = other.nextId
     }
-    companion object { const val MAX_LEVEL = 10 }
+    companion object {
+        const val MAX_LEVEL = 10
+        /** Le minerai et les runes de l'équipement coûtent ce multiple : un ensemble complet se forge en semaines, pas en jours. */
+        const val COST_MULT = 6L
+    }
 }

@@ -99,8 +99,6 @@ internal class HamletNeighborsPage(private val context: Context, private val gam
     }
     private fun supplies() {
         nav.supplies(listOf(
-            HamletChip("coin", game.coins.toLong(), context.getString(R.string.hamlet_ui_number, game.coins.toLong()), context.getString(R.string.hamlet_ui_coins, game.coins.toLong())),
-            HamletChip("gem", game.gems.toLong(), context.getString(R.string.hamlet_ui_number, game.gems.toLong()), context.getString(R.string.hamlet_ui_gems, game.gems.toLong())),
             HamletChip("hourglass", game.workSeconds.toLong(), duration(game.workSeconds * 1000L),
                 context.getString(R.string.hamlet_ui_work_bank, duration(game.workSeconds * 1000L))),
         ))

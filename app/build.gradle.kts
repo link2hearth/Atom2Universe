@@ -159,6 +159,7 @@ val bancsDeMesure = listOf(
     "*.hamlet.HamletAdventureBenchTest",
     "*.hamlet.HamletProgressionBenchTest",
     "*.hamlet.HamletHeroCollectionBenchTest",
+    "*.hamlet.HamletBotBenchTest",
 )
 if (!providers.gradleProperty("bancsMesure").isPresent) {
     tasks.withType<Test>().configureEach {

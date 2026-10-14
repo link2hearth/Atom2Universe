@@ -63,7 +63,7 @@ class Crop(
 
 class HallLevel(val lvl: Int, val cost: Int, val realm: Int)
 
-class Quest(val key: String, val n: Int, val coins: Int, val xp: Int, val gems: Int = 0)
+class Quest(val key: String, val n: Int, val coins: Int, val xp: Int, val gems: Int = 0, val tickets: Int = 0)
 
 object Hamlet {
     const val GRID = 64
@@ -84,12 +84,18 @@ object Hamlet {
         HallLevel(26, 750_000, 50), HallLevel(32, 1_500_000, 54), HallLevel(38, 3_000_000, 58),
     )
 
-    /** XP cumulé nécessaire pour terminer chaque niveau. */
-    val xpTable = intArrayOf(
+    /** XP cumulé de base nécessaire pour terminer chaque niveau (avant l'allongement des niveaux élevés). */
+    private val baseXp = intArrayOf(
         0, 30, 80, 160, 300, 500, 800, 1200, 1800, 2600, 3700, 5500, 8000, 12000, 18000, 27000, 40000,
         60000, 90000, 130000, 185000, 230000, 285000, 350000, 430000, 520000, 630000, 760000, 910000,
         1080000, 1280000, 1500000, 1750000, 2050000, 2400000, 2800000, 3250000, 3750000, 4300000, 4900000,
     )
+    /** Au-delà du niveau 8 chaque niveau coûte de plus en plus : le dernier demande XP_BOOST fois plus. */
+    const val XP_BOOST = 4.5
+    val xpTable: IntArray = IntArray(baseXp.size) { l ->
+        val past = (l - 8).coerceAtLeast(0) / 32.0
+        (baseXp[l] * (1.0 + (XP_BOOST - 1.0) * Math.pow(past, 1.2))).toLong().coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+    }
 
     fun levelForXp(xp: Long): Int {
         var l = 1
@@ -114,44 +120,53 @@ object Hamlet {
 
     // ------------------------------------------------------------------ cultures
 
+    private fun crop(id: String, lvl: Int, time: Int, kind: String, leaf: Int, fruit: Int, magic: Boolean = false): Crop {
+        val earn = HamletEconomy.earn(time, magic)
+        return Crop(id, lvl, HamletEconomy.seed(earn), time, earn, HamletEconomy.xp(earn), kind, leaf, fruit, magic)
+    }
+
+    /**
+     * Les cultures : seuls la durée et le dessin changent d'une ligne à l'autre. Le gain, le prix de la graine et
+     * l'expérience viennent de [HamletEconomy] ; le niveau décide seulement de l'ouverture.
+     */
     val crops: List<Crop> = listOf(
-        Crop("corn", 1, 5, 45, 12, 2, "stalk", 0x6FB83A, 0xF2D12E),
-        Crop("wheat", 1, 12, 5 * MIN, 60, 8, "grain", 0xC9B04A, 0xE8CF5A),
+        crop("corn", 1, 45, "stalk", 0x6FB83A, 0xF2D12E),
+        crop("wheat", 1, 5 * MIN, "grain", 0xC9B04A, 0xE8CF5A),
         // Dès le départ, une plantation viable pour revenir le lendemain.
-        Crop("oats", 1, 8, 6 * HOUR, 48, 8, "grain", 0xA9B45D, 0xDED496),
-        Crop("radish", 2, 10, 2 * MIN, 30, 5, "root", 0x4F9D37, 0xD8334A),
-        Crop("carrots", 2, 20, 15 * MIN, 90, 16, "root", 0x4F9D37, 0xF08A1C),
-        Crop("turnips", 2, 15, 2 * HOUR, 95, 16, "root", 0x6C9C45, 0xD5B9D6),
-        Crop("lettuce", 3, 25, 20 * MIN, 98, 20, "head", 0x7CC545, 0xA6DC5A),
-        Crop("strawberries", 3, 30, 30 * MIN, 110, 26, "bush", 0x3F8F3A, 0xE0263A),
-        Crop("onions", 4, 30, HOUR, 130, 40, "root", 0x5AA03C, 0xE9D8A0),
-        Crop("potatoes", 5, 40, 2 * HOUR, 175, 52, "bush", 0x3F8F3A, 0xB98A52),
-        Crop("peas", 5, 35, 90 * MIN, 150, 46, "tall", 0x5AA83C, 0x8AD25A),
-        Crop("tomatoes", 6, 50, 3 * HOUR, 215, 62, "bush", 0x3F8F3A, 0xE0382A),
-        Crop("leeks", 6, 55, 4 * HOUR, 235, 68, "grain", 0x5AA83C, 0xDFF0C8),
-        Crop("lavender", 7, 70, 6 * HOUR, 285, 82, "flower", 0x6A8F4A, 0x9A6AD8),
-        Crop("squash", 7, 60, 5 * HOUR, 240, 75, "vine", 0x3F8F3A, 0xE8B02A),
-        Crop("cabbage", 8, 70, 6 * HOUR, 285, 88, "head", 0x6FB84A, 0x9AD66A),
-        Crop("peppers", 9, 80, 8 * HOUR, 330, 100, "bush", 0x3F8F3A, 0xE8402A),
-        Crop("glowcabbage", 10, 300, 2 * HOUR, 420, 500, "head", 0x6A5AD8, 0xC8A0FF, magic = true),
-        Crop("garlic", 10, 85, 9 * HOUR, 365, 110, "root", 0x5AA03C, 0xF3EEDD),
-        Crop("beets", 11, 90, 10 * HOUR, 400, 120, "root", 0x4F8D37, 0x9A1F52),
-        Crop("blueberries", 12, 100, 11 * HOUR, 440, 130, "bush", 0x3F8F3A, 0x3A4FC8),
-        Crop("pumpkins", 13, 110, 12 * HOUR, 480, 140, "vine", 0x3F8F3A, 0xF08A1C),
-        Crop("broccoli", 14, 120, 14 * HOUR, 540, 158, "head", 0x4F9D37, 0x2F8A3A),
-        Crop("starfruit", 15, 500, 3 * HOUR, 700, 850, "bush", 0x4F9D5A, 0xFFE24A, magic = true),
-        Crop("watermelon", 15, 130, 16 * HOUR, 600, 175, "vine", 0x3F8F3A, 0x2F8F4A),
-        Crop("cotton", 16, 140, 18 * HOUR, 660, 190, "bush", 0x4F8D37, 0xFFFFFF),
-        Crop("eggplant", 17, 150, 20 * HOUR, 720, 205, "bush", 0x3F8F3A, 0x6A2A8A),
-        Crop("hops", 18, 165, 22 * HOUR, 810, 228, "tall", 0x5AA83C, 0xB8D65A),
-        Crop("beans", 19, 180, 24 * HOUR, 900, 250, "tall", 0x4F9D37, 0x5AB83C),
-        Crop("tea", 19, 170, 28 * HOUR, 980, 262, "bush", 0x2F7A3A, 0x8FD05A),
-        Crop("starasparagus", 20, 800, 4 * HOUR, 1000, 1200, "grain", 0x6FB83A, 0xB8FFD8, magic = true),
-        Crop("sunflower", 21, 200, 30 * HOUR, 1080, 300, "flower", 0x4F8D37, 0xF2C21A),
-        Crop("grapes", 22, 220, 36 * HOUR, 1250, 340, "tall", 0x4F8D37, 0x7A2A8A),
-        Crop("saffron", 24, 260, 40 * HOUR, 1500, 400, "flower", 0x4F8D37, 0xA84AD8),
-        Crop("sunpineapple", 26, 1500, 8 * HOUR, 2200, 2600, "bush", 0x4FA83A, 0xF2B01A, magic = true),
-        Crop("moonmelon", 30, 2500, 12 * HOUR, 3600, 4200, "vine", 0x3F8F6A, 0x9AD8F2, magic = true),
+        crop("oats", 1, 6 * HOUR, "grain", 0xA9B45D, 0xDED496),
+        crop("radish", 2, 2 * MIN, "root", 0x4F9D37, 0xD8334A),
+        crop("carrots", 2, 15 * MIN, "root", 0x4F9D37, 0xF08A1C),
+        crop("turnips", 2, 2 * HOUR, "root", 0x6C9C45, 0xD5B9D6),
+        crop("lettuce", 3, 20 * MIN, "head", 0x7CC545, 0xA6DC5A),
+        crop("strawberries", 3, 30 * MIN, "bush", 0x3F8F3A, 0xE0263A),
+        crop("beans", 3, 24 * HOUR, "tall", 0x4F9D37, 0x5AB83C),
+        crop("onions", 4, HOUR, "root", 0x5AA03C, 0xE9D8A0),
+        crop("potatoes", 5, 2 * HOUR, "bush", 0x3F8F3A, 0xB98A52),
+        crop("peas", 5, 90 * MIN, "tall", 0x5AA83C, 0x8AD25A),
+        crop("tomatoes", 6, 3 * HOUR, "bush", 0x3F8F3A, 0xE0382A),
+        crop("leeks", 6, 4 * HOUR, "grain", 0x5AA83C, 0xDFF0C8),
+        crop("lavender", 7, 6 * HOUR, "flower", 0x6A8F4A, 0x9A6AD8),
+        crop("squash", 7, 5 * HOUR, "vine", 0x3F8F3A, 0xE8B02A),
+        crop("cabbage", 8, 6 * HOUR, "head", 0x6FB84A, 0x9AD66A),
+        crop("peppers", 9, 8 * HOUR, "bush", 0x3F8F3A, 0xE8402A),
+        crop("glowcabbage", 10, 2 * HOUR, "head", 0x6A5AD8, 0xC8A0FF, magic = true),
+        crop("garlic", 10, 9 * HOUR, "root", 0x5AA03C, 0xF3EEDD),
+        crop("beets", 11, 10 * HOUR, "root", 0x4F8D37, 0x9A1F52),
+        crop("blueberries", 12, 11 * HOUR, "bush", 0x3F8F3A, 0x3A4FC8),
+        crop("pumpkins", 13, 12 * HOUR, "vine", 0x3F8F3A, 0xF08A1C),
+        crop("broccoli", 14, 14 * HOUR, "head", 0x4F9D37, 0x2F8A3A),
+        crop("starfruit", 15, 3 * HOUR, "bush", 0x4F9D5A, 0xFFE24A, magic = true),
+        crop("watermelon", 15, 16 * HOUR, "vine", 0x3F8F3A, 0x2F8F4A),
+        crop("cotton", 16, 18 * HOUR, "bush", 0x4F8D37, 0xFFFFFF),
+        crop("eggplant", 17, 20 * HOUR, "bush", 0x3F8F3A, 0x6A2A8A),
+        crop("hops", 18, 22 * HOUR, "tall", 0x5AA83C, 0xB8D65A),
+        crop("tea", 19, 28 * HOUR, "bush", 0x2F7A3A, 0x8FD05A),
+        crop("starasparagus", 20, 4 * HOUR, "grain", 0x6FB83A, 0xB8FFD8, magic = true),
+        crop("sunflower", 21, 30 * HOUR, "flower", 0x4F8D37, 0xF2C21A),
+        crop("grapes", 22, 36 * HOUR, "tall", 0x4F8D37, 0x7A2A8A),
+        crop("saffron", 24, 40 * HOUR, "flower", 0x4F8D37, 0xA84AD8),
+        crop("sunpineapple", 26, 8 * HOUR, "bush", 0x4FA83A, 0xF2B01A, magic = true),
+        crop("moonmelon", 30, 12 * HOUR, "vine", 0x3F8F6A, 0x9AD8F2, magic = true),
     )
     val cropById: Map<String, Crop> = crops.associateBy { it.id }
 
@@ -546,16 +561,23 @@ object Hamlet {
 
     // ------------------------------------------------------------------ quêtes
 
+    /**
+     * La chaîne des quêtes du village. La deuxième offre le premier appel (un ticket), puis quelques-unes
+     * en offrent un autre au fil des grands jalons. Les quêtes de récolte demandent une culture précise.
+     */
     val quests = listOf(
-        Quest("planted", 3, 50, 10), Quest("harvested", 3, 80, 15), Quest("built_cottage", 1, 100, 20),
+        Quest("planted", 3, 50, 10), Quest("harvested", 3, 80, 15, tickets = 1), Quest("built_cottage", 1, 100, 20),
         Quest("taxes", 2, 100, 20), Quest("roads", 5, 120, 25), Quest("built_field", 2, 150, 30),
         Quest("built_bakery", 1, 300, 60), Quest("accepted", 1, 200, 40), Quest("delivered", 1, 300, 60),
         Quest("cat_decor", 5, 500, 120), Quest("cat_nature", 8, 500, 120), Quest("harvested", 20, 600, 150),
-        Quest("cat_home", 3, 1000, 250), Quest("water", 6, 400, 100), Quest("bridges", 1, 400, 100, 1),
+        Quest("harvest_carrots", 12, 700, 160), Quest("cat_home", 3, 1000, 250), Quest("upgrades", 1, 600, 150),
+        Quest("water", 6, 400, 100), Quest("bridges", 1, 400, 100, 1),
         Quest("tips", 5, 600, 150), Quest("gifts", 1, 500, 120), Quest("delivered", 10, 2500, 600),
-        Quest("built_fountain", 1, 1500, 400, 1), Quest("work_used", 300, 500, 200), Quest("castle", 1, 5000, 1500, 2),
-        Quest("earned", 25_000, 5000, 2000), Quest("cat_shop", 10, 6000, 2200), Quest("expanded", 3, 6000, 2500, 2),
-        Quest("pop", 40, 8000, 3000), Quest("harvested", 100, 8000, 3000), Quest("delivered", 50, 15000, 6000, 3),
-        Quest("earned", 250_000, 40000, 15000, 3), Quest("harvested", 500, 60000, 25000, 5), Quest("hall", 5, 100000, 40000, 10),
+        Quest("built_fountain", 1, 1500, 400, 1), Quest("work_used", 300, 500, 200), Quest("castle", 1, 5000, 1500, 2, tickets = 1),
+        Quest("earned", 25_000, 5000, 2000), Quest("cat_shop", 10, 6000, 2200), Quest("harvest_strawberries", 24, 4000, 1500),
+        Quest("expanded", 3, 6000, 2500, 2), Quest("pop", 40, 8000, 3000), Quest("upgrades", 6, 7000, 3000),
+        Quest("harvested", 100, 8000, 3000), Quest("harvest_pumpkins", 20, 9000, 3500), Quest("delivered", 50, 15000, 6000, 3, tickets = 1),
+        Quest("earned", 250_000, 40000, 15000, 3), Quest("harvest_grapes", 16, 30000, 12000, 2),
+        Quest("harvested", 500, 60000, 25000, 5), Quest("hall", 5, 100000, 40000, 10, tickets = 2),
     )
 }

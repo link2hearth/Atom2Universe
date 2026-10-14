@@ -2,7 +2,7 @@ package com.Atom2Universe.app.games.hamlet
 
 /** Local, typed village news. Text is resolved when displayed, so saved news follows the locale. */
 class HamletChronicle(private val game: HamletGame) {
-    enum class Kind { WELCOME, LEVEL, DELIVERY, GIFT, EXPANSION, HALL, REALM, VISIT, ORDER, PICKUP }
+    enum class Kind { WELCOME, LEVEL, DELIVERY, GIFT, EXPANSION, HALL, REALM, VISIT, ORDER, PICKUP, HERO, LEGEND }
     data class Entry(val kind: Kind, val at: Long, val subject: String = "", val actor: String = "", val amount: Long = 0)
     private val entries = ArrayList<Entry>(24)
     val rows: List<Entry> get() = entries.toList()

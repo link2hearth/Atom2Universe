@@ -6,17 +6,19 @@ import kotlin.random.Random
 
 class HamletSystemsTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(4)).apply { startNew(false) }
+    private fun game() = HamletGame({ time }, Random(4)).apply { startNew(false) }.withStarters()
     private fun building(g: HamletGame, id: String, tier: Int = 1) {
         // Scène préparée : les tests d'achat et placement existent dans HamletGameTest.
         g.objs[g.nextId] = Obj(g.nextId++, id, 0, 0).apply { this.tier = tier }
     }
     @Test fun `academie permet des recrues utiles sans entrainement a prix derisoire`() {
         val g = game(); val a = g.adventure
-        a.heroes.filter { it.owned }.forEach { it.level = 20 }
+        a.heroes.filter { it.owned }.forEach { it.stars = 5; it.level = 20 }
         a.heroes[2].owned = true
         assertEquals(1, a.effectiveLevel(2)); building(g, "adventureAcademy")
-        assertEquals(20, a.trainingLevel()); assertEquals(20, a.effectiveLevel(2))
+        // une recrue rattrape l'équipe, mais jamais au-delà du plafond de ses propres étoiles
+        assertEquals(20, a.trainingLevel()); assertEquals(10, a.effectiveLevel(2))
+        a.heroes[2].stars = 2; assertEquals(20, a.effectiveLevel(2))
         assertEquals(a.levelCost(0), a.levelCost(2))
         assertTrue(a.assign(2, 2)); assertTrue(a.numbers(2).attack > HamletHeroes.defs[2].attack * 2)
         a.add(AdventureResource.FOOD, a.levelCost(2)); assertTrue(a.levelUp(2)); assertEquals(21, a.heroes[2].level)

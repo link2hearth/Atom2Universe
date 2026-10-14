@@ -7,7 +7,7 @@ import kotlin.random.Random
 
 class HamletStewardshipTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(5)).apply { startNew(false) }
+    private fun game() = HamletGame({ time }, Random(5)).apply { startNew(false) }.withStarters()
 
     @Test fun `les gestes du village et les aventures alimentent le meme carnet sans doubles gains`() {
         val g = game(); val s = g.stewardship
@@ -17,10 +17,10 @@ class HamletStewardshipTest {
         assertTrue(s.canClaim(0)); assertTrue(s.canClaim(1)); assertTrue(s.canClaim(2)); assertFalse(s.canClaimChest())
         val before = g.adventure[AdventureResource.TICKETS]
         for (i in 0..2) { assertTrue(s.claim(i)); assertFalse(s.claim(i)) }
-        assertEquals(before + 4, g.adventure[AdventureResource.TICKETS])
+        assertEquals(before + 3, g.adventure[AdventureResource.TICKETS])
         val work = g.workSeconds
         assertTrue(s.claimChest()); assertFalse(s.claimChest())
-        assertEquals(before + 6, g.adventure[AdventureResource.TICKETS]); assertEquals(180, g.workSeconds - work)
+        assertEquals(before + 4, g.adventure[AdventureResource.TICKETS]); assertEquals(180, g.workSeconds - work)
         val bag = g.adventure.bag.clone()
         val restored = game(); assertTrue(HamletSave.fromJson(restored, HamletSave.toJson(g)))
         assertFalse(restored.stewardship.hasRewards()); assertArrayEquals(bag, restored.adventure.bag)
@@ -70,6 +70,7 @@ class HamletStewardshipTest {
     @Test fun `les heros renforcent les voyages et le retour recompense les deux systemes une seule fois`() {
         val g = game(); val j = g.journey
         val startingDuration = j.expeditionSeconds(0)
+        assertTrue(g.adventure.assign(0, 2))
         g.adventure.heroes[0].level = 20; g.adventure.heroes[0].stars = 3
         assertTrue(j.scoutingPower() > 0); assertTrue(j.expeditionSeconds(0) < startingDuration)
         assertTrue(j.startExpedition(0)); val arrival = j.arrival

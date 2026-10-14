@@ -97,6 +97,7 @@ object HamletGlyphs {
             "cup" -> { poly(c, 0xF8F4E4, -0.7f, -0.35f, 0.5f, -0.35f, 0.4f, 0.4f, -0.6f, 0.4f); lineP.color = Iso.opaque(0xF8F4E4); lineP.strokeWidth = 0.14f; rect.set(0.2f, -0.2f, 0.85f, 0.25f); c.drawArc(rect, -90f, 180f, false, lineP); oval(c, -0.95f, 0.35f, 0.75f, 0.65f, acc); box(c, -0.7f, -0.35f, 0.5f, -0.15f, acc) }
             "coins" -> { for (i in 0..2) { oval(c, -0.7f, 0.25f - i * 0.38f, 0.7f, 0.7f - i * 0.38f, 0xB8861A); oval(c, -0.7f, 0.1f - i * 0.38f, 0.7f, 0.55f - i * 0.38f, 0xF2C230) } }
             "gem" -> { poly(c, acc, -0.9f, -0.2f, -0.45f, -0.8f, 0.45f, -0.8f, 0.9f, -0.2f, 0f, 0.9f); poly(c, shade(acc, 0.4f), -0.45f, -0.8f, 0f, -0.2f, 0.45f, -0.8f); poly(c, shade(acc, -0.25f), 0f, -0.2f, 0.9f, -0.2f, 0f, 0.9f) }
+            "crystal" -> { poly(c, 0x6FB8E8, -0.35f, -0.9f, 0.35f, -0.9f, 0.7f, -0.1f, 0f, 0.95f, -0.7f, -0.1f); poly(c, 0xA9DDF6, -0.35f, -0.9f, 0f, -0.1f, -0.7f, -0.1f); poly(c, 0x4A8FBF, 0f, -0.1f, 0.7f, -0.1f, 0f, 0.95f) }
             "ore" -> { poly(c, 0x7A7A86, -0.9f, 0.6f, -0.7f, -0.3f, -0.1f, -0.8f, 0.6f, -0.5f, 0.95f, 0.3f, 0.7f, 0.8f); circ(c, -0.2f, 0f, 0.16f, 0xF2C230); circ(c, 0.35f, 0.25f, 0.13f, 0xF2C230); circ(c, 0.1f, -0.4f, 0.1f, 0xF2C230) }
             "ticket" -> { poly(c, 0xF2C230, -0.95f, -0.5f, 0.95f, -0.5f, 0.95f, -0.15f, 0.8f, 0f, 0.95f, 0.15f, 0.95f, 0.5f, -0.95f, 0.5f, -0.95f, 0.15f, -0.8f, 0f, -0.95f, -0.15f); ln(c, -0.3f, -0.4f, -0.3f, 0.4f, 0xC89A1A, 0.06f); circ(c, 0.35f, 0f, 0.17f, 0xC8392E) }
             "star" -> star(c, 0f, 0f, 0.95f, 0.4f, 0xF2C230)

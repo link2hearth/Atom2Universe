@@ -82,6 +82,7 @@ class HamletBattle(val mode: BattleMode, val stage: Int, val region: Int, val un
     private class Contribution(var damage: Double = 0.0, var healing: Double = 0.0,
         var protection: Double = 0.0, var kills: Int = 0)
     private val contributions = HashMap<Int, Contribution>()
+    private val initialAllies = units.count { !it.enemy && !it.summoned }
 
     init {
         for (u in units) {
@@ -381,6 +382,8 @@ class HamletBattle(val mode: BattleMode, val stage: Int, val region: Int, val un
         }
     }
     fun survivors() = units.count { !it.enemy && it.alive && !it.summoned }
+    /** Les héros entrés en combat (les invocations ne comptent pas). */
+    fun fielded() = initialAllies
     companion object {
         const val STEP = 0.05f
         private const val STEP_SECONDS = 0.05

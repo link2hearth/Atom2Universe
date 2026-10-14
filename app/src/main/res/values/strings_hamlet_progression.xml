@@ -5,7 +5,6 @@
     <string name="hamlet_armory_tab_2">Inventory</string>
     <string name="hamlet_armory_slot_empty">No crafted piece equipped</string>
     <string name="hamlet_progression_worn">%1$s: %2$s</string>
-    <string name="hamlet_progression_legacy_gear">Permanent training and equipment mastery</string>
     <string name="hamlet_progression_upgrade_building">Upgrade to rank %1$d · %2$d coins</string>
     <string name="hamlet_progression_rate">%1$s: %2$.1f per hour</string>
     <string name="hamlet_progression_supply_workshop">Supply workshops</string>

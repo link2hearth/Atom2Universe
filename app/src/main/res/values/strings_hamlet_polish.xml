@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hamlet_a_frontier_go">Back to the frontier</string>
-    <string name="hamlet_a_owned_filter">Recruited only · %1$d / %2$d</string>
     <string name="hamlet_a_next_stage">Next stage</string>
     <string name="hamlet_collect_direct_hint">Tap a golden reward in the village to collect it directly. Collect all unlocks after chapter %1$d.</string>
     <string name="hamlet_expedition_invitation_help">Expeditions award one invitation on the first visit and every fifth trip, up to two per day. Other supplies always remain available.</string>
-    <string name="hamlet_hero_target_cost">Recruit this hero · %1$d invitations</string>
-    <string name="hamlet_hero_duplicate_cost">Recruit again · %1$d invitations → %2$d shard</string>
     <string name="hamlet_hero_focus">Prioritize %1$s’s shards</string>
     <string name="hamlet_hero_focus_clear">Stop prioritizing %1$s</string>
     <string name="hamlet_hero_focus_help">Focus directs future adventure fragment rewards to this owned hero. Recruitment duplicates always belong to the hero drawn.</string>
     <string name="hamlet_hero_star_preview">Star %1$d: +%2$.1f%% health and attack</string>
     <string name="hamlet_hero_stars_max">%1$d stars: maximum</string>
-    <string name="hamlet_hero_target_short">From route %1$d · chapter %2$d</string>
 </resources>

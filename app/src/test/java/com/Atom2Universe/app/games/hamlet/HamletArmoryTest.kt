@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 class HamletArmoryTest {
     private var time = 1_800_000_000_000L
-    private fun game(sandbox: Boolean = false) = HamletGame({ time }, Random(9)).apply { startNew(sandbox) }
+    private fun game(sandbox: Boolean = false) = HamletGame({ time }, Random(9)).apply { startNew(sandbox) }.withStarters()
     private fun funded(): HamletGame = game().apply {
         coins = 1_000_000; xp = 1_000_000
         val origin = realmOrigin()
@@ -17,7 +17,7 @@ class HamletArmoryTest {
         val forge = buy("adventureForge", spot.first, spot.second, false)!!
         time += forge.def.build * 1000L + 1
         adventure.advanceProduction()
-        AdventureResource.entries.forEach { adventure.add(it, 10_000) }
+        AdventureResource.entries.forEach { adventure.add(it, 1_000_000) }
     }
 
     @Test fun `forge et progression ouvrent les recettes sans additionner les forges`() {
@@ -52,13 +52,12 @@ class HamletArmoryTest {
 
     @Test fun `transfert et remplacement gardent chaque piece une seule fois`() {
         val g = game(true); val a = g.armory
-        g.adventure.heroes[0].gear[0] = 15
         val first = a.craft(0, GearSet.HUNT, EquipmentRarity.RARE)!!
         val second = a.craft(0, GearSet.GALE, EquipmentRarity.EPIC)!!
         assertTrue(a.equip(0, first.id)); assertTrue(a.equip(7, second.id))
         assertTrue(a.equip(7, first.id)); assertNull(a.equipped(0, 0))
         assertEquals(first.id, a.equipped(7, 0)!!.id); assertNull(a.owner(second.id))
-        assertEquals(2, a.inventory.size); assertEquals(15, g.adventure.heroes[0].gear[0])
+        assertEquals(2, a.inventory.size)
         assertTrue(a.unequip(7, 0)); assertNull(a.owner(first.id)); assertEquals(2, a.inventory.size)
         assertFalse(a.equip(-1, first.id)); assertFalse(a.equip(0, 9999))
     }
@@ -136,12 +135,10 @@ class HamletArmoryTest {
         val g = game(true); val a = g.armory
         val p = a.craft(3, GearSet.GALE, EquipmentRarity.MYTHIC)!!
         assertTrue(a.enhance(p.id)); assertTrue(a.equip(11, p.id))
-        g.adventure.heroes[11].gear[3] = 18
         val restored = game()
         assertTrue(HamletSave.fromJson(restored, HamletSave.toJson(g)))
         assertEquals(a.inventory, restored.armory.inventory)
         assertEquals(p.id, restored.armory.equipped(11, 3)!!.id)
-        assertEquals(18, restored.adventure.heroes[11].gear[3])
         assertTrue(restored.armory.craft(0, GearSet.HUNT, EquipmentRarity.RARE)!!.id > p.id)
     }
 

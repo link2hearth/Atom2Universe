@@ -460,7 +460,7 @@ class HamletAdventureMapView(context: Context, var page: Int,
             c.drawText(number(stage + 1), p.x, p.y + r * 0.3f, paint)
             val kind = adventure.node(stage)
             if (kind == AdventureNode.BOSS) HamletGlyphs.draw(c, "star", p.x, p.y - r * 1.55f, r * 0.8f)
-            else if (kind == AdventureNode.RESCUE) HamletGlyphs.draw(c, "gift", p.x, p.y - r * 1.55f, r * 0.8f)
+            else if (kind == AdventureNode.TREASURE) HamletGlyphs.draw(c, "gift", p.x, p.y - r * 1.55f, r * 0.8f)
             else if (kind == AdventureNode.GATHER) HamletGlyphs.draw(c, "log", p.x, p.y - r * 1.55f, r * 0.7f)
             val stars = adventure.stars[stage] ?: 0
             for (j in 0 until stars) HamletGlyphs.draw(c, "star", p.x + (j - 1) * r * 0.55f, p.y + r * 1.4f, r * 0.44f)

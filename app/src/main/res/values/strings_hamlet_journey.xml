@@ -4,10 +4,9 @@
     <string name="hamlet_journey_ready">Journal •</string>
     <string name="hamlet_chapters">Chapters</string>
     <string name="hamlet_expeditions">Expeditions</string>
-    <string name="hamlet_companions">Companions</string>
     <string name="hamlet_research">Research</string>
     <string name="hamlet_work">Workshop</string>
-    <string name="hamlet_chapter_help">Build your village at your own pace. Chapter rewards unlock buildings, companions and new regions. Previous actions count; completed chapters remain yours.</string>
+    <string name="hamlet_chapter_help">Build your village at your own pace. Chapter rewards unlock buildings and new regions, and every second chapter brings an invitation. Previous actions count; completed chapters remain yours.</string>
     <string name="hamlet_chapter_title">%1$d · %2$s</string>
     <string name="hamlet_chapter_unlocks">Discoveries: %1$s</string>
     <string name="hamlet_chapter_requirements">Village level %1$d · Hall %2$d</string>
@@ -25,13 +24,6 @@
     <string name="hamlet_expedition_collect">Welcome the team back</string>
     <string name="hamlet_expedition_start">Set out</string>
     <string name="hamlet_region_detail">Chapter %1$d · Strength %2$d\nDuration: %3$s\n%4$d coins · %5$d provisions\nTrips completed: %6$d</string>
-    <string name="hamlet_companion_help">Three places in your team. Every trained rank adds 3 strength and 3%% in the companion’s speciality. Farmers boost crops and livestock, artisans boost houses and shops, scouts shorten expeditions. Team strength: %1$d.</string>
-    <string name="hamlet_companion_rank">Rank %1$d/5 · Recruited after chapter %2$d</string>
-    <string name="hamlet_companion_assigned">In team · Place %1$d</string>
-    <string name="hamlet_companion_assign">Choose team place</string>
-    <string name="hamlet_party_slot">Place %1$d · %2$s</string>
-    <string name="hamlet_party_empty">Empty</string>
-    <string name="hamlet_training_cost">Train · %1$d coins + %2$d provisions · Chapter %3$d</string>
     <string name="hamlet_research_help">Fifteen discoveries across three branches. Each rank adds a permanent bonus immediately, with no research timer. Spend provisions found on expeditions; no gems required.</string>
     <string name="hamlet_research_row">%1$s %2$s · Chapter %3$d</string>
     <string name="hamlet_research_cost">Research rank %1$d · %2$d coins + %3$d provisions</string>
@@ -69,7 +61,7 @@
     <string name="hamlet_chapter_8">Under the stars</string>
     <string name="hamlet_chapter_story_8">Observe the sky and bring rare seeds back to the village.</string>
     <string name="hamlet_chapter_9">The highland road</string>
-    <string name="hamlet_chapter_story_9">Train your companions, strengthen your workshops and open the highlands.</string>
+    <string name="hamlet_chapter_story_9">Train your heroes, strengthen your workshops and open the highlands.</string>
     <string name="hamlet_chapter_10">The academy</string>
     <string name="hamlet_chapter_story_10">Share discoveries with a new generation of residents.</string>
     <string name="hamlet_chapter_11">A village to celebrate</string>
@@ -86,18 +78,6 @@
     <string name="hamlet_region_story_4">Find rare plants along the glowing waterways.</string>
     <string name="hamlet_region_5">Cloud highlands</string>
     <string name="hamlet_region_story_5">The longest journey brings enough provisions for advanced discoveries.</string>
-    <string name="hamlet_companion_0">Lina · Gardener</string>
-    <string name="hamlet_companion_story_0" formatted="false">Lina shares her seed collection. Farming income +3% per rank.</string>
-    <string name="hamlet_companion_1">Basile · Carpenter</string>
-    <string name="hamlet_companion_story_1" formatted="false">Basile builds sturdy stalls. Home and shop income +3% per rank.</string>
-    <string name="hamlet_companion_2">Maël · Scout</string>
-    <string name="hamlet_companion_story_2" formatted="false">Maël finds shortcuts. Expedition duration −3% per rank.</string>
-    <string name="hamlet_companion_3">Alba · Herbalist</string>
-    <string name="hamlet_companion_story_3" formatted="false">Alba cares for animals and herbs. Farming income +3% per rank.</string>
-    <string name="hamlet_companion_4">Rose · Weaver</string>
-    <string name="hamlet_companion_story_4" formatted="false">Rose brings colourful crafts. Home and shop income +3% per rank.</string>
-    <string name="hamlet_companion_5">Orion · Stargazer</string>
-    <string name="hamlet_companion_story_5" formatted="false">Orion guides the team by the stars. Expedition duration −3% per rank.</string>
     <string name="hamlet_research_0">Cultivation</string>
     <string name="hamlet_research_story_0" formatted="false">Each rank: +3% crop, livestock and orchard income.</string>
     <string name="hamlet_research_1">Village crafts</string>

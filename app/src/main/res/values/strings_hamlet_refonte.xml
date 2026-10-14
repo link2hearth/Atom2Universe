@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_a_call_title">Call for travellers</string>
+    <string name="hamlet_a_tickets_line">Invitations: %1$d</string>
+    <string name="hamlet_a_collection_title">Your heroes (%1$d)</string>
+    <string name="hamlet_a_collection_help">Heroes you have not met stay hidden behind a question mark. Tap a hero to level up, add stars and learn skills. A golden card means a legend is stirring: follow it in the journal.</string>
+    <string name="hamlet_a_rumor_card">A legend stirs</string>
+    <string name="hamlet_a_unknown">\?</string>
+    <string name="hamlet_a_level_max">Level %1$d · maximum</string>
+    <string name="hamlet_a_skill_max">%1$s · level %2$d (max)</string>
+    <string name="hamlet_a_stars_hall">Next star · Hall rank %1$d</string>
+    <string name="hamlet_a_stars_hall_help">Stars are limited by your Hall. Raise the Hall in the village to take your heroes further. A star also raises the highest level a hero can reach.</string>
+    <string name="hamlet_chapter_call">an invitation</string>
+    <string name="hamlet_reveal_new">A NEW HERO</string>
+    <string name="hamlet_reveal_legend">A LEGEND ARRIVES</string>
+    <string name="hamlet_reveal_continue">Continue</string>
+    <string name="hamlet_legends">Legends</string>
+    <string name="hamlet_legends_help">Legendary heroes never answer a call. A rumor announces each one a chapter ahead. Then build the Stone Circle in the village and keep three vigils: each night asks for coins, crystals and late crops from your barn, then a real wait that nothing can shorten. You can prepare everything in advance. The last legend only comes once the other three stand with you.</string>
+    <string name="hamlet_legends_none">The village is quiet.</string>
+    <string name="hamlet_legend_done">The legend has come true.</string>
+    <string name="hamlet_legend_soon">The way is not open yet.</string>
+    <string name="hamlet_legend_gather">Only when the other three stand together.</string>
+    <string name="hamlet_legend_night">Night %1$d of %2$d</string>
+    <string name="hamlet_legend_burning">The fire burns · %1$s</string>
+    <string name="hamlet_legend_dawn">Greet the dawn</string>
+    <string name="hamlet_legend_hours">The vigil lasts %1$d h</string>
+    <string name="hamlet_legend_light">Light the vigil</string>
+    <string name="hamlet_legend_rumor_0">A light on the hill</string>
+    <string name="hamlet_legend_rumor_story_0">Travellers speak of a woman who walks in sunlight at dusk. Wounds close where she passes.</string>
+    <string name="hamlet_legend_rumor_1">The old forest path</string>
+    <string name="hamlet_legend_rumor_story_1">No arrow is ever found where a stranger vanished on the old path. Someone still keeps watch.</string>
+    <string name="hamlet_legend_rumor_2">A hammer in the night</string>
+    <string name="hamlet_legend_rumor_story_2">At every new moon a hammer rings from a forge nobody has ever seen. The blade it makes never rusts.</string>
+    <string name="hamlet_legend_rumor_3">Snow out of season</string>
+    <string name="hamlet_legend_rumor_story_3">Frost writes names on the windows at midsummer. It waits for three others to stand together.</string>
+    <string name="hamlet_need_coins">%1$,d coins</string>
+    <string name="hamlet_need_crystal">%1$,d crystals</string>
+    <string name="hamlet_need_crop">%1$s · %2$d / %3$d</string>
+    <string name="hamlet_crop_stock">barn %1$d</string>
+    <string name="hamlet_granary">Barn</string>
+    <string name="hamlet_granary_help">Every harvest puts crops in the barn, up to %1$d of each. Buildings use them to reach their next tier, the quests ask for them and so do the legends. A bigger Hall makes the barn bigger.</string>
+    <string name="hamlet_a_find">Lucky find!</string>
+    <string name="hamlet_a_first_clear">First victory!</string>
+</resources>

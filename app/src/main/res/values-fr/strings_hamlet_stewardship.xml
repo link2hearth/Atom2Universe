@@ -30,7 +30,7 @@
     <string name="hamlet_s_choice">%1$s · Rendement +%2$d%%</string>
     <string name="hamlet_s_unassign">Libérer ce métier</string>
     <string name="hamlet_s_expedition_link">Ton équipe de combat aide aussi les expéditions : +%1$d en exploration, −%2$d%% de trajet. La durée est figée au départ ; les héros restent disponibles.</string>
-    <string name="hamlet_s_expedition_loot">Rapporte aussi %1$d vivres, %2$d minerai, %3$d livres et %4$d invitation(s) pour tes héros.</string>
+    <string name="hamlet_s_expedition_loot">Rapporte aussi %1$d vivres, %2$d minerai, %3$d livres, %4$d cristaux et %5$d invitation(s) pour tes héros.</string>
     <string name="hamlet_s_facility_open">Gérer ce bâtiment</string>
     <string name="hamlet_s_village_bonus">\nBonus du métier d’un héros : +%1$d%% de revenus.</string>
 </resources>

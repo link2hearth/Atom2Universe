@@ -2,7 +2,10 @@ package com.Atom2Universe.app.games.hamlet
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.LightingColorFilter
 import android.graphics.Paint
+import android.graphics.RadialGradient
+import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
@@ -14,7 +17,7 @@ import com.Atom2Universe.app.games.hamlet.HamletUi.Weight
 
 /**
  * Le module Journal : la journée (collectes, tâches, fête), les chapitres, les expéditions, les
- * compagnons, les recherches, les coups de main et les métiers des héros. Une page à onglets,
+ * légendes, les recherches, les coups de main et les métiers des héros. Une page à onglets,
  * les explications derrière un « ? ».
  */
 internal class HamletJournalPage(private val context: Context, private val g: HamletGame, private val nav: HamletNav,
@@ -23,13 +26,13 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
         const val TODAY = 0
         const val CHAPTERS = 1
         const val EXPEDITIONS = 2
-        const val COMPANIONS = 3
+        const val LEGENDS = 3
         const val RESEARCH = 4
         const val WORK = 5
         const val POSTS = 6
-        private val LABELS = intArrayOf(R.string.hamlet_s_today, R.string.hamlet_chapters, R.string.hamlet_expeditions, R.string.hamlet_companions,
+        private val LABELS = intArrayOf(R.string.hamlet_s_today, R.string.hamlet_chapters, R.string.hamlet_expeditions, R.string.hamlet_legends,
             R.string.hamlet_research, R.string.hamlet_work, R.string.hamlet_s_posts)
-        private val GLYPHS = arrayOf("sun", "scroll", "ship", "people", "book", "hammer", "hat")
+        private val GLYPHS = arrayOf("sun", "scroll", "ship", "star", "book", "hammer", "hat")
     }
     private val j get() = g.journey
     private val state get() = g.stewardship
@@ -45,6 +48,7 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
     private var collectAction: Button? = null
     private var expeditionAction: Button? = null
     private var shown: List<Any>? = null
+    private val vigils = HashMap<Int, TextView>()
     private fun dp(v: Int) = HamletUi.dp(context, v)
     private fun s(id: Int, vararg args: Any) = if (args.isEmpty()) context.getString(id) else context.getString(id, *args)
     private fun byName(name: String): String {
@@ -132,6 +136,7 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
     override fun hide() = Unit
     override fun tick() {
         supplies()
+        for ((legend, label) in vigils) label.text = s(R.string.hamlet_legend_burning, duration(g.legends.timeLeft(legend)))
         countdown?.text = s(R.string.hamlet_expedition_running, name("region", j.expedition), duration(j.expeditionLeft()))
         readiness?.text = s(R.string.hamlet_s_ready, g.readyCount(), g.adventure.heroes.count { it.owned }, g.adventure.heroes.size)
         collectAction?.isEnabled = g.canCollectAll() && g.collectableCount() > 0
@@ -143,22 +148,20 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
         if (snapshot() != shown) render()
     }
     /** What may change on its own while the page is open: claimable tasks and chapters. */
-    private fun snapshot(): List<Any> = listOf(tab, state.claimed, (0..2).map { state.canClaim(it) }, state.canClaimChest(), j.chapter, j.canClaim(), j.expedition)
+    private fun snapshot(): List<Any> = listOf(tab, state.claimed, (0..2).map { state.canClaim(it) }, state.canClaimChest(), j.chapter, j.canClaim(), j.expedition, HamletLegends.defs.indices.map { g.legends.canFinish(it) })
     private fun supplies() {
         nav.supplies(listOf(
-            HamletChip("coin", g.coins.toLong(), s(R.string.hamlet_ui_number, g.coins.toLong()), s(R.string.hamlet_ui_coins, g.coins.toLong())),
-            HamletChip("gem", g.gems.toLong(), s(R.string.hamlet_ui_number, g.gems.toLong()), s(R.string.hamlet_ui_gems, g.gems.toLong())),
             HamletChip("crate", j.supplies.toLong(), s(R.string.hamlet_ui_number, j.supplies.toLong()), s(R.string.hamlet_ui_supplies, j.supplies.toLong())),
             HamletChip("hourglass", g.workSeconds.toLong(), duration(g.workSeconds * 1000L), s(R.string.hamlet_ui_work_bank, duration(g.workSeconds * 1000L))),
         ))
     }
     private fun render(preserve: Boolean = true) {
         val y = if (preserve) scroll.scrollY else 0
-        state.ensureDay(); rows.removeAllViews(); countdown = null; readiness = null; collectAction = null; expeditionAction = null
+        state.ensureDay(); rows.removeAllViews(); vigils.clear(); countdown = null; readiness = null; collectAction = null; expeditionAction = null
         for (i in 0 until tabs.childCount) HamletUi.choice(tabs.getChildAt(i) as Button, i == tab)
         tabScroll.post { tabScroll.smoothScrollTo((tabs.getChildAt(tab).left - dp(40)).coerceAtLeast(0), 0) }
         supplies()
-        when (tab) { TODAY -> today(); CHAPTERS -> chapters(); EXPEDITIONS -> expeditions(); COMPANIONS -> companions(); RESEARCH -> research(); WORK -> workshop(); else -> posts() }
+        when (tab) { TODAY -> today(); CHAPTERS -> chapters(); EXPEDITIONS -> expeditions(); LEGENDS -> legends(); RESEARCH -> research(); WORK -> workshop(); else -> posts() }
         shown = snapshot()
         scroll.post { scroll.scrollTo(0, y) }
     }
@@ -216,7 +219,7 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
             val box = card(s(R.string.hamlet_chapter_title, i + 1, name("chapter", i)), byName("hamlet_chapter_story_$i"), "scroll", done)
             val unlocks = HamletJourney.buildings.filterValues { it == i + 1 }.keys.map { itemName(it) }.toMutableList()
             HamletJourney.regions.forEachIndexed { r, def -> if (def.chapter == i + 1) unlocks.add(name("region", r)) }
-            if (i % 2 == 0) unlocks.add(name("companion", i / 2))
+            if (i % 2 == 1) unlocks.add(s(R.string.hamlet_chapter_call))
             if (i + 1 == HamletGame.COLLECT_ALL_CHAPTER) unlocks.add(s(R.string.hamlet_ui_collect))
             text(box, s(R.string.hamlet_chapter_unlocks, unlocks.joinToString(s(R.string.hamlet_list_separator))), small = true)
             if (done) continue
@@ -244,29 +247,63 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
             val r = HamletJourney.regions[i]
             val box = card(name("region", i), byName("hamlet_region_story_$i"), "map", j.explored[i] > 0)
             text(box, s(R.string.hamlet_region_detail, r.chapter, r.power, duration(j.expeditionSeconds(i) * 1000L), r.coins, r.supplies, j.explored[i]), small = true)
-            text(box, s(R.string.hamlet_s_expedition_loot, j.expeditionFood(i), j.expeditionOre(i), j.expeditionBooks(i), j.expeditionTickets(i)), small = true)
+            text(box, s(R.string.hamlet_s_expedition_loot, j.expeditionFood(i), j.expeditionOre(i), j.expeditionBooks(i), j.expeditionCrystal(i), j.expeditionTickets(i)), small = true)
             if (j.expedition < 0) action(box, s(R.string.hamlet_expedition_start), j.canExplore(i), Weight.MAIN, "ship") { j.startExpedition(i) }
         }
     }
-    private fun companions() {
-        section(s(R.string.hamlet_companions), s(R.string.hamlet_companion_help, j.power()))
-        for (i in j.companions.indices) {
-            val rank = j.companions[i]
-            val box = card(name("companion", i), byName("hamlet_companion_story_$i"), done = false)
-            if (rank == 0 && !g.sandbox) box.alpha = .75f
-            box.addView(Portrait(context, i), LinearLayout.LayoutParams(-1, dp(76)))
-            text(box, s(R.string.hamlet_companion_rank, rank, i * 2 + 1), small = true)
-            val slot = j.party.indexOf(i)
-            if (slot >= 0) text(box, s(R.string.hamlet_companion_assigned, slot + 1), color = HamletUi.GOOD)
-            if (rank > 0 || g.sandbox) {
-                button(box, s(R.string.hamlet_companion_assign), glyph = "people") {
-                    val labels = j.party.mapIndexed { place, hero -> s(R.string.hamlet_party_slot, place + 1, if (hero < 0) s(R.string.hamlet_party_empty) else name("companion", hero)) }
-                    HamletSheet.pick(context, s(R.string.hamlet_companion_assign), labels, slot) { place -> j.assign(i, place); nav.changed(); render() }
-                }
-                if (rank in 1..4) action(box, s(R.string.hamlet_training_cost, j.trainCoins(i), j.trainSupplies(i), rank * 2 + 1), j.canTrain(i), glyph = "star") { j.train(i) }
+    /** Les légendes : une rumeur, puis trois veillées au cercle de pierres. Aucune ne sort d'un appel. */
+    private fun legends() {
+        section(s(R.string.hamlet_legends), s(R.string.hamlet_legends_help))
+        val legends = g.legends
+        var any = false
+        for (i in HamletLegends.defs.indices) {
+            val def = HamletLegends.defs[i]
+            if (legends.owned(i)) {
+                any = true
+                val box = card(heroName(def.hero), byName("hamlet_a_hero_story_${def.hero}"), "star", done = true)
+                text(box, s(R.string.hamlet_legend_done), small = true, color = HamletUi.GOOD)
+                continue
             }
+            if (!legends.whispered(i)) continue
+            any = true
+            val box = card(byName("hamlet_legend_rumor_$i"), byName("hamlet_legend_rumor_story_$i"), "star")
+            box.addView(Silhouette(context, def.hero), LinearLayout.LayoutParams(-1, dp(110)))
+            if (!legends.opened(i)) {
+                text(box, s(if (def.requires.isEmpty()) R.string.hamlet_legend_soon else R.string.hamlet_legend_gather), small = true)
+                continue
+            }
+            val phase = legends.phase(i) ?: continue
+            text(box, s(R.string.hamlet_legend_night, legends.nights[i] + 1, def.phases.size), true)
+            if (legends.running(i)) {
+                vigils[i] = text(box, s(R.string.hamlet_legend_burning, duration(legends.timeLeft(i))))
+                if (legends.canFinish(i)) action(box, s(R.string.hamlet_legend_dawn), weight = Weight.MAIN, glyph = "star") { finishVigil(i) }
+                continue
+            }
+            need(box, itemName(HamletLegends.CIRCLE), legends.circleBuilt())
+            need(box, s(R.string.hamlet_need_coins, phase.coins), g.sandbox || g.coins >= phase.coins)
+            need(box, s(R.string.hamlet_need_crystal, phase.crystal), g.sandbox || g.adventure[AdventureResource.CRYSTAL] >= phase.crystal)
+            for (n in phase.needs) need(box, s(R.string.hamlet_need_crop, itemName("c_${n.crop}"), g.stock(n.crop), n.units), g.sandbox || g.stock(n.crop) >= n.units)
+            text(box, s(R.string.hamlet_legend_hours, phase.hours), small = true)
+            action(box, s(R.string.hamlet_legend_light), legends.canBegin(i), Weight.MAIN, "star") { legends.begin(i) }
         }
+        if (!any) text(rows, s(R.string.hamlet_legends_none), small = true, color = HamletUi.MUTED_LIGHT)
     }
+    /** Une condition de la veillée : verte quand elle est remplie, rouge sinon. */
+    private fun need(parent: LinearLayout, label: String, met: Boolean) {
+        text(parent, label, small = true, color = if (met) HamletUi.GOOD else HamletUi.BAD)
+    }
+    /** La dernière nuit révèle le héros en plein écran ; les autres nuits redessinent simplement la page. */
+    private fun finishVigil(legend: Int): Boolean {
+        val step = g.legends.finish(legend) ?: return false
+        val recruit = step.recruit
+        if (recruit != null) {
+            nav.changed(); render()
+            HamletHeroReveal.sequence(context, listOf(recruit.hero to true), nav.effects, nav.haptics) { nav.changed(); render() }
+            return false
+        }
+        return true
+    }
+
     private fun research() {
         section(s(R.string.hamlet_research), s(R.string.hamlet_research_help))
         for (i in j.research.indices) {
@@ -364,20 +401,16 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
         }
     }
 
-    /** Petits portraits entièrement dessinés, avec la couleur et l'outil du métier. */
-    private class Portrait(a: Context, private val hero: Int) : View(a) {
-        private val p = Paint(Paint.ANTI_ALIAS_FLAG)
+    /** Un héros qu'on ne connaît pas encore : sa silhouette noire sur un halo de braises, jamais ses couleurs. */
+    private class Silhouette(a: Context, private val hero: Int) : View(a) {
+        private val shade = Paint().apply { colorFilter = LightingColorFilter(0x00000000, 0x00120E0A) }
+        private val glow = Paint(Paint.ANTI_ALIAS_FLAG)
         override fun onDraw(c: Canvas) {
-            c.save(); c.translate(width / 2f, height / 2f); c.scale(height / 80f, height / 80f)
-            fun color(value: Int) { p.color = value or 0xFF000000.toInt() }
-            val colors = intArrayOf(0x678F53, 0xB17855, 0x547F9B, 0x9676A9, 0xB75F79, 0xC6A052)
-            color(0xD6CFB6); c.drawCircle(0f, 0f, 37f, p)
-            color(colors[hero]); c.drawRoundRect(-21f, 12f, 21f, 42f, 12f, 12f, p)
-            color(if (hero % 2 == 0) 0xE5B98E else 0xBF906B); c.drawOval(-17f, -25f, 17f, 17f, p)
-            color(0x514333); c.drawCircle(-6f, -3f, 2f, p); c.drawCircle(6f, -3f, 2f, p)
-            color(colors[hero]); c.drawRoundRect(-22f, -25f, 22f, -16f, 4f, 4f, p)
-            c.drawRoundRect(-15f, -35f, 15f, -20f, 6f, 6f, p)
-            HamletGlyphs.draw(c, arrayOf("flower", "wood", "map", "potion", "cloth", "star")[hero], 24f, 20f, 20f)
+            val size = minOf(width, height).toFloat()
+            glow.shader = RadialGradient(width / 2f, height * .55f, size * .75f, 0x66EAC779, 0x00EAC779, Shader.TileMode.CLAMP)
+            c.drawCircle(width / 2f, height * .55f, size * .75f, glow)
+            c.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), shade)
+            HamletCharacterArt.draw(c, true, hero, width / 2f, height.toFloat(), size)
             c.restore()
         }
     }

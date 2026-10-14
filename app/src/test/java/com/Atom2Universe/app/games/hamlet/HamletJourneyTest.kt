@@ -46,13 +46,19 @@ class HamletJourneyTest {
         assertTrue(Hamlet.defs.all { it.build <= 2 * Hamlet.HOUR })
     }
 
-    @Test fun `reclamer un chapitre ne paie pas deux fois et recrute un compagnon`() {
+    @Test fun `reclamer un chapitre ne paie pas deux fois et un chapitre sur deux offre un appel`() {
         val g = game(); g.xp = 80; g.stats["harvested"] = 8; g.stats["built_bench"] = 1
         assertTrue(g.journey.claim())
-        assertEquals(1, g.journey.chapter)
-        assertEquals(1, g.journey.companions[0]); assertEquals(0, g.journey.party[0])
+        assertEquals(1, g.journey.chapter); assertEquals(0L, g.adventure[AdventureResource.TICKETS])
+        assertEquals(0, g.adventure.ownedCount())
         val coins = g.coins; val supplies = g.journey.supplies
         assertFalse(g.journey.claim()); assertEquals(coins, g.coins); assertEquals(supplies, g.journey.supplies)
+        // le deuxième chapitre offre un appel
+        val h = game(); h.coins = 100_000; h.xp = 100_000
+        repeat(5) { buy(h, "cottage") }
+        h.stats["delivered"] = 6; h.stats["built_waypost"] = 1; h.journey.explored[0] = 2; h.journey.chapter = 1
+        assertTrue(h.journey.canClaim()); val before = h.adventure[AdventureResource.TICKETS]
+        assertTrue(h.journey.claim()); assertEquals(before + 1, h.adventure[AdventureResource.TICKETS])
     }
 
     @Test fun `une expedition exige une equipe puis donne une seule recompense meme hors ligne`() {
@@ -66,31 +72,30 @@ class HamletJourneyTest {
         assertFalse(j.collectExpedition()); assertEquals(coins, g.coins)
         j.chapter = 2
         assertFalse(j.startExpedition(1))
-        j.companions[0] = 1; assertTrue(j.assign(0, 0)); assertTrue(j.startExpedition(1))
+        j.research[2] = 1
+        assertTrue(j.startExpedition(1))
     }
 
-    @Test fun `recherche et entrainement respectent ressources chapitres et plafonds`() {
+    @Test fun `recherche respecte ressources chapitres et plafonds`() {
         val g = game(); val j = g.journey; g.coins = 1_000_000; j.supplies = 10_000
         assertFalse(j.study(0)); j.chapter = 2; assertTrue(j.study(0)); assertFalse(j.study(0))
         assertEquals(1, j.research[0]); assertEquals(999_600L, g.coins)
-        j.companions[0] = 1; assertFalse(j.train(0)); j.chapter = 12
-        assertTrue(j.train(0))
-        while (j.canTrain(0)) assertTrue(j.train(0))
-        assertEquals(5, j.companions[0]); assertFalse(j.train(0))
+        j.chapter = 12
         while (j.canResearch(0)) assertTrue(j.study(0))
         assertEquals(5, j.research[0]); assertFalse(j.study(0))
-        assertFalse(j.study(-1)); assertFalse(j.train(9)); assertFalse(j.assign(9, 0))
+        assertFalse(j.study(-1))
     }
 
-    @Test fun `les bonus ne multiplient pas un compagnon assigne deux fois et les dates sont figees`() {
+    @Test fun `les bonus de recherche et de heros raccourcissent les voyages sans changer les dates figees`() {
         val g = game(); val j = g.journey; j.chapter = 12
-        j.companions.fill(5); j.research.fill(5)
-        assertTrue(j.assign(2, 0)); assertTrue(j.assign(2, 1)); assertEquals(1, j.party.count { it == 2 })
-        j.assign(5, 2)
-        assertEquals(HamletJourney.regions[0].seconds * 70 / 100, j.expeditionSeconds(0))
+        j.research.fill(5)
+        assertEquals(HamletJourney.regions[0].seconds * 85 / 100, j.expeditionSeconds(0))
+        for (id in intArrayOf(2, 7, 0)) g.adventure.welcome(g.adventure.heroes[id])
+        g.adventure.heroes[2].stars = 5
+        assertTrue(j.expeditionSeconds(0) < HamletJourney.regions[0].seconds * 85 / 100)
         assertTrue(j.startExpedition(0)); val arrival = j.arrival
-        j.assign(0, 1); assertEquals(arrival, j.arrival)
-        assertEquals(30, j.bonus(Cat.FIELD))
+        g.adventure.heroes[2].stars = 0; assertEquals(arrival, j.arrival)
+        assertEquals(15, j.bonus(Cat.FIELD))
     }
 
     @Test fun `le petit atelier est gratuit repetable et sans penalite pour une erreur`() {
@@ -117,8 +122,9 @@ class HamletJourneyTest {
     }
 
     @Test fun `un voyage long est accelerable gratuitement et la reserve est consommee`() {
-        val g = game(); val j = g.journey; j.chapter = 12; j.companions.fill(5)
-        j.assign(0, 0); j.assign(1, 1); j.assign(3, 2)
+        val g = game(); val j = g.journey; j.chapter = 12; j.research.fill(5)
+        for (id in intArrayOf(2, 7, 0)) g.adventure.welcome(g.adventure.heroes[id])
+        g.adventure.heroes.filter { it.owned }.forEach { it.stars = 5 }
         assertTrue(j.startExpedition(5)); val left = j.expeditionLeft()
         g.workSeconds = 600
         assertTrue(g.workOnExpedition()); assertEquals(left - 300_000, j.expeditionLeft())
@@ -141,7 +147,7 @@ class HamletJourneyTest {
 
     @Test fun `la sauvegarde conserve progres equipe voyage et gestes de travail`() {
         val g = game(); val j = g.journey
-        j.chapter = 7; j.supplies = 113; j.research[0] = 2; j.companions[1] = 3; j.assign(1, 0)
+        j.chapter = 7; j.supplies = 113; j.research[0] = 2
         j.explored[2] = 8; j.startExpedition(1)
         g.beginWork(); repeat(4) { g.answerWork(g.workTool) }; g.workSeconds = 52
         val json = HamletSave.toJson(g); val other = game()

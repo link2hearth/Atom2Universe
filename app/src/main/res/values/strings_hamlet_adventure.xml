@@ -7,7 +7,7 @@
     <string name="hamlet_a_craft">Forge</string>
     <string name="hamlet_a_kingdom">Kingdom</string>
     <string name="hamlet_a_challenges">Trials</string>
-    <string name="hamlet_a_help_text">Build your village and explore with a team of heroes. Two protect the front line; keep healers and mages behind them. Grove counters Forge, Forge counters Dawn, Dawn counters Grove. Matching factions and hero bonds strengthen your formation.\nWelcome 36 heroes using invitations earned from village work, the inn and adventures. Draws have rarity guarantees; duplicates become fragments. Targeted recruitment and fragments let you choose a hero. Campaign rescues remain available. Improve levels, skills and complete equipment sets to progress.\nThe journal connects village duties, optional daily tasks and expeditions. Heroes on village duty still fight. On short visits, collect produce and expedition rewards, then use quick raids on mastered three-star routes. During longer sessions, keep fighting or gathering freely. Defeats cost nothing. No energy or daily attempt limits. Production continues while you are away.</string>
+    <string name="hamlet_a_help_text">Explore with a team of heroes. Two protect the front line; keep healers and mages behind them. Grove counters Forge, Forge counters Dawn, Dawn counters Grove. Matching factions strengthen your formation.\nYou start alone: the village quests and the first campaign routes offer your first invitations, and the first three travellers are already waiting. After that every invitation is a draw, and duplicates become fragments for stars. Legendary heroes are earned through vigils (journal, Legends). The team has three places, a fourth at route 10 and a fifth at route 40.\nA new route gives a rich reward once. Replaying it gives little, and sometimes a lucky find. On a short visit, collect the camp, harvest and claim what is ready. On a long one, keep fighting. Defeats cost nothing. No energy, no daily limit. The camp keeps producing while you are away, up to its storage.</string>
     <string name="hamlet_a_campaign">Route %1$d · %2$s</string>
     <string name="hamlet_a_explore_help">Power %1$d · %2$d slots</string>
     <string name="hamlet_a_previous">Previous area</string>
@@ -17,7 +17,6 @@
     <string name="hamlet_a_node_battle">Encounter</string>
     <string name="hamlet_a_node_gather">Resource clearing</string>
     <string name="hamlet_a_node_shrine">Ancient shrine</string>
-    <string name="hamlet_a_node_rescue">Hero rescue</string>
     <string name="hamlet_a_node_boss">Guardian boss</string>
     <string name="hamlet_a_loot_preview">Rank %1$d loot</string>
     <string name="hamlet_a_enemy_hint">Enemies: %1$s</string>
@@ -27,7 +26,7 @@
     <string name="hamlet_a_prepare">Team</string>
     <string name="hamlet_a_map_accessibility">Adventure map. Use the route selector below as an alternative to tapping nodes.</string>
     <string name="hamlet_a_next_unlocks">Coming up</string>
-    <string name="hamlet_a_unlock_roadmap">Route 5: bounties · 10: fifth hero, trials and first relic · 12: solo rivals · 20: raid boss and first pet · 24: sixth hero. More heroes are rescued along the way; further relics at 30 and 60, pets at 50 and 80. The route continues beyond 120.</string>
+    <string name="hamlet_a_unlock_roadmap">Route 5: bounties · 10: fourth place, trials and first relic · 12: solo rivals · 20: raid boss and first pet · 40: fifth place. Further relics at 30 and 60, pets at 50 and 80. The route continues beyond 120.</string>
     <string name="hamlet_a_gather_help">Tap the glowing resources.</string>
     <string name="hamlet_a_gather_accessibility">Gather eight resources. The Collect button below is an accessible alternative.</string>
     <string name="hamlet_a_gather_done">Materials gathered</string>
@@ -86,19 +85,15 @@
     <string name="hamlet_a_hero_choice">%1$s · %2$s · Level %3$d</string>
     <string name="hamlet_a_remove">Remove from team</string>
     <string name="hamlet_a_forge_title">Hero forge</string>
-    <string name="hamlet_a_forge_help">Craft and improve four pieces for each hero using ore and runes. Refining raises rarity with crystals. The weakest piece determines set mastery, so a complete set matters. No forging timer.</string>
     <string name="hamlet_a_build_named">Build %1$s in the village</string>
     <string name="hamlet_a_gear_row">%1$s · %2$s · Level %3$d</string>
     <string name="hamlet_a_gear_0">Weapon</string>
     <string name="hamlet_a_gear_1">Armour</string>
     <string name="hamlet_a_gear_2">Helmet</string>
     <string name="hamlet_a_gear_3">Boots</string>
-    <string name="hamlet_a_forge_cost">Improve · %1$d ore + %2$d runes</string>
-    <string name="hamlet_a_refine_cost">Refine · level %1$d + %2$d crystals</string>
-    <string name="hamlet_a_mastery">Set mastery: level %1$d · %2$s</string>
     <string name="hamlet_a_facilities">Adventure buildings</string>
     <string name="hamlet_a_facilities_help">Place these original buildings yourself. Completed facilities boost heroes, production and training; improve them through the village’s building actions.</string>
-    <string name="hamlet_a_facility_0">Earns coins through orders and recruitment invitations while away: one every 12 hours at rank 1, 9 hours 36 minutes at rank 2, or 8 hours at rank 3. Only the highest completed inn rank counts.</string>
+    <string name="hamlet_a_facility_0">Earns coins through orders and prepares an invitation while you are away: one every 24 hours at rank 1, 19 h 12 at rank 2, 16 hours at rank 3. Only the best finished inn counts.</string>
     <string name="hamlet_a_facility_1">Provides skill books, hero HP and access to ongoing research.</string>
     <string name="hamlet_a_facility_2">Produces ore and enables equipment crafting.</string>
     <string name="hamlet_a_facility_3">Increases resource production. Storage has no limit and cannot be raided.</string>
@@ -253,7 +248,6 @@
     <string name="hamlet_a_pity_in">%1$s in %2$d</string>
     <string name="hamlet_a_hero_kind">%1$s · %2$s</string>
     <string name="hamlet_a_hero_level">Lv. %1$d · %2$d★</string>
-    <string name="hamlet_a_rescue_short">Rescue on route %1$d</string>
     <string name="hamlet_a_training_level">Academy training: level %1$d</string>
     <string name="hamlet_a_faction_bonus_short">%1$s +%2$d%%</string>
     <string name="hamlet_a_workers_count">Assigned: %1$d / %2$d</string>

@@ -87,6 +87,13 @@ internal class HamletDock(context: Context, private val choose: (HamletModule) -
     /** [count] above zero shows a number, -1 a plain dot, 0 nothing. */
     fun badge(module: HamletModule, count: Int) { items[module.ordinal].badge = count }
     fun item(module: HamletModule): View = items[module.ordinal]
+    /** A module that is not earned yet stays out of the banner; it pops in the moment it opens. */
+    fun available(module: HamletModule, on: Boolean) {
+        val view = items[module.ordinal]
+        val was = view.visibility == View.VISIBLE
+        view.visibility = if (on) View.VISIBLE else View.GONE
+        if (on && !was) HamletMotion.pop(view, 1.3f)
+    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         shade = LinearGradient(0f, 0f, 0f, h.toFloat(), 0xFF1B3833.toInt(), 0xFF0B2320.toInt(), Shader.TileMode.CLAMP)

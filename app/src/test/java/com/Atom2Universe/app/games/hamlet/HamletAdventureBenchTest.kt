@@ -1,89 +1,51 @@
 package com.Atom2Universe.app.games.hamlet
 
-import org.junit.Assert.*
 import org.junit.Test
-import java.io.File
 import kotlin.random.Random
 
-/** Mesure le vrai moteur : aucune victoire par puissance, aucun revenu ajouté artificiellement.
- * Le bot choisit, récolte, rejoue et entraîne ; les coûts de temps incluent les gestes de menu.
- * Banc demandé pour équilibrer Hamlet, exclu des tests ordinaires. */
+/**
+ * Banc de la campagne : jusqu'où une équipe au plafond de niveau pour ses étoiles se laisse battre.
+ * Il sert à régler la courbe des ennemis (`enemyScale`), pas à vérifier une compilation. Exclu des tests ordinaires.
+ * ./gradlew testDebugUnitTest -PbancsMesure --tests "*HamletAdventureBenchTest*"
+ */
 class HamletAdventureBenchTest {
-    data class Result(val seed: Int, val policy: String, val hours: Double, val stages: Int,
-        val battles: Int, val losses: Int, val gathers: Int, val averageLevel: Double, val owned: Int,
-        val firstBossMinutes: Double, val allHeroesMinutes: Double, val food: Long)
+    private val start = 1_800_000_000_000L
 
-    private fun simulate(seed: Int, policy: String, budgetHours: Int): Result {
-        val start = 1_800_000_000_000L; var time = start
-        val g = HamletGame({ time }, Random(seed)).apply { startNew(false) }; val a = g.adventure
-        var battles = 0; var losses = 0; var gathers = 0; var firstBoss = -1.0; var allHeroes = -1.0
-        var farmNext = false
-        fun clock(seconds: Double) { time += (seconds * 1000).toLong(); g.tick() }
-        fun build(id: String) {
-            val def = Hamlet.byId.getValue(id)
-            if (g.objs.values.any { it.t == id } || g.level() < def.lvl || !g.canAfford(def)) return
-            val origin = g.realmOrigin()
-            for (y in origin until origin + g.realmSize()) for (x in origin until origin + g.realmSize()) if (g.canPlace(id, x, y, false)) {
-                if (g.buy(id, x, y, false) != null) clock(5.0)
-                return
+    private fun wins(team: IntArray, stars: Int, stage: Int, seeds: Int): Double {
+        var won = 0
+        for (seed in 0 until seeds) {
+            val g = HamletGame({ start }, Random(seed)).apply { startNew(false) }
+            val a = g.adventure
+            a.frontier = 400
+            team.forEachIndexed { slot, id ->
+                val h = a.heroes[id]; a.welcome(h)
+                h.stars = stars.coerceAtMost(HamletHeroes.STAR_CAP); h.level = a.levelCap(id)
+                for (i in h.skills.indices) h.skills[i] = a.skillCap(id)
+                a.assign(id, slot)
             }
+            val battle = a.beginBattle(BattleMode.CAMPAIGN, stage, seed * 31 + stage) ?: continue
+            var guard = 0
+            while (battle.outcome == BattleOutcome.RUNNING && guard++ < 40) battle.advance(30f)
+            if (battle.outcome == BattleOutcome.VICTORY) won++
         }
-        while (time - start < budgetHours * 3_600_000L && a.frontier < 240) {
-            if (policy == "four_visits" && (time - start) % 21_600_000L >= 8 * 60_000) {
-                time = start + ((time - start) / 21_600_000L + 1) * 21_600_000L; a.advanceProduction()
-                if (time - start >= budgetHours * 3_600_000L) break
-            }
-            if (policy != "basic") {
-                listOf("adventureForge", "adventureAcademy", "adventureYard", "adventureStore").forEach(::build)
-                // Toutes les améliorations restent payées avec le butin et la production réelle.
-                repeat(20) {
-                    val team = a.teams[a.selectedTeam].filter { it >= 0 }
-                    val lowest = team.minByOrNull { a.heroes[it].level }!!
-                    if (a.levelUp(lowest)) clock(2.0)
-                }
-                for (hero in a.teams[0].filter { it >= 0 }) {
-                    if (a.promote(hero)) clock(2.0)
-                    if (a.studySkill(hero, battles % 4)) clock(2.0)
-                    if (a.forge(hero, battles % 4)) clock(2.0)
-                }
-                if (a.frontier >= 6 && a.heroes[2].owned) a.assign(2, 1)
-                if (a.slotCount() >= 5 && a.heroes[4].owned) a.assign(4, 4)
-                if (a.slotCount() >= 6 && a.heroes[5].owned) a.assign(5, 5)
-                if (a.heroes[6].owned) a.assign(6, 0)
-                if (a.heroes[8].owned) a.assign(8, 3)
-                if (a.pets[0] > 0) a.selectSupport(true, 0)
-                if (a.relics[0] > 0) a.selectSupport(false, 0)
-            }
-            val stage = if (farmNext) (0 until a.frontier).lastOrNull { a.node(it) in listOf(AdventureNode.GATHER, AdventureNode.SHRINE) } ?: 1 else a.frontier
-            if (a.node(stage) in listOf(AdventureNode.GATHER, AdventureNode.SHRINE)) {
-                assertTrue(a.gather(stage)); gathers++; clock(16.0); farmNext = false
-            } else {
-                val b = a.beginBattle(BattleMode.CAMPAIGN, stage)!!; b.advance(100f)
-                assertTrue(a.settle(b)); battles++; clock(b.time.toDouble() / 2 + 5.0)
-                if (b.outcome == BattleOutcome.DEFEAT) { losses++; farmNext = a.frontier > 1 }
-            }
-            if (firstBoss < 0 && a.frontier >= 10) firstBoss = (time - start) / 60_000.0
-            if (allHeroes < 0 && a.heroes.all { it.owned }) allHeroes = (time - start) / 60_000.0
-            assertTrue(a.bag.all { it >= 0 }); assertTrue(a.heroes.all { it.shards >= 0 })
-        }
-        return Result(seed, policy, (time - start) / 3_600_000.0, a.frontier, battles, losses, gathers,
-            a.teams[0].filter { it >= 0 }.map { a.heroes[it].level }.average(), a.heroes.count { it.owned },
-            firstBoss, allHeroes, a[AdventureResource.FOOD])
+        return won * 100.0 / seeds
     }
-    @Test fun campaignEconomy() {
-        val results = ArrayList<Result>()
-        for (seed in 0..5) {
-            results.add(simulate(seed, "active", 6)); results.add(simulate(seed, "four_visits", 24 * 14))
-            results.add(simulate(seed, "basic", 1))
+
+    /** Pour chaque nombre d'étoiles, le pourcentage de victoires par tranche d'étapes (cinq héros, tout au plafond). */
+    @Test fun winsByStars() {
+        val team = intArrayOf(7, 1, 3, 0, 2)
+        val stages = listOf(0, 5, 9, 19, 29, 39, 49, 59, 79, 99, 119, 149, 199)
+        println("étoiles | " + stages.joinToString(" ") { "%4d".format(it + 1) })
+        for (stars in listOf(0, 1, 2, 3, 4, 5, 6, 8, 10)) {
+            println("%7d | ".format(stars) + stages.joinToString(" ") { "%4.0f".format(wins(team, stars, it, 6)) })
         }
-        val dir = File("build/reports/hamlet-adventure").also { it.mkdirs() }
-        File(dir, "economy.csv").writeText("seed,policy,hours,stages,battles,losses,gathers,heroLevel,owned,firstBossMinutes,allHeroesMinutes,food\n" + results.joinToString("\n") { r ->
-            listOf(r.seed, r.policy, r.hours, r.stages, r.battles, r.losses, r.gathers, r.averageLevel, r.owned, r.firstBossMinutes, r.allHeroesMinutes, r.food).joinToString(",")
-        })
-        for ((policy, rows) in results.groupBy { it.policy }) println("$policy: stages ${rows.minOf { it.stages }}..${rows.maxOf { it.stages }}, heroes ${rows.minOf { it.owned }}..${rows.maxOf { it.owned }}, boss ${rows.minOf { it.firstBossMinutes }}..${rows.maxOf { it.firstBossMinutes }} min")
-        // This legacy policy never summons: only four starters and three campaign rescues join it.
-        assertTrue(results.filter { it.policy == "active" }.all { it.stages >= 90 && it.owned == 7 && it.allHeroesMinutes < 0 })
-        assertTrue(results.filter { it.policy == "four_visits" }.all { it.stages > 120 })
-        assertTrue(results.filter { it.policy == "basic" }.all { it.stages < 40 })
+    }
+
+    /** Une équipe réduite à un, deux ou trois héros face aux premières étapes (début de partie). */
+    @Test fun smallTeamsEarly() {
+        val teams = listOf(intArrayOf(7), intArrayOf(7, 3), intArrayOf(7, 3, 0))
+        for (team in teams) for (stars in listOf(0, 1, 2)) {
+            println("${team.size} héros, $stars étoile(s) : " + (0..9).joinToString(" ") { "%3.0f".format(wins(team, stars, it, 6)) })
+        }
     }
 }

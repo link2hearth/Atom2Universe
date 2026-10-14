@@ -37,7 +37,7 @@ object HamletTransfer {
             val source = JSONObject(text.removePrefix("\uFEFF"))
             legacy = !source.has("version") && source.has("castle") && source.has("objs")
             val root = if (legacy) convertLegacy(source, issues) else source
-            if (root.optInt("version", 1) !in 1..5) issues.add(Issue("version"))
+            if (root.optInt("version", 1) !in 1..6) issues.add(Issue("version"))
             validateLand(root, issues)
             val ids = HashSet<Int>()
             val realmIds = hashSetOf(root.optInt("realmNo", 1))
@@ -149,7 +149,7 @@ object HamletTransfer {
         }
         convertLand(root)
         root.optJSONArray("parked")?.let { a -> for (i in 0 until a.length()) convertLand(a.getJSONObject(i)) }
-        root.put("version", 5).put("gems", root.optInt("mojo")).put("questBase", root.optLong("qbase"))
+        root.put("version", 6).put("gems", root.optInt("mojo")).put("questBase", root.optLong("qbase"))
         root.put("realmName", root.optString("name")).put("realmNo", root.optInt("realmNo", 1))
         if (!root.has("sandbox")) root.put("sandbox", true)
         root.optJSONObject("stats")?.let { stats ->
