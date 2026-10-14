@@ -1,0 +1,15 @@
+{
+  "id": "larix",
+  "sections": [
+    {"title": "Identification", "text": "Cette entrée de catalogue désigne Larix decidua, le mélèze d’Europe, et non une espèce distincte de la fiche Larix decidua. Les deux fiches renvoient donc l’une à l’autre. L’illustration du genre seul n’identifie pas davantage l’espèce."},
+    {"title": "Port et aiguilles", "text": "Le mélèze d’Europe est un grand conifère caduc, généralement haut de 15 à 22 m et large de 7 à 10 m. Ses aiguilles souples, longues de 2,5 à 3,5 cm, sont réunies en faisceaux denses sur de courts rameaux et jaunissent avant de tomber à l’automne."},
+    {"title": "Cônes et usages", "text": "Les petits cônes femelles dressés mesurent environ 2,5 à 4 cm. Son bois est utilisé en construction. Aucune partie n’est présentée ici comme aliment."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Larix (genre)", "url": "https://powo.science.kew.org/taxon/30017099-2"},
+    {"title": "Plants of the World Online — Larix decidua", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:262420-1/general-information"},
+    {"title": "KPU Plant Database — Larix decidua", "url": "https://plantdatabase.kpu.ca/PlantPrint/lade"},
+    {"title": "New Zealand Flora — Larix decidua", "url": "https://nzflora.info/factsheet/Taxon/Larix-decidua.html"}
+  ],
+  "related": ["larix_decidua"]
+}

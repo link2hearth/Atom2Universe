@@ -1,0 +1,14 @@
+{
+  "id": "lilium_cernuum",
+  "sections": [
+    {"title": "Form and habitat", "text": "This bulbous lily grows in thickets and grassy slopes of north-east China, Korea and the Russian Far East. Its stem can reach about 65 cm; the bulb is 2.5–4 cm across."},
+    {"title": "Leaves and flowers", "text": "The narrow leaves are about 8–12 cm long and 2–4 mm wide. A stem bears one to six pendent, spotted pink-purple flowers, with strongly recurved tepals 3.5–4.5 cm long. The capsule is about 1.2–2 cm long."},
+    {"title": "Caution", "text": "No food use of the bulb was verified for this species. True lilies (Lilium) can cause severe kidney poisoning in cats; keep every part of the plant away from cats."}
+  ],
+  "sources": [
+    {"title": "Flora of China — Lilium cernuum", "url": "https://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200027707"},
+    {"title": "USDA GRIN — Lilium cernuum", "url": "https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomydetail?id=22132"},
+    {"title": "Veterinary toxicology review — lilies and cats", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11220931/"}
+  ],
+  "related": []
+}

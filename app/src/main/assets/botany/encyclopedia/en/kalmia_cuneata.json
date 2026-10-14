@@ -1,0 +1,13 @@
+{
+  "id": "kalmia_cuneata",
+  "sections": [
+    {"title": "Form and habitat", "text": "This 0.5–1.5 m deciduous shrub is endemic to the coastal plain of the Carolinas, United States. It grows in wet, acidic habitats, including pine savannas and swamp margins."},
+    {"title": "Leaves and flowering", "text": "The alternate leaves are about 2–6 cm long and 0.5–3 cm wide. Cream flowers, often marked by an internal red band, are approximately 12–14 × 13–20 mm and occur in clusters of 3–10; they produce a capsule."},
+    {"title": "Caution", "text": "The sources consulted do not establish a food use or a species-specific toxicological risk. As a precaution, do not eat this plant."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Kalmia cuneata", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=250065668"},
+    {"title": "NatureServe Explorer — Kalmia cuneata", "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.161229/Kalmia_cuneata"}
+  ],
+  "related": ["kalmia_microphylla"]
+}

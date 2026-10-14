@@ -1,0 +1,14 @@
+{
+  "id": "lepidium_virginicum",
+  "sections": [
+    {"title": "Form and habitat", "text": "Virginia pepperweed is a 20–90 cm annual or biennial native to North America, found in open and disturbed places. It differs from L. latifolium, a rhizomatous perennial that is generally much larger."},
+    {"title": "Leaves, flowers and fruit", "text": "The basal leaves are spatulate and often deeply divided; stem leaves are narrower. The tiny white flowers usually have two stamens. The flattened, nearly round silicles are about 2.5–3.5 mm across and have a winged margin."},
+    {"title": "Edibility", "text": "Botanical references list the leaves and fruits as edible. This does not replace reliable identification or the usual precautions for wild plants."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Lepidium virginicum", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A138164-2/general-information"},
+    {"title": "World Flora Online — Lepidium virginicum", "url": "https://www.worldfloraonline.org/taxon/wfo-0000360833"},
+    {"title": "North Carolina Flora — Lepidium virginicum", "url": "https://auth1.dpr.ncparks.gov/flora/species_account.php?nrid_sciName=Lepidium+virginicum"}
+  ],
+  "related": ["lepidium_latifolium"]
+}

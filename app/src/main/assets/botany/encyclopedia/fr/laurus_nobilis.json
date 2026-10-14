@@ -1,0 +1,14 @@
+{
+  "id": "laurus_nobilis",
+  "sections": [
+    {"title": "Port et répartition", "text": "Le laurier-sauce est un arbre ou arbuste persistant dioïque, originaire du bassin méditerranéen et cultivé ailleurs. Il peut atteindre environ 12 m."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Ses feuilles alternes, coriaces et aromatiques mesurent environ 5,5 à 12 cm sur 1,8 à 3,2 cm. Les petites fleurs sont réunies en ombelles axillaires; les drupes ovales mûres deviennent violet-noir."},
+    {"title": "Usage culinaire", "text": "Les feuilles sont utilisées comme aromate, généralement retirées du plat avant consommation. Il faut distinguer le laurier-sauce d’autres plantes appelées laurier, dont certaines sont toxiques."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Laurus nobilis", "url": "https://powo.science.kew.org/taxon/465049-1"},
+    {"title": "Flora of China — Laurus nobilis", "url": "https://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200008765"},
+    {"title": "NParks Flora & Fauna Web — Laurus nobilis", "url": "https://www.nparks.gov.sg/FloraFaunaWeb/Flora/4/3/4369"}
+  ],
+  "related": []
+}

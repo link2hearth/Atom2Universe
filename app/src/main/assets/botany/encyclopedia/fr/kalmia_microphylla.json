@@ -1,0 +1,14 @@
+{
+  "id": "kalmia_microphylla",
+  "sections": [
+    {"title": "Port et habitat", "text": "Kalmia microphylla est un arbuste bas de l’ouest de l’Amérique du Nord, généralement haut de 5 à 80 cm. Il croît dans les prairies alpines, tourbières et autres sols humides."},
+    {"title": "Feuilles et fleurs", "text": "Ses feuilles opposées mesurent environ 1,5 à 4 cm de long sur 0,3 à 1,2 cm de large. Les fleurs roses à pourpres apparaissent en petits groupes et donnent des capsules."},
+    {"title": "Toxicité", "text": "Comme d’autres Kalmia, cette espèce contient des grayanotoxines; des intoxications du bétail sont documentées. Les sources consultées ne précisent pas les effets chez l’humain : ne pas consommer feuilles, fleurs ou fruits."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Kalmia microphylla", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=250065670"},
+    {"title": "Alaska Poisonous Plants — Bog Laurel (Kalmia microphylla)", "url": "https://sites.google.com/alaska.edu/akpoisonousplants/home/poisonous-plants-of-alaska-index/bog-laurel-kalmia-microphylla"},
+    {"title": "USDA NRCS — Plant Guide", "url": "https://www.nrcs.usda.gov/plantmaterials/mtpmctn13674.pdf"}
+  ],
+  "related": ["kalmia_cuneata"]
+}

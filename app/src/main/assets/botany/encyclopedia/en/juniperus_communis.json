@@ -1,0 +1,15 @@
+{
+  "id": "juniperus_communis",
+  "sections": [
+    {"title": "Form and habitat", "text": "Common juniper is a highly variable evergreen conifer, ranging from a prostrate shrub to a tree about 10 m tall. It grows in heathland, pasture and open woodland across the Northern Hemisphere."},
+    {"title": "Needles and cones", "text": "Its sharp needles occur in whorls of three and have a pale band on the upper surface. Plants are usually male or female. The fleshy female cones take two or three years to ripen and turn blue-black; they are about 5–10 mm across."},
+    {"title": "Uses and cautions", "text": "The ripe cones, often called juniper berries, are used as a spice and to flavour some drinks. Concentrated preparations or large amounts may irritate the kidneys; the European Medicines Agency advises against medicinal use during pregnancy and in kidney disease."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Juniperus communis", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30088655-2/general-information"},
+    {"title": "Flora van Nederland — Jeneverbes", "url": "https://heukels.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=2034"},
+    {"title": "European Forest Data Centre — Atlas of Forest Tree Species", "url": "https://ies-ows.jrc.ec.europa.eu/efdac/download/Atlas/pdf/Juniperus_communis.pdf"},
+    {"title": "European Medicines Agency — Juniperi galbulus (pseudo-fructus)", "url": "https://www.ema.europa.eu/en/medicines/herbal/juniperi-galbulus-pseudo-fructus"}
+  ],
+  "related": []
+}

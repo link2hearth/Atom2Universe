@@ -1,0 +1,14 @@
+{
+  "id": "leucaena_leucocephala",
+  "sections": [
+    {"title": "Port et répartition", "text": "Le leucaena est un arbuste ou petit arbre originaire du Mexique et d’Amérique centrale, aujourd’hui planté dans les régions tropicales. Sa hauteur varie fortement, d’environ 0,6 à 9 m."},
+    {"title": "Feuilles, fleurs et gousses", "text": "Les feuilles sont deux fois composées. Les capitules crème d’environ 2 cm donnent des gousses plates de 8 à 18 cm de long sur 1,4 à 2,1 cm de large."},
+    {"title": "Usages et toxicité", "text": "Les jeunes feuilles et gousses sont consommées comme légume dans certaines cuisines, mais la plante contient de la mimosine. Une ingestion importante peut intoxiquer les animaux; cet usage ne permet pas de recommander une consommation sans préparation ni quantité documentées."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Leucaena leucocephala", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A138955-2/general-information"},
+    {"title": "NParks Flora & Fauna Web — Leucaena leucocephala", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/3/4/3471"},
+    {"title": "US Forest Service — Leucaena leucocephala", "url": "https://www.fs.usda.gov/research/publications/misc/78156-1992-Leucaena-leucocephala.pdf"}
+  ],
+  "related": []
+}

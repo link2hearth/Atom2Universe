@@ -1,0 +1,14 @@
+{
+  "id": "lepidium_latifolium",
+  "sections": [
+    {"title": "Port et habitat", "text": "La passerage à larges feuilles est une vivace rhizomateuse d’Eurasie, souvent présente dans les sols humides, salés ou perturbés. Ses tiges fleuries atteignent environ 1 à 2 m; l’espèce est devenue envahissante dans plusieurs régions d’Amérique du Nord."},
+    {"title": "Feuilles et fruits", "text": "Les grandes feuilles basales contrastent avec les feuilles supérieures plus petites. De petites fleurs blanches forment des panicules ramifiées. Les fruits sont des silicules à deux loges, chacune contenant généralement une graine d’environ 1 mm."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire suffisamment documenté n’a été retenu ici. La plante se propage par des rhizomes profonds; éviter de la disséminer lors d’une récolte."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Lepidium latifolium", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A286262-1"},
+    {"title": "US Forest Service — Fire Effects Information System", "url": "https://research.fs.usda.gov/feis/species-reviews/leplat"},
+    {"title": "Burke Herbarium, University of Washington — Lepidium latifolium", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Lepidium+latifolium"}
+  ],
+  "related": ["lepidium_virginicum"]
+}

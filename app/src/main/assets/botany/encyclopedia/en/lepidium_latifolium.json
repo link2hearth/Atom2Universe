@@ -1,0 +1,14 @@
+{
+  "id": "lepidium_latifolium",
+  "sections": [
+    {"title": "Form and habitat", "text": "Broad-leaved pepperweed is a rhizomatous perennial from Eurasia, often found in wet, saline or disturbed soils. Its flowering stems reach about 1–2 m; it has become invasive in several parts of North America."},
+    {"title": "Leaves and fruit", "text": "Large basal leaves contrast with smaller upper leaves. Tiny white flowers form branched panicles. The fruits are two-chambered silicles, each usually containing a seed about 1 mm long."},
+    {"title": "Edibility", "text": "No adequately documented food use is included here. The plant spreads through deep rhizomes, so avoid spreading it while harvesting."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Lepidium latifolium", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A286262-1"},
+    {"title": "US Forest Service — Fire Effects Information System", "url": "https://research.fs.usda.gov/feis/species-reviews/leplat"},
+    {"title": "Burke Herbarium, University of Washington — Lepidium latifolium", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Lepidium+latifolium"}
+  ],
+  "related": ["lepidium_virginicum"]
+}

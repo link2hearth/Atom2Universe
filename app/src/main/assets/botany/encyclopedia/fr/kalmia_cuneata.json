@@ -1,0 +1,13 @@
+{
+  "id": "kalmia_cuneata",
+  "sections": [
+    {"title": "Port et milieu", "text": "Cet arbuste caduc de 0,5 à 1,5 m est endémique de la plaine côtière des Carolines, aux États-Unis. Il pousse dans des milieux humides et acides, notamment les pinèdes et lisières marécageuses."},
+    {"title": "Feuilles et floraison", "text": "Les feuilles alternes mesurent environ 2 à 6 cm de long sur 0,5 à 3 cm de large. Les fleurs crème, souvent marquées d’une bande rouge interne, mesurent approximativement 12–14 × 13–20 mm et sont réunies par groupes de 3 à 10; elles donnent une capsule."},
+    {"title": "Précaution", "text": "Les sources consultées ne permettent pas d’établir un usage alimentaire ou un risque toxicologique spécifique à cette espèce. Par prudence, ne pas consommer la plante."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Kalmia cuneata", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=250065668"},
+    {"title": "NatureServe Explorer — Kalmia cuneata", "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.161229/Kalmia_cuneata"}
+  ],
+  "related": ["kalmia_microphylla"]
+}

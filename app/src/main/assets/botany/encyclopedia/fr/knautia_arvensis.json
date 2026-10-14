@@ -1,0 +1,14 @@
+{
+  "id": "knautia_arvensis",
+  "sections": [
+    {"title": "Port et habitat", "text": "La knautie des champs est une vivace herbacée d’Europe et d’Asie tempérée, fréquente dans les prairies plutôt sèches et les bords de chemins. Ses tiges dressées atteignent environ 15 à 60 cm."},
+    {"title": "Feuilles et fleurs", "text": "Les feuilles sont opposées, souvent lobées à la base et plus étroites sur la tige. Les capitules bleu lilas mesurent environ 2 à 4 cm de diamètre. Chaque fleur produit un akène sec d’environ 5 à 6 mm."},
+    {"title": "Pollinisateurs et usage", "text": "Les fleurs fournissent du nectar aux insectes, notamment aux papillons. Aucune source solide d’usage alimentaire ni de toxicité particulière n’a été trouvée pour cette espèce."}
+  ],
+  "sources": [
+    {"title": "Flora van Nederland — Beemdkroon", "url": "https://heukels.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=4258"},
+    {"title": "Plants of the World Online — Knautia arvensis", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:319318-1"},
+    {"title": "Journal of Ecology — Knautia arvensis study", "url": "https://doi.org/10.1111/1365-2745.13938"}
+  ],
+  "related": []
+}
