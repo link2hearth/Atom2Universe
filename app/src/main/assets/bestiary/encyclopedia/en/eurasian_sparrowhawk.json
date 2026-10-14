@@ -1,0 +1,26 @@
+{
+  "id": "eurasian_sparrowhawk",
+  "name": "Eurasian Sparrowhawk",
+  "scientific": "Accipiter nisus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Eurasian sparrowhawk is one of the smallest diurnal birds of prey in Europe. It is a secretive hunter of small birds, and the female is much larger than the male.",
+    "identification": "In Britain a male weighs about 150 g and has a wing near 198 mm, while a female weighs about 266 g with a wing near 234 mm. The male has a blue-grey back and fine reddish barring below; the female is brown or grey-brown above with brown barring. Both have short, rounded wings, a long tail, long legs and a sharply hooked bill.",
+    "habitat": "In Britain the sparrowhawk breeds mostly in deciduous and coniferous woodland, and it prefers varied woodland. In lowland England it also uses hedges as cover for hunting.",
+    "diet": "It feeds mainly on small birds, which can make up most of its diet, especially ground-feeding species such as finches, thrushes and warblers. It occasionally takes small mammals. Males take lighter prey than the larger females, and birds are often plucked at a regular post.",
+    "behavior": "The sparrowhawk is solitary and territorial. It hunts by dashing out from cover or from a hidden perch to chase prey low and fast, and its flight alternates flapping with short glides. It also visits garden bird feeders in search of prey.",
+    "reproduction": "In Britain a typical clutch is four or five eggs, incubated by the female for about 33 days. The chicks fledge at around 28 days, and birds usually first breed at one year old. The male courts with aerial displays and does most of the early hunting for the family.",
+    "ecology": "As a predator of small birds and mammals, the sparrowhawk helps regulate their numbers. Adults have few natural enemies, though the northern goshawk sometimes raids nests. The species also carries blood parasites such as avian malaria.",
+    "conservation": "The IUCN lists the species as Least Concern worldwide, and in the UK it is Amber-listed. The UK breeding population was estimated at about 31,000 pairs in 2016. The oldest ringed bird reached 17 years."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/sparrowhawk",
+      "title": "Sparrowhawk — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Accipiter_nisus/",
+      "title": "Accipiter nisus — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

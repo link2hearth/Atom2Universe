@@ -44,14 +44,21 @@
     {
       "title": {
         "en": "Sparrowhawk — BTO BirdFacts, British Trust for Ornithology",
-        "fr": "Épervier d’Europe — BirdFacts du BTO, British Trust for Ornithology"
+        "fr": "Épervier d’Europe — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/sparrowhawk",
-      "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Male 151 g, wing 198 mm; female 266 g, wing 234 mm; clutch typically 4–5; incubation about 33 days; fledging about 28 days; first breeding at 1 year.",
-        "UK 31,000 pairs (2016); Amber-listed in the UK; IUCN Least Concern; longevity record 17 years."
+        "UK 31,000 pairs (2016); Amber-listed in the UK; IUCN Least Concern; longevity record 17 years.",
+        "British mean mass and wing length are about 151 g and 198 mm for males, and 266 g and 234 mm for females."
       ]
     },
     {
@@ -61,7 +68,14 @@
       },
       "url": "https://animaldiversity.org/accounts/Accipiter_nisus/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "diet", "behavior", "reproduction", "ecology"],
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "Small birds make up most of the diet; ambush hunting from a hidden perch; solitary and territorial; males court with aerial displays.",
         "Few predators (goshawk sometimes raids nests); hosts blood parasites including avian malaria. Conservation status of this page not used."

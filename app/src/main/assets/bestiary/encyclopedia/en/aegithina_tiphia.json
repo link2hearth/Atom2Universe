@@ -1,0 +1,42 @@
+{
+  "id": "aegithina_tiphia",
+  "name": "Common iora",
+  "scientific": "Aegithina tiphia",
+  "group": "birds",
+  "sections": {
+    "overview": "The common iora is a small, active songbird native to South and Southeast Asia. It searches tree foliage for insects and is often heard before it is seen. In breeding plumage the male becomes strikingly black and yellow, while females and non-breeding males are mostly greenish above and yellow below. It is a resident species across a very broad range and can use parks, gardens, scrub and woodland edges.",
+    "identification": "This sparrow-sized bird measures about 12–14.5 cm long. A dependable wingspan, mass range or body-height and width measurement was not found in the species sources reviewed. The breeding male has a black cap, mantle, wings and tail contrasting with bright yellow underparts; the upperparts can be flecked yellow and the wings have two white bars. The female has yellow-green upperparts and lemon-yellow underparts, with blackish wings edged in white. A non-breeding male resembles the female but retains more black in the wings and tail. The bold white wing bars and seasonal male plumage are useful in distinguishing it from other small yellow-green canopy birds; check the season because male appearance changes markedly.",
+    "habitat": "It inhabits open woodland, forest edges, scrub, mangroves, farms, plantations, rural gardens and urban parks. It occurs from the Indian subcontinent east through mainland Southeast Asia to parts of the Indonesian archipelago and the Philippines. Although it uses disturbed landscapes, it is less associated with closed forest than with open, leafy habitats where it can forage through the canopy.",
+    "diet": "It feeds mainly on insects and other small invertebrates, including insect eggs and larvae. It gleans prey from leaves, twigs and branches, sometimes hanging upside down while searching the underside of foliage. The available references support an insectivorous diet; fruit is not established as a major food source for this species.",
+    "behavior": "The iora forages actively among the canopy and often travels in pairs or small groups; it may join mixed-species feeding flocks. During courtship, the male fluffs his plumage, rises into the air while whistling and spirals back down to a perch. Breeding pairs become particularly vocal and conspicuous within their territories, while non-breeding birds are quieter and easier to overlook.",
+    "reproduction": "The pair builds a small cup-shaped nest in a tree or shrub, using plant fibres and spider silk to bind the structure. Typical clutches contain about two to three eggs, and incubation lasts around 14 days in the compiled species references. Breeding seasons vary with location; in Singapore pairs are especially vocal and conspicuous during the April survey period, while other parts of the range have different seasonal schedules.",
+    "ecology": "As an insect-eating canopy bird, it contributes to the food web of open forests and wooded urban habitats. It is adaptable to gardens, plantations and degraded forest, but remains associated with trees and leafy cover. Its feeding activity and bright breeding display make it a conspicuous part of local bird communities during the nesting season.",
+    "conservation": "BirdLife International's 2024 assessment lists the species as Least Concern because of its very large range. However, global population size and trend are unknown, and the category does not show that every regional population is stable. The species is common in many localities and tolerates some habitat modification, but local tree cover remains important."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/common-iora-aegithina-tiphia",
+      "title": "Common Iora — BirdLife International DataZone species factsheet"
+    },
+    {
+      "url": "https://www.nparks.gov.sg/docs/default-source/resources/2025/4703npb_ebook---spread.pdf",
+      "title": "Common Iora — National Parks Board, Singapore, urban biodiversity guide"
+    },
+    {
+      "url": "https://singaporebirds.com/species/common-iora",
+      "title": "Common Iora — Birds of Singapore, Bird Society of Singapore"
+    },
+    {
+      "url": "https://doi.org/10.2173/bow.comior1.01",
+      "title": "Common Iora — Birds of the World, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/common.iora.html",
+      "title": "Common Iora — Oiseaux.net, English-language account with global references"
+    },
+    {
+      "url": "https://indiabiodiversity.org/species/show/239362",
+      "title": "Aegithina tiphia — India Biodiversity Portal"
+    }
+  ]
+}

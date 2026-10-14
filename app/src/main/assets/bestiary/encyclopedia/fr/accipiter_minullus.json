@@ -1,0 +1,38 @@
+{
+  "id": "accipiter_minullus",
+  "name": "Épervier minule",
+  "scientific": "Accipiter minullus",
+  "group": "birds",
+  "sections": {
+    "overview": "L’épervier minule est l’un des plus petits rapaces d’Afrique. Il vit dans les milieux boisés d’Afrique orientale et australe, où il chasse rapidement entre les arbres de petits oiseaux et d’autres petits vertébrés. Certaines listes récentes le placent aussi dans le genre Tachyspiza ; cette fiche conserve le nom scientifique du projet, Accipiter minullus.",
+    "identification": "Ce petit rapace compact a la tête et le dessus gris à noirâtre, le dessous clair finement barré, les pattes et la cire jaunes, ainsi qu’une longue queue barrée de sombre. L’adulte a les yeux jaunes, qui peuvent devenir orangés ou rougeâtres pendant la reproduction ; le jeune est plus brun dessus et tacheté, plutôt que barré, dessous. Il mesure environ 23 à 27 cm de long, pour une envergure d’environ 39 à 52 cm. Les fourchettes de masse publiées sont approximativement de 74 à 85 g chez les mâles et de 68 à 105 g chez les femelles ; leur chevauchement et les faibles effectifs empêchent de s’en servir pour déterminer le sexe sur le terrain. Aucune mesure utile de hauteur ou de largeur corporelle n’a été trouvée. Deux taches blanches visibles près de la base du dessus de la queue aident à reconnaître l’oiseau posé ou en vol ; le distinguer du plus grand autour tachiro et du proche épervier shikra par la taille, les yeux et l’ensemble du plumage.",
+    "habitat": "Il préfère les bosquets denses, les lisières forestières, les galeries boisées et les vallées arborées, ainsi que les peuplements d’arbres au sein des savanes et certains quartiers suburbains. Il est présent depuis l’Éthiopie et l’Afrique orientale vers le sud, à travers l’Afrique centrale et australe, jusqu’à l’Afrique du Sud. Il est généralement sédentaire, malgré de possibles déplacements locaux. Il évite les grandes forêts pluviales continues, moins favorables à sa manière de chasser et à l’accès aux proies.",
+    "diet": "Les petites espèces d’oiseaux constituent ses proies principales ; il les capture lors d’une poursuite soudaine, rapide et basse, lancée depuis un couvert. Il prend également de petits lézards et d’autres vertébrés ; des références régionales signalent aussi des grenouilles, de petits mammifères et des insectes. Le régime varie avec les proies disponibles et ces listes générales ne signifient pas que chaque groupe représente une part égale de son alimentation.",
+    "behavior": "On le rencontre généralement seul ou en couple ; il chasse depuis un perchoir ou en s’élançant entre les feuillages. Son corps compact et sa longue queue facilitent les manœuvres entre les branches. Une femelle en reproduction peut défendre vigoureusement le nid contre les oiseaux qui s’en approchent. L’espèce est discrète et peut passer inaperçue même là où elle est présente.",
+    "reproduction": "Le couple niche dans un arbre ; la femelle couve tandis que le mâle apporte de la nourriture et contribue à défendre le nid. La taille de ponte et les dates de reproduction varient selon les régions ; des références d’Afrique australe rapportent une à trois œufs, valeur qu’il ne faut pas généraliser à toute l’aire. Les données directes sur l’incubation et l’envol des jeunes sont inégales selon les régions.",
+    "ecology": "Prédateur agile de petits oiseaux, il participe aux réseaux alimentaires des boisements et capture aussi des reptiles, des mammifères et des insectes. Il utilise les forêts naturelles ainsi que des bouquets d’arbres dans les paysages ouverts, y compris certains peuplements plantés. Une référence régionale suggère qu’il peut localement profiter de plantations d’arbres exotiques, sans que cela démontre une hausse de la population à l’échelle du continent.",
+    "conservation": "Les références consultées classent l’espèce en préoccupation mineure et lui attribuent une vaste aire en Afrique subsaharienne. Ce statut ne signifie pas qu’aucun déclin local ne se produise lorsque les boisements sont défrichés ou fragmentés. Les tendances actuelles et l’abondance précise restent peu quantifiées dans l’ensemble des pays concernés."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Accipiter_minullus/",
+      "title": "Épervier minule — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://newmansbirds.com/birds/little-sparrowhawk/",
+      "title": "Épervier minule — Newman's Birds of Southern Africa"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/little.sparrowhawk.html",
+      "title": "Épervier minule — fiche espèce Oiseaux.net"
+    },
+    {
+      "url": "https://sabap2.birdmap.africa/docs/sabap1/157.pdf",
+      "title": "Accipiter minullus — atlas des oiseaux d’Afrique australe SABAP2"
+    },
+    {
+      "url": "https://namibian.org/nature/wildlife/individual?category_name=birds&family_name=Accipitridae&name=little-sparrowhawk&sub_category=1",
+      "title": "Épervier minule — fiche espèce Namibia Nature Foundation"
+    }
+  ]
+}

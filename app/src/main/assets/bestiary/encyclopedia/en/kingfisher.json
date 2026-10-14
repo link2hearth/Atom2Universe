@@ -1,0 +1,74 @@
+{
+  "id": "kingfisher",
+  "name": "Common kingfisher",
+  "scientific": "Alcedo atthis",
+  "group": "birds",
+  "sections": {
+    "overview": "The Common kingfisher is a small hunter of waterways, often watching fish from a low branch before plunging into the water. It ranges across Europe, North Africa and much of Asia. A European synthesis of ringing records found movement most marked in northern populations, while most adults and juveniles were sedentary; winter dispersal varies by region and age. Its piping call can reveal the bird before its bright colours do.",
+    "identification": "Adults are typically 16–17 cm long. The compact body carries a long dark bill, blue-green upperparts and orange underparts. The blue is structural: a spongy keratin-and-air layer in the feather barbs, branches along its shaft, coherently scatters light, rather than relying on blue pigment. Both sexes look alike at a distance, but the female’s lower bill is orange-red with a dark tip, whereas the male’s bill is almost entirely black. British ringing samples average 39 g for adults and 36 g for juveniles.",
+    "habitat": "It uses slow rivers, streams, canals, lakes and marshes where fish can be watched from a perch and caught in shallow water. Clear water can make prey easier to see, but field studies also find kingfishers in small wetlands and ponds away from the nest, so a riverbank alone does not define its feeding habitat. Open, steep earth or sand banks provide places to excavate a nesting tunnel. Bank reinforcement, channel straightening and intensive river works remove nesting faces and can sever feeding reaches and habitat corridors.",
+    "diet": "Small fish make up most of the diet, although aquatic insect larvae and crustaceans are also taken. It watches from a perch, then dives after a fish; surface refraction shifts the prey’s apparent position. Experiments with this species found more attacks and higher capture success in shallow tanks, consistent with prey being more accessible there. After a catch, it beats the fish against its perch to stun it, swallows it head-first, and later regurgitates indigestible bones in a pellet. A study on Italy’s River Ticino found fish in pellets collected at resting sites from March to October 2019, documenting diet outside nesting but not in winter.",
+    "behavior": "Outside courtship and nesting, adults usually forage alone and defend stretches of water that supply dependable fish and perches. A rival may be chased or confronted in a prolonged display, and fights can become physical. Courtship includes the male presenting fish to the female, linking food delivery with pair formation.",
+    "reproduction": "The pair excavates a tunnel in an earth or sand bank, usually ending in a bare chamber. In Britain, five to seven eggs are typical. Both adults incubate for about 20 days, and the naked, dependent chicks remain in the nest for roughly 23–26 days. Hampshire nest observations found that fish delivered grew larger as nestlings developed. In observations from Chiplun, Maharashtra, both parents fed chicks, and fledglings continued begging near the nest for about a week. In Britain, one or two broods are usual and three are recorded in favourable seasons.",
+    "ecology": "The kingfisher catches small fish and aquatic invertebrates, while its eggs and nestlings can be preyed upon by snakes and other ground-dwelling animals. In the River Ticino, pellet analysis found mainly common native fish and fewer introduced fish than expected from their availability, showing how this local predator selects prey.",
+    "conservation": "Cold snaps can freeze fishing waters and cause heavy mortality. Pollution, sediment and river engineering can reduce prey visibility or remove nesting banks. North Rhine-Westphalia’s state nature conservation agency identifies bank reinforcement, channel modification, contaminated runoff and disturbance at nest sites as local pressures. BirdLife’s 2024 global IUCN record classifies the species as Least Concern. In the 2021 European assessment, published by the EU in 2022, it is also Least Concern, though the trend remains downward at a slower rate than in 2015, when it was Vulnerable. These dated assessments use different geographic scales and do not establish that every regional population is secure."
+  },
+  "sources": [
+    {
+      "url": "https://orbi.uliege.be/handle/2268/111532",
+      "title": "Migration et déplacements du martin pêcheur Alcedo atthis en Europe — Aves"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/kingfisher",
+      "title": "Kingfisher — BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/kingfisher",
+      "title": "Kingfisher — RSPB species account"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Alcedo_atthis/",
+      "title": "Alcedo atthis — Animal Diversity Web, University of Michigan Museum of Zoology"
+    },
+    {
+      "url": "https://doi.org/10.22920/PNIE.2021.2.1.21",
+      "title": "Microstructures in Blue Feathers of the Common Kingfisher — National Institute of Ecology, Republic of Korea"
+    },
+    {
+      "url": "https://doi.org/10.1186/s40657-021-00267-4",
+      "title": "Using miniaturized GPS archival tags to assess home range features of a small plunge-diving bird: the European Kingfisher — Avian Research"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.beproc.2013.04.012",
+      "title": "An experimental evaluation of the influence of water depth and bottom color on the Common kingfisher’s foraging performance — Behavioural Processes"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10452-020-09817-2",
+      "title": "Kingfisher diet and prey selection from pellets under resting sites on the River Ticino — Aquatic Ecology"
+    },
+    {
+      "url": "https://doi.org/10.1080/00063659609460999",
+      "title": "Foods brought to the nest by breeding Kingfishers Alcedo atthis in the New Forest — Bird Study"
+    },
+    {
+      "url": "https://indianbirds.in/pdfs/IB_20_1_FinalPrintReady.pdf",
+      "title": "Breeding biology of the Common Kingfisher Alcedo atthis from Chiplun, Maharashtra, India — Indian BIRDS"
+    },
+    {
+      "url": "https://artenschutz.naturschutzinformationen.nrw.de/artenschutz/de/arten/gruppe/voegel/schutzziele/102951",
+      "title": "Kingfisher — Species protection information, North Rhine-Westphalia State Nature Conservation Agency"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-2.RLTS.T22683027A264589271.en",
+      "title": "Alcedo atthis — The IUCN Red List of Threatened Species 2024, BirdLife International"
+    },
+    {
+      "url": "https://www.birdlife.org/wp-content/uploads/2022/05/BirdLife-European-Red-List-of-Birds-2021.pdf.pdf",
+      "title": "European Red List of Birds 2021 — BirdLife International"
+    },
+    {
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/birds/kingfisher/",
+      "title": "Common Kingfisher — Woodland Trust species account"
+    }
+  ]
+}

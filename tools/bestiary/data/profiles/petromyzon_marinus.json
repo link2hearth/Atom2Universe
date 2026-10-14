@@ -12,8 +12,8 @@
       "fr": "La lamproie marine est un poisson sans mâchoires, de forme anguilliforme, de l’Atlantique Nord. Les adultes vivent en mer en parasites d’autres poissons et remontent les rivières pour se reproduire une seule fois. Des populations enclavées existent dans certains lacs nord-américains, et dans les Grands Lacs elle est une envahisseuse redoutée."
     },
     "identification": {
-      "en": "The body is scaleless and cartilaginous, with no jaws and no paired fins. The mouth is a round suction disc lined with horny teeth, with a rasping tongue inside. There is a single nostril, an eye on each side of the head, seven gill openings and two dorsal fins. Adults are brownish-gray and usually reach 60 cm, rarely up to 120 cm.",
-      "fr": "Le corps est sans écailles et cartilagineux, sans mâchoires ni nageoires paires. La bouche est un disque de succion rond garni de dents cornées, avec une langue râpeuse à l’intérieur. On compte une seule narine, un œil de chaque côté de la tête, sept orifices branchiaux et deux nageoires dorsales. Les adultes sont gris-brun et atteignent le plus souvent 60 cm, rarement jusqu’à 120 cm."
+      "en": "The body is scaleless and cartilaginous, with no jaws and no paired fins. The mouth is a round suction disc lined with horny teeth, with a rasping tongue inside. There is a single nostril, an eye on each side of the head, seven gill openings and two dorsal fins. Adults are brownish-gray and usually reach 60 cm, rarely up to 120 cm. FishBase lists a maximum published mass of 2.5 kg; this is a recorded maximum, not a typical adult weight. No sex-specific mass or body width was found.",
+      "fr": "Le corps est sans écailles et cartilagineux, sans mâchoires ni nageoires paires. La bouche est un disque de succion rond garni de dents cornées, avec une langue râpeuse à l’intérieur. On compte une seule narine, un œil de chaque côté de la tête, sept orifices branchiaux et deux nageoires dorsales. Les adultes sont gris-brun et atteignent le plus souvent 60 cm, rarement jusqu’à 120 cm. FishBase indique une masse maximale publiée de 2,5 kg; il s’agit d’un record, non d’un poids typique d’adulte. Aucune masse selon le sexe ni largeur du corps n’a été trouvée."
     },
     "habitat": {
       "en": "It is anadromous: adults live in the sea and return to freshwater to breed. Its range runs from Norway and Iceland south to North Africa in the Northeast Atlantic, and from Labrador to the Gulf coast of Florida in the west. Larvae live in streams with sandy or gravelly bottoms and slow edges.",
@@ -48,10 +48,19 @@
       },
       "url": "https://www.fishbase.se/summary/Petromyzon-marinus.html",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Max 120 cm, common 60 cm; range Norway/Iceland to North Africa and Labrador to Florida; larvae burrow about 5.5–8 years (range 2–19+); adults 20–36 months at sea; spawning at 10–18 °C, eggs hatch in 7–14 days.",
-        "Least Concern, assessed 29 May 2022; parasitic on fishes and marine mammals."
+        "Least Concern, assessed 29 May 2022; parasitic on fishes and marine mammals.",
+        "Lists common adult length of 60 cm and maximum published mass of 2.5 kg; this is not a typical weight."
       ]
     },
     {
@@ -61,7 +70,14 @@
       },
       "url": "https://animaldiversity.org/accounts/Petromyzon_marinus/",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "Jawless, scaleless, cartilaginous; single nostril, seven gill openings, two dorsal fins, no paired fins; adults stop feeding at maturity; pheromones used during spawning.",
         "Introduced to the Great Lakes; parasitism contributed to the collapse of commercial fisheries."
@@ -74,7 +90,14 @@
       },
       "url": "https://www.glfc.org/sea-lamprey.php",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "diet", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Suction disc with horny teeth and rasping tongue; female can produce up to 100,000 eggs; first recorded in Lake Ontario in 1835.",
         "Upper Great Lakes lake trout catch fell from about 15 million pounds to about 300,000 pounds by the early 1960s; control by lampricides, barriers and traps."

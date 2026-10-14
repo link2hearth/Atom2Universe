@@ -1,0 +1,26 @@
+{
+  "id": "tufted_duck",
+  "name": "Fuligule morillon",
+  "scientific": "Aythya fuligula",
+  "group": "birds",
+  "sections": {
+    "overview": "Le fuligule morillon est un canard plongeur trapu des lacs et des étangs, nommé d’après la huppe retombante à l’arrière de sa tête. Il est courant dans une grande partie de la Grande-Bretagne, y compris sur les plans d’eau des parcs urbains.",
+    "identification": "En Grande-Bretagne, les adultes pèsent environ 850 g, les mâles un peu plus que les femelles, avec une aile d’environ 205 mm. Le mâle est noir avec les flancs blancs et l’œil jaune vif; la femelle est brune avec le ventre blanc et a aussi l’œil jaune. Les deux ont une huppe, plus longue et plus noire chez le mâle, et du blanc sous l’aile.",
+    "habitat": "En période de reproduction, il fréquente surtout les lacs, mais aussi les étangs, et niche dans la végétation dense près de l’eau. En hiver, il se répartit sur une grande partie de la Grande-Bretagne, sur les lacs et les étangs, y compris en ville. Pour nicher, il préfère les lacs peu profonds bordés de roseaux denses.",
+    "diet": "Il plonge pour se nourrir d’invertébrés aquatiques et de mollusques bivalves, parmi lesquels des moules comme la moule zébrée tiennent une place importante. Il mange aussi un peu de matière végétale. Les canetons mangent d’abord des insectes à la surface de l’eau.",
+    "behavior": "Le fuligule morillon est très aquatique et plonge souvent, parfois en bondissant légèrement hors de l’eau pour amorcer sa plongée. Les oiseaux sont grégaires en dehors de la reproduction, tandis que les mâles défendent un territoire autour des nids au printemps. La parade comprend des plongeons du bec et des étirements du cou, et les effectifs hivernaux britanniques sont renforcés par des visiteurs venus jusqu’au centre de la Russie.",
+    "reproduction": "En Grande-Bretagne, une couvée compte typiquement huit à onze œufs, couvés par la femelle pendant environ 25 jours. Les poussins couverts de duvet se nourrissent seuls peu après l’éclosion et volent vers 45 à 50 jours. Seule la femelle prodigue des soins directs, et les oiseaux se reproduisent en général pour la première fois à un an.",
+    "ecology": "Plongeur qui se nourrit de moules et d’autres invertébrés, le fuligule morillon peut influencer fortement ces populations de proies. Les œufs et les jeunes sont la proie des corneilles et des mammifères, et les adultes celle des renards et de grands rapaces; les femelles qui couvent comptent sur leur camouflage. Il héberge aussi un parasite qui utilise des mollusques comme hôte intermédiaire.",
+    "conservation": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale, mais elle est considérée comme quasi menacée en Europe, et sur la liste verte au Royaume-Uni. La Grande-Bretagne compte environ 17 000 couples nicheurs (2016) et environ 140 000 oiseaux hivernants, bien que l’effectif hivernal ait baissé de 21 % entre 1998 et 2023. Le plus vieil oiseau bagué a vécu plus de 24 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/tufted-duck",
+      "title": "Fuligule morillon — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Aythya_fuligula/",
+      "title": "Aythya fuligula — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "acanthoscurria_geniculata",
+  "name": "Mygale à genoux blancs",
+  "scientific": "Acanthoscurria geniculata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Acanthoscurria geniculata est une grande mygale terrestre originaire du Brésil. Son corps sombre et les bandes claires très visibles aux articulations des pattes lui valent son nom de mygale à genoux blancs. Elle appartient à la famille des Theraphosidae, les mygales du Nouveau Monde, et est souvent étudiée en laboratoire pour le développement des araignées, même si son comportement sauvage reste peu documenté.",
+    "identification": "Cette araignée robuste et velue a le corps brun foncé à presque noir, avec de nettes bandes blanches à crème autour des articulations des pattes ; l’abdomen peut porter des soies roussâtres ou rosées. Elle possède quatre paires de pattes marcheuses, comme les autres araignées, et la femelle adulte est généralement plus grande et plus lourde que le mâle mature. Les références consacrées à l’espèce indiquent souvent environ 8 à 10 cm de longueur de corps et 18 à 20 cm d’envergure diagonale des pattes ; ces chiffres proviennent surtout de fiches d’élevage, et non de mesures morphométriques standardisées sur des populations sauvages. Aucune fourchette fiable de hauteur, largeur ou masse, ni comparaison mesurée entre les sexes, n’a été trouvée. Les bandes claires aux articulations sont le meilleur critère visuel ; la taille seule ne suffit pas, car plusieurs grandes mygales brésiliennes se ressemblent.",
+    "habitat": "Les spécimens de musée situent l’espèce au Brésil, notamment dans les États du Pará, de Roraima, de Rondônia et du Mato Grosso. Le zoo de Cincinnati décrit un habitat de forêt tropicale dans le bassin amazonien. Cette mygale terrestre est associée au sol forestier, mais les études de terrain détaillées sur ses terriers, l’usage saisonnier de l’habitat et le microclimat sont rares ; les conditions de captivité ne doivent pas être prises pour des observations naturelles.",
+    "diet": "Comme les autres mygales, c’est une araignée prédatrice qui capture des proies animales et les immobilise avec ses chélicères et son venin. Le zoo de Cincinnati cite les insectes, les lézards et les petits mammifères dans son régime, mais les proportions de ces proies à l’état sauvage ne sont pas établies. Il ne faut donc pas déduire un régime naturel précis à partir d’un menu de captivité.",
+    "behavior": "Elle chasse au sol et peut saisir une proie par une brusque détente. Comme d’autres mygales du Nouveau Monde, elle possède sur l’abdomen des soies urticantes qu’elle peut frotter ou projeter vers une menace ; elles irritent la peau et particulièrement les yeux. Une morsure défensive est également possible : il ne faut pas manipuler l’animal. Sa popularité en captivité ne permet pas de savoir à quelle fréquence elle sort ou se montre en forêt.",
+    "reproduction": "La femelle fabrique et garde un cocon d’œufs. Une fiche du zoo de Cincinnati indique 50 à 200 œufs par cocon, tandis qu’une étude embryologique en laboratoire a observé un cocon d’environ 2 000 œufs ; ces valeurs divergentes montrent que le nombre varie selon l’individu et les conditions. L’étude décrit les embryons et les cocons, mais ne permet pas d’établir une taille de ponte habituelle dans la nature ni une saison de reproduction générale.",
+    "ecology": "En tant que grand prédateur terrestre, elle participe au réseau alimentaire des invertébrés des forêts tropicales brésiliennes. Les sources consultées ne quantifient ni l’ensemble de ses proies, ni ses prédateurs naturels, ni ses effets sur les populations locales. Les spécimens de musée et les observations en captivité sont bien mieux documentés que son écologie directe ; il faut donc rester prudent sur son abondance et son rôle dans l’écosystème.",
+    "conservation": "Les sources examinées ne donnent pas d’évaluation actuelle de l’UICN, de tendance démographique ni de statut de conservation quantifié pour Acanthoscurria geniculata. Sa présence dans les collections de musée et le commerce d’animaux ne prouve pas que les populations sauvages soient en sécurité. Il faudrait davantage de données de terrain pour évaluer sa répartition, son abondance et les menaces locales éventuelles."
+  },
+  "sources": [
+    {
+      "url": "https://www.tarantupedia.com/theraphosinae/acanthoscurria/acanthoscurria-geniculata",
+      "title": "Acanthoscurria geniculata — Tarantupedia, taxonomie des Theraphosidae et spécimens"
+    },
+    {
+      "url": "https://cincinnatizoo.org/animals-archive/brazilian-white-knee-tarantula/",
+      "title": "Mygale à genoux blancs — zoo et jardin botanique de Cincinnati"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7128004/",
+      "title": "Développement embryonnaire et induction d’un axe secondaire chez la mygale à genoux blancs Acanthoscurria geniculata"
+    },
+    {
+      "url": "https://academy.herpeton.net/en/caresheets/tarantulas/acanthoscurria-geniculata/",
+      "title": "Acanthoscurria geniculata — fiche espèce Herpeton Academy"
+    },
+    {
+      "url": "https://es.wikipedia.org/wiki/Acanthoscurria_geniculata",
+      "title": "Tarántula de rodillas blancas — présentation de l’espèce en espagnol"
+    }
+  ]
+}

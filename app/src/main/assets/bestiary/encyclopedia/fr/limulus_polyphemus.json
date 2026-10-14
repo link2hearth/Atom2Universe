@@ -1,0 +1,42 @@
+{
+  "id": "limulus_polyphemus",
+  "name": "Limule atlantique",
+  "scientific": "Limulus polyphemus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "La limule atlantique est un arthropode marin des côtes nord-américaines. Malgré son nom, ce n’est pas un crabe : elle appartient à un groupe distinct, plus proche des arachnides, et c’est l’une des quatre espèces actuelles de limules, une lignée dont des parents fossiles remontent à environ 450 millions d’années.",
+    "identification": "Elle porte des chélicères, petits appendices en pince qui acheminent la nourriture vers la bouche, et six appendices abdominaux en lames; le premier recouvre l’orifice génital et les autres servent de branchies. Les mâles matures ont des crochets pour retenir une femelle, et les femelles peuvent garder des cicatrices de cette étreinte. La femelle adulte peut atteindre environ 60 cm de longueur totale, longue queue comprise; le mâle est plus petit. Je n’ai pas trouvé de plage fiable de masse adulte ni de largeur selon le sexe, et aucune n’est donc estimée ici.",
+    "habitat": "Elle vit le long de la côte atlantique de l’Amérique du Nord et du golfe du Mexique, du Maine à l’Alabama, avec une population distincte sur la péninsule du Yucatán. Elle fréquente les eaux côtières peu profondes à fond sableux ou vaseux et tolère des conditions environnementales très variées.",
+    "diet": "Elle se nourrit la nuit de vers, de petits mollusques et d’algues. Elle saisit la nourriture avec ses chélicères, la transmet aux bases de pattes hérissées pour la broyer, puis la conduit à la bouche.",
+    "behavior": "Elle marche sur le fond des eaux peu profondes et peut nager maladroitement sur le dos, en se servant de ses branchies en lames comme de rames. Les individus sont très mobiles et migrateurs; un marquage dans la baie du Delaware a retrouvé des animaux de l’entrée de la baie jusqu’à Virginia Beach.",
+    "reproduction": "La ponte a lieu sur les plages, où les mâles matures arrivent seuls ou accrochés à une femelle. Dans un estuaire du New Hampshire, les mâles semblaient mûrir vers neuf ans, après environ 17 mues, les femelles muant une fois de plus; cela donne un excès de mâles sur les plages de ponte. L’échouage pendant la ponte est une cause naturelle majeure de mortalité des adultes.",
+    "ecology": "Dans la baie du Delaware, l’abondance des œufs de limule était le meilleur prédicteur des plages utilisées au printemps par les bécasseaux maubèche en migration. Ces oiseaux de rivage en longue migration y ont peu d’autres ressources : la ponte de la limule soutient donc un réseau alimentaire plus large.",
+    "conservation": "L’UICN classe l’espèce comme vulnérable, et une évaluation régionale la juge exposée à des extinctions locales, avec un risque variable : maximal dans le golfe du Maine, déclins en Nouvelle-Angleterre, stocks stables et encadrés dans la baie du Delaware. L’usage comme appât prélève jusqu’à environ un million d’animaux par an sur la côte. Son sang sert aussi à produire le lysat d’amibocytes de limule, qui détecte les endotoxines bactériennes dans les médicaments; environ 525 000 limules étaient saignées chaque année en 2013-2017, avec une mortalité à court terme estimée à 15 %."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Limulus_polyphemus/",
+      "title": "Limulus polyphemus — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://pubs.usgs.gov/publication/70193485",
+      "title": "Statut de conservation de la limule américaine, Limulus polyphemus : évaluation régionale — Reviews in Fish Biology and Fisheries (notice USGS)"
+    },
+    {
+      "url": "https://www.frontiersin.org/articles/10.3389/fmars.2020.607668/full",
+      "title": "Effet à long terme du prélèvement de sang pour le lysat d’amibocytes de limule sur la survie annuelle et la recapture de limules marquées — Frontiers in Marine Science, 2020"
+    },
+    {
+      "url": "https://bioone.org/journals/journal-of-wildlife-management/volume-70/issue-6/0022-541X(2006)70%5B1704:HCEDRK%5D2.0.CO;2/Horseshoe-Crab-Eggs-Determine-Red-Knot-Distribution-in-Delaware-Bay/10.2193/0022-541X(2006)70%5B1704:HCEDRK%5D2.0.CO;2.full",
+      "title": "Les œufs de limule déterminent la distribution des bécasseaux maubèche dans la baie du Delaware — Journal of Wildlife Management, 2006"
+    },
+    {
+      "url": "https://scholars.unh.edu/jel/143",
+      "title": "Cycle de vie de Limulus polyphemus dans l’estuaire de Great Bay, New Hampshire — Watson, Cheng et Chabot, 2015"
+    },
+    {
+      "url": "https://invasions.si.edu/nemesis/species_summary/82703",
+      "title": "Horseshoe Crab (Limulus polyphemus) | Smithsonian Marine Invasions Research Laboratory NEMESIS"
+    }
+  ]
+}

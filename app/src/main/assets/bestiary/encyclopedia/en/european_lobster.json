@@ -1,0 +1,42 @@
+{
+  "id": "european_lobster",
+  "name": "European lobster",
+  "scientific": "Homarus gammarus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The European lobster is a clawed marine crustacean native to the northeastern Atlantic, Mediterranean and western Black Sea.",
+    "identification": "Its blue, mottled upper shell contrasts with a pale yellowish underside, long antennae and a segmented abdomen. Pot-caught animals commonly measure about 23–38 centimetres, rather than the much larger sizes reported for exceptional specimens. The ten walking limbs include a massive crushing claw and a sharper cutting claw, which perform complementary feeding functions. Growth requires shedding the rigid shell and expanding before the new shell hardens: this is moulting. Heating breaks the protein complex holding the red pigment astaxanthin, explaining the colour change from blue to red during cooking. Large specimens are commonly 23–50 cm; maximum total length is about 60 cm and maximum mass about 5–6 kg. These are large-size records, not a typical catch mass.",
+    "habitat": "It occupies rocky seabeds from the lower shore to around 60 metres, sheltering in crevices, holes and excavated tunnels. The short, spiny projection at the front of the head is the rostrum, another useful identification feature.",
+    "diet": "Adults eat crabs, molluscs, sea urchins, marine worms and other bottom-living animals, sometimes taking fish or algae. Feeding declines in winter as colder water slows metabolism, so food intake changes with seasonal conditions.",
+    "behavior": "Usually solitary and territorial, it hides during the day and emerges mainly at night to search for food. A rapid contraction of the abdomen and tail can propel it backwards when escape is needed.",
+    "reproduction": "Mating generally joins a hard-shelled male with a recently moulted, soft-shelled female, which can store his sperm before laying. Fertilized eggs remain attached beneath her abdomen for roughly nine to twelve months, with development influenced by water temperature. She fans water over the eggs to maintain oxygenation; hatchlings then enter the plankton, drifting near the sea surface. Successive moults produce the first juvenile stage, which resembles a miniature lobster and settles into sand or gravel rather than remaining in surface waters.",
+    "ecology": "The planktonic phase exposes larvae to many predators; after settlement, buried juveniles gain protection from seabed shelter. Newly moulted lobsters are particularly vulnerable until their replacement shell hardens, making access to shelter essential.",
+    "conservation": "Its global status is Least Concern, although commercial fishing creates substantial pressure in parts of its range; lobster pots are the main capture method. In Cornwall, hatchery programmes rear young through their vulnerable planktonic phase before releasing juveniles to coastal seabeds."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Homarus_gammarus",
+      "title": "Homarus gammarus — Wikipedia"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Homard_europ%C3%A9en",
+      "title": "Homard européen — Wikipédia"
+    },
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/1171",
+      "title": "Common lobster — MarLIN, Emily Wilson (2008)"
+    },
+    {
+      "url": "https://nationallobsterhatchery.co.uk/lobster-biology/",
+      "title": "Biology of the European lobster — National Lobster Hatchery"
+    },
+    {
+      "url": "https://nationallobsterhatchery.co.uk/journey-of-a-hatchery-reared-lobster/",
+      "title": "Journey of a hatchery-reared lobster — National Lobster Hatchery"
+    },
+    {
+      "url": "https://www.fao.org/4/t0411e/t0411e09.pdf",
+      "title": "Homarus gammarus — FAO species catalogue"
+    }
+  ]
+}

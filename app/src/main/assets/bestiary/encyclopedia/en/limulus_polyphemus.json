@@ -1,0 +1,42 @@
+{
+  "id": "limulus_polyphemus",
+  "name": "Atlantic Horseshoe Crab",
+  "scientific": "Limulus polyphemus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Atlantic horseshoe crab is a marine arthropod of the North American coast. Despite its name it is not a crab: it belongs to a separate group, more closely related to arachnids, and is one of four living horseshoe crab species, a lineage with fossil relatives about 450 million years old.",
+    "identification": "It carries chelicerae, small pincer-like appendages that pass food toward the mouth, and six flap-like abdominal appendages; the first covers the genital pore and the others act as gills. Mature males have claspers used to hold a female, and females may show scars from being clasped. Adult females can reach about 60 cm in total length, including the long telson; males are smaller. A reliable adult body-mass range or sex-specific width was not found, so neither is estimated here.",
+    "habitat": "It lives along the Atlantic coast of North America and the Gulf of Mexico, from Maine to Alabama, with a separate population on the Yucatán Peninsula. It uses shallow coastal water over sandy or muddy bottoms, and tolerates a wide range of environmental conditions.",
+    "diet": "It feeds at night on worms, small molluscs and algae. It picks food up with its chelicerae, passes it to the bristly leg bases to be crushed, then moves it to the mouth.",
+    "behavior": "It walks along the bottom of shallow water and can swim clumsily on its back, using its flap-like gills as paddles. Individuals are highly mobile and migratory; tagging in Delaware Bay found animals ranging from the bay’s mouth south to Virginia Beach.",
+    "reproduction": "Spawning takes place on beaches, where mature males come ashore alone or clasping a female. In a New Hampshire estuary, males appeared to mature at about nine years, after roughly 17 moults, while females moulted once more; this skews spawning-beach sex ratios toward males. Stranding during spawning is a main natural cause of adult death.",
+    "ecology": "In Delaware Bay, the abundance of horseshoe crab eggs was the strongest predictor of which beaches migrating red knots used in spring. The knots, shorebirds on a long migration, have few alternative foods there, so the crab’s spawning supports a wider food web.",
+    "conservation": "The IUCN ranks the species as Vulnerable, and a regional assessment found it vulnerable to local extinction, with risk varying by region: highest in the Gulf of Maine, declines in New England, stable and regulated stocks in Delaware Bay. Bait use removes up to about one million animals a year along the coast. Blood is also taken for Limulus amebocyte lysate, which detects bacterial endotoxin in medicines; about 525,000 crabs were bled yearly in 2013–2017, with short-term mortality estimated at 15%."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Limulus_polyphemus/",
+      "title": "Limulus polyphemus — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://pubs.usgs.gov/publication/70193485",
+      "title": "Conservation status of the American horseshoe crab, Limulus polyphemus: a regional assessment — Reviews in Fish Biology and Fisheries (USGS record)"
+    },
+    {
+      "url": "https://www.frontiersin.org/articles/10.3389/fmars.2020.607668/full",
+      "title": "The long-term effect of bleeding for Limulus amebocyte lysate on annual survival and recapture of tagged horseshoe crabs — Frontiers in Marine Science, 2020"
+    },
+    {
+      "url": "https://bioone.org/journals/journal-of-wildlife-management/volume-70/issue-6/0022-541X(2006)70%5B1704:HCEDRK%5D2.0.CO;2/Horseshoe-Crab-Eggs-Determine-Red-Knot-Distribution-in-Delaware-Bay/10.2193/0022-541X(2006)70%5B1704:HCEDRK%5D2.0.CO;2.full",
+      "title": "Horseshoe crab eggs determine red knot distribution in Delaware Bay — Journal of Wildlife Management, 2006"
+    },
+    {
+      "url": "https://scholars.unh.edu/jel/143",
+      "title": "The life history cycle of Limulus polyphemus in the Great Bay Estuary, New Hampshire — Watson, Cheng and Chabot, 2015"
+    },
+    {
+      "url": "https://invasions.si.edu/nemesis/species_summary/82703",
+      "title": "Horseshoe Crab (Limulus polyphemus) | Smithsonian Marine Invasions Research Laboratory NEMESIS"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "scolopax_rusticola",
+  "name": "Eurasian Woodcock",
+  "scientific": "Scolopax rusticola",
+  "group": "birds",
+  "sections": {
+    "overview": "The Eurasian woodcock is a stocky, secretive wader that lives in woodland rather than on the shore. Mostly active at dusk and at night, it spends the day in dense cover, where its cryptic plumage makes it hard to see.",
+    "identification": "A plump bird 33–38 cm long, including a straight bill of 6–8 cm, with a wingspan of 55–65 cm. British adults weigh about 305 g and have a wing near 200 mm. The cryptic plumage is reddish-brown above and buff and barred below. The large eyes sit high and far back on the head, giving it very wide vision.",
+    "habitat": "It is predominantly a bird of woodland, emerging at night to feed in adjacent fields. It breeds in large, unfragmented broadleaved or mixed woods with dense undergrowth, favouring birch and avoiding beech-dominated woods. Breeding needs fairly open areas, which become scarcer as conifer plantations mature.",
+    "diet": "It eats mainly earthworms, along with insects and their larvae, freshwater molluscs and some seeds. It probes soft ground with its long bill, which makes it vulnerable when the ground freezes.",
+    "behavior": "Breeding males perform a display flight called roding at dusk, flying in straight lines above their territories while giving a grunting call. Most British birds are resident, but others arrive in autumn from Finland and Russia to spend the winter.",
+    "reproduction": "The nest is a scrape on the ground in low woodland cover. A clutch is typically 4 eggs (observed 2–5), incubated by the female for 21–24 days. The downy chicks leave the nest at once and fledge after 15–20 days. Breeding typically starts at two years of age.",
+    "ecology": "The woodcock is a significant game bird in many countries. A study in Brittany found annual survival of 0.86 for adults and 0.67 for juveniles, and its authors urged caution in harvesting. Fragmentation of woodland is the main threat across its breeding range.",
+    "conservation": "The IUCN Red List classes the species as Least Concern. In the UK it is Red-listed: about 57,000 males bred in 2016 and a 2013 survey found a 29% decline since 2003, while about 1.4 million birds wintered in 2003–04. Typical life expectancy is four years, and the oldest ringed bird reached over 15 years."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/woodcock",
+      "title": "Woodcock — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/woodcock",
+      "title": "Woodcock — RSPB"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Eurasian_woodcock",
+      "title": "Eurasian woodcock — Wikipedia"
+    }
+  ]
+}

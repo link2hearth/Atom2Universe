@@ -57,12 +57,12 @@
         "2025 global assessment: Least Concern, decreasing population trend."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
-        "conservation.fr.2"
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "habitat.en.3",
+        "habitat.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -90,14 +90,14 @@
         "Le musée indique les dimensions adultes des femelles et des mâles."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
         "behavior.en.3",
         "behavior.fr.3",
-        "reproduction.en.1",
-        "reproduction.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
         "overview.en.1",
-        "overview.fr.1"
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -124,17 +124,17 @@
         "La fiche du zoo décrit plumage, alimentation et développement des jeunes."
       ],
       "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
         "identification.en.2",
         "identification.fr.2",
-        "diet.en.1",
-        "diet.fr.1",
-        "diet.en.2",
-        "diet.fr.2",
         "reproduction.en.5",
-        "reproduction.fr.5",
         "reproduction.en.6",
-        "reproduction.fr.6",
         "reproduction.en.7",
+        "reproduction.fr.5",
+        "reproduction.fr.6",
         "reproduction.fr.7"
       ],
       "budget": {
@@ -161,12 +161,12 @@
         "La fiche universitaire décrit habitat ouvert et groupes saisonniers."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.2",
-        "behavior.fr.2"
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -194,14 +194,14 @@
         "Le zoo décrit le nomadisme et la reproduction saisonnière."
       ],
       "prose_claims": [
-        "habitat.en.2",
-        "habitat.fr.2",
         "diet.en.4",
         "diet.fr.4",
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -227,14 +227,14 @@
         "Deux femelles adultes montrent le rôle des doigts dans l’appui."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "identification.en.3",
-        "identification.fr.3",
         "identification.en.4",
-        "identification.fr.4",
         "identification.en.5",
-        "identification.fr.5"
+        "identification.fr.3",
+        "identification.fr.4",
+        "identification.fr.5",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -342,10 +342,10 @@
         "Le récit décrit parade, soins aux œufs et pressions historiques."
       ],
       "prose_claims": [
-        "reproduction.en.4",
-        "reproduction.fr.4",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.4",
+        "reproduction.en.4",
+        "reproduction.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -373,10 +373,10 @@
       "prose_claims": [
         "behavior.en.4",
         "behavior.fr.4",
-        "reproduction.en.8",
-        "reproduction.fr.8",
         "ecology.en.4",
-        "ecology.fr.4"
+        "ecology.fr.4",
+        "reproduction.en.8",
+        "reproduction.fr.8"
       ],
       "budget": {
         "limit": 200,

@@ -1,0 +1,38 @@
+{
+  "id": "actias_selene",
+  "name": "Indian moon moth",
+  "scientific": "Actias selene",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Actias selene is a large Asian silk moth in the family Saturniidae. It is known for its pale green wings, eye-like spots and long tails extending from the hindwings. The species ranges from the Indian subcontinent through parts of East and Southeast Asia, with regional forms and a complex of closely related moon moths that can complicate identification. Its larvae feed on several woody plants, and Indian research documents it as a native wild silk moth.",
+    "identification": "The adult has pale green to bluish-green wings, a pinkish or brownish forewing border, discal eyespots and long, curved hindwing tails. The male usually has more strongly feathered antennae, more falcate wing tips and longer, more pink-toned tails; the female is often larger with rounder wing tips and less developed pink markings. An Indian taxonomic account reports male wingspans of about 132–166 mm and female spans of 140–182 mm; values differ among studies and regional forms. No reliable adult mass, body height or body-width measurement was found. The long hindwing tails and contrasting eye-spots separate it from many other large green moths, but comparison with related Actias species should use tail shape, eyespot pattern, geography and genital or larval characters when necessary.",
+    "habitat": "It occurs in wooded and forested landscapes across tropical and subtropical Asia. Records include lowland and hill forests in India and neighboring regions; the species is also reared on multiple tree and shrub hosts in Nagaland. Its broad distribution spans different climates, so local flight seasons and life-cycle schedules are not uniform.",
+    "diet": "The adult moth has reduced mouthparts and does not feed; energy for its short adult life is stored during the caterpillar stage. Larvae are polyphagous. A peer-reviewed Nagaland study reared them on Nepal alder (Alnus nepalensis) and Rhus javanica and reported feeding on six host plants in the regional study. Other host records include walnut, willow, cherry, sweetgum and several shrubs, but host use differs by locality and should not be treated as a complete universal list.",
+    "behavior": "Adults are nocturnal and are attracted to lights. The long hindwing tails are not merely ornamental: research on moon moths indicates that tails can disrupt bat echolocation and reduce capture risk, although the cited experimental research tested related Actias species rather than A. selene directly. Males use broad, feathered antennae to detect female pheromones. Adults do not feed and generally live only long enough to mate and lay eggs.",
+    "reproduction": "The female lays eggs that hatch into caterpillars; larvae pass through several moults before spinning a silk cocoon in which they pupate. The species can produce multiple generations per year in Nagaland, but pupae undergo a winter resting period there averaging about 98 days. These findings are regional: elsewhere, temperature and season can change the number of generations and whether pupae enter diapause. Larval colour changes by instar and can be an important clue for identification.",
+    "ecology": "The caterpillars consume foliage from a variety of trees and shrubs, while the adults are part of the nocturnal insect community and provide prey for bats and other predators. Its long tails may reduce bat capture, based on experiments with close relatives. The larval stages can be reared for wild silk, but harvest and commercial breeding should not be confused with evidence about the abundance or condition of wild populations.",
+    "conservation": "The sources reviewed do not establish a current global IUCN category or population trend specific to Actias selene. It remains widespread across a large Asian range, but range size alone does not show that local forest populations are secure. Protecting wooded habitat and avoiding unsustainable collection are reasonable local measures; quantitative trend data are limited."
+  },
+  "sources": [
+    {
+      "url": "https://indiabiodiversity.org/group/National_Moth_Week_2023/species/show/235468",
+      "title": "Taxonomic study of moths (Lepidoptera: Heterocera) from North Maharashtra, India — University of Pune thesis record, India Biodiversity Portal"
+    },
+    {
+      "url": "https://doi.org/10.18984/lepid.61.3_228",
+      "title": "Biology and rearing performance of Actias selene in Nagaland, India — Lepidoptera Science"
+    },
+    {
+      "url": "https://archive.org/details/faunaofbritishin01hamp/page/3/mode/1up",
+      "title": "The fauna of British India, including Ceylon and Burma: Moths, Volume 1 — G. F. Hampson"
+    },
+    {
+      "url": "https://www.floridamuseum.ufl.edu/science/what-is-it-good-for-absolutely-one-thing-luna-moths-use-their-tails-solely-for-bat-evasion/",
+      "title": "Luna moth hindwing tails disrupt bat echolocation — Florida Museum of Natural History"
+    },
+    {
+      "url": "https://tfrienglish.icfre.gov.in/VanSangyan/April%202016%20issue.pdf",
+      "title": "Indian moon moth — ICFRE Van Sangyan, Indian Forest Research and Education Council"
+    }
+  ]
+}

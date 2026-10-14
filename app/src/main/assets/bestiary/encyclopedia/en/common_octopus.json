@@ -1,0 +1,106 @@
+{
+  "id": "common_octopus",
+  "name": "Common octopus",
+  "scientific": "Octopus vulgaris",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Common Octopus is a soft-bodied coastal cephalopod, adapted to reefs and seabed shelters. Octopus vulgaris sensu stricto is documented in the Mediterranean and eastern Atlantic. Earlier worldwide records often treated related lineages as one species. The American Atlantic lineage is recognized as O. americanus. The East Asian common octopus is O. sinensis. Its short life links planktonic young to solitary, bottom-living adults.",
+    "identification": "Its rounded mantle houses the organs; the head bears large eyes and a beak amid eight arms. These are arms, not tentacles: each carries two rows of suckers for gripping, tasting and handling food or shelter. Typical mantle length is 10–20 cm and mass 1–3 kg; the reported maximum is about 10 kg, with males tending to grow larger. Ten kilograms is exceptional; skin colour ranges from grey to yellow or reddish brown and its texture can rise into bumps.",
+    "habitat": "Adults occupy coastal seabeds, often rocky or sandy, mostly within about 100 m. A crevice or rock cavity provides a den for shelter and retreat after foraging. They are generally solitary, and den use varies with local prey and shelter.",
+    "diet": "It hunts bottom-living prey, chiefly crabs and other crustaceans, bivalves and snails. Shells and prey remains near dens reveal part of the diet, but currents and carried-away prey make such middens incomplete evidence. The arms and suckers hold prey while the beak bites. Octopuses drill holes into shells to reach the soft tissue inside. The toothed salivary papilla acts as an accessory radula during drilling. Salivary enzymes help process prey, and nutrients are absorbed through the digestive gland.",
+    "behavior": "An arm is a muscular hydrostat: interwoven lengthwise, transverse and oblique muscles bend, shorten, extend and twist it without rigid bones. Arm nerve networks coordinate local movement within a connected nervous system; the popular phrase “nine brains” oversimplifies this arrangement. Suckers attach, explore and sense surfaces. Chromatophores are pigment sacs expanded by radial muscle contraction; iridophores reflect light, while muscular papillae change skin relief. In a captive spatial-reversal study, some individuals learned to change a rewarded choice when feedback was available, evidence of flexible learning in that specific laboratory task.",
+    "reproduction": "Males transfer sperm packets with a specialized right third arm, the hectocotylus. A female attaches 100,000–500,000 eggs, each about 2 mm long, in strings inside a sheltered den. She cleans and ventilates the clutch with water jets and generally stops feeding while brooding. The species reproduces once: females die after hatching, and males undergo terminal decline after mating. In Senegal, eggs hatched in 15–42 days at 27 degrees Celsius but took 80–87 days at 17 degrees Celsius. Hatchlings are planktonic paralarvae, not miniature benthic adults; a regional rearing study recorded settlement after about 40–60 days at 18–22 degrees Celsius. These timings vary with region and water temperature.",
+    "ecology": "The life cycle spans two food webs: paralarvae eat zooplankton, while adults prey on seabed invertebrates. Currents disperse young, and temperature and circulation affect development and juvenile supply to coasts. Adults also feed larger fish and marine mammals. The octopus therefore links plankton, benthic prey and coastal predators.",
+    "conservation": "The species is commercially exploited. Its short life cycle makes annual abundance sensitive to recruitment success. A 2008 northwest African stock assessment, published by FAO in 2011, classed the Dakhla, Cap Blanc and Senegal–Gambia stocks as overexploited and recommended lower fishing effort; this is a dated regional finding. The European Commission lists a 750 g minimum conservation reference size for relevant fisheries, a management rule rather than a guarantee of population security."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13093632/",
+      "title": "Genomic Divergence Between Octopus vulgaris and Its Undescribed Sister Species From the South Atlantic and Indian Ocean"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230294",
+      "title": "Species complex phylogeography of Octopus vulgaris in Atlantic Macaronesia"
+    },
+    {
+      "url": "https://www.fao.org/fishery/docs/CDrom/ARTFIMED/ArtFiWeb/descript/Species/OCTOCVUL.HTML",
+      "title": "FAO species account: Octopus vulgaris"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3672162/",
+      "title": "The morphology and adhesion mechanism of Octopus vulgaris suckers"
+    },
+    {
+      "url": "https://www.nature.com/articles/s41598-020-77873-7",
+      "title": "Octopus arm flexibility and muscular hydrostat anatomy"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3359305/",
+      "title": "Camouflaging in a complex environment: background matching in octopuses"
+    },
+    {
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/abs/10.1111/j.1469-7998.1991.tb04786.x",
+      "title": "Foraging, feeding and prey remains in juvenile Octopus vulgaris middens"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5562678/",
+      "title": "Prey capture, ingestion and digestion in Octopus vulgaris paralarvae"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/aquatic-living-resources/article/abs/observations-on-the-influence-of-temperature-on-the-length-of-embryonic-development-in-octopus-vulgaris-senegal/6667C5D50E326C9E80C9D3C132B5BBC6",
+      "title": "Temperature and embryonic development of Octopus vulgaris off Senegal"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2023.1162735/full",
+      "title": "Cephalopod ontogeny and life-cycle patterns"
+    },
+    {
+      "url": "https://www.fao.org/4/i2443b/i2443b.pdf",
+      "title": "FAO Fisheries Report 985: regional stock assessments in northwest Africa"
+    },
+    {
+      "url": "https://fish-commercial-names.ec.europa.eu/fish-names/species/octopus-vulgaris_en",
+      "title": "European Commission species page: Octopus vulgaris"
+    },
+    {
+      "url": "https://doi.org/10.3989/scimar.04071.28F",
+      "title": "Dwellers in dens on sandy bottoms: ecology and behaviour of Octopus vulgaris"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8267067/",
+      "title": "Reversal of a spatial discrimination task in the Common Octopus"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/journal-of-the-marine-biological-association-of-the-united-kingdom/article/abs/from-brooding-to-hatching-new-insights-from-a-female-octopus-vulgaris-in-the-wild/66CB052E583951A953EF24627EA0003A",
+      "title": "From brooding to hatching: a female Octopus vulgaris in the wild"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/B9780128206393000200",
+      "title": "Octopus vulgaris, the common octopus: biology and ecology"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/physiology/articles/10.3389/fphys.2017.00164/full",
+      "title": "Embodied organization of Octopus vulgaris morphology, vision and locomotion"
+    },
+    {
+      "url": "https://academic.oup.com/icesjms/article/67/7/1363/664985",
+      "title": "Nurseries, spawning grounds and recruitment of Octopus vulgaris in the Strait of Sicily"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10452-020-09778-6",
+      "title": "Octopus americanus: A Cryptic Species of the O. vulgaris Species Complex Redescribed From the Caribbean"
+    },
+    {
+      "url": "https://doi.org/10.12782/sd.21.1.031",
+      "title": "Octopus sinensis d’Orbigny, 1841 (Cephalopoda: Octopodidae): Valid Species Name for the Commercially Valuable East Asian Common Octopus"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-7998.1980.tb01422.x",
+      "title": "The salivary papilla of Octopus as an accessory radula for drilling shells"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-7998.1980.tb01450.x",
+      "title": "The effects on shells of drilling by octopus"
+    }
+  ]
+}

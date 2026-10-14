@@ -1,0 +1,42 @@
+{
+  "id": "bonobo",
+  "name": "Bonobo",
+  "scientific": "Pan paniscus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The bonobo (Pan paniscus) is a great ape found only in the Democratic Republic of the Congo, south of the Congo River. It shares Pan with the common chimpanzee (P. troglodytes). Communities forage in changing subgroups, with social patterns that vary between them.",
+    "identification": "Adults are slender, long-legged apes with black hair and dark skin on face, hands and feet. Crown hair often parts centrally; infants have a white rump tuft. Pink lips and a less projecting muzzle distinguish them from the more robust common chimpanzee. Adult head-to-rump length is about 70–83 cm; reported adult masses are 27–38 kg for females and 37–61 kg for males, with substantial overlap between sexes.",
+    "habitat": "The range lies in the central Congo Basin, between the Congo River and Kasai–Sankuru system, within the Democratic Republic of the Congo. Bonobos use lowland primary, secondary and swamp forests; some also inhabit forest–savanna mosaics. Habitat varies locally.",
+    "diet": "Bonobos mainly eat fruit, plus leaves, shoots and flowers; insects and small vertebrates are also recorded. Diet varies by site and season. At LuiKotale, fruit appeared in 66% of feeding sessions in one habituated community. They forage in trees and on the ground.",
+    "behavior": "Communities split into temporary parties that later separate or reunite, a fission–fusion pattern. Females often leave their birth community at maturity; males usually stay. Females cooperate around food, but aggression and competition also occur. Patterns vary between sites: bonobos are not universally peaceful.",
+    "reproduction": "Females usually have one infant after about eight months of pregnancy. They nurse and carry it for a long period, with births years apart. At Wamba, the mean interval between live births was 4.8 years; individual timing varies. Mothers care for young as they learn to travel and feed.",
+    "ecology": "After eating fruit, bonobos deposit seeds in dung away from parent trees. At LuiKotale, researchers recorded over 91 plant species and a mean dispersal distance of 1.2 kilometres; gut-passed seeds germinated better in trials. This supports a local role in forest regeneration.",
+    "conservation": "The IUCN’s 2016 global assessment classified bonobos as Endangered, citing hunting, habitat loss and degradation, and weak law enforcement. The Bonobo Conservation Initiative also reports human encroachment and disease risk. Population estimates are difficult; this assessment is not a new census."
+  },
+  "sources": [
+    {
+      "url": "https://strapi.eaza.net/uploads/Bonobo_BPG_final_version_2020_ab295642cd.pdf",
+      "title": "EAZA Best Practice Guidelines: Bonobo (Pan paniscus)"
+    },
+    {
+      "url": "https://www.storre.stir.ac.uk/bitstream/1893/26839/1/10.2305_IUCN.UK.2016-2.RLTS.T15932A17964305.en.pdf",
+      "title": "Pan paniscus — The IUCN Red List of Threatened Species, 2016 assessment"
+    },
+    {
+      "url": "https://www.bonobosworld.org/images/zotero/Moscovice_et_al.-2017-Stable_and_fluctuating_social_preferences.pdf",
+      "title": "Stable and fluctuating social preferences among female bonobos — Animal Behaviour"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/journal-of-tropical-ecology/article/abs/ecological-services-performed-by-the-bonobo-pan-paniscus-seed-dispersal-effectiveness-in-tropical-forest/A581415D4111271BDCD5AA7D0E9519B",
+      "title": "Ecological services performed by the bonobo (Pan paniscus): seed dispersal effectiveness in tropical forest — Journal of Tropical Ecology"
+    },
+    {
+      "url": "https://www.bonobo.org/threats",
+      "title": "Threats — Bonobo Conservation Initiative"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Pan_paniscus/",
+      "title": "Pan paniscus (bonobo) — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

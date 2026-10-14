@@ -57,14 +57,14 @@
         "Species account describes wild anatomy, measurements, groups and ecological relationships."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.3",
-        "identification.fr.3",
         "behavior.en.3",
         "behavior.fr.3",
         "ecology.en.1",
-        "ecology.fr.1"
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -90,14 +90,14 @@
         "Global Vulnerable assessment dated 2014; estimates fewer than 10,000 mature animals."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.2",
-        "habitat.fr.2",
         "conservation.en.1",
-        "conservation.fr.1"
+        "conservation.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -123,10 +123,10 @@
       ],
       "prose_claims": [
         "conservation.en.2",
-        "conservation.fr.2",
         "conservation.en.3",
-        "conservation.fr.3",
         "conservation.en.5",
+        "conservation.fr.2",
+        "conservation.fr.3",
         "conservation.fr.5",
         "ecology.en.3",
         "ecology.fr.3"
@@ -155,12 +155,12 @@
         "Arjin Shan field study examines seasonal habitat choice and human disturbance."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
         "behavior.en.4",
         "behavior.fr.4",
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.2",
+        "habitat.en.3",
+        "habitat.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -185,8 +185,8 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.4",
+        "diet.fr.1",
         "diet.fr.4"
       ],
       "budget": {
@@ -212,12 +212,12 @@
         "Documents two yaks in Upper Humla in 2014 after decades without records."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
         "conservation.en.4",
         "conservation.fr.4",
         "overview.en.2",
-        "overview.fr.2"
+        "overview.en.3",
+        "overview.fr.2",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -242,10 +242,10 @@
       ],
       "prose_claims": [
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
-        "reproduction.fr.2",
         "reproduction.en.4",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
         "reproduction.fr.4"
       ],
       "budget": {
@@ -271,8 +271,8 @@
       ],
       "prose_claims": [
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
+        "diet.fr.2",
         "diet.fr.3"
       ],
       "budget": {
@@ -298,10 +298,10 @@
         "Specialist account describes wild-yak dimensions, habitat, coat and groups."
       ],
       "prose_claims": [
-        "identification.en.2",
-        "identification.fr.2",
         "behavior.en.1",
-        "behavior.fr.1"
+        "behavior.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
       ],
       "budget": {
         "limit": 200,

@@ -1,0 +1,26 @@
+{
+  "id": "european_herring_gull",
+  "name": "European Herring Gull",
+  "scientific": "Larus argentatus",
+  "group": "birds",
+  "sections": {
+    "overview": "The herring gull is the classic large seaside gull of Europe. Originally a cliff-nesting coastal bird, it has adapted to towns and cities, nesting on rooftops, but its numbers in Britain have fallen sharply.",
+    "identification": "A large gull of 54–60 cm. In Britain, adults average about 970 g with a wing of 415 mm. Adults have a pale grey back, white underparts, black wingtips with white spots, pink legs and a heavy yellow bill with a red spot. First-year birds are mottled brown.",
+    "habitat": "Breeding birds are most frequent on open shores and cliffs, but some nest on buildings in towns. Outside the breeding season it is widespread across lowland Britain, mostly near the coast, and inland around rubbish tips, fields, reservoirs and lakes.",
+    "diet": "It feeds mainly on marine animals, the green shore crab being a particular favourite, and also on fish, insects, carrion and refuse. It is an opportunist; it even stamps its feet to imitate rain and bring earthworms to the surface.",
+    "behavior": "Herring gulls forage in large flocks at refuse sites and are highly defensive of their nests and young. Pairs are often lifelong partners and return to the same nest site each year. In towns, rooftop nesting gives them plenty of food and fewer predators.",
+    "reproduction": "A pair raises one brood a year, laying typically three eggs (two to four), usually from mid-April, on the ground, on cliff ledges or on rooftops. The female does most of the 28–30 days of incubation. The chicks fledge at 35–40 days and peck the red spot on a parent’s bill to beg for food. Breeding typically starts at four years of age.",
+    "ecology": "As a scavenger and predator of shore animals the herring gull exploits both natural and human food sources. Tracking of breeding birds at one colony showed most feeding on mussel beds and intertidal areas, while declining marine food is thought to push birds to forage inland.",
+    "conservation": "The IUCN Red List classes the species as Least Concern, but it is Red-listed in the UK. About 130,000 pairs bred there in 1998–2002 and some 740,000 birds wintered in 2003–06; the coastal breeding population fell by more than 50% between 1969–70 and 1998–2002 and appears to have kept falling. In ringing data the oldest birds reach about 12 years."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/herring-gull",
+      "title": "Herring Gull — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/herring-gull",
+      "title": "Herring Gull — RSPB"
+    }
+  ]
+}

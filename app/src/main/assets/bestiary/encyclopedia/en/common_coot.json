@@ -1,0 +1,58 @@
+{
+  "id": "common_coot",
+  "name": "Common Coot",
+  "scientific": "Fulica atra",
+  "group": "birds",
+  "sections": {
+    "overview": "The Common Coot, Fulica atra, is a widespread waterbird of Europe, Africa, Asia and Australasia. Its dark body, bright white bill and frontal shield stand out on lakes, while its unusual toes help it swim, dive and walk on wet ground. Adults measure about 36–38 cm; British ringing samples averaged 880 g, with males heavier than females. The name Eurasian Coot distinguishes it from the separate American Coot, Fulica americana.",
+    "identification": "The adult is slate-black, with a white bill rising into a smooth white shield on the forehead. This distinguishes it from the smaller Eurasian Moorhen, whose bill and shield are red, and from the American Coot, a separate species. The adult’s red iris is another field mark. Young coots are dark and downy, with a bare orange-red head and pale bill; the adult black-and-white plumage develops gradually. BTO adult British means: wing length 223.8 mm and mass 971 g (males), versus 206.2 mm and 754 g (females). These wing-chord figures do not give body length or wingspan.",
+    "habitat": "Winter brings eastern arrivals to Britain and Ireland; elsewhere, weather and freezing shape movements. It also uses sheltered, sometimes brackish, coastal waters. Shallows let birds reach submerged plants or dive to the bottom. In Britain and Ireland, resident birds are joined in winter by arrivals from farther east; elsewhere, movements vary with weather and freezing.",
+    "diet": "Aquatic plants are its main food: coots take pondweeds, algae, seeds and shoots. They dive to forage among submerged plants. Their lobed toes propel them underwater. It also eats snails, insect larvae and other small invertebrates, including when feeding chicks.",
+    "behavior": "Each separate toe has its own flexible skin lobe. Thus, unlike a duck, it has no continuous web joining the toes. Take-off is laborious, with a noisy run across the water. Breeding pairs defend territories, rushing at intruders with wings spread. Their calls vary with social context. A study of breeding birds distinguished four call types, with structure changing according to behavior and individual identity. In winter, coots gather in flocks.",
+    "reproduction": "A pair builds a platform nest of aquatic stems among reeds or other cover; it may float, anchored to vegetation. Both sexes build, incubate and care for the brood. In Britain, a usual clutch is five to seven eggs, incubated for 21–24 days. Downy chicks swim soon after hatching, but still rely on parents for warmth, protection and food. They fledge at about 55–60 days and may stay with their parents while learning to forage.",
+    "ecology": "By eating aquatic plants and invertebrates, coots link vegetation and animal prey in wetland food webs. Otters can provoke alarm calls and a sudden rush away. Reeds and nest platforms shelter chicks; open water helps adults detect danger. Winter flocks gather on productive lakes, where food and resting sites are shared among many birds.",
+    "conservation": "The 2019 global Red List classed the species as Least Concern with an increasing trend. BirdLife’s 2021 European assessment classified Europe’s population as Near Threatened and decreasing. In Britain, it remains Green-listed, although winter numbers have recently fallen and breeding numbers have declined in some areas. Some Irish breeding-range losses may be linked to wetland drainage."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/coot",
+      "title": "Coot — BTO BirdFacts"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/eurasian-coot",
+      "title": "Eurasian Coot — RSPB Birds and Wildlife"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T22692913A154269531.en",
+      "title": "Fulica atra — IUCN Red List of Threatened Species"
+    },
+    {
+      "url": "https://birdlifedata.blob.core.windows.net/sub-global/2944_fulica_atra.pdf",
+      "title": "European Red List of Birds 2021 — Fulica atra factsheet"
+    },
+    {
+      "url": "https://library.dbca.wa.gov.au/static/FullTextFiles/060430.pdf",
+      "title": "Australian Birds — Eurasian Coot account"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37170382/",
+      "title": "A small vocal repertoire during the breeding season expresses complex behavioral motivations and individual signature in the common coot"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/American_Coot/lifehistory",
+      "title": "American Coot Life History — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.nzbirdsonline.org.nz/assets/95597/1691731869-181_australian-20coot.pdf",
+      "title": "Common Coot — New Zealand Birds Online"
+    },
+    {
+      "url": "https://birdwatchireland.ie/birds/coot/",
+      "title": "Coot — BirdWatch Ireland"
+    },
+    {
+      "url": "https://collections.museumsvictoria.com.au/species/8254",
+      "title": "Fulica atra, Eurasian Coot — Museums Victoria Collections"
+    }
+  ]
+}

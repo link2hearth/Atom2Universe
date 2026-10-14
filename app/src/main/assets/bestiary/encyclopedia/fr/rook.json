@@ -1,0 +1,38 @@
+{
+  "id": "rook",
+  "name": "Corbeau freux",
+  "scientific": "Corvus frugilegus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le corbeau freux est un corvidé grégaire des campagnes ouvertes d’Eurasie, présent de l’Europe occidentale jusqu’à la Sibérie orientale. La plupart des populations occidentales restent près de leurs lieux de nidification, tandis que celles du nord et de l’est gagnent le sud en hiver.",
+    "identification": "L’adulte mesure environ 47 cm, pour une envergure de 81 à 94 cm et une masse de 337 à 531 g. Le mâle est légèrement plus grand que la femelle ; dans l’échantillon britannique de baguage du BTO, les moyennes sont de 485 g et 425 g respectivement. La peau pâle et nue autour du bec fin distingue l’adulte de la corneille noire ; le jeune garde des plumes sur le visage jusqu’à environ six mois.",
+    "habitat": "Le freux est surtout commun dans les champs et villages, où il niche dans les grands arbres entre les terres agricoles ; il gagne aussi les villes lorsque l’habitat s’y prête. Il fréquente les parcs et cimetières où de grands arbres offrent des sites de nidification.",
+    "diet": "Omnivore, le freux mange des vers de terre et des larves d’insectes, mais les céréales et autres végétaux forment aussi une part importante de son régime. Au printemps, il peut arracher des semis, et mange parfois de petits vertébrés, des œufs ou des charognes.",
+    "behavior": "Les freux se nourrissent en bandes bruyantes et se rassemblent au crépuscule avant de gagner des dortoirs communs, parfois avec des choucas. Leurs cris variés signalent la reconnaissance entre partenaires ou l’agression, tandis que les couples durables restent unis dans la colonie.",
+    "reproduction": "Les couples établis construisent ou réparent une coupe de brindilles dans la cime d’un arbre, souvent sur un site réutilisé durant des années. La femelle couve généralement trois ou quatre œufs pendant environ 15 à 16 jours, tandis que le mâle apporte de la nourriture ; après l’éclosion, les deux parents nourrissent les petits incapables de se débrouiller seuls. Les jeunes quittent le nid vers 32 à 34 jours, mais dépendent encore de la nourriture apportée par leurs parents avant de devenir autonomes.",
+    "ecology": "En consommant des invertébrés du sol, les freux prélèvent certains ravageurs des cultures, mais leur goût pour les graines fraîchement semées et les jeunes pousses les oppose parfois aux agriculteurs. Leur alimentation relie ainsi les ressources saisonnières des champs à la fois aux bénéfices agricoles et aux pertes de semis.",
+    "conservation": "Son statut mondial de conservation est de préoccupation mineure, malgré des situations locales contrastées. En Grande-Bretagne, les effectifs nicheurs baissent depuis environ 2000, mais les causes restent incertaines. Dans son aire, les transformations agricoles, les semences traitées aux pesticides et les persécutions constituent des pressions documentées."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Rook_(bird)",
+      "title": "Rook (bird)"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Corbeau_freux",
+      "title": "Corbeau freux"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/rook",
+      "title": "Fiche BirdFacts du freux"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Corvus_frugilegus/",
+      "title": "Corbeau freux — Animal Diversity Web"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/rook/",
+      "title": "Corbeau freux"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "id": "muskrat",
+  "name": "Rat musqué",
+  "scientific": "Ondatra zibethicus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le rat musqué est un rongeur de taille moyenne des zones humides douces ou saumâtres, doté d’un pelage isolant et d’adaptations aquatiques qui lui permettent de chercher sa nourriture parmi les plantes émergentes et de regagner un abri par une entrée immergée. Originaire d’Amérique du Nord, il a aussi formé des populations introduites en Europe et en Asie.",
+    "identification": "L’adulte mesure environ 23 à 33 cm de la tête au corps, avec une queue de 18 à 30 cm, et pèse environ 0,7 à 1,9 kg ; la taille varie selon les populations. La queue, presque nue et écailleuse, est comprimée latéralement et mesure à peu près autant que la tête et le corps. Des poils raides bordent les orteils, partiellement palmés aux pieds postérieurs ; les petites oreilles se perdent dans le pelage brun dense. Plus petit que le castor, il a une queue étroite aplatie latéralement ; le ragondin est beaucoup plus lourd, à queue arrondie et vibrisses claires.",
+    "habitat": "Le rat musqué fréquente marais, étangs, lacs, cours d’eau, fossés et zones humides estuariennes où l’eau et la nourriture restent accessibles. Les massettes, scirpes, carex et roseaux denses fournissent pousses comestibles et couvert, tandis que l’eau libre relie les sites d’alimentation et de repos. Au Texas, des marais peu profonds à niveau stable, autour de 15 à 60 cm, étaient particulièrement favorables ; cette plage locale n’est pas universelle. Les animaux bâtissent des huttes végétales au-dessus de l’eau ou creusent des terriers de berge à entrée immergée.",
+    "diet": "L’alimentation est surtout végétale : racines, rhizomes et bases des tiges de massettes, carex, scirpes et nénuphars. Les incisives coupent ces végétaux ; des lèvres qui se ferment derrière elles permettent de ronger sous l’eau sans remplir la bouche. L’animal transporte souvent des morceaux jusqu’à une plateforme ou un abri. Les aliments animaux restent occasionnels : écrevisses, moules, grenouilles, poissons et petites tortues sont signalés, surtout quand les végétaux se raréfient. Un cæcum volumineux et compartimenté retient les fibres pour leur fermentation microbienne, ce qui aide à digérer une alimentation riche en végétaux.",
+    "behavior": "Le rat musqué est actif à toute heure, souvent surtout du milieu de l’après-midi au crépuscule. Une famille peut partager une hutte, mais la surpopulation et la compétition reproductrice provoquent parfois de l’agressivité ; sécrétions musquées et cris aigus servent à communiquer. En hiver, il déterre des racines sous la glace et peut bâtir un abri autour d’un trou pour manger.",
+    "reproduction": "La saison de reproduction varie selon la latitude ; en Indiana, la plupart des portées naissent en mai et juin, et les femelles peuvent avoir deux à quatre portées par an. Après 28 à 30 jours de gestation, la femelle met bas dans un nid d’herbes ou de massettes, souvent six petits. Aveugles et dépendants à la naissance, ils nagent vers dix jours et mangent des plantes vertes vers trois semaines. La mère les allaite jusqu’au sevrage, à trois ou quatre semaines ; les jeunes peuvent rester avec elle plus longtemps, surtout ceux de la dernière portée. Une étude de terrain menée sur deux saisons a montré que les soins du mâle variaient selon la stratégie d’accouplement ; dans cette étude, la survie des jeunes ne dépendait pas de l’importance de ces soins paternels.",
+    "ecology": "Le rat musqué est la proie du vison, de la loutre, du renard, du coyote et de rapaces ; il relie la production végétale aux niveaux trophiques supérieurs. Son broutage et les végétaux entassés dans ses huttes ou plateformes ouvrent parfois les peuplements denses en mosaïque de chenaux, secteurs broutés et couvert émergent. L’effet dépend de la densité et de la croissance végétale : un broutage intense peut dénuder le marais ou fragiliser les berges, tandis qu’une activité modérée diversifie les structures. D’autres animaux des marais utilisent parfois les huttes pour nicher ou se reposer.",
+    "conservation": "L’évaluation mondiale de l’UICN, achevée le 20 août 2016, classe l’espèce en Préoccupation mineure, vu sa vaste aire et l’absence de menace mondiale majeure ; ce n’est pas un recensement actuel de chaque population. Une analyse de 42 ans de données de captures dans 37 États américains révèle un déclin entre 1970 et 2012 après correction des prix des fourrures, plus marqué dans le Sud-Est ; les captures restent un indicateur indirect. Le règlement consolidé de l’Union européenne du 7 août 2025 maintient le rat musqué sur la liste des espèces exotiques envahissantes préoccupantes pour l’Union. Il a été ajouté à cette liste par le règlement d’exécution 2017/1263 en 2017. Ses terriers peuvent endommager digues et berges, et un broutage intense transformer les marais ; la gestion européenne vise ces impacts écologiques et matériels locaux."
+  },
+  "sources": [
+    {
+      "url": "https://www.depts.ttu.edu/nsrl/mammals-of-texas-online-edition/Accounts_Rodentia/Ondatra_zibethicus.php",
+      "title": "Rat musqué — Natural Science Research Laboratory de Texas Tech"
+    },
+    {
+      "url": "https://www.in.gov/dnr/fish-and-wildlife/wildlife-resources/animals/muskrat",
+      "title": "Rat musqué — Indiana Department of Natural Resources"
+    },
+    {
+      "url": "https://research.fs.usda.gov/feis/species-reviews/onzi",
+      "title": "Monographie du rat musqué — USDA Forest Service"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Ondatra_zibethicus/",
+      "title": "Ondatra zibethicus — Animal Diversity Web, Université du Michigan"
+    },
+    {
+      "url": "https://portal.ct.gov/deep/wildlife/fact-sheets/muskrat",
+      "title": "Rat musqué — Connecticut Department of Energy and Environmental Protection"
+    },
+    {
+      "url": "https://wildlife.ca.gov/Conservation/Invasives/Species/Nutria",
+      "title": "Identification du ragondin — California Department of Fish and Wildlife"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.ecoleng.2006.06.008",
+      "title": "Le rat musqué dans les zones humides aménagées — Ecological Engineering"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T15324A22344525.en",
+      "title": "Évaluation Liste rouge du rat musqué — UICN"
+    },
+    {
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=OJ:L:2017:182:FULL",
+      "title": "Règlement d’exécution (UE) 2017/1263 — EUR-Lex"
+    },
+    {
+      "url": "https://environment.ec.europa.eu/news/towards-joint-european-management-invasive-alien-species-through-innovation-and-cooperation-2024-03-14_en",
+      "title": "Gestion transfrontalière des espèces exotiques envahissantes — Commission européenne"
+    },
+    {
+      "url": "https://doi.org/10.1002/jwmg.21328",
+      "title": "Preuves empiriques du déclin du rat musqué aux États-Unis — Journal of Wildlife Management"
+    },
+    {
+      "url": "https://extension.wvu.edu/natural-resources/wildlife/muskrats",
+      "title": "Rats musqués — West Virginia University Extension"
+    },
+    {
+      "url": "https://www.adfg.alaska.gov/index.cfm?adfg=wildlifenews.view_article&articles_id=330",
+      "title": "Comment les rats musqués construisent-ils leurs abris de glace ? — Alaska Department of Fish and Game"
+    },
+    {
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:02016R1141-20250807",
+      "title": "Liste de l’Union des espèces exotiques envahissantes préoccupantes, version consolidée du 7 août 2025 — EUR-Lex"
+    },
+    {
+      "url": "https://www.collectionscanada.gc.ca/obj/s4/f2/dsk3/ftp05/nq23585.pdf",
+      "title": "Écologie nutritionnelle et bioénergétique du rat musqué — thèse de l’Université du Manitoba"
+    },
+    {
+      "url": "https://doi.org/10.2307/1382649",
+      "title": "Conséquences d’une stratégie reproductive mixte chez le rat musqué — Journal of Mammalogy"
+    },
+    {
+      "url": "https://brains.anatomy.msu.edu/museum/brain/specimens/rodentia/muskrat/index.html",
+      "title": "Rat musqué (Ondatra zibethicus) — Comparative Mammalian Brain Collections, Michigan State University"
+    }
+  ]
+}

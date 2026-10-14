@@ -1,0 +1,54 @@
+{
+  "id": "alca_torda",
+  "name": "Petit Pingouin",
+  "scientific": "Alca torda",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Petit Pingouin est un alcidé de l’Atlantique Nord qui niche sur les côtes rocheuses et passe une grande partie de l’année en mer. Ses colonies s’étendent de l’est de l’Amérique du Nord au nord de l’Europe. Ses ailes ont deux fonctions : elles assurent le vol et le propulsent sous l’eau à la poursuite des poissons. Les colonies denses contrastent avec les groupes marins hors reproduction. Le succès reproducteur dépend des ressources au-delà de la falaise de nidification.",
+    "identification": "Alcidé compact à grosse tête, cou court et ailes étroites, le Petit Pingouin est noir dessus et blanc dessous en plumage nuptial. Son bec profond et noir porte une ligne transversale claire. En hiver, la gorge et les côtés du visage blanchissent. Les sexes se ressemblent. Comparé au Guillemot de Troïl, il est plus trapu et son bec est plus massif, même si les espèces sont difficiles à distinguer en mer. Les données du BTO sur les adultes vivants donnent une longueur d’aile moyenne de 196,9 mm et une masse moyenne de 612,6 g (plage de 525 à 705 g). La page regroupe les adultes sans séparer les mesures des mâles et des femelles.",
+    "habitat": "Les Petits Pingouins pondent sur des corniches ou parmi les blocs rocheux, souvent dans des colonies partagées avec le Guillemot de Troïl et d’autres oiseaux marins. Ces sites abritent l’œuf et donnent un accès immédiat à la mer aux poussins qui partent avant de savoir voler. Les relevés du BTO montrent que les colonies britanniques et irlandaises suivent les côtes rocheuses adaptées ; en hiver, les oiseaux s’éloignent au large. Leur cycle alterne sites côtiers de reproduction et zones marines d’alimentation.",
+    "diet": "Le Petit Pingouin poursuit les poissons sous l’eau, se propulsant par battements d’ailes et se dirigeant avec ses pattes. La flottabilité varie avec la profondeur : des enregistreurs posés sur des alcidés libres ont montré que les Petits Pingouins remontaient sans battre des ailes à moins d’environ 20 à 30 m de profondeur. Les poissons dominent le régime reproducteur, mais les proies varient selon les mers. À Stora Karlsö, les clupéidés, souvent le sprat, dominaient les charges photographiées (longueur moyenne : 115 mm). À Hornøya, dans la mer de Barents, les poussins recevaient capelans et lançons, et parfois de jeunes harengs.",
+    "behavior": "Les Petits Pingouins nichent en colonies denses et reviennent souvent aux mêmes sites. En mer, ils peuvent se nourrir en groupes, mais le suivi montre qu’ils ne répètent pas un trajet fixe. Dans une étude de trois ans portant sur 18 reproducteurs et 56 trajets, les zones de recherche étaient plus variables pendant l’incubation et davantage concentrées sur des eaux productives pendant l’élevage. Les deux parents s’occupent du poussin à la colonie ; après son départ de la corniche, le mâle l’accompagne et le nourrit en mer.",
+    "reproduction": "La femelle pond généralement un œuf sur une corniche ; les relevés du BTO en Grande-Bretagne et en Irlande comprennent exceptionnellement deux œufs dans un nid. Les deux adultes couvent pendant environ 32 à 39 jours. Le poussin duveteux quitte la corniche avant de savoir voler, dans l’intervalle localement observé de 14 à 24 jours, et gagne la mer à pied ou en planant.",
+    "ecology": "Prédateur de poissons, le Petit Pingouin dépend des populations de proies marines et peut répondre à leurs déplacements. À Hornøya, dans le nord-est de la Norvège, une étude de 1981 à 2013 a relevé des variations annuelles du régime des poussins et suggéré que les changements de répartition des poissons liés au réchauffement pourraient le modifier. À Stora Karlsö, en Baltique, les charges rapportées étaient surtout composées de clupéidés, poissons également ciblés par les pêcheries industrielles. Ces études locales documentent un lien trophique, mais ne mesurent ni un effet sur les stocks ni une relation uniforme dans l’Atlantique Nord.",
+    "conservation": "L’évaluation mondiale de l’UICN par BirdLife International, datée du 17 août 2021, classe le Petit Pingouin en préoccupation mineure et estime 838 000–1 660 000 individus adultes. Ce statut mondial daté n’exclut pas de déclins locaux. L’évaluation cite les déplacements de proies liés au climat, les captures accidentelles dans les filets maillants ou dérivants et la chasse non réglementée. Le risque de capture découle de la plongée-poursuite ; la disponibilité des poissons peut influer sur le nourrissage des poussins. Le suivi des colonies et des pêcheries est nécessaire pour évaluer les risques locaux."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/razorbill",
+      "title": "Petit Pingouin : BirdFacts"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Razorbill/lifehistory",
+      "title": "Histoire naturelle du Petit Pingouin"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Razorbill/id",
+      "title": "Identification du Petit Pingouin"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16547294/",
+      "title": "Vitesse de nage et battements chez les plongeurs à propulsion alaire"
+    },
+    {
+      "url": "https://journals.lub.lu.se/os/en/article/view/22615",
+      "title": "Régime et taille des proies des Petits Pingouins de Stora Karlsö"
+    },
+    {
+      "url": "https://boap.uib.no/index.php/ornis/article/view/891",
+      "title": "Régime, croissance et survie des poussins dans le sud de la mer de Barents"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4791460/",
+      "title": "Flexibilité alimentaire et recherche chez un oiseau marin libre"
+    },
+    {
+      "url": "https://journals.biologists.com/jeb/article/206/1/25/9265/Sex-differences-in-razorbill-Alca-torda-parent",
+      "title": "Différences sexuelles dans la reconnaissance vocale parent-poussin"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T22694852A228697220.en",
+      "title": "Alca torda : Liste rouge de l’UICN"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "brown_bear",
+  "name": "Ours brun",
+  "scientific": "Ursus arctos",
+  "group": "mammals",
+  "sections": {
+    "overview": "L’ours brun vit dans une vaste aire d’Eurasie et d’Amérique du Nord, des forêts et montagnes à la toundra et aux côtes. Ses populations isolées diffèrent par la taille, le pelage, le rythme saisonnier et l’alimentation, selon les conditions locales. En Amérique du Nord, le grizzli est une sous-espèce de l’ours brun, au sein de cette même espèce.",
+    "identification": "L’adulte a un corps massif, une bosse musculaire aux épaules et de longues griffes pour creuser. Son pelage va du blond au brun foncé ou noir ; les pointes pâles des poils de garde peuvent sembler grisonnantes. Il marche en posant toute la plante du pied. Les adultes mesurent environ 1,5 à 2,1 m de long et 0,9 à 1,5 m au garrot ; la masse publiée couvre environ 90 à 450 kg selon le sexe, la région et la saison, les mâles étant généralement plus grands.",
+    "habitat": "L’espèce fréquente forêts, broussailles, prairies et zones humides. En Alaska, les ours utilisent au printemps les pentes basses et zones humides pour les jeunes pousses, les clairières à baies en été, puis les rivières à saumons ou versants alpins en automne. Leurs déplacements suivent la nourriture.",
+    "diet": "L’ours brun est omnivore : herbes, racines, baies, noix, poissons, insectes, petits mammifères et charognes, parfois aussi de plus grandes proies. À Yellowstone, il mange notamment truites, jeunes wapitis, racines, baies et graines de pin ; les ours côtiers d’Alaska profitent des remontées de saumons.",
+    "behavior": "À Yellowstone, les grizzlis sont généralement solitaires hors de l’accouplement, des familles ou des rassemblements alimentaires ; certains se regroupent près des cours d’eau, carcasses ou agrégations de papillons. Ils hivernent en tanière, mais le calendrier et la sortie varient selon le sexe et la reproduction.",
+    "reproduction": "À Yellowstone, l’accouplement a lieu de mi-mai à mi-juillet. Après une implantation différée, les oursons naissent en tanière fin janvier ou en février, généralement un à trois par portée, parfois quatre. Ils tètent pendant l’hiver et restent auprès de leur mère environ deux ans.",
+    "ecology": "En Alaska, les déplacements saisonniers conduisent les ours des cours d’eau à saumons aux zones à baies ; les réserves de graisse soutiennent l’hivernage. Ces sites nourriciers peuvent attirer de nombreux individus au même endroit, surtout lorsque la nourriture y abonde.",
+    "conservation": "Le groupe de spécialistes des ours de l’UICN indique que l’espèce est en préoccupation mineure à l’échelle mondiale depuis 1996 et que sa tendance globale est stable. Cela masque des populations isolées menacées et des pertes historiques d’aire. Un bilan européen de 2023 signalait le rétablissement et l’expansion de plusieurs grandes populations."
+  },
+  "sources": [
+    {
+      "url": "https://www.globalbearconservation.org/About/leadership_page/75",
+      "title": "Fiche de l’espèce : ours brun, groupe de spécialistes des ours de l’UICN"
+    },
+    {
+      "url": "https://www.bearbiology.org/the-eight-bear-species/ursus-arctos-brown-bear/",
+      "title": "Ursus arctos (ours brun), International Association for Bear Research and Management"
+    },
+    {
+      "url": "https://www.fws.gov/species/brown-bear-ursus-arctos-arctos",
+      "title": "Ours brun (Ursus arctos arctos), U.S. Fish and Wildlife Service"
+    },
+    {
+      "url": "https://www.nps.gov/subjects/bears/brown-bears.htm",
+      "title": "Ours bruns : les ours, U.S. National Park Service"
+    },
+    {
+      "url": "https://home.nps.gov/yell/learn/yellowstone-grizzly-bear-facts.htm",
+      "title": "Faits sur le grizzli de Yellowstone, parc national de Yellowstone (U.S. National Park Service)"
+    },
+    {
+      "url": "https://www.adfg.alaska.gov/index.cfm?adfg=brownbear.printerfriendly",
+      "title": "Profil de l’ours brun, Alaska Department of Fish and Game"
+    },
+    {
+      "url": "https://environment.ec.europa.eu/topics/nature-and-biodiversity/habitats-directive/large-carnivores/large-carnivore-populations-across-europe_en",
+      "title": "Populations de grands carnivores en Europe, Commission européenne"
+    },
+    {
+      "url": "https://home.nps.gov/subjects/bears/brown-bears.htm",
+      "title": "Ours bruns — U.S. National Park Service"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "eurycea_sosorum",
+  "name": "Barton Springs Salamander",
+  "scientific": "Eurycea sosorum",
+  "group": "amphibians",
+  "sections": {
+    "overview": "The Barton Springs salamander is a small, fully aquatic salamander of the springs of Austin, Texas. It keeps its larval, gill-breathing form for its whole life and never leaves the water, depending entirely on groundwater from the Edwards Aquifer.",
+    "identification": "Adults measure about 6–8 cm in total length. The head is broad and deep, with reduced eyes and three bright red, feathery gills on each side. The limbs are long and slender, and the short tail has a well-developed upper fin. The mottled upper body ranges from brown to purple, reddish or orange, and the underside is cream and often translucent. Its relative the Austin blind salamander has skin-covered eyespots. Adults reach about 63–76 mm total length; the consulted species accounts do not report a reliable adult body-mass range.",
+    "habitat": "It lives in clean water fed by the Edwards Aquifer, usually in the wet upper layer of gravel and rock in or near spring openings, pools and spring runs. The water stays near 20 °C all year. It first became known from four spring sites in Zilker Park, and has since been found at 12 more spring and cave sites in Hays and Travis Counties.",
+    "diet": "It is an opportunistic predator of small live invertebrates and prefers planarian flatworms. When these become scarce it switches to midge larvae and the amphipod Hyalella azteca, which an earlier account gave as its main food.",
+    "behavior": "It spends much of its time in the spaces among stones and gravel of the streambed, which give it food, shelter from predators and refuge in drought. It is secretive and appears to be nocturnal, and it can tell low-risk predators from high-risk ones.",
+    "reproduction": "Females with eggs and young larvae are found all year, suggesting breeding in every season. Courtship includes a tail-straddling walk; the male leaves a sperm packet that the female picks up, and fertilisation is internal. Eggs have rarely been found in the wild. In captivity they hatch 15–40 days after laying, and the larvae begin to feed about 10–11 days later.",
+    "ecology": "It feeds on small invertebrates of the spring’s stream bed, and its own predators are thought to include small fishes and crayfish. Its survival is tied to the quality and quantity of groundwater from the Edwards Aquifer.",
+    "conservation": "It was listed as Endangered under the US Endangered Species Act on 30 April 1997, mainly because urban growth was reducing the quality and quantity of water feeding the springs. Its small range leaves it exposed to groundwater contamination, hazardous spills and increased water withdrawals. Its range is larger than first thought, but no population counts are given in the federal profile."
+  },
+  "sources": [
+    {
+      "url": "https://www.fws.gov/species/barton-springs-salamander-eurycea-sosorum",
+      "title": "Barton Springs salamander (Eurycea sosorum) — U.S. Fish and Wildlife Service"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Eurycea_sosorum",
+      "title": "Eurycea sosorum — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

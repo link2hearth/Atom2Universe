@@ -1,0 +1,26 @@
+{
+  "id": "phalanger_mimicus",
+  "name": "Couscous commun du Sud",
+  "scientific": "Phalanger mimicus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le couscous commun du Sud est un marsupial nocturne et arboricole du sud de la Nouvelle-Guinée et de la péninsule du cap York, dans le nord de l’Australie, où on l’appelle aussi couscous gris. Longtemps traité comme une forme d’autres couscous communs, il est aujourd’hui reconnu comme une espèce à part entière.",
+    "identification": "Un couscous de taille petite à moyenne, au corps long de 33 à 40 cm, à la queue de 28 à 35 cm et pesant de 1,5 à 2,2 kg. Le dos est gris-brun avec une bande de la tête à la croupe, et le dessous blanc cassé. En Nouvelle-Guinée, les femelles sont d’un brun plus roux que les mâles, plus gris. Son crâne et ses molaires sont plus petits que ceux des couscous communs du Nord et de l’Est.",
+    "habitat": "En Nouvelle-Guinée, il vit dans la forêt secondaire, la forêt-galerie le long des cours d’eau, les jardins et certaines zones dégradées des basses terres du sud. En Australie, il est connu des forêts tropicales et des forêts à lianes de la région d’Iron Range et des monts McIlwraith, à l’est de la péninsule du cap York.",
+    "diet": "En Australie, on l’a vu manger les fruits du cèdre rouge, les fleurs d’un arbre à écorce liégeuse et les feuilles de divers arbres, et un estomac contenait une pâte de graines de l’arbre appelé « black bean ». Son régime en Nouvelle-Guinée n’est pas décrit dans la source consultée.",
+    "behavior": "Il est nocturne, s’abrite le jour dans des creux d’arbres et passe pour être solitaire. En Australie, il est peu abondant : l’observation de nuit à la lampe ne révèle en moyenne qu’un animal toutes les deux à cinq heures. Le domaine vital et les déplacements ne sont pas documentés dans la source consultée.",
+    "reproduction": "On en sait très peu. En Australie, on a observé aussi bien des petits uniques que des jumeaux. La saison de reproduction, la gestation et la durée en poche ne sont pas indiquées dans les sources consultées.",
+    "ecology": "On pense que les pythons sont des prédateurs importants de l’espèce. Son rôle dans la forêt comme mangeur de fruits, de graines et de feuilles, par exemple pour disperser des graines, n’a pas été étudié dans les sources lues.",
+    "conservation": "Il est classé en préoccupation mineure sur la Liste rouge de l’UICN, d’après la base Mammal Diversity Database et une fiche d’espèce, qui citent son aire étendue, sa population présumée importante, sa présence dans des aires protégées comme le parc national d’Iron Range et sa tolérance à certaines modifications de l’habitat. Il figure aussi à l’annexe II de la CITES."
+  },
+  "sources": [
+    {
+      "url": "https://zenodo.org/records/6620405/files/treatment.html?download=1",
+      "title": "Phalanger mimicus — fiche d’espèce (Zenodo)"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000386",
+      "title": "Phalanger mimicus — Mammal Diversity Database"
+    }
+  ]
+}

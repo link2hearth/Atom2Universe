@@ -1,0 +1,34 @@
+{
+  "id": "acasis_viretata",
+  "name": "Lobophore verdâtre",
+  "scientific": "Acasis viretata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Acasis viretata est un petit papillon de nuit de la famille des Géométridés, présent dans une grande partie de l’Europe et vers l’est en Asie. La lobophore verdâtre doit son nom à ses ailes antérieures jaune-vert marquées de lignes transversales sombres ; les adultes fraîchement éclos sont toutefois plus verts, car cette teinte pâlit rapidement. Ses chenilles mangent les fleurs, les fruits et les feuilles de plusieurs arbustes et plantes grimpantes, dont le houx, le lierre et le troène.",
+    "identification": "L’adulte a une silhouette compacte et des ailes antérieures olive ou jaune-vert traversées de lignes sombres ondulées ; de petits points noirs interrompent souvent la bande claire du bord externe. Les papillons fraîchement éclos peuvent être d’un vert vif, mais la couleur de fond pâlit vers le jaune ou le brun-gris : elle ne suffit donc pas à l’identification. Les ailes postérieures sont gris clair. L’envergure est de 25 à 29 mm ; les sources ne donnent pas de hauteur, largeur corporelle ou masse pertinentes, ni de différence constante de taille entre mâles et femelles. Il faut comparer l’ensemble des lignes transversales et les ailes postérieures aux autres petits Larentiinae plutôt que se fier à la couleur défraîchie.",
+    "habitat": "Elle fréquente les bois de feuillus, les fourrés, les haies, les parcs et les jardins où poussent ses plantes nourricières. Les données françaises la signalent aussi dans les bois clairs, les clairières humides et certaines zones montagneuses. L’espèce est largement répartie en Europe, mais elle reste souvent localisée ou observée en petit nombre ; sa fréquence varie beaucoup selon les régions.",
+    "diet": "Les chenilles se nourrissent de plusieurs genres de plantes et ne dépendent pas d’un hôte unique connu. Les données régionales citent le houx (Ilex), le lierre (Hedera), le troène (Ligustrum), le cornouiller (Cornus), la viorne obier (Viburnum) et la bourdaine ou les nerpruns (Rhamnus) ; les larves consomment les fleurs, les fruits en formation et les feuilles. Les adultes ne se nourrissent pas de ces plantes de la même façon et les sources consultées ne précisent pas de préférence nectarifère propre à l’espèce.",
+    "behavior": "Les adultes volent principalement au printemps et en été ; une seconde génération apparaît dans certaines années ou régions du sud de l’aire. Ils sont souvent capturés isolément à la lumière et peuvent se reposer sur les troncs d’arbres le jour. La couleur verte est surtout visible juste après l’émergence puis s’atténue, ce qui peut faire paraître les individus âgés différents.",
+    "reproduction": "La femelle pond sur les plantes nourricières ou à proximité. Les chenilles sont observées au début de l’été et mangent les fleurs, les fruits et le feuillage ; l’espèce hiverne au stade de chrysalide. Selon la latitude et les conditions locales, elle peut présenter une ou deux périodes de vol des adultes. Les sources ne donnent pas de chiffres généraux fiables sur le nombre d’œufs, la durée du développement ou la taille selon le sexe.",
+    "ecology": "Ses chenilles exploitent plusieurs arbustes et plantes grimpantes communes, tandis que les adultes appartiennent à la faune nocturne des lisières boisées et des jardins. La chrysalide passe l’hiver, ce qui relie le cycle de vie au rythme saisonnier des plantes. Les observations régionales montrent qu’elle peut être largement répartie sans être abondante sur un site donné ; les références consultées ne définissent ni rôle écologique quantifié ni tendance de population.",
+    "conservation": "Les sources examinées ne donnent pas d’évaluation mondiale du risque propre à Acasis viretata. L’espèce occupe une vaste aire, même si les observations peuvent être rares localement et que son statut régional varie. La conservation de lisières boisées diversifiées, de haies et de plantes hôtes préserve les habitats utilisés par les chenilles ; il s’agit d’une mesure générale, et non de la preuve d’un déclin particulier de l’espèce."
+  },
+  "sources": [
+    {
+      "url": "https://www.habitas.org.uk/moths/species.asp?item=5974",
+      "title": "Lobophore verdâtre — papillons et papillons de nuit d’Irlande du Nord"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/acasis-viretata/",
+      "title": "Acasis viretata — UKMoths"
+    },
+    {
+      "url": "https://oreina.org/artemisiae/observatoire/index.php?action=fiche&d=hetero&id=248757&module=fiche",
+      "title": "Lobophore verdâtre — Oreina, Observatoire des lépidoptères"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/?e=l&id=36070",
+      "title": "La Lobophore verdâtre — Lepi’Net, observations des papillons de nuit de France"
+    }
+  ]
+}

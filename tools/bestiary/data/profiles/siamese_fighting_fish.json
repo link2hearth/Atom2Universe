@@ -12,8 +12,8 @@
       "fr": "Indigène de Thaïlande et de l’Indochine voisine, le B. splendens sauvage est discret et doté de nageoires courtes; l’élevage a sélectionné couleurs vives et longues nageoires."
     },
     "identification": {
-      "en": "Adults average about 6.5 cm; males are often slimmer, longer-finned, and brighter, while females have shorter fins, especially in domestic strains.",
-      "fr": "Les adultes mesurent en moyenne 6,5 cm; les mâles sont souvent plus fins, colorés et à longues nageoires, surtout dans les lignées domestiques."
+      "en": "Wild adults reach a documented maximum total length of 6.5 cm; FishBase does not report a body mass. Adult males generally have longer fins than females, but no reliable sex-specific body-size or weight measurements were found in the consulted sources. Wild adults reach a documented maximum total length of 6.5 cm; males are often slimmer, longer-finned, and brighter, while females have shorter fins, especially in domestic strains.",
+      "fr": "Les adultes sauvages atteignent une longueur totale maximale documentée de 6,5 cm ; FishBase ne fournit pas de masse corporelle. Les mâles adultes ont généralement des nageoires plus longues que les femelles, mais les sources consultées ne donnent pas de mesures fiables de taille corporelle ou de masse par sexe. Les adultes atteignent une longueur totale maximale documentée de 6,5 cm; les mâles sont souvent plus fins, colorés et à longues nageoires, surtout dans les lignées domestiques."
     },
     "habitat": {
       "en": "It inhabits Thailand’s central plain and nearby Indochina, in shallow marshes, floodplains and rice fields with warm, slow water and vegetation.",
@@ -58,14 +58,14 @@
         "Wild colours and short fins contrast with selectively bred ornamental forms."
       ],
       "prose_claims": [
-        "overview.en.1",
+        "diet.en.2",
+        "diet.fr.2",
         "identification.en.1",
+        "overview.en.1",
         "reproduction.en.2",
         "reproduction.en.3",
         "reproduction.en.5",
-        "reproduction.fr.5",
-        "diet.en.2",
-        "diet.fr.2"
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -92,14 +92,14 @@
         "Page française corroborates the species identity and basic natural history."
       ],
       "prose_claims": [
-        "overview.fr.1",
+        "behavior.en.3",
+        "behavior.fr.3",
         "identification.fr.1",
+        "overview.fr.1",
+        "reproduction.en.6",
         "reproduction.fr.2",
         "reproduction.fr.3",
-        "reproduction.en.6",
-        "reproduction.fr.6",
-        "behavior.en.3",
-        "behavior.fr.3"
+        "reproduction.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -126,13 +126,13 @@
       "prose_claims": [
         "ecology.en.1",
         "ecology.en.2",
+        "ecology.en.3",
         "ecology.fr.1",
         "ecology.fr.2",
-        "reproduction.en.1",
-        "reproduction.fr.1",
-        "ecology.en.3",
         "ecology.fr.3",
+        "reproduction.en.1",
         "reproduction.en.4",
+        "reproduction.fr.1",
         "reproduction.fr.4"
       ],
       "budget": {
@@ -158,12 +158,12 @@
         "Wild diet includes zooplankton and insect larvae; males defend territories."
       ],
       "prose_claims": [
-        "diet.en.1",
-        "diet.fr.1",
         "behavior.en.1",
         "behavior.en.2",
         "behavior.fr.1",
-        "behavior.fr.2"
+        "behavior.fr.2",
+        "diet.en.1",
+        "diet.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -202,6 +202,26 @@
         "total": 98,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Betta splendens summary — FishBase",
+        "fr": "Fiche Betta splendens — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/betta-splendens.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Maximum total length 6.5 cm male/unsexed; no published body mass on the species summary."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.2",
+        "identification.fr.3"
+      ]
     }
   ],
   "illustration_notes": "Wild-type short-finned Betta splendens, muted brown-green body and modest fins; avoid ornamental long-finned colours.",

@@ -82,8 +82,8 @@
       ],
       "prose_claims": [
         "overview.en.2",
-        "overview.fr.2",
         "overview.en.6",
+        "overview.fr.2",
         "overview.fr.6",
         "reproduction.en.4",
         "reproduction.fr.4"
@@ -113,14 +113,14 @@
         "Typical size, sex difference and reported maximum."
       ],
       "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
         "identification.en.3",
         "identification.fr.3",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
-        "reproduction.fr.2",
-        "habitat.en.1",
-        "habitat.fr.1"
+        "reproduction.fr.1",
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -145,12 +145,12 @@
         "Study of sucker anatomy and muscular adhesion in specimens from the Bay of Naples."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
         "behavior.en.3",
-        "behavior.fr.3"
+        "behavior.fr.3",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -200,10 +200,10 @@
         "Study includes O. vulgaris and describes chromatophores, iridophores and visual background matching; chromatophore sacs expand under radial muscle contraction."
       ],
       "prose_claims": [
-        "identification.en.4",
-        "identification.fr.4",
         "behavior.en.4",
-        "behavior.fr.4"
+        "behavior.fr.4",
+        "identification.en.4",
+        "identification.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -254,8 +254,8 @@
       ],
       "prose_claims": [
         "diet.en.3",
-        "diet.fr.3",
         "diet.en.6",
+        "diet.fr.3",
         "diet.fr.6",
         "ecology.en.1",
         "ecology.fr.1"
@@ -308,8 +308,8 @@
       ],
       "prose_claims": [
         "reproduction.en.6",
-        "reproduction.fr.6",
         "reproduction.en.7",
+        "reproduction.fr.6",
         "reproduction.fr.7"
       ],
       "budget": {
@@ -360,8 +360,8 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.4",
+        "conservation.fr.1",
         "conservation.fr.4"
       ],
       "budget": {
@@ -387,8 +387,8 @@
       ],
       "prose_claims": [
         "habitat.en.2",
-        "habitat.fr.2",
         "habitat.en.3",
+        "habitat.fr.2",
         "habitat.fr.3"
       ],
       "budget": {
@@ -463,14 +463,14 @@
         "Species synthesis describes prey, predators, planktonic young and benthic adults."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "diet.en.1",
         "diet.fr.1",
         "ecology.en.3",
-        "ecology.fr.3",
         "ecology.en.4",
-        "ecology.fr.4"
+        "ecology.fr.3",
+        "ecology.fr.4",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -520,10 +520,10 @@
         "Field study relates hatching temperature and recruitment in central Mediterranean waters."
       ],
       "prose_claims": [
-        "ecology.en.2",
-        "ecology.fr.2",
         "conservation.en.2",
-        "conservation.fr.2"
+        "conservation.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
       ],
       "budget": {
         "limit": 200,

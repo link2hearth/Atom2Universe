@@ -1,0 +1,34 @@
+{
+  "id": "lasius_niger",
+  "name": "Black Garden Ant",
+  "scientific": "Lasius niger",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The black garden ant is the familiar small dark ant of lawns, paths and pavements in Europe. Its colonies are led by a queen that is exceptionally long-lived for an insect, with lifespans of 20 years and more reported, while workers live for a much shorter and more variable time.",
+    "identification": "Workers are small, about 3 to 5 mm long, and dark brown to almost black. The winged females seen during swarms are larger, up to about 9 mm, while winged males measure about 3.5 to 4.5 mm. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+    "habitat": "It is common in built-up areas and often found in drier places. Nests lie in the ground, in lawns, flower pots, compost bins and among plant roots, often under rocks or paving. The main sign of a nest is a small heap of fine soil at the surface.",
+    "diet": "It eats other invertebrates and collects honeydew, the sugary liquid excreted by aphids and some other sap-feeding insects. Workers can often be seen tending aphids.",
+    "behavior": "Colonies hold many hundreds to thousands of ants, and large nests can pass 20,000. Ants may guard aphids from ladybirds and other predators to protect their honeydew supply. Young queens and males swarm in warm, humid weather, mainly from July to August, and swarms occur over several weeks rather than on a single day.",
+    "reproduction": "During the nuptial flight a queen usually mates with several males and stores enough sperm to lay fertilised eggs for the rest of her life. Males live only a day or two afterwards. The queen then chews off her wings, digs an underground chamber, lays her first eggs and raises them without feeding for weeks, until her first workers can forage.",
+    "ecology": "In gardens the ants prey on other invertebrates and, by protecting aphids, can raise plant damage; they do little direct harm to plants. Their excavated soil can bury low plants and disturb the roots of potted plants. The Royal Horticultural Society advises tolerating them as part of garden biodiversity.",
+    "conservation": "No global conservation assessment was found. The species is common and widespread in gardens and built-up areas of Europe, and no threat has been identified in the sources consulted."
+  },
+  "sources": [
+    {
+      "url": "https://www.nhm.ac.uk/discover/when-why-winged-ants-swarm-nuptial-flight.html",
+      "title": "When and why winged ants swarm — Natural History Museum, London"
+    },
+    {
+      "url": "https://www.rhs.org.uk/biodiversity/ants",
+      "title": "Ants — Royal Horticultural Society"
+    },
+    {
+      "url": "https://www.gedlingconservationtrust.org/?p=11656",
+      "title": "Black Garden Ant — Gedling Conservation Trust"
+    },
+    {
+      "url": "https://www.demogr.mpg.de/en/publications_databases_6118/publications_1904/journal_articles/worker_lifespan_is_an_adaptive_trait_during_colony_establishment_in_the_long_lived_ant_lasius_niger_5674",
+      "title": "Worker lifespan is an adaptive trait during colony establishment in the long-lived ant Lasius niger — Kramer, Schaible and Scheuerlein, Experimental Gerontology, 2016 (abstract)"
+    }
+  ]
+}

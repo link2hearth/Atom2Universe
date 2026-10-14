@@ -12,8 +12,8 @@
       "fr": "L’émeu est le plus grand oiseau indigène d’Australie. Incapable de voler, il parcourt une grande partie du continent et adapte ses déplacements aux pluies. Son cycle de vie se distingue par le mâle, seul responsable de la couvaison et des poussins rayés."
     },
     "identification": {
-      "en": "Adults stand 1.6–1.9 m, with shaggy grey-brown feathers, a sparsely feathered bluish head and neck, tiny wings and long legs. Each foot has three forward toes; ostriches are taller and have two. Chicks bear dark stripes.",
-      "fr": "L’adulte mesure 1,6 à 1,9 m. Son plumage gris-brun hirsute, sa tête et son cou bleuâtres peu emplumés, ses petites ailes et ses longues pattes le caractérisent. Chaque pied a trois doigts vers l’avant ; l’autruche, plus grande, en a deux. Les poussins sont rayés."
+      "en": "Adults stand 1.6–1.9 m, with shaggy grey-brown feathers, a sparsely feathered bluish head and neck, tiny wings and long legs. Each foot has three forward toes; ostriches are taller and have two. Chicks bear dark stripes. Adult mass is about 30–45 kg; the consulted sources do not give a dependable sex-specific adult mass range.",
+      "fr": "L’adulte mesure 1,6 à 1,9 m. Son plumage gris-brun hirsute, sa tête et son cou bleuâtres peu emplumés, ses petites ailes et ses longues pattes le caractérisent. Chaque pied a trois doigts vers l’avant ; l’autruche, plus grande, en a deux. Les poussins sont rayés. La masse adulte est d’environ 30 à 45 kg ; les sources consultées ne donnent pas de fourchette fiable selon le sexe."
     },
     "habitat": {
       "en": "Emus range across mainland Australia, from coastal regions and woodlands to open plains. They avoid rainforest and very arid areas. Where food or water varies, birds move in response to climate and rainfall, sometimes hundreds of kilometres.",
@@ -118,6 +118,20 @@
         "Regional population profile last updated 21 January 2020; NSW status is endangered, while the profile says Commonwealth status is not listed.",
         "Describes range contraction, habitat fragmentation, fire, predators, vehicle collisions and barriers as regional threats.",
         "Documents long-distance seed dispersal by emus on the north-east NSW coast and states that all parental care is by males."
+      ]
+    },
+    {
+      "title": {
+        "en": "Emu — Australia Zoo",
+        "fr": "Émeu — Australia Zoo"
+      },
+      "url": "https://australiazoo.com.au/wildlife/our-animals/emu/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult emus weigh about 30–45 kg."
       ]
     }
   ],

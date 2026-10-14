@@ -1,0 +1,74 @@
+{
+  "id": "least_weasel",
+  "name": "Least weasel",
+  "scientific": "Mustela nivalis",
+  "group": "mammals",
+  "sections": {
+    "overview": "The least weasel has a very slender, elongated trunk, short limbs and a short tail, a form that lets it follow rodents into narrow burrows. Its high surface-to-volume ratio and inability to curl into a compact ball increase heat loss. Its native range spans much of Europe, northern Asia and northern North America, with introductions to some islands.",
+    "identification": "In Britain, adult males usually measure 19.4–21.7 cm in body length, with a 4.2–5.2 cm tail, and weigh 106–131 g; females measure 17.3–18.3 cm, with a 3.4–4.3 cm tail, and weigh 55–69 g. Adult body size also varies geographically. The British coat is reddish brown above and cream below, with an irregular boundary; its short tail lacks the stoat’s black tip. Some northern populations turn white in winter, unlike Britain’s. In northeastern Poland, observations from 1997 and 2003–07 associated fewer snow-cover days with a smaller share of white winter coats. In a separate 2015–16 experiment, predators detected coat models more often when their colour mismatched the background; snow-cover percentage did not significantly predict detection.",
+    "habitat": "Across its Holarctic range, it uses grassland, meadows, farmland, woodland edges, scrub, steppe, wetlands and some alpine or coastal habitats. It favors ground cover and prey-rich patches for ambushes, and shelters in abandoned rodent nests or burrows, often using several resting sites rather than digging a den.",
+    "diet": "In a Polish forest, five radio-tracked males attacked bank voles and yellow-necked mice above and below ground. Of 60 observed attacks, success was 23% on voles and 60% on mice, so tunnel access did not guarantee a catch. On English farmland, voles made up 16% of the diet in low-vole years and 54% at peak abundance, while birds became the main alternative when voles were scarce. Smaller weasels consumed more food relative to body mass; captive trials also found assimilation varied with diet and temperature, so they do not define a wild daily ration.",
+    "behavior": "An English woodland study found resident male ranges varied in size and shifted with prey distribution; males generally ranged farther than females. Usually solitary, least weasels mark den sites with scent. Their small bodies need frequent feeding, and surplus prey may be cached near shelters. Measurements of free-ranging males in Poland found higher thermoregulatory costs in cold weather and daily activity adjusted with temperature, body mass, habitat and season.",
+    "reproduction": "From 18 breeding females and three immature young sampled in Poland, the author inferred a season from April mating to the last young leaving in October, cautioning that the sample was small. Unlike stoats, least weasels do not delay implantation: total gestation lasts about 34–37 days from mating, including roughly 25 days after implantation. A five-year captive study recorded 65 litters, averaging 5.1 kits among 53 litters of known size; this is not a universal wild average. Newborns weigh about 1–1.7 g and are naked, blind and deaf; ears open at 21–28 days and eyes at 26–30 days. The female alone nurses for about 32 days; weaning may continue to 42–56 days. In captivity, young can kill prey at about 47 days; they disperse and become independent at about nine to ten weeks.",
+    "ecology": "On 25 km² of southern English farmland, vole density peaked at fourteen times its low-year level in a four-year cycle; weasel numbers lagged and females failed to breed in the trough, documenting a local predator response without showing that weasels caused the vole cycle. In Białowieża Forest, winter estimates attributed 11–21% of rodent predation to weasels, compared with 56–71% to tawny owls and 10–15% to pine martens.",
+    "conservation": "The global IUCN assessment dated 2 May 2015 and amended in 2019 lists the species as Least Concern, citing its broad range, presumed large population and tolerance of some habitat change. In Britain, gamekeepers historically trapped weasels as supposed gamebird enemies; the Mammal Society says they probably killed few chicks and that trapping likely had no long-term effect because populations recover and recolonise."
+  },
+  "sources": [
+    {
+      "url": "https://www.science.smith.edu/departments/Biology/VHAYSSEN/msi/pdf/i0076-3519-454-01-0001.pdf",
+      "title": "Least Weasel — Mammalian Species 454"
+    },
+    {
+      "url": "https://mammal.org.uk/british-mammals/weasel",
+      "title": "Mammal Society: Weasel"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Mustela_nivalis/",
+      "title": "Animal Diversity Web: Mustela nivalis"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5967304/",
+      "title": "Climate change and camouflage mismatch in least weasels"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T70207409A147993366.en",
+      "title": "IUCN Red List: Mustela nivalis"
+    },
+    {
+      "url": "https://www.gwct.org.uk/research/scientific-publications/1970-79/1979/tapper1979/",
+      "title": "Tapper 1979: vole cycles and weasels on English farmland"
+    },
+    {
+      "url": "https://rcin.org.pl/ibs/Content/11804",
+      "title": "Hunting success and rodent escape tactics in Białowieża"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2674502/",
+      "title": "Trade-offs between activity and thermoregulation in least weasels"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28308972/",
+      "title": "Moors: metabolism, food consumption and assimilation in weasels"
+    },
+    {
+      "url": "https://doi.org/10.2307/3616",
+      "title": "The Home Range of the Weasel in an English Woodland"
+    },
+    {
+      "url": "https://nsojournals.onlinelibrary.wiley.com/doi/abs/10.1111/j.1600-0587.1993.tb00058.x",
+      "title": "Autumn and winter predation on forest rodents in Białowieża"
+    },
+    {
+      "url": "https://doi.org/10.1007/BF03194266",
+      "title": "Reproduction of the least weasel in captivity: basic observations"
+    },
+    {
+      "url": "https://rcin.org.pl/Content/11245/BI002_26016_Cz-40-2_Acta-T32-nr31-493-496_o.pdf",
+      "title": "Reproduction in Mustela nivalis"
+    },
+    {
+      "url": "https://www.zin.ru/journals/zsr/content/1999/zr_1999_8_2_Abramov_2.pdf",
+      "title": "Geographic variation in the least weasel"
+    }
+  ]
+}

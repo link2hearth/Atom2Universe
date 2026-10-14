@@ -12,8 +12,8 @@
       "fr": "L’Étourneau sansonnet est un passereau de taille moyenne, adaptable, indigène dans une grande partie de l’Europe et de l’Asie tempérée. Il fréquente les terrains ouverts pour s’alimenter et les abris pour dormir ; il niche souvent dans des cavités d’arbres ou de bâtiments. Son plumage saisonnier, ses cris variés et ses grands vols coordonnés le rendent visible, tandis que ses effets écologiques dépendent fortement de son origine locale ou de son introduction."
     },
     "identification": {
-      "en": "Adults have a compact, dark body, short tail, pointed wings and a slender bill. The apparent blackness is broken by green, blue and purple iridescence: ordered melanosomes beneath a thin keratin layer in feather barbules produce structural colour whose hue changes with illumination and viewing angle. After the annual moult, fresh feathers carry pale tips that create conspicuous winter spots; abrasion gradually removes the tips towards spring, exposing the darker glossy feather. The bill is dark in winter and becomes yellow as breeding approaches. In breeding condition, the lower bill base is usually blue-grey in males and pink in females. A late-winter bird can therefore show both residual white spots and a yellow bill.",
-      "fr": "L’adulte a un corps compact et sombre, une queue courte, des ailes pointues et un bec fin. Cette apparence noire est nuancée d’irisations vertes, bleues et violettes : des mélanosomes ordonnés sous une fine couche de kératine, dans les barbules des plumes, produisent une couleur structurelle dont la teinte varie avec l’éclairage et l’angle de vue. Après la mue annuelle, les plumes neuves portent des pointes pâles qui forment les taches hivernales ; leur usure progressive vers le printemps révèle la plume sombre et brillante. Le bec, sombre en hiver, jaunit à l’approche de la reproduction. En période nuptiale, la base de la mandibule inférieure est généralement bleu-gris chez le mâle et rose chez la femelle. Un oiseau de fin d’hiver peut donc garder des taches blanches tout en ayant le bec jaune."
+      "en": "Adults of both sexes are about 20–23 cm long and weigh 60–96 g. The consulted reference does not provide a dependable wingspan, height or body-width value for this species. Adults have a compact, dark body, short tail, pointed wings and a slender bill. The apparent blackness is broken by green, blue and purple iridescence: ordered melanosomes beneath a thin keratin layer in feather barbules produce structural colour whose hue changes with illumination and viewing angle. After the annual moult, fresh feathers carry pale tips that create conspicuous winter spots; abrasion gradually removes the tips towards spring, exposing the darker glossy feather. The bill is dark in winter and becomes yellow as breeding approaches. In breeding condition, the lower bill base is usually blue-grey in males and pink in females. A late-winter bird can therefore show both residual white spots and a yellow bill.",
+      "fr": "L’adulte des deux sexes mesure environ 20 à 23 cm et pèse 60 à 96 g. La référence consultée ne donne pas de valeur fiable d’envergure, de hauteur ou de largeur corporelle pour cette espèce. L’adulte a un corps compact et sombre, une queue courte, des ailes pointues et un bec fin. Cette apparence noire est nuancée d’irisations vertes, bleues et violettes : des mélanosomes ordonnés sous une fine couche de kératine, dans les barbules des plumes, produisent une couleur structurelle dont la teinte varie avec l’éclairage et l’angle de vue. Après la mue annuelle, les plumes neuves portent des pointes pâles qui forment les taches hivernales ; leur usure progressive vers le printemps révèle la plume sombre et brillante. Le bec, sombre en hiver, jaunit à l’approche de la reproduction. En période nuptiale, la base de la mandibule inférieure est généralement bleu-gris chez le mâle et rose chez la femelle. Un oiseau de fin d’hiver peut donc garder des taches blanches tout en ayant le bec jaune."
     },
     "habitat": {
       "en": "Starlings use open country with short vegetation, including pasture, lawns, parks and cultivated fields, where the ground is accessible for probing. Trees, reedbeds and buildings provide night roosts; nest sites are cavities such as old woodpecker holes, tree hollows, nest boxes and gaps in structures. Their broad use of human-shaped landscapes helps explain successful establishment in several introduced regions, but does not make every introduced population equally damaging.",
@@ -396,6 +396,20 @@
       ],
       "prose_claims": [
         "Scoped 2003 population-analysis finding, distinct from individual nest usurpation."
+      ]
+    },
+    {
+      "title": {
+        "en": "European Starling Identification — Cornell Lab of Ornithology",
+        "fr": "Identification de l’Étourneau sansonnet — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/european_starling/id/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Both sexes: length 20–23 cm and body mass 60–96 g."
       ]
     }
   ],

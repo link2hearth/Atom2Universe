@@ -1,0 +1,30 @@
+{
+  "id": "ophiophagus_hannah",
+  "name": "King Cobra",
+  "scientific": "Ophiophagus hannah",
+  "group": "reptiles",
+  "sections": {
+    "overview": "The king cobra is the world’s longest venomous snake, living in the forests of South and Southeast Asia. Its scientific name means snake-eater: it feeds mainly on other snakes. It is also the only snake known to build a nest, which the female guards.",
+    "identification": "Adults usually measure about 3–4 m, and the longest known individual was 5.85 m. Adults are olive, brown, yellow or nearly black, often with pale cross-bars or chevrons, and the throat is light yellow or cream. When threatened it raises the front of the body and spreads its hood. Juveniles are black with yellow or white cross-bars. A reliable adult body-mass range, body width or sex-specific size difference was not found in the consulted species references, so none is estimated here.",
+    "habitat": "It ranges from northern India east to southern China and south through the Malay Peninsula to western Indonesia and the Philippines. It lives near streams in dense or open forest, in bamboo thickets, nearby farmland and dense mangroves. In Bhutan, one survey recorded it between 650 and 2,057 m, mostly lower, and mainly where human disturbance was low.",
+    "diet": "It feeds mainly on other snakes, including large and mostly harmless species such as Asian rat snakes and pythons, as well as other cobras and kraits. Some individuals eat only one species of snake. When food is scarce, it may also take lizards, birds and other small vertebrates.",
+    "behavior": "It is active by day and usually retreats rather than attack, but it defends a nest fiercely. In a threat display it raises the front of the body about a metre off the ground, spreads its hood, hisses loudly and can strike from a distance. Its venom is a powerful neurotoxin that can cause death by respiratory failure.",
+    "reproduction": "It breeds from January to April. The female pushes leaves and branches into a pile and lays her eggs in it, and the heat of decay incubates them. Clutches have about 21–40 eggs in one source and 7–43 in another, with incubation of roughly 66 to 105 days. She guards the nest, often from on top of it, while the male stays nearby, and females can be very aggressive towards intruders.",
+    "ecology": "As an apex predator that eats mainly other snakes, the king cobra is placed high in forest food webs. In a Bhutan study, a nest of 37 eggs was monitored and found to be guarded by the female. It is also a popular display animal in zoos.",
+    "conservation": "The king cobra is listed as Vulnerable on the IUCN Red List and is in CITES Appendix II. The main threats are habitat destruction and persecution by people who fear snakes. It is protected by law in several countries, including China, Vietnam and India."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Ophiophagus_hannah/",
+      "title": "Ophiophagus hannah — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://thainationalparks.com/species/ophiophagus-hannah",
+      "title": "King cobra (Ophiophagus hannah) — Thai National Parks species profile"
+    },
+    {
+      "url": "https://journals.ku.edu/reptilesandamphibians/article/view/15786/version/17630",
+      "title": "Distribution, habitat use, and nesting behavior of the King Cobra (Ophiophagus hannah) in the Trashigang Forest Division, Eastern Bhutan — Reptiles & Amphibians, 2021"
+    }
+  ]
+}

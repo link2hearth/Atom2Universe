@@ -67,46 +67,14 @@
         "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
       },
       "prose_claims": [
-        {
-          "section": "overview",
-          "en_sentence_ids": [
-            2
-          ],
-          "fr_sentence_ids": [
-            2
-          ],
-          "claim": "Global range outside the Arctic; geographic variation."
-        },
-        {
-          "section": "habitat",
-          "en_sentence_ids": [
-            3
-          ],
-          "fr_sentence_ids": [
-            3
-          ],
-          "claim": "Northeast Pacific feeding, wintering and calving areas."
-        },
-        {
-          "section": "conservation",
-          "en_sentence_ids": [
-            7
-          ],
-          "fr_sentence_ids": [
-            7
-          ],
-          "claim": "Current human pressures: vessel strikes, entanglement, noise and climate change."
-        },
-        {
-          "section": "identification",
-          "en_sentence_ids": [
-            3
-          ],
-          "fr_sentence_ids": [
-            3
-          ],
-          "claim": "NOAA indicative Antarctic and northern upper lengths, Antarctic mass and sex differences; imperial units rounded to metric."
-        }
+        "conservation.en.7",
+        "conservation.fr.7",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "identification.en.3",
+        "identification.fr.3",
+        "overview.en.2",
+        "overview.fr.2"
       ]
     },
     {
@@ -133,32 +101,16 @@
         "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
       },
       "prose_claims": [
-        {
-          "section": "diet",
-          "en_sentence_ids": [
-            1
-          ],
-          "fr_sentence_ids": [
-            1
-          ],
-          "claim": "Krill diet and regional variation in prey."
-        },
-        {
-          "section": "identification",
-          "en_sentence_ids": [
-            1,
-            2,
-            4,
-            5
-          ],
-          "fr_sentence_ids": [
-            1,
-            2,
-            4,
-            5
-          ],
-          "claim": "COSEWIC morphology: body and head, rear-set fin, stable mottling, ventral pleats and baleen."
-        }
+        "diet.en.1",
+        "diet.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.4",
+        "identification.en.5",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.4",
+        "identification.fr.5"
       ]
     },
     {
@@ -185,30 +137,14 @@
         "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
       },
       "prose_claims": [
-        {
-          "section": "overview",
-          "en_sentence_ids": [
-            1
-          ],
-          "fr_sentence_ids": [
-            1
-          ],
-          "claim": "Baleen rorqual and expandable-throat lunge-feeding form."
-        },
-        {
-          "section": "diet",
-          "en_sentence_ids": [
-            2,
-            3,
-            4
-          ],
-          "fr_sentence_ids": [
-            2,
-            3,
-            4
-          ],
-          "claim": "Engulfment, filtration, and density-dependent energetic return."
-        }
+        "diet.en.2",
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.2",
+        "diet.fr.3",
+        "diet.fr.4",
+        "overview.en.1",
+        "overview.fr.1"
       ]
     },
     {
@@ -235,26 +171,10 @@
         "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
       },
       "prose_claims": [
-        {
-          "section": "overview",
-          "en_sentence_ids": [
-            3
-          ],
-          "fr_sentence_ids": [
-            3
-          ],
-          "claim": "Regional population units are distinguished partly through song."
-        },
-        {
-          "section": "behavior",
-          "en_sentence_ids": [
-            2
-          ],
-          "fr_sentence_ids": [
-            2
-          ],
-          "claim": "Low-frequency calls and stable regional song types."
-        }
+        "behavior.en.2",
+        "behavior.fr.2",
+        "overview.en.3",
+        "overview.fr.3"
       ]
     },
     {
@@ -281,38 +201,14 @@
         "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
       },
       "prose_claims": [
-        {
-          "section": "habitat",
-          "en_sentence_ids": [
-            1,
-            2
-          ],
-          "fr_sentence_ids": [
-            1,
-            2
-          ],
-          "claim": "Seasonal and resident movement patterns in the Southern Hemisphere and Indian Ocean."
-        },
-        {
-          "section": "behavior",
-          "en_sentence_ids": [
-            1
-          ],
-          "fr_sentence_ids": [
-            1
-          ],
-          "claim": "Solitary and paired whales, with temporary feeding groupings."
-        },
-        {
-          "section": "habitat",
-          "en_sentence_ids": [
-            4
-          ],
-          "fr_sentence_ids": [
-            4
-          ],
-          "claim": "Regional Antarctic, Indian Ocean and Pacific groupings; incomplete information in some regions."
-        }
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.en.4",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "habitat.fr.4"
       ]
     },
     {
@@ -338,16 +234,8 @@
         "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
       },
       "prose_claims": [
-        {
-          "section": "conservation",
-          "en_sentence_ids": [
-            5
-          ],
-          "fr_sentence_ids": [
-            5
-          ],
-          "claim": "Dated global Endangered category."
-        }
+        "conservation.en.5",
+        "conservation.fr.5"
       ]
     },
     {
@@ -373,16 +261,8 @@
         "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
       },
       "prose_claims": [
-        {
-          "section": "conservation",
-          "en_sentence_ids": [
-            6
-          ],
-          "fr_sentence_ids": [
-            6
-          ],
-          "claim": "Dated Critically Endangered category for Antarctic subspecies."
-        }
+        "conservation.en.6",
+        "conservation.fr.6"
       ]
     },
     {
@@ -408,22 +288,14 @@
         "notes_scope": "facts[] counted; title and prose_claims are citation metadata"
       },
       "prose_claims": [
-        {
-          "section": "reproduction",
-          "en_sentence_ids": [
-            1,
-            2,
-            3,
-            4
-          ],
-          "fr_sentence_ids": [
-            1,
-            2,
-            3,
-            4
-          ],
-          "claim": "Single calf, gestation, winter birth, nursing and observational uncertainty."
-        }
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
       ]
     },
     {
@@ -440,18 +312,10 @@
         "A lab experiment found pygmy blue whale faeces stimulated tested phytoplankton growth."
       ],
       "prose_claims": [
-        {
-          "section": "ecology",
-          "en_sentence_ids": [
-            2,
-            3
-          ],
-          "fr_sentence_ids": [
-            2,
-            3
-          ],
-          "claim": "Laboratory phytoplankton response to pygmy blue-whale faeces and limits of inference."
-        }
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.fr.2",
+        "ecology.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -477,18 +341,10 @@
         "IWC records the 1931 Antarctic catch and the 1986 commercial-whaling moratorium."
       ],
       "prose_claims": [
-        {
-          "section": "conservation",
-          "en_sentence_ids": [
-            1,
-            2
-          ],
-          "fr_sentence_ids": [
-            1,
-            2
-          ],
-          "claim": "Industrial whaling, 1931 Antarctic catch and commercial moratorium."
-        }
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -515,28 +371,12 @@
         "Northeast Pacific tag and acoustic study found night foraging song, day migration song at population scale."
       ],
       "prose_claims": [
-        {
-          "section": "diet",
-          "en_sentence_ids": [
-            5
-          ],
-          "fr_sentence_ids": [
-            5
-          ],
-          "claim": "Energy stores built on feeding grounds support migration and reproduction."
-        },
-        {
-          "section": "behavior",
-          "en_sentence_ids": [
-            3,
-            4
-          ],
-          "fr_sentence_ids": [
-            3,
-            4
-          ],
-          "claim": "Northeast Pacific night/day song pattern signals population-level shift to migration; social-cue role remains hypothetical."
-        }
+        "behavior.en.3",
+        "behavior.en.4",
+        "behavior.fr.3",
+        "behavior.fr.4",
+        "diet.en.5",
+        "diet.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -563,18 +403,10 @@
         "IWC’s 2024 Antarctic estimate: 4,000 (1,870–8,400), or 1.9% (0.7–4.8%) pre-whaling abundance."
       ],
       "prose_claims": [
-        {
-          "section": "conservation",
-          "en_sentence_ids": [
-            3,
-            4
-          ],
-          "fr_sentence_ids": [
-            3,
-            4
-          ],
-          "claim": "2024 circumpolar Antarctic population estimate, proportion of pre-whaling abundance, and rise since final catches."
-        }
+        "conservation.en.3",
+        "conservation.en.4",
+        "conservation.fr.3",
+        "conservation.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -600,16 +432,8 @@
         "Canada describes blue whales as lower-trophic predators and possible killer-whale prey."
       ],
       "prose_claims": [
-        {
-          "section": "ecology",
-          "en_sentence_ids": [
-            1
-          ],
-          "fr_sentence_ids": [
-            1
-          ],
-          "claim": "Blue whales as lower-trophic predators and possible killer-whale prey."
-        }
+        "ecology.en.1",
+        "ecology.fr.1"
       ],
       "budget": {
         "limit": 200,

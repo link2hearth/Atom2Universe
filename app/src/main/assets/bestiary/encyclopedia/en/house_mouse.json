@@ -1,0 +1,50 @@
+{
+  "id": "house_mouse",
+  "name": "House mouse",
+  "scientific": "Mus musculus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The house mouse, Mus musculus, is a small rodent whose global spread followed human food storage and transport. Its ancestral range lay in Asia, and it now occurs on most continents and many islands. Some populations live in buildings and farms; others forage outdoors. A flexible diet and rapid breeding when conditions permit help it exploit varied settings. But populations differ: mice in food-rich buildings often remain close to nests, while outdoor populations tend to disperse farther. On islands where people introduced them, they can become damaging invaders.",
+    "identification": "An adult measures about 65–95 millimetres from nose to rump; its tail is usually nearly as long, and mass is about 12–30 grams. Large rounded ears, dark eyes and a nearly bare tail marked by rings of scales help identify it; its proportions and tail distinguish it from short-tailed voles. Fine whiskers read air currents and nearby surfaces. Incisors grow continuously: hard enamel coats the front, while softer dentine behind wears faster, preserving a sharp cutting bevel. Molars grind food.",
+    "habitat": "The species occupies buildings, barns, granaries, cultivated fields, hedgerows and wooded margins. A mouse may spend summer in a field and move into a barn or house as autumn cools. Inside, cracks, wall cavities, stored goods and debris offer shelter beside food; outside, burrows and rock crevices conceal nests. They line nests with shredded fibres. Human settlements let them persist in places too cold or dry for independent survival. Ships and later cargo carried populations to remote islands.",
+    "diet": "The mouse is an opportunistic omnivore. Wild foods include seeds, grains, green plants, roots and insects; near people it takes stored food and scraps. Switching among foods helps it persist when one resource dwindles. Mice feed in frequent small bouts: UC Agriculture and Natural Resources reports up to one fifth of body mass per day and roughly 200 small meals nightly. Moist foods supply water, but dry diets and heat increase drinking.",
+    "behavior": "Mice are often active at night. Smell, hearing and whiskers help them navigate; scent cues signal social and reproductive information, and males can produce ultrasonic courtship songs. Social structure changes with density and setting. In commensal colonies, a dominant male may defend a territory containing females and young; family members repel outsiders. In wild populations, territories are less distinct and ranges may overlap. A long-term study of free-living mice in a Swiss barn found patterned social contacts, while also showing how ordinary movement could generate some apparent group structure. Young males often leave after conflict; females more often remain nearby.",
+    "reproduction": "Where food and shelter remain available, mice can breed throughout the year; outdoor breeding is often seasonal. Pregnancy lasts about 19–21 days, and a litter usually has five or six pups. Newborns are blind and hairless; fur grows by about day ten, eyes open near two weeks, and weaning occurs around three weeks. Young become sexually mature at about five to seven weeks, although wild populations vary with season and conditions. In some wild populations, females share nests and nurse pups communally. Young females are more likely than males to remain near their mother's territory; adult aggression often drives young males away.",
+    "ecology": "Mice eat seeds and invertebrates and are prey for owls, hawks, snakes, foxes, weasels and cats. At high density they can consume grain that would otherwise feed other animals. On some remote islands, introduced mice also attack seabird eggs and chicks. In 2021 on Gough Island, researchers found wounded breeding Tristan Albatrosses; one female was later found dead beside her nest after a mouse-inflicted wound. In 2023 on Marion Island, two wounded adult Wandering Albatrosses and eight carcasses were found. The cause of those Marion deaths remained undetermined, although two fresh carcasses bore wounds consistent with mouse attacks. Such effects are local, not typical of every population.",
+    "conservation": "The Mammal Diversity Database, consulted in October 2026, reports the IUCN global category as Least Concern, consistent with the species’ broad distribution. That global category does not describe every local impact. Introduced mice can threaten native wildlife on islands. Around people, control addresses food contamination, property damage and pathogens; rodenticides can also harm non-target animals. Management priorities therefore vary: the species remains globally widespread, while some island ecosystems face pressure from introduced populations."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Mus_musculus/",
+      "title": "Mus musculus — Animal Diversity Web, University of Michigan Museum of Zoology"
+    },
+    {
+      "url": "https://ipm.ucanr.edu/home-and-landscape/house-mouse/",
+      "title": "House Mouse — UC Statewide Integrated Pest Management Program, University of California Agriculture and Natural Resources"
+    },
+    {
+      "url": "https://cdn.elifesciences.org/articles/05959/elife-05959-v1.pdf",
+      "title": "Insights into mammalian biology from the wild house mouse Mus musculus — eLife"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1095-8312.2005.00455.x",
+      "title": "Dispersal in house mice — Biological Journal of the Linnean Society"
+    },
+    {
+      "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002786",
+      "title": "How Random Is Social Behaviour? Disentangling Social Complexity through the Study of a Wild House Mouse Population — PLOS Computational Biology"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1007/s10530-023-03177-2",
+      "title": "First evidence of mouse predation killing adult great albatrosses — Biological Invasions"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003372/",
+      "title": "Mus musculus — Mammal Diversity Database, American Society of Mammalogists"
+    },
+    {
+      "url": "https://digimorph.org/specimens/Mus_musculus/heterozygous/juvenile/head/",
+      "title": "Mus musculus (House Mouse) — DigiMorph, University of Texas at Austin"
+    }
+  ]
+}

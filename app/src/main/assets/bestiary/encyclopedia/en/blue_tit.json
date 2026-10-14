@@ -1,0 +1,58 @@
+{
+  "id": "blue_tit",
+  "name": "Eurasian Blue Tit",
+  "scientific": "Cyanistes caeruleus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Eurasian Blue Tit is a small, agile member of the tit family, recognizable by its blue-and-yellow plumage. It ranges across much of Europe and into western Asia.",
+    "identification": "Adults measure about 11.5–12 centimetres and weigh roughly 10–12 grams; a short, fine bill picks small prey while strong feet grip twigs and leaves. The adult has a blue crown, wings and tail, white cheeks crossed by a dark eye stripe, a greenish back and a yellow underside. The sexes look much alike to human eyes, but ultraviolet reflection on the crown differs between them and can be seen by the birds themselves. Recently fledged young are duller, with pale yellow rather than white cheeks; their post-juvenile moult replaces body feathers within weeks.",
+    "habitat": "The range runs from the British Isles and northern Europe east to the Urals, and south through much of Europe to northwestern Iran. Deciduous and mixed woods offer leafy crowns rich in insects and holes for nesting; orchards, hedgerows, wooded parks and gardens can serve the same purposes where mature trees remain.",
+    "diet": "For most of the year, Blue Tits glean insects, spiders and other small arthropods from leaves, buds and twigs. Gleaning means taking prey directly from a surface; the bird probes cracks, turns leaves or hangs upside down to reach their undersides, using its feet to steady itself among flexible branches. In spring, soft caterpillars are valuable food for growing nestlings and parents also bring other arthropods. As insects decline in winter, seeds and berries supplement the diet, and feeders provide another source in settled areas.",
+    "behavior": "In spring, the male’s repeated song helps advertise a territory and attract a mate. Contact calls keep nearby birds in touch, while a rough, chattering scold draws attention to danger. In winter, adults and young join mixed-species flocks that search through woodland together; these roaming flocks differ from the family groups formed by dependent fledglings. After leaving the nest, young follow and beg from their parents until they can feed independently.",
+    "reproduction": "The female chooses a cavity in a tree, wall or nest box and builds a cup of moss and dry fibres, lined with hair or feathers. British clutches commonly hold eight to ten eggs. The female incubates for about 13–14 days, while the male often brings her food. Both parents then deliver frequent small prey to nestlings, which grow rapidly and usually fledge at about 18–21 days in Britain.",
+    "ecology": "By eating caterpillars and other arthropods, Blue Tits prey on animals that feed on leaves and buds. The seasonal rise in caterpillars can coincide with the heavy food demand of growing chicks, but laying begins earlier and breeding need not match a single peak exactly. In a primeval forest study, caterpillars remained important in nestling diets despite a greater-than-tenfold fall in their supply between years, and only some broods were close to the caterpillar peak.",
+    "conservation": "The British Trust for Ornithology lists the species globally as Least Concern. In Europe, the Red List assessment dated 18 December 2020 and published in 2021 also classified it as Least Concern; it estimated 59.7–95.1 million mature birds and a regional increasing trend. In the United Kingdom, breeding abundance rose by a net 20 percent from 1967 to 2024, with a shallow decline within that longer trend since about 2008."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/blue-tit",
+      "title": "Blue Tit"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/mesanges/mesange-bleue",
+      "title": "Mésange bleue"
+    },
+    {
+      "url": "https://avibase.bsc-eoc.org/species.jsp?avibaseid=9BE53D340F9A4305&lang=EN",
+      "title": "Cyanistes caeruleus (Eurasian Blue Tit)"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Blue_Tit/lifehistory",
+      "title": "Eurasian Blue Tit Life History"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/blue-tit",
+      "title": "Blue Tit"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Blue_Tit/sounds",
+      "title": "Eurasian Blue Tit Sounds"
+    },
+    {
+      "url": "https://www.bto.org/learn/skills/bird-identification/young-birds",
+      "title": "Identifying young birds"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1688906/",
+      "title": "Blue tits are ultraviolet tits"
+    },
+    {
+      "url": "https://www.tandfonline.com/doi/full/10.1080/00063657.2014.899307",
+      "title": "Do Blue Tits Cyanistes caeruleus synchronize reproduction with caterpillar peaks in a primeval forest?"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T103761667A200218007.en",
+      "title": "Cyanistes caeruleus: Europe assessment"
+    }
+  ]
+}

@@ -12,8 +12,8 @@
       "fr": "Le chirurgien à poitrine blanche est un poisson de récif de la famille des Acanthuridés, originaire de l’océan Indien tropical. Son corps bleu, sa tête sombre et sa poitrine blanche le rendent reconnaissable. Il broute les algues des récifs et peut s’alimenter seul ou rejoindre d’autres poissons. Il fréquente surtout les récifs peu profonds, où ses zones d’alimentation et ses comportements territoriaux sont liés aux tapis d’algues."
     },
     "identification": {
-      "en": "Its deep body is flattened from side to side. A broad white band crosses the chest from the pectoral-fin bases, and a narrow pale line outlines the lower face. The dorsal fin is yellow with a pale edge and dark submarginal line; the tail base and paired spines are yellow. A pale crescent marks the dark tail fin. Each side of the tail base bears a sharp spine that folds into a groove and can be raised when the fish bends its tail. The Andaman Sea account reports specimens up to 23 cm. FishBase lists a maximum total length of 54 cm.",
-      "fr": "Son corps haut est aplati latéralement. Une large bande blanche traverse la poitrine depuis la base des nageoires pectorales, et un fin trait clair souligne le bas du visage. La nageoire dorsale jaune porte un bord pâle et un trait sombre ; la base de la queue et les épines sont jaunes. Un croissant clair marque la nageoire caudale sombre. De chaque côté de la queue, une épine acérée se replie dans un sillon et peut se redresser quand le poisson courbe la queue. L’entrée sur les poissons de la mer d’Andaman indique des individus jusqu’à 23 cm. FishBase donne une longueur totale maximale de 54 cm."
+      "en": "Its deep body is flattened from side to side. A broad white band crosses the chest from the pectoral-fin bases, and a narrow pale line outlines the lower face. The dorsal fin is yellow with a pale edge and dark submarginal line; the tail base and paired spines are yellow. A pale crescent marks the dark tail fin. Each side of the tail base bears a sharp spine that folds into a groove and can be raised when the fish bends its tail. The Andaman Sea account reports specimens up to 23 cm. FishBase lists a maximum total length of 54 cm. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "Son corps haut est aplati latéralement. Une large bande blanche traverse la poitrine depuis la base des nageoires pectorales, et un fin trait clair souligne le bas du visage. La nageoire dorsale jaune porte un bord pâle et un trait sombre ; la base de la queue et les épines sont jaunes. Un croissant clair marque la nageoire caudale sombre. De chaque côté de la queue, une épine acérée se replie dans un sillon et peut se redresser quand le poisson courbe la queue. L’entrée sur les poissons de la mer d’Andaman indique des individus jusqu’à 23 cm. FishBase donne une longueur totale maximale de 54 cm. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
     },
     "habitat": {
       "en": "It ranges through the tropical Indian Ocean, from eastern Africa to the Andaman Sea and Indonesia, reaching Bali; records include Cocos (Keeling) and Christmas islands. It occupies shallow coastal and island reefs, especially reef flats and upper outer slopes, generally down to about 25 metres. These sunlit surfaces support the benthic algae it eats, although feeding grounds vary among reef zones.",
@@ -57,21 +57,21 @@
         "conservation"
       ],
       "facts": [
-        "Indian Ocean reef distribution; chest band, fin colours, algal grazing."
+        "Indian Ocean reef distribution; chest band, fin colours, algal grazing.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
       ],
       "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "identification.en.3",
         "overview.en.1",
         "overview.en.2",
         "overview.fr.1",
-        "overview.fr.2",
-        "identification.en.3",
-        "identification.fr.3",
-        "habitat.en.3",
-        "habitat.fr.3",
-        "diet.en.1",
-        "diet.fr.1",
-        "conservation.en.3",
-        "conservation.fr.3"
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -100,18 +100,18 @@
         "Shallow reefs, algal diet, grouping, monogamy, trade and 2010 status."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.en.4",
-        "overview.fr.3",
-        "overview.fr.4",
-        "diet.en.3",
-        "diet.fr.3",
         "behavior.en.1",
         "behavior.fr.1",
         "conservation.en.1",
         "conservation.fr.1",
+        "diet.en.3",
+        "diet.fr.3",
         "ecology.en.5",
-        "ecology.fr.5"
+        "ecology.fr.5",
+        "overview.en.3",
+        "overview.en.4",
+        "overview.fr.3",
+        "overview.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -136,6 +136,8 @@
         "Deep body, caudal pattern and spine, distribution, length, shallow reef."
       ],
       "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
         "identification.en.2",
         "identification.en.4",
         "identification.en.5",
@@ -143,9 +145,7 @@
         "identification.fr.2",
         "identification.fr.4",
         "identification.fr.5",
-        "identification.fr.6",
-        "habitat.en.1",
-        "habitat.fr.1"
+        "identification.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -172,18 +172,18 @@
         "Aldabra feeding territories, algal turf, pair formation and no parental care."
       ],
       "prose_claims": [
-        "diet.en.2",
-        "diet.fr.2",
         "behavior.en.2",
         "behavior.en.3",
         "behavior.fr.2",
         "behavior.fr.3",
-        "reproduction.en.3",
-        "reproduction.fr.3",
+        "diet.en.2",
+        "diet.fr.2",
         "ecology.en.3",
         "ecology.en.4",
         "ecology.fr.3",
-        "ecology.fr.4"
+        "ecology.fr.4",
+        "reproduction.en.3",
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -210,10 +210,10 @@
         "Incisor teeth, spawning, larval sequence, and maximum size records."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
         "diet.en.4",
         "diet.fr.4",
+        "identification.en.1",
+        "identification.fr.1",
         "reproduction.en.1",
         "reproduction.en.4",
         "reproduction.en.5",
@@ -247,12 +247,15 @@
         "Reef depth and underwater-survey occurrence and transect abundance."
       ],
       "prose_claims": [
-        "habitat.en.2",
-        "habitat.fr.2",
         "conservation.en.6",
         "conservation.fr.6",
+        "habitat.en.2",
+        "habitat.fr.2",
         "identification.en.7",
-        "identification.fr.7"
+        "identification.en.8",
+        "identification.fr.3",
+        "identification.fr.7",
+        "identification.fr.8"
       ],
       "budget": {
         "limit": 200,
@@ -306,14 +309,14 @@
         "Kenyan fisheries, monogamous pairing, immature catch, gear share and exploitation."
       ],
       "prose_claims": [
-        "reproduction.en.2",
-        "reproduction.fr.2",
         "conservation.en.2",
         "conservation.en.4",
         "conservation.en.5",
         "conservation.fr.2",
         "conservation.fr.4",
-        "conservation.fr.5"
+        "conservation.fr.5",
+        "reproduction.en.2",
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,

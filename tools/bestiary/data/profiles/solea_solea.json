@@ -12,8 +12,8 @@
       "fr": "La sole commune est un poisson plat de l’Atlantique oriental et de la Méditerranée qui vit à demi enfoui sur les fonds sableux et vaseux. Ses jeunes grandissent dans des nourriceries côtières peu profondes, et c’est une espèce de grande valeur commerciale pour les pays du sud de la mer du Nord."
     },
     "identification": {
-      "en": "The body is oval and strongly flattened, with both eyes on the right side of the head. The eyed side is greyish to reddish brown with large diffuse dark blotches, while the underside is white. The pectoral fin on the eyed side has a dark spot on its outer half. It reaches about 70 cm at most and is commonly 15–45 cm.",
-      "fr": "Le corps est ovale et très aplati, avec les deux yeux sur le côté droit de la tête. Le côté oculaire est brun grisâtre à rougeâtre, marqué de grandes taches sombres diffuses, tandis que la face inférieure est blanche. La nageoire pectorale du côté oculaire porte une tache sombre sur sa moitié externe. Elle atteint environ 70 cm au maximum et mesure couramment 15 à 45 cm."
+      "en": "The common sole reaches 70 cm standard length, commonly about 35 cm, and has a published maximum mass of 3 kg; the consulted sources give no reliable adult size comparison by sex. Width and height are not reported as standard identification measurements. The body is oval and strongly flattened, with both eyes on the right side of the head. The eyed side is greyish to reddish brown with large diffuse dark blotches, while the underside is white. The pectoral fin on the eyed side has a dark spot on its outer half. It reaches about 70 cm at most and is commonly 15–45 cm.",
+      "fr": "La sole commune atteint 70 cm de longueur standard, pour une longueur courante d’environ 35 cm, et une masse maximale publiée de 3 kg ; les sources consultées ne donnent pas de comparaison fiable de la taille adulte entre sexes. La largeur et la hauteur ne sont pas rapportées comme mesures usuelles d’identification. Le corps est ovale et très aplati, avec les deux yeux sur le côté droit de la tête. Le côté oculaire est brun grisâtre à rougeâtre, marqué de grandes taches sombres diffuses, tandis que la face inférieure est blanche. La nageoire pectorale du côté oculaire porte une tache sombre sur sa moitié externe. Elle atteint environ 70 cm au maximum et mesure couramment 15 à 45 cm."
     },
     "habitat": {
       "en": "It lives in the eastern Atlantic from Norway’s Trondheim Fjord south to Senegal, in the North Sea and the western Baltic, and throughout the Mediterranean. It stays on sandy and muddy bottoms, usually at 10–60 m and down to about 150 m, and moves into deeper water in winter.",
@@ -48,10 +48,20 @@
       },
       "url": "https://www.fishbase.se/summary/Solea-solea.html",
       "consulted": "2026-10-12",
-      "supports": ["overview", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation",
+        "identification"
+      ],
       "facts": [
         "Max 70 cm SL, common 35 cm; eastern Atlantic from Trondheim Fjord to Senegal, North Sea, Mediterranean; 0–150 m, usually 10–60 m; adults burrow, solitary, deeper in winter; feed at night on worms, molluscs, crustaceans.",
-        "Batch spawner at 6–12 °C mainly February–May; maturity at 3–5 years; Wadden Sea the most important nursery; Data Deficient, assessed 15 July 2014."
+        "Batch spawner at 6–12 °C mainly February–May; maturity at 3–5 years; Wadden Sea the most important nursery; Data Deficient, assessed 15 July 2014.",
+        "Maximum standard length 70 cm, common length 35 cm, published maximum weight 3 kg; male/unsexed source record."
       ]
     },
     {
@@ -61,7 +71,12 @@
       },
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8457496/",
       "consulted": "2026-10-12",
-      "supports": ["reproduction", "behavior", "ecology", "conservation"],
+      "supports": [
+        "reproduction",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Hatching between early April and mid-May; pelagic larval duration 34.5 ± 2.7 days; settlement mid-May to mid-June in shallow nurseries (Belgian coast, Eems–Dollard, Suffolk); juveniles limited movement and high residency.",
         "Commercially valuable for southern North Sea states, risk of unsustainable exploitation, large undersized juvenile bycatch."
@@ -74,7 +89,12 @@
       },
       "url": "https://www.fao.org/fi/static-media/FI/CDrom/ARTFIMED/ArtFiWeb/descript/Species/SOLSOVUL.HTML",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "reproduction"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
       "facts": [
         "Both eyes on the right side; eyed side greyish-brown to reddish with large diffuse dark blotches; pectoral fin with a dark spot on its outer half; maximum 70 cm, common 15–45 cm.",
         "Feeds on polychaetes, molluscs and small crustaceans; maturity at 3–5 years (about 25 cm). The old name Solea vulgaris is a synonym of Solea solea."

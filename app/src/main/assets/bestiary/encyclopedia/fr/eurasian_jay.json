@@ -1,0 +1,66 @@
+{
+  "id": "eurasian_jay",
+  "name": "Geai des chênes",
+  "scientific": "Garrulus glandarius",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Geai des chênes est un corvidé forestier dont la tache bleue très visible contraste avec une vie souvent discrète dans le feuillage. Il cherche sa nourriture dans les arbres et au sol, en passant d’une ressource saisonnière à l’autre sur une vaste aire eurasiatique. Sa réputation de transporteur de glands est fondée, mais les insectes, les fruits, les graines et les proies animales comptent aussi dans son alimentation et ses effets écologiques.",
+    "identification": "Chez la forme européenne, le corps est brun rosé chaud, avec la gorge pâle, une moustache noire et une calotte de plumes striées de noir et de blanc qu’il peut redresser. L’aile repliée montre un panneau bleu vif barré de noir, près de marques blanches et noires ; en vol, le croupion blanc tranche sur la queue sombre. Dans l’échantillon britannique, les adultes pesaient en moyenne 167 grammes ; 90 % des 1 113 poids relevés se situaient entre 144 et 189 grammes. En Europe du Nord et en France, la forme nominale porte une calotte pâle tachetée de noir, tandis que les formes des îles Britanniques sont d’un roux plus sombre. La forme européenne mesure environ 34 cm ; les adultes britanniques pesaient en moyenne 167 g (90 % des poids relevés : 144–189 g).",
+    "habitat": "L’espèce s’étend de l’Europe occidentale et de l’Afrique du Nord vers l’est à travers une grande partie de l’Asie tempérée, avec des formes locales qui varient sur cette vaste aire. Elle fréquente les forêts matures de feuillus, mixtes et de conifères, ainsi que les parcs et campagnes arborées offrant un abri.",
+    "diet": "Cet omnivore consomme des insectes et d’autres invertébrés, surtout pendant la reproduction, ainsi que des glands, faînes, graines, baies et fruits cultivés. Il explore le feuillage et les branches à la recherche de chenilles et de larves de coléoptères, fouille la litière et le sol, et prend parfois des œufs ou des oisillons. Son bec puissant ouvre les aliments durs, tandis que cette diversité saisonnière réduit sa dépendance envers une seule récolte et fournit des protéines aux poussins en croissance.",
+    "behavior": "Un cri rauque et râpeux révèle souvent un oiseau dissimulé dans la cime ; les appels peuvent alerter les animaux voisins, et des expériences de diffusion sonore ont montré que les écureuils roux devenaient plus vigilants ou fuyaient après des cris d’alarme du geai. En automne, les geais emportent les glands loin des chênes et les enterrent seuls ou en petits dépôts, puis en récupèrent beaucoup par la suite. Dans une expérience de laboratoire, sept geais ayant observé un expérimentateur cacher des vers de farine sous des coupelles ont ensuite utilisé des détails visuels accessoires de cet événement lors d’un test inattendu après un délai.",
+    "reproduction": "Les couples élèvent généralement une seule nichée par an et pondent le plus souvent quatre ou cinq œufs dans un nid de brindilles bien caché, dans un arbre ou un arbuste. Les deux sexes couvent pendant environ 18 jours ; les oisillons nus et dépendants restent normalement au nid près de 21 jours avant l’envol. Les parents continuent de nourrir les jeunes après leur départ, tandis que le calendrier et la réussite varient avec la nourriture et les conditions locales.",
+    "ecology": "En transportant des glands viables et en les enterrant loin des arbres parents, les geais dispersent les graines : certains glands oubliés peuvent germer dans des conditions favorables et donner de nouveaux chênes. Dans une étude de terrain menée dans quatre pays d’Europe centrale, les geais fréquentaient des chênes dont les glands étaient plus étroits que ceux des arbres voisins non utilisés. Des caméras de nids en Grande-Bretagne et en Irlande ont aussi filmé des geais prenant des nichées de passereaux, montrant que la dispersion des graines coexiste avec la prédation d’autres oiseaux. Une étude alimentaire menée dans le sud de la Finlande a recensé le Geai des chênes parmi les proies de l’Autour des palombes.",
+    "conservation": "L’évaluation mondiale de la Liste rouge de l’UICN publiée en 2025 classe le Geai des chênes en préoccupation mineure. La Liste rouge européenne de 2021 le classe en préoccupation mineure et indique une tendance stable pour sa population dans l’Union européenne. Le suivi européen signalait une hausse modérée ; en France, les effectifs ont augmenté de 23 % entre 2001 et 2019. Ces indicateurs généraux ne décrivent pas chaque population locale."
+  },
+  "sources": [
+    {
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=130979",
+      "title": "Garrulus glandarius (geai des chênes), Birds of Europe 3.1"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/jay",
+      "title": "Fiche BirdFacts du geai"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T103723684A153832514.en",
+      "title": "Garrulus glandarius, évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Garrulus_glandarius/",
+      "title": "Garrulus glandarius, Animal Diversity Web"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11095760/",
+      "title": "La mémoire épisodique-like du geai par encodage incident"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1439-0310.2006.01191.x",
+      "title": "Les écureuils roux réagissent aux cris d’alarme des geais"
+    },
+    {
+      "url": "https://doi.org/10.2478/orhu-2020-0010",
+      "title": "Les geais choisissent chênes et glands en Europe centrale"
+    },
+    {
+      "url": "https://www.bto.org/our-work/science/publications/papers/identity-predators-bird-nests-british-islands",
+      "title": "Les caméras de nids identifient les prédateurs en Grande-Bretagne et Irlande"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/geai-des-chenes",
+      "title": "Fiche espèce du Geai des chênes, LPO"
+    },
+    {
+      "url": "https://www.mapa.gob.es/dam/mapa/contenido/ganaderia/temas/produccion-y-mercados-ganaderos/caza/aspectos-generales/documentos/kcd_speciesaccounts_2021_11_14.pdf",
+      "title": "Fiche espèce du geai Garrulus glandarius"
+    },
+    {
+      "url": "https://doi.org/10.3390/ani15040512",
+      "title": "Vulnérabilité des proies à deux éperviers sympatriques dans le sud de la Finlande"
+    },
+    {
+      "url": "https://www.birdlife.org/wp-content/uploads/2022/05/BirdLife-European-Red-List-of-Birds-2021.pdf.pdf",
+      "title": "Liste rouge européenne des oiseaux 2021"
+    }
+  ]
+}

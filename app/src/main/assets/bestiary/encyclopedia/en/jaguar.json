@@ -1,0 +1,38 @@
+{
+  "id": "jaguar",
+  "name": "Jaguar",
+  "scientific": "Panthera onca",
+  "group": "mammals",
+  "sections": {
+    "overview": "The jaguar is the largest cat native to the Americas and the only living member of its genus there. Its range stretches from Mexico through Central America into South America, with its strongest continuous populations centered on the Amazon basin.",
+    "identification": "A jaguar has a compact, muscular body, broad head, short limbs and a tawny to reddish coat. Dark rosettes usually contain smaller central spots; their arrangement differs across the two flanks. Some individuals are melanistic, so rosettes remain faintly visible on black fur. Adults measure about 1.5–1.8 m from head to body, with a 0.7–0.9 m tail. Size varies strongly by region: males and females average about 100 and 76 kg respectively in Brazil’s Pantanal, compared with about 57 and 42 kg in Honduras. These regional figures are not a universal male–female range; a reliable general shoulder height was not found.",
+    "habitat": "It favors dense lowland forest, wetlands and river margins, where cover and water are close, but also occupies scrub, savanna and some dry woodland. In the southwestern United States and northwestern Mexico, it uses wooded and riparian corridors rather than rainforest alone.",
+    "diet": "This obligate carnivore takes prey ranging from reptiles and fish to large mammals. Peccaries, deer, capybaras, tapirs, caimans and turtles feature in regional diets; livestock may be taken where natural prey has declined. Its strong jaws help dispatch armored reptiles, including by biting through shells.",
+    "behavior": "Jaguars generally live and hunt alone, and scent or scratch marks help signal territorial use. Activity is mainly nocturnal, though individuals may move at any hour as conditions change. Hunting relies on concealment, a short rush and a forceful pounce rather than prolonged pursuit.",
+    "reproduction": "Breeding can occur throughout the year across much of the range, although seasonality appears at its northern and southern edges. After roughly 100 days of gestation, a female gives birth to one to four cubs, usually two, in a sheltered den and raises them alone.",
+    "ecology": "As a large predator, the jaguar consumes many animals and can influence prey populations in the ecosystems it occupies. It also depends on connected territories, freshwater and adequate prey. Forest fragmentation can therefore disrupt both its movements and access to food or mates.",
+    "conservation": "Habitat conversion and fragmentation, prey depletion, illegal trade and retaliatory killing all pressure jaguar populations. Livestock losses can bring conflict where ranches overlap with jaguar habitat. Protecting connected landscapes, wild prey and practical coexistence measures addresses several linked pressures across the species’ range."
+  },
+  "sources": [
+    {
+      "url": "https://www.fws.gov/species/jaguar-panthera-onca",
+      "title": "Jaguar (Panthera onca) — U.S. Fish & Wildlife Service"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Panthera_onca/",
+      "title": "Panthera onca (jaguar) — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/jaguar",
+      "title": "Jaguar — San Diego Zoo Animals & Plants"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/jaguar/reproduction",
+      "title": "Jaguar Fact Sheet: Reproduction & Development — San Diego Zoo Wildlife Alliance Library"
+    },
+    {
+      "url": "https://www.worldwildlife.org/species/jaguar/",
+      "title": "Jaguar — World Wildlife Fund"
+    }
+  ]
+}

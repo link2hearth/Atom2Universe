@@ -12,8 +12,8 @@
       "fr": "Le Petit Pingouin est un alcidé de l’Atlantique Nord qui niche sur les côtes rocheuses et passe une grande partie de l’année en mer. Ses colonies s’étendent de l’est de l’Amérique du Nord au nord de l’Europe. Ses ailes ont deux fonctions : elles assurent le vol et le propulsent sous l’eau à la poursuite des poissons. Les colonies denses contrastent avec les groupes marins hors reproduction. Le succès reproducteur dépend des ressources au-delà de la falaise de nidification."
     },
     "identification": {
-      "en": "A compact auk with a large head, short neck and narrow wings, the Razorbill is black above and white below in breeding plumage. Its deep black bill has a pale transverse line. In winter, the throat and face sides turn white. The sexes look alike. Compared with the Common Guillemot, it is stockier and has a heavier bill, though the species can be difficult to distinguish at sea.",
-      "fr": "Alcidé compact à grosse tête, cou court et ailes étroites, le Petit Pingouin est noir dessus et blanc dessous en plumage nuptial. Son bec profond et noir porte une ligne transversale claire. En hiver, la gorge et les côtés du visage blanchissent. Les sexes se ressemblent. Comparé au Guillemot de Troïl, il est plus trapu et son bec est plus massif, même si les espèces sont difficiles à distinguer en mer."
+      "en": "A compact auk with a large head, short neck and narrow wings, the Razorbill is black above and white below in breeding plumage. Its deep black bill has a pale transverse line. In winter, the throat and face sides turn white. The sexes look alike. Compared with the Common Guillemot, it is stockier and has a heavier bill, though the species can be difficult to distinguish at sea. BTO live-adult data give a mean wing length of 196.9 mm and mean mass of 612.6 g (range 525–705 g). The page reports pooled adults rather than separate male and female measurements.",
+      "fr": "Alcidé compact à grosse tête, cou court et ailes étroites, le Petit Pingouin est noir dessus et blanc dessous en plumage nuptial. Son bec profond et noir porte une ligne transversale claire. En hiver, la gorge et les côtés du visage blanchissent. Les sexes se ressemblent. Comparé au Guillemot de Troïl, il est plus trapu et son bec est plus massif, même si les espèces sont difficiles à distinguer en mer. Les données du BTO sur les adultes vivants donnent une longueur d’aile moyenne de 196,9 mm et une masse moyenne de 612,6 g (plage de 525 à 705 g). La page regroupe les adultes sans séparer les mesures des mâles et des femelles."
     },
     "habitat": {
       "en": "Razorbills lay eggs on cliff ledges or among boulders, often in colonies shared with Common Guillemots and other seabirds. These sites provide sheltered space and immediate sea access for chicks that leave before they can fly. BTO records show British and Irish colonies follow suitable rocky coasts; in winter, birds range more widely offshore. Their annual cycle thus shifts between coastal breeding sites and marine feeding grounds.",
@@ -47,13 +47,15 @@
         "fr": "Petit Pingouin : BirdFacts"
       },
       "url": "https://www.bto.org/learn/about-birds/birdfacts/razorbill",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "habitat",
+        "identification",
         "reproduction"
       ],
       "facts": [
-        "British and Irish records: breeding distribution, one typical egg, shared incubation, incubation and fledging intervals; pelagic winter distribution."
+        "British and Irish records: breeding distribution, one typical egg, shared incubation, incubation and fledging intervals; pelagic winter distribution.",
+        "Live adult UK mean wing length is 196.9 mm and mean mass 612.6 g (525–705 g); values are pooled across sexes."
       ]
     },
     {

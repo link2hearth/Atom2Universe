@@ -12,8 +12,8 @@
       "fr": "Grand pigeon adaptable, le Pigeon ramier fréquente les bois, campagnes, parcs et jardins d’Europe. Les adultes mesurent 40 à 42 cm, pèsent environ 480 à 550 g et présentent une envergure de 75 à 80 cm. Certaines populations restent près de leurs sites de reproduction; d’autres migrent et se rassemblent en hiver là où la nourriture abonde."
     },
     "identification": {
-      "en": "Its bulky grey body, pink breast, yellow eye and orange-red bill make it distinctive. Adults have white patches on both sides of the neck, edged with green and purple iridescence, and broad white wing bars that flash in flight. Juveniles lack the white neck patches, but show the wing bars. It is larger than the Rock Pigeon, Columba livia, whose wings have dark bars; the smaller Stock Dove, Columba oenas, lacks white neck patches.",
-      "fr": "Son corps gris massif, sa poitrine rosée, son œil jaune et son bec rouge orangé le distinguent. L’adulte porte deux taches blanches au cou, bordées de reflets verts et violets, et de larges bandes alaires blanches visibles en vol. Le jeune n’a pas les taches du cou, mais possède déjà les bandes alaires. Plus grand que le Pigeon biset, Columba livia, aux barres alaires sombres, il se distingue aussi du Pigeon colombin, Columba oenas, plus petit et sans taches blanches au cou."
+      "en": "Adults are about 40–42 cm long, with a 75–80 cm wingspan and a typical mass around 480–550 g. In BTO ringing samples, adult males averaged 529 g and females 488 g; the sex-specific values come from a small British sample. Its bulky grey body, pink breast, yellow eye and orange-red bill make it distinctive. Adults have white patches on both sides of the neck, edged with green and purple iridescence, and broad white wing bars that flash in flight. Juveniles lack the white neck patches, but show the wing bars. It is larger than the Rock Pigeon, Columba livia, whose wings have dark bars; the smaller Stock Dove, Columba oenas, lacks white neck patches.",
+      "fr": "L’adulte mesure environ 40 à 42 cm, pour une envergure de 75 à 80 cm et une masse typique de 480 à 550 g. Dans les échantillons de baguage du BTO, les mâles adultes pesaient en moyenne 529 g et les femelles 488 g ; ces valeurs par sexe proviennent d’un petit échantillon britannique. Son corps gris massif, sa poitrine rosée, son œil jaune et son bec rouge orangé le distinguent. L’adulte porte deux taches blanches au cou, bordées de reflets verts et violets, et de larges bandes alaires blanches visibles en vol. Le jeune n’a pas les taches du cou, mais possède déjà les bandes alaires. Plus grand que le Pigeon biset, Columba livia, aux barres alaires sombres, il se distingue aussi du Pigeon colombin, Columba oenas, plus petit et sans taches blanches au cou."
     },
     "habitat": {
       "en": "It nests in open woods, woodland edges and hedgerows, then feeds in fields, meadows and lawns. In cities, parks and tree-lined gardens offer nesting branches, grass and planted foods; some birds forage there, while others travel to farmland. This flexibility has helped it colonize European cities, though timing varies by region.",
@@ -87,15 +87,16 @@
         "identification"
       ],
       "facts": [
-        "Call, crops, UK population estimate."
+        "Call, crops, UK population estimate.",
+        "Species fact page: length 40–42 cm, wingspan 75–80 cm, mass 480–550 g."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
-        "diet.en.2",
-        "diet.fr.2",
         "conservation.en.2",
         "conservation.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
         "identification.en.1",
         "identification.fr.1"
       ],
@@ -124,9 +125,12 @@
         "identification.en.2",
         "identification.en.3",
         "identification.en.4",
+        "identification.en.5",
+        "identification.en.6",
         "identification.fr.2",
         "identification.fr.3",
-        "identification.fr.4"
+        "identification.fr.4",
+        "identification.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -153,14 +157,14 @@
         "White wing bars; winter flocks; Hobby nesting association."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.3",
+        "behavior.fr.1",
         "behavior.fr.3",
         "ecology.en.2",
         "ecology.fr.2",
+        "overview.en.1",
+        "overview.fr.1",
         "reproduction.en.3",
         "reproduction.fr.3"
       ],
@@ -188,14 +192,14 @@
         "Plant diet, urban habitats and display flight."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
+        "behavior.en.2",
+        "behavior.fr.2",
         "diet.en.1",
         "diet.en.4",
         "diet.fr.1",
         "diet.fr.4",
-        "behavior.en.2",
-        "behavior.fr.2"
+        "habitat.en.3",
+        "habitat.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -220,10 +224,10 @@
         "Jabot-wall cells shed nutritious material for newly hatched young."
       ],
       "prose_claims": [
-        "reproduction.en.4",
-        "reproduction.fr.4",
         "diet.en.3",
-        "diet.fr.3"
+        "diet.fr.3",
+        "reproduction.en.4",
+        "reproduction.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -247,6 +251,7 @@
         "Crop milk initially; seeds added around day ten; fledging near day 33."
       ],
       "prose_claims": [
+        "identification.fr.6",
         "reproduction.en.5",
         "reproduction.fr.5"
       ],
@@ -301,12 +306,12 @@
         "European populations show resident, partially migratory and migratory strategies."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
         "behavior.en.4",
         "behavior.fr.4",
         "habitat.en.2",
-        "habitat.fr.2"
+        "habitat.fr.2",
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,

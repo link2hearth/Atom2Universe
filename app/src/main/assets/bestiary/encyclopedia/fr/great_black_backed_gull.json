@@ -1,0 +1,30 @@
+{
+  "id": "great_black_backed_gull",
+  "name": "Goéland marin",
+  "scientific": "Larus marinus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le goéland marin est le plus grand goéland du monde, un puissant oiseau de mer agressif des côtes rocheuses de l’Atlantique Nord. C’est un prédateur et charognard opportuniste qui poursuit les autres goélands pour leur voler leur nourriture.",
+    "identification": "Long d’environ 64 à 79 cm, l’adulte britannique pèse en moyenne 1,56 kg, avec une aile d’environ 474 mm. Les adultes ont la tête, le corps et la queue blancs, le dos et les ailes noir ardoise aux extrémités blanches, des pattes roses et un gros bec jaune à tache rouge; ils paraissent plus noirs que le goéland brun. Les jeunes sont tachetés de brun et de blanc et mettent environ trois ans à acquérir le plumage adulte.",
+    "habitat": "Il se reproduit surtout sur les côtes, sur des corniches de falaises, des affleurements rocheux et de petites îles, avec seulement quelques couples dans des colonies de l’intérieur. En hiver, il gagne aussi les estuaires, les lacs et les sites bas de l’intérieur, et des oiseaux de Scandinavie rejoignent ceux de Grande-Bretagne et d’Irlande.",
+    "diet": "Il est omnivore et opportuniste : poissons, coquillages, crustacés, petits mammifères, oiseaux et œufs, et charognes. Il suit les bateaux de pêche et supplante vraisemblablement les autres goélands pour récupérer les rejets de pêche et les abats.",
+    "behavior": "Il est agressif envers les autres goélands, qu’il chasse et poursuit pour leur voler de la nourriture. Son vol est lourd, il paraît voûté une fois posé et émet un fort aboiement. Il est souvent solitaire mais se rassemble près de la nourriture, en migration et à la reproduction.",
+    "reproduction": "Le nid est une simple cuvette ou se trouve sur une corniche ou un affleurement rocheux près de l’eau. Il y a une couvée par an, de deux ou trois œufs en général, pondus en avril ou en mai. Les deux sexes couvent 27 à 28 jours, et les poussins s’envolent après environ 50 à 55 jours. La reproduction débute en général vers quatre ans.",
+    "ecology": "Les adultes n’ont pas de prédateur naturel connu, et le cannibalisme des adultes est une cause majeure de mortalité des poussins. Ses carcasses nourrissent des insectes et des vertébrés charognards. La pollution par les hydrocarbures en mer est une cause majeure de mortalité, et l’espèce sert d’indicateur dans les suivis d’oiseaux échoués. Le plus vieil oiseau bagué a vécu plus de 26 ans.",
+    "conservation": "La Liste rouge de l’UICN le classe en préoccupation mineure. Au Royaume-Uni, il figure sur la liste rouge : environ 15 000 couples nicheurs en 2015 et 77 000 oiseaux en hiver en 2003-2006. Les effectifs étaient stables de 1969-1970 à 1998-2002, avec un léger recul de 11 %, et la tendance récente est incertaine."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/great-black-backed-gull",
+      "title": "Goéland marin — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/great-black-backed-gull",
+      "title": "Goéland marin — RSPB, oiseaux et faune"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Larus_marinus/",
+      "title": "Larus marinus — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

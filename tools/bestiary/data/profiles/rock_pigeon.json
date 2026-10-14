@@ -55,14 +55,14 @@
         "Adult dimensions, grey wing bars and variable plumage."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
-        "identification.en.3",
-        "identification.fr.3",
         "behavior.en.1",
-        "behavior.fr.1"
+        "behavior.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -89,12 +89,12 @@
         "Cliff nests, seeds, feral dispersal and urban foods."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
         "ecology.en.1",
         "ecology.fr.1",
-        "diet.en.1",
-        "diet.fr.1"
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -121,10 +121,10 @@
       ],
       "prose_claims": [
         "habitat.en.2",
-        "habitat.fr.2",
         "habitat.en.3",
-        "habitat.fr.3",
         "habitat.en.4",
+        "habitat.fr.2",
+        "habitat.fr.3",
         "habitat.fr.4"
       ],
       "budget": {
@@ -153,8 +153,8 @@
       ],
       "prose_claims": [
         "ecology.en.3",
-        "ecology.fr.3",
         "ecology.en.4",
+        "ecology.fr.3",
         "ecology.fr.4"
       ],
       "budget": {
@@ -180,8 +180,8 @@
       ],
       "prose_claims": [
         "diet.en.4",
-        "diet.fr.4",
         "diet.en.5",
+        "diet.fr.4",
         "diet.fr.5"
       ],
       "budget": {
@@ -207,14 +207,14 @@
         "Nest building, shared incubation, fledging and drinking."
       ],
       "prose_claims": [
-        "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.3",
-        "reproduction.fr.3",
-        "reproduction.en.7",
-        "reproduction.fr.7",
         "diet.en.2",
-        "diet.fr.2"
+        "diet.fr.2",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.en.7",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
+        "reproduction.fr.7"
       ],
       "budget": {
         "limit": 200,
@@ -239,8 +239,8 @@
       ],
       "prose_claims": [
         "reproduction.en.4",
-        "reproduction.fr.4",
         "reproduction.en.5",
+        "reproduction.fr.4",
         "reproduction.fr.5"
       ],
       "budget": {
@@ -290,12 +290,12 @@
         "Genomic study of feral gene flow in wild populations."
       ],
       "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
         "identification.en.4",
         "identification.fr.4",
         "overview.en.4",
-        "overview.fr.4",
-        "conservation.en.3",
-        "conservation.fr.3"
+        "overview.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -345,12 +345,12 @@
         "Genome study of wild and domestic ancestry."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
-        "overview.en.3",
-        "overview.fr.3",
         "habitat.en.1",
-        "habitat.fr.1"
+        "habitat.fr.1",
+        "overview.en.2",
+        "overview.en.3",
+        "overview.fr.2",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,

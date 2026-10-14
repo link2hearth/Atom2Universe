@@ -1,0 +1,70 @@
+{
+  "id": "ostrich",
+  "name": "Common ostrich",
+  "scientific": "Struthio camelus",
+  "group": "birds",
+  "sections": {
+    "overview": "The common ostrich is the largest living bird, a flightless inhabitant of Africa’s open landscapes. Its long stride is carried by a two-toed foot whose large inner toe bears most of its weight.",
+    "identification": "Adult males are larger on average: the Paris Muséum gives females as 1.75–1.90 metres tall and 90–110 kilograms, and males as 2.10–2.75 metres and 100–150 kilograms. Males have black plumage with white wing and tail feathers; females are grey-brown. Each foot has two toes, a large clawed inner toe and a smaller outer toe. Pressure recordings show that the main toe bears most of the load, while the mobile outer toe helps balance the foot during walking and running. In laboratory trials, two adult females ran at 3–6 m/s; the study did not test a maximum speed.",
+    "habitat": "It uses open savannas, grasslands and dry scrub, including places with sparse or short vegetation. Sparse plants leave open sightlines. The species occurs across much of Africa.",
+    "diet": "Leaves, roots, flowers and seeds make up much of the diet; ostriches also take insects and other small animals. Food is swallowed whole. In adult domesticated birds, a study describes pebbles grinding food in the muscular gizzard and microbial fermentation in the caeca and colon. These digestive observations come from managed birds; wild food choices vary with local and seasonal plant growth.",
+    "behavior": "Ostriches are social ground-dwellers. Groups loosen outside breeding and become more organized around territorial males during courtship; reported flock sizes vary with place and season. Males court with bows, wing movements and conspicuous feathers, accompanied by calls. Although flightless, it uses its wings while running to help change direction, and fans them in hot weather to help keep cool.",
+    "reproduction": "Breeding arrangements vary among populations. In East Africa, several hens laid in one shallow scrape; a field report describes communal nests holding 30–40 eggs of about 1.5 kilograms each. Genetic work in Nairobi found multiple mothers and fathers among eggs in the same nest. A dominant hen and territorial male guard and incubate; the female’s pale plumage blends by day and the male’s dark plumage by night. San Diego Zoo gives 42–46 days for incubation. Chicks leave within days, follow adults and are sheltered from sun, rain and predators. Their patterned down is replaced as adult feathers develop; the zoo account says they near adult size at about six months. Adult size precedes sexual maturity, which the Smithsonian account places around three to four years.",
+    "ecology": "Ostriches move nomadically as rainfall changes the availability of fresh plant food. A South African field guide reports that breeding and laying precede rains, so chicks hatch as forage becomes available. In northern Tanzania, surveys of the Masai population found local ostrich densities correlated with those of nine of ten large ungulate species, although their site-specific population trends were not closely correlated. Ostriches themselves are prey for large carnivores, including lions, cheetahs, leopards and hyenas.",
+    "conservation": "BirdLife International’s 2025 global IUCN assessment lists the common ostrich as Least Concern, with a decreasing population trend. This global category does not describe the condition of every regional population. Northern Sahel transects repeated in 1971–73 and 2004 documented severe regional declines and identified hunting, overgrazing and woodland degradation among local pressures. Historic feather hunting and egg collection also affected ostriches, while habitat loss remains a concern."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T45020636A280828427.en",
+      "title": "Common Ostrich — IUCN Red List assessment"
+    },
+    {
+      "url": "https://www.mnhn.fr/en/ostrich",
+      "title": "Ostrich"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/ostrich?qt-animals_page_content_tabs=0",
+      "title": "Ostrich"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Struthio_camelus/",
+      "title": "Struthio camelus (ostrich)"
+    },
+    {
+      "url": "https://lazoo.org/explore-your-zoo/our-animals/birds/ostrich/",
+      "title": "Ostrich"
+    },
+    {
+      "url": "https://journals.biologists.com/jeb/article/214/7/1123/33537/Toe-function-and-dynamic-pressure-distribution-in",
+      "title": "Toe function and dynamic pressure distribution in ostrich locomotion"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8342792/",
+      "title": "Studies on the gastrointestinal tract and digesta of adult domesticated ostriches"
+    },
+    {
+      "url": "https://www.nature.com/articles/279233a0",
+      "title": "Ostriches recognise their own eggs and discard others"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12492891/",
+      "title": "A molecular genetic analysis of the communal nesting of the ostrich"
+    },
+    {
+      "url": "https://sandiegozoowildlifealliance.org/story-hub/zoonooz/flightless-fancy",
+      "title": "Flightless Fancy"
+    },
+    {
+      "url": "https://nationalzoo.si.edu/animals/ostrich",
+      "title": "Ostrich"
+    },
+    {
+      "url": "https://doi.org/10.1017/S0959270906000487",
+      "title": "Severe decline of large birds in the Northern Sahel of West Africa: a long-term assessment"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.ecolind.2021.107348",
+      "title": "Ostrich population densities and temporal dynamics in coupled social-ecological systems"
+    }
+  ]
+}

@@ -12,8 +12,8 @@
       "fr": "Malgré son nom courant, Drosophila melanogaster est une mouche du vinaigre de la famille des Drosophilidae, et non une mouche des fruits « vraie » des Tephritidae. Ses générations courtes et sa génétique bien étudiée en ont fait un modèle majeur de l’hérédité et du développement."
     },
     "identification": {
-      "en": "Adults are about 3 millimetres long, with females slightly larger than males. The thorax bears six legs and clear forewings; small knob-shaped halteres, the altered hindwings, help stabilize flight. Wild-type flies have reddish eyes and a yellow-brown body with dark abdominal bands; the male’s abdomen is darker toward the rear.",
-      "fr": "L’adulte mesure environ 3 millimètres et la femelle est légèrement plus grande que le mâle. Le thorax porte six pattes et des ailes transparentes ; les balanciers, ailes postérieures réduites en petites massues, stabilisent le vol. La forme sauvage a des yeux rougeâtres et un corps brun jaunâtre à bandes abdominales sombres ; l’abdomen du mâle est plus foncé vers l’arrière."
+      "en": "Adults are about 3 millimetres long, with females slightly larger than males. The thorax bears six legs and clear forewings; small knob-shaped halteres, the altered hindwings, help stabilize flight. Wild-type flies have reddish eyes and a yellow-brown body with dark abdominal bands; the male’s abdomen is darker toward the rear. In one laboratory study, mean wet mass was 0.693 ± 0.050 mg for females and 0.505 ± 0.047 mg for males; mass depends on rearing conditions and is not a fixed field measurement.",
+      "fr": "L’adulte mesure environ 3 millimètres et la femelle est légèrement plus grande que le mâle. Le thorax porte six pattes et des ailes transparentes ; les balanciers, ailes postérieures réduites en petites massues, stabilisent le vol. La forme sauvage a des yeux rougeâtres et un corps brun jaunâtre à bandes abdominales sombres ; l’abdomen du mâle est plus foncé vers l’arrière. Dans une étude en laboratoire, la masse humide moyenne était de 0,693 ± 0,050 mg chez les femelles et de 0,505 ± 0,047 mg chez les mâles ; la masse dépend des conditions d’élevage et ne constitue pas une mesure fixe sur le terrain."
     },
     "habitat": {
       "en": "Originally African, it now occurs worldwide. It gathers where fruit, plant juices and other foods ferment, from orchards and markets to kitchens and restaurants.",
@@ -59,14 +59,14 @@
         "Worldwide distribution; household nuisance; adult anatomy; short generation model."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
-        "habitat.en.1",
-        "habitat.fr.1",
         "behavior.en.1",
         "behavior.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "overview.en.1",
+        "overview.fr.1",
         "reproduction.en.2",
         "reproduction.fr.2"
       ],
@@ -94,14 +94,14 @@
         "Short generation and tractable genetics; female stores sperm after mating."
       ],
       "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
         "overview.en.2",
         "overview.fr.2",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.4",
-        "reproduction.fr.4",
-        "identification.en.3",
-        "identification.fr.3"
+        "reproduction.fr.1",
+        "reproduction.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -152,12 +152,12 @@
         "Adult D. melanogaster about 3 mm; vinegar flies common near fermenting foods."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
         "habitat.en.2",
         "habitat.fr.2",
-        "conservation.en.1",
-        "conservation.fr.1"
+        "identification.en.1",
+        "identification.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -212,8 +212,8 @@
         "diet.en.1",
         "diet.fr.1",
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
+        "ecology.fr.1",
         "ecology.fr.2"
       ],
       "budget": {
@@ -223,6 +223,24 @@
         "total": 192,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Metabolic rate and hypoxia tolerance are affected by group interactions and sex in the fruit fly (Drosophila melanogaster): new data and a literature survey — Biology Open",
+        "fr": "Metabolic rate and hypoxia tolerance are affected by group interactions and sex in the fruit fly (Drosophila melanogaster): new data and a literature survey — Biology Open"
+      },
+      "url": "https://doi.org/10.1242/bio.023994",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Laboratory adult wet mass means: females 0.693 ± 0.050 mg and males 0.505 ± 0.047 mg."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ]
     }
   ],
   "illustration_notes": "Small yellow-brown fly with red compound eyes, dark abdominal bands, six legs, one clear wing pair and visible knob-like halteres; avoid tephritid fruit flies.",

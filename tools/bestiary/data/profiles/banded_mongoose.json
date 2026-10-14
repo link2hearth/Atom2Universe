@@ -57,8 +57,8 @@
       ],
       "prose_claims": [
         "identification.en.2",
-        "identification.fr.2",
         "identification.en.3",
+        "identification.fr.2",
         "identification.fr.3",
         "reproduction.en.2",
         "reproduction.fr.2"
@@ -87,12 +87,12 @@
         "Zoo account gives size, digits, egg cracking and diet."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
         "identification.en.1",
         "identification.fr.1",
-        "diet.en.2",
-        "diet.fr.2"
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -167,8 +167,8 @@
       ],
       "prose_claims": [
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.3",
+        "reproduction.fr.1",
         "reproduction.fr.3"
       ],
       "budget": {
@@ -219,8 +219,8 @@
       ],
       "prose_claims": [
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
+        "ecology.fr.1",
         "ecology.fr.2"
       ],
       "budget": {
@@ -247,10 +247,10 @@
         "Global assessment completed 2015; publication year 2016."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
         "conservation.en.1",
-        "conservation.fr.1"
+        "conservation.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -275,8 +275,8 @@
       ],
       "prose_claims": [
         "conservation.en.2",
-        "conservation.fr.2",
         "conservation.en.3",
+        "conservation.fr.2",
         "conservation.fr.3"
       ],
       "budget": {
@@ -303,12 +303,12 @@
         "Two-year field study in Rwenzori National Park, Uganda."
       ],
       "prose_claims": [
-        "habitat.en.2",
-        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
         "diet.en.1",
         "diet.fr.1",
-        "behavior.en.1",
-        "behavior.fr.1"
+        "habitat.en.2",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,

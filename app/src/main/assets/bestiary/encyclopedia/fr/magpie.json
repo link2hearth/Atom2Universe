@@ -1,0 +1,78 @@
+{
+  "id": "magpie",
+  "name": "Pie bavarde",
+  "scientific": "Pica pica",
+  "group": "birds",
+  "sections": {
+    "overview": "La Pie bavarde est un corvidé bien connu d’Europe et d’une grande partie de l’Asie septentrionale et centrale, reconnaissable à son plumage noir et blanc et à sa queue exceptionnellement longue.",
+    "identification": "L’adulte mesure environ 46 à 50 cm et pèse généralement de 185 à 268 grammes. Sa queue, plus de la moitié de sa longueur, distingue sa silhouette au sol et en vol. Son plumage est noir, avec le ventre, les épaules et de grandes zones des ailes blancs. Les jeunes sont plus ternes et ont la queue plus courte. En pleine lumière, les plumes sombres des ailes et de la queue brillent de bleu et de vert : des couches de mélanosomes creux dans leurs barbules réfléchissent sélectivement la lumière et produisent une iridescence structurelle. Son cri caractéristique est un bavardage rauque et crépitant.",
+    "habitat": "Elle fréquente les terres agricoles, villages, parcs, bois clairsemés et abords des villes. Arbres et haies lui offrent des sites de nidification. Elle évite généralement les forêts denses, les vastes zones humides et les paysages sans arbres : la présence conjointe d’abris et de terrains de nourrissage ouverts compte davantage qu’un habitat unique.",
+    "diet": "Omnivore opportuniste, elle cherche surtout au sol, où elle marche ou sautille avant de saisir ses proies. Elle mange insectes, graines, fruits, charognes et restes, parfois œufs ou oisillons ; les vertébrés restent minoritaires. À Manchester, une étude a relevé surtout des invertébrés de surface et davantage de végétaux en hiver. La pie dissimule aussi des surplus dans de petites réserves qu’elle retrouve plus tard grâce à des repères proches et à d’autres indices ; certains glands enterrés ne sont pas récupérés et peuvent germer.",
+    "behavior": "Les couples reproducteurs défendent généralement un territoire, tandis que les jeunes ou non-reproducteurs se réunissent en groupes familiaux ou en dortoirs collectifs. Leur cri rauque avertit les autres pies de la présence de chats et d’autres prédateurs. Les pies peuvent stocker puis déplacer leur nourriture, et des expériences montrent qu’elles se servent de repères proches pour retrouver leurs réserves. Une expérience sur des pies captives et sauvages n’a relevé aucune attirance innée pour les objets brillants ; les objets inconnus suscitaient plutôt la méfiance. En 2008, un test au miroir a suggéré une reconnaissance de soi. Une réplication plus vaste en 2020 ne l’a pas confirmé : ce test ne prouve donc pas une conscience de soi.",
+    "reproduction": "Le couple bâtit dans un arbre un nid de branches en dôme, à entrée latérale ; le mâle apporte surtout les matériaux et la femelle construit. La femelle pond généralement cinq ou six œufs et les couve pendant environ 20 jours, tandis que son partenaire lui apporte de la nourriture. Les poussins éclosent nus et dépendants, et les deux parents les nourrissent. Ils prennent généralement leur envol vers 26 à 31 jours, puis reçoivent encore de la nourriture des adultes pendant plusieurs semaines. Une seule nichée annuelle est habituelle et, selon les données britanniques, la reproduction commence souvent vers l’âge de deux ans.",
+    "ecology": "Lorsque les jeunes réclament beaucoup de nourriture, les adultes territoriaux prennent parfois œufs et oisillons d’autres oiseaux. Dans une étude britannique, la prédation de nids artificiels augmentait en fin de saison, mais les suivis ne lient pas simplement la hausse des corvidés au déclin des oiseaux chanteurs. Dans les agroforêts méditerranéennes, elles enterrent des glands de chêne vert ; certains glands oubliés germent. L’équilibre entre prédation et dispersion des graines dépend du contexte local.",
+    "conservation": "L’évaluation mondiale de l’UICN publiée en 2024 classe la Pie bavarde en Préoccupation mineure. Cette catégorie n’exclut pas des déclins dans certaines populations locales. En Grande-Bretagne, le BTO relève un indice de population en hausse de 104 % entre 1967 et 2024 et une aire de reproduction élargie de 6,4 %. La Pie bavarde a aussi été abattue dans le cadre de la gestion britannique du gibier ; une synthèse de 2022 documente cette histoire et signale des politiques variables selon les nations. Les données ne font pas des pies une cause générale du déclin des oiseaux chanteurs ; habitats et ressources alimentaires influencent aussi ces populations."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Magpie/id",
+      "title": "Identification de la Pie bavarde — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://doi.org/10.1242/jeb.174656",
+      "title": "Les couleurs de la Pie bavarde sont produites par des plumes aux couches de mélanosomes creux — Journal of Experimental Biology"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Magpie/lifehistory",
+      "title": "Cycle de vie de la Pie bavarde — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1474-919X.1983.tb03086.x",
+      "title": "Le régime alimentaire des pies urbaines Pica pica — Ibis"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10071-010-0357-2",
+      "title": "Les pies utilisent des repères locaux pour retrouver leurs réserves — Animal Cognition"
+    },
+    {
+      "url": "https://doi.org/10.1111/1365-2745.13642",
+      "title": "La territorialité et les préférences de site influencent la dispersion des graines et l’émergence des plantules — Journal of Ecology"
+    },
+    {
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?epi=207&id=130985",
+      "title": "Oiseaux d’Europe 3.1 : Pica pica (Pie) — Naturalis Biodiversity Center"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/magpie",
+      "title": "Pie bavarde — British Trust for Ornithology"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10071-014-0794-4",
+      "title": "« La pie voleuse » ? Aucune preuve d’une attirance pour les objets brillants — Animal Cognition"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pbio.0060202",
+      "title": "Comportement induit par le miroir chez la pie : indices de reconnaissance de soi — PLOS Biology"
+    },
+    {
+      "url": "https://doi.org/10.1037/com0000223",
+      "title": "La réplication du test de la marque au miroir chez la pie n’apporte pas de preuve de reconnaissance de soi — Journal of Comparative Psychology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-2.RLTS.T103727048A264575751.en",
+      "title": "Pica pica (Pie bavarde) — Liste rouge de l’UICN des espèces menacées (évaluation 2024)"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10344-019-1290-6",
+      "title": "Prédation de nids artificiels par les pies dans les terres agricoles britanniques : facteurs écologiques, saisonniers et sociaux — European Journal of Wildlife Research"
+    },
+    {
+      "url": "https://www.gwct.org.uk/media/1528491/Review2022.pdf",
+      "title": "Synthèse sur la gestion du gibier à plumes — Game & Wildlife Conservation Trust (2022)"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Magpie/sounds",
+      "title": "Chants et cris de la Pie bavarde — Cornell Lab of Ornithology"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "id": "polar_bear",
+  "name": "Ours polaire",
+  "scientific": "Ursus maritimus",
+  "group": "mammals",
+  "sections": {
+    "overview": "L’ours polaire est un mammifère marin qui suit la banquise arctique, plateforme d’accès aux phoques. Sa fourrure, sa graisse, son odorat et ses larges pattes l’adaptent au froid, mais il chasse surtout depuis la glace. La perte saisonnière de banquise modifie l’accès aux proies et les distances parcourues.",
+    "identification": "Les mâles pèsent généralement 270 à 545 kg et mesurent 2,4 à 3 m du museau à la queue ; les femelles, plus petites, autour de 180 à 320 kg. Ces fourchettes d’adultes sauvages varient avec l’âge, la région, la saison et l’état corporel. Le long cou et la tête étroite distinguent l’espèce ; les poils translucides diffusent la lumière visible, donnant au pelage dense son aspect blanc ou crème. Sous la fourrure se trouvent la peau sombre puis une épaisse couche de graisse sous-cutanée ; les poils ne conduisent pas la lumière solaire comme des fibres optiques. Le sous-poil et les poils de couverture emprisonnent l’air ; la graisse isole aussi dans l’eau. Les larges pattes répartissent le poids sur la glace fragile et servent de palettes dans l’eau ; leur palmure partielle rend la nage plus efficace. Ses petites oreilles rondes et sa courte queue limitent les surfaces exposées. Son odorat repère les phoques ; son museau et ses griffes aident à les saisir.",
+    "habitat": "L’espèce vit autour de l’Arctique, de l’Alaska à la Russie, mais les déplacements dépendent des côtes et de la glace. La banquise des plateaux continentaux productifs donne accès aux phoques qui s’y reposent ou élèvent leurs petits. Certaines populations gagnent la côte à la débâcle ; d’autres restent plus au nord : l’été à terre n’est pas universel. Beaucoup de tanières terrestres sont creusées dans la neige, mais dans l’ouest et le sud de la baie d’Hudson, certaines femelles commencent dans la tourbe ou le sol gelé avant de prolonger la tanière dans la neige qui s’accumule. Dans certaines autres régions, les femelles gestantes creusent aussi leur tanière sur la banquise stable.",
+    "diet": "Le phoque annelé est une proie majeure ; le phoque barbu compte selon sa disponibilité. Un ours peut attendre près d’un trou de respiration, détecter un phoque à l’odeur et le saisir à sa remontée, ou l’approcher sur la glace. L’ours mange souvent d’abord le lard et la peau, puis laisse des restes aux renards, corbeaux, goélands et autres ours. Il digère et stocke ces lipides sous forme de graisse, qui alimente déplacement, thermorégulation, reproduction et jeûne. À terre, il mange parfois oiseaux, œufs, végétaux, poissons, charognes ou déchets ; la plupart sont dispersés ou peu énergétiques et ne remplacent généralement pas la chasse aux phoques. Les carcasses riches de mammifères marins, comme les baleines ou les morses, peuvent toutefois compter localement. Un ours peut jeûner facultativement même en cherchant activement à manger : ses lipides stockés fournissent l’énergie, tandis que ses protéines sont épargnées. La durée et le coût énergétique du jeûne varient.",
+    "behavior": "Hors accouplement et groupes familiaux, les adultes sont généralement solitaires ; les femelles occupent de vastes domaines vitaux, variables selon la répartition locale entre terre et banquise. Selon la région, les déplacements suivent le gel et la débâcle, ou les ours restent sur la glace en été. Au printemps, les mâles suivent les traces et les odeurs laissées par les pattes des femelles. Des expériences montrent que l’odeur renseigne sur le sexe et l’état reproducteur ; une piste transmet donc plus qu’une simple présence. Quand les phoques manquent, certains ours se reposent, d’autres cherchent de la nourriture à terre ; les deux stratégies épuisent les réserves.",
+    "reproduction": "L’accouplement a lieu sur la banquise au printemps. Après fécondation, l’embryon suspend son développement et s’implante à l’automne si la femelle a constitué assez de réserves : c’est l’implantation différée. L’intervalle entre accouplement et naissance dure environ 195 à 265 jours, mais le développement fœtal actif n’occupe que deux à trois mois. Seules les femelles gestantes entrent en tanière, souvent en octobre ou novembre, et les naissances ont lieu de novembre au début janvier selon la latitude. La mère jeûne pendant la mise bas et l’allaitement ; cette dormance hivernale n’est pas une hibernation générale. Les portées comptent un à trois oursons, le plus souvent deux ; aveugles à la naissance, ils pèsent environ 0,5 kg. Ils grandissent vite grâce au lait gras et restent avec leur mère environ 2,5 à 3 ans, apprenant à chasser et nager.",
+    "ecology": "Plus grand prédateur terrestre de l’Arctique, l’ours relie la banquise aux réseaux marins : les algues nourrissent de petits organismes, puis poissons et phoques, proies des ours. Les restes des phoques nourrissent renards, goélands et corbeaux ; une capture soutient donc d’autres espèces. Les réserves saisonnières relient l’abondance des proies à la survie et aux naissances, transmettant les effets des changements de glace à l’écosystème.",
+    "conservation": "Le Groupe de spécialistes de l’ours polaire de l’UICN l’a classé Vulnérable dans son évaluation mondiale de 2015. Il désignait la perte de banquise due au réchauffement comme principale menace à long terme, car la glace donne accès aux phoques. Des saisons d’eau libre plus longues peuvent conduire certains ours à terre, prolonger le jeûne et affecter leur état, leur reproduction ou leur survie ; les effets varient selon la région. Au Canada, le COSEPAC a classé l’espèce préoccupante en 2018 ; les tendances des unités de gestion restent distinctes du statut mondial et peuvent être incertaines ou anciennes. En 1973, les cinq États de l’aire ont signé un accord pour protéger et gérer ensemble les habitats d’alimentation, de tanière et de migration."
+  },
+  "sources": [
+    {
+      "url": "https://www.adfg.alaska.gov/index.cfm?adfg=polarbear.main",
+      "title": "Profil de l’espèce : ours polaire"
+    },
+    {
+      "url": "https://www.polarbearsinternational.org/polar-bears/polar-bear-facts/adaptations-characteristics/",
+      "title": "Adaptations et caractéristiques"
+    },
+    {
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/polar-bear-2018.html",
+      "title": "Ours polaire : rapport d’évaluation et de situation du COSEPAC, 2018"
+    },
+    {
+      "url": "https://www.usgs.gov/centers/alaska-science-center/science/distribution-and-movements-polar-bears",
+      "title": "Répartition et déplacements des ours polaires"
+    },
+    {
+      "url": "https://polarbearsinternational.org/polar-bears/polar-bear-facts/diet-prey/",
+      "title": "Régime alimentaire et proies"
+    },
+    {
+      "url": "https://www.usgs.gov/news/national-news-release/polar-bears-unlikely-thrive-land-based-foods",
+      "title": "Les ours polaires ne peuvent probablement pas prospérer avec des aliments terrestres"
+    },
+    {
+      "url": "https://www.polarbearsinternational.org/polar-bears/polar-bear-facts/life-cycle/",
+      "title": "Cycle de vie"
+    },
+    {
+      "url": "https://www.iucn-pbsg.org/iucn-redlist/",
+      "title": "Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/10.1111/jzo.12181",
+      "title": "Étude expérimentale de la communication chimique chez l’ours polaire"
+    },
+    {
+      "url": "https://polarbearsinternational.org/what-we-do/research/energetics/",
+      "title": "Énergie et alimentation"
+    },
+    {
+      "url": "https://opg.optica.org/ao/abstract.cfm?uri=ao-37-15-3198",
+      "title": "Les poils de l’ours polaire sont-ils des fibres optiques ?"
+    },
+    {
+      "url": "https://www.adfg.alaska.gov/static/education/wns/polar_bear.pdf",
+      "title": "Ours polaire : fiche naturaliste"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10864307/",
+      "title": "Stratégies énergétiques et comportementales de l’ours polaire à terre pendant la période sans glace"
+    },
+    {
+      "url": "https://www.polarbearsinternational.org/news-media/articles/polar-bears-oceans-facts/",
+      "title": "Sept faits sur les océans et les ours polaires"
+    },
+    {
+      "url": "https://www.iucn-pbsg.org/agreements-conventions/agreement-on-the-conservation-of-polar-bears/",
+      "title": "Accord de 1973 sur la conservation des ours polaires"
+    },
+    {
+      "url": "https://pubs.usgs.gov/fs/2012/3131/",
+      "title": "Réponse de l’ours polaire et du morse au recul rapide de la banquise arctique"
+    },
+    {
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/polar-bear/chapter-5.html",
+      "title": "Ours polaire : rapport d’évaluation du COSEPAC 2018, chapitre 5 : biologie"
+    },
+    {
+      "url": "https://www.usgs.gov/centers/alaska-science-center/science/polar-bear-maternal-denning",
+      "title": "Tanières de maternité de l’ours polaire"
+    },
+    {
+      "url": "https://link.springer.com/doi/10.1007/s00300-017-2209-x",
+      "title": "Modélisation du coût métabolique de la nage chez l’ours polaire (Ursus maritimus)"
+    },
+    {
+      "url": "https://www.canada.ca/content/dam/eccc/documents/pdf/cosewic/wsam-results/november-2018/2018-wildlife-species-assessments-detailed-november-en.pdf",
+      "title": "Évaluations détaillées des espèces sauvages par le COSEPAC, novembre 2018"
+    }
+  ]
+}

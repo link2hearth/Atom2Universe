@@ -1,0 +1,54 @@
+{
+  "id": "grey_seal",
+  "name": "Phoque gris",
+  "scientific": "Halichoerus grypus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le phoque gris est un grand mammifère de l’Atlantique Nord qui chasse en mer et revient à terre pour se reposer et se reproduire. Son nom signifie « porc de mer au nez crochu » et décrit le museau arqué du mâle.",
+    "identification": "Comme les autres phoques véritables, il n’a pas de pavillons auriculaires externes et ne peut pas ramener ses nageoires postérieures vers l’avant pour marcher ; à terre, il avance par ondulations, comme une chenille. Les femelles adultes atteignent couramment 2 à 2,3 mètres et 150 à 200 kilogrammes, tandis que les grands mâles peuvent dépasser 2,3 mètres et 300 kilogrammes. Les femelles sont généralement gris argenté ou brunes avec des taches sombres ; les mâles sont plus foncés, ont le museau plus long et portent des marques pâles. Une épaisse couche de graisse isole le corps et emmagasine de l’énergie.",
+    "habitat": "Il fréquente les côtes tempérées et subarctiques de l’Atlantique Nord, surtout au Canada et en Europe du Nord-Ouest. Il se repose et se reproduit sur des îles, des récifs, des bancs de sable, des plages rocheuses et, dans certaines régions, sur la glace saisonnière. La population baltique est distincte de celle de l’Atlantique Nord-Est.",
+    "diet": "Il capture des poissons près du fond ou en pleine eau, surtout des lançons, des poissons de la famille des morues et des poissons plats, mais aussi des calmars, des poulpes et certains crustacés. Le menu local varie selon la saison et les proies disponibles ; un adulte peut consommer plusieurs kilogrammes par jour, selon sa taille et la richesse énergétique de ses proies.",
+    "behavior": "Les nageoires antérieures orientent le phoque, tandis que les postérieures le propulsent sous l’eau. Des phoques ont été enregistrés à près de 475 mètres de profondeur et presque une heure sous l’eau ; ce sont des capacités maximales rapportées, pas la durée de chaque chasse. À l’île Sable, des expériences de diffusion sonore ont montré que les mères distinguaient le cri de leur petit ; à l’île de May, les tests n’ont révélé aucune discrimination détectable, signe de différences entre populations.",
+    "reproduction": "Après l’accouplement, l’embryon reste dormant environ trois mois avant l’implantation, ce qui ajuste la naissance à la saison de reproduction suivante. Les naissances ont lieu en automne dans une grande partie de l’Atlantique oriental, en hiver à l’ouest et en fin d’hiver en Baltique. La femelle met généralement bas un seul petit au pelage blanc et l’allaite environ deux à trois semaines avec un lait très énergétique. Sur les sites atlantiques étudiés, les mères jeûnent pendant l’allaitement et utilisent leurs réserves ; après le sevrage, elles repartent en mer. Les femelles reviennent souvent aux colonies connues, où les mâles dominants peuvent s’accoupler avec plusieurs femelles. Le petit perd son lanugo près du sevrage et reste à terre pendant qu’il se développe, avant de gagner la mer sans soins maternels supplémentaires. À l’île de May, les jeunes peuvent jeûner plusieurs semaines à terre après le sevrage ; le calendrier varie selon les colonies.",
+    "ecology": "Les phoques gris alternent les sorties alimentaires et les retours à terre pour se reposer, muer et se reproduire, parfois après de longs trajets au large. En consommant des poissons, ils s’insèrent dans les réseaux alimentaires marins et interagissent avec les pêcheries. Certaines carcasses de marsouins de mer du Nord portent des blessures jugées compatibles avec une prédation par le phoque gris, dont la fréquence reste incertaine.",
+    "conservation": "En Baltique, la chasse et la pollution avaient fortement réduit les phoques gris dans les années 1970 ; la population suivie a depuis augmenté pendant plusieurs décennies. L’évaluation régionale HELCOM 2024 classe la population en préoccupation mineure, mais cite l’aménagement côtier, l’enchevêtrement dans les engins de pêche et les contaminants ; le réchauffement pourrait déplacer davantage de naissances de la glace vers la terre, où la survie des jeunes est moindre, avec un effet possible sur la croissance de la population. Dans les eaux américaines, l’espèce est protégée par le Marine Mammal Protection Act, mais les collisions avec les bateaux et les dérangements restent des risques locaux. La fiche HELCOM de 2024 indique aussi un classement mondial UICN en préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://www.fisheries.noaa.gov/species/gray-seal",
+      "title": "Phoque gris — NOAA Fisheries"
+    },
+    {
+      "url": "https://www.smru.st-andrews.ac.uk/files/2020/08/SCOS-2019.pdf",
+      "title": "Avis scientifique sur la gestion des populations de phoques : 2019"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2020.596904/full",
+      "title": "Le lait du phoque gris atlantique évolue continuellement en métabolites clés"
+    },
+    {
+      "url": "https://helcom.fi/wp-content/uploads/2025/11/HELCOM-Red-List-II-Halichoerus-grypus.pdf",
+      "title": "Liste rouge HELCOM II : fiche d’information sur le phoque gris"
+    },
+    {
+      "url": "https://www.nature.com/articles/s41598-020-73258-y",
+      "title": "Évaluation des carcasses de marsouins possiblement victimes du phoque gris"
+    },
+    {
+      "url": "https://www.nationalzoo.si.edu/animals/gray-seal",
+      "title": "Phoque gris | Smithsonian’s National Zoo"
+    },
+    {
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/abs/10.1111/j.1469-7998.2000.tb00800.x",
+      "title": "Reconnaissance vocale entre la mère et le petit chez le phoque gris"
+    },
+    {
+      "url": "https://mammal.org.uk/british-mammals/grey-seal",
+      "title": "Phoque gris | The Mammal Society"
+    },
+    {
+      "url": "https://oceanservice.noaa.gov/facts/seal-sealion.html",
+      "title": "Quelle différence entre phoques et otaries ? | NOAA Ocean Service"
+    }
+  ]
+}

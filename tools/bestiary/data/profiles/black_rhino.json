@@ -12,8 +12,8 @@
       "fr": "Le rhinocéros noir est un grand mammifère africain qui broute arbustes et végétaux ligneux. Sa lèvre crochue et préhensile le distingue du rhinocéros blanc, au museau carré, qui mange de l’herbe. Les deux espèces sont généralement grises; leur couleur n’explique pas leur nom."
     },
     "identification": {
-      "en": "Adults stand about 1.4–1.8 metres at the shoulder. Their thick skin is nearly hairless, and they carry two keratin horns, usually with the front one longer. The pointed, flexible upper lip grasps leaves and twigs. Soil and wallowing can change the apparent skin shade; neither species has a black or white coat.",
-      "fr": "Les adultes mesurent 1,4 à 1,8 mètre au garrot. Leur peau épaisse est presque sans poils; ils portent deux cornes de kératine, celle de devant généralement plus longue. La lèvre mobile saisit feuilles et brindilles. Sol et boue modifient l’aspect de la peau; aucune espèce n’a un pelage noir ou blanc."
+      "en": "Adults stand about 1.4–1.8 metres at the shoulder. Their thick skin is nearly hairless, and they carry two keratin horns, usually with the front one longer. The pointed, flexible upper lip grasps leaves and twigs. Soil and wallowing can change the apparent skin shade; neither species has a black or white coat. Adults are about 3.0–3.75 m long and 1.4–1.8 m high at the shoulder. Adult mass is commonly reported around 800–1,400 kg; females are generally smaller than males, but a robust species-wide sex-specific mass range was not found.",
+      "fr": "Les adultes mesurent 1,4 à 1,8 mètre au garrot. Leur peau épaisse est presque sans poils; ils portent deux cornes de kératine, celle de devant généralement plus longue. La lèvre mobile saisit feuilles et brindilles. Sol et boue modifient l’aspect de la peau; aucune espèce n’a un pelage noir ou blanc. Les adultes mesurent environ 3,0 à 3,75 m de long et 1,4 à 1,8 m au garrot. La masse adulte est souvent donnée autour de 800 à 1 400 kg ; les femelles sont généralement plus petites que les mâles, mais aucune plage de masse distincte par sexe et robuste à l’échelle de l’espèce n’a été trouvée."
     },
     "habitat": {
       "en": "Its fragmented range lies in eastern and southern Africa. It uses semi-arid scrub, savanna, woodland and forest edges, where browse is available; water access also matters, though succulent plants provide moisture. In Namibia it inhabits arid north-western landscapes. Local habitat conditions influence the area each animal uses.",
@@ -56,7 +56,8 @@
         "conservation"
       ],
       "facts": [
-        "Describes the prehensile pointed lip versus the white rhino's square lip, body dimensions, browsing, mud wallows and activity periods; states the IUCN assessment year as 2020 and category as Critically Endangered."
+        "Describes the prehensile pointed lip versus the white rhino's square lip, body dimensions, browsing, mud wallows and activity periods; states the IUCN assessment year as 2020 and category as Critically Endangered.",
+        "Adults 1.4–1.8 m at shoulder and 3–3.75 m long; females are smaller than males."
       ]
     },
     {
@@ -122,6 +123,20 @@
       ],
       "facts": [
         "Research using relocation records for 59 Namibian black rhinos frames browsing as a potential influence on vegetation structure and emphasizes that movement and habitat effects require empirical study."
+      ]
+    },
+    {
+      "title": {
+        "en": "EAZA Best Practice Guidelines for Black Rhinoceros",
+        "fr": "Directives EAZA de bonnes pratiques pour le rhinocéros noir"
+      },
+      "url": "https://strapi.eaza.net/uploads/2020_EAZA_Black_rhinoceros_Best_Practice_Guidelines_NV_a2e09f245a.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult mass is reported around 800–1,400 kg."
       ]
     }
   ],

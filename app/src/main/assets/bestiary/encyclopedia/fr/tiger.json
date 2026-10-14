@@ -1,0 +1,78 @@
+{
+  "id": "tiger",
+  "name": "Tigre",
+  "scientific": "Panthera tigris",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le tigre est le plus grand félin sauvage d’Asie ; des populations subsistent de l’Extrême-Orient russe à l’Asie du Sud et du Sud-Est jusqu’à Sumatra.",
+    "identification": "Son pelage orangé porte des rayures verticales sombres, un dessous clair et des marques blanches visibles derrière les oreilles. Le dessin est propre à chaque individu, ce qui permet de reconnaître les tigres sur des séries de photographies. Selon les populations, les longueurs tête-tronc adultes rapportées vont d’environ 150 à 230 cm, la queue étant mesurée séparément (90 à 110 cm), et les masses de 75 à 325 kg ; cette large fourchette n’est ni une moyenne unique ni une taille record. Les mâles sont plus grands que les femelles, et les grands animaux continentaux ne représentent pas toutes les populations. Un crâne large, de longues canines et de puissants muscles de la mâchoire et des membres antérieurs aident à saisir et maîtriser de lourdes proies.",
+    "habitat": "Les tigres fréquentent les forêts tropicales humides et les mangroves, les forêts sèches et les broussailles, les prairies ainsi que les forêts tempérées très enneigées. Cette diversité traduit une souplesse écologique, mais le climat seul ne suffit pas : un couvert, de l’eau et de grandes proies sauvages sont essentiels, et l’abondance des proies influe sur l’espace nécessaire au tigre.",
+    "diet": "Les cervidés et les sangliers constituent une grande part du régime ; le gaur, le banteng et le buffle comptent parmi les proies de certaines régions. Les tigres capturent aussi de petits mammifères, des oiseaux, des reptiles et des poissons. Ils peuvent prendre du bétail là où les humains et leur habitat se côtoient. Une étude menée dans une forêt semi-aride de Ranthambhore, en Inde, a relevé que le sambar et le chital représentaient l’essentiel de la biomasse des proies, tandis que le bétail contribuait aussi au régime dans une moindre mesure. Ce résultat local montre que le choix des proies et la dépendance aux animaux domestiques varient selon les régions. Le tigre approche généralement à couvert et attaque de près plutôt que de poursuivre sa proie sur une longue distance. Son poids et ses membres antérieurs font tomber l’animal ; une morsure à la nuque peut endommager la moelle épinière des petites proies, tandis qu’une morsure à la gorge peut étouffer les plus grandes. Après une capture, il peut tirer la carcasse à couvert, arracher la viande avec ses carnassières et revenir s’en nourrir pendant plusieurs jours.",
+    "behavior": "Les adultes vivent généralement seuls. Les mâles occupent en général des domaines plus vastes qui recouvrent ceux de plusieurs femelles ; dans une population thaïlandaise, les domaines des femelles voisines se chevauchaient peu, tandis que ceux des mâles couvraient l’essentiel des domaines féminins concernés. Les domaines des femelles tendent à être plus petits là où les proies sont abondantes, mais leur superficie varie selon le paysage. Les dépôts odorants, les grattages, les marques de griffes et les cris transmettent des informations sans rencontres directes fréquentes ; rugissements, grognements et sons de contact plus doux ont des fonctions sociales différentes. Ses membres antérieurs musclés l’aident à se déplacer sur terre et à maîtriser ses proies. Il nage bien et a même été observé en train de chasser dans l’eau.",
+    "reproduction": "La reproduction peut avoir lieu en toute saison. Après quelques jours de réceptivité, la gestation dure environ cent jours et donne généralement deux ou trois petits, même si la taille des portées varie. Aveugles et dépendants à la naissance, les petits sont allaités dans un abri et protégés par leur mère seule. Ils commencent à suivre leur mère vers deux mois ; le sevrage intervient généralement entre trois et six mois. Ils accompagnent leur mère à la chasse vers cinq ou six mois. Les jeunes deviennent progressivement indépendants ; dans une étude de terrain à Chitwan, ils ont quitté leur domaine natal entre 19 et 28 mois. À Ranthambhore, les mâles se dispersaient en moyenne plus tard que les femelles. Les femelles mûrissent vers trois ou quatre ans et les mâles vers quatre ou cinq ans.",
+    "ecology": "Les zones riches en proies peuvent accueillir davantage de tigres et des domaines de femelles plus petits que les paysages où les ongulés sont rares ; la répartition du tigre dépend donc du stock de proies. La prédation peut structurer les communautés d’herbivores, mais ses effets plus larges dépendent des réseaux alimentaires locaux. Dans le nord-est de la Chine, une expérience de terrain a montré que des oiseaux, dont des corneilles, geais et pics, utilisaient des restes simulant les proies du tigre de l’Amour : ses carcasses peuvent aussi nourrir les charognards.",
+    "conservation": "L’UICN a évalué le tigre le 15 décembre 2021 et publié sa fiche de Liste rouge en 2022, en classant l’espèce « En danger ». L’estimation était de 3 726 à 5 578 individus sauvages, petits exclus, avec 3 140 individus matures comme meilleure estimation. Elle combine des données nationales recueillies à des dates et par des méthodes différentes : ce n’est pas un comptage simultané, et sa valeur supérieure aux anciennes éditions ne prouve pas à elle seule une croissance. L’évaluation indique que l’aire occupée a diminué de plus de moitié en trois générations. Le braconnage destiné au commerce illégal, la chasse des proies, la conversion et la fragmentation des habitats restent des pressions majeures ; la raréfaction des proies et les conflits avec les humains entraînent aussi des pertes locales et des représailles."
+  },
+  "sources": [
+    {
+      "url": "https://nationalzoo.si.edu/animals/tiger",
+      "title": "Tigre — Smithsonian’s National Zoo and Conservation Biology Institute"
+    },
+    {
+      "url": "https://www.catsg.org/living-species-tiger",
+      "title": "Espèces actuelles : Tigre — Groupe de spécialistes des félins de l’UICN"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Panthera_tigris/",
+      "title": "Panthera tigris (tigre) — Animal Diversity Web, Université du Michigan"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-1.RLTS.T15955A214862019.en",
+      "title": "Panthera tigris — Liste rouge de l’UICN des espèces menacées, évaluation 2022"
+    },
+    {
+      "url": "https://doi.org/10.1017/S0952836903003765",
+      "title": "Abondance et sélection des proies du tigre en forêt semi-aride — Journal of Zoology"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/oryx/article/female-tiger-panthera-tigris-home-range-size-and-prey-abundance-important-metrics-for-management/C427421DD59691CFF5C9D1D06CDEC07A",
+      "title": "Domaines des tigresses et abondance des proies — Oryx"
+    },
+    {
+      "url": "https://doi.org/10.1111/joa.13636",
+      "title": "Anatomie musculaire du membre antérieur du tigre — Journal of Anatomy"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.gecco.2024.e03161",
+      "title": "Restes de proies du tigre de l’Amour et oiseaux charognards — Global Ecology and Conservation"
+    },
+    {
+      "url": "https://www.wti.org.in/wp-content/uploads/2023/02/Action-Tiger-2nd-Edition-2011-institutional.pdf",
+      "title": "Plan d’action pour le tigre, deuxième édition — Wildlife Trust of India"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/tiger",
+      "title": "Tigre — San Diego Zoo Animals & Plants"
+    },
+    {
+      "url": "https://panthera.org/newsroom/global-tiger-population-stable-and-potentially-increasing-despite-extreme-threats",
+      "title": "Tigre — organisation de conservation Panthera"
+    },
+    {
+      "url": "https://www.worldwildlife.org/species/tiger/",
+      "title": "Tigre — fiche espèce du World Wildlife Fund"
+    },
+    {
+      "url": "https://experts.umn.edu/en/publications/the-role-of-dispersal-in-structuring-the-chitwan-tiger-population/",
+      "title": "Le rôle de la dispersion dans la structuration de la population de tigres de Chitwan — Behaviour"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0140196320302196",
+      "title": "Philopatrie et dispersion natale des tigres en habitat semi-aride, Inde occidentale — Journal of Arid Environments"
+    },
+    {
+      "url": "https://www.pretoriazoo.org/animals/tiger/",
+      "title": "Tigre — Jardin zoologique national de Pretoria, SANBI"
+    }
+  ]
+}

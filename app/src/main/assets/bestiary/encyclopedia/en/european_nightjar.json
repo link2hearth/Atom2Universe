@@ -1,0 +1,30 @@
+{
+  "id": "european_nightjar",
+  "name": "European Nightjar",
+  "scientific": "Caprimulgus europaeus",
+  "group": "birds",
+  "sections": {
+    "overview": "The European nightjar is a secretive, nocturnal summer visitor to Europe, far more often heard than seen. Its mechanical, churring song carries across heaths at dusk, and old folklore claimed it drank goats’ milk, hence the name “goatsucker”.",
+    "identification": "The bird is 26–28 cm long, slightly smaller than a kestrel, with grey-brown plumage mottled, streaked and barred like bark. It has pointed wings, a long tail, large dark eyes and a small, very wide mouth. Males show white patches on the throat and near the wing and tail tips. British adults weigh 63–88 g, females being heavier.",
+    "habitat": "In Britain it breeds on lowland heathland and on recently felled or newly planted conifer plantations, and more locally on moorland, woodland clearings and coastal dunes. Tracking shows that it also feeds over grassland and other non-forest habitats.",
+    "diet": "It hunts flying insects, especially moths, at dusk and dawn. GPS tracking in Britain showed fast foraging flights, sometimes over 3 km, to feeding sites that the birds revisit on later nights.",
+    "behavior": "By day it relies on stillness and camouflage and at night it flies almost silently. The male sings a rising and falling churr, often turning his head and adding wing claps. It reaches Britain in late April or May and leaves in late August or September to winter south of the equatorial forest, especially in the south of the Democratic Republic of Congo.",
+    "reproduction": "The eggs are laid on bare ground. The typical clutch is two eggs, incubated by both sexes for about 18 days, and the downy chicks fledge after roughly 18 days. In Britain the average first clutch date is 23 June, and a pair typically raises one or two broods. Breeding usually starts at one year old.",
+    "ecology": "As a predator of night-flying insects, the nightjar helps limit their numbers. Its eggs on the ground are taken by foxes, hedgehogs and corvids, and adults can fall prey to owls and diurnal raptors, so camouflage is its main defence. Habitat loss is its main pressure.",
+    "conservation": "The IUCN global category is Least Concern. In Britain it is Amber-listed, with about 4,600 males in 2004, after a decline of 51% between 1972 and 1992 followed by a recovery. The main threats are the loss of heathland and afforestation. A bird that reaches breeding age lives about four years; the oldest ringed bird was over 12."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/nightjar",
+      "title": "Nightjar — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/nightjar",
+      "title": "Nightjar — RSPB Birds & Wildlife"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Caprimulgus_europaeus/",
+      "title": "Caprimulgus europaeus (Eurasian nightjar) — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

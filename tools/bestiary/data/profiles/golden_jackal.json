@@ -60,12 +60,12 @@
         "OFB gives dimensions, pup timing, and French detections."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
         "behavior.en.4",
         "behavior.fr.5",
         "conservation.en.6",
-        "conservation.fr.6"
+        "conservation.fr.6",
+        "identification.en.1",
+        "identification.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -81,7 +81,7 @@
         "fr": "KORA : portrait du chacal doré"
       },
       "url": "https://www.kora.ch/en/species/golden-jackal/profile?entry_id=262&language=en",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "identification",
         "habitat",
@@ -91,17 +91,18 @@
         "conservation"
       ],
       "facts": [
-        "European account reports sex-specific weight ranges and life history."
+        "European account reports sex-specific weight ranges and life history.",
+        "European adults are about 44–50 cm at the shoulder, 80–105 cm head-and-body with 20–30 cm tail; males weigh about 11–16 kg and females 8–13 kg."
       ],
       "prose_claims": [
         "identification.en.2",
-        "identification.fr.2",
-        "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.5",
-        "reproduction.fr.5",
         "identification.en.4",
-        "identification.fr.4"
+        "identification.fr.2",
+        "identification.fr.4",
+        "reproduction.en.2",
+        "reproduction.en.5",
+        "reproduction.fr.2",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -127,8 +128,8 @@
       ],
       "prose_claims": [
         "identification.en.3",
-        "identification.fr.3",
         "identification.en.5",
+        "identification.fr.3",
         "identification.fr.5"
       ],
       "budget": {
@@ -155,14 +156,14 @@
         "European review synthesizes diet studies and food variation."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
+        "diet.fr.1",
         "diet.fr.2",
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -188,12 +189,12 @@
         "Greek plan reports regional habitat use and breeding timing."
       ],
       "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
         "habitat.en.2",
         "habitat.fr.2",
         "reproduction.en.1",
-        "reproduction.fr.1",
-        "behavior.en.1",
-        "behavior.fr.1"
+        "reproduction.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -273,10 +274,10 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.5",
-        "conservation.fr.5",
         "conservation.en.7",
+        "conservation.fr.1",
+        "conservation.fr.5",
         "conservation.fr.7"
       ],
       "budget": {
@@ -327,12 +328,12 @@
         "Eurasian review compares historic and newly colonized jackal diets."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
         "diet.en.3",
-        "diet.fr.3",
         "diet.en.4",
-        "diet.fr.4"
+        "diet.fr.3",
+        "diet.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -407,8 +408,8 @@
       ],
       "prose_claims": [
         "conservation.en.2",
-        "conservation.fr.2",
         "conservation.en.3",
+        "conservation.fr.2",
         "conservation.fr.3"
       ],
       "budget": {
@@ -435,8 +436,8 @@
       ],
       "prose_claims": [
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.4",
+        "reproduction.fr.3",
         "reproduction.fr.4"
       ],
       "budget": {

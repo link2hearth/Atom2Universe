@@ -1,0 +1,30 @@
+{
+  "id": "callorhinus_ursinus",
+  "name": "Otarie à fourrure du Nord",
+  "scientific": "Callorhinus ursinus",
+  "group": "mammals",
+  "sections": {
+    "overview": "L’otarie à fourrure du Nord est un otariidé du Pacifique nord qui passe l’essentiel de sa vie en mer et vient à terre en colonies denses pour se reproduire. La plupart de la population se reproduit sur les îles Pribilof, en mer de Béring. Les mâles sont bien plus grands que les femelles.",
+    "identification": "Elle a un corps trapu, une petite tête, un museau très court, de petites oreilles externes et une fourrure extrêmement dense. Ses nageoires antérieures sont les plus longues de tous les otariidés. Les mâles adultes atteignent environ 2 m et jusqu’à 270 kg, sont brun foncé à noirs,, tandis que les femelles mesurent environ 1,5 m, grises ou brunes dessus et plus claires dessous. Les petits naissent noirs et deviennent gris argenté vers trois mois.",
+    "habitat": "Elle se reproduit en mer de Béring et le long du Pacifique nord-est, sur des îles comme Saint-Paul, Saint-Georges et Bogoslof en Alaska ainsi que sur plusieurs îles russes. Hors de la saison de reproduction, elle parcourt le Pacifique nord, la mer de Béring et la mer d’Okhotsk, et descend en hiver jusqu’au sud de la Californie et à Honshū, au Japon.",
+    "diet": "C’est un chasseur opportuniste de poissons et de calmars des eaux moyennes, qui se nourrit surtout la nuit. Le lieu d’Alaska est la proie principale sur le plateau de la mer de Béring, tandis qu’au large de la côte ouest des États-Unis elle prend notamment des maquereaux, des calmars, des sardines et des anchois.",
+    "behavior": "Elle est très pélagique et le plus souvent solitaire en mer, et peut rester en plein océan près de deux ans avant de regagner ses colonies de reproduction. À terre pendant la saison de reproduction, elle est agressive : les mâles défendent leur territoire en poussant et en mordant, et les combats entre mâles peuvent être mortels.",
+    "reproduction": "Les mâles reviennent sur les îles de reproduction dès mai et tiennent un territoire, en général à partir d’environ 10 ans. Les femelles mettent bas un seul petit et s’accouplent de nouveau dans les cinq jours environ. Elles ont d’ordinaire leur premier petit à 5-6 ans et sont les plus productives de 8 à 13 ans. Les petits tètent jusqu’au sevrage, vers quatre mois.",
+    "ecology": "Prédatrice de poissons grégaires et de calmars, l’otarie à fourrure du Nord relie le large du Pacifique nord à ses îles de reproduction. Elle est elle-même la proie d’orques, d’otaries de Steller et de requins. Les petits sont capturés par les otaries de Steller, et l’emmêlement dans les débris marins et les engins de pêche perdus est un danger majeur.",
+    "conservation": "La Liste rouge de l’UICN classe l’espèce comme vulnérable (évaluation de 2015). Aux États-Unis, elle est protégée par la loi sur la protection des mammifères marins, et le stock des îles Pribilof et du Pacifique oriental a été déclaré épuisé en 1988 après avoir perdu plus de la moitié de ses quelque 2,2 millions d’individus des années 1950. Son effectif estimé en 2019 était d’environ 627 000, et la production de petits a baissé d’environ 1,8 % par an de 1999 à 2019."
+  },
+  "sources": [
+    {
+      "url": "https://www.fisheries.noaa.gov/species/northern-fur-seal",
+      "title": "Otarie à fourrure du Nord — fiche espèce de NOAA Fisheries"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Callorhinus_ursinus/",
+      "title": "Callorhinus ursinus — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://www.sealifebase.se/Summary/SpeciesSummary.php?id=69422",
+      "title": "Callorhinus ursinus, otarie à fourrure du Nord — SeaLifeBase"
+    }
+  ]
+}

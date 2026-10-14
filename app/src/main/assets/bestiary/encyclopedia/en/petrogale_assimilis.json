@@ -1,0 +1,30 @@
+{
+  "id": "petrogale_assimilis",
+  "name": "Allied Rock-wallaby",
+  "scientific": "Petrogale assimilis",
+  "group": "mammals",
+  "sections": {
+    "overview": "The allied rock-wallaby is a medium-sized marsupial of north-eastern Queensland, Australia, that lives among rocky outcrops, cliffs and boulder piles. It shelters in rocks by day and comes out at dusk to feed.",
+    "identification": "Males average about 4.7 kg and females 4.3 kg. The coat is grey on freshly moulted animals and turns paler to darker brown through the year, with lighter, sandy underparts and limbs, dark paws and feet, and a tail darkening to an indistinct brush at the tip. Some animals show a pale cheek stripe and a dark stripe along the head.",
+    "habitat": "It lives in rocky terrain such as cliffs, slopes, outcrops and boulder piles, usually within tropical woodland and open forest, so its distribution is fragmented. It occurs from Townsville south to the lower Burdekin and Bowen rivers, north-west to Croydon and south-west to Hughenden, and on Palm and Magnetic Islands.",
+    "diet": "It is a generalist herbivore, eating new grass after rain, browse and small herbs, and supplementing this with fruit, seeds, flowers and some animal matter such as insect larvae. Animal Diversity Web describes it more narrowly as a leaf eater.",
+    "behavior": "It often forages at night and is most visible in the evening, when it moves from rock shelters to open feeding areas, and it stays loyal to its rocky shelter area. Stable bonds form between one adult male and one or two females, which share daytime shelters, groom each other and defend their area, though genetic studies show the bonds are not strictly exclusive.",
+    "reproduction": "Breeding is continuous, though extended drought can reduce the number of young that survive. Gestation lasts about 29–34 days and a female usually has one young, which stays in the pouch for about six to seven months and is weaned at about 11 months. Females mature at roughly 18–19 months and males at about two years.",
+    "ecology": "Its home range expands in the wet season and shrinks in the late dry season, following food availability. Known predators include feral cats and red foxes, though it is seldom threatened by predation.",
+    "conservation": "The Mammal Diversity Database lists it as Least Concern on the IUCN Red List, and Animal Diversity Web describes populations as fairly stable. Introduced predators, especially during drought, are a possible threat."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Petrogale_assimilis/",
+      "title": "Petrogale assimilis — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://rootourism.com/fsheet37.htm",
+      "title": "Allied rock-wallaby fact sheet — Rootourism"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000293",
+      "title": "Petrogale assimilis — Mammal Diversity Database"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "eurasian_teal",
+  "name": "Eurasian Teal",
+  "scientific": "Anas crecca",
+  "group": "birds",
+  "sections": {
+    "overview": "The Eurasian teal is a small, fast dabbling duck of marshes and estuaries. In Britain it is much more numerous in winter, when about half a million birds arrive from the Continent, than in the breeding season.",
+    "identification": "In Britain, males average about 336 g with a wing of 190 mm; females are smaller, around 303 g and 182 mm. The male has a chestnut head with a broad green eye patch, a spotted chest, grey flanks and a black-edged yellow patch under the tail. The female is mottled brown. Both sexes show a bright green wing patch.",
+    "habitat": "In winter it uses low-lying wetlands in the south and west, from small pools to large estuaries, on coast and fresh water. In the breeding season it is thinly and patchily distributed, with a preference for northern moors and mires and some sites in southern Britain and Ireland.",
+    "diet": "The teal is an opportunistic feeder, taking insects and their larvae, seeds and aquatic plants. It skims food from the surface or filters it through the comb-like plates of its bill. Ducklings eat mostly insect larvae at first.",
+    "behavior": "Winter flocks are made up largely of birds from around the Baltic and Siberia. Numbers in Britain peak between October and February, and the species is scarce in summer. Teal gather in large groups, which helps them find food and spot danger, and they rarely dive except to escape predators.",
+    "reproduction": "In Britain a pair typically raises one brood a year. The female lays 8–11 eggs and incubates them alone for 21–23 days; the ducklings leave the nest soon after hatching and fledge at about 25–30 days. Teal can breed from one year of age.",
+    "ecology": "Teal carry seeds in their droppings and feed alongside other dabbling ducks, sharing vigilance. Eagles, harriers and falcons hunt loafing birds, foxes take incubating females, and crows and other nest raiders eat eggs. The UK supports a significant share of the north-west European wintering population.",
+    "conservation": "The IUCN Red List classes the species as Least Concern, but it is Amber-listed in the UK. About 2,700 pairs bred there in 2016, and about 435,000 birds wintered in 2012–17; the winter population rose by 14% between 1998 and 2023, though the breeding range has shrunk by 16.5% since 1968–72. The oldest ringed bird lived over 18 years."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/teal",
+      "title": "Teal — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/teal",
+      "title": "Teal — RSPB"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Anas_crecca/",
+      "title": "Anas crecca — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/teal",
+      "title": "Teal — BTO BirdFacts, British Trust for Ornithology"
+    }
+  ]
+}

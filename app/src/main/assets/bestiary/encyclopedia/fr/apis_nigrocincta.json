@@ -1,0 +1,26 @@
+{
+  "id": "apis_nigrocincta",
+  "name": "Abeille à bandes noires",
+  "scientific": "Apis nigrocincta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Apis nigrocincta est une abeille mellifère qui niche dans des cavités et vit en Asie du Sud-Est. Elle appartient au groupe des abeilles asiatiques nichant dans des cavités et est notamment associée aux Philippines et aux îles indonésiennes voisines. Sa biologie est moins étudiée que celle de l’abeille domestique occidentale, et de nombreux aspects de son écologie restent mal connus.",
+    "identification": "C’est une abeille sociale au corps d’insecte en trois parties, avec deux paires d’ailes, et, chez les ouvrières, des pattes postérieures adaptées au transport du pollen. Ses ailes antérieures mesurent environ 7 à 9 mm ; aucune plage fiable de longueur totale du corps ni mesure comparative par sexe n’a été publiée dans les sources consultées. L’identification au sein des Apis asiatiques nichant en cavité est délicate à la seule apparence : les chercheurs combinent morphologie, caractères du nid et données génétiques pour distinguer les espèces proches. Une photographie sans lieu d’observation ni détail diagnostique peut donc ne pas suffire à une identification certaine. Les sources consultées sur l’espèce ne fournissent ni masse adulte fiable ni différence de masse documentée entre les sexes.",
+    "habitat": "Les publications situent l’espèce aux Philippines et en Indonésie, notamment à Sulawesi et dans les îles Sangihe. Elle niche dans des cavités fermées, plutôt que de construire les rayons exposés caractéristiques de certaines autres abeilles mellifères. Les sources disponibles donnent une répartition régionale, sans cartographier précisément tous les habitats occupés.",
+    "diet": "Comme les autres abeilles mellifères, les ouvrières récoltent le nectar et le pollen des fleurs pour approvisionner la colonie. Les études propres à cette espèce consultées ici portent surtout sur la répartition, la nidification et les relations entre abeilles asiatiques ; elles ne donnent pas de bilan détaillé et quantifié des fleurs préférées ou du régime saisonnier.",
+    "behavior": "L’espèce vit en colonie et occupe des cavités. Les recherches sur les abeilles asiatiques nichant en cavité distinguent A. nigrocincta de ses proches parentes à l’aide de caractères du nid et des cellules de couvain, ainsi que de marqueurs génétiques. Les sources examinées ici livrent peu d’observations de terrain détaillées sur son butinage, son essaimage et sa communication.",
+    "reproduction": "Chez les abeilles mellifères, la reproduction des colonies passe par la production de nouvelles reines et le départ d’une reine accompagnée d’ouvrières pour fonder une autre colonie. Les sources retenues ici ne donnent pas de calendrier, de distance d’accouplement ni de taux de fondation propres à A. nigrocincta suffisamment étayés ; ces valeurs ne sont donc pas indiquées.",
+    "ecology": "Abeille sociale indigène, A. nigrocincta visite les plantes en fleurs et peut contribuer à leur pollinisation. Sa nidification en cavité rend la disponibilité des sites de nidification importante pour son habitat. Les études consultées soulignent le manque de connaissances sur l’écologie et la conservation de plusieurs abeilles asiatiques ; elles ne quantifient ni sa contribution à la pollinisation ni la tendance de sa population.",
+    "conservation": "Aucune catégorie mondiale récente de Liste rouge ni tendance de population n’a été confirmée dans les sources utilisées pour cette fiche. L’absence de statut vérifié ne signifie pas que l’espèce est à l’abri ; la littérature scientifique signale précisément d’importantes lacunes de connaissance sur les abeilles asiatiques."
+  },
+  "sources": [
+    {
+      "url": "https://edis.ifas.ufl.edu/publication/IN1353",
+      "title": "Abeilles mellifères asiatiques nichant en cavité — service de vulgarisation IFAS de l’université de Floride"
+    },
+    {
+      "url": "https://academic.oup.com/isd/article/7/4/5/7235953",
+      "title": "Phylogéographie et délimitation des espèces d’abeilles asiatiques nichant en cavité — Insect Systematics and Diversity"
+    }
+  ]
+}

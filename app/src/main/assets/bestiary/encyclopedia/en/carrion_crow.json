@@ -1,0 +1,38 @@
+{
+  "id": "carrion_crow",
+  "name": "Carrion crow",
+  "scientific": "Corvus corone",
+  "group": "birds",
+  "sections": {
+    "overview": "The carrion crow is a large, adaptable corvid native to western Europe and parts of eastern Asia.",
+    "identification": "Adults are about 48–52 cm long, with an 84–100 cm wingspan and a usual mass of roughly 400–600 g; males average somewhat larger, but the sexes look alike. Its plumage is glossy black, and the bill and legs are black. The slimmer-billed adult rook has bare greyish skin at the bill base; the much larger raven has a heavier bill and shaggy throat. The similarly sized hooded crow, Corvus cornix, is a distinct species with a grey body and black head, wings and tail.",
+    "habitat": "Across its broad Eurasian range, the species uses woodland edges, farmland, moorland, coasts and urban parks.",
+    "diet": "An opportunistic omnivore, it takes seeds, grain, fruit, insects, earthworms, eggs, small animals and food discarded by people. It also scavenges carcasses and picks parasites from livestock.",
+    "behavior": "Breeding pairs defend territories throughout the year, while unpaired birds and young gather in flocks and winter roosts. Calls and postures convey signals. Experiments show that carrion crows recognize individual humans.",
+    "reproduction": "The pair builds a deep stick nest, usually high in a tree, in early spring. A typical clutch contains three or four eggs; the female incubates them for about 18–20 days while her mate brings food. Both parents feed the helpless chicks, which leave the nest at roughly 29 days, then continue to depend on adults while learning to forage before becoming independent.",
+    "ecology": "They scavenge carcasses and take invertebrates and small vertebrates, sometimes raiding eggs or chicks; they are both scavengers and active predators.",
+    "conservation": "BirdLife International’s 2021 European Red List classifies the species as Least Concern in Europe, based on national data largely reported in 2019–2020; this is a regional assessment, not a current global reassessment. In France, perceived agricultural damage has led to campaigns of destruction and deterrence."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Carrion_crow",
+      "title": "Carrion crow — Wikipedia"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Corneille_noire",
+      "title": "Corneille noire — Wikipédia"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/carrion-crow",
+      "title": "Carrion Crow — BirdFacts"
+    },
+    {
+      "url": "https://birdlifedata.blob.core.windows.net/sub-global/5783_corvus_corone.pdf",
+      "title": "European Red List of Birds 2021: Corvus corone supplementary material — BirdLife International"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/corvides/corneille-noire",
+      "title": "La Corneille noire — Ligue pour la Protection des Oiseaux"
+    }
+  ]
+}

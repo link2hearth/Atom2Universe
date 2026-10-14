@@ -1,0 +1,62 @@
+{
+  "id": "nile_crocodile",
+  "name": "Nile crocodile",
+  "scientific": "Crocodylus niloticus",
+  "group": "reptiles",
+  "sections": {
+    "overview": "The Nile crocodile is a large African crocodilian of rivers, lakes, swamps and estuaries, with a modern range centred in eastern and southern Africa and Madagascar. The Red List’s current taxonomic scope separates it from Crocodylus suchus, the West and Central African species once included in many broad Nile crocodile accounts. It waits at the water’s edge with only its eyes and nostrils exposed, then lunges when prey comes within reach. Fish and other aquatic animals connect its hunting to the food webs of African wetlands.",
+    "identification": "Its muscular tail supplies the main thrust in water, while strong limbs support movement on land. An Okavango account describes typical adults around 3.5 m long, with males able to reach 5 m. Exceptional males may approach 6 m, an exceptional value rather than a representative adult size. The pointed crocodile muzzle differs from an alligator’s broader one, and its fourth lower tooth remains visible when the jaws close. Eyes, ears and nostrils sit high on the head, and nostrils can close underwater. A San Diego Zoo Wildlife Alliance reference gives a usual mass of about 70–100 kg for males and females together, while noting that adults above 3.5 m are rarely weighed; the largest reported masses are exceptional and should not be read as typical. No sex-specific weight range or reliable body width was found.",
+    "habitat": "The species uses slow and still waters, including rivers, lakes, seasonal swamps, reservoirs and coastal estuaries. It also occurs in desert oasis pools and, in Madagascar, underground streams. Around the Nile, its northernmost modern population is localized at Lake Nasser in Egypt. Older accounts include western populations now assigned to C. suchus.",
+    "diet": "Its diet changes as it grows. Young juveniles take insects and invertebrates, later adding frogs, crabs, snails, small fish, birds and rodents. Adults eat fish, reptiles, birds and mammals; local prey availability shapes the menu. Large land animals are occasional prey, not the routine food of every large crocodile. It ambushes from water or shore; a crocodile may roll to tear large prey apart.",
+    "behavior": "As an ectotherm, it adjusts body temperature by moving between sunlit banks, shade and water. It often basks by day and spends much of the night in or near water, with activity shifting by weather and season. When submerged, it can expose only its eyes, ears and nostrils and close its nostrils underwater. Nile crocodiles tolerate one another at basking sites, but large males may defend shoreline stretches. Hatchling calls draw adults to the nest and help keep young together.",
+    "reproduction": "In local dry seasons, females dig sandy hole nests near permanent water and lay around 40–60 eggs. Incubation commonly lasts about 80–90 days, although temperature changes its duration. Egg temperature also influences sex: one Zimbabwe study produced only females at constant 31 °C or below, while the threshold for males varied among clutches above that range. The female guards the nest and responds to calls from hatching young, uncovering them and carrying hatchlings in her mouth to water. Hatchlings measure about 28 cm and stay guarded in groups for up to three months before dispersing.",
+    "ecology": "In the Okavango Delta, studies describe crocodiles taking fish, recycling nutrients and maintaining wet refuges during drought. Eggs and young also feed other animals: fish, herons, storks, monitor lizards and mammals can prey on them, while larger crocodiles may eat juveniles. These relationships vary by site, water level and life stage, making the crocodile both predator and prey in a changing wetland community.",
+    "conservation": "The global IUCN assessment completed on 30 April 2017 and published in 2019 listed the species as Least Concern, estimating 50,000–70,000 mature individuals. The assessment reports that hunting depleted populations in many countries from the 1940s through the 1960s, while legal protection and CITES trade controls supported recovery in many areas. Habitat conversion, pollution, uncontrolled harvest and conflict killings remain regional pressures; local declines and die-offs are documented within the wider range. Some commercial skins come from ranching or captive breeding, while local harvest still needs careful management in the wild."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-1.RLTS.T45433088A3010181.en",
+      "title": "Crocodylus niloticus — The IUCN Red List of Threatened Species, 2019 assessment"
+    },
+    {
+      "url": "https://doi.org/10.7717/peerj.1901",
+      "title": "Fine scale patterns of genetic partitioning in the rediscovered African crocodile, Crocodylus suchus — PeerJ"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/characteristics",
+      "title": "Physical Characteristics — Nile Crocodiles Fact Sheet, San Diego Zoo Wildlife Alliance Library"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/distribution",
+      "title": "Distribution & Habitat — Nile Crocodiles Fact Sheet, San Diego Zoo Wildlife Alliance Library"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/diet",
+      "title": "Diet & Feeding — Nile Crocodiles Fact Sheet, San Diego Zoo Wildlife Alliance Library"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/behavior",
+      "title": "Behavior & Ecology — Nile Crocodiles Fact Sheet, San Diego Zoo Wildlife Alliance Library"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-7998.1987.tb07458.x",
+      "title": "Incubation temperatures, sex ratios and sex determination in a population of Nile crocodiles — Journal of Zoology"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/reproduction",
+      "title": "Reproduction & Development — Nile Crocodiles Fact Sheet, San Diego Zoo Wildlife Alliance Library"
+    },
+    {
+      "url": "https://scielo.org.za/scielo.php?pid=S1019-91282011000300004&script=sci_arttext",
+      "title": "A preliminary disease survey in the wild Nile crocodile population in the Okavango Delta, Botswana — Journal of the South African Veterinary Association"
+    },
+    {
+      "url": "https://doi.org/10.1007/s00114-006-0156-4",
+      "title": "Parent-offspring communication in the Nile crocodile Crocodylus niloticus: do newborns’ calls show an individual signature? — The Science of Nature"
+    },
+    {
+      "url": "https://www.iucncsg.org/365_docs/attachments/protarea/15_C-cf25967f.pdf",
+      "title": "Crocodiles: Status Survey and Conservation Action Plan, Third Edition — IUCN SSC Crocodile Specialist Group"
+    }
+  ]
+}

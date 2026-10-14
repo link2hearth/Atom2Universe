@@ -1,0 +1,34 @@
+{
+  "id": "pteropus_seychellensis",
+  "name": "Roussette des Seychelles",
+  "scientific": "Pteropus seychellensis",
+  "group": "mammals",
+  "sections": {
+    "overview": "La roussette des Seychelles, appelée sousouri localement, est la plus grande chauve-souris des Seychelles et l’un des deux mammifères indigènes de l’archipel. C’est une roussette qui se nourrit de fruits et de fleurs et qui vit sur l’ensemble des îles granitiques centrales.",
+    "identification": "Une grande roussette au pelage brun foncé, aux ailes noires, à la tête et au cou jaune-orangé vif, avec un museau marqué. Elle pèse jusqu’à environ 600 g, pour une envergure pouvant atteindre 1,2 m selon une source et 1,5 m selon une autre.",
+    "habitat": "Elle est répandue sur les îles granitiques centrales des Seychelles, comme Mahé, Praslin et Cousine, et dort dans la cime des arbres. Elle peut voler entre îles voisines, par exemple entre Praslin et Cousin. La base Mammal Diversity Database limite désormais l’espèce aux Seychelles et traite la population des Comores comme une espèce distincte.",
+    "diet": "Elle mange des fruits, du nectar et du pollen, y compris des mangues et des papayes cultivées, et s’appuie sur un odorat fin et une bonne vue pour trouver sa nourriture. Elle se nourrit bruyamment dans les arbres en fruits, parfois toute la nuit.",
+    "behavior": "Les colonies dorment ensemble dans la cime des arbres aux heures chaudes, suspendues par une patte, et les roussettes s’envolent en fin d’après-midi pour se nourrir. On les voit surtout à l’aube et au crépuscule, et en plus grand nombre de novembre à février, quand la nourriture est plus abondante, d’après un récit de l’île Cousine. Par temps très calme, quelques-unes frôlent la mer et trempent leur poitrine, pour des raisons mal comprises.",
+    "reproduction": "Les sources consultées ne donnent ni saison de reproduction, ni taille de portée, ni âge de maturité. Le ministère de l’Environnement des Seychelles a annoncé une étude pour documenter l’alimentation et la reproduction de l’espèce, signe que ces points restent mal documentés.",
+    "ecology": "Pollinisatrice et disperseuse de graines, elle aide les plantes indigènes à se régénérer et joue un rôle important dans les écosystèmes insulaires. Un environnementaliste seychellois a noté qu’elle disperse les graines de plantes endémiques.",
+    "conservation": "La base Mammal Diversity Database l’indique comme préoccupation mineure sur la Liste rouge de l’UICN. Un rapport de 2004 estimait environ 8 500 individus aux Seychelles, et aucun recensement plus récent n’avait été fait au moment d’un article de presse récent. Elle est chassée pour un curry considéré comme un mets fin, sans loi qui l’interdise, et subit aussi des collisions avec des infrastructures et a été liée à des pannes de courant sur Mahé."
+  },
+  "sources": [
+    {
+      "url": "https://natureseychelles.org/seychelles-wildlife/mammals/seychelles-fruit-bat/",
+      "title": "Roussette des Seychelles — Nature Seychelles"
+    },
+    {
+      "url": "https://cousineisland.com/journal/seychelles-fruit-bat-flying-fox",
+      "title": "Roussette des Seychelles — île Cousine"
+    },
+    {
+      "url": "https://www.sbc.sc/?p=8288",
+      "title": "Étude prévue sur la population et la reproduction de la roussette des Seychelles — Seychelles Broadcasting Corporation"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1004499",
+      "title": "Pteropus seychellensis — Mammal Diversity Database"
+    }
+  ]
+}

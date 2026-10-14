@@ -12,8 +12,8 @@
       "fr": "La grande limace noire est une très grosse limace terrestre du nord-ouest de l’Europe. Le nom recouvre un complexe d’espèces proches que seules la dissection ou l’ADN distinguent de façon fiable, si bien que les observations sont souvent notées pour le groupe entier. C’est une omnivore nocturne qui préfère les sols humides et végétalisés."
     },
     "identification": {
-      "en": "Adults measure about 75–180 mm in one source and 90–140 mm in another. The body is bulky, with long coarse tubercles along the back and sides and no keel, and it contracts into a bell shape. Colour varies from black to brown, grey, green, orange or red, and a jet-black form lives on peatlands. Young slugs are pale yellow to orange and darken with age.",
-      "fr": "Les adultes mesurent environ 75 à 180 mm selon une source et 90 à 140 mm selon une autre. Le corps est massif, avec de longs tubercules grossiers sur le dos et les flancs, sans carène, et il se contracte en forme de cloche. La couleur varie du noir au brun, gris, vert, orange ou rouge, et une forme noir de jais vit dans les tourbières. Les jeunes sont jaune pâle à orange et foncent en grandissant."
+      "en": "Adults measure about 75–180 mm in one source and 90–140 mm in another. The body is bulky, with long coarse tubercles along the back and sides and no keel, and it contracts into a bell shape. Colour varies from black to brown, grey, green, orange or red, and a jet-black form lives on peatlands. Young slugs are pale yellow to orange and darken with age. Reliable adult body-mass and sex-specific size figures were not found in the consulted sources.",
+      "fr": "Les adultes mesurent environ 75 à 180 mm selon une source et 90 à 140 mm selon une autre. Le corps est massif, avec de longs tubercules grossiers sur le dos et les flancs, sans carène, et il se contracte en forme de cloche. La couleur varie du noir au brun, gris, vert, orange ou rouge, et une forme noir de jais vit dans les tourbières. Les jeunes sont jaune pâle à orange et foncent en grandissant. Les sources consultées ne donnent pas de masse adulte fiable ni de mensurations distinctes selon le sexe."
     },
     "habitat": {
       "en": "It is found in farmland, hedge bottoms, woodland, wetland margins and peatland, up to moderate altitudes, and is common in any well-vegetated area. Sources disagree on gardens: one calls it common there, another rare there because of competition from other slugs. Its exact world range is uncertain because of the identification problem.",
@@ -59,7 +59,8 @@
       ],
       "facts": [
         "75–180 mm, bulky, long coarse tubercles, no keel, bell-shaped when contracted; colour brown, black, grey, green, orange or red; separated from relatives only by dissection or DNA.",
-        "Omnivorous on carrion, dung and vegetation, prefers rotting plants; largely nocturnal; eggs pearly white, about 5 mm; extremely common in Britain."
+        "Omnivorous on carrion, dung and vegetation, prefers rotting plants; largely nocturnal; eggs pearly white, about 5 mm; extremely common in Britain.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
       ]
     },
     {

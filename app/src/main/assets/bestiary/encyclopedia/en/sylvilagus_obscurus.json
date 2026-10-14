@@ -1,0 +1,38 @@
+{
+  "id": "sylvilagus_obscurus",
+  "name": "Appalachian Cottontail",
+  "scientific": "Sylvilagus obscurus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The Appalachian cottontail is a secretive rabbit of the Appalachian Mountains of eastern North America, living in dense shrubby and coniferous cover at higher elevations. It was described as a species only in 1992 and is very similar to the eastern cottontail.",
+    "identification": "A medium-sized cottontail about 39–43 cm long, weighing roughly 0.7 to 1.5 kg depending on the source. The back is yellowish to reddish brown mixed with black, the belly whitish, and the tail fluffy and white beneath. The short, rounded ears have black front edges, and there is a small black spot between the ears but no white forehead patch; reliable identification may need skull features.",
+    "habitat": "It lives in dense cover of mountain laurel, rhododendron, blueberry and conifers such as red spruce, mostly above about 760 m, though it is reported lower in Tennessee and Alabama. It also uses young clearcuts and reclaimed mining land. Its range runs from northern Pennsylvania and the Hudson River area south to northern Alabama and Georgia.",
+    "diet": "In summer it eats grasses, clover and other herbs, shrubs, buds, seeds and fruit, and in winter it shifts toward woody plant material. Like other rabbits, it eats its own droppings to recover nutrients.",
+    "behavior": "It rests under dense vegetation or logs by day and forages near cover after sunset, rarely entering open areas. Radio-tracking at Dolly Sods, West Virginia, gave summer home ranges of about 6–13 ha and winter ranges of about 1.5–9 ha, with winter use concentrated in evergreen cover. It escapes predators by leaping and zigzagging.",
+    "reproduction": "The breeding season runs roughly from late winter to late summer. Females have several litters a year of three to eight young after a gestation of about 28 days, and only females care for the young in a shallow nest of fur and grass covered with leaves. Young leave the nest at about two weeks and are nearly independent after about a month.",
+    "ecology": "It is prey for owls, hawks, foxes and dogs, and it spreads seeds by eating fruit. In areas heavily disturbed by people, it appears to be displaced by the eastern cottontail.",
+    "conservation": "The Mammal Diversity Database lists it as Near Threatened on the IUCN Red List. In Alabama it is poorly known and of high conservation concern, hunting does not seem to threaten it, but habitat fragmentation and development do. Its need for extensive unbroken forest and displacement by the eastern cottontail are the main limits noted in Virginia."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Sylvilagus_obscurus/",
+      "title": "Sylvilagus obscurus — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://dwr.virginia.gov/wildlife/information/appalachian-cottontail/",
+      "title": "Appalachian cottontail — Virginia Department of Wildlife Resources"
+    },
+    {
+      "url": "https://outdooralabama.com/rabbits/appalachian-cottontail",
+      "title": "Appalachian cottontail — Outdoor Alabama"
+    },
+    {
+      "url": "https://eaglehill.us/NENAonline/articles/NENA-14-1/19-Boyce.shtml",
+      "title": "Seasonal home range and diurnal movements of Sylvilagus obscurus at Dolly Sods, West Virginia — Northeastern Naturalist"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1001139",
+      "title": "Sylvilagus obscurus — Mammal Diversity Database"
+    }
+  ]
+}

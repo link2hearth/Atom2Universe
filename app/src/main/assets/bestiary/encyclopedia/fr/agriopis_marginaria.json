@@ -1,0 +1,38 @@
+{
+  "id": "agriopis_marginaria",
+  "name": "Hibernie hâtive",
+  "scientific": "Agriopis marginaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Agriopis marginaria est un Géométridé qui apparaît très tôt dans l’année, les mâles volant à la fin de l’hiver et au début du printemps. Ses ailes ocre à jaune brun pâle portent une bordure caractéristique ponctuée, tandis que la femelle ne vole pas et n’a que de minuscules ailes vestigiales. Les chenilles se nourrissent de plusieurs arbres et arbustes caducifoliés. Comme l’envergure publiée du mâle varie sensiblement selon les références régionales, les mesures doivent rester rattachées à leur source plutôt que d’être présentées comme une valeur unique.",
+    "identification": "Les sources ne s’accordent pas sur l’envergure du mâle : UKMoths indique 27 à 32 mm et Hantsmoths 36 à 42 mm ; il vaut donc mieux conserver ces estimations propres à chaque référence régionale. La femelle ne vole pas ; ses ailes sont fortement réduites et vestigiales, et son corps paraît plus massif. Aucune longueur corporelle, masse, hauteur ou largeur fiable ni comparaison des masses selon le sexe n’a été trouvée. Les ailes antérieures du mâle varient du jaune pâle ou ocre au brun rouille et peuvent être très assombries ; une rangée discontinue de points sombres le long de la bordure externe est un indice utile. Les ailes réduites de la femelle la distinguent des femelles volantes d’autres phalènes hivernales. Les mâles peuvent être confondus avec l’Hibernie orangée (Agriopis aurantiaria) et l’Hibernie défeuillante (Erannis defoliaria) ; comparer la forme des ailes, la couleur et les ponctuations plutôt que de se fier uniquement à la saison.",
+    "habitat": "Elle fréquente les boisements de feuillus, les broussailles, les haies, les jardins, les landes et d’autres lieux où poussent ses plantes hôtes. Les sources européennes signalent une large répartition, et les références britanniques la décrivent comme commune dans les bois et les milieux arbustifs adaptés. Les adultes émergent pendant la saison froide ; lors d’hivers doux, les premiers mâles peuvent voler dès le milieu de l’hiver dans certaines localités d’Europe centrale, tandis que la période principale britannique va de février à avril.",
+    "diet": "Les chenilles sont polyphages sur les arbres et arbustes caducifoliés. Les relevés régionaux citent notamment les chênes, aubépines, prunelliers, bouleaux, noisetiers, saules, ormes, érables sycomores, pommiers et pruniers. Cette diversité de plantes hôtes concorde avec la présence du papillon dans les boisements mixtes, les vergers, les haies et les jardins ; l’alimentation des adultes n’était pas documentée dans les sources consultées.",
+    "behavior": "Les mâles volent la nuit et sont attirés par la lumière, même par temps froid ; les femelles ne peuvent pas voler et grimpent sur les troncs pour attirer les mâles par leurs phéromones. Cette différence marquée entre les sexes caractérise l’activité hivernale de l’espèce. La posture et la couleur de la chenille peuvent la faire ressembler à un petit rameau, ce qui la rend discrète sur les branches hôtes.",
+    "reproduction": "En Grande-Bretagne, les adultes apparaissent surtout de février à avril, mais des observations plus précoces sont possibles lors des hivers doux d’Europe centrale. Après l’accouplement, la femelle aptère pond sur les arbres hôtes ; les chenilles consomment le feuillage caduc et l’espèce passe l’été et l’automne au stade de chrysalide avant l’émergence hivernale des adultes. Les sources concordent sur la période hiverno-printanière des adultes, mais donnent peu d’informations cohérentes sur le nombre d’œufs et leur emplacement exact.",
+    "ecology": "Ses chenilles font partie de la communauté d’insectes phytophages des bois de feuillus tempérés et des haies, et peuvent servir de proies aux oiseaux et autres insectivores. Le vol hivernal rend les adultes actifs à une période où peu d’autres grands papillons de nuit volent. L’espèce utilise de nombreux arbres et arbustes communs ; sa présence dépend donc du maintien d’habitats ligneux variés plutôt que d’une seule plante hôte.",
+    "conservation": "Les inventaires britanniques régionaux décrivent Agriopis marginaria comme commune et répandue dans les bois, broussailles et haies qui lui conviennent. Les sources consultées ne fournissent ni évaluation mondiale de conservation ni tendance démographique à l’échelle de toute l’aire ; l’abondance britannique ne doit donc pas être appliquée à toutes les régions européennes. Le maintien de boisements mixtes de feuillus, de haies et d’arbustes indigènes préserve la diversité de plantes nourricières nécessaire aux chenilles."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/agriopis-marginaria/",
+      "title": "Hibernie hâtive — fiche espèce UKMoths"
+    },
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=70.255",
+      "title": "Agriopis marginaria — inventaire Hantsmoths du Hampshire et de l’île de Wight"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5350/",
+      "title": "Agriopis marginaria — catalogue belge des Lépidoptères"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Agriopis_marginaria",
+      "title": "Agriopis marginaria — portail spécialisé Lepiforum"
+    },
+    {
+      "url": "https://www.papillon-poitou-charentes.org/Agriopis-marginaria-Fabricius-1776%2C13837.html",
+      "title": "Hibernie hâtive — Papillons de Poitou-Charentes"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "dugong",
+  "name": "Dugong",
+  "scientific": "Dugong dugon",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le dugong est un sirénien entièrement marin, seul représentant actuel des Dugongidés. Il fréquente les eaux tropicales côtières, de l’Afrique de l’Est et de la mer Rouge jusqu’au Pacifique occidental, là où poussent des herbiers. À la différence de certains lamantins qui remontent les rivières, sa queue se termine par une nageoire échancrée, non par une palette arrondie. Sa vie suit les herbiers peu profonds : il s’y nourrit, se repose à proximité et se déplace lorsque les zones de nourriture changent ou se dégradent.",
+    "identification": "L’adulte a un corps massif qui s’amincit vers l’arrière, de courtes nageoires antérieures et aucun membre postérieur visible. Son large museau s’oriente vers le fond ; une lèvre supérieure souple et des soies sensorielles l’aident à repérer et saisir les plantes. La peau grise, couverte de poils clairsemés, peut paraître brune ou verte sous les algues. La queue porte deux lobes pointus. Les mâles peuvent développer de petites défenses issues des incisives supérieures. Le museau incliné et la queue à deux lobes le distinguent des lamantins et correspondent à son broutage lent sur le fond. Les adultes mesurent environ trois mètres et peuvent peser jusqu’à 500 kilogrammes.",
+    "habitat": "Le dugong préfère les eaux côtières chaudes et peu profondes avec herbiers, notamment les baies abritées, lagons, chenaux et rivages insulaires. Il s’alimente surtout à faible profondeur, souvent à moins de 20 mètres, mais utilise aussi des herbiers plus profonds sur les larges plateaux peu inclinés. Les herbiers sont discontinus et varient par leurs espèces, leur qualité et leur croissance saisonnière. Le suivi au Queensland et dans le Territoire du Nord a révélé des individus assez sédentaires et d’autres parcourant des centaines de kilomètres. Ces déplacements individuels suivent la nourriture ; ils ne forment pas une migration fixe commune à tous les dugongs.",
+    "diet": "Les herbiers composent presque toute l’alimentation du dugong. Son museau et sa lèvre garnie de soies l’aident à arracher les pousses du sédiment. Lorsque les plantes se déracinent, il peut manger feuilles, rhizomes et racines ; sur un sol ferme ou parmi des plantes résistantes, il broute plutôt les feuilles. La consommation des racines dépend donc des conditions. À Ambon, en Indonésie, des chercheurs ont observé le prélèvement de pousses et de biomasse souterraine d’Halodule uninervis. Le dugong sélectionne souvent des espèces digestibles et nutritives. Ses traces dans les sédiments meubles indiquent les zones perturbées par le broutage.",
+    "behavior": "Le dugong respire de l’air et remonte entre ses périodes d’alimentation sous l’eau. Il vit seul, en petits groupes ou dans des rassemblements alimentaires plus importants. Dans la baie de Moreton, en Australie, les animaux des troupeaux denses passaient davantage de temps à manger, ce qui suggère un regroupement lié à la nourriture. Leurs voisins changeaient souvent ; les rassemblements ne semblaient pas organisés pour se protéger des prédateurs. Mère et petit restent proches ; le jeune se déplace ou se repose parfois au-dessus du dos maternel. Dans cette même baie, les paires mère–petit passaient davantage de temps près de la surface que les animaux isolés, augmentant leur exposition aux collisions avec les bateaux. Ces résultats décrivent les animaux étudiés dans cette baie.",
+    "reproduction": "Le dugong atteint tardivement la maturité et donne généralement naissance à un seul petit après une gestation estimée à environ quatorze mois. Plusieurs années séparent les naissances, davantage lorsque la nourriture manque ; les populations remplacent donc lentement les adultes disparus. Le petit naît sous l’eau. Il tète tout en commençant à manger les plantes des herbiers peu après la naissance. Il reste près d’elle environ un à deux ans. L’âge à la première naissance et l’intervalle entre naissances varient selon les populations. Dans le détroit de Torres, la reproduction était plus faible lorsque les herbiers déclinaient que lorsqu’ils étaient abondants, sans pouvoir isoler l’effet de la nourriture de celui de la densité.",
+    "ecology": "Grand herbivore, le dugong transforme les herbiers où il se nourrit. En coupant les feuilles ou en déterrant les plantes, il forme des traces et modifie l’équilibre entre pousses et parties souterraines. Sur un site indonésien, le broutage a retiré une grande part des pousses et de la biomasse souterraine superficielle ; les traces se sont rétablies pendant la croissance de saison humide, mais pas en saison sèche. Les effets sont donc locaux et saisonniers. Le broutage crée une mosaïque de zones coupées et intactes ; les herbiers servent aussi d’abri aux jeunes poissons et invertébrés. La santé du dugong et celle des herbiers sont liées.",
+    "conservation": "L’évaluation mondiale amendée de l’UICN de 2015, publiée en 2019, classe le dugong « Vulnérable ». Deux évaluations distinctes de 2022 classent la sous-population d’Afrique de l’Est « En danger critique » et celle de Nouvelle-Calédonie « En danger ». Ces catégories sont locales, pas mondiales. Les filets peuvent piéger et noyer les dugongs ; chasse, collisions avec les bateaux et perte ou dégradation des herbiers s’ajoutent aux pressions. L’évaluation d’Afrique de l’Est relève de très faibles effectifs et des mortalités liées à la pêche. En Nouvelle-Calédonie, chasse et blessures par bateau s’ajoutent au déclin des herbiers lié aux aménagements côtiers, à la pollution et aux ancres. Maturité tardive et naissances espacées freinent le rétablissement après la perte d’adultes."
+  },
+  "sources": [
+    {
+      "url": "https://ocean.si.edu/more-manatees-meet-sirenians",
+      "title": "Au-delà des lamantins : découvrir les siréniens — Smithsonian Ocean"
+    },
+    {
+      "url": "https://dugong.cms.int/about/faq-dugong",
+      "title": "FAQ sur le dugong — Mémorandum d’entente CMS sur le dugong"
+    },
+    {
+      "url": "https://dugong.cms.int/publication/global-assessment-dugong-status-and-conservation-needs",
+      "title": "Évaluation mondiale du statut du dugong et des besoins de conservation — CMS et James Cook University"
+    },
+    {
+      "url": "https://researchonline.jcu.edu.au/2097/",
+      "title": "Écologie spatiale des dugongs : applications à la gestion de la conservation — thèse de James Cook University"
+    },
+    {
+      "url": "https://doi.org/10.1016/0304-3770(94)00438-R",
+      "title": "Répartition et variations saisonnières de la biomasse des herbiers en lien avec le broutage du dugong aux Moluques, Indonésie orientale — Aquatic Botany"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.csr.2008.03.023",
+      "title": "Variabilité temporelle de l’histoire de vie et de la biologie reproductive des dugongs femelles du détroit de Torres — Continental Shelf Research"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2015-4.RLTS.T6909A160756767.en",
+      "title": "Dugong dugon (version amendée de l’évaluation de 2015) — Liste rouge de l’UICN, publiée en 2019"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T218582764A218589142.en",
+      "title": "Dugong dugon (sous-population d’Afrique de l’Est) — Liste rouge de l’UICN, évaluation de 2022"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T218582754A218589361.en",
+      "title": "Dugong dugon (sous-population de Nouvelle-Calédonie) — Liste rouge de l’UICN, évaluation de 2022"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/environment/marine/marine-species/dugongs",
+      "title": "Dugongs — ministère australien du Changement climatique, de l’Énergie, de l’Environnement et de l’Eau"
+    },
+    {
+      "url": "https://iucn.org/press-release/202212/human-activity-devastating-marine-species-mammals-corals-iucn-red-list",
+      "title": "Les activités humaines déciment les espèces marines, des mammifères aux coraux — mise à jour de la Liste rouge de l’UICN, 9 décembre 2022"
+    },
+    {
+      "url": "https://researchonline.jcu.edu.au/73/",
+      "title": "Hodgson (2004) — Comportement du dugong dans la baie de Moreton"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0155675",
+      "title": "Production de jeunes dugongs et variations climatiques (2016)"
+    },
+    {
+      "url": "https://www.qld.gov.au/environment/plants-animals/conservation/threatened-species/featured-projects/dugongs",
+      "title": "Gouvernement du Queensland — Dugongs"
+    }
+  ]
+}

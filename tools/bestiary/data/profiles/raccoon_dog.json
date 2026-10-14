@@ -57,16 +57,16 @@
         "Native East Asian canid; mask, habitat breadth, seasonal weight gain, generalist feeding, and European introduction."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "overview.en.2",
-        "overview.fr.2",
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
         "diet.en.1",
-        "diet.fr.1"
+        "diet.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -91,14 +91,14 @@
         "Species account describes face markings, coat, seasonal moult, and river-valley habitat."
       ],
       "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
         "identification.en.3",
-        "identification.fr.3",
         "identification.en.5",
+        "identification.fr.3",
         "identification.fr.5",
         "overview.en.3",
-        "overview.fr.3",
-        "habitat.en.2",
-        "habitat.fr.2"
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -224,12 +224,12 @@
         "About 9,100 animals were released in European Russia from 1929 to 1955."
       ],
       "prose_claims": [
-        "overview.en.4",
-        "overview.fr.4",
         "conservation.en.3",
-        "conservation.fr.3",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.3",
+        "conservation.fr.4",
+        "overview.en.4",
+        "overview.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -304,8 +304,8 @@
       ],
       "prose_claims": [
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
+        "diet.fr.2",
         "diet.fr.3"
       ],
       "budget": {
@@ -333,8 +333,8 @@
       ],
       "prose_claims": [
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.2",
+        "behavior.fr.1",
         "behavior.fr.2",
         "habitat.en.3",
         "habitat.fr.3"
@@ -363,12 +363,12 @@
       ],
       "prose_claims": [
         "behavior.en.3",
-        "behavior.fr.3",
         "behavior.en.4",
+        "behavior.fr.3",
         "behavior.fr.4",
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.4",
+        "reproduction.fr.3",
         "reproduction.fr.4"
       ],
       "budget": {
@@ -394,10 +394,10 @@
         "Finnish animals showed intermittent winter passivity and modest body-temperature declines."
       ],
       "prose_claims": [
-        "identification.en.6",
-        "identification.fr.6",
         "behavior.en.5",
-        "behavior.fr.5"
+        "behavior.fr.5",
+        "identification.en.6",
+        "identification.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -422,8 +422,8 @@
       ],
       "prose_claims": [
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
+        "reproduction.fr.1",
         "reproduction.fr.2"
       ],
       "budget": {
@@ -450,14 +450,14 @@
         "European review finds localized amphibian impacts, uncertain bird effects, and limited competition evidence."
       ],
       "prose_claims": [
-        "ecology.en.1",
-        "ecology.fr.1",
-        "ecology.en.2",
-        "ecology.fr.2",
-        "ecology.en.3",
-        "ecology.fr.3",
         "conservation.en.7",
-        "conservation.fr.7"
+        "conservation.fr.7",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3"
       ],
       "budget": {
         "limit": 200,

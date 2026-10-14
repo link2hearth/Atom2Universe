@@ -12,8 +12,8 @@
       "fr": "Petit cétacé des mers tempérées fraîches et subarctiques, il vit près des côtes et sur les plateaux continentaux de l’Atlantique Nord et du Pacifique Nord. Des populations distinctes existent en mer Noire. Leur répartition et leurs proies varient."
     },
     "identification": {
-      "en": "The compact adult has a rounded head without a long beak, dark grey back, paler flanks and light underside. Its low triangular dorsal fin sits near mid-back; small pointed pectoral flippers and flattened, spade-shaped teeth distinguish its form. Females are generally larger; throat markings vary.",
-      "fr": "Son corps compact porte une tête arrondie sans long rostre, un dos gris foncé, des flancs plus clairs et un ventre pâle. La nageoire dorsale triangulaire est basse et située vers le milieu du dos; les nageoires pectorales sont petites et pointues. Les dents aplaties sont en spatule. Les femelles sont généralement plus grandes."
+      "en": "The compact adult has a rounded head without a long beak, dark grey back, paler flanks and light underside. Its low triangular dorsal fin sits near mid-back; small pointed pectoral flippers and flattened, spade-shaped teeth distinguish its form. Females are generally larger; throat markings vary. British adults are typically 145–160 cm and 50–55 kg; females grow larger, reaching about 189 cm and 81 kg, versus 163 cm and 54 kg for males.",
+      "fr": "Son corps compact porte une tête arrondie sans long rostre, un dos gris foncé, des flancs plus clairs et un ventre pâle. La nageoire dorsale triangulaire est basse et située vers le milieu du dos; les nageoires pectorales sont petites et pointues. Les dents aplaties sont en spatule. Les femelles sont généralement plus grandes. Les adultes britanniques mesurent généralement 145–160 cm et pèsent 50–55 kg ; les femelles sont plus grandes, jusqu’à environ 189 cm et 81 kg, contre 163 cm et 54 kg chez les mâles."
     },
     "habitat": {
       "en": "It mainly inhabits cold-temperate and subarctic coastal and shelf waters, including bays, estuaries and fjords. The University of British Columbia reports typical depths to about 150 m, though deeper sightings occur. In Europe it is widespread around the North Sea and British Isles, but patchier in the Baltic and Iberian Atlantic.",
@@ -130,6 +130,20 @@
       ],
       "facts": [
         "UK reporting period 2019–2024, published in 2026: national Unfavourable-inadequate and Celtic/Irish Seas unit Unfavourable-bad."
+      ]
+    },
+    {
+      "title": {
+        "en": "Harbour porpoise — The Mammal Society",
+        "fr": "Marsouin commun — The Mammal Society"
+      },
+      "url": "https://mammal.org.uk/british-mammal/harbour-porpoise",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "British adults are typically 145–160 cm and 50–55 kg; females grow larger (maximum about 189 cm and 81 kg, versus 163 cm and 54 kg for males)."
       ]
     }
   ],

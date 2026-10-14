@@ -1,0 +1,66 @@
+{
+  "id": "barnacle_goose",
+  "name": "Barnacle Goose",
+  "scientific": "Branta leucopsis",
+  "group": "birds",
+  "sections": {
+    "overview": "The Barnacle Goose is a compact, strongly social Arctic goose whose annual life follows a long migration between northern breeding grounds and milder European wintering areas. Three principal flyway populations breed in northeast Greenland, Svalbard and the Russian Arctic, including Baltic regions; their winter destinations differ, so conservation counts track them separately.",
+    "identification": "Adults have a black head, neck and breast, sharply set off by a complete creamy-white face; the upper body is blue-grey with fine black bars, while the belly is pale. Black bill and legs, white tail patch and compact body are diagnostic. Length is 58–70 cm; wingspan is 132–145 cm. Canada Goose is larger, with a black neck and white chinstrap rather than a full white face. BTO live-adult means are 1.93 kg and 421.1 mm wing length in males, versus 1.72 kg and 399.9 mm in females. These are British biometric averages; the species account does not give body width.",
+    "habitat": "Arctic breeders use tundra coasts, offshore islets and, in some colonies, ledges on steep cliffs; nesting on islands or heights can reduce access by terrestrial predators. After hatching, families move to tundra, coastal marshes and freshwater margins. During migration and winter, flocks use estuaries, tidal flats, saltmarshes and open grassland, and often graze on agricultural pasture. In northwestern Europe, some descendants of established or escaped birds also breed on temperate islands and lakes.",
+    "diet": "This is a grazing herbivore: its stubby bill clips grass leaves and shoots close to the ground, and it also takes sedges, mosses, buds and other tundra plants as availability changes. Goslings pick vegetation for themselves soon after hatching rather than being fed by their parents. Like other grazing geese, it processes abundant, fibrous forage rapidly; frequent feeding and cropping young growth help meet the high energy costs of migration and egg production.",
+    "behavior": "Barnacle Geese remain vocal and sociable, gathering into large flocks outside the breeding season and travelling in noisy lines or V-shaped formations. Pairs maintain close bonds, and parents accompany and defend their young within family groups. Their repeated barking calls help keep flock members in contact, especially in flight and at crowded roosts. Seasonal movements connect northern breeding areas with wintering sites in Britain, Ireland, the Netherlands and adjacent coasts.",
+    "reproduction": "Pairs nest once each year, usually in a colony. Depending on the population and local predators, a nest may sit on a cliff ledge, a small island or low ground; cliff nesting is not universal. The female usually incubates four to five eggs for about 24–25 days while her mate guards nearby. Downy, precocial goslings leave the nest soon after hatching and feed themselves; both parents guide and protect them. Only cliff-nesting colonies require the famous descent: chicks follow adults down to feeding areas, sometimes by leaping from ledges. They can fly at about 40–45 days and remain with family through their first winter.",
+    "ecology": "On Svalbard, the availability of nutritious plants affects nesting success: females feeding on poorer vegetation spend longer away from their nests, increasing exposure of eggs to predators. Droppings return nutrients to feeding and roosting sites, while seeds may be moved between patches. Eggs and young are vulnerable to Arctic foxes, polar bears, and adults can be taken by raptors. On temperate wintering grounds, concentrated grazing sometimes brings geese into conflict with farmers.",
+    "conservation": "The Barnacle Goose is globally listed as Least Concern in BTO’s species account. AEWA’s 2024 report estimated about 1.4 million birds in the Russia–Netherlands/Germany flyway population in January 2023, following decades of growth and signs of recent stabilization. Protection of breeding and wintering wetlands, coordinated counts and management of crop damage remain important. Arctic habitat change, hunting and disturbance require attention alongside the benefits and pressures created by expanding populations."
+  },
+  "sources": [
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/barnacle-goose",
+      "title": "Barnacle Goose"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/barnacle-goose",
+      "title": "Barnacle Goose BirdFacts"
+    },
+    {
+      "url": "https://www.wwt.org.uk/discover-wetlands/blog/barmy-barnacle-geese",
+      "title": "Why do barnacle geese jump off cliffs?"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Barnacle_Goose/lifehistory",
+      "title": "Barnacle Goose Life History"
+    },
+    {
+      "url": "https://lister.artsdatabanken.no/rodlisteforarter/2021/31807",
+      "title": "Vurdering av hvitkinngås Branta leucopsis"
+    },
+    {
+      "url": "https://egmp.aewa.info/sites/default/files/download/population_status_reports/Population%20Status%20and%20Assessment%20Report%202024.pdf",
+      "title": "EGMP Population Status and Offtake Assessment Report 2024"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1751-8369.1998.tb00255.x",
+      "title": "Vegetation exploitation by barnacle geese during incubation on Svalbard"
+    },
+    {
+      "url": "https://www.unep-aewa.org/document/draft-international-single-species-management-plan-barnacle-goose-branta-leucopsis",
+      "title": "International Single Species Management Plan for the Barnacle Goose"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Branta_leucopsis/",
+      "title": "Branta leucopsis (barnacle goose)"
+    },
+    {
+      "url": "https://tidsskrift.dk/Wildfowl/article/view/154307",
+      "title": "Foraging routines and estimated daily food intake in Barnacle Geese wintering in the northern Netherlands"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Barnacle_Goose/overview",
+      "title": "Barnacle Goose Overview"
+    },
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/barnacle-goose-branta-leucopsis",
+      "title": "Barnacle Goose species factsheet"
+    }
+  ]
+}

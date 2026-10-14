@@ -1,0 +1,34 @@
+{
+  "id": "sterna_paradisaea",
+  "name": "Arctic Tern",
+  "scientific": "Sterna paradisaea",
+  "group": "birds",
+  "sections": {
+    "overview": "The Arctic tern is a slender seabird famous for the longest migration of any animal tracked so far. It breeds in the far north and spends the northern winter in Antarctic waters, so it enjoys two summers each year.",
+    "identification": "A small tern about 36–43 cm long with a wingspan of 74–84 cm; adults weigh around 100 g. It is white with a grey back, a black cap, long tail streamers and a deeply forked tail. In the breeding season the whole bill is red. The legs are very short, so the bird looks crouched when standing.",
+    "habitat": "It breeds in high-latitude coastal areas of the Arctic and subarctic; in Britain, breeding is coastal and mainly northern. Outside the breeding season it lives mostly offshore or along coasts, and in the far south it rests on pack-ice floes. Some birds pause at lakes and reservoirs during spring migration.",
+    "diet": "It hovers above the water, then dives, often submerging completely, to catch small fish such as sand eels, sand lance and capelin, and it also takes small crustaceans. In Britain, breeding success is linked to how many sand eels are available.",
+    "behavior": "Arctic terns nest in colonies and defend them vigorously. A tracking study of 11 birds fitted with tiny geolocators showed that some flew more than 80,000 km a year, using two main southbound routes along the African or South American coasts and an S-shaped route back across the Atlantic.",
+    "reproduction": "In the UK a clutch is typically one or two eggs, with one brood a year. Both sexes incubate for 20–24 days. The downy chicks are semi-precocial and fledge after 21–24 days. Breeding typically starts at about four years of age. Nests are shallow scrapes on sand, gravel or moss.",
+    "ecology": "The tern is a predator of small fish and crustaceans, and its eggs and chicks are taken by foxes, rats, gulls and other animals. American mink are implicated in the loss of breeding range in western Scotland. In the past, DDT contamination of the fish it ate killed many terns.",
+    "conservation": "The IUCN lists the species as Least Concern. In the UK it is Red-listed: the breeding population was about 54,000 pairs in 2000, and the breeding range shrank by 30.5% between 1968–72 and 2008–11. A tern that reaches breeding age typically lives about 13 years, and the oldest ringed bird exceeded 31."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/arctic-tern",
+      "title": "Arctic Tern — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/arctic-tern",
+      "title": "Arctic Tern — RSPB"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Sterna_paradisaea/",
+      "title": "Sterna paradisaea — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://nora.nerc.ac.uk/id/eprint/14091/",
+      "title": "Tracking of Arctic terns Sterna paradisaea reveals longest animal migration — Egevang et al., PNAS 2010"
+    }
+  ]
+}

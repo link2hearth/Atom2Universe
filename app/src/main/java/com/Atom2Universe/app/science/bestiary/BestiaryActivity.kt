@@ -125,9 +125,9 @@ class BestiaryActivity : ThemedActivity() {
         val collator = Collator.getInstance(resources.configuration.locales[0])
         val entries = AnimalCatalog.species.filter { animal ->
             (group.isEmpty() || group == animal.group) && terms.all {
-                it in LifeTree.normalize(getString(animal.name) + " " + animal.scientific)
+                it in LifeTree.normalize(animalName(animal) + " " + animal.scientific)
             }
-        }.sortedWith { a, b -> collator.compare(getString(a.name), getString(b.name)) }
+        }.sortedWith { a, b -> collator.compare(animalName(a), animalName(b)) }
         count.text = getString(if (entries.isEmpty()) R.string.be_empty else R.string.be_count, entries.size, AnimalCatalog.species.size)
         list.adapter = object : ArrayAdapter<AnimalSpecies>(this, android.R.layout.simple_list_item_1, entries) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -143,8 +143,8 @@ class BestiaryActivity : ThemedActivity() {
                     background = palette.shape(palette.surface)
                     (getChildAt(0) as AnimalPlateView).variant = animal.id
                     (getChildAt(1) as LinearLayout).apply {
-                        (getChildAt(0) as TextView).text = getString(animal.name)
-                        (getChildAt(1) as TextView).text = getString(animal.latin)
+                        (getChildAt(0) as TextView).text = animalName(animal)
+                        (getChildAt(1) as TextView).text = animalLatin(animal)
                     }
                 }
             }
@@ -181,31 +181,57 @@ class BestiaryActivity : ThemedActivity() {
 
     private fun open(animal: AnimalSpecies) {
         selected = animal.id
+        val encyclopediaProfile = animal.encyclopediaId?.let { id ->
+            runCatching {
+                AnimalEncyclopediaRepository.load(this, id, resources.configuration.locales[0].language)
+            }.getOrNull()
+        }
+        val profileSections = encyclopediaProfile?.sections
         val top = column().apply {
-            addView(label(getString(animal.latin), 18f).apply { setTypeface(typeface, Typeface.ITALIC) })
+            addView(label(animalLatin(animal), 18f).apply { setTypeface(typeface, Typeface.ITALIC) })
             addView(label(getString(groupTitle(animal.group)), 13f))
         }
         val media = column()
         val plate = AnimalPlateView(this).apply {
             variant = animal.id
-            contentDescription = animal.identification?.let {
-                getString(R.string.be_plate_accessibility, getString(animal.name), getString(it))
-            } ?: getString(R.string.be_plate_accessibility_name, getString(animal.name))
+            val identification = profileSections?.get("identification")
+                ?: animal.identification?.let(::getString)
+            contentDescription = identification?.let {
+                getString(R.string.be_plate_accessibility, animalName(animal), it)
+            } ?: getString(R.string.be_plate_accessibility_name, animalName(animal))
         }
         media.addView(FitFrame(this, .78f, dp(640)).apply { addView(plate, android.widget.FrameLayout.LayoutParams(-1, -1, Gravity.CENTER)) },
             if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f) else full())
         media.addView(label(getString(R.string.be_plate_note), 12f), full())
         val body = column()
-        if (animal.description == null) {
+        if (encyclopediaProfile == null && animal.description == null) {
             body.addView(label(getString(R.string.be_encyclopedia_coming), 15f), full())
         }
-        listOf(R.string.be_overview to animal.description, R.string.be_identification to animal.identification,
-            R.string.be_habitat to animal.habitat, R.string.be_diet to animal.diet, R.string.be_behavior to animal.behavior,
-            R.string.be_reproduction to animal.reproduction, R.string.be_ecology to animal.ecology,
-            R.string.be_conservation to animal.conservation).forEach { (title, text) ->
+        val sections = if (profileSections != null) {
+            listOf(
+                R.string.be_overview to profileSections["overview"],
+                R.string.be_identification to profileSections["identification"],
+                R.string.be_habitat to profileSections["habitat"],
+                R.string.be_diet to profileSections["diet"],
+                R.string.be_behavior to profileSections["behavior"],
+                R.string.be_reproduction to profileSections["reproduction"],
+                R.string.be_ecology to profileSections["ecology"],
+                R.string.be_conservation to profileSections["conservation"]
+            )
+        } else {
+            listOf(R.string.be_overview to animal.description?.let(::getString),
+                R.string.be_identification to animal.identification?.let(::getString),
+                R.string.be_habitat to animal.habitat?.let(::getString),
+                R.string.be_diet to animal.diet?.let(::getString),
+                R.string.be_behavior to animal.behavior?.let(::getString),
+                R.string.be_reproduction to animal.reproduction?.let(::getString),
+                R.string.be_ecology to animal.ecology?.let(::getString),
+                R.string.be_conservation to animal.conservation?.let(::getString))
+        }
+        sections.forEach { (title, text) ->
             if (text == null) return@forEach
             body.addView(label(getString(title), 18f, true).apply { ViewCompat.setAccessibilityHeading(this, true) }, full(18))
-            body.addView(label(getString(text)).apply { setTextIsSelectable(true) }, full(4))
+            body.addView(label(text).apply { setTextIsSelectable(true) }, full(4))
         }
         index?.forSpecies(animal.id)?.let { node ->
             val repo = repository!!
@@ -218,19 +244,28 @@ class BestiaryActivity : ThemedActivity() {
                     .putExtra(ParentesActivity.EXTRA_NODE_ID, node))
             }, full())
         }
-        if (animal.references.isNotEmpty()) {
+        val references = encyclopediaProfile?.references?.map { it.url to it.title }
+            ?: animal.references.map { it.url to getString(it.title) }
+        if (references.isNotEmpty()) {
             body.addView(label(getString(R.string.be_sources), 18f, true), full(18))
             body.addView(label(getString(R.string.be_source_note), 12f), full(4))
-            animal.references.forEach { reference ->
-                body.addView(button(getString(reference.title)) {
-                    try { startActivity(Intent(Intent.ACTION_VIEW, reference.url.toUri())) }
+            references.forEach { (url, title) ->
+                body.addView(button(title) {
+                    try { startActivity(Intent(Intent.ACTION_VIEW, url.toUri())) }
                     catch (_: ActivityNotFoundException) { Toast.makeText(this, R.string.be_no_browser, Toast.LENGTH_SHORT).show() }
                 }, full())
-                body.addView(label(reference.url, 12f).apply { setTextIsSelectable(true) }, full(4))
+                body.addView(label(url, 12f).apply { setTextIsSelectable(true) }, full(4))
             }
         }
-        fiche.show(getString(animal.name), top, media, body)
+        fiche.show(animalName(animal), top, media, body)
     }
+
+    private fun animalName(animal: AnimalSpecies): String = animal.encyclopediaId?.let {
+        BestiaryEncyclopediaCatalog.name(it, resources.configuration.locales[0].language)
+    } ?: getString(animal.name)
+
+    private fun animalLatin(animal: AnimalSpecies): String =
+        if (animal.encyclopediaId != null) animal.scientific else getString(animal.latin)
 
     private fun groupTitle(id: String) = when (id) {
         "mammals" -> R.string.be_mammals

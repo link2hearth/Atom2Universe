@@ -43,34 +43,35 @@
   "sources": [
     {
       "title": {
-        "en": "NOAA Fisheries — Green Turtle species profile",
-        "fr": "NOAA Fisheries — Fiche de la tortue verte"
+        "en": "Green Turtle — NOAA Fisheries",
+        "fr": "Tortue verte — NOAA Fisheries"
       },
       "url": "https://www.fisheries.noaa.gov/species/green-turtle?page=0",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "overview",
         "habitat",
-        "reproduction"
+        "reproduction",
+        "identification"
       ],
       "facts": [
-        "Global range, adult life history, maturity and migration."
+        "Adults: 0.9–1.2 m long, 136–159 kg; males have longer tails and larger foreflipper claws."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "overview.en.3",
-        "overview.fr.3",
         "habitat.en.2",
         "habitat.fr.2",
+        "overview.en.1",
+        "overview.en.3",
+        "overview.fr.1",
+        "overview.fr.3",
         "reproduction.en.1",
         "reproduction.fr.1"
       ],
       "budget": {
         "limit": 200,
         "derived_prose_en_fr": 175,
-        "notes_words": 8,
-        "total": 183,
+        "notes_words": 14,
+        "total": 189,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -89,14 +90,14 @@
         "Fat colour, herbivory and age-related feeding shift."
       ],
       "prose_claims": [
-        "overview.en.4",
-        "overview.fr.4",
-        "diet.en.1",
-        "diet.fr.1",
-        "diet.en.2",
-        "diet.fr.2",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.4",
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "overview.en.4",
+        "overview.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -199,12 +200,12 @@
         "Adult mean near one metre straight carapace length and 150 kilograms."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
         "identification.en.4",
         "identification.fr.4",
-        "habitat.en.1",
-        "habitat.fr.1"
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -379,8 +380,8 @@
       ],
       "prose_claims": [
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.5",
+        "reproduction.fr.3",
         "reproduction.fr.5"
       ],
       "budget": {
@@ -406,12 +407,12 @@
       ],
       "prose_claims": [
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
-        "ecology.fr.2",
         "ecology.en.3",
-        "ecology.fr.3",
         "ecology.en.5",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3",
         "ecology.fr.5"
       ],
       "budget": {
@@ -462,8 +463,8 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.3",
+        "conservation.fr.1",
         "conservation.fr.3"
       ],
       "budget": {

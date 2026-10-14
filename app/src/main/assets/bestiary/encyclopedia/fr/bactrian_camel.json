@@ -1,0 +1,34 @@
+{
+  "id": "bactrian_camel",
+  "name": "Chameau de Bactriane",
+  "scientific": "Camelus bactrianus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le chameau de Bactriane à deux bosses est un animal domestique d’Asie centrale et orientale, élevé pour le transport, le lait, la viande et les fibres. Le chameau sauvage, distinct, est Camelus ferus.",
+    "identification": "Ses deux bosses le distinguent du dromadaire. Le Bactrien domestique est robuste et hirsute, souvent brun foncé à sable ; les mâles sont plus grands. Les bosses stockent de la graisse, non de l’eau ; son pelage d’hiver tombe au printemps. Pour le chameau de Bactriane domestique, le zoo de San Francisco indique une hauteur d’environ 2,3 à 2,4 m, une longueur corporelle d’environ 2,1 à 3,4 m et une masse d’environ 295 à 680 kg ; les mâles sont plus grands que les femelles. Ce sont de larges repères zoologiques, pas une série de mesures sur des chameaux sauvages ; la source ne précise pas la largeur du corps.",
+    "habitat": "Les troupeaux vivent en Asie intérieure, centrale et orientale, notamment en Mongolie et en Chine. Les éleveurs les gardent dans les steppes et déserts, où déplacements et fourrage dépendent du climat ; ce n’est pas une aire sauvage unique.",
+    "diet": "Il broute herbes et plantes sèches, salées ou épineuses. Sa lèvre fendue saisit le fourrage ; il régurgite et remâche. En hiver neigeux, il dégage la neige pour atteindre les plantes. La graisse des bosses fournit de l’énergie quand le fourrage manque.",
+    "behavior": "Les groupes comprennent femelles, jeunes et mâle dominant ; les mâles écartés forment parfois des groupes de célibataires. Les mâles paradent ou se battent pour s’accoupler. Cris et odeurs assurent la communication. Les éleveurs conduisent les troupeaux et utilisent les chameaux comme montures ou animaux de bât.",
+    "reproduction": "Les accouplements ont souvent lieu au printemps. Après 12 à 14 mois de gestation, les femelles mettent généralement bas un petit ; les jumeaux sont rares. Le nouveau-né marche en un jour et tète un à deux ans.",
+    "ecology": "Les chameaux convertissent la maigre végétation des steppes et déserts en transport, lait, viande et fibres. Leur pâturage est géré ; ses effets dépendent de la densité des troupeaux, de leur mobilité et des conditions locales.",
+    "conservation": "Le classement « en danger critique » du chameau sauvage concerne Camelus ferus, non cette espèce domestique. Camelus bactrianus reste un animal d’élevage ; aucune catégorie mondiale unique ne lui est attribuée. Les pressions sur les troupeaux exigent une évaluation régionale."
+  },
+  "sources": [
+    {
+      "url": "https://www.sfzoo.org/animals-exhibits/a-to-z/bactrian-camel/",
+      "title": "Chameau de Bactriane"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Camelus_bactrianus/",
+      "title": "Camelus bactrianus (chameau de Bactriane)"
+    },
+    {
+      "url": "https://www.fao.org/dad-is/stories/story-detail/bactrian-camels--an-invaluable-resource-of-the-gobi-desert/en",
+      "title": "Les chameaux de Bactriane, ressource précieuse du désert de Gobi"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1186/s13570-020-0159-3",
+      "title": "Pratiques d’élevage et de croisement du dromadaire et du chameau de Bactriane en Turquie et au Kazakhstan : revue approfondie"
+    }
+  ]
+}

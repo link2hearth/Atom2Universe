@@ -12,8 +12,8 @@
       "fr": "La morue-lingue est un grand prédateur du nord-est du Pacifique, de la famille des Hexagrammidae, et non des Gadidae comme les vraies morues. Elle vit du golfe d’Alaska à la Basse-Californie et peut dépasser vingt ans."
     },
     "identification": {
-      "en": "Its elongated body tapers toward the tail and is mottled grey, brown, green or blue, often with copper spots. A broad, unscaled head and large mouth hold many sharp teeth. Canadian records place maturity near 45 centimetres in males and 61–75 centimetres in females. Some have blue-green flesh that loses colour when cooked; its cause remains unknown.",
-      "fr": "Son corps allongé et effilé est marbré de gris, brun, vert ou bleu, souvent avec des taches cuivrées. Sa tête large et sans écailles porte une grande gueule garnie de dents pointues. Les données canadiennes situent la maturité vers 45 centimètres chez les mâles et 61–75 centimètres chez les femelles. La chair de certains est bleu-vert et pâlit à la cuisson; sa cause reste inconnue."
+      "en": "Its elongated body tapers toward the tail and is mottled grey, brown, green or blue, often with copper spots. A broad, unscaled head and large mouth hold many sharp teeth. Canadian records place maturity near 45 centimetres in males and 61–75 centimetres in females. Some have blue-green flesh that loses colour when cooked; its cause remains unknown. NOAA reports that lingcod can grow to about 1.5 m and 36 kg. These are upper-end values, not typical adult measurements; the cited Canadian maturity lengths are population-specific and do not provide adult sex-specific weights. No reliable body-width measurement was found.",
+      "fr": "Son corps allongé et effilé est marbré de gris, brun, vert ou bleu, souvent avec des taches cuivrées. Sa tête large et sans écailles porte une grande gueule garnie de dents pointues. Les données canadiennes situent la maturité vers 45 centimètres chez les mâles et 61–75 centimètres chez les femelles. La chair de certains est bleu-vert et pâlit à la cuisson; sa cause reste inconnue. La NOAA indique que la lingue peut atteindre environ 1,5 m et 36 kg. Ce sont des valeurs hautes, et non des mensurations typiques d’adulte; les longueurs de maturité citées pour le Canada sont propres à une population et ne donnent pas de poids adulte selon le sexe. Je n’ai pas trouvé de mesure fiable de largeur du corps."
     },
     "habitat": {
       "en": "Adults occupy coastal rocky reefs and other complex bottom habitats, with crevices that provide shelter. Adhesive eggs stay in shallow crevices, and larvae drift near the surface. Juveniles settle on nearshore sand among eelgrass or kelp, then move toward deeper reefs as they grow.",
@@ -57,22 +57,24 @@
         "Taxon, appearance, range, habitat, diet and ecological relationships."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.en.2",
+        "conservation.en.1",
+        "conservation.fr.1",
         "identification.en.1",
         "identification.en.2",
+        "identification.en.3",
         "identification.en.4",
         "identification.fr.1",
         "identification.fr.2",
+        "identification.fr.3",
         "identification.fr.4",
-        "conservation.en.1",
-        "conservation.fr.1"
+        "overview.en.1",
+        "overview.en.2"
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 159,
+        "derived_prose_en_fr": 191,
         "notes_words": 8,
-        "total": 167,
+        "total": 199,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -118,24 +120,24 @@
         "Status."
       ],
       "prose_claims": [
-        "diet.en.1",
-        "diet.en.2",
-        "diet.fr.1",
-        "diet.fr.2",
-        "behavior.en.1",
-        "behavior.fr.1",
         "conservation.en.2",
         "conservation.en.3",
         "conservation.fr.2",
         "conservation.fr.3",
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
         "ecology.en.1",
-        "ecology.fr.1"
+        "ecology.fr.1",
+        "identification.en.5",
+        "identification.fr.5"
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 197,
+        "derived_prose_en_fr": 179,
         "notes_words": 1,
-        "total": 198,
+        "total": 180,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     },
@@ -190,20 +192,24 @@
         "Reef habitat, sex-specific growth and marine mammal predation."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
         "ecology.en.2",
         "ecology.fr.2",
-        "behavior.en.2",
-        "identification.en.3",
-        "behavior.fr.2",
-        "identification.fr.3"
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.6",
+        "identification.en.7",
+        "identification.fr.6",
+        "identification.fr.7"
       ],
       "budget": {
         "limit": 200,
-        "derived_prose_en_fr": 105,
+        "derived_prose_en_fr": 191,
         "notes_words": 8,
-        "total": 113,
+        "total": 199,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
     }

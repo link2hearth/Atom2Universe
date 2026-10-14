@@ -12,8 +12,8 @@
       "fr": "Le Bourdon terrestre est une grande abeille sociale originaire d’Europe, d’Afrique du Nord et d’Asie occidentale. Sa colonie annuelle commence avec une reine, s’agrandit grâce aux ouvrières, puis produit des mâles et de futures reines. L’humain l’élève pour polliniser des cultures, et des colonies échappées se sont établies hors de son aire naturelle. En Europe, l’espèce reste largement répartie et classée en préoccupation mineure ; ce statut régional ne décrit pas ses effets après introduction ailleurs."
     },
     "identification": {
-      "en": "Adults have dense black fur, two golden-yellow bands and a pale abdomen tip. Queens measure about 20–22 millimetres, workers 11–17 and males 14–16; these British reference ranges vary among individuals. A queen’s tail is buff, while workers and males usually have white tails, sometimes with a fine buff edge. Workers can resemble the white-tailed bumblebee, Bombus lucorum; DNA markers distinguish the species more reliably than some field keys.",
-      "fr": "L’adulte porte une fourrure noire dense, deux bandes jaune doré et une extrémité abdominale pâle. Les reines mesurent environ 20 à 22 millimètres, les ouvrières 11 à 17 et les mâles 14 à 16 ; ces mesures britanniques varient selon les individus. La queue de la reine est fauve ; celle des ouvrières et des mâles est généralement blanche, parfois bordée de fauve. Les ouvrières ressemblent au Bourdon des saussaies, Bombus lucorum ; l’ADN les distingue plus sûrement que certaines clés de terrain."
+      "en": "Adults have dense black fur, two golden-yellow bands and a pale abdomen tip. Queens measure about 20–22 millimetres, workers 11–17 and males 14–16; these British reference ranges vary among individuals. A queen’s tail is buff, while workers and males usually have white tails, sometimes with a fine buff edge. Workers can resemble the white-tailed bumblebee, Bombus lucorum; DNA markers distinguish the species more reliably than some field keys. The British field guide gives caste-specific body lengths of about 20–22 mm for queens, 11–17 mm for workers and 14–16 mm for males. It does not give a dependable body-mass range, and worker size varies substantially; no mass is inferred from length.",
+      "fr": "L’adulte porte une fourrure noire dense, deux bandes jaune doré et une extrémité abdominale pâle. Les reines mesurent environ 20 à 22 millimètres, les ouvrières 11 à 17 et les mâles 14 à 16 ; ces mesures britanniques varient selon les individus. La queue de la reine est fauve ; celle des ouvrières et des mâles est généralement blanche, parfois bordée de fauve. Les ouvrières ressemblent au Bourdon des saussaies, Bombus lucorum ; l’ADN les distingue plus sûrement que certaines clés de terrain. Le guide de terrain britannique indique une longueur corporelle d’environ 20 à 22 mm pour les reines, 11 à 17 mm pour les ouvrières et 14 à 16 mm pour les mâles. Il ne donne pas de plage fiable de masse corporelle, et la taille des ouvrières varie fortement ; aucune masse n’est déduite de la longueur."
     },
     "habitat": {
       "en": "The species uses gardens, parks, farmland and meadows where flowers and nest shelter are available. Queens often nest underground in abandoned rodent burrows, reusing their protected cavities. In Britain, queens emerge in late winter or early spring; workers appear about six weeks after a nest is founded.",
@@ -57,14 +57,14 @@
         "EU27 assessed Least Concern."
       ],
       "prose_claims": [
-        "overview.en.4",
-        "overview.fr.4",
         "conservation.en.1",
+        "conservation.en.5",
         "conservation.fr.1",
+        "conservation.fr.5",
         "ecology.en.5",
         "ecology.fr.5",
-        "conservation.en.5",
-        "conservation.fr.5"
+        "overview.en.4",
+        "overview.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -82,22 +82,22 @@
       "url": "https://www.bumblebeeconservation.org/learn-about-bumblebees/species-guide/buff-tailed-bumblebee/",
       "consulted": "2026-10-11",
       "supports": [
-        "identification",
+        "behavior",
         "habitat",
-        "behavior"
+        "identification"
       ],
       "facts": [
-        "UK account: nests often use old rodent burrows."
+        "UK guide lists caste lengths; it gives no mass figures."
       ],
       "prose_claims": [
-        "identification.en.3",
-        "identification.fr.3",
         "habitat.en.1",
-        "habitat.fr.1",
         "habitat.en.2",
-        "habitat.fr.2",
         "habitat.en.3",
-        "habitat.fr.3"
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "habitat.fr.3",
+        "identification.en.3",
+        "identification.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -118,15 +118,17 @@
         "identification"
       ],
       "facts": [
-        "Indicative British adult lengths: queen 20–22 mm, worker 11–17 mm, male 14–16 mm."
+        "Adult castes have distinct length ranges."
       ],
       "prose_claims": [
         "identification.en.1",
-        "identification.fr.1",
         "identification.en.2",
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.1",
         "identification.fr.2",
-        "behavior.en.2",
-        "behavior.fr.2"
+        "identification.fr.5",
+        "identification.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -179,8 +181,10 @@
       ],
       "prose_claims": [
         "behavior.en.1",
-        "behavior.fr.1",
+        "behavior.en.2",
         "behavior.en.3",
+        "behavior.fr.1",
+        "behavior.fr.2",
         "behavior.fr.3",
         "diet.en.5",
         "diet.fr.5",
@@ -235,10 +239,10 @@
         "Queens warm brood with flight muscles; workers later help regulate nest temperature."
       ],
       "prose_claims": [
-        "reproduction.en.3",
-        "reproduction.fr.3",
         "behavior.en.6",
-        "behavior.fr.6"
+        "behavior.fr.6",
+        "reproduction.en.3",
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -292,10 +296,10 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
+        "diet.fr.1",
+        "diet.fr.2",
         "diet.fr.3"
       ],
       "budget": {
@@ -397,8 +401,8 @@
       ],
       "prose_claims": [
         "conservation.en.2",
-        "conservation.fr.2",
         "conservation.en.4",
+        "conservation.fr.2",
         "conservation.fr.4"
       ],
       "budget": {
@@ -453,8 +457,8 @@
         "overview.en.2",
         "overview.fr.2",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.6",
+        "reproduction.fr.1",
         "reproduction.fr.6"
       ],
       "budget": {
@@ -480,10 +484,10 @@
         "Patagonian surveys linked B. terrestris spread with local retreat of native B. dahlbomii."
       ],
       "prose_claims": [
-        "ecology.en.4",
-        "ecology.fr.4",
         "conservation.en.3",
-        "conservation.fr.3"
+        "conservation.fr.3",
+        "ecology.en.4",
+        "ecology.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -508,10 +512,10 @@
         "Review describes commercial pollination introductions and ecological risks from non-native bumblebees."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
         "ecology.en.3",
-        "ecology.fr.3"
+        "ecology.fr.3",
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -536,8 +540,8 @@
       ],
       "prose_claims": [
         "diet.en.6",
-        "diet.fr.6",
         "diet.en.7",
+        "diet.fr.6",
         "diet.fr.7"
       ],
       "budget": {

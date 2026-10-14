@@ -1,0 +1,42 @@
+{
+  "id": "common_nightingale",
+  "name": "Rossignol philomèle",
+  "scientific": "Luscinia megarhynchos",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Rossignol philomèle est un petit passereau apparenté aux gobemouches qui cherche sa nourriture au sol et dont le chant célèbre porte dans les fourrés européens au printemps. Il se reproduit en Europe et dans une partie de l’Asie occidentale et centrale, puis traverse le Sahara pour hiverner en Afrique subsaharienne.",
+    "identification": "L’adulte mesure environ 15 à 16,5 cm et les sexes ont un plumage semblable. Le dessus brun, la queue rousse, le dessous clair sans taches, le bec fin et les pattes assez longues donnent à cet oiseau discret une silhouette sobre et dressée ; les jeunes sont tachetés. Les échantillons britanniques de baguage situent la masse adulte autour de 18 à 24 g.",
+    "habitat": "En période de reproduction, l’espèce privilégie les fourrés denses et les jeunes bois avec un couvert bas et feuillu ainsi que des zones de terre nue dessous. Le nid est posé au sol ou tout près, caché parmi feuilles et tiges ; cette structure protège la nichée et laisse des zones proches pour chercher la nourriture.",
+    "diet": "Il capture des insectes et d’autres petits invertébrés, notamment des coléoptères et des fourmis, en fouillant la litière et la végétation basse par bonds et pauses. À la fin de l’été et en automne, baies et autres fruits complètent ces proies animales.",
+    "behavior": "Les mâles émettent des sifflements puissants et variés, des trilles et des phrases roulées pour attirer les femelles et signaler ou défendre un territoire de reproduction. Le chant nocturne est surtout associé aux mâles non appariés qui cherchent une partenaire ; après l’appariement, ils cessent généralement de chanter régulièrement la nuit, si bien que tous les individus ne chantent pas ainsi toute la saison.",
+    "reproduction": "La femelle construit une coupe basse de feuilles mortes et d’herbes, garnie de matières végétales fines, de plumes ou de poils, puis pond généralement quatre ou cinq œufs. Elle les couve environ 14 jours ; les poussins couverts de duvet et dépendants sont nourris au nid et prennent normalement leur envol à 11–13 jours. Quitter le nid ne signifie pas être autonome : les jeunes restent près du couvert, apprennent à chercher leur nourriture et dépendent encore des adultes ensuite.",
+    "ecology": "Les rossignols qui fouillent le sol capturent des invertébrés, tandis que rapaces et mammifères les chassent ; les fourrés bas et denses abritent nids et jeunes fraîchement envolés.",
+    "conservation": "L’évaluation mondiale de l’UICN publiée en 2017, issue d’une évaluation de 2016, classe l’espèce en préoccupation mineure. En Grande-Bretagne, le BTO décrit la population nicheuse localisée comme en déclin ; le broutage des cervidés et la disparition ou la maturation des fourrés réduisent le couvert bas favorable, et les changements dans les quartiers d’hiver peuvent aussi affecter les oiseaux au retour."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Common_nightingale",
+      "title": "Rossignol philomèle — Wikipédia"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Rossignol_philom%C3%A8le",
+      "title": "Rossignol philomèle — Wikipédia"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/nightingale",
+      "title": "Nightingale BirdFacts — British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/common.nightingale.html",
+      "title": "Rossignol philomèle — Oiseaux.net"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-1.RLTS.T22709696A111760622.en",
+      "title": "Luscinia megarhynchos — évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/birds/nightingale/",
+      "title": "Rossignol — Woodland Trust"
+    }
+  ]
+}

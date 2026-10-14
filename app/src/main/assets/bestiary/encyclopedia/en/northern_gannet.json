@@ -1,0 +1,50 @@
+{
+  "id": "northern_gannet",
+  "name": "Northern gannet",
+  "scientific": "Morus bassanus",
+  "group": "birds",
+  "sections": {
+    "overview": "The northern gannet is a large seabird of the North Atlantic, breeding on offshore islands and cliffs from northeastern North America to western Europe. It spends much of the year at sea, returning to crowded colonies to nest.",
+    "identification": "Adults are about 85–100 cm long, with a wingspan of roughly 165–180 cm. The sexes look alike: the body is white, the long narrow wings have black tips, and the head and neck are buff-yellow in breeding plumage. Young birds are dark brown and acquire more white feathers over several years. British ringing data give an average adult body mass of about 3 kg; the BTO’s displayed summary does not separate mass by sex. No reliable sex-specific mass, body width or standing height was found.",
+    "habitat": "Breeding colonies occupy steep sea cliffs, rocky islands and other isolated coastal sites, where many nests fit close together. At sea, gannets range widely over productive shelf waters and follow moving shoals; after breeding, many migrate south within the Atlantic or into the western Mediterranean.",
+    "diet": "It eats mainly schooling fish, including mackerel, herring and sandeels, as well as squid. From a glide or steep flight it folds its wings and plunges bill-first, often striking at high speed; it can also pursue prey below the surface. Its eyes are protected by a translucent third eyelid, and air spaces beneath the skin cushion the impact. It swallows captured fish underwater or at the surface.",
+    "behavior": "Gannets forage singly or in loose groups, and several birds may dive where fish are driven toward the surface by predators or boats. At colonies, close neighbors defend small nest spaces with upright postures, bill-pointing and harsh calls. Pairs greet with raised bills and mutual display; their repeated calls help maintain contact in the noisy crowd.",
+    "reproduction": "Pairs usually return to the same colony and may remain together across years. They build a mound of seaweed, grass and other material, then lay a single egg. Both parents incubate it between their webbed feet for about 42–46 days. The chick hatches helpless and is fed regurgitated fish by both adults; it grows for roughly 84–97 days before its first flight, then leaves the colony and must find food at sea. Breeding generally begins at around five years.",
+    "ecology": "Northern gannets consume schooling pelagic fish and squid, linking their feeding to stocks also sought by commercial fisheries. They can be caught accidentally in fishing nets, so fishing activity affects both their food supply and survival.",
+    "conservation": "The species is globally classified as Least Concern, a status that describes extinction risk across its full range and does not mean every colony is secure. Past egg collection and hunting reduced some colonies, while fishing pressure, bycatch, pollution and changing food supplies remain concerns. Highly pathogenic avian influenza caused severe recent losses: in 2022, at least 11,000 gannet deaths were recorded in Scotland and 5,000 at Grassholm, Wales."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Northern_gannet",
+      "title": "Northern gannet — Wikipedia"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Fou_de_Bassan",
+      "title": "Northern gannet — Wikipedia"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/gannet",
+      "title": "Gannet — BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Northern_Gannet/lifehistory/",
+      "title": "Northern Gannet Life History — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.birdlife.org/news/2021/07/06/seabird-month-northern-gannet-morus-bassanus/",
+      "title": "Seabird of the month – Northern Gannet (Morus bassanus) — BirdLife International"
+    },
+    {
+      "url": "https://web-cdn.rspb.org.uk/birds-and-wildlife/seabird-surveys-project-report",
+      "title": "Avian Influenza: a major threat to our struggling seabirds — RSPB"
+    },
+    {
+      "url": "https://www.nature.scot/sites/default/files/2017-06/Publication%202017%20-%20SNH%20Commissioned%20Report%20947%20-%20Analysis%20of%20the%20possible%20displacement%20of%20bird%20and%20marine%20mammal%20species%20related%20to%20the%20installation%20and%20operation%20of%20marine%20energy%20conversion%20systems.pdf",
+      "title": "Analysis of the possible displacement of bird and marine mammal species related to marine energy systems — NatureScot"
+    },
+    {
+      "url": "https://www.nature.scot/doc/genetic-scorecard-indicator-northern-gannet",
+      "title": "Genetic Scorecard Indicator – Northern Gannet — NatureScot"
+    }
+  ]
+}

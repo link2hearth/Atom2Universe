@@ -1,0 +1,46 @@
+{
+  "id": "wild_boar",
+  "name": "Wild boar",
+  "scientific": "Sus scrofa",
+  "group": "mammals",
+  "sections": {
+    "overview": "The wild boar is native to much of Europe, North Africa and Asia, reaching eastern Siberia and Southeast Asian islands. Feral populations also occur in the Americas and New Zealand, where pigs introduced by people established in the wild. Body size and coat vary widely, and escaped domestic pigs can alter local populations.",
+    "identification": "The species varies greatly by subspecies and region: the IUCN/SSC Pigs, Peccaries and Hippos Specialist Group gives 90–200 cm head-and-body length, 55–110 cm shoulder height, a 15–40 cm tail and 44–320 kg. Females average about 80% of male size; local populations can fall well outside any single “typical” figure. Adults have a muscular body, short muzzle and coarse bristles; their brown to nearly black coat often greys with age. Piglets' dark stripes fade within months. Both sexes have curved canine tusks, usually larger in males. A study of 403 boars in two Spanish districts found canine thickness chiefly related to sex and age.",
+    "habitat": "Wild boars inhabit forests, scrub, grassland, wooded savanna and farmland. They rest in cover and feed in open areas; in Singapore they also forage at urban edges. Habitat use shifts with season, food and disturbance. Their native range spans diverse climates; introduced populations do not extend it naturally.",
+    "diet": "This omnivore finds food mainly by smell and roots through soil with its mobile snout. Depending on season and place, it eats roots, tubers, grasses, nuts, berries, crops, insects, worms, small reptiles and carrion. Plants often dominate. Rooting also disturbs soil and seedlings.",
+    "behavior": "Females and young often form family groups; adult males are usually solitary outside mating periods. Boars may be active by day but become more nocturnal under human disturbance. Their keen smell locates food. They push soil aside while rooting and wallow in mud to help regulate body temperature. Grouping varies locally.",
+    "reproduction": "Breeding follows climate and food: it can occur year-round in the tropics, while births in temperate regions often peak in spring. Gestation lasts about 108–120 days, and litters commonly have five or six piglets, with local variation. The sow makes a sheltered nest; piglets' stripes fade as they grow.",
+    "ecology": "Rooting turns over vegetation, litter and soil; effects depend on habitat and intensity. In 22 Berlin dry grasslands, plant diversity declined with rooting, while grasshopper diversity and sand-lizard abundance were positively associated. Forest studies report damage to understory plants and regeneration. Outcomes vary locally.",
+    "conservation": "The species remains widespread in much of its native range, though habitat loss, hunting and interbreeding with free-ranging domestic pigs threaten some populations. In introduced regions such as North America, rooting can erode soil, hinder forest regeneration, compete with native wildlife and disturb nests. Such impacts are documented especially in the United States."
+  },
+  "sources": [
+    {
+      "url": "https://www.iucn-wpsg.org/eurasian-wild-boar-detailed",
+      "title": "Eurasian Wild Boar — IUCN SSC Wild Pigs Specialist Group"
+    },
+    {
+      "url": "https://biodiversitysg.nparks.gov.sg/our-biodiversity/mammals/ungulates-hoofed-animals/wild-boar/",
+      "title": "Wild Boar — BiodiversitySG, National Parks Board of Singapore"
+    },
+    {
+      "url": "https://www.biokids.umich.edu/critters/Sus_scrofa/",
+      "title": "Sus scrofa — BioKIDS, University of Michigan"
+    },
+    {
+      "url": "https://doi.org/10.7325/Galemys.2003.1.A4",
+      "title": "Do morphological characteristics and environmental factors affect canine development in wild boar? — Galemys / SECEM"
+    },
+    {
+      "url": "https://doi.org/10.1038/s41598-022-20964-4",
+      "title": "Endangered animals and plants are positively or neutrally related to wild boar soil disturbance in urban grasslands — Scientific Reports"
+    },
+    {
+      "url": "https://www.aphis.usda.gov/operational-wildlife-activities/feral-swine/damage-natural-resources",
+      "title": "Feral Swine Damage: Natural Resources — USDA Animal and Plant Health Inspection Service"
+    },
+    {
+      "url": "https://www.doc.govt.nz/parks-and-recreation/things-to-do/hunting/what-to-hunt/feral-pigs/",
+      "title": "Wild pigs — Department of Conservation, New Zealand"
+    }
+  ]
+}

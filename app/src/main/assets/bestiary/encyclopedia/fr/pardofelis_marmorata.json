@@ -1,0 +1,34 @@
+{
+  "id": "pardofelis_marmorata",
+  "name": "Chat marbré",
+  "scientific": "Pardofelis marmorata",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le chat marbré est un petit félin forestier d’Asie du Sud et du Sud-Est, de la taille d’un chat domestique, à la longue queue et au pelage marqué comme celui d’une panthère nébuleuse. Il est rarement vu et peu étudié, et il est classé quasi menacé.",
+    "identification": "Félin au corps de 45 à 61 cm, à la queue de 35 à 55 cm et pesant de 2,4 à 5 kg. Le pelage est brun jaunâtre, avec de grandes taches plus pâles au centre et cernées de noir, et des lignes noires sur la tête, le cou et le dos. La queue est tachetée, noire à l’extrémité, et le plus souvent tenue à l’horizontale pendant la marche. Les oreilles sont courtes et arrondies, les pieds grands et les canines grosses pour sa taille. Les jeunes sont tachetés de brun jusque vers quatre mois.",
+    "habitat": "Il dépend de la forêt et n’a pas été trouvé dans les plantations de palmiers à huile. On le signale en forêt mixte de feuillus caducs et sempervirents, en forêt secondaire et exploitée, du niveau de la mer à environ 3 000 m. Son aire va des contreforts de l’est de l’Himalaya à l’Asie du Sud-Est continentale, puis à Sumatra et à Bornéo; sa présence au Bangladesh et au Bhoutan est incertaine.",
+    "diet": "Son régime est mal connu. Les oiseaux, jusqu’à la taille d’un faisan, seraient les proies principales, avec les écureuils arboricoles, les tupaïes, les rongeurs, les petits primates, les roussettes, les lézards, les grenouilles et les insectes. Cela repose sur peu d’observations, comme celle d’un chat guettant des oiseaux dans la canopée.",
+    "behavior": "Il est solitaire et excellent grimpeur, capable de descendre les troncs la tête la première, mais il ne vit pas qu’en haut des arbres et marche aussi au sol. On l’a longtemps cru nocturne, mais pièges photographiques et observations montrent une activité de jour comme de nuit. Une femelle munie d’un collier émetteur en Thaïlande occupait un domaine d’environ 5,3 km², un seul animal qui ne peut représenter l’espèce.",
+    "reproduction": "Presque tout ce que l’on sait vient de la captivité : une gestation de 66 à 82 jours et des portées de 2 à 4 petits, le plus souvent deux. Les yeux s’ouvrent vers 16 jours, les petits marchent vers 22 jours, mangent de la nourriture solide vers 59 jours et la maturité survient à 21-22 mois. La femelle élève seule les jeunes. La reproduction n’a pas été documentée dans la nature.",
+    "ecology": "C’est un prédateur d’oiseaux et de petits mammifères. Aucun prédateur du chat marbré n’est documenté. Dans trois zones d’étude du Sabah, à Bornéo, les pièges photographiques ont donné des densités de 7,1 (forêt primaire de montagne), 10,5 (forêt exploitée de plaine) et 19,6 (forêt primaire de plaine) individus pour 100 km²; les auteurs pensent qu’elles se situent peut-être dans le haut de la fourchette de l’espèce.",
+    "conservation": "Il est classé quasi menacé depuis 2015, après avoir été vulnérable en 2008; ce changement ne signifie pas que ses effectifs ont augmenté ni que les menaces ont reculé, l’espèce restant peu étudiée. La perte de forêt est la principale menace, et le piégeage au collet sans discernement en est probablement une autre importante. Il figure à l’annexe I de la CITES."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Pardofelis_marmorata/",
+      "title": "Pardofelis marmorata — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0151046",
+      "title": "Premières estimations de la densité du chat marbré en forêt primaire et exploitée de Bornéo — PLOS ONE (Hearn et al. 2016)"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1006011",
+      "title": "Pardofelis marmorata — Mammal Diversity Database"
+    },
+    {
+      "url": "https://www.rekoforest.org/field-stories/wildlife-of-rer-marbled-cat/",
+      "title": "La faune du RER : le chat marbré — Restorasi Ekosistem Riau"
+    }
+  ]
+}

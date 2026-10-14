@@ -1,0 +1,94 @@
+{
+  "id": "atlantic_salmon",
+  "name": "Saumon atlantique",
+  "scientific": "Salmo salar",
+  "group": "fish",
+  "sections": {
+    "overview": "Le Saumon atlantique vit dans les rivières et eaux côtières de l’Atlantique Nord. La plupart des populations sont anadromes : les jeunes grandissent en rivière, les adultes se nourrissent en mer puis reviennent frayer. Migration et calendrier varient. Certaines populations enclavées vivent entre rivières et lacs.",
+    "identification": "En mer, l’adulte est argenté, dos sombre et ventre pâle ; ses rares taches en croix se trouvent surtout au-dessus de la ligne latérale. Son corps allongé, sa petite tête et sa mâchoire supérieure arrêtée à l’œil le distinguent de la Truite brune, plus tachetée. Les jeunes portent des barres sombres et des taches rouges ; les smolts deviennent plus élancés et argentés. À maturité, le mâle s’assombrit et développe une mâchoire inférieure crochue, le « kype ». Les grilses reviennent après un hiver marin et sont plus petits que ceux passés au moins deux hivers en mer. À Terre-Neuve-et-Labrador, les adultes mesurent généralement moins de 70 centimètres et pèsent moins de 4,5 kilogrammes ; le record nord-américain à la mouche, 32,6 kilogrammes, est exceptionnel.",
+    "habitat": "Les œufs se développent dans des graviers propres parcourus d’un courant oxygéné. Les tacons vivent en cours d’eau frais et peu profonds, à fond rocheux, entre radiers nourriciers et fosses abritées. Après une à plusieurs années en eau douce, les smolts descendent vers les zones d’alimentation marines. Les adultes ont besoin de rivières accessibles et de graviers ; barrages, buses et mauvaise qualité de l’eau peuvent entraver leur passage. Les populations enclavées grandissent dans les lacs et frayent dans les affluents ou émissaires.",
+    "diet": "À la sortie du gravier, les alevins capturent des invertébrés dérivants, surtout des larves d’insectes aquatiques. Les tacons happent les insectes du courant ou de la surface. En mer, les jeunes consomment des crustacés planctoniques et larves de poissons ; les grands adultes chassent capelans, harengs et lançons. Ils avalent leurs proies entières ; les aliments marins abondants accélèrent leur croissance. Les adultes qui remontent frayer cessent généralement de s’alimenter et vivent sur leurs réserves.",
+    "behavior": "Les tacons défendent des postes d’alimentation et changent de milieu selon les saisons ; certains mâles mûrissent tôt en eau douce. Au printemps, la smoltification les argente et les prépare à la mer. L’osmorégulation équilibre eau et sels corporels : en mer, le saumon boit, absorbe l’eau par l’intestin, évacue sodium et chlorure par les branchies et réduit son débit urinaire ; en eau douce, il conserve les sels et produit une urine diluée. Les adultes montrent une forte fidélité et reviennent souvent dans leur rivière natale. Les jeunes mémorisent sa signature chimique, qui aide à l’approche finale en eau douce. Les odeurs n’expliquent pas seules l’orientation en mer, encore mal comprise. Sur les frayères, les mâles rivalisent pour les femelles ; le kype caractérise cette période.",
+    "reproduction": "À l’automne, la femelle balaie les graviers pour creuser un nid (redd). Elle y pond tandis que les mâles libèrent leur sperme : la fécondation est externe, puis elle recouvre les œufs. Ceux-ci se développent l’hiver entre les pierres, oxygénés par le courant. Après l’éclosion, les alevins vésiculés restent dans le redd et résorbent leur sac vitellin ; ils en sortent comme alevins nageurs et commencent à se nourrir environ un mois après, délai variable avec l’eau. Dans les populations du Maine, ils deviennent des tacons qui passent généralement deux ou trois ans en eau douce ; ailleurs, le calendrier varie. Selon la population, les adultes reviennent après un à trois ans en mer. Beaucoup meurent ensuite, mais les kelts survivants peuvent se reproduire de nouveau : mourir après une seule ponte n’est pas inévitable.",
+    "ecology": "Les jeunes de rivière mangent des larves d’insectes ; les adultes marins chassent des poissons grégaires et sont proies de grands poissons, d’oiseaux et de mammifères marins. Leur retour apporte aussi des nutriments marins aux rivières. Des mesures ont retrouvé ces apports dans le biofilm, les invertébrés et les poissons résidents au frai. Œufs, excrétions et carcasses transmettent des nutriments au réseau alimentaire ; comme beaucoup d’adultes survivent, ces apports dépendent moins des mortalités massives que chez les saumons du Pacifique semelpares, qui meurent généralement après leur unique reproduction.",
+    "conservation": "L’évaluation mondiale de l’UICN, réalisée le 6 avril 2022 et publiée en 2023, classe l’espèce « quasi menacée ». Elle estime un recul de 20 à 25 % en trois générations et un risque d’approcher la catégorie vulnérable ; l’état varie selon les rivières. Aux États-Unis, barrages, pollution et surpêche ont réduit l’aire historique ; le segment distinct du golfe du Maine est classé en danger par la loi fédérale. L’UICN cite barrages et aquaculture comme menaces actuelles ; sécheresses et températures extrêmes sont des menaces futures aux effets incertains. Près des fermes, les poux de mer peuvent infester les jeunes migrateurs ; des adultes d’élevage échappés peuvent s’accoupler avec des adultes sauvages et réduire la productivité, avec des effets variables selon le lieu et l’année. Tout Saumon atlantique vendu sur le marché public américain provient d’élevage ; cela ne restaure pas les populations sauvages ni leur diversité locale."
+  },
+  "sources": [
+    {
+      "url": "https://www.dfo-mpo.gc.ca/species-especes/publications/salmon-saumon/lifecycle-cyclevital/index-eng.html",
+      "title": "Le cycle de vie remarquable du saumon atlantique — Pêches et Océans Canada"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-salmon/resources",
+      "title": "Saumon atlantique : ressources — NOAA Fisheries"
+    },
+    {
+      "url": "https://www.dfo-mpo.gc.ca/about-notre-sujet/publications/infographics-infographies/salmon-browntrout-saumon-truitebrune-eng.html",
+      "title": "Reconnaître sa prise : différences entre saumon atlantique et truite brune — Pêches et Océans Canada"
+    },
+    {
+      "url": "https://www.usgs.gov/media/images/male-atlantic-salmon-showing-a-kype-lower-jaw",
+      "title": "Saumon atlantique mâle avec un kype à la mâchoire inférieure — U.S. Geological Survey"
+    },
+    {
+      "url": "https://www.usgs.gov/publications/movement-migration-and-smolting-atlantic-salmon-salmo-salar-0",
+      "title": "Déplacements, migration et smoltification du saumon atlantique — U.S. Geological Survey"
+    },
+    {
+      "url": "https://www.maine.gov/dmr/fisheries/sea-run-fisheries/sea-run-species/atlantic-salmon",
+      "title": "Saumon atlantique — Département des ressources marines du Maine"
+    },
+    {
+      "url": "https://www.maine.gov/ifw/fish-wildlife/fisheries/species-information/landlocked-salmon.html",
+      "title": "Saumon enclavé — Département de la pêche et de la faune du Maine"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-185X.1984.tb00709.x",
+      "title": "Orientation et olfaction chez les salmonidés : synthèse critique centrée sur le saumon atlantique — Biological Reviews"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29235101/",
+      "title": "Dynamique des réseaux alimentaires aquatiques après incorporation des nutriments issus de poissons anadromes atlantiques — Journal of Fish Biology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2023-1.RLTS.T19855A67373433.en",
+      "title": "Salmo salar (Saumon atlantique) — Liste rouge de l’UICN des espèces menacées"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-salmon/science",
+      "title": "Saumon atlantique : science — NOAA Fisheries"
+    },
+    {
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec/fiches-especes-fauniques/saumon-atlantique",
+      "title": "Saumon atlantique — fiche espèce, Pêches et Océans Canada, Québec"
+    },
+    {
+      "url": "https://www.fws.gov/story/life-cycle-atlantic-salmon",
+      "title": "Cycle de vie du saumon atlantique — U.S. Fish and Wildlife Service"
+    },
+    {
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?speciesID=926",
+      "title": "Saumon atlantique (Salmo salar) — base des espèces aquatiques non indigènes de l’USGS"
+    },
+    {
+      "url": "https://ices-library.figshare.com/articles/report/NASCO_has_asked_ICES_to_advise_on_possible_effects_of_salmonid_aquaculture_on_wild_Atlantic_salmon_populations_focusing_on_the_effects_of_sea_lice_genetic_interactions_and_the_impact_on_wild_salmon_production/18686906",
+      "title": "Effets possibles de l’aquaculture des salmonidés sur les populations sauvages de saumon atlantique — avis du CIEM demandé par l’OCSAN"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-salmon/seafood",
+      "title": "Saumon atlantique : marché — NOAA Fisheries"
+    },
+    {
+      "url": "https://esajournals.onlinelibrary.wiley.com/doi/10.1002/ecs2.1818",
+      "title": "Effets du frai du saumon atlantique sur les lipides et acides gras des réseaux alimentaires fluviaux — Ecosphere"
+    },
+    {
+      "url": "https://www.fws.gov/media/atlantic-salmon-male",
+      "title": "Saumon atlantique mâle — U.S. Fish and Wildlife Service"
+    },
+    {
+      "url": "https://doi.org/10.1242/jeb.034785",
+      "title": "Évolution des aquaporines dans les organes osmorégulateurs du saumon atlantique pendant la smoltification — Journal of Experimental Biology"
+    }
+  ]
+}

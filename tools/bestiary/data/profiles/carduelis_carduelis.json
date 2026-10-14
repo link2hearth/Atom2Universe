@@ -12,8 +12,8 @@
       "fr": "Le Chardonneret élégant est un petit fringille indigène d’Europe, d’Afrique du Nord et d’Asie occidentale et centrale. Il fréquente les milieux ouverts où plantes porte-graines, arbres et arbustes coexistent, notamment les bordures de champs, vergers, villages et jardins. Chardons et cardères sont des aliments caractéristiques, mais il consomme les graines de nombreuses plantes. Certaines populations restent sur place toute l’année ; d’autres se déplacent selon les saisons. En Grande-Bretagne et en Irlande, les observations révèlent des sédentaires et des échanges avec le continent."
     },
     "identification": {
-      "en": "Adults have a red face, black-and-white head, brown upperparts, pale underparts and broad yellow wing bands. The short pointed bill is pale. The sexes look similar, with subtle differences in facial plumage. Juveniles lack the red, patterned head and instead appear brown and streaked, though they already show the yellow wing band.",
-      "fr": "L’adulte a le visage rouge, la tête noire et blanche, le dessus brun, le dessous pâle et de larges bandes jaunes aux ailes. Son bec court et pointu est clair. Les sexes se ressemblent, avec de discrètes différences de plumage facial. Les jeunes n’ont pas le masque rouge ni la tête contrastée : ils sont bruns et striés, mais possèdent déjà la barre jaune alaire."
+      "en": "Adults have a red face, black-and-white head, brown upperparts, pale underparts and broad yellow wing bands. The short pointed bill is pale. The sexes look similar, with subtle differences in facial plumage. Juveniles lack the red, patterned head and instead appear brown and streaked, though they already show the yellow wing band. BTO ringing measurements give adult wing lengths averaging 79.3 mm in males and 76.7 mm in females; mean body mass is 16.1 g in males and 15.3 g in females. These are UK live-bird averages, not total body length or wingspan; the cited BTO biometric table does not provide those dimensions.",
+      "fr": "L’adulte a le visage rouge, la tête noire et blanche, le dessus brun, le dessous pâle et de larges bandes jaunes aux ailes. Son bec court et pointu est clair. Les sexes se ressemblent, avec de discrètes différences de plumage facial. Les jeunes n’ont pas le masque rouge ni la tête contrastée : ils sont bruns et striés, mais possèdent déjà la barre jaune alaire. Les mesures de baguage du BTO donnent une longueur d’aile moyenne de 79,3 mm chez les mâles et 76,7 mm chez les femelles ; la masse corporelle moyenne est de 16,1 g chez les mâles et de 15,3 g chez les femelles. Ce sont des moyennes d’oiseaux vivants mesurés au Royaume-Uni, pas la longueur totale ni l’envergure ; le tableau biométrique cité ne donne pas ces dimensions."
     },
     "habitat": {
       "en": "Goldfinches feed where herbs can flower and set seed, and nest in trees or shrubs nearby. British and Irish surveys find them in varied breeding habitats, including villages and reedbeds. A study near Sagunto in eastern Spain sampled chicks in intensively cultivated orange-growing country; their food reflected local plants. This single study cannot define habitat use across the species’ range. The recurring requirements are seed heads and woody nesting cover.",
@@ -49,14 +49,16 @@
       "url": "https://www.bto.org/learn/about-birds/birdfacts/goldfinch",
       "consulted": "2026-10-11",
       "supports": [
-        "overview",
+        "conservation",
         "habitat",
-        "reproduction",
-        "conservation"
+        "identification",
+        "overview",
+        "reproduction"
       ],
       "facts": [
         "British and Irish ringing/nest records: clutch size, incubation, fledging and laying dates.",
-        "BTO trend summary and habitat monitoring apply specifically to Britain and Ireland."
+        "BTO trend summary and habitat monitoring apply specifically to Britain and Ireland.",
+        "Live adult UK measurements: mean wing length 79.3 mm in males and 76.7 mm in females; mean mass 16.1 g in males and 15.3 g in females."
       ]
     },
     {

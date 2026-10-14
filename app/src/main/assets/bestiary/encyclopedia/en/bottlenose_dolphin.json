@@ -1,0 +1,90 @@
+{
+  "id": "bottlenose_dolphin",
+  "name": "Common bottlenose dolphin",
+  "scientific": "Tursiops truncatus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The common bottlenose dolphin is a toothed whale of temperate and tropical seas worldwide, found in coastal and offshore waters. In the western North Atlantic, the coastal form is recognized as a separate species, Tursiops erebennus, by the Society for Marine Mammalogy’s 2026 list. Boundaries between species in this genus remain under study. Tursiops aduncus, the Indo-Pacific bottlenose dolphin, is another distinct species.",
+    "identification": "Adults are robust, usually grey above and paler below, with a short thick rostrum and curved dorsal fin; coastal individuals tend to be smaller and lighter than offshore ones. Teeth are numerous, conical and suited to seizing prey rather than chewing: each upper jaw side bears about 20–26 and each lower side 18–24. The tail flukes are horizontal, the pectoral flippers broad and rounded, and the dorsal fin falcate; the blowhole opens at the top of the head. Size varies with ecotype: coastal dolphins average about 2.6 m and 190–260 kg, while offshore males can reach 3.8 m and females 3.7 m; offshore animals average about 450 kg, with records up to 650 kg. Males are typically larger than females. No standard body-width measurement is provided by the cited species account.",
+    "habitat": "The species uses estuaries, bays, lagoons, harbours, continental shelves and open ocean in temperate and tropical waters. Long-term photo-identification in Sarasota Bay documents a resident, multigenerational community with strong site fidelity; this local pattern does not define every population. NOAA lists nearshore T. erebennus from New York to Florida; its wider range is unresolved.",
+    "diet": "The diet includes locally available fish, squid and crustaceans. Dolphins locate prey by passive listening and echolocation, especially useful when visibility is poor. Air moving through nasal passages activates the phonic lips to produce brief clicks; forehead tissues including the melon shape and direct the outgoing sonar beam. Echoes are received through sound-sensitive tissues associated with the lower jaw and carry information about target direction and distance. At Cedar Key, Florida, observers recorded group hunting with role specialization: a driver herded fish toward waiting dolphins.",
+    "behavior": "Groups split and reunite, a fission–fusion pattern in which associations change with activity and circumstance. At Sarasota Bay, long-term studies of T. truncatus describe stable male pairs that cooperate in associations accompanying females; these findings are specific to that population. Dolphins produce echolocation clicks as well as whistles and burst-pulsed sounds. Individuals develop learned, distinctive signature whistles. Playback experiments found wild dolphins responded to copies of their own signature whistle, supporting its use as an identity signal directed to another dolphin. During sleep, EEG recordings show slow-wave sleep in one brain hemisphere at a time; dolphins continue surfacing to breathe while the other hemisphere remains more alert.",
+    "reproduction": "Females usually give birth to one calf after about 12 months of gestation; NOAA reports births three to six years apart on average in the populations summarized by its account. A Sarasota Bay study found that calving intervals vary with maternal age and calf survival, illustrating that reproductive timing is not constant. Mothers that successfully raised a calf remained associated with it for about 4.2–4.4 years on average, extending well beyond nursing and allowing time for learning and development.",
+    "ecology": "Dolphins are linked to the habitats supporting their prey. In Sarasota Bay, Florida, stomach contents of stranded resident dolphins contained fish, most associated to varying degrees with seagrass. The principal prey produced sounds, suggesting that passive listening helped locate them. Seagrass meadows were important feeding habitat for this community, although animals also foraged elsewhere. Protecting these habitats therefore matters for local dolphin conservation; prey composition and habitat use differ among populations.",
+    "conservation": "The global IUCN assessment dated 13 May 2018 and published in 2019 classified T. truncatus as Least Concern; that category does not establish the condition of every local population. NOAA lists several western North Atlantic coastal stocks as depleted under US management and reports unknown trends for many other stocks. Documented pressures include bycatch and entanglement, vessel strikes, pollution, harmful algal toxins, habitat alteration and underwater noise; status depends on population and region."
+  },
+  "sources": [
+    {
+      "url": "https://www.fisheries.noaa.gov/species/common-bottlenose-dolphin?page=2",
+      "title": "Common Bottlenose Dolphin — NOAA Fisheries"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/resource/peer-reviewed-research/common-bottlenose-dolphin-ecotypes-western-north-atlantic-revisited",
+      "title": "Common Bottlenose Dolphin Ecotypes of the Western North Atlantic Revisited — NOAA Fisheries"
+    },
+    {
+      "url": "https://marinemammalscience.org/science-and-publications/list-marine-mammal-species-subspecies/",
+      "title": "List of Marine Mammal Species and Subspecies — Society for Marine Mammalogy, 2026"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1006849/",
+      "title": "Tursiops erebennus — ASM Mammal Diversity Database, version 2.5"
+    },
+    {
+      "url": "https://www.depts.ttu.edu/nsrl/mammals-of-texas-online-edition/Accounts_Cetacea/Tursiops_truncatus.php",
+      "title": "Species account of the Common Bottlenose Dolphin — Texas Tech Natural Science Research Laboratory"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/common-bottlenose-dolphin/science?page=1",
+      "title": "Common Bottlenose Dolphin: Science — NOAA Fisheries"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1634948/",
+      "title": "A division of labour with role specialization in group-hunting bottlenose dolphins — Proceedings of the Royal Society B"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3210668/",
+      "title": "Frequency-dependent variation in the two-dimensional beam pattern of an echolocating dolphin"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/1214118/",
+      "title": "Sound localization by the bottlenose dolphin Tursiops truncatus"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.anbehav.2025.123229",
+      "title": "Bottlenose dolphin community structure along Florida’s Gulf coast"
+    },
+    {
+      "url": "https://doi.org/10.1139/z02-195",
+      "title": "Ranging and social association patterns of paired and unpaired adult male bottlenose dolphins, Tursiops truncatus, in Sarasota, Florida"
+    },
+    {
+      "url": "https://doi.org/10.1073/pnas.1304459110",
+      "title": "Bottlenose dolphins can use learned vocal labels to address each other — PNAS"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8665646/",
+      "title": "Sleep in Aquatic Mammals"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2025.1531528/full",
+      "title": "Life history, reproductive, and demographic parameters for bottlenose dolphins (Tursiops truncatus) in Sarasota Bay, Florida"
+    },
+    {
+      "url": "https://doi.org/10.2307/1383114",
+      "title": "Prey and Feeding Patterns of Resident Bottlenose Dolphins in Sarasota Bay, Florida"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-1.RLTS.T22563A156932432.en",
+      "title": "Common Bottlenose Dolphin — IUCN Red List of Threatened Species, 2019"
+    },
+    {
+      "url": "https://iwc.int/about-whales/whale-species/bottlenose-dolphin",
+      "title": "Bottlenose Dolphin — International Whaling Commission"
+    },
+    {
+      "url": "https://nammco.no/common-bottlenose-dolphin/",
+      "title": "Common bottlenose dolphin — North Atlantic Marine Mammal Commission (NAMMCO)"
+    }
+  ]
+}

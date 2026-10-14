@@ -58,12 +58,12 @@
       ],
       "prose_claims": [
         "overview.en.1",
-        "overview.fr.1",
         "overview.en.2",
+        "overview.fr.1",
         "overview.fr.2",
         "reproduction.en.2",
-        "reproduction.fr.2",
         "reproduction.en.4",
+        "reproduction.fr.2",
         "reproduction.fr.4"
       ],
       "budget": {
@@ -89,12 +89,12 @@
         "British account reports sex-specific size and gamekeeper history."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.3",
-        "identification.fr.3",
         "conservation.en.2",
-        "conservation.fr.2"
+        "conservation.fr.2",
+        "identification.en.1",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -120,15 +120,15 @@
         "University account reports captive prey-killing and dispersal ages."
       ],
       "prose_claims": [
+        "behavior.en.2",
+        "behavior.en.3",
+        "behavior.fr.2",
+        "behavior.fr.3",
         "habitat.en.2",
         "habitat.fr.2",
-        "behavior.en.2",
-        "behavior.fr.2",
-        "behavior.en.3",
-        "behavior.fr.3",
         "reproduction.en.5",
-        "reproduction.fr.5",
         "reproduction.en.6",
+        "reproduction.fr.5",
         "reproduction.fr.6"
       ],
       "budget": {
@@ -154,10 +154,10 @@
       ],
       "prose_claims": [
         "identification.en.4",
-        "identification.fr.4",
         "identification.en.5",
-        "identification.fr.5",
         "identification.en.6",
+        "identification.fr.4",
+        "identification.fr.5",
         "identification.fr.6"
       ],
       "budget": {
@@ -184,12 +184,12 @@
         "Global Least Concern assessment dated 2015; amended publication appeared in 2019."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
+        "conservation.en.1",
+        "conservation.fr.1",
         "habitat.en.1",
         "habitat.fr.1",
-        "conservation.en.1",
-        "conservation.fr.1"
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -244,8 +244,8 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
+        "diet.fr.1",
         "diet.fr.2"
       ],
       "budget": {

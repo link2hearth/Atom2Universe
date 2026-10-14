@@ -1,0 +1,26 @@
+{
+  "id": "tufted_duck",
+  "name": "Tufted Duck",
+  "scientific": "Aythya fuligula",
+  "group": "birds",
+  "sections": {
+    "overview": "The tufted duck is a compact diving duck of lakes and ponds, named for the drooping crest on the back of its head. It is common across much of Britain, including on park lakes in towns and cities.",
+    "identification": "In Britain adults weigh about 850 g, males slightly more than females, with a wing near 205 mm. The male is black with white flanks and a bright yellow eye; the female is brown with a white belly and also has yellow eyes. Both have a crest, longer and blacker in the male, and white under the wing.",
+    "habitat": "In the breeding season it favours lakes, with ponds also common, and nests in dense vegetation near the water. In winter it spreads across much of Britain on lakes and ponds, including in towns and cities. It prefers shallow lakes with dense reeds for breeding.",
+    "diet": "It dives to feed on aquatic invertebrates and bivalve molluscs, with mussels such as the zebra mussel an important food. It also eats some plant matter. Ducklings eat insects from the water surface at first.",
+    "behavior": "The tufted duck is highly aquatic and is often seen diving, sometimes springing slightly out of the water to start a dive. Birds are social outside the breeding season, while males defend territories around nests in spring. Courtship includes bill-dipping and neck stretches, and winter numbers in Britain are boosted by visitors from as far as central Russia.",
+    "reproduction": "In Britain a clutch is typically eight to eleven eggs, incubated by the female for about 25 days. The downy chicks feed themselves soon after hatching and fledge at roughly 45–50 days. Only the female provides direct care, and birds typically first breed at one year old.",
+    "ecology": "As a diver on mussels and other invertebrates, the tufted duck can strongly affect those prey populations. Eggs and young fall prey to crows and mammals, and adults to foxes and large birds of prey; incubating females rely on camouflage. It also hosts a parasite that uses molluscs as an intermediate host.",
+    "conservation": "The IUCN lists the species as Least Concern worldwide, but it is considered Near Threatened in Europe, and Green-listed in the UK. Britain holds about 17,000 breeding pairs (2016) and about 140,000 wintering birds, though the winter count fell 21% between 1998 and 2023. The oldest ringed bird lived over 24 years."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/tufted-duck",
+      "title": "Tufted Duck — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Aythya_fuligula/",
+      "title": "Aythya fuligula — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

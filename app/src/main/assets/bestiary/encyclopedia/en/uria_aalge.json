@@ -1,0 +1,30 @@
+{
+  "id": "uria_aalge",
+  "name": "Common Guillemot",
+  "scientific": "Uria aalge",
+  "group": "birds",
+  "sections": {
+    "overview": "The common guillemot is a diving seabird that comes to land only to breed. It nests shoulder to shoulder in dense colonies on sea cliffs, some holding tens of thousands of birds, and spends the rest of its life at sea.",
+    "identification": "A breeding adult is about 38–43 cm long, with a dark brown head, neck and back and white underparts. In winter the cheeks and throat turn white. It is less black than the razorbill, and a “bridled” form has a white ring around the eye and a white line behind it. British adults weigh about 770–1010 g.",
+    "habitat": "It breeds on steep rocky cliffs, offshore stacks and islands. On mainland cliffs, pairs use narrow ledges that predators cannot reach, and on predator-free islands they nest among rocks or on bare ground. Outside the breeding season it lives in coastal waters, most abundantly in the northern North Sea and off western shores.",
+    "diet": "Sandeels are a key prey in Britain, and the diet also includes herring, capelin, marine worms, amphipods, shrimp, molluscs and squid. It dives for its food, usually to about 30 m, and can stay under for up to a minute.",
+    "behavior": "It uses its strong wings to “fly” underwater. It flies strongly in the air but has to run across the water to take off. Severe winter storms can stop it from feeding and cause starvation; large seabird wrecks occurred on British coasts in the winter of 2013–14.",
+    "reproduction": "A pair lays a single pear-shaped egg on bare rock, once a year. Both parents incubate it for 28–37 days. The downy chick leaves the ledge after only 18–25 days, jumping to the sea and following the male, and can fly at about 39–46 days. Breeding typically begins at five years old.",
+    "ecology": "Crows and herring gulls take eggs and chicks, especially in small colonies that give less protection. Changing sea temperatures are altering the abundance and distribution of sandeels, which may force the birds onto less nourishing prey and lower breeding success. Spending its life on the water makes the species vulnerable to oil spills.",
+    "conservation": "The IUCN global category is Least Concern, and the species is Amber-listed in the UK. The UK breeding population was 950,000 pairs in 1998–2002; the later Seabirds Count census found about 8% fewer birds, with falls in the north and rises in the south. A bird that reaches breeding age lives about 23 years; the oldest ringed bird passed 40."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/guillemot",
+      "title": "Guillemot — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Uria_aalge/",
+      "title": "Uria aalge (common murre) — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/guillemot",
+      "title": "Guillemot — RSPB Birds & Wildlife"
+    }
+  ]
+}

@@ -55,14 +55,14 @@
         "Adult measurements, plumage, and ground-foraging identification."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
-        "identification.en.3",
-        "identification.fr.3",
         "diet.en.1",
         "diet.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
         "identification.fr.4"
       ],
       "budget": {
@@ -116,16 +116,16 @@
         "Nest form, habitat, caching, and parental care."
       ],
       "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
         "habitat.en.2",
         "habitat.fr.2",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.5",
-        "reproduction.fr.5",
-        "diet.en.2",
-        "diet.fr.2"
+        "reproduction.fr.1",
+        "reproduction.fr.3",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -204,8 +204,8 @@
         "diet.en.4",
         "diet.fr.4",
         "ecology.en.3",
-        "ecology.fr.3",
         "ecology.en.4",
+        "ecology.fr.3",
         "ecology.fr.4"
       ],
       "budget": {
@@ -232,12 +232,12 @@
         "Resident European species account describes habitat, pair life, calls, and roosts."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.3",
-        "habitat.fr.3",
         "behavior.en.1",
         "behavior.fr.1",
+        "habitat.en.1",
+        "habitat.en.3",
+        "habitat.fr.1",
+        "habitat.fr.3",
         "identification.en.5",
         "identification.fr.6"
       ],
@@ -265,12 +265,12 @@
         "British nesting records and population monitoring through 2024."
       ],
       "prose_claims": [
-        "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.4",
-        "reproduction.fr.4",
         "conservation.en.3",
-        "conservation.fr.3"
+        "conservation.fr.3",
+        "reproduction.en.2",
+        "reproduction.en.4",
+        "reproduction.fr.2",
+        "reproduction.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -370,12 +370,12 @@
         "2024 global assessment classifies the Eurasian Magpie as Least Concern."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
-        "conservation.fr.2"
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -400,12 +400,12 @@
         "UK artificial nests suffered locally and seasonally variable magpie predation; national links are complex."
       ],
       "prose_claims": [
-        "ecology.en.1",
-        "ecology.fr.1",
-        "ecology.en.2",
-        "ecology.fr.2",
         "conservation.en.5",
-        "conservation.fr.5"
+        "conservation.fr.5",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
       ],
       "budget": {
         "limit": 200,

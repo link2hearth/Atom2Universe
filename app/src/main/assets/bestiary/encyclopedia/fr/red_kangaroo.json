@@ -1,0 +1,74 @@
+{
+  "id": "red_kangaroo",
+  "name": "Kangourou roux",
+  "scientific": "Osphranter rufus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le kangourou roux est un grand marsupial herbivore de l’intérieur aride et semi-aride de l’Australie continentale. Il fréquente plaines, prairies et broussailles. Son sort suit les pluies irrégulières : les nouvelles pousses peuvent favoriser la reproduction et la hausse des effectifs, tandis qu’une sécheresse prolongée réduit nourriture et peut faire baisser les populations.",
+    "identification": "Le plus grand marsupial vivant présente un fort dimorphisme sexuel. Les mâles peuvent atteindre 1,4 m de longueur tête-corps et 92 kg ; les femelles, environ 1,1 m et 39 kg. Les mâles sont souvent roux et les femelles gris bleuté, avec des nuances variables. Tous ont le dessous pâle et des marques noires et blanches aux joues, dont une bande claire de la bouche vers l’oreille. Les déplacements rapides reposent sur de puissants bonds des pattes arrière ; une longue queue musclée accompagne leur mouvement et aide à limiter le tangage du tronc. À chaque bond, les tendons extenseurs de la cheville s’étirent sous la charge puis se rétractent, restituant leur énergie élastique. Cela réduit le travail musculaire nécessaire aux bonds répétés ; sur terrain plat, la consommation d’oxygène varie peu avec la vitesse, mais la montée coûte davantage.",
+    "habitat": "Dans l’intérieur sec de l’Australie continentale, il fréquente plaines, prairies, broussailles et savanes boisées. Des arbres et arbustes épars donnent de l’ombre. Par forte chaleur, la circulation augmente dans les vaisseaux superficiels des pattes avant ; le léchage y étale de l’humidité qui évacue la chaleur en s’évaporant. Le suivi radio a montré en Australie-Occidentale que les femelles adultes gardent un noyau stable où pâture et abri coïncident ; les mâles utilisent de plus grands domaines. En sécheresse, les adultes se dispersent davantage et font des trajets jusqu’à l’eau. La répartition dépend donc du couvert et du fourrage autant que de l’accès à l’eau.",
+    "diet": "Il broute surtout des graminées. Une étude de douze ans dans les broussailles arides du sud australien a relevé davantage de plantes herbacées non graminéennes en saison humide et de végétaux ligneux en saison sèche ; les graminées formaient encore près de 90 % des aliments échantillonnés lors d’une sécheresse sévère. Des microbes fermentent les fibres dans son avant-estomac volumineux et rendent des nutriments disponibles. Des essais sur des kangourous roux ont montré que le rendement en méthane variait avec l’ingestion. Les plantes vertes fournissent une partie de l’eau, mais la sécheresse réduit nourriture et humidité.",
+    "behavior": "Les groupes sont petits et temporaires plutôt que des familles fixes : une étude de terrain dans le nord-ouest de la Nouvelle-Galles du Sud a relevé une moyenne de 2,2 individus, avec des effectifs et une composition qui changeaient souvent. Le suivi radio a montré que les femelles adultes sont relativement sédentaires, avec des domaines stables, tandis que les mâles subadultes se dispersent largement ; la sécheresse accroît les déplacements des adultes. Les domaines des mâles sont plus vastes et peuvent englober les noyaux d’activité de plusieurs femelles. Dans une étude de pâturage aride, le broutage culminait entre le crépuscule et l’aube, période durant laquelle les animaux y consacraient plus de 60 % de leur temps.",
+    "reproduction": "La reproduction peut avoir lieu toute l’année, avec davantage de naissances au printemps et en été ; elle répond à la nourriture et aux pluies. Après environ 33 jours, un petit très immature rampe jusqu’à la poche et s’attache à une tétine. La femelle peut s’accoupler peu après la naissance. Si le jeune en poche tète encore, le nouvel embryon peut suspendre son développement au stade blastocyste : cette diapause embryonnaire retarde sa croissance jusqu’à la sortie définitive du jeune précédent de la poche. Le joey quitte définitivement la poche vers huit mois, mais peut continuer à téter plusieurs mois.",
+    "ecology": "Proie du dingo, le kangourou roux partage les parcours arides avec le bétail. Une étude de longue durée dans le sud australien a trouvé que le chevauchement alimentaire avec les moutons augmente en sécheresse, quand les deux mangent surtout des graminées ; la concurrence possible croît avec la dégradation des pâturages. Les comptages aériens de 1978 à 2002 dans quatre régions d’Australie-Méridionale ont été modélisés selon les pluies, les prélèvements et les densités de kangourous et de bétail. Le meilleur modèle associe positivement densité du bétail et croissance des kangourous ; les auteurs proposent que le bétail signale des ressources non mesurées par la seule pluviométrie. Ce résultat régional ne démontre pas un effet universel du bétail.",
+    "conservation": "La catégorie mondiale UICN rapportée par la Mammal Diversity Database, consultée en octobre 2026, est « préoccupation mineure », compte tenu de la vaste aire australienne et des effectifs élevés. Les effectifs locaux fluctuent : sécheresses et manque de nourriture peuvent réduire survie et nombres, tandis que les pluies favorables soutiennent la croissance. La gestion est régionale : un rapport de Nouvelle-Galles du Sud (17 décembre 2025) fixe les quotas commerciaux de 2026 et donne les estimations de population 2025 des zones suivies. Ces quotas encadrent les prélèvements de cet État sans mesurer l’effectif mondial."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/mammals/red-kangaroo/",
+      "title": "Kangourou roux — Australian Museum"
+    },
+    {
+      "url": "https://academic.oup.com/mspecies/article/52/998/143/6046133",
+      "title": "Osphranter rufus (Diprotodontia : Macropodidae) — Mammalian Species, Oxford University Press"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/9787777/",
+      "title": "Énergétique et biomécanique du déplacement du kangourou roux — Comparative Biochemistry and Physiology B"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-7998.1975.tb05983.x",
+      "title": "Mécanique du bond chez les kangourous (Macropodidae) — Journal of Zoology"
+    },
+    {
+      "url": "https://researchonline.jcu.edu.au/27493/1/27493_Dawson_etal_2000.pdf",
+      "title": "Thermorégulation de kangourous de milieux humides et arides — Physiological and Biochemical Zoology"
+    },
+    {
+      "url": "https://doi.org/10.1006/jare.1994.1028",
+      "title": "Régimes alimentaires d’herbivores mammifères dans les broussailles arides d’Australie — Journal of Arid Environments"
+    },
+    {
+      "url": "https://doi.org/10.1242/jeb.128165",
+      "title": "Baisse du rendement en méthane lorsque l’ingestion augmente chez deux marsupiaux à fermentation antérieure — Journal of Experimental Biology"
+    },
+    {
+      "url": "https://researchportal.murdoch.edu.au/esploro/outputs/doctoral/Social-organisation-and-dispersal-in-the/991005543254107891",
+      "title": "Organisation sociale et dispersion du kangourou roux — thèse de doctorat, Murdoch University"
+    },
+    {
+      "url": "https://www.publish.csiro.au/AM/AM80015",
+      "title": "Comportement du kangourou roux dans le nord-ouest de la Nouvelle-Galles du Sud — Australian Mammalogy"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-7998.1964.tb05152.x",
+      "title": "Cycle biologique et reproduction du kangourou roux — Proceedings of the Zoological Society of London"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1365-2656.2005.00915.x",
+      "title": "Moutons et pluies : dynamique à grande échelle des populations de kangourous roux — Journal of Animal Ecology"
+    },
+    {
+      "url": "https://researchportal.murdoch.edu.au/esploro/outputs/journalArticle/The-effect-of-pasture-availability-on/991005540635107891",
+      "title": "Effet de la disponibilité des pâturages sur l’ingestion, le choix alimentaire et le comportement de pâturage des kangourous — Journal of Applied Ecology"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000292/",
+      "title": "Osphranter rufus — Mammal Diversity Database"
+    },
+    {
+      "url": "https://www.environment.nsw.gov.au/publications/nsw-commercial-kangaroo-management-program-2026-quota-report",
+      "title": "Programme de gestion commerciale des kangourous de Nouvelle-Galles du Sud : rapport des quotas 2026 — ministère de l’Environnement de NSW"
+    }
+  ]
+}

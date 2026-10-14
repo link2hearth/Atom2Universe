@@ -1,0 +1,90 @@
+{
+  "id": "stoat",
+  "name": "Hermine",
+  "scientific": "Mustela erminea",
+  "group": "mammals",
+  "sections": {
+    "overview": "L’hermine est un petit mustélidé au corps long et fin, aux pattes courtes et à la queue terminée de noir. Elle fouille les milieux couverts et poursuit ses proies jusque dans leurs terriers. Son pelage mue au fil des saisons, mais le blanchiment hivernal varie selon le climat et l’enneigement locaux.",
+    "identification": "En Grande-Bretagne, les mâles adultes mesurent environ 27,5 à 31 cm et pèsent 200 à 450 g ; les femelles mesurent environ 24 à 29 cm et pèsent 140 à 280 g. La queue mesure 9,5 à 14 cm dans les deux sexes. En été, le dos est brun roux et le dessous clair ; la pointe noire persiste en hiver. La belette, Mustela nivalis, plus petite, n’a pas cette pointe noire. L’hermine mue deux fois par an : la durée du jour contribue au calendrier saisonnier, tandis que la température influe sur le blanchiment complet ou partiel. Une étude de peaux néerlandaises a trouvé davantage de pelages entièrement blancs dans les régions froides. Quand la neige disparaît, le pelage blanc peut trancher sur le sol nu.",
+    "habitat": "L’hermine fréquente des milieux variés offrant du couvert, des prairies et terres agricoles aux bois, marais et reliefs élevés ; en Grande-Bretagne, elle circule le long des haies, fossés et murs de pierre. Une révision génétique et morphométrique de 2021 attribue M. erminea surtout à l’Ancien Monde et à la Béringie jusqu’en Alaska ; la plupart des populations continentales d’Amérique du Nord sont M. richardsonii, tandis que celles de Haida Gwaii et de l’archipel Alexandre sont M. haidarum.",
+    "diet": "Les petits mammifères, surtout les lapins et les campagnols aquatiques là où ils abondent, constituent l’essentiel des proies ; l’hermine prend aussi des rongeurs, des oiseaux et des œufs. Une étude britannique de contenus stomacaux a trouvé surtout des lagomorphes, puis des rongeurs, oiseaux ou œufs ; dans cet échantillon, les mâles mangeaient davantage de lagomorphes et les femelles davantage de petits rongeurs. L’hermine pénètre dans des terriers assez larges, comme ceux des lapins, rats et campagnols aquatiques, et grimpe jusqu’aux nids d’oiseaux. La plupart des proies sont tuées d’une morsure à la nuque. L’hermine met en réserve les surplus et réutilise comme gîtes les anciens nids de proies, parfois garnis de fourrure dans les régions froides.",
+    "behavior": "L’hermine est surtout solitaire : adultes mâles et femelles occupent des territoires distincts, et les mâles s’éloignent davantage lorsqu’ils cherchent une partenaire. Les marques odorantes signalent la présence territoriale et le statut social. Vers huit semaines, les jeunes commencent à chasser aux côtés de leur mère.",
+    "reproduction": "Chez les hermines sauvages de Nouvelle-Zélande, les femelles s’accouplent de septembre à novembre et mettent bas en septembre-octobre de l’année suivante. L’œuf fécondé reste dormant dans l’utérus environ huit à neuf mois avant l’implantation. Après l’implantation, la gestation active dure environ quatre semaines. Les portées printanières comptent généralement six à douze petits, nés aveugles, sourds et peu couverts de poils. Les mères s’occupent des jeunes jusqu’à leur autonomie, vers douze semaines. Les très jeunes femelles peuvent s’accoupler dès deux ou trois semaines, avant de quitter le nid.",
+    "ecology": "En Grande-Bretagne, les effectifs d’hermines suivent souvent ceux de leurs proies, surtout des lapins ; l’effondrement des lapins dû à la myxomatose a coïncidé avec un fort recul des hermines dans les années 1950 et 1960. Une projection climatique récente dans les Alpes italiennes suggère que son aire locale pourrait se réduire avec le recul de l’enneigement et le déplacement des campagnols des neiges, mais il s’agit d’une prévision régionale, non d’une tendance mondiale mesurée. Aux Orcades, les hermines introduites prédatent les campagnols endémiques et les oiseaux nichant au sol, et concurrencent les rapaces indigènes pour les campagnols. Les hermines ont été introduites depuis la Grande-Bretagne en Nouvelle-Zélande au XIXe siècle pour lutter contre les lapins, mais elles ont eu des effets dévastateurs sur les oiseaux indigènes.",
+    "conservation": "L’évaluation des mammifères d’Angleterre de 2021 classait l’hermine en préoccupation mineure, tout en jugeant les données sur ses effectifs très lacunaires. En Grande-Bretagne, la disparition des haies et le recul des lapins peuvent réduire les abris ou la nourriture. Aux Orcades, où elles ont été signalées pour la première fois en 2010, un programme d’éradication vise ce prédateur introduit afin de protéger la faune indigène."
+  },
+  "sources": [
+    {
+      "url": "https://naturblick.museumfuernaturkunde.berlin/species/portrait/509?lang=en",
+      "title": "Portrait d’espèce Naturblick : hermine"
+    },
+    {
+      "url": "https://mammal.org.uk/british-mammals/stoat",
+      "title": "Mammal Society : stoat"
+    },
+    {
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/10.1111/j.1469-7998.2000.tb00631.x",
+      "title": "Journal of Zoology : régimes alimentaires du stoat et de la belette en Grande-Bretagne"
+    },
+    {
+      "url": "https://www.orkneynativewildlife.org.uk/project/stoats-in-orkney",
+      "title": "Orkney Native Wildlife Project : les stoats dans les Orcades"
+    },
+    {
+      "url": "https://www.iucn-uk-peatlandprogramme.org/wildlife-explorer/mammals/stoat",
+      "title": "Hermine — programme tourbières de l’IUCN Royaume-Uni"
+    },
+    {
+      "url": "https://www.doc.govt.nz/documents/science-and-technical/sfc268.pdf",
+      "title": "Biologie reproductive du stoat — Département néo-zélandais de la conservation"
+    },
+    {
+      "url": "https://repository.naturalis.nl/pub/504487",
+      "title": "La mue de l’hermine aux Pays-Bas"
+    },
+    {
+      "url": "https://doi.org/10.1007/s13364-026-00878-6",
+      "title": "La perte de neige et le déplacement des proies menacent les hermines alpines"
+    },
+    {
+      "url": "https://doi.org/10.4404/hystrix-7.1-2-4047",
+      "title": "Organisation sociale des petits mustélidés européens"
+    },
+    {
+      "url": "https://doi.org/10.1016/S0003-3472(82)80154-1",
+      "title": "Le marquage olfactif et sa fonction territoriale chez l’hermine"
+    },
+    {
+      "url": "https://pubs.usgs.gov/publication/70218814",
+      "title": "Colella et al. 2021 : délimitation des espèces d’hermines holarctiques"
+    },
+    {
+      "url": "https://www.nature.scot/plants-animals-and-fungi/mammals/land-mammals/other-carnivores/stoat-and-weasel",
+      "title": "Hermine et belette — NatureScot"
+    },
+    {
+      "url": "https://doi.org/10.1080/03014223.1982.10423841",
+      "title": "Mue et changement de couleur chez les hermines de Nouvelle-Zélande"
+    },
+    {
+      "url": "https://www.gwct.org.uk/research/long-term-monitoring/national-gamebag-census/mammal-bags-comprehensive-overviews/stoat/",
+      "title": "Hermine — Game & Wildlife Conservation Trust"
+    },
+    {
+      "url": "https://mammal.org.uk/s/RedList_30June2021.pdf",
+      "title": "Évaluation de l’Angleterre — Liste rouge des mammifères 2021 de la Mammal Society"
+    },
+    {
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/mammals/stoat/",
+      "title": "Hermine — Woodland Trust"
+    },
+    {
+      "url": "https://www.hse.gov.uk/pesticides/assets/docs/MammBible.pdf",
+      "title": "Mammal Bible — Health and Safety Executive"
+    },
+    {
+      "url": "https://www.doc.govt.nz/nature/pests-and-threats/animal-pests-and-threats/stoats/",
+      "title": "Les stoats — Département de la conservation, Nouvelle-Zélande"
+    }
+  ]
+}

@@ -12,8 +12,8 @@
       "fr": "Le cochon d’Inde est un petit rongeur caviidé dont les populations sont principalement entretenues par les humains. La lignée domestiquée est reconnue sous le nom Cavia porcellus, distinct dans la classification des espèces sauvages C. aperea et C. tschudii. Les comparaisons génétiques désignent le cobaye montagnard andin, C. tschudii, comme son plus proche parent sauvage, tandis que l’ADN ancien révèle une histoire de domestication plus complexe qu’une origine unique et simple. Les données d’un projet génomique situent la domestication andine il y a plus de quatre millénaires. Aujourd’hui, il est élevé comme animal de compagnie ou de recherche, ainsi que pour l’alimentation dans certaines régions d’Amérique du Sud."
     },
     "identification": {
-      "en": "A guinea pig has a compact, low-set body, short limbs, a blunt head and no external tail. Each forefoot has four digits and each hind foot three. Its coat may be short or long, smooth or rough, and comes in many colours and patterns; these differences reflect selective breeding. Smithsonian measurements place typical adults at about 20–25 centimetres long, although size varies among breeds.",
-      "fr": "Le cochon d’Inde a un corps compact et bas, des membres courts, une tête arrondie et aucune queue externe. Chaque patte avant porte quatre doigts et chaque patte arrière trois. Son pelage peut être court ou long, lisse ou rude, et présenter de nombreuses couleurs et marques ; ces différences résultent de la sélection. Le Smithsonian indique une longueur adulte typique d’environ 20 à 25 centimètres, avec des variations selon les lignées."
+      "en": "A guinea pig has a compact, low-set body, short limbs, a blunt head and no external tail. Each forefoot has four digits and each hind foot three. Its coat may be short or long, smooth or rough, and comes in many colours and patterns; these differences reflect selective breeding. Smithsonian measurements place typical adults at about 20–25 centimetres long, although size varies among breeds. Merck gives average adult masses of 700–900 g for females and 900–1,200 g for males; body length varies among breeds.",
+      "fr": "Le cochon d’Inde a un corps compact et bas, des membres courts, une tête arrondie et aucune queue externe. Chaque patte avant porte quatre doigts et chaque patte arrière trois. Son pelage peut être court ou long, lisse ou rude, et présenter de nombreuses couleurs et marques ; ces différences résultent de la sélection. Le Smithsonian indique une longueur adulte typique d’environ 20 à 25 centimètres, avec des variations selon les lignées. Merck donne des masses adultes moyennes de 700 à 900 g chez les femelles et de 900 à 1 200 g chez les mâles ; la longueur corporelle varie selon les races."
     },
     "habitat": {
       "en": "Cavia porcellus is associated with human settlements rather than a self-sustaining wild range: it lives in household enclosures, farms and research facilities, and has travelled globally through human keeping and trade. The high Andean grasslands sometimes described as guinea-pig habitat belong to wild relatives, especially C. tschudii, not automatically to the domestic species. That montane cavy is reported from Peru, Bolivia, north-western Argentina and north-eastern Chile.",
@@ -192,6 +192,20 @@
       ],
       "facts": [
         "Broad Institute genome-project account places domestication in the Andes more than 4,000 years ago."
+      ]
+    },
+    {
+      "title": {
+        "en": "Restraint and Physical Examination of Guinea Pigs — Merck Veterinary Manual",
+        "fr": "Contention et examen physique du cobaye — Merck Veterinary Manual"
+      },
+      "url": "https://www.merckvetmanual.com/exotic-and-laboratory-animals/guinea-pigs/restraint-and-physical-examination-of-guinea-pigs",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Average adult mass: females 700–900 g; males 900–1,200 g."
       ]
     }
   ],

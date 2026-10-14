@@ -12,8 +12,8 @@
       "fr": "L’axolotl est une salamandre taupe des zones humides d’altitude du Mexique; son habitat naturel subsistant se concentre autour de Xochimilco. Au lieu de se métamorphoser en salamandre terrestre, il atteint la maturité reproductive tout en conservant des traits larvaires comme les branchies externes et la nageoire caudale. Sa régénération en fait un modèle du développement; les résultats de laboratoire ne garantissent aucun traitement humain. Après l’amputation d’un membre, un épiderme spécialisé recouvre le moignon; les cellules y forment un blastème, zone de croissance qui reconstruit les parties manquantes grâce à des signaux nerveux nécessaires à sa croissance."
     },
     "identification": {
-      "en": "Adults average about 20 centimetres, and some exceed 30; age, sex and rearing conditions influence size. Wild-type animals are dark brown, olive or blackish with mottling; captive lines also include pink-bodied leucistic and pale-eyed albino forms. Three pairs of feathery external gills project from the head, above a long tail edged by a low fin. Four short limbs have slender digits. Gills and vascularized skin absorb dissolved oxygen from water, while simple lungs let the axolotl breathe air at the surface. Mature males tend to have a swollen cloaca, while egg-bearing females may have a fuller abdomen.",
-      "fr": "Les adultes mesurent en moyenne environ 20 centimètres, et certains dépassent 30; âge, sexe et élevage influencent la taille. Les individus sauvages sont brun foncé, olive ou noirâtres et tachetés; les lignées captives comprennent aussi des formes leucistiques roses et des albinos aux yeux pâles. Trois paires de branchies plumeuses dépassent de la tête, au-dessus d’une longue queue bordée d’une nageoire basse. Quatre membres courts portent des doigts fins. Les branchies et la peau vascularisée captent l’oxygène dissous dans l’eau, tandis que les poumons simples lui permettent de respirer l’air en surface. Le cloaque des mâles mûrs tend à être renflé, tandis que l’abdomen des femelles peut s’arrondir lorsqu’elles portent des œufs."
+      "en": "Adults average about 20 centimetres, and some exceed 30; age, sex and rearing conditions influence size. Wild-type animals are dark brown, olive or blackish with mottling; captive lines also include pink-bodied leucistic and pale-eyed albino forms. Three pairs of feathery external gills project from the head, above a long tail edged by a low fin. Four short limbs have slender digits. Gills and vascularized skin absorb dissolved oxygen from water, while simple lungs let the axolotl breathe air at the surface. Mature males tend to have a swollen cloaca, while egg-bearing females may have a fuller abdomen. In one adult laboratory sample, total length including the tail averaged 25.7 ± 1.7 cm and body mass 112.7 ± 10.8 g; this sample does not establish a wild species-wide range or a sex difference.",
+      "fr": "Les adultes mesurent en moyenne environ 20 centimètres, et certains dépassent 30; âge, sexe et élevage influencent la taille. Les individus sauvages sont brun foncé, olive ou noirâtres et tachetés; les lignées captives comprennent aussi des formes leucistiques roses et des albinos aux yeux pâles. Trois paires de branchies plumeuses dépassent de la tête, au-dessus d’une longue queue bordée d’une nageoire basse. Quatre membres courts portent des doigts fins. Les branchies et la peau vascularisée captent l’oxygène dissous dans l’eau, tandis que les poumons simples lui permettent de respirer l’air en surface. Le cloaque des mâles mûrs tend à être renflé, tandis que l’abdomen des femelles peut s’arrondir lorsqu’elles portent des œufs. Dans un échantillon d’adultes élevés en laboratoire, la longueur totale, queue comprise, était en moyenne de 25,7 ± 1,7 cm et la masse de 112,7 ± 10,8 g ; cet échantillon ne définit ni une plage pour les populations sauvages ni une différence entre sexes."
     },
     "habitat": {
       "en": "Historically, axolotls inhabited freshwater lakes and wetlands across the Mexican Central Valley, including Xochimilco and Chalco; Lake Chalco was later drained. The canal network of Xochimilco, south of Mexico City, is the best-documented modern natural habitat; the 2019 IUCN assessment also listed records from other sites. These cool, high-altitude waters have muddy bottoms, aquatic plants and channels woven through cultivated chinampas. Chinampa refuge canals combine habitat structure with local farming and wetland restoration.",
@@ -57,10 +57,10 @@
       ],
       "prose_claims": [
         "overview.en.1",
-        "overview.fr.1",
         "overview.en.2",
-        "overview.fr.2",
         "overview.en.3",
+        "overview.fr.1",
+        "overview.fr.2",
         "overview.fr.3"
       ],
       "budget": {
@@ -86,12 +86,12 @@
         "Colony resource summarizes adult morphology, color morphs, breeding, and laboratory maturation."
       ],
       "prose_claims": [
-        "identification.en.2",
-        "identification.fr.2",
-        "identification.en.6",
-        "identification.fr.6",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.4",
+        "identification.en.2",
+        "identification.en.6",
+        "identification.fr.2",
+        "identification.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -142,7 +142,8 @@
       ],
       "prose_claims": [
         "identification.en.4",
-        "identification.fr.4"
+        "identification.fr.4",
+        "identification.fr.7"
       ],
       "budget": {
         "limit": 200,
@@ -167,10 +168,10 @@
         "Global CR assessment dated 23 October 2019; published 2020; inferred decline at least 80%."
       ],
       "prose_claims": [
-        "habitat.en.2",
-        "habitat.fr.2",
         "conservation.en.1",
-        "conservation.fr.1"
+        "conservation.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -195,10 +196,10 @@
         "Earlier profile describes Xochimilco and Chalco range and threats from drainage, pollution, urbanization."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
         "conservation.en.3",
-        "conservation.fr.3"
+        "conservation.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -224,12 +225,12 @@
         "UNAM scientists and chinamperos established refuge canals within working chinampa plots."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
+        "conservation.en.5",
+        "conservation.fr.5",
         "ecology.en.3",
         "ecology.fr.3",
-        "conservation.en.5",
-        "conservation.fr.5"
+        "habitat.en.3",
+        "habitat.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -336,8 +337,8 @@
         "diet.en.2",
         "diet.fr.2",
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
+        "ecology.fr.1",
         "ecology.fr.2"
       ],
       "budget": {
@@ -415,8 +416,8 @@
       ],
       "prose_claims": [
         "behavior.en.3",
-        "behavior.fr.3",
         "behavior.en.4",
+        "behavior.fr.3",
         "behavior.fr.4"
       ],
       "budget": {
@@ -467,10 +468,10 @@
       ],
       "prose_claims": [
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
-        "reproduction.fr.2",
         "reproduction.en.3",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
         "reproduction.fr.3"
       ],
       "budget": {
@@ -624,10 +625,10 @@
         "Paedomorphic adults use aquatic gills and skin plus lungs; air-breathing increases under hypoxia."
       ],
       "prose_claims": [
-        "identification.en.5",
-        "identification.fr.5",
         "behavior.en.2",
-        "behavior.fr.2"
+        "behavior.fr.2",
+        "identification.en.5",
+        "identification.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -636,6 +637,23 @@
         "total": 90,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Ground Reaction Forces and Energy Exchange During Underwater Walking — Journal of Experimental Biology, via PubMed Central",
+        "fr": "Ground Reaction Forces and Energy Exchange During Underwater Walking — Journal of Experimental Biology, via PubMed Central"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11191838/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "One adult laboratory sample averaged 25.7 ± 1.7 cm total length and 112.7 ± 10.8 g mass; not a wild population range."
+      ],
+      "prose_claims": [
+        "identification.en.7"
+      ]
     }
   ],
   "illustration_notes": "Accurate adult Ambystoma mexicanum in natural dark mottled wild-type coloration, full body isolated on white. Show aquatic paedomorphic anatomy: three pairs of branched external gills, broad head, four short limbs with slender digits, long laterally compressed tail and continuous low dorsal/caudal fin. Do not depict the popular pink leucistic captive morph as the wild norm; no clothes, props, or other species.",

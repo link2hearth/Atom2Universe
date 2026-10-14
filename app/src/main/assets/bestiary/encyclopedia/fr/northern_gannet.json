@@ -1,0 +1,50 @@
+{
+  "id": "northern_gannet",
+  "name": "Fou de Bassan",
+  "scientific": "Morus bassanus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Fou de Bassan est un grand oiseau marin de l’Atlantique Nord. Il niche sur des îles et des falaises, du nord-est de l’Amérique à l’Europe occidentale, et passe une grande partie de l’année en mer avant de revenir nicher en colonies denses.",
+    "identification": "L’adulte mesure environ 85 à 100 cm, pour une envergure de l’ordre de 165 à 180 cm. Mâle et femelle se ressemblent : le corps est blanc, les longues ailes étroites ont les extrémités noires, et la tête ainsi que le cou prennent une teinte jaune pâle en plumage nuptial. Le jeune, brun, blanchit progressivement en plusieurs années. Les données britanniques de baguage indiquent une masse moyenne adulte d’environ 3 kg; le résumé du BTO ne distingue pas les sexes pour cette mesure. Je n’ai pas trouvé de masse fiable selon le sexe, de largeur du corps ni de hauteur debout.",
+    "habitat": "Les colonies occupent des falaises maritimes, des îles rocheuses et d’autres sites côtiers isolés, où les nids sont très rapprochés. En mer, les fous parcourent les eaux productives du plateau continental et suivent les bancs de poissons; après la reproduction, beaucoup gagnent le sud de l’Atlantique ou la Méditerranée occidentale.",
+    "diet": "Il mange surtout des poissons vivant en bancs, comme le maquereau, le hareng et le lançon, ainsi que des calmars. Après un vol plané ou une descente abrupte, il replie ses ailes et plonge le bec en avant, parfois à grande vitesse; il peut aussi poursuivre une proie sous l’eau. Une membrane translucide protège ses yeux, et des espaces remplis d’air sous la peau amortissent le choc. Il avale sa prise sous l’eau ou en surface.",
+    "behavior": "Les fous pêchent seuls ou en groupes lâches; plusieurs peuvent plonger là où des prédateurs ou des bateaux rabattent les poissons vers la surface. Dans la colonie, chaque couple défend le petit espace autour de son nid par des postures dressées, le bec dirigé vers les intrus et des cris rauques. Les partenaires se saluent bec levé et par des parades; leurs appels répétés entretiennent le contact dans le vacarme.",
+    "reproduction": "Les couples reviennent généralement à la même colonie et peuvent rester unis plusieurs années. Ils construisent un amas d’algues, d’herbes et d’autres matériaux, puis pondent un seul œuf. Les deux parents le couvent entre leurs pattes palmées pendant environ 42 à 46 jours. Le poussin, incapable de se débrouiller seul à l’éclosion, reçoit des poissons régurgités par les adultes; il grandit quelque 84 à 97 jours avant son premier envol, puis quitte la colonie et doit trouver sa nourriture en mer. Il commence généralement à se reproduire vers cinq ans.",
+    "ecology": "Les fous de Bassan consomment des poissons pélagiques grégaires et des calmars, ce qui relie leur alimentation aux stocks exploités par les pêcheries. Ils peuvent être capturés accidentellement dans les filets; l’activité de pêche influe donc sur leurs ressources et leur survie.",
+    "conservation": "À l’échelle mondiale, l’espèce est classée en préoccupation mineure; cette catégorie évalue le risque d’extinction sur l’ensemble de son aire et ne garantit pas la sécurité de chaque colonie. La collecte des œufs et la chasse ont autrefois réduit certaines colonies; pression de la pêche, captures accidentelles, pollution et évolution des ressources alimentaires restent des préoccupations. La grippe aviaire hautement pathogène a provoqué de lourdes pertes récentes : en 2022, au moins 11 000 morts ont été recensés en Écosse et 5 000 à Grassholm, au pays de Galles."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Northern_gannet",
+      "title": "Fou de Bassan — Wikipédia"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Fou_de_Bassan",
+      "title": "Fou de Bassan — Wikipédia"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/gannet",
+      "title": "Fou de Bassan — BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Northern_Gannet/lifehistory/",
+      "title": "Cycle de vie du Fou de Bassan — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.birdlife.org/news/2021/07/06/seabird-month-northern-gannet-morus-bassanus/",
+      "title": "Oiseau marin du mois – Fou de Bassan (Morus bassanus) — BirdLife International"
+    },
+    {
+      "url": "https://web-cdn.rspb.org.uk/birds-and-wildlife/seabird-surveys-project-report",
+      "title": "Grippe aviaire : une menace majeure pour les oiseaux marins — RSPB"
+    },
+    {
+      "url": "https://www.nature.scot/sites/default/files/2017-06/Publication%202017%20-%20SNH%20Commissioned%20Report%20947%20-%20Analysis%20of%20the%20possible%20displacement%20of%20bird%20and%20marine%20mammal%20species%20related%20to%20the%20installation%20and%20operation%20of%20marine%20energy%20conversion%20systems.pdf",
+      "title": "Analyse du déplacement potentiel des oiseaux et mammifères marins lié aux systèmes d’énergie marine — NatureScot"
+    },
+    {
+      "url": "https://www.nature.scot/doc/genetic-scorecard-indicator-northern-gannet",
+      "title": "Indicateur de score génétique – Fou de Bassan — NatureScot"
+    }
+  ]
+}

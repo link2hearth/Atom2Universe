@@ -12,8 +12,8 @@
       "fr": "Le homard européen est un crustacé marin à grandes pinces, indigène de l’Atlantique nord-est, de la Méditerranée et de l’ouest de la mer Noire."
     },
     "identification": {
-      "en": "Its blue, mottled upper shell contrasts with a pale yellowish underside, long antennae and a segmented abdomen. Pot-caught animals commonly measure about 23–38 centimetres, rather than the much larger sizes reported for exceptional specimens. The ten walking limbs include a massive crushing claw and a sharper cutting claw, which perform complementary feeding functions. Growth requires shedding the rigid shell and expanding before the new shell hardens: this is moulting. Heating breaks the protein complex holding the red pigment astaxanthin, explaining the colour change from blue to red during cooking.",
-      "fr": "Sa carapace supérieure bleue et tachetée contraste avec un dessous jaunâtre pâle, de longues antennes et un abdomen segmenté. Les individus pris au casier mesurent couramment environ 23–38 centimètres, loin des dimensions beaucoup plus grandes rapportées pour des spécimens exceptionnels. Les dix membres marcheurs comprennent une grande pince broyeuse et une pince coupante plus tranchante, aux fonctions alimentaires complémentaires. La croissance exige de quitter la carapace rigide puis de grossir avant le durcissement de la nouvelle : c’est la mue. La chaleur détruit le complexe protéique qui retient le pigment rouge appelé astaxanthine, ce qui explique le passage du bleu au rouge à la cuisson."
+      "en": "Its blue, mottled upper shell contrasts with a pale yellowish underside, long antennae and a segmented abdomen. Pot-caught animals commonly measure about 23–38 centimetres, rather than the much larger sizes reported for exceptional specimens. The ten walking limbs include a massive crushing claw and a sharper cutting claw, which perform complementary feeding functions. Growth requires shedding the rigid shell and expanding before the new shell hardens: this is moulting. Heating breaks the protein complex holding the red pigment astaxanthin, explaining the colour change from blue to red during cooking. Large specimens are commonly 23–50 cm; maximum total length is about 60 cm and maximum mass about 5–6 kg. These are large-size records, not a typical catch mass.",
+      "fr": "Sa carapace supérieure bleue et tachetée contraste avec un dessous jaunâtre pâle, de longues antennes et un abdomen segmenté. Les individus pris au casier mesurent couramment environ 23–38 centimètres, loin des dimensions beaucoup plus grandes rapportées pour des spécimens exceptionnels. Les dix membres marcheurs comprennent une grande pince broyeuse et une pince coupante plus tranchante, aux fonctions alimentaires complémentaires. La croissance exige de quitter la carapace rigide puis de grossir avant le durcissement de la nouvelle : c’est la mue. La chaleur détruit le complexe protéique qui retient le pigment rouge appelé astaxanthine, ce qui explique le passage du bleu au rouge à la cuisson. Les grands spécimens mesurent couramment 23–50 cm ; la longueur totale maximale est d’environ 60 cm et la masse maximale de 5–6 kg. Ce sont des valeurs de grands spécimens, pas une masse de capture typique."
     },
     "habitat": {
       "en": "It occupies rocky seabeds from the lower shore to around 60 metres, sheltering in crevices, holes and excavated tunnels. The short, spiny projection at the front of the head is the rostrum, another useful identification feature.",
@@ -57,14 +57,14 @@
         "Size, colour, mating and global status."
       ],
       "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
         "identification.en.2",
-        "identification.fr.2",
         "identification.en.5",
+        "identification.fr.2",
         "identification.fr.5",
         "reproduction.en.1",
-        "reproduction.fr.1",
-        "conservation.en.1",
-        "conservation.fr.1"
+        "reproduction.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -90,14 +90,14 @@
         "Range, benthic food and nocturnal activity."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "diet.en.1",
-        "diet.fr.1",
-        "diet.en.2",
-        "diet.fr.2",
         "behavior.en.1",
-        "behavior.fr.1"
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -122,12 +122,12 @@
         "Blue shell, rocky shelter and depth."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
         "habitat.en.1",
-        "habitat.fr.1",
         "habitat.en.2",
-        "habitat.fr.2"
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "identification.en.1",
+        "identification.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -154,16 +154,16 @@
         "Claws, moult vulnerability and egg carrying."
       ],
       "prose_claims": [
-        "identification.en.3",
-        "identification.fr.3",
-        "identification.en.4",
-        "identification.fr.4",
         "behavior.en.2",
         "behavior.fr.2",
-        "reproduction.en.2",
-        "reproduction.fr.2",
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.2",
+        "identification.en.3",
+        "identification.en.4",
+        "identification.fr.3",
+        "identification.fr.4",
+        "reproduction.en.2",
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -189,14 +189,14 @@
         "Egg ventilation, development and Cornish release programme."
       ],
       "prose_claims": [
-        "reproduction.en.3",
-        "reproduction.fr.3",
-        "reproduction.en.4",
-        "reproduction.fr.4",
+        "conservation.en.2",
+        "conservation.fr.2",
         "ecology.en.1",
         "ecology.fr.1",
-        "conservation.en.2",
-        "conservation.fr.2"
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -205,6 +205,26 @@
         "total": 185,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Homarus gammarus — FAO species catalogue",
+        "fr": "Homarus gammarus — catalogue FAO des espèces"
+      },
+      "url": "https://www.fao.org/4/t0411e/t0411e09.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Maximum total length is about 60 cm and maximum mass about 5–6 kg; larger specimens are usually 23–50 cm. These are maxima/large specimens, not a typical catch mass."
+      ],
+      "prose_claims": [
+        "identification.en.6",
+        "identification.en.7",
+        "identification.fr.6",
+        "identification.fr.7"
+      ]
     }
   ],
   "illustration_notes": "Blue living adult, asymmetrical crushing and cutting claws, ten walking limbs including claws, long antennae, segmented abdomen and tail fan on white background.",

@@ -57,14 +57,14 @@
         "Native range; global status date, trend, habitats, persecution."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
         "habitat.en.4",
         "habitat.fr.4",
-        "conservation.en.1",
-        "conservation.fr.1",
-        "conservation.en.2",
-        "conservation.fr.2"
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -90,18 +90,18 @@
         "Body size, coat tones, patch, and habitat breadth."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "overview.en.3",
-        "overview.fr.3",
-        "overview.en.4",
-        "overview.fr.4",
         "habitat.en.1",
-        "habitat.fr.1",
         "habitat.en.3",
+        "habitat.fr.1",
         "habitat.fr.3",
         "identification.en.6",
-        "identification.fr.6"
+        "identification.fr.6",
+        "overview.en.1",
+        "overview.en.3",
+        "overview.en.4",
+        "overview.fr.1",
+        "overview.fr.3",
+        "overview.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -150,12 +150,12 @@
         "Portuguese telemetry: cork oak, streams, orchards, pasture."
       ],
       "prose_claims": [
-        "habitat.en.2",
-        "habitat.fr.2",
-        "habitat.en.5",
-        "habitat.fr.5",
         "ecology.en.3",
-        "ecology.fr.3"
+        "ecology.fr.3",
+        "habitat.en.2",
+        "habitat.en.5",
+        "habitat.fr.2",
+        "habitat.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -180,10 +180,10 @@
       ],
       "prose_claims": [
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.3",
-        "behavior.fr.3",
         "behavior.en.4",
+        "behavior.fr.1",
+        "behavior.fr.3",
         "behavior.fr.4"
       ],
       "budget": {
@@ -210,12 +210,12 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
-        "diet.fr.3",
         "diet.en.4",
+        "diet.fr.1",
+        "diet.fr.2",
+        "diet.fr.3",
         "diet.fr.4"
       ],
       "budget": {
@@ -273,8 +273,8 @@
       ],
       "prose_claims": [
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
+        "ecology.fr.1",
         "ecology.fr.2"
       ],
       "budget": {
@@ -299,16 +299,16 @@
         "Wisconsin feral population reported; numbers poorly known; scent marks signal territories."
       ],
       "prose_claims": [
-        "overview.en.5",
-        "overview.fr.5",
-        "identification.en.2",
-        "identification.fr.2",
-        "identification.en.5",
-        "identification.fr.5",
         "behavior.en.2",
-        "behavior.fr.2",
         "behavior.en.5",
-        "behavior.fr.5"
+        "behavior.fr.2",
+        "behavior.fr.5",
+        "identification.en.2",
+        "identification.en.5",
+        "identification.fr.2",
+        "identification.fr.5",
+        "overview.en.5",
+        "overview.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -387,12 +387,12 @@
       "prose_claims": [
         "identification.en.3",
         "identification.fr.3",
-        "reproduction.en.6",
-        "reproduction.fr.6",
-        "reproduction.en.7",
-        "reproduction.fr.7",
         "reproduction.en.4",
-        "reproduction.fr.4"
+        "reproduction.en.6",
+        "reproduction.en.7",
+        "reproduction.fr.4",
+        "reproduction.fr.6",
+        "reproduction.fr.7"
       ],
       "budget": {
         "limit": 200,

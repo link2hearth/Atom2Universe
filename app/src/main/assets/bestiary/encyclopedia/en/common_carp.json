@@ -1,0 +1,74 @@
+{
+  "id": "common_carp",
+  "name": "Common carp",
+  "scientific": "Cyprinus carpio",
+  "group": "fish",
+  "sections": {
+    "overview": "The common carp is a large freshwater fish native to the Black, Caspian and Aral Sea drainages. People have cultured it for food for centuries and transported it widely, creating a sharp distinction between native wild river populations and abundant farmed or introduced fish.",
+    "identification": "Its deep, slightly compressed body carries large scales and a long-based dorsal fin with a strong spine at the front; the spine’s rear edge bears small serrations. Two pairs of barbels beside the protrusible mouth, which can extend forward, identify it; the upper-lip pair is shorter. Wild fish are usually brownish green above and golden below, while colour and scale coverage vary among cultured strains. Adults commonly measure about 30–60 centimetres and weigh roughly 0.5–4 kilograms. Exceptional fish exceed a metre and 20 kilograms.",
+    "habitat": "Wild carp favor the middle and lower reaches of rivers, floodplains, oxbow lakes and shallow lakes or reservoirs, often over soft bottoms with aquatic vegetation. They feed mainly near the bottom but search through middle and upper water layers as well. Flooded margins are especially important when rising water connects the river to spawning and nursery grounds; dams and channel changes can remove or mistime that access.",
+    "diet": "A carp pushes its soft, protrusible mouth into sediment and selects edible particles from mud, plant fragments and other debris. Sensitive barbels and taste-rich mouth surfaces help it sort food; modified throat bones bear stout pharyngeal teeth that crush and grind seeds, insect larvae, worms, molluscs and other small prey against a hard chewing pad. It has no true stomach: enzymes digest food along the intestine, where amino acids are absorbed, especially in its front section.",
+    "behavior": "Common carp may feed alone or gather in shifting social groups. At Kleiner Döllnsee, a lake in northern Brandenburg, telemetry of stocked, hatchery-born and pond-reared carp found stronger daytime grouping in winter and smaller, longer-lasting groups in summer. The same individuals met repeatedly, consistent with social memory lasting up to about two weeks; the researchers suggested this could help fish locate patchy food, though they did not identify a communication signal.",
+    "reproduction": "In temperate Europe, spawning starts near 17–18 °C, with local variation. In shallow, plant-rich water, females scatter eggs among aquatic plants, where males fertilize them externally. Water makes the egg coat sticky, so eggs adhere to vegetation. Wild females can spawn fractionally, releasing eggs in repeated bouts rather than depositing the full clutch at once; this pattern was documented in the lower River Murray, Australia. At 20–23 °C, embryos develop and hatch in about three days; newly hatched larvae cling to the substrate, then swim horizontally and begin feeding on microscopic aquatic animals called rotifers roughly three days later.",
+    "ecology": "By stirring sediment while feeding, carp release suspended particles and nutrients into the water and can uproot submerged plants. Experiments with juvenile carp found reduced abundance of a submerged pondweed, while a floating-leaved plant increased; turbidity and light availability help determine which species respond. Carp also eat invertebrates, including snails and zooplankton, so they can affect plant growth indirectly through food-web links. Their ecological effects are strongest in some introduced or densely stocked waters and vary with fish size, abundance, habitat and season.",
+    "conservation": "The 2008 IUCN global assessment classified the common carp as Vulnerable. The IUCN Red List update published in 2024 now lists it as Least Concern. The IUCN indicates that this category change does not reflect a genuine improvement in the species’ condition; it therefore does not document a recovery of wild stocks. The 2008 account described native populations in the Black, Caspian and Aral basins as declining, linking the trend to river regulation that disrupts floodplain spawning and hybridization with introduced cultured stocks and related carp."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/fishery/docs/CDrom/aquaculture/I1129m/file/en/en_commoncarp.htm",
+      "title": "Cyprinus carpio — Cultured Aquatic Species Information Programme, FAO"
+    },
+    {
+      "url": "https://www.floridamuseum.ufl.edu/discover-fish/florida-fishes-gallery/common-carp/",
+      "title": "Cyprinus carpio — Florida Museum of Natural History, Discover Fishes"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Cyprinus_carpio/",
+      "title": "Cyprinus carpio — Animal Diversity Web, University of Michigan Museum of Zoology"
+    },
+    {
+      "url": "https://doi.org/10.18174/203139",
+      "title": "Food handling and mastication in the carp — Wageningen University & Research"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/3749594/",
+      "title": "Protein digestion and amino acid absorption along the intestine of the common carp — PubMed"
+    },
+    {
+      "url": "https://doi.org/10.1186/s40462-023-00410-4",
+      "title": "Rhythm of relationships in a social fish over the course of a full year in the wild — Movement Ecology"
+    },
+    {
+      "url": "https://doi.org/10.1111/1365-2664.14040",
+      "title": "Warming alters juvenile carp effects on macrophytes in freshwater mesocosms — Journal of Applied Ecology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2008.RLTS.T6181A12559362.en",
+      "title": "Cyprinus carpio — The IUCN Red List of Threatened Species"
+    },
+    {
+      "url": "https://doi.org/10.1016/0044-8486(94)00227-F",
+      "title": "Origin and domestication of the wild carp, Cyprinus carpio: from Roman gourmets to the swimming flowers — Aquaculture"
+    },
+    {
+      "url": "https://www.fishbase.org/summary/1450",
+      "title": "Cyprinus carpio — FishBase species summary"
+    },
+    {
+      "url": "https://digital.library.adelaide.edu.au/items/c51cc83d-4451-46c9-bd86-eef2625c45d4",
+      "title": "Carp spawning dynamics and early growth in the lower River Murray, South Australia — University of Adelaide thesis"
+    },
+    {
+      "url": "https://www.iucnredlist.org/species/6181/3107721",
+      "title": "Cyprinus carpio — The IUCN Red List of Threatened Species, assessment published 2024-2"
+    },
+    {
+      "url": "https://nc.iucnredlist.org/redlist/content/attachment_files/2024-2_RL_Table_7.pdf",
+      "title": "IUCN Red List version 2024-2: Table 7 — species changing status"
+    },
+    {
+      "url": "https://warnercnr.colostate.edu/wp-content/uploads/sites/2/2020/02/Snyder-et-al-2019-Cypriniform-Guide-MRG-final-report-r2a-small-size.pdf",
+      "title": "Species Account: Cyprinus carpio, Common Carp — Colorado State University guide"
+    }
+  ]
+}

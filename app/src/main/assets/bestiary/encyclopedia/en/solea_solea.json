@@ -1,0 +1,30 @@
+{
+  "id": "solea_solea",
+  "name": "Common Sole",
+  "scientific": "Solea solea",
+  "group": "fish",
+  "sections": {
+    "overview": "The common sole is a flatfish of the eastern Atlantic and the Mediterranean that lives half buried on sandy and muddy seabeds. Its young grow up in shallow coastal nurseries, and it is a commercially valuable species for the countries around the southern North Sea.",
+    "identification": "The common sole reaches 70 cm standard length, commonly about 35 cm, and has a published maximum mass of 3 kg; the consulted sources give no reliable adult size comparison by sex. Width and height are not reported as standard identification measurements. The body is oval and strongly flattened, with both eyes on the right side of the head. The eyed side is greyish to reddish brown with large diffuse dark blotches, while the underside is white. The pectoral fin on the eyed side has a dark spot on its outer half. It reaches about 70 cm at most and is commonly 15–45 cm.",
+    "habitat": "It lives in the eastern Atlantic from Norway’s Trondheim Fjord south to Senegal, in the North Sea and the western Baltic, and throughout the Mediterranean. It stays on sandy and muddy bottoms, usually at 10–60 m and down to about 150 m, and moves into deeper water in winter.",
+    "diet": "Adults feed at night on the seabed, taking mainly polychaete worms, molluscs and small crustaceans found in the sand and mud.",
+    "behavior": "Adults burrow into sandy and muddy bottoms and usually live alone. After settling, juveniles move little and stay in the same nursery area, a shallow, muddy-to-sandy coastal zone.",
+    "reproduction": "It spawns in batches in shallow coastal water at 6–12 °C, mainly from February to May, and starts to breed at 3–5 years of age, at about 25–30 cm. In the southern North Sea, eggs hatch from early April to mid-May. The pelagic larval phase lasts about 34 days, and the young settle in nurseries between mid-May and mid-June.",
+    "ecology": "In the southern North Sea, young sole depend on shallow coastal nurseries such as the Belgian coast, the Eems–Dollard estuary and the Wadden Sea, the most important nursery area. As a bottom predator, the sole feeds on worms, molluscs and small crustaceans. Its life cycle therefore ties offshore spawning to these sheltered coastal habitats.",
+    "conservation": "The IUCN Red List lists the species as Data Deficient (assessed in 2014). It is commercially valuable in the southern North Sea, where there is a risk of unsustainable exploitation and large bycatch of undersized juveniles, so management focuses on reducing that bycatch."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Solea-solea.html",
+      "title": "Solea solea, Common sole — FishBase"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8457496/",
+      "title": "Validating a biophysical dispersal model with the early life-history traits of common sole (Solea solea L.) — PLOS ONE, 2021"
+    },
+    {
+      "url": "https://www.fao.org/fi/static-media/FI/CDrom/ARTFIMED/ArtFiWeb/descript/Species/SOLSOVUL.HTML",
+      "title": "Solea vulgaris Quensel, 1806 — FAO species description (French page)"
+    }
+  ]
+}

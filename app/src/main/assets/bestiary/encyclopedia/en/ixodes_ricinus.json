@@ -1,0 +1,26 @@
+{
+  "id": "ixodes_ricinus",
+  "name": "Castor Bean Tick",
+  "scientific": "Ixodes ricinus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The castor bean tick, also called sheep tick, is a blood-feeding hard tick, an arachnid and not an insect, and an important tick of medical and veterinary concern in Europe. It waits on vegetation for passing animals and can carry the agents of Lyme disease and tick-borne encephalitis.",
+    "identification": "Before feeding, adult males are about 2.5–3 mm long and females 3–4 mm; a fed female can reach about 1 cm and turns light grey. Adults are red-brown and have no eyes. The dorsal shield covers the whole back of the male but only the front part of the female. Larvae have three pairs of legs, while nymphs and adults have four. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+    "habitat": "It occurs from Portugal to Russia and from North Africa to Scandinavia, mainly in deciduous and mixed forest, and is scarce in hot, dry parts of the Mediterranean. It needs relative humidity of at least 80% and can live in grassland, heathland, parks and conifer woods where hosts are present. Its range has shifted to higher altitudes and latitudes in several countries.",
+    "diet": "It feeds only on blood. Larvae and nymphs mostly take small or medium animals such as wood mice, birds and reptiles, while adults feed mainly on large mammals like cattle, sheep and deer. All stages will bite humans, and each active stage feeds for several days on a single host.",
+    "behavior": "The tick ambushes hosts by climbing to the tips of vegetation and waiting. Because it loses water while questing, it must go back down to the leaf litter to rehydrate, so its activity follows temperature and humidity. Activity often peaks in spring and again in autumn.",
+    "reproduction": "The life cycle has four stages (egg, larva, nymph, adult) and three hosts, taking up to three years in one source and two to four in another. After a blood meal, a female waits 4–8 weeks and lays up to 2,000 eggs, and larvae hatch about eight weeks later. Mating can last up to a week.",
+    "ecology": "It transmits many pathogens, including the Lyme borreliosis bacteria Borrelia burgdorferi sensu lato, tick-borne encephalitis virus, Anaplasma phagocytophilum, Babesia and louping ill virus. Milder winters and warm springs make questing start earlier, and snow cover helps overwintering by keeping the ground above freezing.",
+    "conservation": "The species is not threatened; it is expanding its range in several European countries, and models project establishment across Norway, Finland and Sweden by 2071–2100. It is not found in North America, and no Red List assessment was read."
+  },
+  "sources": [
+    {
+      "url": "https://www.ecdc.europa.eu/en/disease-vectors/facts/tick-factsheets/ixodes-ricinus",
+      "title": "Ixodes ricinus — Factsheet for experts, European Centre for Disease Prevention and Control"
+    },
+    {
+      "url": "https://www.cfsph.iastate.edu/Factsheets/pdfs/ixodes_ricinus.pdf",
+      "title": "Ixodes ricinus — Technical Disease Fact Sheet, Center for Food Security and Public Health, Iowa State University (2022)"
+    }
+  ]
+}

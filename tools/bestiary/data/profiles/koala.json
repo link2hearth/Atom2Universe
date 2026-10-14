@@ -12,8 +12,8 @@
       "fr": "Le koala est un marsupial australien dont l’aire suit les forêts et boisements d’eucalyptus du Queensland, de la Nouvelle-Galles du Sud, du Victoria et d’une petite partie de l’Australie-Méridionale. Sa répartition est vaste mais discontinue : les arbres alimentaires, les sols et les conditions locales déterminent les secteurs où il peut vivre. Seul représentant actuel de la famille des Phascolarctidés, il passe l’essentiel de sa vie dans les arbres."
     },
     "identification": {
-      "en": "Adults have a large rounded head, conspicuous furry ears, a broad black nose and dense grey to brown fur, usually paler on the chest, inner limbs and rump. Their strong limbs and curved claws grip trunks; two opposable digits on each forepaw help secure a hold while climbing. Males tend to be larger and have a prominent chest scent gland, while females have a pouch opening towards the rear. Size and coat thickness vary geographically, with northern animals generally smaller and lighter than southern ones.",
-      "fr": "L’adulte a une grosse tête arrondie, de grandes oreilles velues, un large nez noir et une fourrure épaisse grise à brune, généralement plus claire sur la poitrine, l’intérieur des membres et le croupion. Ses membres puissants et ses griffes recourbées agrippent les troncs ; deux doigts opposables à chaque patte avant aident à tenir les branches. Les mâles sont en général plus grands et portent une glande odorante sur la poitrine, tandis que la poche de la femelle s’ouvre vers l’arrière. La taille et l’épaisseur du pelage varient selon la région, les animaux du nord étant généralement plus petits et plus clairs que ceux du sud."
+      "en": "Adults have a large rounded head, conspicuous furry ears, a broad black nose and dense grey to brown fur, usually paler on the chest, inner limbs and rump. Their strong limbs and curved claws grip trunks; two opposable digits on each forepaw help secure a hold while climbing. Males tend to be larger and have a prominent chest scent gland, while females have a pouch opening towards the rear. Size and coat thickness vary geographically, with northern animals generally smaller and lighter than southern ones. In southern Australia, adults measure about 750–820 mm from head to body in males and 680–730 mm in females; their corresponding average masses are 11.8 kg and 7.9 kg. Across the wider range, government sources give broader weight ranges (about 4–14 kg for males and 4–10 kg for females), reflecting geographic variation. No useful body-width measurement was found.",
+      "fr": "L’adulte a une grosse tête arrondie, de grandes oreilles velues, un large nez noir et une fourrure épaisse grise à brune, généralement plus claire sur la poitrine, l’intérieur des membres et le croupion. Ses membres puissants et ses griffes recourbées agrippent les troncs ; deux doigts opposables à chaque patte avant aident à tenir les branches. Les mâles sont en général plus grands et portent une glande odorante sur la poitrine, tandis que la poche de la femelle s’ouvre vers l’arrière. La taille et l’épaisseur du pelage varient selon la région, les animaux du nord étant généralement plus petits et plus clairs que ceux du sud. Dans le sud de l’Australie, l’adulte mesure environ 750 à 820 mm de la tête au corps chez le mâle et 680 à 730 mm chez la femelle; les masses moyennes correspondantes sont de 11,8 kg et 7,9 kg. À l’échelle de l’aire, les autorités indiquent des plages de poids plus larges (environ 4 à 14 kg pour le mâle et 4 à 10 kg pour la femelle), qui reflètent les variations géographiques. Je n’ai pas trouvé de mesure utile de largeur du corps."
     },
     "habitat": {
       "en": "Koalas occupy open forests and woodlands from tropical Queensland to temperate southern Australia, including some fragmented and urban landscapes. Habitat quality depends especially on the local mixture and abundance of food trees; fertile soils and watercourses often support higher densities. Koalas also use non-food trees for resting and shelter, including during extreme weather. Because preferred tree species differ by region and season, suitable habitat is a network of feeding and refuge trees rather than simply any stand of eucalypts.",
@@ -249,6 +249,34 @@
       ],
       "facts": [
         "Maternal microbial inheritance and developmental maturation studied during juvenile diet transition."
+      ]
+    },
+    {
+      "title": {
+        "en": "Koala life – up close and personal | South Australian Department for Environment and Water",
+        "fr": "Koala life – up close and personal | South Australian Department for Environment and Water"
+      },
+      "url": "https://www.environment.sa.gov.au/files/sharedassets/public/plants_and_animals/pa-fact-koalalife.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Provides southern Australian sex-specific head–body lengths and average weights."
+      ]
+    },
+    {
+      "title": {
+        "en": "Koala | NSW Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Koala | NSW Department of Climate Change, Energy, the Environment and Water"
+      },
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/native-animals/native-animal-facts/koala",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Reports broad sex-specific adult weight ranges and regional body-size variation."
       ]
     }
   ],

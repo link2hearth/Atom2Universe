@@ -57,16 +57,16 @@
         "Australian Museum account updated 6 April 2021."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "overview.en.3",
-        "overview.fr.3",
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
         "diet.en.1",
-        "diet.fr.1"
+        "diet.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "overview.en.1",
+        "overview.en.3",
+        "overview.fr.1",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -93,18 +93,18 @@
         "Ichthyology account, 2023; specialist source."
       ],
       "prose_claims": [
-        "identification.en.3",
-        "identification.fr.3",
-        "identification.en.4",
-        "identification.fr.4",
-        "identification.en.5",
-        "identification.fr.5",
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.2",
-        "habitat.fr.2",
         "behavior.en.1",
         "behavior.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "identification.en.3",
+        "identification.en.4",
+        "identification.en.5",
+        "identification.fr.3",
+        "identification.fr.4",
+        "identification.fr.5",
         "reproduction.en.4",
         "reproduction.fr.4"
       ],
@@ -134,20 +134,20 @@
         "English Wikipedia; no French species page."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
-        "diet.en.2",
-        "diet.fr.2",
         "behavior.en.2",
         "behavior.fr.2",
-        "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.3",
-        "reproduction.fr.3",
-        "reproduction.en.5",
-        "reproduction.fr.5",
+        "diet.en.2",
+        "diet.fr.2",
         "ecology.en.1",
-        "ecology.fr.1"
+        "ecology.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.en.5",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -174,16 +174,16 @@
         "Federal advice page updated 3 October 2021."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
         "conservation.en.1",
         "conservation.en.2",
         "conservation.fr.1",
         "conservation.fr.2",
-        "reproduction.en.1",
-        "reproduction.fr.1",
+        "habitat.en.3",
+        "habitat.fr.3",
         "identification.en.6",
-        "identification.fr.6"
+        "identification.fr.6",
+        "reproduction.en.1",
+        "reproduction.fr.1"
       ],
       "budget": {
         "limit": 200,

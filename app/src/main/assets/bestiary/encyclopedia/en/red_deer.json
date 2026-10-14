@@ -1,0 +1,42 @@
+{
+  "id": "red_deer",
+  "name": "Red deer",
+  "scientific": "Cervus elaphus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The red deer is a large hoofed ruminant native to Europe, the Atlas Mountains, Anatolia, the Caucasus and northwestern Iran. Current classifications distinguish it from the wapiti and Central Asian red deer. Introduced populations occur elsewhere, including New Zealand.",
+    "identification": "In Britain, adult stags stand 1.07–1.37 m at the shoulder and weigh 90–190 kg; hinds stand 1.07–1.22 m and weigh 63–120 kg. These figures vary with habitat and population; the consulted source does not give body length. Adults have a reddish-brown summer coat, greyer or darker in winter; it is not spotted. Stags are generally larger and darker than hinds and have a pale rump. Males grow branching antlers, shed annually and regrow them beneath velvet, which they rub off when growth ends. Point count does not reliably show age.",
+    "habitat": "It uses deciduous and coniferous woods, edges, scrub, grasslands and moorland, feeding in open areas with cover nearby. Habitat use varies regionally. Introduced deer released in New Zealand since 1851 now occupy forest and tussock country on the main islands.",
+    "diet": "This flexible herbivore grazes grasses and herbs and browses leaves, shoots and shrubs. Spring growth, winter bark and ferns, and other foods vary with season and location. As a ruminant, it regurgitates and rechews plant matter; diets differ between woodland and open habitats.",
+    "behavior": "Hinds often associate with calves and younger deer; mature stags tend to keep apart outside breeding season. In autumn, males roar, scent-mark and display. Rivals may walk parallel, then clash with locked antlers; successful stags gather temporary harems. The sexes usually separate again after the rut.",
+    "reproduction": "In Europe, the rut usually occurs in autumn, though timing varies with latitude and hemisphere. After about eight months, a hind generally bears one calf in late spring or early summer. Its reddish coat has pale spots that fade within months. At first it hides in vegetation while its mother feeds nearby.",
+    "ecology": "Grazing and browsing change vegetation, depending on deer density and habitat. In Swiss subalpine grasslands, seeds in red deer dung showed that deer disperse plants between feeding and resting areas. This can shape local plant communities, though effects vary by site.",
+    "conservation": "The global IUCN assessment, last assessed on 12 October 2015 and published in 2018, classified red deer as Least Concern because of its wide range and presumed large populations. This dated assessment is not a new count; it also noted regional contractions and likely declines. In introduced New Zealand populations, deer can damage native plants and forest regeneration, prompting control. Taxonomic limits in Asia have changed since that assessment."
+  },
+  "sources": [
+    {
+      "url": "https://bds.org.uk/information-advice/about-deer/deer-species/red-deer/",
+      "title": "Red Deer — The British Deer Society"
+    },
+    {
+      "url": "https://www.mnhn.fr/en/red-deer",
+      "title": "Red deer — Muséum national d’Histoire naturelle"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T55997072A142404453.en",
+      "title": "Cervus elaphus — The IUCN Red List of Threatened Species"
+    },
+    {
+      "url": "https://www.doc.govt.nz/nature/pests-and-threats/animal-pests-and-threats/deer/",
+      "title": "Deer: Animal Threats — Department of Conservation, New Zealand"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1007/s10344-025-01922-7",
+      "title": "The essential, but complex, role of red deer as an ecosystem service provider: a comprehensive review across Europe — European Journal of Wildlife Research"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1006313/",
+      "title": "Cervus elaphus — Mammal Diversity Database, American Society of Mammalogists"
+    }
+  ]
+}

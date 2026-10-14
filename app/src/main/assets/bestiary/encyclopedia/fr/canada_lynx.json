@@ -1,0 +1,42 @@
+{
+  "id": "canada_lynx",
+  "name": "Lynx du Canada",
+  "scientific": "Lynx canadensis",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le lynx du Canada est un félin du nord de l’Amérique du Nord. Il vit dans les forêts boréales, de l’Alaska au Canada et dans le nord des États-Unis. Sa vie dépend du lièvre d’Amérique, dont l’abondance influe sur ses effectifs.",
+    "identification": "Ce félin de taille moyenne a de longues pattes, de larges pieds poilus, des favoris marqués et de fines touffes noires aux oreilles. Sa queue courte a l’extrémité noire. Son pelage gris ou fauve, parfois tacheté, paraît moins fourni en été. Les adultes mesurent en moyenne environ 80 à 85 cm de long. Les masses publiées sont d’environ 4,5 à 10,0 kg chez les femelles et 7,3 à 17,2 kg chez les mâles ; les mâles sont généralement plus lourds, avec un chevauchement des plages.",
+    "habitat": "Le lynx utilise une mosaïque forestière. Les jeunes peuplements denses abritent les lièvres; arbres âgés, troncs tombés et souches déracinées offrent couvert et sites de mise bas. En montagne, la neige profonde caractérise son habitat et lui donne un avantage sur certains prédateurs concurrents.",
+    "diet": "Le lièvre d’Amérique est sa proie principale, surtout en hiver. Le lynx capture aussi souris, campagnols, écureuils, gélinottes et oiseaux. Ces aliments comptent davantage lorsque les lièvres manquent ou dans certaines populations méridionales; affamé, le lynx peut errer plus loin sans se nourrir assez.",
+    "behavior": "Généralement solitaire, le lynx se déplace discrètement et chasse surtout grâce à la vue et à l’ouïe. Il approche sa proie ou l’attend près d’une piste avant de bondir. Actif jour et nuit, souvent à l’aube et au crépuscule, il communique par odeurs.",
+    "reproduction": "L’accouplement a lieu en fin d’hiver ou au début du printemps. Après neuf semaines, la femelle met bas dans un abri parmi les débris ligneux. Elle élève seule les petits. Portées et survie varient selon les ressources; les années pauvres en lièvres réduisent la reproduction.",
+    "ecology": "La relation lynx-lièvre forme un cycle prédateur-proie variable. Quand les lièvres abondent, les lynx trouvent facilement leur nourriture; après leur déclin, les effectifs du félin baissent généralement avec retard et certains individus se dispersent. Le rythme et l’ampleur des fluctuations changent selon les régions.",
+    "conservation": "Les risques varient. La fragmentation, le piégeage, la concurrence des coyotes ou lynx roux et l’évolution de l’enneigement peuvent affecter les populations, surtout au sud. Les évaluations nationales de 1989 et 2001 jugeaient l’espèce non en péril; le Nouveau-Brunswick la classait préoccupante en 2022."
+  },
+  "sources": [
+    {
+      "url": "https://www1.gnb.ca/0078/speciesatrisk/PDF_Documents/60/Canada-Lynx-NB-status-report-final-May2022-En.pdf",
+      "title": "Canada Lynx, Lynx canadensis, in New Brunswick: Status Report"
+    },
+    {
+      "url": "https://www.gov.nl.ca/fal/wildlife/snp/programs/education/animal-facts/mammals/lynx/",
+      "title": "Canada Lynx"
+    },
+    {
+      "url": "https://parks.canada.ca/pn-np/ab/banff/nature/faune-wildlife/mammal/carnivores/~/link.aspx?_id=BB49AA634D4249B8&_z=z",
+      "title": "Lynx canadien — Parc national Banff"
+    },
+    {
+      "url": "https://www.gov.nt.ca/ecc/en/services/lynx/lynx-snowshoe-hare-cycle?simple=True",
+      "title": "Lynx-Snowshoe Hare Cycle"
+    },
+    {
+      "url": "https://nationalzoo.si.edu/animals/canada-lynx",
+      "title": "Canada lynx"
+    },
+    {
+      "url": "https://www1.gnb.ca/0078/SpeciesAtRisk/details-e.asp?ID=60",
+      "title": "Canada Lynx — Registre public des espèces en péril"
+    }
+  ]
+}

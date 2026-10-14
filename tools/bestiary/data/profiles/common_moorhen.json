@@ -56,14 +56,14 @@
         "Current Old World range; American gallinule separated; winter groups and migration."
       ],
       "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5",
         "overview.en.1",
         "overview.en.2",
         "overview.en.3",
         "overview.fr.1",
         "overview.fr.2",
-        "overview.fr.3",
-        "behavior.en.5",
-        "behavior.fr.5"
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -88,6 +88,8 @@
         "Adult dimensions and plumage; plant and animal foods."
       ],
       "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
         "identification.en.1",
         "identification.en.2",
         "identification.en.3",
@@ -95,9 +97,7 @@
         "identification.fr.1",
         "identification.fr.2",
         "identification.fr.3",
-        "identification.fr.4",
-        "diet.en.1",
-        "diet.fr.1"
+        "identification.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -149,6 +149,8 @@
         "Diverse wetland nest sites; habitat fragmentation concern."
       ],
       "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4",
         "habitat.en.1",
         "habitat.en.2",
         "habitat.en.3",
@@ -156,9 +158,7 @@
         "habitat.fr.1",
         "habitat.fr.2",
         "habitat.fr.3",
-        "habitat.fr.4",
-        "conservation.en.4",
-        "conservation.fr.4"
+        "habitat.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -217,16 +217,16 @@
         "British reproduction records and winter monitoring; global Least Concern."
       ],
       "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.3",
+        "conservation.fr.1",
+        "conservation.fr.3",
         "reproduction.en.1",
         "reproduction.en.2",
         "reproduction.en.4",
         "reproduction.fr.1",
         "reproduction.fr.2",
-        "reproduction.fr.4",
-        "conservation.en.1",
-        "conservation.en.3",
-        "conservation.fr.1",
-        "conservation.fr.3"
+        "reproduction.fr.4"
       ],
       "budget": {
         "limit": 200,

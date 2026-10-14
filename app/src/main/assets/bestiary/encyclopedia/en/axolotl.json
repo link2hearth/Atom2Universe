@@ -1,0 +1,110 @@
+{
+  "id": "axolotl",
+  "name": "Axolotl",
+  "scientific": "Ambystoma mexicanum",
+  "group": "amphibians",
+  "sections": {
+    "overview": "The axolotl is a mole salamander of Mexico’s highland wetlands, with its surviving natural habitat concentrated around Xochimilco. Rather than metamorphosing into a land-dwelling salamander, it reaches reproductive maturity while retaining larval features such as external gills and a finned tail. Its remarkable limb and tissue regeneration makes it a major developmental model, but laboratory findings do not promise human treatments. After a limb is amputated, a specialized wound epidermis covers the stump, where cells gather into a blastema, a growth zone that rebuilds missing structures; experiments show that nerve signals are needed for its growth.",
+    "identification": "Adults average about 20 centimetres, and some exceed 30; age, sex and rearing conditions influence size. Wild-type animals are dark brown, olive or blackish with mottling; captive lines also include pink-bodied leucistic and pale-eyed albino forms. Three pairs of feathery external gills project from the head, above a long tail edged by a low fin. Four short limbs have slender digits. Gills and vascularized skin absorb dissolved oxygen from water, while simple lungs let the axolotl breathe air at the surface. Mature males tend to have a swollen cloaca, while egg-bearing females may have a fuller abdomen. In one adult laboratory sample, total length including the tail averaged 25.7 ± 1.7 cm and body mass 112.7 ± 10.8 g; this sample does not establish a wild species-wide range or a sex difference.",
+    "habitat": "Historically, axolotls inhabited freshwater lakes and wetlands across the Mexican Central Valley, including Xochimilco and Chalco; Lake Chalco was later drained. The canal network of Xochimilco, south of Mexico City, is the best-documented modern natural habitat; the 2019 IUCN assessment also listed records from other sites. These cool, high-altitude waters have muddy bottoms, aquatic plants and channels woven through cultivated chinampas. Chinampa refuge canals combine habitat structure with local farming and wetland restoration.",
+    "diet": "Young larvae eat zooplankton, including small crustaceans, and laboratory trials show that prey choice changes as they grow. Larger axolotls are carnivores; wild gut samples and food-web studies find varied aquatic invertebrate and fish prey, though adult field data remain limited. The axolotl approaches prey closely, then rapidly opens its mouth and lowers the floor of its mouth, drawing water and prey inward by suction. Laboratory tests with Xochimilco water found that contamination reduced feeding by axolotl larvae.",
+    "behavior": "Axolotls swim through waves of bending that pass along the body and tail, a motion documented in adults. Their external gills remain functional in adulthood, and their vascularized skin also exchanges gases with water. Courtship is the clearest documented adult social interaction: a male nudges a female and leads her to a sperm packet on the bottom. Studies have detected male proteins released into the water during courtship, evidence for chemical communication.",
+    "reproduction": "During courtship, the male deposits a spermatophore that the female takes up with her cloaca, enabling internal fertilization. In controlled UAM Xochimilco breeding, females laid roughly 300–600 eggs, attaching them to plants or other submerged surfaces. Transparent egg coverings reveal development; one university study recorded hatching about 15 days after laying under laboratory conditions. Newly hatched larvae feed on small zooplankton, with intake changing as they grow. Their limbs develop progressively while adults retain the larval body plan and external gills. Laboratory studies place female maturity around 12–18 months; growth varies with rearing conditions, and comparable wild-age data are scarce.",
+    "ecology": "As a predator, the axolotl links zooplankton and other small aquatic animals to larger consumers in the Xochimilco food web. Introduced carp and tilapia eat some of the same prey as axolotls, and carp stomach samples have also contained axolotl eggs. Vegetated chinampa edges and filtered refuge canals can shelter axolotls from invasive fish and improve local water conditions. A release study documented survival and foraging at two sites, but also recorded a great egret capturing an axolotl in Xochimilco; releases alone cannot prove population recovery.",
+    "conservation": "The IUCN SSC Amphibian Specialist Group assessed the axolotl as Critically Endangered globally on 23 October 2019; the assessment appeared in the 2020 Red List. The assessment estimated an observed decline of more than 80 percent over three generations (16.5 years), associated with urban habitat change, water pollution and introduced fish. Drainage and conversion erased much of the historic lake habitat, while remaining canals face urban pressure and degraded water quality. This wild crisis is distinct from extensive captive and research colonies; laboratory abundance does not mean Xochimilco has recovered. UNAM researchers and chinamperos have built filtered refuge canals that pair habitat restoration with local agriculture."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1101/pdb.emo128",
+      "title": "The Mexican Axolotl: A Versatile Amphibian Model for Regeneration, Development, and Evolution Studies — Cold Spring Harbor Protocols"
+    },
+    {
+      "url": "https://ambystoma.as.uky.edu/genetic-stock-center/documents/AGSC%20_Guide_2024.pdf",
+      "title": "Introduction to the Laboratory Axolotl and Ambystoma Genetic Stock Center Guide 2024 — University of Kentucky"
+    },
+    {
+      "url": "https://ousar.lib.okayama-u.ac.jp/files/public/5/57315/20191101155729326960/DevBiol_452_104.pdf",
+      "title": "Fgf- and Bmp-signaling regulate gill regeneration in Ambystoma mexicanum — Developmental Biology"
+    },
+    {
+      "url": "https://www.scielo.cl/scielo.php?pid=S0717-95022022000200401&script=sci_arttext&tlng=es",
+      "title": "Ambystoma mexicanum external and internal anatomy: morphometric description — International Journal of Morphology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T1095A53947343.en",
+      "title": "Ambystoma mexicanum — The IUCN Red List of Threatened Species 2020"
+    },
+    {
+      "url": "https://www.iucn-amphibians.org/wp-content/uploads/sites/4/2018/11/TAW-Threatened-Species-Profiles_Part5.pdf",
+      "title": "Threatened Amphibians of the World: Ambystoma mexicanum species profile — IUCN SSC Amphibian Specialist Group"
+    },
+    {
+      "url": "https://doi.org/10.3368/er.28.3.257",
+      "title": "Creating Refuges for the Axolotl (Ambystoma mexicanum) — Ecological Restoration"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0314257",
+      "title": "Movement ecology of captive-bred axolotls in restored and artificial wetlands — PLOS ONE"
+    },
+    {
+      "url": "https://doi.org/10.1163/156853811X610348",
+      "title": "Feeding behaviour of larval Ambystoma mexicanum — Amphibia-Reptilia"
+    },
+    {
+      "url": "https://doi.org/10.4081/jlimnol.2013.e46",
+      "title": "Effect of water quality on the feeding ecology of axolotl Ambystoma mexicanum — Journal of Limnology"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10530-010-9697-8",
+      "title": "Food web overlap among native axolotl and two exotic fishes in Xochimilco — Biological Invasions"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12309904/",
+      "title": "The impact of size and ontogeny on suction feeding kinematics in the axolotl — Biology Open"
+    },
+    {
+      "url": "https://doi.org/10.1242/jeb.200.13.1863",
+      "title": "Kinematics and Efficiency of Steady Swimming in Adult Axolotls — Journal of Experimental Biology"
+    },
+    {
+      "url": "https://doi.org/10.1038/srep20184",
+      "title": "Courtship Pheromone Use in a Model Urodele, the Mexican Axolotl — Scientific Reports"
+    },
+    {
+      "url": "https://doi.org/10.1016/0012-1606(75)90343-7",
+      "title": "Normal Stages of Development of the Axolotl, Ambystoma mexicanum — Developmental Biology"
+    },
+    {
+      "url": "https://repositorio.xoc.uam.mx/jspui/handle/123456789/48017",
+      "title": "Seguimiento del Desarrollo Embrionario del Ajolote Ambystoma mexicanum en Condiciones Controladas — Universidad Autónoma Metropolitana, Xochimilco"
+    },
+    {
+      "url": "https://doi.org/10.1002/jmor.70118",
+      "title": "Gonadal Development in Larvae of the Paedomorphic Ambystoma mexicanum — Journal of Morphology"
+    },
+    {
+      "url": "https://doi.org/10.1242/dev.133363",
+      "title": "Neuregulin-1 signaling is essential for nerve-dependent axolotl limb regeneration — Development"
+    },
+    {
+      "url": "https://doi.org/10.3368/er.28.3.343",
+      "title": "Participatory Monitoring and Evaluation of a Mexico City Wetland Restoration Effort — Ecological Restoration"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-1795.2007.00105.x",
+      "title": "A population matrix model and population viability analysis to predict the fate of endangered species in highly managed water systems — Animal Conservation"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Ambystoma_mexicanum/",
+      "title": "Ambystoma mexicanum — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.thebhs.org/publications/the-herpetological-journal/volume-2-number-1-january-1992/1261-01-aquatic-oxygen-conformity-in-the-mexican-axolotl-ambystoma-mexicanum/file",
+      "title": "Aquatic oxygen conformity in the Mexican axolotl, Ambystoma mexicanum — Herpetological Journal"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11191838/",
+      "title": "Ground Reaction Forces and Energy Exchange During Underwater Walking — Journal of Experimental Biology, via PubMed Central"
+    }
+  ]
+}

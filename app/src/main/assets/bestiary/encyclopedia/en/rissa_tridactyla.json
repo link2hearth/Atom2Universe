@@ -1,0 +1,30 @@
+{
+  "id": "rissa_tridactyla",
+  "name": "Black-legged Kittiwake",
+  "scientific": "Rissa tridactyla",
+  "group": "birds",
+  "sections": {
+    "overview": "The black-legged kittiwake is a medium-sized, strictly maritime gull that spends most of its life at sea and comes ashore to nest in noisy cliff colonies. It is Britain’s most numerous gull, but its numbers have fallen steeply.",
+    "identification": "An adult is 38–40 cm long with a white head and body, a mid-grey back and wings, a dark eye, a small yellow bill and long black legs. The wing tips are solid black, as if dipped in ink, with no white spots. Adults weigh about 310–434 g, and young birds take three years to reach full adult plumage.",
+    "habitat": "It breeds mainly on rocky sea cliffs, also on buildings and bridges: more than 1,000 pairs nest on window ledges and bridges along the River Tyne. In Britain the main strongholds are in Scotland, notably Orkney and Shetland, and densities are highest on the east coast from Flamborough Head to Orkney.",
+    "diet": "It feeds mainly on sandeels and other shoaling fish caught at sea. Unlike related gulls, it does not scavenge from chip shops. It is a surface feeder that takes small fish and invertebrates.",
+    "behavior": "After breeding it moves out onto the high seas of the Atlantic for the winter and is rarely seen from land. It flies with tern-like wingbeats and can land on narrow ledges in strong wind. At the nest it faces the cliff, so that its tail projects over the edge.",
+    "reproduction": "A pair raises one brood a year. The typical clutch is two eggs (one to three), incubated by both sexes for about 25–32 days. The downy chicks are semi-precocial and fledge after roughly 33–54 days. Breeding typically starts at age four. Males tend to reuse the same nest site each year.",
+    "ecology": "Breeding success in Britain is probably linked to sandeel numbers, which are affected by fisheries and by sea surface temperatures. Kittiwakes often depend on one main food source, so a shortage of that prey can hit them hard. Their colonies are often shared with guillemots and razorbills.",
+    "conservation": "The BTO lists the species as Vulnerable globally on the IUCN Red List and Red-listed in the UK. The UK breeding population was 205,000 pairs in 2015, and the British breeding population has nearly halved since the 1970s. A bird that reaches breeding age lives about 12 years; the oldest ringed bird reached over 28."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/kittiwake",
+      "title": "Kittiwake — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/kittiwake",
+      "title": "Kittiwake — RSPB Birds & Wildlife"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Rissa_tridactyla/",
+      "title": "Rissa tridactyla (black-legged kittiwake) — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

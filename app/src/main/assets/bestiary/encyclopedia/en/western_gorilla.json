@@ -1,0 +1,38 @@
+{
+  "id": "western_gorilla",
+  "name": "Western gorilla",
+  "scientific": "Gorilla gorilla",
+  "group": "mammals",
+  "sections": {
+    "overview": "The western gorilla (Gorilla gorilla) is one of two gorilla species; the eastern gorilla (G. beringei) lives farther east. Western gorillas inhabit west-central equatorial Africa and comprise western lowland and Cross River subspecies.",
+    "identification": "The Smithsonian reports adult male western lowland gorillas averaging 136 kg and reaching 1.8 m standing height, with an arm span around 2.4 m; females are about 68–91 kg, up to 1.4 m tall, with a 2 m arm span. These are zoo reference figures, not field-population limits. Adults have dark hair, long arms and broad chests; males are much larger. Mature males develop a silver saddle, sometimes extending to rump and thighs in western lowland gorillas. Infants have a pale rump tuft. Gorillas knuckle-walk; skull crests anchor jaw muscles.",
+    "habitat": "Western lowland gorillas inhabit swamp and terra firma forests across the Congo Basin; Cross River gorillas occupy fragmented forests on the Nigeria–Cameroon border. Gorillas spend much time on the ground, but also climb and nest in trees or on the forest floor.",
+    "diet": "Leaves, stems, shoots and fruit dominate, but proportions vary by season and site. At three western lowland sites, fruit made up about 35% of feeding time and leaves plus herbs about half; plant species differed. Some populations also eat nuts or insects, so these figures are not universal.",
+    "behavior": "Groups often include a mature silverback, females, young and sometimes other males; membership changes. Gorillas forage, rest and nest by day, communicating through calls, posture and chest-beating. Females leave their birth group; young males may live alone or in bachelor groups for years.",
+    "reproduction": "Western lowland gorilla pregnancy lasts about eight and a half months; usually one infant is born, with no fixed season. It grasps its mother, who carries it; young may ride on her back for years. Females change groups as they mature, and births are years apart. These observations concern this subspecies.",
+    "ecology": "Fruit-eating western lowland gorillas pass many seeds intact in their dung, carrying them from parent trees. Studies in Gabon and Cameroon found seeds from many fruit species, some able to germinate. Dispersal and germination effects vary with diet, site and plant.",
+    "conservation": "The IUCN’s 2016 global assessment classified western gorillas as Critically Endangered, citing losses from illegal hunting, disease and habitat loss. Logging roads expose remote forests to hunters. This is a dated assessment, not a new census. Cross River gorillas have a particularly restricted, fragmented range; pressures vary regionally."
+  },
+  "sources": [
+    {
+      "url": "https://www.nationalzoo.si.edu/animals/western-lowland-gorilla",
+      "title": "Western lowland gorilla — Smithsonian’s National Zoo and Conservation Biology Institute"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0271576",
+      "title": "Dietary variability of western gorillas (Gorilla gorilla gorilla) — PLOS ONE"
+    },
+    {
+      "url": "https://popups.uliege.be/1780-4507/index.php?id=10293&lang=en",
+      "title": "Role of the western lowland gorilla in seed dispersal in tropical forests — Université de Liège"
+    },
+    {
+      "url": "https://dspace.stir.ac.uk/handle/1893/26838",
+      "title": "Gorilla gorilla — IUCN Red List assessment (2016), University of Stirling repository"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/gorilla",
+      "title": "Gorilla — San Diego Zoo Animals & Plants"
+    }
+  ]
+}

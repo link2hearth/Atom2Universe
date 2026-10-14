@@ -1,0 +1,30 @@
+{
+  "id": "great_black_backed_gull",
+  "name": "Great Black-backed Gull",
+  "scientific": "Larus marinus",
+  "group": "birds",
+  "sections": {
+    "overview": "The great black-backed gull is the largest gull in the world, a powerful, aggressive seabird of rocky coasts in the North Atlantic. It is an opportunistic predator and scavenger that chases other gulls to steal their food.",
+    "identification": "About 64–79 cm long, a British adult averages 1.56 kg with a wing length near 474 mm. Adults have a white head, body and tail, a slate-black back and wings with white tips, pink legs, and a heavy yellow bill with a red spot; they look blacker than a lesser black-backed gull. Young birds are brown and white speckled and take about three years to gain adult plumage.",
+    "habitat": "It breeds mainly on coasts, on cliff ledges, rock outcrops and small islands, with only a few pairs at inland colonies. In winter it also moves to estuaries, lakes and lowland inland sites, and birds from Scandinavia join those of Britain and Ireland.",
+    "diet": "It is omnivorous and opportunistic, eating fish, shellfish, crustaceans, small mammals, birds and eggs, and carrion. It follows fishing boats and is thought to out-compete other gulls at scavenging fishery discards and offal.",
+    "behavior": "It is aggressive towards other gulls, fighting them off and chasing them to steal food. It has a heavy flight, looks hunched when perched and gives a loud barking call. It is often solitary but gathers at food, on migration and when breeding.",
+    "reproduction": "The nest is a scrape or sits on a cliff ledge or rock outcrop near water. There is one brood a year, of typically two or three eggs laid in April or May. Both sexes incubate for 27–28 days, and the chicks fledge after about 50–55 days. Breeding typically begins at about four years.",
+    "ecology": "Adults have no known natural predators, and cannibalism by adults is a major cause of chick mortality. Its carcasses feed scavenging insects and vertebrates. Oil pollution at sea is a major cause of death, and the species is used in beached-bird surveys as an indicator of oil. The oldest ringed bird lived over 26 years.",
+    "conservation": "The IUCN Red List classes it as Least Concern. In the UK it is Red-listed: about 15,000 breeding pairs in 2015 and 77,000 birds in winter in 2003–06. Numbers were stable from 1969–70 to 1998–2002 with a shallow 11% decline, and the recent trend is uncertain."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/great-black-backed-gull",
+      "title": "Great Black-backed Gull — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/great-black-backed-gull",
+      "title": "Great Black-backed Gull — RSPB Birds and Wildlife"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Larus_marinus/",
+      "title": "Larus marinus — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

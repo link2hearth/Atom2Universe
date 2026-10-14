@@ -1,0 +1,42 @@
+{
+  "id": "eurasian_jackdaw",
+  "name": "Eurasian Jackdaw",
+  "scientific": "Corvus monedula",
+  "group": "birds",
+  "sections": {
+    "overview": "The Eurasian Jackdaw, also classified as Coloeus monedula, is a small crow of Europe, western Asia and north-west Africa. Most populations are resident; northern and eastern birds move south in winter.",
+    "identification": "Adults measure 34–39 cm and weigh around 240 g. British ringing samples averaged 242 g for males and 226 g for females. Glossy black plumage, a grey nape and cheeks, short black bill and silvery-white eyes distinguish this crow. Young birds are browner with blue eyes.",
+    "habitat": "It forages in open farmland and parks but nests in sheltered cavities: tree holes and rock clefts, or urban chimneys and towers.",
+    "diet": "This omnivore searches mostly on the ground, picking insects and other invertebrates from short vegetation and soil surfaces. During breeding, it takes surface and grass-dwelling prey from short turf and beneath dung; nestlings eat mainly insects and larvae. In winter, plant matter, especially grain and weed seeds, becomes more important. Fruit, carrion and refuse also supplement its diet. Jackdaws sometimes raid other birds’ nests for eggs or chicks.",
+    "behavior": "Pairs feed and roost together, remaining close within noisy flocks. Their metallic “chack-chack” calls maintain contact, while a harsher call warns of danger. In experiments, jackdaws responded to human attention during competition for food and used a familiar person’s communicative cues to locate hidden food in a cooperative task.",
+    "reproduction": "Pairs often mate for life, breed from their second year and nest in colonies. They build a stick platform in a cavity, lining it with hair, wool or feathers. The female lays four or five pale blue-green eggs and incubates them for about 20 days as the male feeds her. Hatchlings are naked and helpless; both parents feed them. British nest records show fledging at about 32 days. Young then remain with their family for roughly another month while learning to feed independently.",
+    "ecology": "Ground insects feed jackdaws, which also consume seeds and carrion. Cavity nests can be contested with other birds, and communal roosts concentrate large flocks.",
+    "conservation": "Globally, the species is assessed as Least Concern; the broad European population trend has been stable. In Britain, breeding numbers rose from the 1960s to 2024. Historically, jackdaws were hunted for crop damage and nesting in belfries."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Western_jackdaw",
+      "title": "Western jackdaw — Wikipedia"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Choucas_des_tours",
+      "title": "Choucas des tours — Wikipédia"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/jackdaw",
+      "title": "Jackdaw BirdFacts — British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Jackdaw/lifehistory",
+      "title": "Eurasian Jackdaw Life History — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.cub.2009.02.062",
+      "title": "Jackdaws Respond to Human Attentional States and Communicative Cues in Different Contexts"
+    },
+    {
+      "url": "https://www.bto.org/sites/default/files/shared_documents/publications/research-reports/2007/rr485v2.pdf",
+      "title": "Predicting the impact of future agricultural change and uptake of Entry Level Stewardship on farmland birds (BTO Research Report 485)"
+    }
+  ]
+}

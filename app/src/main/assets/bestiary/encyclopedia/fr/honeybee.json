@@ -1,0 +1,78 @@
+{
+  "id": "honeybee",
+  "name": "Abeille mellifère occidentale",
+  "scientific": "Apis mellifera",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "L’abeille mellifère occidentale est un insecte social dont la colonie repose sur la coopération de milliers de femelles et d’un nombre plus réduit de mâles. Son aire naturelle couvre l’Afrique, l’Europe et l’Asie occidentale, tandis que l’humain a largement déplacé des colonies élevées pour le miel et la pollinisation agricole. Dans certaines régions, des colonies sauvages nichent encore de façon autonome : l’espèce ne se réduit donc pas aux ruches domestiques.",
+    "identification": "Les adultes ont un thorax velu, un abdomen annelé et deux paires d’ailes reliées en vol par de minuscules crochets. Les ouvrières mesurent généralement environ 10 à 15 millimètres, les mâles 15 à 17 millimètres et les reines pondeuses quelque 18 à 20 millimètres ; ces fourchettes indicatives varient selon la caste. La corbeille à pollen des pattes postérieures et les poils ramifiés de l’ouvrière transportent le pollen, tandis que les très grands yeux du mâle facilitent la recherche d’une partenaire en vol. Les ouvrières mesurent environ 10–15 mm et les reines 18–20 mm ; les sources consultées ne donnent pas de fourchette fiable de masse adulte selon la caste.",
+    "habitat": "Les colonies ont besoin de fleurs disponibles au fil des saisons, d’eau et d’une cavité protégée ; les arbres creux servent de nids naturels, tandis que bâtiments et ruches offrent d’autres abris. L’espèce fréquente prairies, bois ouverts, jardins et paysages agricoles, et peut vivre dans des milieux plus secs ou humides si nourriture et abri sont présents.",
+    "diet": "Les butineuses aspirent le nectar avec leur trompe et le transportent dans un jabot distinct de l’intestin ; elles récoltent dans leurs corbeilles arrière le pollen, riche en protéines, lipides et micronutriments. Le nectar alimente le vol ; le pollen digéré fournit aux nourrices les nutriments utilisés par les glandes de leur tête pour produire la nourriture des larves. Au nid, les ouvrières se transmettent le nectar, y ajoutent des enzymes glandulaires et ventilent les rayons pour en évaporer l’eau : il devient du miel stocké. Pollen, nectar et sécrétions forment le pain d’abeille ; le miel nourrit la colonie quand les fleurs manquent.",
+    "behavior": "La colonie est eusociale : les reines se reproduisent, les ouvrières généralement non, et les mâles s’accouplent avec des reines d’autres colonies. Les tâches des ouvrières évoluent souvent avec l’âge, du nettoyage des cellules et du nourrissage du couvain à la construction de cire, la garde de l’entrée et la récolte ; elles peuvent toutefois changer de rôle après une perte d’abeilles ou de couvain. Les phéromones et les échanges de nourriture coordonnent les tâches de la colonie. Les ouvrières ventilent le nid ou font vibrer leurs muscles alaires pour maintenir le couvain près de 34 degrés Celsius. De retour, une butineuse peut danser : l’angle de sa course frétillante par rapport à la verticale indique une direction par rapport au soleil, et sa durée estime la distance.",
+    "reproduction": "Le plus souvent, les œufs non fécondés donnent des mâles haploïdes, avec un seul jeu de chromosomes, et les œufs fécondés des femelles diploïdes, avec deux jeux ; rarement, un œuf fécondé portant deux variantes identiques du gène csd de détermination sexuelle donne un mâle diploïde, généralement éliminé tôt par les ouvrières. La nourriture larvaire contribue à déterminer si une femelle devient ouvrière ou reine. Les ouvrières élèvent les reines dans de grandes cellules et les nourrissent de gelée royale pendant tout leur développement ; les larves ouvrières reçoivent une nourriture de couvain sécrétée par les nourrices, dont la composition évolue avec l’âge et comprend des nutriments issus du miel et du pollen. Après ses vols d’orientation, une reine vierge s’accouple en vol avec plusieurs mâles rassemblés et stocke leur sperme pour féconder des œufs ultérieurs ; les mâles meurent après un accouplement réussi. Le développement de l’œuf à l’adulte prend généralement environ 16 jours chez la reine, 21 chez l’ouvrière et 24 chez le mâle, selon la température. Lors de l’essaimage, l’ancienne reine et de nombreuses ouvrières partent nicher ailleurs pendant qu’une remplaçante se développe.",
+    "ecology": "Lorsqu’elles récoltent nectar et pollen, des grains s’accrochent aux poils des ouvrières et peuvent atteindre les stigmates lors d’autres visites : l’abeille pollinise ainsi des plantes sauvages et cultivées. Les insectes sauvages peuvent améliorer la nouaison même lorsque des abeilles mellifères visitent les fleurs ; les ruchers ne remplacent donc pas une communauté diversifiée de pollinisateurs. Là où les ruchers sont denses et les ressources limitées, l’abeille mellifère peut concurrencer les espèces sauvages pour le nectar et le pollen ; les résultats des études varient et beaucoup mesurent les visites ou le partage des ressources plutôt que des effets durables sur les populations. Des agents pathogènes partagés constituent une autre voie possible ; les effets écologiques dépendent donc de la densité locale des colonies, des ressources et des espèces concernées.",
+    "conservation": "Les évaluations de conservation distinguent les colonies sauvages autonomes des ruches gérées par l’humain. En 2025, l’UICN a classé « En danger » les colonies sauvages des 27 États membres de l’Union européenne, d’après le déclin estimé et les menaces documentées. À l’échelle paneuropéenne, le statut reste « Données insuffisantes », car les données de répartition, de survie et de tendance sont rares ; l’évaluation européenne de 2014 était également « Données insuffisantes ». Les menaces citées pour les abeilles mellifères sauvages comprennent parasites, ravageurs, prédateurs, agents pathogènes, pesticides et hybridation. Pour les pollinisateurs sauvages européens, l’UICN signale aussi la perte d’habitat, l’agriculture intensive, la fragmentation, les dépôts d’azote et les pesticides."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Apis_mellifera/",
+      "title": "Apis mellifera (abeille mellifère) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+    },
+    {
+      "url": "https://ask.ifas.ufl.edu/publication/IN1102",
+      "title": "Organisation sociale des abeilles mellifères — service de vulgarisation IFAS de l’Université de Floride"
+    },
+    {
+      "url": "https://canr.udel.edu/maarec/honey-bee-biology/the-colony-and-its-organization/",
+      "title": "La colonie et son organisation — consortium de recherche et vulgarisation apicole du Mid-Atlantic"
+    },
+    {
+      "url": "https://ag.purdue.edu/department/extension/ppp/resources/ppp-publications/mobile/ppp-116-pol-91.html",
+      "title": "La vie complexe de l’abeille mellifère — service de vulgarisation de l’Université Purdue"
+    },
+    {
+      "url": "https://www.fao.org/4/t0104e/t0104e05.htm",
+      "title": "Développement de l’abeille mellifère — Organisation des Nations unies pour l’alimentation et l’agriculture"
+    },
+    {
+      "url": "https://content.ces.ncsu.edu/honey-bee-dance-language",
+      "title": "Danse de communication des abeilles mellifères — service de vulgarisation de l’Université d’État de Caroline du Nord"
+    },
+    {
+      "url": "https://doi.org/10.1146/annurev-ento-040320-074933",
+      "title": "Le miel comme aliment fonctionnel pour Apis mellifera — Annual Review of Entomology"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5722319/",
+      "title": "Les abeilles élevées ont-elles des effets négatifs sur les abeilles sauvages ? Revue systématique — PLOS ONE"
+    },
+    {
+      "url": "https://coloss.org/wp-content/uploads/Honey-Bee-Watch_press-release_IUCN-Red-List-for-Apis-mellifera_IMMEDIATE-1.pdf",
+      "title": "Apis mellifera (évaluation européenne), Liste rouge de l’UICN — annonce de la réévaluation 2025, Honey Bee Watch"
+    },
+    {
+      "url": "https://iucn.org/press-release/202510/mounting-risks-threaten-survival-wild-european-pollinators-iucn-red-list",
+      "title": "Les pollinisateurs sauvages européens sont menacés par des risques croissants — communiqué de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://extension.missouri.edu/publications/m403",
+      "title": "Abeilles mellifères : pollinisation, habitats et produits — University of Missouri Extension"
+    },
+    {
+      "url": "https://doi.org/10.1126/science.1230200",
+      "title": "Les pollinisateurs sauvages améliorent la nouaison indépendamment de l’abondance des abeilles mellifères — Science"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5443781/",
+      "title": "Répartition inégale des allèles csd chez Apis mellifera — étude évaluée par les pairs"
+    },
+    {
+      "url": "https://www.honeybeewatch.com/team",
+      "title": "Honey Bee Watch : équipe et réévaluation 2025 de la Liste rouge"
+    },
+    {
+      "url": "https://ask.ifas.ufl.edu/publication/4H419",
+      "title": "Welcome to the Hive! Guide 4-H sur les abeilles mellifères — service de vulgarisation IFAS de l’Université de Floride"
+    }
+  ]
+}

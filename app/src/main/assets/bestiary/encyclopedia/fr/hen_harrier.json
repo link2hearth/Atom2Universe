@@ -1,0 +1,26 @@
+{
+  "id": "hen_harrier",
+  "name": "Busard Saint-Martin",
+  "scientific": "Circus cyaneus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le busard Saint-Martin est un rapace svelte, de taille moyenne, qui plane bas au-dessus des terrains ouverts. Au Royaume-Uni, c’est l’un des rapaces les plus rares et les plus persécutés, et son sort est lié au conflit avec la chasse au tétras.",
+    "identification": "Les sexes diffèrent. Le mâle est d’un gris bleuté pâle, « fantomatique », dessus et plus clair dessous, avec les bouts d’ailes noirs. La femelle et les jeunes sont bruns, striés sur le corps et barrés sur la queue; on les appelle « busards à queue annelée ». Tous deux ont un croupion blanc, une face arrondie de type hibou, un bec jaune à pointe noire et des pattes jaunes. Un oiseau pèse environ 425 g. Les adultes mesurent 44–52 cm pour une envergure de 100–120 cm ; les mâles pèsent 300–400 g et les femelles 400–600 g.",
+    "habitat": "Au Royaume-Uni, il se reproduit sur les landes d’altitude, aux Orcades, dans les Hébrides, les Highlands, les Southern Uplands, le nord de l’Angleterre, le pays de Galles et l’île de Man. En hiver, il gagne les basses terres, la lisière des hauteurs et les marais côtiers.",
+    "diet": "En Grande-Bretagne, il se nourrit surtout de campagnols et de pipits farlouses, deux proies qui préfèrent les milieux herbeux. Son nom anglais viendrait d’une ancienne habitude de s’attaquer aux volailles en liberté.",
+    "behavior": "Il plane bas au-dessus du sol, les ailes en V peu marqué. Au printemps, le mâle exécute une « danse du ciel » : il monte haut, plonge en tournoyant puis se redresse au dernier moment. En hiver, les oiseaux se rassemblent à des dortoirs traditionnels, où ils arrivent de la fin d’après-midi au crépuscule et repartent dès l’aube.",
+    "reproduction": "La ponte habituelle en Grande-Bretagne est de quatre ou cinq œufs (de deux à huit), couvés par la femelle pendant environ 34 jours. Les poussins, couverts de duvet, s’envolent après environ 39 jours, avec une seule couvée par an. La reproduction commence en général à deux ans. Aux Orcades, certains mâles s’accouplent avec plusieurs femelles.",
+    "ecology": "Nichant au sol, le busard Saint-Martin est sensible à la prédation par les corneilles et les renards. Sa principale menace est la persécution illégale liée à la gestion des landes à tétras, qui réduit le succès de reproduction et la survie des femelles. Ses proies principales, campagnols et pipits farlouses, sont des animaux de prairie.",
+    "conservation": "La population nicheuse du Royaume-Uni était estimée à 545 couples en 2016, contre 662 en 2010, avec une baisse de 44 % au pays de Galles sur cette période. L’espèce figure sur la liste rouge britannique et relève de l’annexe 1, tandis que sa catégorie mondiale de l’UICN est « préoccupation mineure ». Un oiseau qui atteint l’âge adulte vit environ sept ans; le plus âgé bagué a dépassé 15 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/hen-harrier",
+      "title": "Busard Saint-Martin — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/hen-harrier",
+      "title": "Busard Saint-Martin — RSPB Birds & Wildlife"
+    }
+  ]
+}

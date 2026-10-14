@@ -1,0 +1,90 @@
+{
+  "id": "stoat",
+  "name": "Stoat",
+  "scientific": "Mustela erminea",
+  "group": "mammals",
+  "sections": {
+    "overview": "The stoat is a small mustelid with a long, slender body, short legs and a black-tipped tail. It searches covered ground and follows prey into burrows. Its coat moults seasonally, but winter whitening varies with local climate and snow conditions.",
+    "identification": "In Britain, adult males measure about 27.5–31 cm and weigh roughly 200–450 g; females are about 24–29 cm and 140–280 g. Tails measure 9.5–14 cm in both sexes. In summer the back is chestnut to reddish brown and the underside pale; the black tail tip remains in winter. The smaller least weasel, Mustela nivalis, lacks this black tip. Stoats moult twice yearly: day length helps set the seasonal timing, while temperature affects whether winter fur becomes fully white or stays mottled. A study of Dutch pelts found full winter whiteness more often in colder regions. When snow disappears, a white coat can stand out against bare ground.",
+    "habitat": "Stoats occupy a broad range of covered habitats, from grassland and farmland to woodland, marsh and upland; in Britain they travel along hedgerows, ditches and stone walls. A 2021 genetic and morphometric revision assigns M. erminea mainly to the Old World and Beringia into Alaska; most continental North American populations are M. richardsonii, while Haida Gwaii and Alexander Archipelago island populations are M. haidarum.",
+    "diet": "Small mammals, especially rabbits and water voles where abundant, are staple prey; stoats also take rodents, birds and eggs. A British stomach-content study found lagomorphs most often, followed by rodents and birds or eggs; in that sample, males ate more lagomorphs and females more small rodents. Stoats enter wider prey tunnels, such as rabbit, rat and water-vole burrows, and climb to reach birds’ nests. Most prey are killed with a bite to the back of the neck. Stoats cache surplus prey and reuse former prey nests as dens, sometimes lining them with fur in cold regions.",
+    "behavior": "Stoats are mostly solitary: adult males and females occupy separate territories, and males range more widely when searching for mates. Scent marks communicate territorial presence and social status. At about eight weeks, kits begin hunting alongside their mother.",
+    "reproduction": "In wild stoats in New Zealand, females mate in September–November and give birth the following September–October. The fertilised egg remains dormant in the uterus for about eight to nine months before implantation. After implantation, active pregnancy lasts about four weeks. Spring litters usually contain six to twelve young, born blind, deaf and sparsely furred. Mothers care for the kits until they become self-sufficient at around twelve weeks. Female kits can mate at only two or three weeks old, before leaving the nest.",
+    "ecology": "In Britain, stoat abundance often tracks prey populations, especially rabbits; myxomatosis-driven rabbit crashes coincided with sharp stoat declines in the 1950s and 1960s. A recent climate projection for the Italian Alps suggests its local range may contract as snow cover declines and snow voles shift distribution, but this is a regional forecast rather than a measured global trend. On Orkney, introduced stoats prey on endemic voles and ground-nesting birds, and compete with native raptors for voles. New Zealand stoats were introduced from Britain in the nineteenth century to control rabbits, but they have had a devastating effect on native birdlife.",
+    "conservation": "England’s 2021 mammal assessment classed the stoat as Least Concern but also described its population evidence as highly data deficient. In Britain, hedgerow loss and rabbit declines may reduce habitat or food. On Orkney, where they were first recorded in 2010, an eradication programme targets this introduced predator to protect native wildlife."
+  },
+  "sources": [
+    {
+      "url": "https://naturblick.museumfuernaturkunde.berlin/species/portrait/509?lang=en",
+      "title": "Naturblick species portrait: Stoat"
+    },
+    {
+      "url": "https://mammal.org.uk/british-mammals/stoat",
+      "title": "Mammal Society: Stoat"
+    },
+    {
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/10.1111/j.1469-7998.2000.tb00631.x",
+      "title": "British Journal of Zoology: Stoat and weasel diets in Great Britain"
+    },
+    {
+      "url": "https://www.orkneynativewildlife.org.uk/project/stoats-in-orkney",
+      "title": "Orkney Native Wildlife Project: Stoats in Orkney"
+    },
+    {
+      "url": "https://www.iucn-uk-peatlandprogramme.org/wildlife-explorer/mammals/stoat",
+      "title": "Stoat — IUCN UK Peatland Programme"
+    },
+    {
+      "url": "https://www.doc.govt.nz/documents/science-and-technical/sfc268.pdf",
+      "title": "Stoat reproductive biology — New Zealand Department of Conservation"
+    },
+    {
+      "url": "https://repository.naturalis.nl/pub/504487",
+      "title": "On the moult in the Stoat, Mustela erminea, from the Netherlands"
+    },
+    {
+      "url": "https://doi.org/10.1007/s13364-026-00878-6",
+      "title": "Snow loss and prey shift may threaten alpine stoats under climate change"
+    },
+    {
+      "url": "https://doi.org/10.4404/hystrix-7.1-2-4047",
+      "title": "Social organization in European small mustelids"
+    },
+    {
+      "url": "https://doi.org/10.1016/S0003-3472(82)80154-1",
+      "title": "Scent-marking and its territorial significance in stoats"
+    },
+    {
+      "url": "https://pubs.usgs.gov/publication/70218814",
+      "title": "Colella et al. 2021: Holarctic ermine species delimitation"
+    },
+    {
+      "url": "https://www.nature.scot/plants-animals-and-fungi/mammals/land-mammals/other-carnivores/stoat-and-weasel",
+      "title": "Stoat and weasel — NatureScot"
+    },
+    {
+      "url": "https://doi.org/10.1080/03014223.1982.10423841",
+      "title": "Moult and colour change in stoats in New Zealand"
+    },
+    {
+      "url": "https://www.gwct.org.uk/research/long-term-monitoring/national-gamebag-census/mammal-bags-comprehensive-overviews/stoat/",
+      "title": "Stoat — Game & Wildlife Conservation Trust"
+    },
+    {
+      "url": "https://mammal.org.uk/s/RedList_30June2021.pdf",
+      "title": "England assessment — Mammal Society Red List 2021"
+    },
+    {
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/mammals/stoat/",
+      "title": "Stoat — Woodland Trust"
+    },
+    {
+      "url": "https://www.hse.gov.uk/pesticides/assets/docs/MammBible.pdf",
+      "title": "Mammal Bible — Health and Safety Executive"
+    },
+    {
+      "url": "https://www.doc.govt.nz/nature/pests-and-threats/animal-pests-and-threats/stoats/",
+      "title": "Stoats — Department of Conservation, New Zealand"
+    }
+  ]
+}

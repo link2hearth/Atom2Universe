@@ -1,0 +1,66 @@
+{
+  "id": "beech_marten",
+  "name": "Fouine",
+  "scientific": "Martes foina",
+  "group": "mammals",
+  "sections": {
+    "overview": "La fouine est un mustélidé de taille moyenne au corps long et souple, aux pattes courtes et à la queue touffue. Son aire d’origine couvre une grande partie de l’Europe et de l’Asie centrale, jusqu’à l’Himalaya et au nord-ouest de la Chine. Elle fréquente les bois, les pentes rocheuses et les paysages habités, et s’abrite régulièrement dans des bâtiments en certaines régions d’Europe. On l’appelle aussi martre des pierres. Une population introduite a été signalée dans le sud-est du Wisconsin, hors de son aire d’origine ; ce signalement isolé ne doit pas être confondu avec la martre d’Amérique, une autre espèce.",
+    "identification": "L’adulte porte généralement une fourrure brun sable à brun foncé, une bavette blanc crème sur la gorge et la poitrine, des oreilles arrondies et une longue queue ; sa tête est allongée et anguleuse. La bavette claire se divise souvent en deux branches et peut descendre sur les pattes avant. Le dessous des pattes est peu poilu, détail utile lorsqu’on peut l’observer de près pour la distinguer de la martre des pins. Cette proche parente, Martes martes, a généralement une bavette plus petite, jaunâtre ou crème, des oreilles plus grandes et des pieds plus velus. Le nez brun rosé de la fouine contraste avec celui, plus sombre, de Martes martes. Les adultes mesurent généralement 45–60 cm hors queue, celle-ci mesurant 25–30 cm, et pèsent 1,2–2,3 kg.",
+    "habitat": "Dans toute son aire, la fouine fréquente forêts feuillues, fourrés, lisières, pentes rocheuses et terres agricoles. Au sud du Portugal, des fouines suivies par radio utilisaient des chênaies-lièges complexes, des bandes riveraines, des vergers et des pâturages ; les sites d’alimentation et de repos variaient selon le sexe et l’échelle. En Europe centrale, elles nichent aussi dans des bâtiments : greniers, granges, garages et cavités murales. Cette tolérance urbaine n’est pas universelle : selon la fiche de l’UICN, en Israël elles sont davantage associées aux bois. Leur habitat dépend donc des ressources et du paysage locaux.",
+    "diet": "La fouine est omnivore et opportuniste. Elle mange de petits mammifères, des oiseaux et des œufs, des reptiles, des invertébrés et des charognes, ainsi que des fruits et d’autres matières végétales. En Grèce centrale, les contenus stomacaux révélaient surtout des proies animales au printemps, notamment de petits vertébrés et des arthropodes ; fruits mûrs et insectes devenaient plus importants en été et en automne. Le régime variait selon la saison et les individus, plutôt que de suivre un menu fixe.",
+    "behavior": "Les fouines cherchent surtout leur nourriture la nuit et passent le jour dans des gîtes abrités. Elles sont généralement solitaires en dehors de la reproduction ; les marques odorantes signalent les limites territoriales. Dans deux villes du Luxembourg, le suivi radio a révélé des territoires stables toute l’année, presque entièrement urbains, et peu de chevauchement entre individus du même sexe. La vie en ville n’a donc pas effacé cette organisation spatiale. Nourriture et abris les attirent parfois dans les bâtiments, mais leurs mouvements restent territoriaux.",
+    "reproduction": "L’accouplement a lieu en été, mais la naissance survient au printemps suivant, car le développement s’interrompt après la fécondation. Une étude portant sur plus de 100 individus de la région de Bordeaux a établi une implantation différée d’environ huit mois, qui prend fin à la fin février ; l’implantation est suivie d’une gestation active d’environ 30 jours. Les portées naissent vers la fin mars ou le début avril. Au départ, les petits sont dépendants et restent au gîte pendant que leur mère les allaite. Dans l’étude bordelaise, l’allaitement pouvait se poursuivre jusqu’à la mi-mai. Après le sevrage, les jeunes continuent de grandir et apprennent à chercher leur nourriture avant de devenir indépendants plus tard dans l’année. Cette longue pause sépare l’accouplement de la courte période de croissance embryonnaire et de la naissance.",
+    "ecology": "Dans la forêt nationale de Bussaco, au centre du Portugal, une étude a recueilli des graines dans les fèces de fouines et en a testé la germination, notamment pour des plantes indigènes et le laurier-cerise introduit. Le passage intestinal a accru et accéléré la germination de la ronce à feuilles d’orme indigène, Rubus ulmifolius, mais n’a pas eu d’effet mesurable sur le laurier-cerise ; la préférence pour ce fruit introduit pourrait néanmoins favoriser sa propagation. Les fouines utilisaient aussi les vergers, les lisières boisées et les bâtiments dans le paysage du sud du Portugal étudié par radiopistage, reliant leur écologie aux parcelles cultivées et moins modifiées.",
+    "conservation": "Publiée en 2016 à partir d’une évaluation datée du 3 mars 2015, l’UICN classait l’espèce en préoccupation mineure à l’échelle mondiale, en invoquant sa vaste aire de répartition, sa population importante et sa présence dans des espaces protégés. La persécution et la chasse pour la fourrure existent localement, mais les évaluateurs ne trouvaient pas de preuve d’un déclin généralisé causé par ces pressions. Le Livre rouge national des mammifères de Jordanie de 2020 classe l’espèce en danger dans ce pays et cite la dégradation des habitats et les mises à mort directes, ce qui illustre les différences régionales."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T29672A45202514.en",
+      "title": "Martes foina : évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.martesworkinggroup.org/martes-species/stone-marten",
+      "title": "Fiche d’espèce : martre des pierres"
+    },
+    {
+      "url": "https://www.mammalweb.org/en/learn-dropdown/learn-about-animals/178-beech-marten",
+      "title": "Guide de terrain de la fouine"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1007/s10344-009-0317-9",
+      "title": "Habitat de la martre des pierres en milieu méditerranéen"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-7998.2008.00510.x",
+      "title": "Organisation socio-spatiale des fouines urbaines"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3349108/",
+      "title": "Régime et stratégies alimentaires en Grèce centrale"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-7998.1981.tb03448.x",
+      "title": "Implantation différée chez la fouine"
+    },
+    {
+      "url": "https://doi.org/10.1111/1749-4877.12362",
+      "title": "Dispersion de graines indigènes et exotiques par la fouine"
+    },
+    {
+      "url": "https://www.genuinemustelids.org/family/martens/",
+      "title": "Martres – Genuine Mustelids : population du Wisconsin"
+    },
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-569.5-001-En.pdf",
+      "title": "Livre rouge national des mammifères de Jordanie"
+    },
+    {
+      "url": "https://www.face.eu/sites/default/files/attachments/trapping_guidelines_-_martes_martes.pdf",
+      "title": "Guide d’identification de la martre des pins"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Martes_foina/",
+      "title": "Fiche de la fouine, Animal Diversity Web"
+    }
+  ]
+}

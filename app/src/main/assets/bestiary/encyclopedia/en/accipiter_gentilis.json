@@ -1,0 +1,34 @@
+{
+  "id": "accipiter_gentilis",
+  "name": "Northern Goshawk",
+  "scientific": "Accipiter gentilis",
+  "group": "birds",
+  "sections": {
+    "overview": "The northern goshawk is a large, powerful hawk of mature woodland, secretive and easily overlooked. It was driven to extinction as a British breeding bird by the late 1800s and has since returned, mostly from birds escaped or released by falconers.",
+    "identification": "Almost as large as a buzzard, with females clearly bigger than males: about 49–56 cm and 850 g for a male, 58–64 cm and 1.5 kg for a female, with wingspans of roughly 90–120 cm. Adults are grey above and white below with fine grey barring, with a white eyebrow, orange to red eyes and thick yellow legs. Juveniles are brown above, with streaked underparts.",
+    "habitat": "It is largely tied to large forests, often conifer plantations; in Britain many territories lie in state-owned forests such as the New Forest and Thetford Forest. It is most numerous in Wales, northern England and southern Scotland. In parts of mainland Europe it also lives in towns and cities, hunting feral pigeons.",
+    "diet": "It hunts mostly birds such as woodpigeons, crows and game birds, and also takes squirrels, rabbits and other mammals. It catches prey in flight with its feet and talons, using surprise and agility to pursue it through trees and dense undergrowth.",
+    "behavior": "Its broad wings and long rounded tail let it fly fast through trees, and it can also soar for long periods. It is resident all year, and is most often noticed in late winter and early spring, when pairs perform display flights, a “sky-dance”, over their woodland territories.",
+    "reproduction": "There is one brood a year, typically three or four eggs, incubated for 35–38 days mainly by the female while the male hunts. The downy chicks fledge after 35–42 days and stay dependent for about three months. The nest, built close to a tree trunk, is often reused for several years. Breeding typically starts at two years of age.",
+    "ecology": "As a top predator of woodland birds and mammals, the goshawk helps shape the numbers of its prey, including the grey partridge. Its nests are frequently robbed and persecution continues in Britain. Loss of woodland and persecution by gamekeepers caused its disappearance there, and both remain threats.",
+    "conservation": "The IUCN lists the species as Least Concern. The UK breeding population was about 620 pairs in 2013–17, with county recorders estimating over 1,200, and it has increased strongly in recent decades. It is Green-listed and protected by Schedule 1 of the Wildlife and Countryside Act. A goshawk typically lives about seven years once adult, and the oldest ringed bird exceeded 18."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/goshawk",
+      "title": "Goshawk — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/goshawk",
+      "title": "Goshawk — RSPB"
+    },
+    {
+      "url": "https://www.wildlifetrusts.org/wildlife-explorer/birds/birds-prey/goshawk",
+      "title": "Goshawk — The Wildlife Trusts"
+    },
+    {
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/birds/goshawk/",
+      "title": "Goshawk — Woodland Trust"
+    }
+  ]
+}

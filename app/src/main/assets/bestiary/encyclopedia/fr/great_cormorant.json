@@ -1,0 +1,46 @@
+{
+  "id": "great_cormorant",
+  "name": "Grand Cormoran",
+  "scientific": "Phalacrocorax carbo",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Grand Cormoran est un grand oiseau piscivore présent en Europe, en Asie, en Afrique, en Australasie et sur la côte atlantique nord-américaine. Il fréquente les côtes et les eaux intérieures. Au nord, les populations migrent parfois vers des eaux libres en hiver.",
+    "identification": "L’adulte mesure généralement 84 à 98 cm, avec une envergure de 130 à 160 cm et une masse de 2 à 3,7 kg ; le mâle est en moyenne plus grand. Le corps sombre et lustré, le bec crochu et les pieds entièrement palmés sont caractéristiques ; en plumage nuptial, la tête et les cuisses portent des taches blanches, tandis que les jeunes ont le dessous pâle. En Europe, il dépasse le Cormoran huppé par sa taille, son bec plus épais et l’absence de huppe.",
+    "habitat": "Il pêche sur les côtes, dans les estuaires, les lacs et les rivières, souvent en eau abritée et peu profonde. Des perchoirs, falaises et arbres proches lui servent à se reposer, sécher son plumage et nicher.",
+    "diet": "Les poissons constituent l’essentiel de son alimentation, complétée par des crustacés, des amphibiens, des mollusques et parfois de jeunes oiseaux au nid. Il plonge et poursuit ses proies sous l’eau, propulsé par ses pieds palmés ; son bec crochu saisit le poisson, et les grosses prises sont remontées puis avalées.",
+    "behavior": "Chaque plume du corps possède une partie externe mouillable et une partie interne imperméable, retenant une fine couche d’air qui assure l’isolation tout en limitant la flottabilité. Après la pêche, l’oiseau étend souvent ses ailes pour sécher. Les pieds assurent l’essentiel de la propulsion, les ailes aidant parfois à diriger ; il pêche généralement seul, mais dort et niche en groupe, avec des cris gutturaux dans les colonies.",
+    "reproduction": "La reproduction varie selon la région : les oiseaux nordiques nichent souvent au printemps, tandis que les populations tropicales peuvent suivre les saisons des pluies. Les couples nichent dans les arbres, sur les falaises ou au sol rocheux ; trois à cinq œufs bleu-vert sont couvés environ un mois. Les deux parents nourrissent par régurgitation les poussins nus ; ceux-ci quittent le nid vers sept semaines, mais restent dépendants plusieurs semaines encore.",
+    "ecology": "Les fientes accumulées peuvent modifier la végétation autour des dortoirs et des arbres occupés durablement.",
+    "conservation": "L’évaluation mondiale de l’UICN publiée en 2018 classe cette espèce largement répartie en préoccupation mineure. Les populations européennes, longtemps persécutées comme concurrentes des pêcheurs, se sont rétablies après leur protection ; les pressions actuelles incluent persécution, captures accidentelles, pollution, dérangement et conflits avec les piscicultures."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Great_cormorant",
+      "title": "Grand Cormoran"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Grand_Cormoran",
+      "title": "Grand Cormoran"
+    },
+    {
+      "url": "https://publications.naturalengland.org.uk/file/3897615",
+      "title": "Grand Cormoran : informations sur l’espèce pour les consultations des zones de protection spéciale marines"
+    },
+    {
+      "url": "https://www.birdlife.org/news/2022/06/02/seabird-of-the-month-great-cormorant-phalacrocorax-carbo/",
+      "title": "Oiseau marin du mois : Grand Cormoran (Phalacrocorax carbo)"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22696792A155523636.en",
+      "title": "Phalacrocorax carbo (Grand Cormoran)"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.0908-8857.2005.03331.x",
+      "title": "Structure inhabituelle des plumes et mouillabilité partielle chez le Grand Cormoran"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Phalacrocorax_carbo/",
+      "title": "Phalacrocorax carbo — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

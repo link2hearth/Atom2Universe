@@ -1,0 +1,30 @@
+{
+  "id": "pleuronectes_platessa",
+  "name": "Plie",
+  "scientific": "Pleuronectes platessa",
+  "group": "fish",
+  "sections": {
+    "overview": "La plie est un poisson plat à yeux à droite du plateau continental de l’Europe du Nord-Ouest, présent depuis l’Islande et la mer Blanche vers le sud le long des côtes européennes. C’est l’un des poissons les mieux étudiés de la mer du Nord, où on la pêche depuis des siècles.",
+    "identification": "La face supérieure est brune ou brun verdâtre, parsemée de taches irrégulières rouge vif ou orangées, et la face inférieure est blanche. La peau est lisse, à petites écailles, et une crête osseuse court derrière les yeux. La longueur courante est d’environ 40 cm, et les plus grands individus atteignent environ 100 cm et 7 kg.",
+    "habitat": "Elle vit sur les fonds sableux et vaseux, du rivage jusqu’à environ 200 m, le plus souvent entre 10 et 50 m, dans une eau de 2 à 15 °C. Les juvéniles restent dans les eaux côtières peu profondes et les estuaires externes, puis descendent plus profond en grandissant; en mer du Nord, la mer des Wadden est la principale nourricerie.",
+    "diet": "Les adultes se nourrissent surtout de mollusques à coquille mince et de vers polychètes, et consomment des bivalves, les siphons de bivalves enfouis et, localement, de petits crustacés et des ophiures. Les adultes ne s’alimentent pas pendant la période de ponte.",
+    "behavior": "Elle se repose sur le fond, à demi enfouie dans le sédiment. Le marquage a montré que les individus reviennent aux mêmes zones de ponte et d’alimentation, et les adultes se déplacent entre elles grâce aux courants de marée : ils dérivent en pleine eau avec le courant et restent au fond quand il s’inverse.",
+    "reproduction": "La ponte a lieu au large, dans des zones restreintes, avec un pic début janvier dans l’est de la Manche et mi-février dans la baie allemande. Une femelle de 35 cm peut produire de 60 000 à 100 000 œufs pélagiques de 1,7 à 2,2 mm. Œufs et larves dérivent pendant trois à quatre mois; le poisson ne se pose au fond qu’après la métamorphose, quand l’œil gauche est passé du côté droit. En mer du Nord, les mâles mûrissent à deux ou trois ans et les femelles à quatre ou cinq ans.",
+    "ecology": "Les larves de plie mangent de petits animaux planctoniques comme les appendiculaires et les copépodes, tandis que les poissons plus âgés se nourrissent sur le fond. Les œufs sont consommés par d’autres poissons : on en a trouvé beaucoup dans l’estomac de harengs et de sprats, si bien que leur survie varie avec l’abondance de ces prédateurs.",
+    "conservation": "L’UICN classe l’espèce en préoccupation mineure (évaluation de 2022, d’après FishBase). C’est une espèce commerciale importante, capturée surtout au chalut à perche dans une pêcherie mixte avec la sole. En mer du Nord, les débarquements sont passés d’environ 70 000 t à la fin des années 1950 à environ 170 000 t à la fin des années 1980, puis sont tombés sous 60 000 t en 2005, et la maturation plus précoce a été reliée à la pression de pêche."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Pleuronectes-platessa.html",
+      "title": "Pleuronectes platessa, plie — FishBase"
+    },
+    {
+      "url": "https://www.ices.dk/about-ICES/projects/EU-RFP/EU%20Repository/ICES%20FIshMap/ICES%20FishMap%20species%20factsheet-plaice.pdf",
+      "title": "Fiche espèce ICES FishMap : plie"
+    },
+    {
+      "url": "https://www.habitas.org.uk/marinelife/species.asp?item=ZG9030",
+      "title": "Plie (Pleuronectes platessa) — Habitas, vie marine du musée d’Ulster"
+    }
+  ]
+}

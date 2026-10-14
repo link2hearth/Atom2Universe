@@ -12,8 +12,8 @@
       "fr": "Le guépard est un grand félin d’Afrique et d’Asie, l’unique espèce actuelle du genre Acinonyx. Son corps fin, ses longues pattes et ses griffes émoussées favorisent l’accélération en terrain ouvert. Il vit seul, sauf les mères avec leurs petits et les coalitions de mâles."
     },
     "identification": {
-      "en": "An adult has a slender frame, small rounded head and yellowish, tawny or grey coat with separate black spots. Dark tear-lines run from the inner eye corners toward the mouth. Its spotted tail ends in dark rings and a pale tip.",
-      "fr": "L’adulte a une silhouette fine, une petite tête arrondie et un pelage jaunâtre, fauve ou gris tacheté de noir. Des lignes sombres vont du coin interne des yeux vers la bouche. Sa queue tachetée porte des anneaux foncés et une pointe claire."
+      "en": "An adult has a slender frame, small rounded head and yellowish, tawny or grey coat with separate black spots. Dark tear-lines run from the inner eye corners toward the mouth. Its spotted tail ends in dark rings and a pale tip. Adults are about 1.0–1.4 m in body length, 63–94 cm at the shoulder, with a 66–84 cm tail; reported mass is 38–65 kg, and males are larger than females. The cited species account does not provide a body-width measurement.",
+      "fr": "L’adulte a une silhouette fine, une petite tête arrondie et un pelage jaunâtre, fauve ou gris tacheté de noir. Des lignes sombres vont du coin interne des yeux vers la bouche. Sa queue tachetée porte des anneaux foncés et une pointe claire. L’adulte mesure environ 1,0 à 1,4 m de longueur corporelle, 63 à 94 cm au garrot, avec une queue de 66 à 84 cm ; la masse indiquée est de 38 à 65 kg et les mâles sont plus grands que les femelles. La fiche citée ne donne pas de mesure de largeur du corps."
     },
     "habitat": {
       "en": "Cheetahs use open habitats where they can see prey and run: African grasslands, savannas and dry country, including deserts. They also occur in open woodland and scrub. Their former range spanned Africa to the Middle East and India; populations now occupy scattered remnants.",
@@ -119,6 +119,20 @@
       ],
       "facts": [
         "The current species profile reports a global Vulnerable listing; the Asiatic remnant occurs in Iran."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cheetah — San Diego Zoo Wildlife Alliance",
+        "fr": "Cheetah — San Diego Zoo Wildlife Alliance"
+      },
+      "url": "https://animals.sandiegozoo.org/animals/cheetah",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult body length 1.0–1.4 m, shoulder height 63–94 cm, tail 66–84 cm and mass 38–65 kg; males are larger than females."
       ]
     }
   ],

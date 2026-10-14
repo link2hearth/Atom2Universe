@@ -1,0 +1,26 @@
+{
+  "id": "eurycea_sosorum",
+  "name": "Eurycea sosorum",
+  "scientific": "Eurycea sosorum",
+  "group": "amphibians",
+  "sections": {
+    "overview": "La salamandre de Barton Springs, Eurycea sosorum, est une petite salamandre entièrement aquatique des sources d’Austin, au Texas. Elle garde toute sa vie sa forme larvaire à branchies et ne quitte jamais l’eau, dépendant entièrement des eaux souterraines de l’aquifère d’Edwards.",
+    "identification": "Les adultes mesurent environ 6 à 8 cm de longueur totale. La tête est large et haute, avec des yeux réduits et trois branchies rouge vif, plumeuses, de chaque côté. Les membres sont longs et grêles, et la queue courte porte une nageoire supérieure bien développée. Le dessus du corps, marbré, va du brun au violet, au roux ou à l’orange, et le dessous est crème et souvent translucide. La salamandre aveugle d’Austin, sa proche voisine, a des taches oculaires recouvertes de peau. Les adultes atteignent environ 63–76 mm de longueur totale ; les fiches consultées ne donnent pas de fourchette fiable de masse adulte.",
+    "habitat": "Elle vit dans une eau propre alimentée par l’aquifère d’Edwards, le plus souvent dans la couche humide superficielle de graviers et de roches, dans ou près des sources, des bassins et des écoulements. L’eau reste proche de 20 °C toute l’année. Elle n’était d’abord connue que de quatre sources du parc Zilker, et on l’a depuis trouvée dans 12 autres sources et grottes des comtés de Hays et de Travis.",
+    "diet": "C’est un prédateur opportuniste de petits invertébrés vivants, qui préfère les planaires. Quand elles se raréfient, elle se rabat sur des larves de chironomes et sur l’amphipode Hyalella azteca, que des observations plus anciennes donnaient comme sa principale nourriture.",
+    "behavior": "Elle passe une grande partie de son temps dans les interstices entre les pierres et les graviers du lit, qui lui offrent nourriture, abri contre les prédateurs et refuge pendant la sécheresse. Elle est discrète et semble nocturne, et elle sait distinguer les prédateurs peu dangereux des plus dangereux.",
+    "reproduction": "On trouve des femelles avec des œufs et de jeunes larves toute l’année, ce qui suggère une reproduction en toute saison. La parade comprend une marche où la femelle enjambe la queue du mâle; celui-ci dépose un spermatophore que la femelle ramasse, et la fécondation est interne. Les œufs ont rarement été trouvés dans la nature. En captivité, ils éclosent 15 à 40 jours après la ponte, et les larves se mettent à se nourrir environ 10 à 11 jours plus tard.",
+    "ecology": "Elle se nourrit de petits invertébrés du fond des sources, et ses propres prédateurs seraient de petits poissons et des écrevisses. Sa survie est liée à la qualité et à la quantité des eaux souterraines de l’aquifère d’Edwards.",
+    "conservation": "Elle a été inscrite comme espèce en danger (Endangered) par la loi américaine sur les espèces menacées le 30 avril 1997, surtout parce que l’urbanisation réduisait la qualité et la quantité de l’eau alimentant les sources. Sa petite aire l’expose à la contamination des eaux souterraines, aux déversements de substances dangereuses et aux prélèvements d’eau accrus. Son aire est plus vaste qu’on ne le pensait d’abord, mais la fiche fédérale ne donne aucun effectif."
+  },
+  "sources": [
+    {
+      "url": "https://www.fws.gov/species/barton-springs-salamander-eurycea-sosorum",
+      "title": "Salamandre des sources de Barton (Eurycea sosorum) — U.S. Fish and Wildlife Service"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Eurycea_sosorum",
+      "title": "Eurycea sosorum — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

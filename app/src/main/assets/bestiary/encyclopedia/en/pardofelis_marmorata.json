@@ -1,0 +1,34 @@
+{
+  "id": "pardofelis_marmorata",
+  "name": "Marbled Cat",
+  "scientific": "Pardofelis marmorata",
+  "group": "mammals",
+  "sections": {
+    "overview": "The marbled cat is a small forest cat of South and South-East Asia, about the size of a house cat, with a long tail and a coat marked like that of a clouded leopard. It is rarely seen and poorly studied, and is listed as Near Threatened.",
+    "identification": "A cat with a body of 45–61 cm, a tail of 35–55 cm and a weight of 2.4–5 kg. The coat is yellowish brown with large blotches, paler in the centre and outlined in black, and black lines on the head, neck and back. The tail is spotted, black at the tip and usually held horizontally when walking. The ears are short and rounded, the feet large and the canines big for its size. Young are mottled brown until about four months.",
+    "habitat": "It depends on forest and has not been found inside oil palm plantations. It is recorded in mixed deciduous-evergreen forest, secondary and logged forest, from sea level to about 3,000 m. Its range runs from the eastern Himalayan foothills through mainland South-East Asia to Sumatra and Borneo; its presence in Bangladesh and Bhutan is uncertain.",
+    "diet": "Its diet is poorly known. Birds, up to the size of a pheasant, are thought to be the main prey, along with tree squirrels, tree shrews, rodents, small primates, fruit bats, lizards, frogs and insects. This rests on few observations, such as a cat seen stalking birds in the canopy.",
+    "behavior": "It is solitary and a skilled climber, able to come down tree trunks head first, but it is not limited to trees and also walks on the ground. It was long thought to be nocturnal, yet camera traps and sightings show activity by day as well as by night. One radio-collared female in Thailand used a range of about 5.3 km², a single animal that cannot stand for the species.",
+    "reproduction": "Nearly everything known comes from captivity: gestation of 66–82 days and litters of 2–4 kittens, usually two. Eyes open at about 16 days, kittens walk at about 22 days, eat solid food around 59 days and females mature at 21–22 months. The female raises the young alone. Breeding has not been documented in the wild.",
+    "ecology": "It is a predator of birds and small mammals. No predator of the marbled cat is documented. In three Sabah study areas in Borneo, camera traps gave densities of 7.1 (upland primary forest), 10.5 (logged lowland forest) and 19.6 (lowland primary forest) animals per 100 km²; the authors suggest these may be at the high end of the species’ abundance.",
+    "conservation": "It is listed as Near Threatened since 2015, having been Vulnerable in 2008; this change does not mean its numbers have risen or its threats lessened, as the species is still poorly studied. Forest loss is the main threat, and indiscriminate snaring is probably a major one. It is in CITES Appendix I."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Pardofelis_marmorata/",
+      "title": "Pardofelis marmorata — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0151046",
+      "title": "First estimates of marbled cat population density from Bornean primary and selectively logged forest — PLOS ONE (Hearn et al. 2016)"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1006011",
+      "title": "Pardofelis marmorata — Mammal Diversity Database"
+    },
+    {
+      "url": "https://www.rekoforest.org/field-stories/wildlife-of-rer-marbled-cat/",
+      "title": "Wildlife of RER: the marbled cat — Restorasi Ekosistem Riau"
+    }
+  ]
+}

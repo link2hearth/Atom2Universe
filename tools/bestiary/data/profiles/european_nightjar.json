@@ -44,14 +44,22 @@
     {
       "title": {
         "en": "Nightjar — BTO BirdFacts, British Trust for Ornithology",
-        "fr": "Engoulevent d’Europe — BirdFacts du BTO, British Trust for Ornithology"
+        "fr": "Engoulevent d’Europe — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/nightjar",
-      "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Adults 63–88 g; clutch typically 2, incubation about 18 days, fledging about 18 days; mean first clutch 23 June; 4,600 males (2004).",
-        "UK Amber, IUCN Least Concern; threats heathland loss and afforestation; GPS foraging flights over 3 km; wintering mainly southern DR Congo; record age 12 years."
+        "UK Amber, IUCN Least Concern; threats heathland loss and afforestation; GPS foraging flights over 3 km; wintering mainly southern DR Congo; record age 12 years.",
+        "British adults weigh 63–88 g; females are heavier."
       ]
     },
     {
@@ -61,7 +69,12 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/nightjar",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "behavior", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "conservation"
+      ],
       "facts": [
         "26–28 cm, slightly smaller than a kestrel; bark-like plumage; churring song with wing claps; summer visitor late April–September; folklore of the goatsucker.",
         "UK numbers fell 51% between 1972 and 1992 and have begun to recover."
@@ -74,7 +87,10 @@
       },
       "url": "https://animaldiversity.org/accounts/Caprimulgus_europaeus/",
       "consulted": "2026-10-12",
-      "supports": ["identification", "ecology"],
+      "supports": [
+        "identification",
+        "ecology"
+      ],
       "facts": [
         "Males have white throat patches and white patches on outer tail feathers and primaries; insectivore catching moths, beetles and other flying insects.",
         "Adults preyed on by owls and diurnal raptors; eggs by foxes, hedgehogs, crows and jays. The account dates from 2007, so its status and lifespan data were not used."

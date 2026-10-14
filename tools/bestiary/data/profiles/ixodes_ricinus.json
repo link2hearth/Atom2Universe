@@ -12,8 +12,8 @@
       "fr": "La tique du mouton, aussi appelée tique du ricin, est une tique dure hématophage, un arachnide et non un insecte, et une tique importante sur le plan médical et vétérinaire en Europe. Elle attend dans la végétation le passage d’un animal et peut transmettre les agents de la maladie de Lyme et de l’encéphalite à tiques."
     },
     "identification": {
-      "en": "Before feeding, adult males are about 2.5–3 mm long and females 3–4 mm; a fed female can reach about 1 cm and turns light grey. Adults are red-brown and have no eyes. The dorsal shield covers the whole back of the male but only the front part of the female. Larvae have three pairs of legs, while nymphs and adults have four.",
-      "fr": "Avant le repas, les mâles adultes mesurent environ 2,5 à 3 mm et les femelles 3 à 4 mm; une femelle gorgée peut atteindre environ 1 cm et devient gris clair. Les adultes sont brun rouge et n’ont pas d’yeux. Le scutum couvre tout le dos du mâle mais seulement la partie avant de la femelle. Les larves ont trois paires de pattes, les nymphes et les adultes quatre."
+      "en": "Before feeding, adult males are about 2.5–3 mm long and females 3–4 mm; a fed female can reach about 1 cm and turns light grey. Adults are red-brown and have no eyes. The dorsal shield covers the whole back of the male but only the front part of the female. Larvae have three pairs of legs, while nymphs and adults have four. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "Avant le repas, les mâles adultes mesurent environ 2,5 à 3 mm et les femelles 3 à 4 mm; une femelle gorgée peut atteindre environ 1 cm et devient gris clair. Les adultes sont brun rouge et n’ont pas d’yeux. Le scutum couvre tout le dos du mâle mais seulement la partie avant de la femelle. Les larves ont trois paires de pattes, les nymphes et les adultes quatre. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
     },
     "habitat": {
       "en": "It occurs from Portugal to Russia and from North Africa to Scandinavia, mainly in deciduous and mixed forest, and is scarce in hot, dry parts of the Mediterranean. It needs relative humidity of at least 80% and can live in grassland, heathland, parks and conifer woods where hosts are present. Its range has shifted to higher altitudes and latitudes in several countries.",
@@ -60,7 +60,8 @@
       ],
       "facts": [
         "Range Portugal to Russia, North Africa to Scandinavia; humidity at least 80%; three hosts; cycle up to three years; up to 2,000 eggs; bimodal spring and autumn peaks.",
-        "Pathogens: Borrelia burgdorferi s.l., TBE virus, Anaplasma, Babesia, louping ill; projected establishment in Norway, Finland and Sweden by 2071–2100."
+        "Pathogens: Borrelia burgdorferi s.l., TBE virus, Anaplasma, Babesia, louping ill; projected establishment in Norway, Finland and Sweden by 2071–2100.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
       ]
     },
     {

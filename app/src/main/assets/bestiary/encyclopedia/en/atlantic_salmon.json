@@ -1,0 +1,94 @@
+{
+  "id": "atlantic_salmon",
+  "name": "Atlantic salmon",
+  "scientific": "Salmo salar",
+  "group": "fish",
+  "sections": {
+    "overview": "The Atlantic salmon is a streamlined fish native to North Atlantic rivers and coastal waters. Most populations are anadromous: juveniles grow in rivers, adults feed at sea, then return to spawn. Migration timing and distance vary among populations. Some naturally landlocked populations complete their cycle between streams and lakes.",
+    "identification": "At sea, adults are silvery, dark-backed and pale underneath, with sparse cross-shaped spots mostly above the lateral line. The long body, small head and upper jaw ending at the eye help distinguish them from more heavily spotted brown trout. Juveniles have dark vertical parr marks and red spots; migrating smolts become slimmer and silver. Mature males darken and develop a hooked lower jaw, the kype, during spawning. Grilse return after one sea winter and are smaller than fish that spend two or more winters at sea. In Newfoundland and Labrador, adults are usually under 70 centimetres and 4.5 kilograms; the North American fly-caught record of 32.6 kilograms is exceptional.",
+    "habitat": "Eggs develop in clean gravel flushed by oxygen-rich current. Parr use shallow, cool streams with rocky bottoms, feeding in riffles and sheltering in pools. After one to several freshwater years, smolts descend rivers and estuaries to coastal or open-ocean feeding grounds. Returning adults need connected rivers and gravel beds; dams, culverts and poor water quality can block access. Landlocked populations feed and grow in lakes, then spawn in tributaries or lake outlets.",
+    "diet": "Newly emerged fry seize drifting invertebrates, especially aquatic insect larvae. Parr dart at insects carried by the current or falling onto the surface. At sea, young salmon eat planktonic crustaceans and fish larvae; larger adults prey on capelin, herring and sand lance. They swallow prey whole, and abundant marine food supports faster growth than in rivers. Adults entering rivers to spawn usually stop feeding and rely on stored energy.",
+    "behavior": "Parr hold feeding territories, move between seasonal habitats, and some males mature early in fresh water. During spring smoltification, the fish becomes silver and prepares for seawater. Osmoregulation, the balancing of body water and salts, changes with salinity: at sea it drinks, absorbs water through the intestine, secretes excess sodium and chloride through the gills, and sharply reduces urine flow; in fresh water it conserves salts and produces dilute urine. Adults show strong fidelity to their natal river. Evidence supports smell as a cue: juveniles learn stream chemistry that can help adults identify their home river. Odours guide the final freshwater approach, while other cues are needed at sea and the full navigation mechanism remains unresolved. At spawning sites, males compete for females; the kype is a visible feature of this breeding phase.",
+    "reproduction": "In autumn, a female sweeps gravel with her tail to make a shallow nest, or redd. She releases eggs as males release sperm over them, so fertilization is external; she then covers the eggs with gravel. The eggs develop through winter among stones, where flowing water supplies oxygen. After hatching, yolk-sac alevins remain in the redd and absorb their yolk; they emerge as free-swimming fry and begin feeding after roughly a month, with timing varying with water conditions. In Maine populations, fry grow into parr, which usually spend two or three years in fresh water before smoltification; timing varies elsewhere. Depending on population, adults return to spawn after one to three years at sea. Many die afterward, but surviving kelts can return and reproduce again; death after one spawning is not inevitable.",
+    "ecology": "River juveniles eat insect larvae; marine adults prey on schooling fish and are themselves eaten by larger fish, birds and marine mammals. Their return also carries marine-derived nutrients into rivers. Measurements in Atlantic rivers found these inputs in stream biofilm, invertebrates and resident fish during spawning periods. Eggs, excretion and occasional carcasses pass nutrients into the food web; because many adults survive, inputs are less dominated by mass die-offs than in semelparous Pacific salmon runs, where adults usually die after their single spawning.",
+    "conservation": "The global IUCN assessment, made on 6 April 2022 and published in 2023, lists Atlantic salmon as Near Threatened. It estimates a 20–25% decline over three generations and warns the species may approach Vulnerable; river populations vary greatly. In the United States, dams, pollution and overfishing sharply reduced the historic range; the Gulf of Maine distinct population segment is listed as Endangered under federal law. The global assessment lists dams and aquaculture as ongoing threats; droughts and temperature extremes are future threats whose impacts remain uncertain. Where farms overlap wild migration routes, sea lice can raise infection risk for migrating juveniles, while escaped farm adults can breed with wild adults and reduce population productivity; effects vary by place and year. All Atlantic salmon sold in U.S. public markets are farm-raised; this production does not restore depleted wild populations or their river-specific diversity."
+  },
+  "sources": [
+    {
+      "url": "https://www.dfo-mpo.gc.ca/species-especes/publications/salmon-saumon/lifecycle-cyclevital/index-eng.html",
+      "title": "Atlantic salmon... a remarkable life cycle — Fisheries and Oceans Canada"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-salmon/resources",
+      "title": "Atlantic Salmon: Resources — NOAA Fisheries"
+    },
+    {
+      "url": "https://www.dfo-mpo.gc.ca/about-notre-sujet/publications/infographics-infographies/salmon-browntrout-saumon-truitebrune-eng.html",
+      "title": "Know your catch: the differences between Atlantic salmon and brown trout — Fisheries and Oceans Canada"
+    },
+    {
+      "url": "https://www.usgs.gov/media/images/male-atlantic-salmon-showing-a-kype-lower-jaw",
+      "title": "Male Atlantic salmon showing a kype in lower jaw — U.S. Geological Survey"
+    },
+    {
+      "url": "https://www.usgs.gov/publications/movement-migration-and-smolting-atlantic-salmon-salmo-salar-0",
+      "title": "Movement, migration, and smolting of Atlantic salmon — U.S. Geological Survey"
+    },
+    {
+      "url": "https://www.maine.gov/dmr/fisheries/sea-run-fisheries/sea-run-species/atlantic-salmon",
+      "title": "Atlantic Salmon — Maine Department of Marine Resources"
+    },
+    {
+      "url": "https://www.maine.gov/ifw/fish-wildlife/fisheries/species-information/landlocked-salmon.html",
+      "title": "Landlocked Salmon — Maine Department of Inland Fisheries and Wildlife"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-185X.1984.tb00709.x",
+      "title": "Homing and olfaction in salmonids: a critical review with special reference to Atlantic salmon — Biological Reviews"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29235101/",
+      "title": "Aquatic food-web dynamics following incorporation of nutrients derived from Atlantic anadromous fishes — Journal of Fish Biology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2023-1.RLTS.T19855A67373433.en",
+      "title": "Salmo salar (Atlantic Salmon) — IUCN Red List of Threatened Species"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-salmon/science",
+      "title": "Atlantic Salmon: Science — NOAA Fisheries"
+    },
+    {
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec/fiches-especes-fauniques/saumon-atlantique",
+      "title": "Atlantic salmon — Fisheries and Oceans Canada, Quebec species profile"
+    },
+    {
+      "url": "https://www.fws.gov/story/life-cycle-atlantic-salmon",
+      "title": "Life Cycle of Atlantic Salmon — U.S. Fish and Wildlife Service"
+    },
+    {
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?speciesID=926",
+      "title": "Atlantic Salmon (Salmo salar) — U.S. Geological Survey Nonindigenous Aquatic Species"
+    },
+    {
+      "url": "https://ices-library.figshare.com/articles/report/NASCO_has_asked_ICES_to_advise_on_possible_effects_of_salmonid_aquaculture_on_wild_Atlantic_salmon_populations_focusing_on_the_effects_of_sea_lice_genetic_interactions_and_the_impact_on_wild_salmon_production/18686906",
+      "title": "Possible effects of salmonid aquaculture on wild Atlantic salmon populations — ICES Advice requested by NASCO"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-salmon/seafood",
+      "title": "Atlantic Salmon: Seafood — NOAA Fisheries"
+    },
+    {
+      "url": "https://esajournals.onlinelibrary.wiley.com/doi/10.1002/ecs2.1818",
+      "title": "Effects of spawning Atlantic salmon on total lipid content and fatty acid composition of river food webs — Ecosphere"
+    },
+    {
+      "url": "https://www.fws.gov/media/atlantic-salmon-male",
+      "title": "Atlantic Salmon Male — U.S. Fish and Wildlife Service"
+    },
+    {
+      "url": "https://doi.org/10.1242/jeb.034785",
+      "title": "Aquaporin expression dynamics in osmoregulatory tissues of Atlantic salmon during smoltification and seawater acclimation — Journal of Experimental Biology"
+    }
+  ]
+}

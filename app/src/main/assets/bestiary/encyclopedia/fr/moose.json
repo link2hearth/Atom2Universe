@@ -1,0 +1,46 @@
+{
+  "id": "moose",
+  "name": "Élan",
+  "scientific": "Alces alces",
+  "group": "mammals",
+  "sections": {
+    "overview": "L’élan est le plus grand cervidé vivant. Il habite les forêts nordiques d’Amérique du Nord et d’Eurasie, de l’Alaska au Canada, en Scandinavie, en Russie, au nord de la Chine et en Mongolie. En anglais britannique, il est souvent appelé « elk ».",
+    "identification": "Une bosse, un corps massif, de longues pattes et un museau tombant définissent sa silhouette. Seuls les mâles portent des bois annuels : les palettes sont fréquentes en Amérique du Nord, les formes étroites en Eurasie. Le pelage va du brun au presque noir. Les longues pattes franchissent la neige profonde ; les narines se ferment sous l’eau pour brouter immergé. L’adulte mesure généralement environ 1,5 à 2,1 m au garrot. La Colombie-Britannique indique des masses moyennes d’environ 450 à 500 kg chez les mâles et 340 à 420 kg chez les femelles; les très grands mâles peuvent atteindre environ 680 kg. Les bois du mâle peuvent mesurer environ 1,5 m d’envergure, mais cette largeur variable n’est pas celle du corps.",
+    "habitat": "L’élan fréquente forêts nordiques, jeunes peuplements, zones humides et rives. En Alaska, il utilise les vallées fluviales, plateaux près des arbres et brûlis où repoussent saules, bouleaux et trembles. Lacs et marais offrent nourriture et abri. Ses déplacements relient les lieux d’alimentation, de mise bas, de rut et d’hivernage.",
+    "diet": "Son régime varie selon la saison et les ressources. En été, il mange feuilles, herbes et plantes aquatiques ; au printemps, il broute aussi. Les pousses de saules, bouleaux et trembles dominent davantage en automne et en hiver. Son museau et ses narines refermables facilitent la coupe de plantes immergées.",
+    "behavior": "Les élans sont généralement solitaires ; les femelles restent avec leurs petits et les adultes se rencontrent au rut. Les mâles poussent leurs bois contre leurs rivaux ; les vainqueurs peuvent s’accoupler avec plusieurs femelles. Les déplacements saisonniers varient localement. Leur journée alterne alimentation, repos et rumination.",
+    "reproduction": "En Alaska, le rut culmine fin septembre et début octobre. Après environ 230 jours, la femelle met bas au printemps, généralement un petit, parfois des jumeaux si les conditions sont favorables. Le jeune grandit vite, tète tout l’été, est sevré en automne et reste auprès de sa mère jusqu’à l’année suivante.",
+    "ecology": "Le broutage des arbustes, jeunes arbres et plantes aquatiques agit sur la régénération forestière. À forte densité à Forillon, Parcs Canada relève d’importants changements végétaux. Ce cas local montre l’influence possible d’élans nombreux ; les effets varient selon la population et le milieu.",
+    "conservation": "L’évaluation mondiale de l’UICN (27 septembre 2015 ; publiée en 2016) classait l’élan en « préoccupation mineure », avec une tendance globale à la hausse. Elle citait la transformation des habitats comme menace humaine majeure. Cette évaluation datée ne constitue pas un recensement régional actuel."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1006285/",
+      "title": "Alces alces • Élan — base de données de diversité des mammifères de l’ASM"
+    },
+    {
+      "url": "https://www.awc.adfg.alaska.gov/index.cfm?adfg=moose.main",
+      "title": "Profil de l’élan — Département de la pêche et de la chasse de l’Alaska"
+    },
+    {
+      "url": "https://www.uaf.edu/news/archives/news-archives-2010-2021/whats-the-purpose-of-a-mooses-long-nose.php",
+      "title": "À quoi sert le long museau de l’élan ? — Université d’Alaska à Fairbanks"
+    },
+    {
+      "url": "https://parks.canada.ca/pn-np/qc/forillon/nature/conservation/gestion-orignaux-moose-management",
+      "title": "Maintenir l’équilibre forestier : plan de gestion de l’élan de Forillon 2023–2027 — Parcs Canada"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T56003281A22157381.en",
+      "title": "Alces alces — Liste rouge des espèces menacées de l’UICN"
+    },
+    {
+      "url": "https://www.nps.gov/romo/learn/nature/moose.htm",
+      "title": "Moose | Rocky Mountain National Park, National Park Service"
+    },
+    {
+      "url": "https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/wildlife/wildlife-conservation/moose",
+      "title": "Moose | Government of British Columbia"
+    }
+  ]
+}

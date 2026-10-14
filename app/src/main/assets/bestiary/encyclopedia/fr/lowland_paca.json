@@ -1,0 +1,62 @@
+{
+  "id": "lowland_paca",
+  "name": "Paca de plaine",
+  "scientific": "Cuniculus paca",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le paca de plaine est un grand rongeur surtout nocturne des régions tropicales américaines, de l’est du Mexique à l’Amérique centrale et à une grande partie de l’Amérique du Sud. Il appartient aux Cuniculidés, la famille des pacas ; les agoutis sont des rongeurs distincts du genre Dasyprocta, malgré la proximité de leurs noms communs. Son proche parent, le paca de montagne, est une autre espèce des forêts andines d’altitude.",
+    "identification": "L’adulte pèse généralement environ 6 à 12 kilogrammes et mesure près de 60 à 82 centimètres du museau à la base de la queue ; le mâle est souvent un peu plus grand. Son corps trapu presque dépourvu de queue, ses pattes courtes et robustes, sa tête arrondie et ses longues vibrisses caractérisent ce rongeur terrestre. Le dos rêche, brun roux à brun foncé, porte plusieurs rangées longitudinales de taches pâles au-dessus d’un ventre plus clair. Le paca de montagne est généralement plus petit et plus fourni en poils. L’agouti est un rongeur distinct, et non un autre paca.",
+    "habitat": "Le paca fréquente les forêts tropicales et subtropicales, jusque dans des boisements modifiés. Il préfère les rives, où les berges offrent des terriers et l’eau une voie de fuite. Le jour, il s’abrite dans un terrier creusé ou une cavité sous des racines ou des rochers ; plusieurs sorties rejoignent des sentiers forestiers. Dans la forêt Lacandone, les cavités occupées se trouvaient sous des racines ou des troncs tombés, en forêt secondaire ou riveraine, à moins de 100 mètres de l’eau.",
+    "diet": "Les fruits tombés constituent l’aliment principal, complétés par des graines, des feuilles tendres, des tiges et des racines ; le menu varie selon les saisons locales. Une comparaison des contenus stomacaux en Guyane française a montré que les fruits dominaient le régime du paca, avec plus de variations saisonnières que chez les rongeurs terrestres plus petits. En forêt Lacandone, des caméras ont détecté des fruits sur 31 sites d’alimentation sur 57 et relevé 20 espèces d’arbres. Seulement 40 % des espèces consommées étaient communes aux sites préservés et transformés, signe d’un régime souple.",
+    "behavior": "Le paca se repose le jour, puis sort au crépuscule pour suivre ses sentiers familiers et se nourrir. Les adultes sont souvent seuls, bien que des couples territoriaux vivant dans des terriers séparés soient aussi décrits. En alerte, il peut fuir dans l’eau, frapper le sol, grincer des dents ou gronder sourdement. Ses arcades zygomatiques élargies et les creux du maxillaire forment une cavité osseuse qui pourrait amplifier l’appel ; cette fonction reste incertaine.",
+    "reproduction": "Sous les tropiques, la reproduction peut avoir lieu toute l’année, mais elle est saisonnière dans certaines régions subtropicales. Après 97 à 118 jours de gestation dans la nature, la femelle met généralement au monde un petit bien développé ; les jumeaux sont moins courants. Il naît nidifuge, les yeux ouverts, et peut se déplacer rapidement, sans dépendre d’un nid. Il goûte aux aliments solides vers trois semaines et est sevré entre six et douze semaines ; il peut tôt gagner un abri et fuir le danger.",
+    "ecology": "En mangeant des fruits tombés, les pacas peuvent disperser des graines et favoriser le renouvellement des arbres fruitiers. Leurs terriers abandonnés servent d’abris à d’autres animaux. Jaguars, ocelots et autres prédateurs les chassent ; ils peuvent aussi concurrencer les agoutis et d’autres mammifères forestiers pour les fruits.",
+    "conservation": "L’UICN classe le paca en préoccupation mineure à l’échelle mondiale. Le même système signale la catégorie « Quasi menacée » de la SAREM en Argentine (2025) et « Vulnérable » au niveau national (2021). Chassé pour sa viande et le sport, le paca compte parmi les mammifères néotropicaux les plus ciblés ; les chercheurs doutent que sa reproduction suffise sous forte pression. Une première mise bas après plusieurs mois rend ce cycle lent vulnérable à une chasse soutenue, malgré l’aire étendue."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Cuniculus_paca/",
+      "title": "Cuniculus paca (paca de plaine)"
+    },
+    {
+      "url": "https://sib.gob.ar/especies/cuniculus-paca",
+      "title": "Cuniculus paca (paca, lapa)"
+    },
+    {
+      "url": "https://lazoo.org/explore-your-zoo/our-animals/mammals/lowland-paca/",
+      "title": "Paca de plaine"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Cuniculidae/",
+      "title": "Cuniculidae (pacás)"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1001213/",
+      "title": "Cuniculus paca : Paca de plaine"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31060921/",
+      "title": "Âge à la maturité sexuelle, première mise bas et sénescence reproductive chez les pacas sauvages"
+    },
+    {
+      "url": "https://www.scielo.org.mx/scielo.php?lng=en&pid=S1870-34532018000200507&script=sci_abstract",
+      "title": "Écologie alimentaire du paca de plaine en zones préservées et transformées de la forêt Lacandone"
+    },
+    {
+      "url": "https://www.revista.ib.unam.mx/index.php/bio/article/view/1450",
+      "title": "Disponibilité et caractéristiques des cavités utilisées par les pacas dans la forêt Lacandone"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/journal-of-tropical-ecology/article/abs/comparison-of-diets-of-the-acouchy-agouti-and-paca-the-three-largest-terrestrial-rodents-of-french-guianan-forests/1A776EF5F98B63809E86E0AEF221265F",
+      "title": "Comparaison des régimes de l’acouchi, de l’agouti et du paca des forêts de Guyane française"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7309292/",
+      "title": "Développement osseux fœtal du paca de plaine étudié par échographie"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Cuniculus_taczanowskii/",
+      "title": "Cuniculus taczanowskii (paca de montagne)"
+    }
+  ]
+}

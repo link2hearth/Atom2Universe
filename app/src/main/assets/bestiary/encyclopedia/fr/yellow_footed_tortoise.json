@@ -1,0 +1,58 @@
+{
+  "id": "yellow_footed_tortoise",
+  "name": "Tortue charbonnière à pattes jaunes",
+  "scientific": "Chelonoidis denticulatus",
+  "group": "reptiles",
+  "sections": {
+    "overview": "La tortue charbonnière à pattes jaunes est une grande tortue terrestre originaire d’Amérique du Sud tropicale. Son nom scientifique est Chelonoidis denticulatus ; les noms anciens comprennent C. denticulata et Geochelone denticulata. Elle vit surtout en forêt humide et cherche au sol nourriture tombée et abris. Les données de terrain proviennent principalement de quelques sites étudiés.",
+    "identification": "La carapace des tortues charbonnières à pattes jaunes adultes mesure généralement environ 35 cm (plage rapportée : 29 à 44 cm) et la masse tourne autour de 6 kg (2,5 à 14 kg) ; des individus exceptionnels atteignent environ 70 cm et 50 kg. Le plastron du mâle est concave, celui de la femelle plus plat ou convexe. Les fourchettes sont larges et les valeurs extrêmes sont rares. Sa carapace arrondie et bombée est formée d’os recouverts de scutelles cornées, au-dessus d’un plastron plus plat. La carapace est brune, souvent avec un centre jaune pâle ou orange sur les scutelles ; la tête et les membres portent des écailles jaune orangé. Ce motif aide à la distinguer de la tortue à pattes rouges (Chelonoidis carbonarius), mais les couleurs varient et ne suffisent pas seules. Le mâle adulte a une queue plus longue et épaisse et un plastron légèrement concave. L’espèce est généralement plus grande, avec des variations régionales. Les écailles préfrontales allongées de la tête constituent un autre caractère utile, comparées aux petites écailles fragmentées typiques de la tortue à pattes rouges.",
+    "habitat": "L’espèce fréquente surtout les forêts tropicales humides, dont la forêt amazonienne. Elle s’abrite dans la litière, sous les troncs tombés et parmi les racines ou les plantes denses, qui limitent chaleur et dessèchement. Dans une étude de six mois en Amazonie centrale, les tortues étaient généralement à l’abri lors des rencontres ; les petites utilisaient souvent la litière. Les individus suivis ont utilisé en moyenne 1,56 hectare, et les plus grands des surfaces plus étendues. Cette estimation locale n’est pas un domaine vital universel.",
+    "diet": "Cette omnivore opportuniste récolte surtout au sol fruits tombés, fleurs, graines, champignons, invertébrés et charognes. Une étude brésilienne a trouvé dans les fèces les graines de plusieurs plantes, dont beaucoup restaient viables ; une étude ultérieure de deux espèces de Chelonoidis a trouvé des graines viables dans la plupart des échantillons. Certaines graines survivent donc au transit intestinal, sans garantie de germination ni d’établissement des plantes.",
+    "behavior": "Les observations décrivent une activité surtout diurne, modulée par la météo et les conditions locales. Comme les autres reptiles, l’espèce dépend de la chaleur extérieure ; ombre, abris humides et zones ensoleillées offrent des conditions thermiques différentes, mais sa thermorégulation saisonnière reste peu étudiée. En Amazonie centrale, les animaux étaient beaucoup plus souvent rencontrés à l’abri qu’en marche ou en train de manger. Les études décrivent déplacements et abris individuels, pas un système stable de groupes sociaux.",
+    "reproduction": "La reproduction sauvage est opportuniste et saisonnière. Chez 347 femelles adultes d’Amazonie péruvienne, les stades reproductifs étaient présents toute l’année, mais le rendement variait selon le climat : la croissance folliculaire suivait le pic des pluies et la ponte était estimée surtout en saison sèche. Les femelles gravides portaient en moyenne 3,7 œufs à coquille ; la ponte était estimée à 5,1 œufs, avec une forte variation. Ces chiffres proviennent d’une population exploitée. La durée d’incubation et la survie des jeunes dans la nature sont peu documentées.",
+    "ecology": "En mangeant des fruits et en traversant la forêt, la tortue peut transporter des graines loin des plantes parentes. Une étude de 2025 portant sur deux espèces de Chelonoidis a combiné fèces, tests de viabilité et données de déplacement ; ses modèles situent de nombreuses graines à plusieurs centaines de mètres, parfois au-delà d’un kilomètre. Cela étaye un rôle de dispersion, mais l’effet sur les plantes dépend du lieu de dépôt, de la germination et de l’établissement.",
+    "conservation": "L’évaluation mondiale de l’UICN de 1996 classait la tortue comme vulnérable ; ce résultat est historique, pas une mesure récente. En décembre 2025, le groupe de spécialistes de l’UICN a inscrit une évaluation « En danger » parmi celles soumises et sous presse, sans en donner la date d’évaluation. La tortue est chassée pour sa viande et entre dans le commerce international d’animaux vivants. Une expertise scientifique norvégienne signale raréfaction et épuisement dans certaines populations, tout en mentionnant l’incertitude sur l’élevage captif dans le commerce. La situation varie selon les régions et nécessite un suivi local."
+  },
+  "sources": [
+    {
+      "url": "https://iucn-tftsg.org/wp-content/uploads/crm.10.checklist.atlas_.v10.2025.pdf",
+      "title": "Turtles of the World : checklist annotée et atlas, 10e édition (2025) — Groupe de spécialistes des tortues terrestres et d’eau douce de l’UICN/SSC"
+    },
+    {
+      "url": "https://ppbio.inpa.gov.br/en/Cheloniateca/Chelonoidis_denticulata",
+      "title": "Chelonoidis denticulata — collection de chéloniens PPBio-INPA, Institut national de recherche amazonienne"
+    },
+    {
+      "url": "https://www.scielo.br/j/bjb/a/PpqM86dq5FpJhcNXrkhRjCn/?lang=en",
+      "title": "Variations morphologiques et dimorphisme sexuel chez Chelonoidis carbonaria et C. denticulata — Brazilian Journal of Biology"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0211869",
+      "title": "Influence de la taille, du relief, des ressources alimentaires et des chablis sur l’utilisation de l’espace par les tortues à pattes jaunes en Amazonie centrale — PLOS ONE"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.therwi.2023.100022",
+      "title": "Cycle ovarien, rendement reproducteur et saisonnalité de la reproduction de tortues amazoniennes à pattes jaunes sauvages — Theriogenology Wild"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/btp.70055",
+      "title": "L’efficacité de la dispersion des graines par Chelonoidis carbonarius et C. denticulatus dépend de la taille et des différences de déplacement entre sexes — Biotropica"
+    },
+    {
+      "url": "https://iucn-tftsg.org/wp-content/uploads/file/ChelonianConservationNews/Chelonian_Conservation_News.3.Dec2025.pdf",
+      "title": "Chelonian Conservation News no 3 (décembre 2025), Groupe de spécialistes des tortues terrestres et d’eau douce de l’UICN/SSC"
+    },
+    {
+      "url": "https://vkm.no/download/18.12dd184318e517da1a03e832/1710939913411/Scientific%2520assessment%2520of%2520risk%2520to%2520the%2520populations%2520of%2520tortoises%2520listed%2520by%2520CITES%2520as%2520a%2520result%2520of%2520trade_publisert%2520versjon.pdf",
+      "title": "Évaluation scientifique des risques du commerce pour les populations de tortues inscrites à la CITES — Comité scientifique norvégien pour l’alimentation et l’environnement"
+    },
+    {
+      "url": "https://www.tortoise.org/archives/carbdent.html",
+      "title": "Distinguer les tortues à pattes jaunes et rouges — California Turtle & Tortoise Club"
+    },
+    {
+      "url": "https://www.fao.org/4/T0750E/t0750e09.htm",
+      "title": "Tortues : caractéristiques des espèces — FAO"
+    }
+  ]
+}

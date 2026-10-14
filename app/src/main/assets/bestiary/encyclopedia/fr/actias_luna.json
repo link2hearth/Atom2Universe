@@ -1,0 +1,34 @@
+{
+  "id": "actias_luna",
+  "name": "Actias luna",
+  "scientific": "Actias luna",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Actias luna est un grand papillon de nuit nord-américain, reconnaissable à ses ailes vert pâle et à leurs longues queues postérieures. Il fréquente les forêts de feuillus et les forêts mixtes où ses chenilles trouvent des arbres-hôtes adaptés. L’adulte spectaculaire vit peu de temps et ne se nourrit pas ; l’essentiel de la croissance a lieu au stade chenille.",
+    "identification": "L’adulte a des ailes vert citron pâle, une bordure externe blanche à rosée, des ocelles translucides et une longue queue courbe sur chaque aile postérieure. Son envergure est d’environ 75 à 105 mm ; les sexes sont de taille similaire, mais les antennes du mâle sont plus plumeuses. Cette combinaison le distingue des Actias asiatiques également appelés papillons lunaires. Les références de terrain citées indiquent l’envergure mais pas de plage fiable de masse corporelle.",
+    "habitat": "L’espèce vit dans une grande partie de l’est de l’Amérique du Nord, du Canada à l’est des États-Unis et au nord du Mexique. Elle est associée aux forêts de feuillus ou mixtes et aux marécages boisés où poussent ses arbres-hôtes. Le nombre de générations et la période de vol varient avec la latitude : les populations nordiques en ont généralement une, tandis que les régions méridionales plus chaudes peuvent en avoir plusieurs.",
+    "diet": "Les chenilles mangent les feuilles d’arbres et d’arbustes feuillus. Parmi les plantes-hôtes documentées figurent les bouleaux dans les populations nordiques et, plus au sud, les caryers, noyers, sumacs, copalmes et plaqueminiers ; l’adéquation des hôtes varie selon les populations géographiques. Les adultes ont des pièces buccales vestigiales et ne se nourrissent pas : le nectar n’est donc pas leur ressource alimentaire.",
+    "behavior": "Les adultes volent la nuit et sont fortement attirés par la lumière, notamment ultraviolette. Les mâles peuvent parcourir de longues distances pour localiser les femelles, qui émettent une phéromone sexuelle ; l’accouplement a souvent lieu après minuit. Les longues queues postérieures pourraient perturber l’écholocation des chauves-souris, une défense proposée et étayée par des recherches citées par l’IFAS.",
+    "reproduction": "Après l’accouplement, les femelles pondent seules ou en petits groupes sur les feuilles des plantes-hôtes, sur plusieurs nuits. Les chenilles traversent cinq stades larvaires et tissent un cocon parmi les feuilles ; celui-ci tombe avec le feuillage automnal et la chrysalide hiverne dans la litière. Au printemps ou en été, l’adulte émerge, sèche ses ailes puis recherche un partenaire. La vitesse de développement dépend de la température et de la photopériode.",
+    "ecology": "Les chenilles de l’Actias luna consomment des arbres feuillus, mais elles ne sont généralement pas assez nombreuses pour causer des dégâts importants. Adultes et chenilles sont la proie d’autres animaux ; les chenilles hébergent aussi des insectes parasitoïdes. Leurs longues queues pourraient aider les adultes à échapper aux chauves-souris, reliant leur silhouette distinctive à l’évitement des prédateurs.",
+    "conservation": "Aucune catégorie mondiale de l’UICN n’a été vérifiée dans les sources utilisées pour cette fiche. L’IFAS signale la crainte que l’éclairage artificiel nocturne perturbe l’accouplement et affecte les populations urbaines, sans quantifier de tendance mondiale. La qualité de l’habitat, la présence d’arbres-hôtes et la pollution lumineuse sont des facteurs locaux pertinents."
+  },
+  "sources": [
+    {
+      "url": "https://ask.ifas.ufl.edu/publication/IN737",
+      "title": "Papillon lunaire Actias luna — service de vulgarisation UF/IFAS"
+    },
+    {
+      "url": "https://mynpn.usanpn.org/npnapps/species/Actias/luna",
+      "title": "Papillon lunaire — carnet Nature’s Notebook du réseau américain de phénologie"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Actias_luna/",
+      "title": "Actias luna — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://www.butterfliesandmoths.org/node/6140",
+      "title": "Papillon lunaire Actias luna — Butterflies and Moths of North America"
+    }
+  ]
+}

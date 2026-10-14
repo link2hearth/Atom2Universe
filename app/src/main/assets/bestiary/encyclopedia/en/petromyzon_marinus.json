@@ -1,0 +1,30 @@
+{
+  "id": "petromyzon_marinus",
+  "name": "Sea Lamprey",
+  "scientific": "Petromyzon marinus",
+  "group": "fish",
+  "sections": {
+    "overview": "The sea lamprey is a jawless, eel-like fish of the North Atlantic. Adults live at sea as parasites of other fish and return to rivers to spawn once. Landlocked populations exist in some North American lakes, and in the Great Lakes it is a notorious invader.",
+    "identification": "The body is scaleless and cartilaginous, with no jaws and no paired fins. The mouth is a round suction disc lined with horny teeth, with a rasping tongue inside. There is a single nostril, an eye on each side of the head, seven gill openings and two dorsal fins. Adults are brownish-gray and usually reach 60 cm, rarely up to 120 cm. FishBase lists a maximum published mass of 2.5 kg; this is a recorded maximum, not a typical adult weight. No sex-specific mass or body width was found.",
+    "habitat": "It is anadromous: adults live in the sea and return to freshwater to breed. Its range runs from Norway and Iceland south to North Africa in the Northeast Atlantic, and from Labrador to the Gulf coast of Florida in the west. Larvae live in streams with sandy or gravelly bottoms and slow edges.",
+    "diet": "Larvae filter-feed on diatoms, algae and detritus. Adults are parasites that attach to fishes, and in the sea sometimes to marine mammals, with their suction mouth and feed on blood and body fluids, often without killing the host. Adults stop feeding when they reach sexual maturity and during spawning.",
+    "behavior": "Adults are highly mobile and have no home range or territory. They are solitary or gather in small groups while attached to hosts. During spawning, males use chemical signals, bile-acid pheromones, to attract females.",
+    "reproduction": "Adults run up rivers in spring and early summer, at water temperatures of 10–18 °C, to spawn once and die. Males build nests and females lay tens to hundreds of thousands of small eggs, which hatch after about one to two weeks. The larvae burrow in mud for years, typically 3 to 7 or more, then transform and go to sea, where adults spend about two to three years before returning.",
+    "ecology": "As a parasite, the sea lamprey can harm its host fishes, and adults have few natural predators. Introduced to the Great Lakes, it contributed to the collapse of lake trout, whitefish and cisco fisheries. The catch of lake trout in the upper lakes fell from about 15 million pounds a year to about 300,000 pounds by the early 1960s.",
+    "conservation": "In its native range the species is Least Concern on the IUCN Red List (assessed in 2022). In the Great Lakes, where it is invasive, it is the target of control: lampricides applied to larval streams, plus barriers and traps that stop adults from reaching spawning grounds."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Petromyzon-marinus.html",
+      "title": "Petromyzon marinus, Sea lamprey — FishBase"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Petromyzon_marinus/",
+      "title": "Petromyzon marinus — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.glfc.org/sea-lamprey.php",
+      "title": "Sea lamprey — Great Lakes Fishery Commission"
+    }
+  ]
+}

@@ -12,8 +12,8 @@
       "fr": "Le castor du Canada est un grand rongeur herbivore d’eau douce, distinct du castor d’Eurasie (Castor fiber). Ses pattes arrière palmées le propulsent ; sa large queue aplatie le dirige dans l’eau et soutient son corps à terre. Les familles occupent étangs, lacs, zones humides et cours d’eau. Là où ils construisent des barrages, l’eau retenue, plus profonde, permet un accès immergé aux réserves alimentaires et aux abris."
     },
     "identification": {
-      "en": "The adult has a stout brown body, small ears, a broad, scaly tail and large webbed hind feet. Its orange incisors grow continuously and cut branches or strip bark. Hard enamel on the front and faster wear behind keep their edges sharp. Dense underfur insulates the animal beneath longer guard hairs that shed water. Valves close the ears and nostrils underwater; a nictitating membrane protects the eyes, and the lips can close behind the incisors while the animal gnaws underwater.",
-      "fr": "L’adulte a le corps trapu et brun, de petites oreilles, une large queue écailleuse et de grandes pattes arrière palmées. Ses incisives orange poussent sans cesse et coupent les branches ou détachent l’écorce. L’émail dur à l’avant et l’usure plus rapide à l’arrière en gardent le tranchant. Le sous-poil dense l’isole sous les poils de garde qui repoussent l’eau. Des valves ferment oreilles et narines sous l’eau ; une membrane nictitante protège les yeux et les lèvres peuvent se fermer derrière les incisives pendant le rongement immergé."
+      "en": "The adult has a stout brown body, small ears, a broad, scaly tail and large webbed hind feet. Its orange incisors grow continuously and cut branches or strip bark. Hard enamel on the front and faster wear behind keep their edges sharp. Dense underfur insulates the animal beneath longer guard hairs that shed water. Valves close the ears and nostrils underwater; a nictitating membrane protects the eyes, and the lips can close behind the incisors while the animal gnaws underwater. The U.S. National Park Service describes an average body length of about 61 cm excluding the tail and mass of 16–27 kg; males and females look alike. These are broad field-guide figures, not sex-specific measurements.",
+      "fr": "L’adulte a le corps trapu et brun, de petites oreilles, une large queue écailleuse et de grandes pattes arrière palmées. Ses incisives orange poussent sans cesse et coupent les branches ou détachent l’écorce. L’émail dur à l’avant et l’usure plus rapide à l’arrière en gardent le tranchant. Le sous-poil dense l’isole sous les poils de garde qui repoussent l’eau. Des valves ferment oreilles et narines sous l’eau ; une membrane nictitante protège les yeux et les lèvres peuvent se fermer derrière les incisives pendant le rongement immergé. Le National Park Service des États-Unis indique une longueur corporelle moyenne d’environ 61 cm sans la queue et une masse de 16 à 27 kg ; mâles et femelles se ressemblent. Ces valeurs générales ne distinguent pas les sexes."
     },
     "habitat": {
       "en": "The species ranges across much of Canada and the United States into northern Mexico. It uses fresh water beside woody or herbaceous plants, especially ponds, wetlands and slow streams with banks suitable for burrowing. A lodge of branches and mud has an underwater entrance and a dry chamber. Where lakes or rivers already hold deep, stable water, beavers may use a bank den or lodge without building a dam. Introductions have also established populations outside North America, notably in Finland and Tierra del Fuego.",
@@ -170,6 +170,20 @@
       ],
       "facts": [
         "Account consulted October 2026 reports the global IUCN category as Least Concern; its generic bibliographic year is not interpreted as a species assessment year."
+      ]
+    },
+    {
+      "title": {
+        "en": "North American Beaver — Acadia National Park, U.S. National Park Service",
+        "fr": "Castor du Canada — parc national d’Acadia, National Park Service des États-Unis"
+      },
+      "url": "https://www.nps.gov/articles/north-american-beaver-acadia.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Average body length about 2 feet excluding the tail; mass 35–60 pounds."
       ]
     }
   ],

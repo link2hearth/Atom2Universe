@@ -12,8 +12,8 @@
       "fr": "Le Grèbe huppé est un grand oiseau d’eau des zones humides d’Europe, d’Asie, de régions d’Afrique, d’Australie et de Nouvelle-Zélande. Il plonge pour capturer ses proies, niche sur la végétation flottante et élève ses petits sur l’eau. Les oiseaux nordiques gagnent souvent des eaux libres de glace en hiver. Des populations nichent jusqu’en Mongolie, et des oiseaux hivernent jusqu’en Asie méridionale."
     },
     "identification": {
-      "en": "Adults are about 45–51 cm long, with similar plumage in both sexes. Breeding birds show a black double crest and chestnut-and-black facial ruff; in winter these ornaments shrink. Striped heads distinguish juveniles. Their long neck, pointed reddish bill, short tail and pale underside complete a distinctive profile on the water.",
-      "fr": "Les adultes mesurent environ 45 à 51 cm, et les deux sexes ont un plumage semblable. En période nuptiale, la double huppe noire et la collerette faciale rousse et noire sont visibles ; elles diminuent en hiver. La tête rayée distingue les jeunes. Leur long cou, leur bec rougeâtre pointu, leur courte queue et leur dessous pâle dessinent une silhouette reconnaissable sur l’eau."
+      "en": "Adults are about 45–51 cm long, with similar plumage in both sexes. Breeding birds show a black double crest and chestnut-and-black facial ruff; in winter these ornaments shrink. Striped heads distinguish juveniles. Their long neck, pointed reddish bill, short tail and pale underside complete a distinctive profile on the water. British adults average about 993 g; the species is about 45–51 cm long, with similar adult plumage in both sexes.",
+      "fr": "Les adultes mesurent environ 45 à 51 cm, et les deux sexes ont un plumage semblable. En période nuptiale, la double huppe noire et la collerette faciale rousse et noire sont visibles ; elles diminuent en hiver. La tête rayée distingue les jeunes. Leur long cou, leur bec rougeâtre pointu, leur courte queue et leur dessous pâle dessinent une silhouette reconnaissable sur l’eau. Les adultes britanniques pèsent en moyenne environ 993 g ; l’espèce mesure environ 45–51 cm, et le plumage adulte est semblable chez les deux sexes."
     },
     "habitat": {
       "en": "Breeding grebes favour freshwater lakes and reservoirs, often with reed-fringed sheltered margins. Calm shallows provide plants and anchorage for floating nests. In winter, some move to larger lakes, estuaries or coasts, depending on ice and food. They also use brackish lagoons and bays, provided shallow water and vegetation offer secure nesting cover.",
@@ -56,14 +56,16 @@
         "Adult length 45–51 cm; breeding crest and ruff."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
-        "identification.en.4",
-        "identification.fr.4",
         "behavior.en.4",
-        "behavior.fr.4"
+        "behavior.fr.4",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.4",
+        "identification.en.5",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.4",
+        "identification.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -75,11 +77,11 @@
     },
     {
       "title": {
-        "en": "Great Crested Grebe BirdFacts — British Trust for Ornithology",
-        "fr": "Great Crested Grebe BirdFacts — British Trust for Ornithology"
+        "en": "Great Crested Grebe — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Grèbe huppé — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/learn/about-birds/birdfacts/great-crested-grebe",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "overview",
         "habitat",
@@ -88,23 +90,24 @@
         "conservation"
       ],
       "facts": [
-        "BTO nest records give clutch, incubation and fledging timings."
+        "BTO nest records give clutch, incubation and fledging timings.",
+        "British adults average about 993 g."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
+        "conservation.en.4",
+        "conservation.fr.4",
         "habitat.en.1",
-        "habitat.fr.1",
         "habitat.en.2",
+        "habitat.fr.1",
         "habitat.fr.2",
         "identification.en.3",
         "identification.fr.3",
+        "overview.en.3",
+        "overview.fr.3",
         "reproduction.en.2",
-        "reproduction.fr.2",
         "reproduction.en.5",
-        "reproduction.fr.5",
-        "conservation.en.4",
-        "conservation.fr.4"
+        "reproduction.fr.2",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -131,16 +134,16 @@
         "RSPB documents the weed ceremony and British plumage campaign history."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.3",
+        "behavior.fr.1",
         "behavior.fr.3",
+        "conservation.en.5",
+        "conservation.fr.5",
         "ecology.en.4",
         "ecology.fr.4",
-        "conservation.en.5",
-        "conservation.fr.5"
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -190,8 +193,8 @@
       ],
       "prose_claims": [
         "diet.en.3",
-        "diet.fr.3",
         "diet.en.4",
+        "diet.fr.3",
         "diet.fr.4"
       ],
       "budget": {
@@ -218,15 +221,15 @@
         "Prey, wetland threats and the 2025 southern African Vulnerable status."
       ],
       "prose_claims": [
+        "conservation.en.2",
+        "conservation.en.3",
+        "conservation.fr.2",
+        "conservation.fr.3",
         "diet.en.1",
         "diet.fr.1",
-        "conservation.en.2",
-        "conservation.fr.2",
-        "conservation.en.3",
-        "conservation.fr.3",
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
+        "ecology.fr.1",
         "ecology.fr.2"
       ],
       "budget": {
@@ -253,14 +256,14 @@
         "Global distribution and 2019 assessment are distinct from regional status."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "overview.en.4",
-        "overview.fr.4",
+        "conservation.en.1",
+        "conservation.fr.1",
         "habitat.en.3",
         "habitat.fr.3",
-        "conservation.en.1",
-        "conservation.fr.1"
+        "overview.en.1",
+        "overview.en.4",
+        "overview.fr.1",
+        "overview.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -288,15 +291,15 @@
         "Account describes floating nest, hatchlings, back-riding and parental care."
       ],
       "prose_claims": [
-        "habitat.en.4",
-        "habitat.fr.4",
         "behavior.en.5",
         "behavior.fr.5",
+        "habitat.en.4",
+        "habitat.fr.4",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.4",
+        "reproduction.fr.1",
+        "reproduction.fr.3",
         "reproduction.fr.4"
       ],
       "budget": {

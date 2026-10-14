@@ -12,8 +12,8 @@
       "fr": "Les lions sauvages subsistent aujourd’hui dans des régions morcelées d’Afrique subsaharienne et dans une population asiatique de l’ouest de l’Inde. Ils fréquentent savanes, broussailles et bois secs, tandis que proies et pressions humaines varient selon les régions. En Inde, ils circulent dans le paysage élargi de Gir, où les forêts protégées côtoient fermes et villages."
     },
     "identification": {
-      "en": "The lion has a muscular, deep-chested body, a short tawny coat, pale underparts and a long tail tipped with a dark tuft; cubs often have fading spots. Adult males usually grow a mane whose length and shade vary with age and individual; females generally lack one. African reference adults average 180 kilograms and 1.20 metres at the shoulder for males, and 130 kilograms and 1.05 metres for females; individuals vary. Asiatic lions often have shorter manes and a more visible abdominal fold. Retractile claws grip prey; long canines kill and cheek teeth slice meat.",
-      "fr": "Le lion a un corps musclé à poitrine ample, un pelage fauve court, le dessous pâle et une longue queue terminée par une touffe sombre ; les lionceaux ont souvent des taches qui s’estompent. Les mâles adultes développent généralement une crinière dont la longueur et la teinte varient selon l’âge et l’individu ; les femelles en sont habituellement dépourvues. À titre indicatif, les adultes africains mesurent en moyenne 1,20 mètre au garrot et 180 kilogrammes chez les mâles, contre 1,05 mètre et 130 kilogrammes chez les femelles ; les individus varient. Les lions asiatiques ont souvent une crinière plus courte et un pli ventral plus visible. Les griffes rétractiles agrippent les proies ; les longues canines tuent et les dents jugales découpent la viande."
+      "en": "The lion has a muscular, deep-chested body, a short tawny coat, pale underparts and a long tail tipped with a dark tuft; cubs often have fading spots. Adult males usually grow a mane whose length and shade vary with age and individual; females generally lack one. African reference adults average 180 kilograms and 1.20 metres at the shoulder for males, and 130 kilograms and 1.05 metres for females; individuals vary. Asiatic lions often have shorter manes and a more visible abdominal fold. Retractile claws grip prey; long canines kill and cheek teeth slice meat. For comparison across references, the Smithsonian reports shoulder heights of about 1.0–1.2 m; males may reach 3 m in body length plus a 0.6–0.91 m tail and weigh 150–250 kg, while females may reach 2.7 m and weigh about 120–179 kg. These are broad zoo-reference values, while the regional averages above describe African populations.",
+      "fr": "Le lion a un corps musclé à poitrine ample, un pelage fauve court, le dessous pâle et une longue queue terminée par une touffe sombre ; les lionceaux ont souvent des taches qui s’estompent. Les mâles adultes développent généralement une crinière dont la longueur et la teinte varient selon l’âge et l’individu ; les femelles en sont habituellement dépourvues. À titre indicatif, les adultes africains mesurent en moyenne 1,20 mètre au garrot et 180 kilogrammes chez les mâles, contre 1,05 mètre et 130 kilogrammes chez les femelles ; les individus varient. Les lions asiatiques ont souvent une crinière plus courte et un pli ventral plus visible. Les griffes rétractiles agrippent les proies ; les longues canines tuent et les dents jugales découpent la viande. À titre de comparaison entre références, le Smithsonian indique une hauteur au garrot d’environ 1,0 à 1,2 m; le mâle peut atteindre 3 m de longueur corporelle, auxquels s’ajoutent 0,6 à 0,91 m de queue, et peser 150 à 250 kg; la femelle peut atteindre 2,7 m et peser environ 120 à 179 kg. Ces plages générales sont celles d’une référence zoologique, tandis que les moyennes ci-dessus décrivent des populations africaines."
     },
     "habitat": {
       "en": "Lions occupy savannas, grasslands, scrub, open woodland and dry forests, provided that cover, prey and relatively undisturbed den sites are available. Gir combines dry deciduous forest, thorn scrub, grassland and river corridors within a cultivated regional landscape. Asiatic lions may rest in dense vegetation by day and range more widely at night, sometimes near farms and settlements. A comparison across ten habitats found that seasonal food scarcity, rather than overall prey abundance alone, was linked to larger home ranges.",
@@ -58,15 +58,16 @@
         "African adult measurements vary across populations."
       ],
       "prose_claims": [
-        "identification.en.3",
-        "identification.fr.3",
-        "identification.en.5",
-        "identification.fr.5",
         "behavior.en.4",
         "behavior.fr.4",
+        "identification.en.3",
+        "identification.en.5",
+        "identification.en.7",
+        "identification.fr.3",
+        "identification.fr.5",
         "reproduction.en.2",
-        "reproduction.fr.2",
         "reproduction.en.4",
+        "reproduction.fr.2",
         "reproduction.fr.4"
       ],
       "budget": {
@@ -93,12 +94,12 @@
         "Lions stalk close; cubs begin eating meat before weaning."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
         "diet.en.2",
         "diet.fr.2",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
         "reproduction.en.1",
         "reproduction.fr.1"
       ],
@@ -129,16 +130,16 @@
         "Regional prey, habitat and social patterns differ."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
-        "identification.en.4",
-        "identification.fr.4",
-        "habitat.en.3",
-        "habitat.fr.3",
+        "conservation.en.3",
+        "conservation.fr.3",
         "diet.en.1",
         "diet.fr.1",
-        "conservation.en.3",
-        "conservation.fr.3"
+        "habitat.en.3",
+        "habitat.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -163,14 +164,14 @@
         "Assessment date and publication year are distinct."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "overview.en.2",
-        "overview.fr.2",
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
-        "conservation.fr.2"
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -197,12 +198,12 @@
         "Gir studies describe social units, cub dependence and recovery."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.2",
-        "habitat.fr.2",
         "behavior.en.6",
         "behavior.fr.6",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
         "reproduction.en.3",
         "reproduction.fr.3"
       ],
@@ -229,10 +230,10 @@
         "Lean-season prey availability related to range and cub survival."
       ],
       "prose_claims": [
-        "habitat.en.4",
-        "habitat.fr.4",
         "ecology.en.1",
-        "ecology.fr.1"
+        "ecology.fr.1",
+        "habitat.en.4",
+        "habitat.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -285,7 +286,8 @@
       ],
       "prose_claims": [
         "diet.en.3",
-        "diet.fr.3"
+        "diet.fr.3",
+        "identification.fr.7"
       ],
       "budget": {
         "limit": 200,
@@ -310,10 +312,10 @@
       ],
       "prose_claims": [
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.2",
-        "behavior.fr.2",
         "behavior.en.3",
+        "behavior.fr.1",
+        "behavior.fr.2",
         "behavior.fr.3"
       ],
       "budget": {
@@ -364,7 +366,8 @@
       ],
       "prose_claims": [
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.4",
+        "identification.en.6"
       ],
       "budget": {
         "limit": 200,
@@ -389,7 +392,8 @@
       ],
       "prose_claims": [
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.2",
+        "identification.fr.6"
       ],
       "budget": {
         "limit": 200,

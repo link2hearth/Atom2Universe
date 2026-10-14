@@ -1,0 +1,30 @@
+{
+  "id": "daphnia_magna",
+  "name": "Water Flea",
+  "scientific": "Daphnia magna",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Daphnia magna is a small freshwater crustacean, the largest of the European water fleas, that drifts in ponds and lakes. It is mostly transparent, reproduces mainly by clones, and is one of the most widely used animals in ecology, genetics and toxicity testing.",
+    "identification": "Females measure about 3 to 5 mm and males about 2 mm. The body is bean-shaped and enclosed in a transparent carapace, with one large dark compound eye at the front and two pairs of antennae; the large, branched second pair drives swimming. Males have longer first antennae and a hooked first leg used to clasp females. Reliable body-mass figures were not found in the consulted sources; the published adult measurements are lengths and vary strongly with sex and environment.",
+    "habitat": "It lives in standing fresh and brackish water, from temporary pools to lakes, tolerating salinity up to about 8 parts per thousand and preferring roughly 18 to 22 °C. It is native to the Nearctic and Palearctic regions, with records in western Europe, around the Black Sea and in coastal rock pools of the north-eastern United States.",
+    "diet": "It is a filter feeder. Hairs on its thoracic legs strain particles, generally smaller than 50 micrometres, from the water: algae, bacteria, detritus and fungal spores.",
+    "behavior": "It swims in quick, jerky jumps driven by its large second antennae. In lakes it can perform a daily vertical migration, rising to the upper water at night to feed and sinking by day to avoid predators. It lives in dense groups with no social hierarchy.",
+    "reproduction": "It is a cyclic parthenogen: most of the time females produce diploid eggs that develop into female clones, with a brood of about 8 eggs on average, held in the brood pouch for 1 to 4 days. Under stress such as low food, extreme temperature or crowding, males appear and fertilised eggs are enclosed in a protective case called an ephippium, which can remain dormant for years. Young reach maturity in 6 to 10 days.",
+    "ecology": "Daphnia are often keystone grazers in ponds and lakes, the main consumers of unicellular algae, and they link primary production to fish and invertebrate predators. D. magna is eaten by fish such as roach and perch and by insect larvae and backswimmers, and in some habitats it can be displaced by competing Daphnia species.",
+    "conservation": "The Animal Diversity Web states that the species has not been evaluated by the IUCN and has no special protection status. It is easy to culture and widespread, and no specific threat was found in the sources consulted."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Daphnia_magna/",
+      "title": "Daphnia magna — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9360664/",
+      "title": "Daphnia as a versatile model system in ecology and evolution (PubMed Central)"
+    },
+    {
+      "url": "https://www.canadiannaturephotographer.com/daphnia.html",
+      "title": "Photographing Water-fleas, Daphnia — The Canadian Nature Photographer"
+    }
+  ]
+}

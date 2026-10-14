@@ -1,0 +1,58 @@
+{
+  "id": "black_rat",
+  "name": "Rat noir",
+  "scientific": "Rattus rattus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le rat noir, aussi appelé rat des toits ou rat des navires, est un petit rongeur adaptable dont l’histoire accompagne celle des humains. L’évaluation de l’UICN situe son aire d’origine dans la région indomalaise ; le commerce maritime l’a propagé bien au-delà, et des populations établies vivent aujourd’hui sur plusieurs continents et îles. Il prospère dans les villages comme en forêt : « rat des maisons » décrit une proximité, pas une limite d’habitat.",
+    "identification": "Le rat noir est généralement élancé, avec un museau pointu, de grandes oreilles fines et une queue plus longue que la tête et le corps réunis. Son pelage varie du noirâtre au gris charbon ou au brun, parfois plus clair sur le dos, et souvent pâle dessous. Le rat brun (Rattus norvegicus) est en général plus lourd et trapu ; sa queue est plus courte et épaisse, son museau plus obtus. La couleur seule ne suffit pas et les jeunes sont difficiles à identifier. Les adultes ont une longueur tête-corps d’environ 16,5 à 20,5 cm, une queue de 18,5 à 25,5 cm et une masse publiée de 95 à 340 g ; ces plages ne sont pas distinguées selon le sexe.",
+    "habitat": "L’espèce fréquente les régions côtières chaudes, les fermes, jardins, boisements et bâtiments, surtout lorsque nourriture et abris sont proches. Son agilité lui ouvre les arbustes, cimes, lianes, clôtures, câbles et combles ; elle peut nicher en hauteur dans la végétation ou les constructions. En Californie, les rats des toits nichent souvent dans les arbres et les jardins denses, mais descendent aussi au sol pour chercher leur nourriture ou se nourrissent dans les arbres. Ils peuvent creuser ou s’abriter au sol si les sites élevés manquent : l’arboricolie est une tendance, pas une règle.",
+    "diet": "Le rat noir consomme des aliments variés, généralement avec une forte composante végétale : fruits, baies, graines, noix, céréales, feuilles et autres végétaux. Il prend aussi des invertébrés et, quand ils sont accessibles, des œufs ou de petits animaux. Dans quatre colonies de pétrels des Galápagos échantillonnées en juin 2013 sur San Cristóbal, les contenus stomacaux étaient surtout végétaux, avec des arthropodes ; les graines de l’arbre indigène Miconia robinsoniana étaient particulièrement fréquentes. Ce résultat ponctuel dépend du lieu et de la saison. Le rat peut privilégier les ressources localement abondantes.",
+    "behavior": "Le rat noir est surtout actif la nuit : l’obscurité lui permet de chercher sa nourriture tout en réduisant son exposition aux prédateurs diurnes. Il n’est pas toujours solitaire : les descriptions de l’espèce signalent des groupes de plusieurs mâles et femelles, où la dominance influe sur l’accès aux partenaires et aux territoires nourriciers défendus. Elles ne permettent pas de fixer une organisation sociale valable pour toutes les populations. Cris, dépôts odorants et postures accompagnent les interactions. Les trajets relient les nids aux ressources, par les branches, clôtures, câbles ou le sol.",
+    "reproduction": "Lorsque nourriture et abris restent disponibles, les rats noirs peuvent avoir plusieurs portées ; la gestation est brève, d’environ trois à quatre semaines, et une portée compte généralement plusieurs petits. Nouveau-nés, ils sont nus, aveugles et dépendants. La mère les allaite et les protège au nid ; pelage et mobilité se développent durant les premières semaines, puis vient le sevrage, vers trois ou quatre semaines. Les jeunes peuvent atteindre la maturité sexuelle en quelques mois, ce qui permet un rétablissement rapide des effectifs. La reproduction n’est toutefois pas continue partout : une étude menée à Madagascar et publiée en 2024 a relevé une forte saisonnalité, liée en partie aux pluies, à l’habitat et à la densité des rats.",
+    "ecology": "Son aptitude à grimper et son régime omnivore relient le rat noir aux réseaux alimentaires des arbres comme du sol. Il peut disperser certaines graines après avoir mangé des fruits, mais en consomme aussi et peut abîmer les jeunes plants : l’effet net dépend de la plante et du milieu. Dans des fragments de boisements urbains de Sydney, une expérience de terrain a montré que les rats noirs attaquaient des nids d’oiseaux, ajoutant une cause de mortalité là où ils avaient remplacé le rat buissonnier indigène. Plus arboricoles, et aidés par une longue queue qui stabilise leur équilibre, ils atteignent les nids en hauteur et d’autres animaux des arbres.",
+    "conservation": "L’évaluation mondiale amendée de l’UICN, publiée en 2021 à partir d’une évaluation datée du 7 septembre 2016, classe l’espèce en préoccupation mineure, car elle est répandue et abondante. Cette catégorie mondiale ne signifie pas qu’elle est inoffensive : son introduction peut fortement affecter la faune locale. Sur l’île Lord Howe, en Australie, le rat noir est arrivé après un naufrage en 1918 ; en 2000, un comité scientifique de l’État l’a mis en cause dans les pertes d’oiseaux endémiques et la disparition du phasme de Lord Howe de l’île principale, les menaces pour les escargots indigènes et la diminution des graines de palmiers. Les enjeux de gestion sont donc locaux, liés aux écosystèmes, et non au risque mondial d’extinction. Le rapport final du conseil de l’île, publié en novembre 2025, confirme l’éradication réussie des rongeurs et souligne la nécessité de maintenir la biosécurité pour éviter leur réintroduction."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-1.RLTS.T19360A192565917.en",
+      "title": "Rattus rattus — Liste rouge de l’UICN, évaluation de 2016 amendée (publiée en 2021)"
+    },
+    {
+      "url": "https://australian.museum/learn/species-identification/ask-an-expert/is-it-a-rat/",
+      "title": "Est-ce un rat ? — Australian Museum"
+    },
+    {
+      "url": "https://ipm.ucanr.edu/home-and-landscape/rats/",
+      "title": "Rats — programme intégré de lutte antiparasitaire de l’Université de Californie (Agriculture et ressources naturelles)"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Rattus_rattus/",
+      "title": "Rattus rattus (rat des maisons) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10952345/",
+      "title": "Écologie reproductive du rat noir à Madagascar — Integrative Zoology"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0127901",
+      "title": "Régime alimentaire de rats noirs introduits dans des colonies de pétrels des Galápagos — PLOS ONE"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4905641/",
+      "title": "Prédation des nids par les rongeurs commensaux dans des fragments boisés urbains — étude de terrain, disponible sur PubMed Central"
+    },
+    {
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/threatened-species/nsw-threatened-species-scientific-committee/determinations/final-determinations/2000-2003/predation-by-the-ship-rat-on-lord-howe-island-key-threatening-process-listing",
+      "title": "Prédation du rat des navires sur l’île Lord Howe — comité scientifique des espèces menacées de Nouvelle-Galles du Sud, décision finale (2000)"
+    },
+    {
+      "url": "https://www.lhib.nsw.gov.au/environment/rodent-eradication-project/final-report-2025",
+      "title": "Éradication des rongeurs : rapport final et enseignements (2025) — Lord Howe Island Board"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/mammals/black-rat/",
+      "title": "Rat noir — Australian Museum"
+    }
+  ]
+}

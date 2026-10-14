@@ -1,0 +1,62 @@
+{
+  "id": "banded_mongoose",
+  "name": "Mangouste rayée",
+  "scientific": "Mungos mungo",
+  "group": "mammals",
+  "sections": {
+    "overview": "La mangouste rayée est un petit carnivore africain diurne, dont les bandes transversales sombres du dos la distinguent des autres mangoustes. Elle vit en groupes mixtes qui élèvent leurs portées en commun.",
+    "identification": "L’adulte mesure environ 30 à 45 cm de la tête à la croupe, avec une queue de 15 à 30 cm et une masse rapportée de 1,5 à 2,5 kg. Le pelage va du pâle au roux, avec des bandes sombres dès le milieu du dos, des pieds foncés et le bout de la queue noir. Chaque patte avant porte cinq doigts griffus et chaque patte arrière en porte quatre ; les griffes arrière sont plus courtes et émoussées, tandis que les molaires arrondies aident à broyer les proies dures.",
+    "habitat": "Dans l’Afrique subsaharienne, la mangouste rayée fréquente forêts, savanes, broussailles et prairies. Les études de terrain ont relevé des gîtes dans des termitières, ravines, terriers d’oryctérope et parfois bâtiments ; la plupart servaient peu de temps, mais certains étaient réutilisés pendant des semaines.",
+    "diet": "Dans une étude de deux ans en Ouganda, les coléoptères et mille-pattes dominaient les relevés alimentaires, tandis que des restes de vertébrés n’apparaissaient que dans 12 % des déjections. D’autres observations mentionnent termites, sauterelles, vers, fruits, reptiles, petits mammifères, oiseaux et œufs ; pour briser un œuf ou la coquille d’un escargot, la mangouste peut le lancer en arrière entre ses pattes arrière contre une pierre ou une autre surface dure.",
+    "behavior": "Une étude de terrain en Ouganda a relevé des groupes de six à 35 adultes et subadultes ; leur taille varie et les individus cherchent leurs proies pendant que le groupe se déplace ensemble. Des appels de contact fréquents maintiennent la cohésion pendant le fourragement, lorsque les animaux fouillent le sol tête baissée. Une étude expérimentale montre que les appels de rassemblement indiquent le degré d’urgence ou de risque plutôt qu’un signal distinct pour chaque stimulus. Dans la population étudiée en Ouganda, les jeunes mâles avaient tendance à assurer davantage de garde que les plus âgés ; les soins ne sont donc pas répartis également entre les membres du groupe.",
+    "reproduction": "Les femelles peuvent se reproduire vers l’âge d’un an ; dans la population ougandaise suivie à long terme, plusieurs mettent souvent bas ensemble, parfois le même jour, et peuvent avoir plusieurs portées dans l’année. La gestation dure près de deux mois et les portées comptent généralement deux à six petits, aveugles et peu poilus ; leurs yeux s’ouvrent vers le dixième jour. À trois ou quatre semaines, les petits sortent du terrier et nouent souvent une relation étroite avec un adulte qui les nourrit, transporte, toilette et protège jusqu’à leur autonomie alimentaire, vers trois mois ; dans cette population, les soins reçus prédisent une meilleure survie jusqu’à l’autonomie alimentaire et une masse plus élevée à un an.",
+    "ecology": "Dans la population ougandaise étudiée, la compétition à l’échelle de la population pour la nourriture et les partenaires augmentait la probabilité de rencontres entre groupes. Les conflits étaient aussi associés aux périodes de croissance des groupes et à une baisse de la survie des portées et des adultes.",
+    "conservation": "L’évaluation mondiale de l’UICN achevée le 28 février 2015 et publiée en 2016 classe l’espèce en préoccupation mineure, en raison de sa vaste aire, de sa présence fréquente, de ses populations en zones protégées et de sa tolérance aux milieux modifiés ; elle indique une tendance stable. Une exception régionale sérieuse est documentée dans le nord du Botswana : la bactérie associée à la mangouste, Mycobacterium mungi, a provoqué des foyers répétés et une forte mortalité chez des groupes vivant près des humains entre 2000 et 2010. L’étude n’a établi ni l’ensemble des hôtes de l’agent ni sa transmission aux humains ; ce signal sanitaire local ne doit pas être généralisé à toute l’aire africaine."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Mungos_mungo/",
+      "title": "Animal Diversity Web : Mungos mungo"
+    },
+    {
+      "url": "https://nationalzoo.si.edu/animals/banded-mongoose",
+      "title": "Smithsonian National Zoo : mangouste rayée"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.anbehav.2009.05.002",
+      "title": "Furrer et Manser : les appels de rassemblement renseignent sur le risque"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3529192/",
+      "title": "Communication vocale des mangoustes rayées : appels de contact segmentés"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6460079/",
+      "title": "Vincent et al. : effets durables des soins précoces chez la mangouste rayée"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4943108/",
+      "title": "Les conditions écologiques variables favorisent l’aide des mâles chez les mangoustes rayées"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.anbehav.2017.01.017",
+      "title": "Causes et conséquences des conflits entre groupes de mangoustes rayées"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T41621A45208886.en",
+      "title": "Liste rouge de l’UICN : Mungos mungo"
+    },
+    {
+      "url": "https://wwwnc.cdc.gov/eid/article/16/8/10-0314_article",
+      "title": "Alexander et al. : nouvel agent du complexe Mycobacterium tuberculosis, M. mungi"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1365-2028.1975.tb00125.x",
+      "title": "Rood : dynamique des populations et régime alimentaire de la mangouste rayée"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1599779/",
+      "title": "VanderWaal et al. : les aides bénéficient aux jeunes à court et long terme"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "bison",
+  "name": "Bison d’Amérique",
+  "scientific": "Bison bison",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le bison d’Amérique est un grand ruminant à sabots d’Amérique du Nord. Avant la colonisation européenne, il vivait du nord du Mexique à l’intérieur de l’Alaska. On distingue couramment deux formes : le bison des plaines au sud et le bison des bois plus au nord.",
+    "identification": "Sa tête massive, sa bosse et son arrière-train court forment une silhouette typique. Les deux sexes ont des cornes courtes et recourbées. De longs poils couvrent tête, épaules et pattes avant ; le pelage arrière est plus court. L’adulte perd sa toison hivernale au printemps. La bosse du bison des plaines est plus petite et arrondie que celle du bison des bois. Les adultes mesurent généralement environ 2,7 à 3,8 m de long et 1,8 à 2,0 m de haut ; les mâles pèsent souvent autour de 907 à 998 kg et les femelles environ 454 kg. Les mâles sont nettement plus grands, avec des variations selon la sous-espèce et la population.",
+    "habitat": "Le bison fréquente prairies, prés à carex, broussailles et bois. Autrefois, les troupeaux parcouraient d’immenses territoires. Aujourd’hui, ceux en liberté ou de conservation occupent des fragments de l’ancienne aire ; clôtures et gestion limitent souvent leurs déplacements.",
+    "diet": "Le bison broute toute l’année, surtout des graminées et des carex, ainsi que des plantes à fleurs et des feuilles disponibles. En hiver, il balaie la neige de la tête pour découvrir les plantes. Il a besoin d’eau chaque jour.",
+    "behavior": "Les troupeaux varient selon le sexe, l’âge et la saison : femelles et jeunes se regroupent souvent, tandis que les mâles adultes peuvent être seuls ou en groupes. Les bisons alternent pâturage, repos et rumination. Ils suivent les changements de nourriture et d’eau, se roulent dans la terre meuble, et les mâles s’affrontent au rut estival.",
+    "reproduction": "L’accouplement a lieu surtout de la fin juin à septembre. Après environ 285 jours, la femelle met bas un petit au printemps. Le veau roux suit bientôt le troupeau, tète sept à huit mois et est sevré avant un an. Les femelles peuvent se reproduire dès deux ou trois ans ; les mâles plus tard.",
+    "ecology": "Pâturage, piétinement, bains de poussière et déplacements remuent plantes et sols, créant des conditions de croissance variées. Des graines accrochées au pelage sont transportées ; les déjections rendent des nutriments au sol. Ces effets forment une mosaïque végétale et de petits habitats, selon le paysage et la gestion des troupeaux.",
+    "conservation": "L’évaluation mondiale de la Liste rouge de l’UICN, datée du 1er septembre 2016 et publiée en 2017, classait l’espèce « quasi menacée ». Elle porte sur les troupeaux sauvages et de conservation, pas le bétail commercial ; la plupart des bisons sont élevés pour la production. Elle relevait peu de populations viables et de nombreux troupeaux isolés. Elle relevait aussi perte d’habitat et risques génétiques, notamment l’incorporation de gènes bovins et les croisements entre sous-espèces."
+  },
+  "sources": [
+    {
+      "url": "https://www.nps.gov/subjects/bison/bison-facts.htm",
+      "title": "Faits essentiels sur le bison — National Park Service des États-Unis"
+    },
+    {
+      "url": "https://nationalzoo.si.edu/animals/american-bison",
+      "title": "Bison d’Amérique — Smithsonian’s National Zoo and Conservation Biology Institute"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Bison_bison/",
+      "title": "Bison bison (bison d’Amérique) — Animal Diversity Web, Université du Michigan"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T2815A45156541.en",
+      "title": "Bison bison — Liste rouge des espèces menacées de l’UICN"
+    },
+    {
+      "url": "https://www.nps.gov/subjects/bison/about.htm",
+      "title": "À propos du bison — U.S. National Park Service"
+    }
+  ]
+}

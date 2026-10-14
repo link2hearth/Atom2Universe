@@ -1,0 +1,38 @@
+{
+  "id": "anax_imperator",
+  "name": "Anax empereur",
+  "scientific": "Anax imperator",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "L’anax empereur est une grande libellule de la famille des aeschnes et la plus massive des libellules de Grande-Bretagne. C’est un voilier puissant qui se pose rarement, patrouille au-dessus des étangs et des lacs, et dont l’aire s’est étendue en Grande-Bretagne depuis les années 1990.",
+    "identification": "Le corps mesure environ 7,3 à 8,2 cm et l’envergure environ 10,5 cm. Le mâle a l’abdomen bleu ciel et la femelle vert, tous deux avec une ligne sombre continue sur le dos; le thorax est vert pomme, les yeux verts ou bleus et la nervure avant de l’aile d’un jaune vif. Les ailes sont transparentes et sans motif. Dans une étude menée sur des mares françaises, les mâles adultes mesuraient en moyenne 77,2 mm et pesaient 0,97 g, contre 72,9 mm et 1,26 g chez les femelles ; ce sont les moyennes d’un échantillon, pas des limites universelles.",
+    "habitat": "Elle fréquente surtout les grands étangs et lacs bien végétalisés, y compris les gravières inondées, et peut aussi s’observer au-dessus des canaux, des grands fossés et des rivières lentes. Sur le continent, on la trouve dans la majeure partie de l’Europe et de l’Asie orientale, et elle est commune dans une grande partie de l’Afrique.",
+    "diet": "L’adulte chasse de petits insectes au-dessus de l’eau et mange souvent sa proie en vol, sans se poser. Les sources consultées ne donnent pas de détails sur le régime de la larve.",
+    "behavior": "Les mâles sont très territoriaux : ils patrouillent le long des rives et chassent les intrus. L’adulte peut voler longtemps sans se reposer, souvent avec l’extrémité de l’abdomen légèrement courbée vers le bas. En Grande-Bretagne, les adultes volent de début juin à août ou début septembre.",
+    "reproduction": "La femelle pond seule ses œufs dans des plantes aquatiques flottantes. Ils éclosent après environ trois semaines, puis les larves passent un ou deux ans dans l’eau avant d’émerger sous forme d’adultes, en général la nuit. Dans une étude, la taille et la masse des adultes tout juste émergés étaient étroitement liées à la longueur de l’exuvie qu’ils laissent derrière eux.",
+    "ecology": "La larve est trapue, avec de grands yeux qui se rejoignent presque sur le dessus de la tête, et atteint 45 à 56 mm à maturité, la plus grande des larves d’aeschnes britanniques. La larve passe d’abord un ou deux ans dans l’eau. L’espèce est signalée en Écosse depuis 2003.",
+    "conservation": "Aucune évaluation mondiale de conservation n’a été trouvée. En Grande-Bretagne, elle est présente dans tout le pays de Galles et la majeure partie de l’Angleterre, et sa répartition a fortement augmenté depuis les années 1990."
+  },
+  "sources": [
+    {
+      "url": "https://british-dragonflies.org.uk/species/emperor-dragonfly/",
+      "title": "Anax empereur — British Dragonfly Society"
+    },
+    {
+      "url": "https://www.first-nature.com/insects/o-anax-imperator.php",
+      "title": "Anax imperator, anax empereur — First Nature"
+    },
+    {
+      "url": "https://www.delta-intkey.com/britin/odo/www/imperato.htm",
+      "title": "Anax imperator — Odonates de Grande-Bretagne (clé DELTA)"
+    },
+    {
+      "url": "https://eje.cz/doi/10.14411/eje.2019.031.html",
+      "title": "Variation de taille du corps de la larve à l’adulte chez Anax imperator — Minot et al., European Journal of Entomology, 2019 (résumé)"
+    },
+    {
+      "url": "https://doi.org/10.1111/fwb.13632",
+      "title": "Habitat use and movements of a large dragonfly (Odonata: Anax imperator) in a pond network — Freshwater Biology"
+    }
+  ]
+}

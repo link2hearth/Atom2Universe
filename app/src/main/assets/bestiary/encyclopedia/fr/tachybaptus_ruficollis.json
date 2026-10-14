@@ -1,0 +1,30 @@
+{
+  "id": "tachybaptus_ruficollis",
+  "name": "Grèbe castagneux",
+  "scientific": "Tachybaptus ruficollis",
+  "group": "birds",
+  "sections": {
+    "overview": "Le grèbe castagneux est le plus petit des grèbes de Grande-Bretagne : un oiseau plongeur timide et rondouillard des étangs et des lacs. Il se cache souvent dans la végétation et se trahit par son trille aigu qui ressemble à un hennissement.",
+    "identification": "Petit grèbe rondouillard dont l’arrière paraît souvent duveteux, d’un poids d’adulte d’environ 225 g et d’une aile d’environ 104 mm; un ouvrage donne une longueur d’environ 29 cm. En été, il a la gorge et les joues d’un marron vif et une tache pâle à la base du bec.",
+    "habitat": "En Grande-Bretagne et en Irlande, il se reproduit surtout sur les lacs et les étangs, y compris les petites mares agricoles et les parcs urbains. En hiver, il utilise aussi les rivières, les ruisseaux et quelques sites saumâtres et côtiers.",
+    "diet": "Un guide de terrain du Kenya décrit un régime d’insectes et de leurs larves, de petits poissons, de grenouilles et de têtards, de petits crustacés et de mollusques, tous capturés en plongée.",
+    "behavior": "Il plonge volontiers quand on le dérange et réapparaît hors de vue à quelque distance, plutôt que de s’envoler. Ses pattes sont placées très en arrière du corps, ce qui le rend maladroit à terre. Les oiseaux nichant en Grande-Bretagne font de courts déplacements vers leurs sites d’hivernage, et d’autres arrivent d’ailleurs.",
+    "reproduction": "Le nid est une plate-forme flottante de végétation fixée à des plantes immergées. Il y a en général deux couvées de quatre à six œufs, couvés par les deux sexes pendant 20 à 21 jours. Les poussins couverts de duvet quittent vite le nid et montent parfois sur le dos d’un parent; ils s’envolent après environ 44 à 48 jours. La reproduction débute en général à un an.",
+    "ecology": "En Grande-Bretagne, les nids réussissent plus souvent sur les étangs et les lacs que sur les rivières et les ruisseaux, où les variations du niveau d’eau provoquent des échecs par inondation. En Afrique, l’aigle ravisseur, les hérons et la loutre à joues blanches figurent parmi ses prédateurs. Le plus vieil oiseau bagué en Grande-Bretagne a vécu un peu plus de six ans.",
+    "conservation": "La Liste rouge de l’UICN le classe en préoccupation mineure. La population nicheuse britannique était d’environ 5 500 couples en 2016, avec quelque 16 000 oiseaux en hiver. Il est sur la liste verte du Royaume-Uni, après un passage sur la liste ambre lors d’un déclin en 2009-2015, et il est globalement stable en Europe depuis 1990."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/little-grebe",
+      "title": "Grèbe castagneux — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/little-grebe",
+      "title": "Grèbe castagneux — RSPB, oiseaux et faune"
+    },
+    {
+      "url": "https://www.mpalalive.org/field_guide/view/little_grebe",
+      "title": "Grèbe castagneux — guide de terrain Mpala Live, Mpala Research Centre"
+    }
+  ]
+}

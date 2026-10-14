@@ -1,0 +1,78 @@
+{
+  "id": "pine_marten",
+  "name": "Martre des pins",
+  "scientific": "Martes martes",
+  "group": "mammals",
+  "sections": {
+    "overview": "Indigène dans une grande partie de l’Europe et de l’Eurasie occidentale, la martre des pins varie fortement en abondance et en aire locale. Elle grimpe et cherche aussi souvent sa nourriture au sol.",
+    "identification": "L’adulte porte une fourrure brun soutenu, une bavette jaune à orangée sur la gorge et la poitrine, des oreilles au bord clair et une longue queue touffue. La couleur et le contour de la bavette varient selon les populations et les individus. Les mâles sont en moyenne plus grands ; les échantillons européens indiquent des masses adultes d’environ 0,8 à 2,4 kilogrammes chez les mâles et 0,6 à 1,5 kilogramme chez les femelles, avec des plages variables selon les études. La fouine porte généralement une bavette blanche qui se divise vers les pattes avant et un nez clair ; la martre des pins a plutôt la bavette jaunâtre et le nez sombre.",
+    "habitat": "L’espèce fréquente les forêts de conifères, de feuillus et mixtes ; les peuplements mûrs sont utiles lorsqu’ils offrent un couvert de canopée et des cavités dans les vieux arbres ou le bois mort sur pied. Ces structures servent d’abri et de gîte pour le repos ou la reproduction. Dans un paysage irlandais pauvre en cavités arboricoles, des martres suivies ont aussi gîté dans des grottes, des fissures rocheuses, des murs et des amas de bois, tout en évitant la plupart des plantations immatures.",
+    "diet": "La martre des pins est un omnivore opportuniste : son régime comprend des petits mammifères, des oiseaux et leurs œufs, des charognes, des invertébrés et des fruits. En Irlande du Nord, l’analyse des fèces a relevé une forte présence d’aliments animaux au printemps et en été, puis de baies en automne ; les oiseaux et les petits mammifères prenaient davantage d’importance lorsque les fruits manquaient. À Galloway, aucune charogne n’a été détectée dans les fèces des femelles au gîte ; oiseaux, petits mammifères et anoures comptaient parmi les aliments importants, contrairement à certains régimes printaniers d’échantillons mixtes contenant des charognes ailleurs en Écosse.",
+    "behavior": "Les martres des pins sont généralement solitaires hors accouplement et surtout nocturnes, même si leur activité varie selon la saison. Les marques odorantes, dont les fèces déposées bien en vue, signalent l’occupation des trajets ; en Espagne, le marquage se concentrait aux endroits exposés et aux carrefours, surtout en mai et juillet. En Grande-Bretagne, les études relèvent des domaines vitaux plus grands chez les mâles, avec des estimations qui varient selon l’habitat et la nourriture.",
+    "reproduction": "L’accouplement de juillet à août est suivi d’environ sept mois d’implantation différée. Après l’implantation en fin d’hiver, le développement dure 30 à 35 jours ; les naissances surviennent fin mars ou en avril. Les femelles ont généralement une portée annuelle d’un à cinq petits. Nés aveugles, sourds et édentés, les petits ouvrent les yeux vers 34 à 38 jours, prennent des aliments solides dès 36 à 45 jours et sont sevrés vers six semaines. Les jeunes sortent à 7 ou 8 semaines ; la dispersion peut débuter vers 12 à 16 semaines, mais certains hivernent dans leur territoire natal et partent au printemps suivant. Les femelles utilisent des gîtes protégés pendant les premières semaines.",
+    "ecology": "Après avoir mangé des fruits charnus, les martres des pins peuvent transporter dans leurs fèces des graines loin des arbustes parents. Dans une expérience en forêt tempérée, des graines factices marquées et incorporées à des fruits ont été retrouvées jusqu’à 1 233 mètres des stations de nourrissage, un maximum de l’étude plutôt qu’une distance habituelle. Dans les Midlands irlandais, des enquêtes ont relevé le recul de l’écureuil gris et le retour du roux là où les martres avaient récupéré. Des analyses en Grande-Bretagne et en Irlande ont aussi trouvé des associations régionales entre présence des martres, occupation moindre par l’écureuil gris et occupation accrue par le roux. En Irlande, une étude avec caméras aux mangeoires a observé que les roux devenaient plus vigilants et mangeaient moins après le passage d’une martre ; cette réaction brève est un mécanisme possible, et non une preuve du phénomène démographique. Ces résultats ne montrent pas que les martres éliminent les écureuils gris partout ni qu’elles bénéficient toujours aux roux.",
+    "conservation": "La Liste rouge de l’UICN classait l’espèce en préoccupation mineure à l’échelle mondiale lors d’une évaluation datée du 3 mars 2015 et publiée en 2016, en raison de sa vaste aire et de sa population importante malgré des déclins passés. Ce statut mondial ne vaut pas partout : classée en préoccupation mineure en Grande-Bretagne, la martre reste rare dans certaines zones anglaises et galloises, après fragmentation et persécution. En Grande-Bretagne, la loi de 1981 sur la faune et la campagne, modifiée, protège l’espèce ; la couverture des annexes varie selon la juridiction. L’Irlande l’inscrit aussi dans sa loi sur la faune de 1976."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1093/mspecies/seac007",
+      "title": "Martes martes (Carnivora : Mustelidae)"
+    },
+    {
+      "url": "https://www.waldwissen.net/en/forest-ecology/forest-fauna/mammals/pine-marten-or-stone-marten",
+      "title": "Martre des pins ou fouine ?"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Martes_martes/",
+      "title": "Fiche d’espèce : martre des pins"
+    },
+    {
+      "url": "https://doi.org/10.2981/wlb.00760",
+      "title": "Toutes les forêts ne se valent pas : démographie et gîtes en paysages transformés"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10344-019-1289-z",
+      "title": "Effets saisonniers, géographiques et de l’habitat sur le régime d’une population prédatrice en rétablissement en Irlande"
+    },
+    {
+      "url": "https://doi.org/10.1007/s13364-018-0398-5",
+      "title": "Régime des femelles martres des pins au gîte à Galloway"
+    },
+    {
+      "url": "https://secem.es/galemys/galemys-17-2005-ne-a10",
+      "title": "Marquage fécal de la martre des pins dans le nord-ouest de l’Espagne"
+    },
+    {
+      "url": "https://mammal.org.uk/british-mammals/pine-marten",
+      "title": "Martre des pins"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23228197/",
+      "title": "Diversité fonctionnelle des distances de dispersion des graines par les mammifères carnivores"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10531-014-0632-7",
+      "title": "Effondrement d’une espèce envahissante après le rétablissement d’un prédateur indigène"
+    },
+    {
+      "url": "https://doi.org/10.1111/1365-2664.13660",
+      "title": "Le gris envahissant peut persister dans des refuges lors du rétablissement d’un prédateur indigène"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T12848A45199169.en",
+      "title": "Liste rouge de l’UICN : Martes martes"
+    },
+    {
+      "url": "https://www.irishstatutebook.ie/eli/1976/act/39/schedule/5/enacted/en/html",
+      "title": "Wildlife Act 1976, annexe 5"
+    },
+    {
+      "url": "https://doi.org/10.1098/rsos.250661",
+      "title": "Les écureuils roux modifient leur comportement antiprédateur face à la martre des pins"
+    },
+    {
+      "url": "https://www.legislation.gov.uk/ukpga/1981/69/schedule/5?lang=en",
+      "title": "Wildlife and Countryside Act 1981, annexe 5 révisée"
+    }
+  ]
+}

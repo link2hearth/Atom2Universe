@@ -1,0 +1,30 @@
+{
+  "id": "leptinotarsa_decemlineata",
+  "name": "Doryphore de la pomme de terre",
+  "scientific": "Leptinotarsa decemlineata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le doryphore est un chrysomèle d’Amérique du Nord devenu l’un des ravageurs les plus sérieux de la pomme de terre. Il vivait d’abord sur des morelles sauvages, est passé à la pomme de terre cultivée au XIXe siècle, puis s’est répandu en Europe et en Asie.",
+    "identification": "L’adulte est ovale, bombé et mesure 8 à 10 mm. Chaque élytre porte cinq bandes noires sur fond jaune, et le thorax orangé est orné de taches noires. Les larves sont molles, dodues et bossues, avec une rangée de points noirs sur chaque flanc; les œufs sont jaune-orangé et mesurent environ 1,7 à 1,8 mm. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici.",
+    "habitat": "Il vit surtout dans les champs de pomme de terre et d’autres solanacées cultivées comme la tomate, l’aubergine et le poivron, ainsi que sur des morelles sauvages en prairie et en banlieue. L’espèce est originaire du sud-ouest des États-Unis et du Mexique; elle s’est étendue à l’est des Rocheuses et est installée aujourd’hui dans toute l’Europe, en Asie Mineure, en Iran, en Asie centrale et en Chine.",
+    "diet": "Adultes et larves mangent des feuilles, surtout de plantes du genre Solanum. La pomme de terre cultivée est l’hôte préféré, devant l’aubergine, la tomate, le poivron et les morelles sauvages. Une forte attaque peut laisser une plante réduite à ses tiges.",
+    "behavior": "Adultes et larves sont actifs le jour et au repos la nuit. Les adultes peuvent voler sur plusieurs kilomètres, surtout quand ils sont nombreux, et les mâles émettent une phéromone qui attire les deux sexes. Les larves se défendent en s’éloignant, en régurgitant et en se tortillant.",
+    "reproduction": "Les adultes passent l’hiver dans le sol, en général en bordure de champ, et sortent au printemps. Les femelles pondent des paquets d’œufs jaune-orangé sous les feuilles, jusqu’à environ 800 en tout. Les larves passent par quatre stades puis se nymphosent dans le sol, et un cycle dure environ 30 jours selon la température. Il y a deux ou trois générations par an, et certains adultes restent en terre plus d’un hiver.",
+    "ecology": "Des champignons, des insectes prédateurs, des crapauds et des oiseaux s’en prennent au doryphore, mais ils suffisent rarement à le contenir. Sa résistance aux insecticides pose un problème majeur : plus de 300 cas sont documentés en Asie, en Europe et en Amérique du Nord.",
+    "conservation": "L’espèce n’est pas menacée; l’Animal Diversity Web indique que son statut UICN est « non évalué ». Elle est surtout connue comme ravageur agricole, et la Grande-Bretagne a combattu trois invasions en 1876, 1901 et 1914 par des moyens chimiques."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Leptinotarsa_decemlineata/",
+      "title": "Leptinotarsa decemlineata — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/agronomy/articles/10.3389/fagro.2021.642189/full",
+      "title": "Identifier la résistance au doryphore dans le matériel génétique de la pomme de terre : mise à jour — Frontiers in Agronomy, 2021"
+    },
+    {
+      "url": "https://www.uvm.edu/vtvegandberry/factsheets/potatobeetle.html",
+      "title": "Doryphore de la pomme de terre — fiche de l’extension de l’université du Vermont"
+    }
+  ]
+}

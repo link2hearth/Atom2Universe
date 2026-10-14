@@ -44,14 +44,22 @@
     {
       "title": {
         "en": "Hooded Crow — BTO BirdFacts, British Trust for Ornithology",
-        "fr": "Corneille mantelée — BirdFacts du BTO, British Trust for Ornithology"
+        "fr": "Corneille mantelée — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/hooded-crow",
-      "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Weight 505 g; lays from March, one brood, clutch 3–6 (2–7), incubation 18–19 days by the female, fledging 28–30 days, breeding from 2 years; hybridises with Carrion Crow.",
-        "UK 285,000 territories (2016), stable; breeding range -0.4%, winter range -10.5%; IUCN Least Concern; nests in trees, crags or pylons; record age 10 years."
+        "UK 285,000 territories (2016), stable; breeding range -0.4%, winter range -10.5%; IUCN Least Concern; nests in trees, crags or pylons; record age 10 years.",
+        "British adults average about 505 g; the species is about 48–52 cm long."
       ]
     },
     {
@@ -61,7 +69,14 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/hooded-crow",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "diet", "behavior", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Closely related to the Carrion Crow, until recently classed as the same species; hybrids show mixed grey and black; feeds on dead animals and more sociably than other crows; UK status Green."
       ]
@@ -73,7 +88,10 @@
       },
       "url": "https://en.wikipedia.org/wiki/Hooded_crow",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification"],
+      "supports": [
+        "overview",
+        "identification"
+      ],
       "facts": [
         "Length 48–52 cm; ash-grey body with black head, throat, wings and tail; breeds in northern and western Scotland, the Isle of Man and Ireland (secondary source, qualitative use only)."
       ]
@@ -85,7 +103,11 @@
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/carrion-crow",
       "consulted": "2026-10-12",
-      "supports": ["diet", "behavior", "ecology"],
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
       "facts": [
         "Carrion Crows are omnivorous (grain, invertebrates, eggs, chicks, carrion), large, noisy and intelligent, build large stick nests and defend big territories; hybrids occur where the two overlap."
       ]

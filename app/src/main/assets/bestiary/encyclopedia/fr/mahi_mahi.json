@@ -1,0 +1,38 @@
+{
+  "id": "mahi_mahi",
+  "name": "Dorade coryphène",
+  "scientific": "Coryphaena hippurus",
+  "group": "fish",
+  "sections": {
+    "overview": "La dorade coryphène, ou mahi-mahi, est un poisson pélagique à croissance rapide des mers tropicales et tempérées chaudes du monde entier. Malgré son nom anglais de dolphinfish, elle n’a aucun lien avec les dauphins, qui sont des mammifères.",
+    "identification": "Son corps fuselé et comprimé sur les côtés porte une nageoire dorsale unique, longue, qui va de la tête presque jusqu’à la queue très fourchue. Le dos bleu-vert métallique contraste avec les flancs argentés et dorés tachetés de sombre, mais ces couleurs vives pâlissent rapidement après la mort. Le mâle adulte développe un front haut et carré, tandis que la tête de la femelle est plus arrondie. La coryphène pompano, Coryphaena equiselis, est plus trapue et porte sur la langue une plaque dentaire trapézoïdale ; celle de C. hippurus est ovale. La NOAA indique que l’espèce peut atteindre près de 2,1 m et 40 kg. Ce sont des limites maximales, non des mensurations typiques d’adulte; la source ne donne ni plage de poids selon le sexe ni largeur du corps.",
+    "habitat": "Elle fréquente la couche de surface des eaux océaniques tropicales, subtropicales et tempérées chaudes, dans les océans Atlantique, Indien et Pacifique, et pénètre parfois en Méditerranée. Les radeaux d’algues flottantes et autres objets dérivants abritent les jeunes poissons et concentrent les proies. Les adultes mesurent couramment près d’un mètre ; les spécimens de 2,1 mètres sont rares.",
+    "diet": "Prédateur actif le jour, le mahi-mahi chasse des poissons pélagiques comme les poissons-volants et les jeunes thons, ainsi que des calmars, des crabes et d’autres invertébrés dérivants. Sa nage rapide et son régime varié lui permettent de capturer des proies dans le sillage des algues flottantes comme en pleine eau.",
+    "behavior": "Les jeunes vivent souvent en bancs, tandis que les individus plus âgés sont généralement solitaires ; les grands mâles fréquentent davantage le large, alors que les femelles et les petits mâles se rassemblent volontiers près d’objets flottants. Leur robe changeante est éclatante dans l’eau, puis se ternit rapidement après la capture.",
+    "reproduction": "Les deux sexes peuvent atteindre la maturité au cours de leur première année, vers quatre à cinq mois dans les populations atlantiques. Pendant la saison chaude, les femelles libèrent plusieurs pontes d’œufs dans l’eau ; dans l’Atlantique, la ponte a lieu sous des tapis flottants de sargasses.",
+    "ecology": "Le mahi-mahi transfère l’énergie des petits poissons et invertébrés dérivants vers de plus grands prédateurs, notamment les thons, marlins, voiliers, espadons et mammifères marins. Les algues flottantes servent d’abri et de zone d’alimentation aux jeunes, reliant ce prédateur du large aux communautés de surface.",
+    "conservation": "Son statut mondial de conservation est de préoccupation mineure. La pression de pêche et les captures accidentelles de tortues ou de mammifères marins par les palangres restent préoccupantes ; plusieurs stocks atlantiques des États-Unis n’ont pas été évalués complètement."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Mahi-mahi",
+      "title": "Mahi-mahi"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Coryphaena_hippurus",
+      "title": "Coryphaena hippurus"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-mahi-mahi",
+      "title": "Atlantic Mahi Mahi"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/fishes/mahi-mahi-coryphaena-hippurus-linnaeus-1758/",
+      "title": "Mahi Mahi, Coryphaena hippurus (Linnaeus, 1758)"
+    },
+    {
+      "url": "https://www.montereybayaquarium.org/animals-the-ocean/animals-a-to-z/dolphinfish",
+      "title": "Dolphinfish"
+    }
+  ]
+}

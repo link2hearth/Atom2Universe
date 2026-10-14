@@ -1,0 +1,30 @@
+{
+  "id": "crex_crex",
+  "name": "Corn Crake",
+  "scientific": "Crex crex",
+  "group": "birds",
+  "sections": {
+    "overview": "The corn crake is a small, brown and secretive bird of the rail family. Unlike its relatives the moorhen and the coot, it lives on dry land, hidden in tall grass, so it is far more often heard than seen.",
+    "identification": "A medium-sized rail, 27–30 cm long, weighing about 150 g (151 g on average in Britain). The back is brown-black streaked with buff, the wings show chestnut patches, the face, neck and breast are blue-grey, and the flanks are barred chestnut and white. The bill is flesh-coloured and the legs pale grey.",
+    "habitat": "On its breeding grounds it favours meadows: cool, moist hayfields and traditional grassland that is cut late and lightly fertilised. In winter it lives in dry grassland and savanna in Africa.",
+    "diet": "It eats mainly invertebrates such as earthworms, slugs, snails, beetles and grasshoppers. It also takes small frogs and mammals, grass seeds and cereal grain.",
+    "behavior": "The male gives a loud, rasping advertising call, a repeated “krek krek” that carries up to about 1.5 km. The species migrates at night between Europe and Africa, arriving in Britain from April.",
+    "reproduction": "The nest is a scrape on the ground lined with grass. A clutch is typically 8–12 eggs (range 6–14), incubated by the female alone for 16–19 days. The downy chicks leave the nest within a day or two and fledge after 34–38 days; one or two broods are raised per season. Breeding typically starts at one year of age.",
+    "ecology": "Cats, foxes, weasels, rats and birds such as buzzards and crows prey on corn crakes and their chicks. The greatest danger comes from early mechanical mowing, which destroys nests and kills chicks hidden in the grass.",
+    "conservation": "The IUCN Red List classes the species as Least Concern; it was Near Threatened until 2010. In Europe it numbers an estimated 1.3–2.0 million breeding pairs, about three-quarters of them in Russia. In the UK it is Red-listed: about 1,100 calling males bred in 2013–17, and 904 were counted in 2019. Typical life expectancy is only about two years."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/corncrake",
+      "title": "Corncrake — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/corncrake",
+      "title": "Corncrake — RSPB"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Corn_crake",
+      "title": "Corn crake — Wikipedia"
+    }
+  ]
+}

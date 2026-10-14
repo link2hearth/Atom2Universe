@@ -12,8 +12,8 @@
       "fr": "Le Geai des chênes est un corvidé forestier dont la tache bleue très visible contraste avec une vie souvent discrète dans le feuillage. Il cherche sa nourriture dans les arbres et au sol, en passant d’une ressource saisonnière à l’autre sur une vaste aire eurasiatique. Sa réputation de transporteur de glands est fondée, mais les insectes, les fruits, les graines et les proies animales comptent aussi dans son alimentation et ses effets écologiques."
     },
     "identification": {
-      "en": "In the European form, the body is warm pinkish brown, with a pale throat, black facial moustache and a crown of black-and-white streaked feathers that can be raised. The folded wing shows a vivid blue panel barred with black, beside white and black markings; in flight, the white rump flashes against the dark tail. In the British sample, adults averaged 167 grams; 90% of the 1,113 recorded weights fell between 144 and 189 grams. In northern Europe and France the nominate form has a pale, black-spotted crown, while British island forms are darker russet.",
-      "fr": "Chez la forme européenne, le corps est brun rosé chaud, avec la gorge pâle, une moustache noire et une calotte de plumes striées de noir et de blanc qu’il peut redresser. L’aile repliée montre un panneau bleu vif barré de noir, près de marques blanches et noires ; en vol, le croupion blanc tranche sur la queue sombre. Dans l’échantillon britannique, les adultes pesaient en moyenne 167 grammes ; 90 % des 1 113 poids relevés se situaient entre 144 et 189 grammes. En Europe du Nord et en France, la forme nominale porte une calotte pâle tachetée de noir, tandis que les formes des îles Britanniques sont d’un roux plus sombre."
+      "en": "In the European form, the body is warm pinkish brown, with a pale throat, black facial moustache and a crown of black-and-white streaked feathers that can be raised. The folded wing shows a vivid blue panel barred with black, beside white and black markings; in flight, the white rump flashes against the dark tail. In the British sample, adults averaged 167 grams; 90% of the 1,113 recorded weights fell between 144 and 189 grams. In northern Europe and France the nominate form has a pale, black-spotted crown, while British island forms are darker russet. The European form is about 34 cm long; British adults averaged 167 g (90% of recorded weights: 144–189 g).",
+      "fr": "Chez la forme européenne, le corps est brun rosé chaud, avec la gorge pâle, une moustache noire et une calotte de plumes striées de noir et de blanc qu’il peut redresser. L’aile repliée montre un panneau bleu vif barré de noir, près de marques blanches et noires ; en vol, le croupion blanc tranche sur la queue sombre. Dans l’échantillon britannique, les adultes pesaient en moyenne 167 grammes ; 90 % des 1 113 poids relevés se situaient entre 144 et 189 grammes. En Europe du Nord et en France, la forme nominale porte une calotte pâle tachetée de noir, tandis que les formes des îles Britanniques sont d’un roux plus sombre. La forme européenne mesure environ 34 cm ; les adultes britanniques pesaient en moyenne 167 g (90 % des poids relevés : 144–189 g)."
     },
     "habitat": {
       "en": "The species ranges from western Europe and North Africa east through much of temperate Asia, with local forms differing across this enormous span. It occupies mature deciduous, mixed and conifer woods, as well as parks and wooded farmland with cover.",
@@ -44,24 +44,25 @@
     {
       "title": {
         "en": "Garrulus glandarius (Eurasian Jay), Birds of Europe 3.1",
-        "fr": "Garrulus glandarius (Geai des chênes), Birds of Europe 3.1"
+        "fr": "Garrulus glandarius (geai des chênes), Birds of Europe 3.1"
       },
       "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=130979",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "overview",
         "identification"
       ],
       "facts": [
-        "European field marks; 34 cm overall length."
+        "European field marks; 34 cm overall length.",
+        "European field account gives an overall length of about 34 cm."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "identification.en.1",
         "identification.en.2",
         "identification.fr.1",
-        "identification.fr.2"
+        "identification.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -141,14 +142,14 @@
         "Omnivory includes acorns, invertebrates, fruit and occasional nest prey."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
-        "overview.en.3",
-        "overview.fr.3",
         "diet.en.1",
         "diet.en.2",
         "diet.fr.1",
-        "diet.fr.2"
+        "diet.fr.2",
+        "overview.en.2",
+        "overview.en.3",
+        "overview.fr.2",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -277,12 +278,14 @@
         "Regional plumage differences; French count increase 23% from 2001 to 2019; European monitoring reported moderate increase."
       ],
       "prose_claims": [
-        "identification.en.4",
-        "identification.fr.4",
         "conservation.en.3",
-        "conservation.fr.3",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.3",
+        "conservation.fr.4",
+        "identification.en.4",
+        "identification.en.5",
+        "identification.fr.4",
+        "identification.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -308,12 +311,12 @@
         "Broad Eurasian distribution; mature woodland use and juvenile independence period."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.2",
-        "habitat.fr.2",
         "diet.en.3",
         "diet.fr.3",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
         "reproduction.en.3",
         "reproduction.fr.3"
       ],

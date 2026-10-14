@@ -12,8 +12,8 @@
       "fr": "Le saint-pierre est un poisson marin au corps extrêmement aplati et à la grande bouche qui se projette vers l’avant pour saisir ses proies. Il vit près du fond dans les mers chaudes et tempérées, et se rencontre dans l’Atlantique oriental, la Méditerranée, l’océan Indien et le Pacifique occidental."
     },
     "identification": {
-      "en": "The body is deep, very compressed and covered with minute scales. The dorsal fin has 9–11 long spines whose membranes extend into trailing filaments, and large bony plates sit at the bases of the dorsal and anal fins. Each side carries a large dark spot ringed with a lighter band. Common length is about 40 cm, with a maximum of about 90 cm.",
-      "fr": "Le corps est haut, très comprimé et couvert de minuscules écailles. La nageoire dorsale compte 9 à 11 longues épines dont les membranes se prolongent en filaments flottants, et de grandes plaques osseuses se trouvent à la base des nageoires dorsale et anale. Chaque flanc porte une grande tache sombre entourée d’un anneau plus clair. La longueur courante est d’environ 40 cm, pour un maximum d’environ 90 cm."
+      "en": "The fish commonly reaches about 40 cm and has a recorded maximum of 90 cm total length; the maximum published mass is 8 kg. FishBase’s length and weight records are male or unsexed, so no sex-specific size difference is claimed. The body is deep, very compressed and covered with minute scales. The dorsal fin has 9–11 long spines whose membranes extend into trailing filaments, and large bony plates sit at the bases of the dorsal and anal fins. Each side carries a large dark spot ringed with a lighter band.",
+      "fr": "Le poisson atteint couramment environ 40 cm et une longueur totale maximale documentée de 90 cm ; la masse maximale publiée est de 8 kg. Les données FishBase sur longueur et masse sont mâles ou de sexe non précisé ; aucune différence entre sexes n’est avancée. Le corps est haut, très comprimé et couvert de minuscules écailles. La nageoire dorsale compte 9 à 11 longues épines dont les membranes se prolongent en filaments flottants, et de grandes plaques osseuses se trouvent à la base des nageoires dorsale et anale. Chaque flanc porte une grande tache sombre entourée d’un anneau plus clair."
     },
     "habitat": {
       "en": "It occurs from 5 to 400 m deep, usually at 50–150 m. In the eastern Atlantic it ranges from Norway to South Africa, and it also lives in the Mediterranean and Black Sea.",
@@ -48,10 +48,19 @@
       },
       "url": "https://www.fishbase.se/summary/Zeus-faber.html",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Max 90 cm TL, common 40 cm, max age 12 years; 5–400 m, usually 50–150 m; 9–11 dorsal spines; large dark spot with light ring; mainly schooling bony fishes.",
-        "Spawning end of winter and start of spring in the NE Atlantic, earlier in the Mediterranean; pelagic eggs; maturity at 4 years (Lm 35.1 cm); IUCN Data Deficient, assessed 20 May 2013."
+        "Spawning end of winter and start of spring in the NE Atlantic, earlier in the Mediterranean; pelagic eggs; maturity at 4 years (Lm 35.1 cm); IUCN Data Deficient, assessed 20 May 2013.",
+        "Common length 40 cm TL, maximum 90 cm TL and maximum published weight 8 kg; male/unsexed record."
       ]
     },
     {
@@ -61,7 +70,14 @@
       },
       "url": "https://fishesofaustralia.net.au/home/species/1492",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "diet", "behavior", "reproduction", "ecology"],
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "Very compressed body, large protrusible mouth, spine membranes extending past the tips, bony bucklers at fin bases; approaches prey head-on then shoots out its jaws.",
         "Little known of its biology, usually solitary near the bottom; spawns in summer and early autumn; DNA barcoding indicates two distinct species (Europe versus South Africa and Australasia)."

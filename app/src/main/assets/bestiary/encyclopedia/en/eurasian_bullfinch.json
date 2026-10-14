@@ -1,0 +1,38 @@
+{
+  "id": "eurasian_bullfinch",
+  "name": "Eurasian Bullfinch",
+  "scientific": "Pyrrhula pyrrhula",
+  "group": "birds",
+  "sections": {
+    "overview": "The Eurasian Bullfinch is a compact finch of wooded Europe and temperate Asia. Northern populations often move south in winter, while many remain resident.",
+    "identification": "Adults measure about 14.5–16 cm and show a stout black bill, grey back, black cap and wings, and white rump. Males have rose-red underparts; females are grey-brown, and juveniles lack the black cap. Adults average about 22.5 g in British ringing data; male and female means are close (about 22.2 and 23.0 g).",
+    "habitat": "It nests in mixed woodland, scrub and hedgerows, including wooded parks and gardens. Shrubs and leafy cover offer nest sites and sheltered feeding routes; it generally avoids open, treeless country.",
+    "diet": "Its short, powerful conical bill cracks seeds and clips buds from branches, often high in trees. Seeds and berries are important seasonally, while fruit-tree buds are especially taken in late winter and spring. A pouch at the floor of the mouth stores food, complementing the bill’s role in collecting it.",
+    "behavior": "Pairs move quietly through cover, giving soft piping whistles that reveal birds hidden in foliage. Outside breeding, they usually travel as pairs or small family groups rather than large flocks.",
+    "reproduction": "The female builds a cup nest in a shrub or tree and usually lays four or five eggs, incubating them for 14–16 days. Downy chicks receive parental food, including small invertebrates, leave after about 15–17 days, and remain dependent while learning to forage. In Britain, breeding extends mainly from May to July, with nests of twigs, moss and lichen concealed in dense vegetation.",
+    "ecology": "Sparrowhawks prey on adult bullfinches, while eggs and nestlings are vulnerable to other predators; dense nesting cover shelters these early stages. Their seasonal use of buds links them to woody plant growth and can bring them into conflict with orchard growers.",
+    "conservation": "The global IUCN assessment published in 2018 classified the species as Least Concern because of its broad range. Regional declines can still occur: British monitoring records a long fall since the late 1970s, which may be affected by declining habitat quality and fewer large orchards."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Eurasian_bullfinch",
+      "title": "Eurasian bullfinch"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Bouvreuil_pivoine",
+      "title": "Bouvreuil pivoine"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/bullfinch",
+      "title": "Bullfinch: BirdFacts — British Trust for Ornithology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22720671A132141969.en",
+      "title": "Pyrrhula pyrrhula: The IUCN Red List"
+    },
+    {
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/birds/bullfinch/",
+      "title": "Bullfinch (Pyrrhula pyrrhula)"
+    }
+  ]
+}

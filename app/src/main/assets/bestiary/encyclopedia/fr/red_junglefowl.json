@@ -1,0 +1,74 @@
+{
+  "id": "red_junglefowl",
+  "name": "Coq bankiva",
+  "scientific": "Gallus gallus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le coq bankiva est un oiseau galliforme de la famille des Phasianidés, originaire d’Asie du Sud et du Sud-Est, et le principal ancêtre sauvage de la poule domestique. Les comparaisons de génomes entiers appuient une contribution initiale de la sous-espèce d’Asie du Sud-Est Gallus gallus spadiceus, suivie de flux génétiques entre populations de poules et autres coqs sauvages ; la domestication ne fut pas un événement simple et isolé. Certains génomes régionaux de poules portent aussi de l’ADN introgressé du coq de Sonnerat (Gallus sonneratii), avec des signaux moindres ou plus rares du coq de Ceylan (Gallus lafayettii) et du coq vert (Gallus varius) ; ces résultats ne remplacent pas le coq bankiva comme ancêtre principal.",
+    "identification": "Le coq mesure 65 à 78 cm de longueur totale et pèse 672 à 1 450 g ; la poule est plus petite, avec 41 à 46 cm et 485 à 1 050 g. Ces fourchettes reflètent un dimorphisme marqué et correspondent aux mesures de référence du Cornell Lab. Le mâle adulte sauvage porte une crête et des caroncules rouge vif, des plumes du cou orange doré, un corps sombre irisé et de longues plumes courbées au-dessus de la queue. Les femelles paraissent plus petites, sont brun moucheté et ont une queue courte ainsi qu’un camouflage adapté à la nidification au sol. Une étude de la sous-espèce thaïlandaise Gallus gallus spadiceus a observé chez les mâles reproducteurs de longues plumes dorées au cou, contrairement aux plumes noires plus courtes hors de la période de reproduction. Une silhouette de type sauvage ne permet pas à elle seule d’établir la pureté génétique, car une ascendance domestique peut rester invisible. Les poules domestiques ont aussi été sélectionnées pour une croissance rapide ; la taille et la forme des races ne donnent pas des normes fiables pour les oiseaux sauvages.",
+    "habitat": "Son aire naturelle couvre le sous-continent indien et une grande partie de l’Asie du Sud-Est continentale et insulaire, où les sous-espèces régionales occupent des secteurs différents. Il fréquente forêts anciennes ou secondaires, mangroves et lisières, et s’alimente souvent dans une clairière ou une plantation proche d’un couvert.",
+    "diet": "Cet omnivore opportuniste consomme graines, fruits et petits invertébrés, notamment fourmis, coléoptères et termites ; la composition varie selon les ressources locales et la saison. Il gratte le sol et la litière avec ses pattes avant de picorer, et fréquente souvent les espaces ouverts tôt le matin et le soir. Son appareil digestif comprend un jabot et un gésier musculeux ; le gésier broie mécaniquement les aliments ingérés.",
+    "behavior": "Méfiant et surtout terrestre, le coq bankiva peut s’envoler avec puissance lorsqu’il est alarmé et dort souvent dans les arbres. Les observations de terrain décrivent de petits groupes changeants : un mâle peut accompagner une ou plusieurs femelles, mais on voit aussi des individus solitaires. Les mâles chantent de façon répétée, souvent avant l’aube, et leur chant signale leur présence ; appels et parades assurent aussi la communication entre oiseaux, même si les relations sociales varient selon le lieu et la saison.",
+    "reproduction": "Le calendrier de reproduction varie selon les régions : une étude de deux ans sur la sous-espèce Gallus gallus spadiceus dans des paysages agricoles malaisiens a relevé des nids toute l’année, avec un pic local en décembre. Les nids contenaient en moyenne environ quatre œufs et l’incubation en captivité durait près de 19,5 jours, soit presque trois semaines. À Hainan, les chercheurs ont observé les femelles seules s’occuper de la couvée, tandis que des observations du Yunnan méridional rapportent la participation des deux sexes à la couvaison des œufs ; les rôles parentaux varient parmi les populations étudiées. Les poussins naissent couverts de duvet et quittent rapidement le nid ; un compte rendu d’histoire naturelle situe le plumage complet vers quatre à cinq semaines et la maturité sexuelle autour de cinq mois, un peu plus tard chez les femelles.",
+    "ecology": "Des observations et témoignages locaux de Thaïlande et de Malaisie citent les chats sauvages et les oiseaux de proie parmi les prédateurs des coqs bankiva adultes. À Hainan, le suivi des nids a montré que la prédation était une cause majeure d’échec de la reproduction ; des coucals et des rongeurs ont été enregistrés aux nids expérimentaux, et les reptiles proposés comme autres prédateurs possibles.",
+    "conservation": "L’évaluation mondiale de BirdLife International pour la Liste rouge de l’UICN, publiée en 2024, classe l’espèce en préoccupation mineure ; cette catégorie de risque mondial ne garantit pas la sécurité de chaque population locale. En Inde, un projet du Wildlife Institute of India a signalé une répartition fragmentée et des pressions croissantes dans plusieurs États, et trouvé dix hybrides avec des poules domestiques parmi 220 oiseaux échantillonnés dans des centres d’élevage. Une comparaison génomique de 2023 a trouvé environ 20 à 50 % d’ascendance domestique chez les populations sauvages actuelles échantillonnées, par comparaison avec des oiseaux de musée collectés environ un siècle auparavant, avec de fortes variations entre individus et lieux ; changements d’habitat et contact avec les volailles en liberté restent des enjeux locaux."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Red_Junglefowl/lifehistory",
+      "title": "Histoire naturelle du coq bankiva, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Gallus_gallus/",
+      "title": "Gallus gallus, Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://thesiamsociety.org/wp-content/uploads/2020/04/NHBSS_022_1-2n_Collias_EcologyOfTheRedJ.pdf",
+      "title": "Écologie du coq bankiva en Thaïlande et en Malaisie, Siam Society"
+    },
+    {
+      "url": "https://psasir.upm.edu.my/id/eprint/8223/",
+      "title": "Étude écologique du coq bankiva en milieu agricole, Universiti Putra Malaysia"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7395088/",
+      "title": "863 génomes révèlent l’origine et la domestication du poulet, Nature Communications"
+    },
+    {
+      "url": "https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010551",
+      "title": "Les échantillons historiques révèlent la perte du génotype sauvage par introgression de poules domestiques, PLOS Genetics"
+    },
+    {
+      "url": "https://digitalrepository.wii.gov.in/items/af79ed62-6e9b-4679-9a66-9de0256b96df",
+      "title": "Conservation du coq bankiva en Inde, rapport final du Wildlife Institute of India"
+    },
+    {
+      "url": "https://dx.doi.org/10.2305/IUCN.UK.2024-2.RLTS.T22679199A263732457.en",
+      "title": "Gallus gallus, évaluation 2024 de la Liste rouge de l’UICN, BirdLife International"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/redjun",
+      "title": "Présentation du coq bankiva, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2023.1127139/full",
+      "title": "Réussite de nidification et prédateurs potentiels du coq bankiva, Frontiers in Ecology and Evolution"
+    },
+    {
+      "url": "https://digital.car.chula.ac.th/chulaetd/58768/",
+      "title": "Morphologie, chant et utilisation de l’habitat de Gallus gallus spadiceus, Université Chulalongkorn"
+    },
+    {
+      "url": "https://www.nature.com/articles/s41598-017-17922-w",
+      "title": "Corrélats physiologiques et neuroendocriniens de la faim chez le coq bankiva, Scientific Reports"
+    },
+    {
+      "url": "https://bmcbiol.biomedcentral.com/articles/10.1186/s12915-020-0738-1",
+      "title": "L’ascendance génomique des espèces sauvages chez les poules domestiques, BMC Biology"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Red_Junglefowl/id",
+      "title": "Identification du Coq bankiva — Cornell Lab of Ornithology"
+    }
+  ]
+}

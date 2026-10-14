@@ -1,0 +1,26 @@
+{
+  "id": "pachyuromys_duprasi",
+  "name": "Gerbille à grosse queue",
+  "scientific": "Pachyuromys duprasi",
+  "group": "mammals",
+  "sections": {
+    "overview": "La gerbille à grosse queue est un petit rongeur du nord du Sahara et la seule espèce de son genre. Elle a été décrite pour la première fois en 1880 à Laghouat, en Algérie. Elle est classée en préoccupation mineure et se reconnaît surtout à sa queue courte et renflée.",
+    "identification": "Gerbille au corps rond, avec une tête et un corps d’environ 108 mm et un poids proche de 36 g. Le pelage long et duveteux est gris à brun clair, avec un ventre et des pattes blancs. Les yeux sont grands et ovales et les oreilles roses sont placées bas sur la tête. La queue, plus courte que le corps, est épaisse et en massue, sans pinceau, et sert de réserve de graisse et d’eau.",
+    "habitat": "Elle vit dans les étendues de sable portant un peu de végétation, et parfois dans le désert rocheux. La Mammal Diversity Database donne comme aire le nord du Sahara, du Sahara occidental et du Maroc jusqu’au nord de l’Égypte, tandis que l’Animal Diversity Web la décrit surtout à l’ouest du delta du Nil, jusqu’en Libye, en Tunisie et en Algérie. Elle creuse des terriers jusqu’à environ 1 m de profondeur et utilise parfois ceux d’autres rongeurs.",
+    "diet": "À l’état sauvage, elle est surtout insectivore, mais elle mange aussi des plantes, comme les arbustes du désert Anabasis articulata et Artemisia monosperma.",
+    "behavior": "Elle est surtout nocturne, bien que souvent active au crépuscule, et passe une grande partie de sa vie dans des terriers. On la trouve en colonies mais elle peut aussi vivre seule. Les mâles marquent leur territoire avec des glandes odorantes du ventre. Elle est docile quand on la manipule et mord rarement, mais peut se montrer agressive envers ses congénères.",
+    "reproduction": "La gestation dure 19 à 22 jours et une portée compte 3 à 9 petits, 4,5 en moyenne; jusqu’à trois portées par an sont possibles. Les petits naissent aveugles et nus, sont soignés par la seule femelle et sevrés à 3-4 semaines. La maturité vient à 3 à 6 mois. Une grande partie de ces données provient d’animaux captifs et surtout de la sous-espèce égyptienne.",
+    "ecology": "Ses terriers peuvent aérer le sol du désert, et elle influence probablement les populations locales d’insectes et de plantes. Les oiseaux sont des prédateurs probables, mais la prédation est mal documentée. Son pelage clair et sa vie souterraine peuvent l’aider à échapper aux prédateurs.",
+    "conservation": "Elle est classée en préoccupation mineure sur la Liste rouge de l’UICN. Les sources lues ne donnent ni estimation de population ni menace précise pour les animaux sauvages."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Pachyuromys_duprasi/",
+      "title": "Pachyuromys duprasi — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1002904",
+      "title": "Pachyuromys duprasi — Mammal Diversity Database"
+    }
+  ]
+}

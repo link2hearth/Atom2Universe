@@ -1,0 +1,58 @@
+{
+  "id": "wild_turkey",
+  "name": "Dindon sauvage",
+  "scientific": "Meleagris gallopavo",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Dindon sauvage est un grand oiseau forestier d’Amérique du Nord qui circule entre bois et clairières. Il marche et gratte le sol une grande partie de la journée, mais vole assez bien pour gagner un perchoir nocturne dans les arbres ou fuir un danger.",
+    "identification": "Le mâle adulte est nettement plus grand que la femelle : sa masse habituelle est d’environ 6,8 à 11 kilogrammes, contre 3,6 à 5,4 kilogrammes chez la femelle, avec des variations selon les populations et les saisons. Sa tête nue bleue et rouge porte de petites caroncules charnues ; un appendice souple appelé snood pend au-dessus du bec, des caroncules rouges de la gorge et une barbe noire de soies se détachent, et ses longues pattes portent des ergots acérés. La femelle est plus petite et brune, généralement sans barbe. Les deux sexes ont des ailes barrées et une large queue arrondie, fermée au repos et déployée en éventail pendant la parade.",
+    "habitat": "Dans une grande partie de l’Amérique du Nord, le Dindon sauvage fréquente les forêts mûres de feuillus ou mixtes, les champs et les clairières herbeuses. Dans le sud-est des États-Unis, les arbres fournissent perchoirs et glands, tandis qu’un couvert bas permet de repérer les prédateurs et abrite les nids et les insectes des zones de nourrissage des poussins.",
+    "diet": "Le Dindon sauvage est omnivore, même si les végétaux dominent : il mange graines, glands, noix, baies et plantes vertes, ainsi que des insectes et autres invertébrés, surtout jeune. Il gratte la litière, picore au sol et atteint parfois des fruits dans les arbustes. Il avale de petits cailloux qui, avec les contractions du gésier musculaire, broient graines et végétaux grossiers en fragments plus petits qui seront digérés.",
+    "behavior": "Le Dindon sauvage est grégaire, mais les groupes varient selon la saison et le sexe : hors reproduction, les mâles s’associent souvent, tandis que les femelles voyagent avec les jeunes et rejoignent parfois d’autres familles. Au crépuscule, les oiseaux volent jusqu’aux arbres abrités pour dormir ; leurs puissants départs en vol les aident aussi à fuir un danger. De nombreuses lignées commerciales à poitrine large ont été sélectionnées pour leur masse et volent difficilement. Au printemps, les mâles glougloutent, paradent ailes basses et queue en éventail ; cris et plumage attirent les femelles et signalent leur présence aux rivaux.",
+    "reproduction": "Un mâle peut parader pour plusieurs femelles et ne participe ni au nid ni à l’élevage ; celles-ci viennent s’accoupler sur les lieux de parade. Une étude génétique menée sur des dindons sauvages de l’Est en Géorgie et en Caroline du Sud a trouvé plusieurs pères dans certaines couvées. La femelle gratte un nid peu profond dans la litière ou un couvert bas et pond généralement une seule couvée saisonnière d’environ 4 à 17 œufs ; elle les couve pendant 25 à 31 jours. Les poussins couverts de duvet éclosent déjà bien développés, quittent le nid en un jour environ et suivent leur mère, qui les réchauffe et les protège. Ils se nourrissent tôt seuls, notamment de nombreux insectes, et savent généralement voler jusqu’aux arbres pour dormir entre deux et trois semaines ; auparavant, ils passent la nuit au sol, période où ils sont vulnérables.",
+    "ecology": "Les dindons mangent graines et noix, et leurs poussins consomment beaucoup d’insectes ; ils nourrissent à leur tour des prédateurs comme coyotes, lynx roux, aigles et hiboux, tandis que ratons laveurs et serpents prennent œufs et jeunes.",
+    "conservation": "L’évaluation mondiale de l’UICN achevée le 9 août 2018 et publiée en 2018 classait le Dindon sauvage en préoccupation mineure ; cette catégorie mondiale ne garantit pas la sécurité de chaque population locale. La chasse et le défrichement des forêts ont provoqué de forts déclins aux XIXe et au début du XXe siècle. Les premiers lâchers d’oiseaux d’élevage échouaient souvent, mais les agences de la faune ont ensuite rétabli des populations en capturant des oiseaux sauvages pour les déplacer dans des habitats adaptés ; le programme de l’État de New York a commencé en 1959 et a fourni d’autres États du nord-est ainsi que l’Ontario. L’espèce est aussi l’ancêtre des dindons domestiques : des peuples autochtones du Mexique l’avaient domestiquée plusieurs siècles avant que des Européens n’emportent des oiseaux domestiques en Europe. La chasse reste un usage humain important et un enjeu de gestion, encadré localement par des saisons et des règles."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Wild_Turkey/id",
+      "title": "Identification du Dindon sauvage — All About Birds, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Meleagris_gallopavo/",
+      "title": "Meleagris gallopavo (Dindon sauvage) — Animal Diversity Web"
+    },
+    {
+      "url": "https://content.ces.ncsu.edu/wild-turkey",
+      "title": "Dindon sauvage — Publications de vulgarisation de NC State"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/wild_turkey/lifehistory",
+      "title": "Cycle biologique du Dindon sauvage — All About Birds, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.pa.gov/agencies/pgc/wildlife/discover-pa-wildlife/turkey",
+      "title": "Dindon — Pennsylvania Game Commission"
+    },
+    {
+      "url": "https://academic.oup.com/auk/article/143/1/1/8279657",
+      "title": "L’analyse génétique éclaire le système d’accouplement de Meleagris gallopavo et révèle une paternité extrapaire fréquente"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/wild_turkey",
+      "title": "Présentation du Dindon sauvage — All About Birds, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://dec.ny.gov/nature/animals-fish-plants/wild-turkey",
+      "title": "Dindon sauvage — Département de la conservation de l’environnement de l’État de New York"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22679525A132051953.en",
+      "title": "Dindon sauvage, Meleagris gallopavo — Liste rouge de l’UICN 2018"
+    },
+    {
+      "url": "https://www.dnr.sc.gov/news/2019/nov/nov25_turkeys.php",
+      "title": "Différences entre dindons sauvages et domestiques — South Carolina Department of Natural Resources"
+    }
+  ]
+}

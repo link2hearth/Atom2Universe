@@ -1,0 +1,58 @@
+{
+  "id": "hermann_tortoise",
+  "name": "Hermann's tortoise",
+  "scientific": "Testudo hermanni",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Hermann's tortoise is a land-dwelling tortoise native to Mediterranean and nearby parts of southeastern Europe, from northeastern Spain to the Balkans. The current specialist checklist recognizes western Testudo hermanni hermanni and eastern Testudo hermanni boettgeri as subspecies.",
+    "identification": "The domed, oval shell is usually yellow to yellow-orange with dark marks, and its plastron, the shell's underside, often has two black bands whose pattern varies by region. A horny claw at the tail tip and a supracaudal scale above the tail that is almost always divided help identify it. Unlike Testudo graeca, it lacks prominent spurs on the inner thighs; unlike Testudo marginata, its rear shell edge does not flare. In the Var, females can reach 20–25 centimetres in shell length. Males are smaller, with a longer, thicker tail and a slightly concave plastron. Across western populations, adult females average about 15–18 centimetres and males 13–15 centimetres in straight carapace length; Balkan adults are generally larger.",
+    "habitat": "Hermann's tortoise uses a patchwork of Mediterranean vegetation, from coastal lowlands to inland hills. At a central Italian site, tortoises selected small patches where bare ground lay beside dense plant cover and several favored plant species.",
+    "diet": "It crops leaves, flowers and other low-growing plants as it forages on foot. Wild diets are chiefly plant material, especially soft annual plants, and the menu changes with season and local growth. A central Italian study of the western subspecies found mostly legume leaves and grasses in spring, then flowers and unripe butcher's-broom fruit in autumn.",
+    "behavior": "This tortoise is mostly active by day, but its schedule changes with temperature. It basks in the morning, then moves between feeding grounds and cover. In hot Mediterranean summers, activity often pauses during the hottest hours and resumes toward evening; winter brings a prolonged inactive period in a sheltered place. Adults generally live alone and meet to mate. Courtship also uses high-pitched calls and scent cues.",
+    "reproduction": "Mating begins after winter dormancy and can continue through the active season. Females dig nests in soil and lay hard-shelled eggs, usually in late spring or early summer; clutch size and frequency vary among populations. In the Var, incubation averages about one hundred days, and hatchlings usually emerge in early September after late-summer rain. Incubation temperature influences hatchling sex. After laying, the female leaves the nest; the young develop without parental care. In the Var, maturity averages about eleven years.",
+    "ecology": "As a herbivore, it crops leaves, flowers and seasonal fruit. Eggs and young tortoises are prey for mammals and birds, while the hard shell protects older individuals from many attacks. In some studied areas, nest predators destroy many eggs before hatchlings can join the population.",
+    "conservation": "The global IUCN Red List assessment was dated 5 May 2024 and classified Testudo hermanni as Vulnerable with a decreasing population trend; its corrected version was published in 2025. Former western populations have disappeared from parts of their range, including Roussillon, and France now retains populations in Corsica and the Var. The 2015 French assessment classified the species as Vulnerable and the Var population as Endangered. Urban development, roads, intensive land use, wildfire and illegal collection for the pet trade are documented threats. France's action plans for the Var covered 2009–2014 and 2018–2027, with work on habitat and populations."
+  },
+  "sources": [
+    {
+      "url": "https://iucn-tftsg.org/wp-content/uploads/file/Accounts/crm_5_059_hermanni_v1_2011.pdf",
+      "title": "Testudo hermanni (Gmelin 1789) – Hermann’s Tortoise, Conservation Biology of Freshwater Turtles and Tortoises, Chelonian Research Monographs No. 5 (2011)"
+    },
+    {
+      "url": "https://iucn-tftsg.org/wp-content/uploads/crm.10.checklist.atlas_.v10.2025.pdf",
+      "title": "Turtles of the World: Annotated Checklist and Atlas, 10th Edition (2025) — IUCN/SSC Tortoise and Freshwater Turtle Specialist Group"
+    },
+    {
+      "url": "https://doi.org/10.1655/HERPETOLOGICA-D-10-00064.1",
+      "title": "Seasonal changes in the diet of Testudo hermanni hermanni in central Italy — Herpetologica (2011)"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Testudo_hermanni/",
+      "title": "Testudo hermanni — Animal Diversity Web, University of Michigan Museum of Zoology (2012)"
+    },
+    {
+      "url": "https://parcsnationaux.fr/fr/des-connaissances/biodiversite/faune-emblematique/les-reptiles/la-tortue-dhermann",
+      "title": "La tortue d'Hermann — Portail des parcs nationaux de France"
+    },
+    {
+      "url": "https://brill.com/view/journals/amre/28/1/article-p77_9.pdf",
+      "title": "Breeding traits of Hermann's tortoise Testudo hermanni hermanni in two western populations — Amphibia-Reptilia (2007)"
+    },
+    {
+      "url": "https://doi.org/10.1163/157075511X584209",
+      "title": "The turtle is in the details: Microhabitat choice by Testudo hermanni is based on microscale plant distribution — Animal Biology (2011)"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-1.RLTS.T21648A268511652.en",
+      "title": "Testudo hermanni — The IUCN Red List of Threatened Species, errata version (assessment 2024; published 2025)"
+    },
+    {
+      "url": "https://inpn.mnhn.fr/docs/LR_FCE/Rapport-Eval-Reptiles-Amphibiens-metropole_Actualisee-16-01-2017.pdf",
+      "title": "La Liste rouge des espèces menacées en France: Reptiles et amphibiens de France métropolitaine (2015) — INPN/MNHN, OFB and IUCN France"
+    },
+    {
+      "url": "https://www.paca.developpement-durable.gouv.fr/la-tortue-d-hermann-a385.html?lang=fr",
+      "title": "La Tortue d’Hermann — DREAL Provence-Alpes-Côte d’Azur"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "water_vole",
+  "name": "Eurasian water vole",
+  "scientific": "Arvicola amphibius",
+  "group": "mammals",
+  "sections": {
+    "overview": "The Eurasian water vole, Arvicola amphibius, is a wetland rodent widespread across Europe and northern Asia. Its range reaches from Britain east through Russia to Siberia, and south into the Middle East. Most populations live beside water, while some use damp grasslands and other less aquatic habitats. The IUCN classified it as globally Least Concern in 2023, despite regional declines.",
+    "identification": "Adults are usually 14–22 cm long, with a 9.5–14 cm tail, and weigh 150–300 g. A blunt muzzle, fur-hidden ears and furry tail distinguish it from the brown rat, which has a pointed face and bare tail. The coat is usually chestnut or dark brown above, greyish below; some populations are entirely black. Continuously growing incisors cut vegetation, and broad molars grind it.",
+    "habitat": "The waterside form favours slow streams, ditches, ponds, marshes and reedbeds with soft banks and dense cover. It stays near water but travels and feeds mostly on land, often under grass. Bank burrows contain nest chambers and may open both above and below water, offering escape from danger. Some northern and upland populations also occupy wet grassland or moorland away from rivers.",
+    "diet": "It is chiefly herbivorous and may eat plant matter approaching 80 percent of its body mass daily. Grasses, sedges, rushes and waterside herbs dominate, supplemented by roots, bulbs, shoots and fruit. It carries cut stems to feeding spots and stores vegetation underground for lean periods. Pregnant females sometimes seek protein-rich snails or flowers. In captive water voles, the caecum, a pouch in the large intestine, enlarged on cellulose-rich food; pellet-eating (coprophagy) also became more frequent.",
+    "behavior": "It swims and dives over short distances but is no aquatic specialist: it breathes air with lungs, and its coat can become waterlogged. A compact body and burrows help it escape predators; most feeding and resting occur on land. Activity peaks by day and at twilight, varying with season. Along streams, females often defend breeding territories while males range farther and overlap several females; studies in other habitats find looser boundaries. Scent marks and latrines advertise territories.",
+    "reproduction": "Breeding in temperate Europe usually lasts from spring into early autumn, with a shorter season in colder regions. Gestation is about three weeks; litters commonly contain four to six pups, and females may produce several. Newborns are hairless and blind, sheltered in a grass nest; their eyes open within days. They are weaned at two to three weeks, leave the nest soon after, and may mature in their first year.",
+    "ecology": "By burrowing, feeding and moving through wetlands, the vole helps create conditions that other plants and animals can use. Burrowing and droppings alter soil structure and nutrient cycling. It is prey for native predators and, in Britain, introduced American mink. Dispersing juveniles can recolonize empty patches, linking local populations across wetlands.",
+    "conservation": "The IUCN’s 2023 Least Concern assessment reflects the species’ broad range and mostly stable global trend, while recognizing regional declines. In Britain it is Endangered in England and Great Britain, and Near Threatened in Scotland. Agricultural intensification, pollution and watercourse development have destroyed and fragmented British water vole habitat. Introduced American mink can enter burrows and intensify predation; river restoration and mink control are part of recovery work."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2023-1.RLTS.T219451656A219451755.en",
+      "title": "Arvicola amphibius (Eurasian Water Vole)"
+    },
+    {
+      "url": "https://www.wwt.org.uk/discover-wetlands/wetland-wildlife/species-factfiles/water-vole",
+      "title": "Water vole"
+    },
+    {
+      "url": "https://mammal.org.uk/british-mammals/water-vole",
+      "title": "Water vole"
+    },
+    {
+      "url": "https://doi.org/10.5281/zenodo.6706842",
+      "title": "Arvicola amphibius"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4846030/",
+      "title": "Influence of Reproductive Status: Home Range Size in Water Voles (Arvicola amphibius)"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Arvicola_amphibius/",
+      "title": "Arvicola amphibius (Eurasian water vole)"
+    },
+    {
+      "url": "https://cronfa.swan.ac.uk/Record/cronfa42744",
+      "title": "Habitat, home range, diet and demography of the water vole: Patch-use in a complex wetland landscape"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/2575948/",
+      "title": "The effects of increased dietary cellulose on the anatomy, physiology and behaviour of captive water voles, Arvicola terrestris (L.)"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-1.RLTS.T2149A197271401.en",
+      "title": "Arvicola amphibius (European Water Vole)"
+    },
+    {
+      "url": "https://mammal.org.uk/blog/2020/06/when-weasels-eat-water-voles",
+      "title": "When Weasels Eat Water Voles"
+    }
+  ]
+}

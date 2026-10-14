@@ -1,0 +1,30 @@
+{
+  "id": "bluethroat",
+  "name": "Gorgebleue à miroir",
+  "scientific": "Luscinia svecica",
+  "group": "birds",
+  "sections": {
+    "overview": "La gorgebleue à miroir est un petit turdidé timide qui ressemble au rouge-gorge, nichant dans les fourrés humides de la Scandinavie à la Sibérie et hivernant très au sud. En Grande-Bretagne, c’est un visiteur rare, vu surtout en migration, qui ne s’y reproduit qu’occasionnellement.",
+    "identification": "Long d’environ 13 à 14 cm, l’adulte pèse à peu près 17 g, avec une aile d’environ 75 mm. La gorge et la poitrine bleu vif du mâle sont bordées de bandes noire, blanche et rousse, avec une tache centrale blanche ou rousse selon la forme. Les femelles sont plus ternes, avec moins de bleu. Le dessus est gris-brun et la queue a une base roux vif, avec un sourcil clair.",
+    "habitat": "Il niche dans le nord, en Scandinavie et en Sibérie, jusqu’en Asie vers l’Himalaya, ainsi que par endroits en Europe centrale et occidentale et autour de la mer Noire. Il préfère les saulaies sur sol humide et reste caché dans la végétation dense.",
+    "diet": "Il se nourrit surtout d’insectes et d’autres invertébrés, prélevés sur les tiges et les feuilles ou sous les feuilles mortes au sol, et capture rarement des insectes en vol. Il prend à l’occasion des escargots et des vers de terre, et mange des graines et des fruits en hiver.",
+    "behavior": "Oiseau timide et discret, il se glisse souvent d’un bond dans un buisson en montrant les plages rousses à la base de sa queue. Les populations occidentales hivernent dans le bassin méditerranéen et le nord de l’Afrique, les orientales dans le sous-continent indien.",
+    "reproduction": "Le nid profond en coupe, fait de brindilles, de tiges d’herbe et de mousse et garni de poils d’animaux, est construit par la femelle et caché dans une touffe d’herbe ou un arbuste; la nidification s’étend de mai à juillet. Il y a en général une ou deux couvées de cinq à sept œufs (jusqu’à neuf). La femelle couve 14 à 15 jours et les poussins s’envolent après environ 14 à 15 jours.",
+    "ecology": "Oiseau surtout insectivore des fourrés humides, il se nourrit d’invertébrés à la saison de reproduction et passe en partie aux graines et aux fruits en hiver. L’espèce présente une grande variation dans l’intensité de sa gorge bleue et dans la couleur et la forme de sa tache de gorge.",
+    "conservation": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure. Au Royaume-Uni, c’est un visiteur rare, avec environ 5 000 données au BTO, sans estimation de population et avec une reproduction occasionnelle (la dernière citée en 2016); il est protégé par l’annexe 1 et classé ambre par la RSPB."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/bluethroat",
+      "title": "Gorgebleue à miroir — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/bluethroat",
+      "title": "Gorgebleue à miroir — RSPB, oiseaux et faune"
+    },
+    {
+      "url": "https://notranjski-park.si/en/discover/encyclopedia/animal-world/birds/whips/blue-mother-in-law",
+      "title": "Gorgebleue à miroir — parc régional de Notranjska"
+    }
+  ]
+}

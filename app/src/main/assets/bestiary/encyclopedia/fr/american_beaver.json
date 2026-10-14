@@ -1,0 +1,58 @@
+{
+  "id": "american_beaver",
+  "name": "Castor du Canada",
+  "scientific": "Castor canadensis",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le castor du Canada est un grand rongeur herbivore d’eau douce, distinct du castor d’Eurasie (Castor fiber). Ses pattes arrière palmées le propulsent ; sa large queue aplatie le dirige dans l’eau et soutient son corps à terre. Les familles occupent étangs, lacs, zones humides et cours d’eau. Là où ils construisent des barrages, l’eau retenue, plus profonde, permet un accès immergé aux réserves alimentaires et aux abris.",
+    "identification": "L’adulte a le corps trapu et brun, de petites oreilles, une large queue écailleuse et de grandes pattes arrière palmées. Ses incisives orange poussent sans cesse et coupent les branches ou détachent l’écorce. L’émail dur à l’avant et l’usure plus rapide à l’arrière en gardent le tranchant. Le sous-poil dense l’isole sous les poils de garde qui repoussent l’eau. Des valves ferment oreilles et narines sous l’eau ; une membrane nictitante protège les yeux et les lèvres peuvent se fermer derrière les incisives pendant le rongement immergé. Le National Park Service des États-Unis indique une longueur corporelle moyenne d’environ 61 cm sans la queue et une masse de 16 à 27 kg ; mâles et femelles se ressemblent. Ces valeurs générales ne distinguent pas les sexes.",
+    "habitat": "L’espèce vit dans une grande partie du Canada et des États-Unis, jusqu’au nord du Mexique. Elle fréquente les eaux douces bordées de plantes ligneuses ou herbacées, surtout les étangs, zones humides et cours d’eau lents aux berges propices au creusement. Une hutte de branches et de boue comprend une entrée immergée et une chambre sèche. Si un lac ou une rivière offre déjà une eau profonde et stable, le castor peut utiliser un terrier de berge ou une hutte sans construire de barrage. Des introductions ont aussi établi des populations hors d’Amérique du Nord, notamment en Finlande et en Terre de Feu.",
+    "diet": "Le castor mange feuilles, herbes, plantes aquatiques, racines, bourgeons, rameaux et cambium tendre sous l’écorce. Trembles, saules, bouleaux, peupliers et autres arbres locaux fournissent des aliments ligneux ; le bois dense sert souvent à construire. Les mammifères ne digèrent pas seuls la cellulose : des microbes du cæcum agrandi fermentent les tissus végétaux et en libèrent les nutriments. En automne, la colonie peut ancrer des branches sous l’eau près de la hutte. Cette réserve reste accessible sous la glace, lorsque les plantes fraîches se font rares.",
+    "behavior": "Une colonie est généralement une famille territoriale comprenant deux adultes et les jeunes d’une ou deux saisons de reproduction. Les jeunes plus âgés entretiennent la hutte et les barrages et participent aux soins des petits. Les animaux restent actifs toute l’année, souvent au crépuscule ou la nuit. Dans l’eau, les pattes arrière propulsent et la queue dirige ; à terre, celle-ci soutient le corps pendant le rongement.",
+    "reproduction": "L’accouplement a généralement lieu en hiver. Après environ 105 à 107 jours de gestation, la femelle met bas au printemps ou au début de l’été, souvent deux à quatre petits. Ceux-ci naissent couverts de poils et les yeux ouverts ; ils goûtent bientôt des aliments solides tout en continuant à téter. Parents et frères et sœurs plus âgés les protègent et les soignent. Vers deux ans, les jeunes se dispersent, avant ou près de la portée suivante, pour établir leur territoire. Dates de reproduction et taille des portées varient selon la latitude, la nourriture et la densité locale.",
+    "ecology": "Un barrage ralentit l’eau, élève le niveau en amont et peut relier un cours d’eau à sa plaine inondable. Dans une étude de 2002 à 2005 sur deux barrages le long de 1,5 kilomètre du Colorado, dans le parc national des Montagnes Rocheuses, les chercheurs ont mesuré des inondations prolongées et une nappe plus haute. Les barrages ont réduit la baisse estivale de la nappe dans certaines parties de la vallée étudiée, qui couvre 58 hectares. Ces résultats concernent ce tronçon ; ailleurs, les effets dépendent du chenal et du débit. En Terre de Feu, les castors introduits peuvent transformer des forêts indigènes de Nothofagus en prairies par l’abattage des arbres et l’inondation.",
+    "conservation": "La Mammal Diversity Database, consultée en octobre 2026, relaie la catégorie mondiale « Préoccupation mineure » de l’UICN. L’espèce s’est rétablie dans plusieurs régions après les déclins historiques dus au commerce des fourrures, mais les pressions locales persistent. Le Centre de données sur la conservation de la Colombie-Britannique lui attribue le rang provincial S5, révisé pour la dernière fois le 15 janvier 2024 ; il cite l’urbanisation, la modification des cours d’eau, les sécheresses sévères, le piégeage et le contrôle des conflits parmi les pressions locales possibles. Ces évaluations régionales ne fournissent pas de total continental actuel."
+  },
+  "sources": [
+    {
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec/fiches-especes-fauniques/castor",
+      "title": "Castor du Canada — Gouvernement du Québec"
+    },
+    {
+      "url": "https://www.nps.gov/glac/learn/education/beaver-natural-history-narrative.htm",
+      "title": "Histoire naturelle du castor — Parc national de Glacier, National Park Service"
+    },
+    {
+      "url": "https://www.in.gov/dnr/fish-and-wildlife/wildlife-resources/animals/beaver",
+      "title": "Poissons et faune : castor — Département des ressources naturelles de l’Indiana"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Castor_canadensis/",
+      "title": "Castor canadensis — Animal Diversity Web, Université du Michigan"
+    },
+    {
+      "url": "https://home.nps.gov/romo/learn/nature/beavers.htm",
+      "title": "Castors — Parc national des Montagnes Rocheuses, National Park Service"
+    },
+    {
+      "url": "https://pubs.usgs.gov/publication/70030228",
+      "title": "Les barrages de castors et les crues influencent les échanges entre eaux souterraines et superficielles dans une vallée des Rocheuses — USGS"
+    },
+    {
+      "url": "https://a100.gov.bc.ca/pub/eswp/esr.do?id=14816",
+      "title": "Rapport sur le statut de conservation : Castor canadensis — Centre de données sur la conservation de la Colombie-Britannique"
+    },
+    {
+      "url": "https://www.iucngisd.org/gisd/species.php?sc=981",
+      "title": "Castor du Canada — base mondiale des espèces envahissantes, UICN SSC"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1001957/",
+      "title": "Castor canadensis — Mammal Diversity Database"
+    },
+    {
+      "url": "https://www.nps.gov/articles/north-american-beaver-acadia.htm",
+      "title": "Castor du Canada — parc national d’Acadia, National Park Service des États-Unis"
+    }
+  ]
+}

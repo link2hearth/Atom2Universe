@@ -1,0 +1,38 @@
+{
+  "id": "aequorea_victoria",
+  "name": "Méduse cristal",
+  "scientific": "Aequorea victoria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Aequorea victoria est une hydroméduse presque transparente du nord-est du Pacifique. Sa cloche délicate et ses tentacules marginaux la rendent difficile à repérer dans l’eau, mais son système lumineux l’a rendue célèbre en biomédecine : la protéine fluorescente verte GFP en a été isolée pour la première fois. La méduse produit aussi une bioluminescence bleu-vert lorsqu’elle est stimulée mécaniquement. La fluorescence de la GFP et la lumière émise par l’animal sont liées, mais ce sont deux phénomènes distincts.",
+    "identification": "La méduse possède une cloche arrondie et transparente, bordée de nombreux tentacules fins, ainsi qu’une bouche centrale entourée de larges lobes oraux. Sa transparence presque vitreuse est le principal caractère visible ; les canaux radiaires et les gonades peuvent se distinguer à travers la cloche. Elle ne mesure souvent que quelques centimètres, mais des fiches d’aquarium et de musée signalent des adultes atteignant environ 25 cm de diamètre de cloche. La taille varie avec l’âge, l’alimentation et la localité. Aucune masse corporelle fiable, hauteur de cloche ou différence de taille entre les sexes n’a été trouvée. Elle peut être confondue avec d’autres hydroméduses transparentes ; comparer la disposition des tentacules, les structures marginales, les canaux radiaires et l’aire géographique plutôt que de se fier à la seule transparence.",
+    "habitat": "Elle vit dans les eaux côtières et au large du nord-est du Pacifique, du sud de la Californie jusqu’à la Colombie-Britannique et l’île de Vancouver. La méduse dérive et nage dans le plancton, tandis que le stade hydropolype, beaucoup moins étudié, est fixé au fond ou à des supports durs comme des coquilles. Son abondance varie avec les saisons ; dans certaines parties de la mer des Salish, les méduses sont particulièrement visibles au printemps et en été.",
+    "diet": "Elle capture les animaux planctoniques à l’aide de ses tentacules et de ses lobes oraux. Elle consomme des copépodes et d’autres petits crustacés, mais des observations en nature et en laboratoire indiquent une forte préférence pour les proies gélatineuses, notamment les cténophores et les petites hydroméduses. Sa bouche peut s’élargir pour avaler une proie relativement grande par rapport à sa cloche. Des expériences montrent que son substrat bioluminescent, la coelentérazine, doit être obtenu par l’alimentation et n’est pas synthétisé de novo par l’animal.",
+    "behavior": "La méduse contracte sa cloche pour nager et dérive aussi avec les courants. Une perturbation mécanique déclenche de brefs éclairs bleu-vert produits par des photoprotéines concentrées autour du bord de la cloche ; cette lumière peut surprendre ou désorienter les prédateurs, même si son efficacité défensive dépend du contexte. Aequorea est un prédateur actif du plancton gélatineux, et non simplement un organisme passif filtrant au gré des courants.",
+    "reproduction": "Les sexes sont séparés. Les méduses adultes libèrent leurs ovules ou leurs spermatozoïdes dans l’eau ; la fécondation donne une larve planula nageuse. Celle-ci se fixe ensuite et devient une colonie d’hydropolypes benthiques, qui produit plus tard de jeunes méduses par bourgeonnement asexué. Dans la région du Puget Sound, les colonies libèrent de petites méduses au début du printemps ; le calendrier est moins bien documenté ailleurs. Le stade hydropolype reste mal connu dans la nature.",
+    "ecology": "Prédateur du plancton gélatineux et des petits crustacés, elle participe aux réseaux alimentaires pélagiques et peut à son tour servir de proie à de grands animaux comme le poisson-lune. Son abondance peut fortement varier selon les années et les localités. L’espèce fournit aussi l’aequorine et la GFP, mais l’utilisation de ces molécules en laboratoire ne décrit pas son rôle écologique.",
+    "conservation": "Les sources consultées ne donnent pas d’évaluation mondiale de l’UICN ni de tendance de population propre à Aequorea victoria. L’espèce est largement présente dans le nord-est du Pacifique, mais les fluctuations locales et le suivi limité rendent toute affirmation générale sur son abondance incertaine. Les références examinées ne la signalent pas comme une espèce présentant un enjeu de conservation particulier."
+  },
+  "sources": [
+    {
+      "url": "https://faculty.washington.edu/cemills/Aequorea.html",
+      "title": "Bioluminescence d’Aequorea, une hydroméduse — C. E. Mills, université de Washington"
+    },
+    {
+      "url": "https://www.montereybayaquarium.org/animals-the-ocean/animals-a-to-z/crystal-jelly",
+      "title": "Méduse cristal — Monterey Bay Aquarium"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC58698/",
+      "title": "Les cnidaires peuvent-ils produire la coelentérazine ? Dépendance alimentaire de la bioluminescence — Proceedings of the National Academy of Sciences"
+    },
+    {
+      "url": "https://www.montereybayaquarium.org/es/animales-y-el-oceano/animales-de-la-a-a-la-z/medusa-de-cristal",
+      "title": "Méduse cristal — Monterey Bay Aquarium en espagnol"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?id=283998&p=taxdetails",
+      "title": "Aequorea victoria — World Register of Marine Species"
+    }
+  ]
+}

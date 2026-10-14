@@ -12,8 +12,8 @@
       "fr": "Daphnia magna est un petit crustacé d’eau douce, la plus grande des daphnies d’Europe, qui dérive dans les étangs et les lacs. Elle est presque transparente, se reproduit surtout par clonage et compte parmi les animaux les plus utilisés en écologie, en génétique et dans les tests de toxicité."
     },
     "identification": {
-      "en": "Females measure about 3 to 5 mm and males about 2 mm. The body is bean-shaped and enclosed in a transparent carapace, with one large dark compound eye at the front and two pairs of antennae; the large, branched second pair drives swimming. Males have longer first antennae and a hooked first leg used to clasp females.",
-      "fr": "Les femelles mesurent environ 3 à 5 mm et les mâles environ 2 mm. Le corps, en forme de haricot, est enfermé dans une carapace transparente, avec un grand œil composé sombre à l’avant et deux paires d’antennes; la grande paire postérieure, ramifiée, assure la nage. Les mâles ont des antennules plus longues et une première patte en crochet pour retenir les femelles."
+      "en": "Females measure about 3 to 5 mm and males about 2 mm. The body is bean-shaped and enclosed in a transparent carapace, with one large dark compound eye at the front and two pairs of antennae; the large, branched second pair drives swimming. Males have longer first antennae and a hooked first leg used to clasp females. Reliable body-mass figures were not found in the consulted sources; the published adult measurements are lengths and vary strongly with sex and environment.",
+      "fr": "Les femelles mesurent environ 3 à 5 mm et les mâles environ 2 mm. Le corps, en forme de haricot, est enfermé dans une carapace transparente, avec un grand œil composé sombre à l’avant et deux paires d’antennes; la grande paire postérieure, ramifiée, assure la nage. Les mâles ont des antennules plus longues et une première patte en crochet pour retenir les femelles. Les sources consultées ne donnent pas de masse fiable ; les mensurations adultes publiées sont des longueurs et varient fortement selon le sexe et le milieu."
     },
     "habitat": {
       "en": "It lives in standing fresh and brackish water, from temporary pools to lakes, tolerating salinity up to about 8 parts per thousand and preferring roughly 18 to 22 °C. It is native to the Nearctic and Palearctic regions, with records in western Europe, around the Black Sea and in coastal rock pools of the north-eastern United States.",
@@ -48,10 +48,20 @@
       },
       "url": "https://animaldiversity.org/accounts/Daphnia_magna/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Females 3–5 mm, males about 2 mm; transparent carapace, one compound eye; brackish water up to 8 ppt; filter feeder on particles under 50 micrometres; swims in jumps; diel vertical migration.",
-        "Cyclic parthenogen; ephippial eggs; brood about 8 on average, 1–4 days in brood pouch, maturity in 6–10 days; eaten by fish and insects; IUCN: not evaluated."
+        "Cyclic parthenogen; ephippial eggs; brood about 8 on average, 1–4 days in brood pouch, maturity in 6–10 days; eaten by fish and insects; IUCN: not evaluated.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
       ]
     },
     {
@@ -61,7 +71,12 @@
       },
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9360664/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "habitat", "reproduction", "ecology"],
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "Cyclic parthenogenesis; stress brings males and ephippia that can survive many years; standing fresh and brackish water from temporary pools to lakes.",
         "Often a keystone species and main primary consumer; prey for fish and invertebrates; D. magna used in routine crosses and standard ecotoxicology tests."
@@ -74,7 +89,11 @@
       },
       "url": "https://www.canadiannaturephotographer.com/daphnia.html",
       "consulted": "2026-10-12",
-      "supports": ["identification", "behavior", "reproduction"],
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
       "facts": [
         "Large secondary antennae drive swimming in jumps; males smaller with larger antennules and a hooked first leg; resting eggs in a dark saddle-like ephippium; young stay about 3 days in the brood pouch.",
         "General genus-level observations, not specific to D. magna."

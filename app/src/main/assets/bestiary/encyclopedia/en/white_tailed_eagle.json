@@ -1,0 +1,26 @@
+{
+  "id": "white_tailed_eagle",
+  "name": "White-tailed Eagle",
+  "scientific": "Haliaeetus albicilla",
+  "group": "birds",
+  "sections": {
+    "overview": "The white-tailed eagle is the largest bird of prey in the United Kingdom, a heavy-set coastal eagle nicknamed the “flying barn door”. Persecution drove it out of Britain, and it returned only through reintroduction projects.",
+    "identification": "The body is brown, with a pale head and neck that can look almost white in older birds, and adults have a white, wedge-shaped tail. The bill is large and yellow (dark in juveniles) and the feet are yellow. The wings are very broad with “fingered” tips and are held flat when soaring. A bird weighs about 4.9 kg.",
+    "habitat": "It prefers coasts, which is why it is also called the sea eagle. In Britain the breeding range centres on four areas: the Outer Hebrides, Wester Ross, Skye with the Small Isles, and north Argyll around Mull. Nests are placed on a cliff ledge or in a large tree.",
+    "diet": "Unlike the golden eagle, it catches fish, sometimes plunging talons-first into the sea or a lake. It also eats rabbits, hares and other mammals, birds such as gulls and ducks, and carrion.",
+    "behavior": "Pairs mate for life and stay faithful to their nest site. They add twigs and grass each breeding season, so a nest grows larger year after year and can reach about 1.8 m across.",
+    "reproduction": "A clutch is typically two eggs (one to three), incubated by both parents for about 38 days. The downy, helpless chicks fledge after 70–75 days. There is usually one brood a year, and a bird typically first breeds at five years old.",
+    "ecology": "As a predator of fish, mammals and birds that also eats carrion, it sits at the top of coastal food chains. It once lived across the whole UK but was driven out of England by the early 19th century through persecution, and the last Scottish bird was shot in the early 20th century. Releases began on Rum in 1975 and on the Isle of Wight in 2019.",
+    "conservation": "The UK breeding population was 123 pairs in 2017, and the species is Amber-listed in the UK and protected under Schedule 1, which makes disturbance illegal. The IUCN global category is Least Concern. Birds that reach breeding age can live about 20 years; the oldest ringed bird reached nearly 17."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/white-tailed-eagle",
+      "title": "White-tailed Eagle — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/white-tailed-eagle",
+      "title": "White-tailed Eagle — RSPB Birds & Wildlife"
+    }
+  ]
+}

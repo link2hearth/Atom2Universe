@@ -1,0 +1,58 @@
+{
+  "id": "blue_tit",
+  "name": "Mésange bleue",
+  "scientific": "Cyanistes caeruleus",
+  "group": "birds",
+  "sections": {
+    "overview": "La Mésange bleue est un petit passereau agile de la famille des mésanges, reconnaissable à son plumage bleu et jaune. Elle vit dans une grande partie de l’Europe et jusqu’en Asie occidentale.",
+    "identification": "L’adulte mesure environ 11,5 à 12 centimètres et pèse près de 10 à 12 grammes ; son bec court et fin prélève de petites proies tandis que ses pattes fortes agrippent brindilles et feuilles. Il porte une calotte, des ailes et une queue bleues, des joues blanches barrées par une ligne sombre, un dos verdâtre et un dessous jaune. À l’œil humain, les sexes se ressemblent beaucoup, mais la réflexion ultraviolette de la calotte diffère et les oiseaux peuvent la percevoir. Les jeunes à l’envol sont plus ternes, avec des joues jaune pâle plutôt que blanches ; leur mue postjuvénile remplace le plumage du corps en quelques semaines.",
+    "habitat": "L’aire s’étend des îles Britanniques et du nord de l’Europe jusqu’à l’Oural, puis vers le sud à travers une grande partie de l’Europe jusqu’au nord-ouest de l’Iran. Les bois de feuillus et les forêts mixtes offrent des houppiers riches en insectes et des cavités pour nicher ; vergers, haies, parcs arborés et jardins fournissent les mêmes ressources lorsque de vieux arbres subsistent.",
+    "diet": "La majeure partie de l’année, la Mésange bleue glane insectes, araignées et autres petits arthropodes sur les feuilles, les bourgeons et les brindilles. Glaner consiste à prendre une proie directement sur une surface ; l’oiseau sonde les fentes, retourne les feuilles ou se suspend à l’envers pour en fouiller le dessous, en s’agrippant aux branches souples. Au printemps, les chenilles tendres nourrissent les oisillons en croissance et les parents apportent aussi d’autres arthropodes. Quand les insectes se raréfient en hiver, graines et baies complètent le régime, et les mangeoires ajoutent une ressource près des habitations.",
+    "behavior": "Au printemps, le chant répété du mâle contribue à signaler un territoire et à attirer une partenaire. Des cris de contact maintiennent le lien entre oiseaux proches, tandis qu’un bavardage rauque attire l’attention sur un danger. En hiver, adultes et jeunes rejoignent des bandes réunissant plusieurs espèces qui parcourent ensemble les bois ; ces bandes mobiles diffèrent des familles formées par les jeunes encore dépendants après l’envol. Sortis du nid, ceux-ci suivent leurs parents et réclament leur nourriture jusqu’à savoir s’alimenter seuls.",
+    "reproduction": "La femelle choisit une cavité d’arbre, de mur ou de nichoir et bâtit une coupe de mousse et de fibres sèches, garnie de poils ou de plumes. Les pontes britanniques comptent généralement huit à dix œufs. La femelle couve environ 13 à 14 jours, tandis que le mâle lui apporte souvent de la nourriture. Les deux parents livrent ensuite de petites proies à intervalles rapprochés aux oisillons, qui grandissent vite et s’envolent généralement vers 18 à 21 jours en Grande-Bretagne.",
+    "ecology": "En mangeant chenilles et autres arthropodes, les Mésanges bleues sont des prédatrices d’animaux qui consomment feuilles et bourgeons. La hausse saisonnière des chenilles peut coïncider avec les besoins élevés des oisillons en croissance, mais la ponte commence plus tôt et la reproduction n’a pas à s’aligner exactement sur un pic unique. Dans une forêt primaire, les chenilles restaient importantes dans le régime des jeunes malgré une baisse de disponibilité supérieure à dix fois entre les années ; seules certaines nichées se situaient près du pic.",
+    "conservation": "Le British Trust for Ornithology indique que l’espèce est globalement de préoccupation mineure. En Europe, l’évaluation de la Liste rouge datée du 18 décembre 2020 et publiée en 2021 l’a également classée en préoccupation mineure ; elle estimait 59,7 à 95,1 millions d’individus matures et une tendance régionale à la hausse. Au Royaume-Uni, l’abondance nicheuse a augmenté de 20 % nets entre 1967 et 2024, cette évolution comprenant un léger recul depuis environ 2008."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/blue-tit",
+      "title": "Mésange bleue"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/mesanges/mesange-bleue",
+      "title": "Mésange bleue"
+    },
+    {
+      "url": "https://avibase.bsc-eoc.org/species.jsp?avibaseid=9BE53D340F9A4305&lang=EN",
+      "title": "Cyanistes caeruleus (Mésange bleue)"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Blue_Tit/lifehistory",
+      "title": "Histoire naturelle de la Mésange bleue"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/blue-tit",
+      "title": "Mésange bleue"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Blue_Tit/sounds",
+      "title": "Vocalisations de la Mésange bleue"
+    },
+    {
+      "url": "https://www.bto.org/learn/skills/bird-identification/young-birds",
+      "title": "Identifier les jeunes oiseaux"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1688906/",
+      "title": "Blue tits are ultraviolet tits"
+    },
+    {
+      "url": "https://www.tandfonline.com/doi/full/10.1080/00063657.2014.899307",
+      "title": "Do Blue Tits Cyanistes caeruleus synchronize reproduction with caterpillar peaks in a primeval forest?"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T103761667A200218007.en",
+      "title": "Cyanistes caeruleus: Europe assessment"
+    }
+  ]
+}

@@ -56,13 +56,13 @@
         "Berlin museum portrait: coat, tail, activity and shelters."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
+        "identification.en.2",
         "identification.en.3",
-        "identification.fr.3",
         "identification.en.4",
+        "identification.fr.3",
         "identification.fr.4",
-        "identification.en.2"
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -89,17 +89,17 @@
         "British account gives dimensions, life history and Orkney history."
       ],
       "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5",
         "identification.en.1",
         "identification.fr.1",
         "identification.fr.2",
-        "diet.en.5",
-        "diet.fr.5",
-        "reproduction.en.6",
-        "reproduction.fr.6",
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.4",
-        "reproduction.fr.4"
+        "reproduction.en.6",
+        "reproduction.fr.3",
+        "reproduction.fr.4",
+        "reproduction.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -149,10 +149,10 @@
         "Reports first observation in 2010 and a conservation project."
       ],
       "prose_claims": [
-        "ecology.en.3",
-        "ecology.fr.3",
         "conservation.en.3",
-        "conservation.fr.3"
+        "conservation.fr.3",
+        "ecology.en.3",
+        "ecology.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -206,8 +206,8 @@
       ],
       "prose_claims": [
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
+        "reproduction.fr.1",
         "reproduction.fr.2"
       ],
       "budget": {
@@ -232,10 +232,10 @@
         "Study of 300 Dutch pelts linked winter whiteness with temperature."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
         "identification.en.6",
-        "identification.fr.6"
+        "identification.fr.6",
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -260,10 +260,10 @@
         "Alpine distribution model projects snow-dependent local range changes."
       ],
       "prose_claims": [
-        "identification.en.7",
-        "identification.fr.7",
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.2",
+        "identification.en.7",
+        "identification.fr.7"
       ],
       "budget": {
         "limit": 200,
@@ -363,12 +363,12 @@
         "Scottish authority describes burrow pursuit, prey range and eight-week maternal hunting."
       ],
       "prose_claims": [
-        "diet.en.1",
-        "diet.fr.1",
-        "diet.en.3",
-        "diet.fr.3",
         "behavior.en.3",
-        "behavior.fr.3"
+        "behavior.fr.3",
+        "diet.en.1",
+        "diet.en.3",
+        "diet.fr.1",
+        "diet.fr.3"
       ],
       "budget": {
         "limit": 200,

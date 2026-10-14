@@ -1,0 +1,30 @@
+{
+  "id": "hemiechinus_auritus",
+  "name": "Hérisson à grandes oreilles",
+  "scientific": "Hemiechinus auritus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le hérisson à grandes oreilles est un petit hérisson rapide et nocturne des steppes sèches et des déserts d’Asie occidentale et centrale et de la région méditerranéenne orientale. Ses grandes oreilles et ses piquants bandés le distinguent des hérissons communs d’Europe.",
+    "identification": "La tête et le corps mesurent environ 120 à 270 mm et la queue 10 à 50 mm. Il pèse à peu près 250 à 400 g, moins que le hérisson d’Europe. Les piquants sont bandés de brun foncé et de blanc, le ventre blanchâtre et les oreilles longues, de plus de la moitié de la longueur de la tête. Ces oreilles aideraient à évacuer la chaleur dans le désert.",
+    "habitat": "Il vit dans les steppes arides, les semi-déserts et les déserts, de la zone de steppe de l’Ukraine orientale à la Mongolie au nord, et de la Libye au Pakistan occidental au sud. Il préfère les vallées sèches, les ravins, les zones buissonneuses et les oasis, et vit souvent près des villages et des cultures. Il évite plutôt les déserts très chauds et les montagnes froides du nord.",
+    "diet": "Il est omnivore mais mange surtout de petits invertébrés, comme des criquets et des coléoptères. Il prend aussi des œufs, des fruits et des végétaux, et parfois de petits vertébrés comme des lézards et des serpents. En laboratoire, il a survécu jusqu’à dix semaines sans nourriture ni eau.",
+    "behavior": "Il est nocturne et solitaire, et peut parcourir jusqu’à 9 km en une nuit à la recherche de nourriture. Le jour, il se repose sous des pierres ou dans des creux, ou dans un terrier d’environ 45 cm à une seule entrée, souvent creusé sous un buisson. Il court vite et se met rarement en boule. Il entre en torpeur en été, et certaines populations hibernent en hiver.",
+    "reproduction": "Il se reproduit une fois par an, en général de juillet à septembre. La gestation dure 35 à 42 jours. Les portées sont petites, les sources indiquant de un à quatre petits, qui sont entièrement couverts de piquants au bout d’environ deux semaines. Les yeux s’ouvrent après environ une semaine et les jeunes mangent de la nourriture solide vers trois semaines.",
+    "ecology": "En mangeant des insectes, dont des termites et des scorpions, il élimine de nombreux nuisibles, et comme il vit surtout dans des terrains vagues ouverts, il n’est pas connu pour abîmer les cultures. Ses prédateurs comprennent des rapaces nocturnes : le grand-duc d’Europe prend des hérissons, qui formaient environ 14 % de ses proies dans une étude.",
+    "conservation": "Il est classé en préoccupation mineure sur la Liste rouge de l’UICN et semble abondant sur sa vaste aire. On sait peu de chose sur son abondance réelle en bien des endroits, et rien n’indique qu’il soit menacé."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Hemiechinus_auritus/",
+      "title": "Hemiechinus auritus — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003812",
+      "title": "Hemiechinus auritus — Mammal Diversity Database"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Long-eared_hedgehog",
+      "title": "Hérisson à grandes oreilles — Wikipédia (source complémentaire)"
+    }
+  ]
+}

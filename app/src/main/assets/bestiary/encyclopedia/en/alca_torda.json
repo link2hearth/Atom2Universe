@@ -1,0 +1,54 @@
+{
+  "id": "alca_torda",
+  "name": "Razorbill",
+  "scientific": "Alca torda",
+  "group": "birds",
+  "sections": {
+    "overview": "The Razorbill is a North Atlantic auk that breeds on rocky coasts and spends much of the year at sea. Its colonies extend from eastern North America to northern Europe. Its wings serve two functions: rapid flapping powers flight, while underwater strokes propel it after fish. Dense breeding colonies contrast with flocks at sea outside the breeding season. Because adults forage over marine waters, breeding success can depend on food conditions far beyond the nesting cliff.",
+    "identification": "A compact auk with a large head, short neck and narrow wings, the Razorbill is black above and white below in breeding plumage. Its deep black bill has a pale transverse line. In winter, the throat and face sides turn white. The sexes look alike. Compared with the Common Guillemot, it is stockier and has a heavier bill, though the species can be difficult to distinguish at sea. BTO live-adult data give a mean wing length of 196.9 mm and mean mass of 612.6 g (range 525–705 g). The page reports pooled adults rather than separate male and female measurements.",
+    "habitat": "Razorbills lay eggs on cliff ledges or among boulders, often in colonies shared with Common Guillemots and other seabirds. These sites provide sheltered space and immediate sea access for chicks that leave before they can fly. BTO records show British and Irish colonies follow suitable rocky coasts; in winter, birds range more widely offshore. Their annual cycle thus shifts between coastal breeding sites and marine feeding grounds.",
+    "diet": "Razorbills pursue fish underwater, using wing strokes for propulsion and their feet to steer. Buoyancy changes with depth: loggers on free-ranging auks recorded Razorbills ascending without wing strokes at depths shallower than roughly 20–30 m. Fish dominate the breeding-season diet, but prey varies by sea. At Stora Karlsö in the Baltic, clupeids, usually sprat, dominated photographed food loads; mean fish length was 115 mm. At Hornøya in the Barents Sea, chick food included capelin and sandeels, with young herring in some years.",
+    "behavior": "Razorbills breed in dense colonies and often return to established sites. At sea they may feed in flocks, but tracking shows that they do not simply repeat fixed routes. In a three-year study of 18 breeders and 56 trips, foraging locations were more flexible during incubation and more focused on productive water during chick-rearing. Both parents care for the chick at the colony; after it leaves the ledge, the male accompanies and feeds it at sea.",
+    "reproduction": "The pair usually lays one egg on a ledge; BTO records from Britain and Ireland include occasional two-egg clutches. Both adults incubate for about 32–39 days. The downy chick leaves the ledge before it can fly, within the locally recorded 14–24-day fledging interval, and reaches the sea by walking or fluttering down.",
+    "ecology": "As a fish predator, the Razorbill depends on marine prey populations and can respond to their changing distribution. At Hornøya, northeast Norway, a 1981–2013 study found annual variation in chick food and suggested warming-related shifts in fish distribution could alter future diets. At Stora Karlsö in the Baltic, the prey loads were largely clupeids, fish also targeted by industrial fisheries. These local studies document a trophic link, not a measured effect on fish stocks or a uniform relationship across the North Atlantic.",
+    "conservation": "BirdLife International’s global IUCN assessment of 17 August 2021 classified the Razorbill as Least Concern and estimated 838,000–1,660,000 mature individuals. This dated global status does not exclude local declines. The assessment identifies climate-related prey shifts, entanglement in gillnets and driftnets, and unregulated hunting as threats. Bycatch risk follows from pursuit-diving; changing fish availability can affect chick provisioning. Colony counts and fishery data are needed to assess local risk."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/razorbill",
+      "title": "Razorbill: BirdFacts"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Razorbill/lifehistory",
+      "title": "Razorbill Life History"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Razorbill/id",
+      "title": "Razorbill Identification"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16547294/",
+      "title": "Swim speeds and stroke patterns in wing-propelled divers"
+    },
+    {
+      "url": "https://journals.lub.lu.se/os/en/article/view/22615",
+      "title": "Diet and prey size preference in Razorbills breeding at Stora Karlsö"
+    },
+    {
+      "url": "https://boap.uib.no/index.php/ornis/article/view/891",
+      "title": "The diet, growth and survival of Razorbill chicks in the southern Barents Sea"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4791460/",
+      "title": "Foraging flexibility and search patterns in a free-ranging seabird"
+    },
+    {
+      "url": "https://journals.biologists.com/jeb/article/206/1/25/9265/Sex-differences-in-razorbill-Alca-torda-parent",
+      "title": "Sex differences in Razorbill parent–offspring vocal recognition"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T22694852A228697220.en",
+      "title": "Alca torda: The IUCN Red List"
+    }
+  ]
+}

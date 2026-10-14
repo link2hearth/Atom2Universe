@@ -57,10 +57,10 @@
         "Alaska adult mass is sex-specific; litters number two or three."
       ],
       "prose_claims": [
-        "identification.en.3",
-        "identification.fr.3",
         "diet.en.1",
         "diet.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
         "reproduction.en.4",
         "reproduction.fr.4"
       ],
@@ -89,12 +89,12 @@
         "Delayed implantation and juvenile development are described."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
         "behavior.en.1",
         "behavior.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
         "reproduction.en.2",
         "reproduction.fr.2"
       ],
@@ -123,10 +123,10 @@
         "Circumpolar range and seasonal diet are summarized."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "diet.en.4",
         "diet.fr.4",
+        "overview.en.2",
+        "overview.fr.2",
         "reproduction.en.7",
         "reproduction.fr.7"
       ],
@@ -154,12 +154,12 @@
         "Mountain hare dominated other sampled animals."
       ],
       "prose_claims": [
-        "ecology.en.2",
-        "ecology.fr.2",
-        "ecology.en.3",
-        "ecology.fr.3",
         "ecology.en.1",
-        "ecology.fr.1"
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -210,8 +210,8 @@
       ],
       "prose_claims": [
         "behavior.en.2",
-        "behavior.fr.2",
         "behavior.en.3",
+        "behavior.fr.2",
         "behavior.fr.3"
       ],
       "budget": {
@@ -238,17 +238,17 @@
         "Deep-snow hunts; 30–40-day gestation; den shifts; scent marks; food caches."
       ],
       "prose_claims": [
-        "diet.en.3",
-        "diet.fr.3",
-        "diet.en.6",
-        "diet.fr.6",
         "behavior.en.4",
         "behavior.fr.4",
+        "diet.en.3",
+        "diet.en.6",
+        "diet.fr.3",
+        "diet.fr.6",
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.5",
-        "reproduction.fr.5",
         "reproduction.en.6",
+        "reproduction.fr.3",
+        "reproduction.fr.5",
         "reproduction.fr.6"
       ],
       "budget": {
@@ -324,8 +324,8 @@
       ],
       "prose_claims": [
         "ecology.en.4",
-        "ecology.fr.4",
         "ecology.en.5",
+        "ecology.fr.4",
         "ecology.fr.5"
       ],
       "budget": {
@@ -351,8 +351,8 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
+        "conservation.fr.1",
         "conservation.fr.2"
       ],
       "budget": {
@@ -379,14 +379,14 @@
         "Canadian report documents morphology, range and 2014 status."
       ],
       "prose_claims": [
-        "identification.en.4",
-        "identification.fr.4",
-        "identification.en.5",
-        "identification.fr.5",
+        "conservation.en.4",
+        "conservation.fr.4",
         "habitat.en.2",
         "habitat.fr.2",
-        "conservation.en.4",
-        "conservation.fr.4"
+        "identification.en.4",
+        "identification.en.5",
+        "identification.fr.4",
+        "identification.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -413,14 +413,14 @@
         "Mammal review summarizes range, dimensions and life history."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.4",
-        "habitat.fr.4",
         "diet.en.2",
-        "diet.fr.2"
+        "diet.fr.2",
+        "habitat.en.1",
+        "habitat.en.4",
+        "habitat.fr.1",
+        "habitat.fr.4",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "consulted": "2026-10-11",
       "budget": {
@@ -496,12 +496,12 @@
         "Southern populations face fragmentation and dispersal constraints."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
-        "habitat.en.5",
-        "habitat.fr.5",
         "conservation.en.5",
-        "conservation.fr.5"
+        "conservation.fr.5",
+        "habitat.en.3",
+        "habitat.en.5",
+        "habitat.fr.3",
+        "habitat.fr.5"
       ],
       "consulted": "2026-10-11",
       "budget": {

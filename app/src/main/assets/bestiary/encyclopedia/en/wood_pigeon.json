@@ -1,0 +1,62 @@
+{
+  "id": "wood_pigeon",
+  "name": "Common Wood Pigeon",
+  "scientific": "Columba palumbus",
+  "group": "birds",
+  "sections": {
+    "overview": "A large, adaptable pigeon, the Common Wood Pigeon inhabits European woods, farmland, parks and gardens. Adults measure 40–42 cm long, weigh about 480–550 g and span 75–80 cm. Some European populations stay near their breeding grounds; others migrate, and winter flocks gather where food is abundant.",
+    "identification": "Adults are about 40–42 cm long, with a 75–80 cm wingspan and a typical mass around 480–550 g. In BTO ringing samples, adult males averaged 529 g and females 488 g; the sex-specific values come from a small British sample. Its bulky grey body, pink breast, yellow eye and orange-red bill make it distinctive. Adults have white patches on both sides of the neck, edged with green and purple iridescence, and broad white wing bars that flash in flight. Juveniles lack the white neck patches, but show the wing bars. It is larger than the Rock Pigeon, Columba livia, whose wings have dark bars; the smaller Stock Dove, Columba oenas, lacks white neck patches.",
+    "habitat": "It nests in open woods, woodland edges and hedgerows, then feeds in fields, meadows and lawns. In cities, parks and tree-lined gardens offer nesting branches, grass and planted foods; some birds forage there, while others travel to farmland. This flexibility has helped it colonize European cities, though timing varies by region.",
+    "diet": "It eats mainly plants: seeds, grain, buds, leaves, flowers, berries and fruits. It pecks seeds and cereal grain on the ground, and plucks fruits and buds from trees; crops such as oilseed rape can be important seasonal foods. The crop, an expandable pouch in the lower throat, stores food before it passes to the stomach, allowing quick gathering followed by digestion. Small invertebrates are occasional foods, not a staple.",
+    "behavior": "Pairs keep contact with a deep, repeated coo, often from a perch. In display, a bird climbs steeply, claps its wings loudly and glides down with wings stiff; this signals territory and courts a mate. Outside nesting, loose groups feed together and large flocks use communal winter roosts. Movements vary: some city birds stay near parks, while tracked birds in central Europe fly several kilometres to fields.",
+    "reproduction": "Courtship leads to a simple stick platform in a tree, hedge or sometimes building; both parents incubate the usual two white eggs. Incubation lasts about 17 days, and the downy chicks fledge after roughly 33–34 days. Both parents feed the young. In the final days of incubation, cells lining the crop, a food-storage pouch in the lower throat, swell and shed a nutrient-rich secretion called crop milk. Chicks rely on it at first; around day ten, parents add softened seeds and other solid foods. A long breeding season allows one or two broods yearly, depending on place and conditions.",
+    "ecology": "By eating fruit, Wood Pigeons can disperse seeds; in southern Spain, many swallowed cultivated olive seeds passed intact into nearby natural vegetation. Some pairs nest near Eurasian Hobby falcons: although a falcon may take a pigeon, its defense of nearby nests can deter other intruders. Cereal feeding can conflict with farming, and local population growth has accompanied agricultural food access and reduced hunting.",
+    "conservation": "The species has expanded in parts of Europe and was assessed as Least Concern in BirdLife’s 2021 European assessment, which estimated an increasing population. The RSPB estimates around 5.2 million breeding pairs in the United Kingdom, where continental birds add to winter numbers. In northern Algeria, one population grew while hunting pressure fell and agriculture supplied new foods, showing that land use can affect populations differently by region. National and European assessments cover different scales, so their categories may differ."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/woodpigeon",
+      "title": "Woodpigeon: BirdFacts"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/woodpigeon",
+      "title": "Woodpigeon"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/identifying-birds/pigeons-and-doves-an-id-guide",
+      "title": "Doves vs Pigeons. What’s the difference?"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Common_Wood-Pigeon/overview",
+      "title": "Common Wood-Pigeon: Overview"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Common_Wood-Pigeon/lifehistory",
+      "title": "Common Wood-Pigeon: Life History"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/behaviour/crop-milk",
+      "title": "Crop milk"
+    },
+    {
+      "url": "https://www.bto.org/our-work/news/blog/amazing-nesters-journey-through-bird-breeding-season",
+      "title": "Amazing nesters: a journey through the bird breeding season"
+    },
+    {
+      "url": "https://www.birdlife.org/wp-content/uploads/2022/05/BirdLife-European-Red-List-of-Birds-2021.pdf.pdf",
+      "title": "BirdLife European Red List of Birds 2021"
+    },
+    {
+      "url": "https://jlupub.ub.uni-giessen.de/items/133c5b6a-6a01-4715-a269-228968259839",
+      "title": "Should I stay or should I fly? Migration phenology, individual-based migration decision and seasonal changes in foraging behaviour of Common Woodpigeons"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1186/s40657-015-0027-9",
+      "title": "Rapid increase in numbers and change of land-use in two expanding Columbidae species"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S1146609X15300205",
+      "title": "Introducing cultivated trees into the wild: Wood pigeons as dispersers of domestic olive seeds"
+    }
+  ]
+}

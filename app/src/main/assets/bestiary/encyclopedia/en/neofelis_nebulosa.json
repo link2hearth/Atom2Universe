@@ -1,0 +1,62 @@
+{
+  "id": "neofelis_nebulosa",
+  "name": "Mainland clouded leopard",
+  "scientific": "Neofelis nebulosa",
+  "group": "mammals",
+  "sections": {
+    "overview": "The mainland clouded leopard is a medium-sized Asian cat in the genus Neofelis. Genetic and morphological evidence distinguishes it from the Sunda clouded leopard, N. diardi, native to Sumatra and Borneo. Neofelis nebulosa ranges across parts of South and Southeast Asia. Its long tail and cloud-shaped coat are distinctive, but its secretive habits leave much of its biology poorly documented.",
+    "identification": "Adults have sturdy short legs, broad paws and longer hind legs. Dark-edged, pale-centred blotches mark a yellowish, grey or brown coat; the tail is banded. Nearly as long as the head and body, it helps balance the cat on branches. The skull has exceptionally long upper canines for a living cat. This anatomy alone does not imply unusually large prey: accounts describe a nape bite when it subdues larger animals. Adults weigh about 18–22 kg and stand 50–60 cm at the shoulder; head-and-body length is 75–105 cm and the tail 79–90 cm. Females are slightly smaller, but no separate sex-specific measurement range was found. No reliable body-width measurement is published in the source consulted.",
+    "habitat": "Its range includes Nepal, India, southern China and the Indochinese Peninsula. It is strongly associated with dense evergreen and tropical forests, although secondary and logged forests are also used. Camera-trap surveys in Peninsular Malaysia found local differences in habitat use, including associations with elevation and distance from water; these relationships are not universal habitat requirements.",
+    "diet": "It takes vertebrate prey on trees and on the ground. Records include macaques, gibbons, muntjacs, pigs, porcupines, pangolins, squirrels and birds. Diet evidence is patchy and varies by site; no comprehensive range-wide study exists. Long canines and climbing ability do not show that arboreal prey dominate. In southern Thailand, muntjacs occupied less disturbed core forest more often, where clouded leopard density was also higher; this local association does not establish cause.",
+    "behavior": "Broad gripping footpads and specialized ankle bones allow varied climbing positions, including descending a trunk headfirst. Direct observations are rare, so one radio-tracking study provides a useful, geographically limited view of movement. In Thailand’s Phu Khieo Wildlife Sanctuary, four cats were tracked for one to 17 months. Their annual ranges measured 22.9–45.1 km², daily travel averaged 1,932 m, and they were active during 58% of recorded diel readings. The small sample cannot establish a universal daily schedule or social pattern.",
+    "reproduction": "Most developmental measurements come from captive animals. Smithsonian records report 85–93 days of gestation and one to five cubs, usually two or three. Eyes open around 10–14 days, weaning occurs around 90–100 days, and sexual maturity is reached at about two years. These records do not establish wild reproductive-season or survival averages.",
+    "ecology": "Its role in local food webs is poorly measured. At Khlong Saeng–Khao Sok, Thailand, camera traps recorded at least 27 individuals over 5,242 trap-days. Estimated density was higher in a less accessible forest core than at a more heavily hunted edge. Muntjac occupancy was also higher in the core. These site-specific findings suggest that access, hunting and prey communities may relate to local abundance, but do not establish a universal pattern.",
+    "conservation": "The IUCN Cat Specialist Group cites the 2021 global assessment as Vulnerable. Forest fragmentation, prey depletion, killing and capture for trade threaten the species. Stronghold habitat declined between 2000 and 2018, while population estimates remain uncertain. Conservation priorities include connected forests, reduced snaring and better field surveys."
+  },
+  "sources": [
+    {
+      "url": "https://www.catsg.org/living-species-cloudedleopard",
+      "title": "Mainland Clouded Leopard — IUCN/SSC Cat Specialist Group"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5618441/",
+      "title": "Molecular Evidence for Species-Level Distinctions in Clouded Leopards"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9801239/",
+      "title": "Whole genome analysis of clouded leopard species reveals an ancient divergence and distinct demographic histories"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16845677/",
+      "title": "Sabertooth characters in the clouded leopard (Neofelis nebulosa Griffith 1821)"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10558132/",
+      "title": "How genomic insights into the evolutionary history of clouded leopards inform their conservation"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S235198941930976X",
+      "title": "Density and movements of mainland clouded leopards under conditions of high and low poaching pressure"
+    },
+    {
+      "url": "https://nationalzoo.si.edu/animals/clouded-leopard",
+      "title": "Clouded Leopard — Smithsonian’s National Zoo and Conservation Biology Institute"
+    },
+    {
+      "url": "https://maxallen.inhs.illinois.edu/files/2019/01/Chiang-and-Allen-Clouded-Leopard-Review-2017.pdf",
+      "title": "A Review of our Current Knowledge of Clouded Leopards (Neofelis nebulosa)"
+    },
+    {
+      "url": "https://ora.ox.ac.uk/objects/uuid:06cb85f5-034a-47bc-8d69-7a53f4660645",
+      "title": "Habitat use and predicted range for the mainland clouded leopard in Peninsular Malaysia"
+    },
+    {
+      "url": "https://academic.oup.com/jmammal/article-abstract/86/1/29/2373526",
+      "title": "Ecology of Three Sympatric Felids in a Mixed Evergreen Forest in North-Central Thailand"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Neofelis_nebulosa/",
+      "title": "Neofelis nebulosa (clouded leopard) | Animal Diversity Web"
+    }
+  ]
+}

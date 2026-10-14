@@ -1,0 +1,34 @@
+{
+  "id": "adelphobates_quinquevittatus",
+  "name": "Dendrobate du Rio Madeira",
+  "scientific": "Adelphobates quinquevittatus",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Adelphobates quinquevittatus est une petite grenouille venimeuse du sud de l’Amazonie, notamment associée au bassin du Rio Madeira, au Brésil. Son motif contrasté orange, noir et clair la rend visible sur le sol forestier. Sa reproduction reste mal connue, et des observations de terrain récentes ont précisé les lieux où se développent ses têtards.",
+    "identification": "La grenouille a le dos sombre traversé de lignes longitudinales claires, un corps orangé et des marques foncées sur les membres. Une étude brésilienne l’a identifiée par cette association de couleur orangée, de taches noires sur les quatre pattes et d’un dos noir à rayures blanches. Dans un échantillon de 14 individus du Rondônia, la longueur museau-cloaque était de 15,9 à 18,9 mm (moyenne 17,71 mm) et la largeur de la tête de 5,0 à 5,8 mm ; l’étude ne ventile pas ces mesures par sexe. Il faut comparer son motif à celui des autres dendrobatidés de la région, en tenant compte de la provenance et de la disposition des bandes. Aucune plage fiable de masse adulte n’a été trouvée dans les sources consultées sur l’espèce ; l’échantillon de terrain disponible indique la longueur du corps et la largeur de la tête, mais pas la masse.",
+    "habitat": "Elle vit dans la forêt tropicale humide du sud de l’Amazonie, notamment dans le bassin du Madeira, dans les États brésiliens de Rondônia et d’Amazonas. Les adultes sont signalés dans la litière et sur les troncs tombés au sol. L’aire documentée est centrée sur le Brésil ; les mentions anciennes des pays voisins ne sont pas toutes confirmées par des données récentes vérifiées sur photographie.",
+    "diet": "L’espèce consomme de petites proies abondantes. Un article d’écologie reproductive cite les fourmis (Formicidae) et les termites (Isoptera) parmi les aliments probables, à partir d’études sur le régime des dendrobatidés. Cette liste reste générale et n’est pas un bilan quantifié propre à l’espèce ; aucune mesure saisonnière n’a été trouvée dans les sources consultées.",
+    "behavior": "L’espèce est diurne et utilise la litière ainsi que le bois tombé comme abris au sol de la forêt. Des observations de terrain ont trouvé des adultes près de structures végétales retenant l’eau et utilisées par les têtards. Les études disponibles sont limitées dans le temps et l’espace ; elles ne définissent donc pas complètement son rythme quotidien ni son organisation sociale.",
+    "reproduction": "Les œufs sont pondus sur terre et, après l’éclosion, les adultes transportent les têtards vers de petites structures végétales contenant de l’eau. Une étude de terrain a documenté des têtards dans l’inflorescence en spadice d’Attalea speciosa et dans des coques de noix du Brésil voisines ; les auteurs estiment que le spadice plus grand peut accueillir davantage de têtards, tandis que leur répartition entre plusieurs sites peut réduire les pertes par prédation ou cannibalisme. Ces observations proviennent d’un site limité et ne décrivent pas tous les lieux de reproduction.",
+    "ecology": "Comme d’autres dendrobatidés, A. quinquevittatus contient des alcaloïdes défensifs ; un article sur l’espèce rapporte des histrionicotoxines et de la pumiliotoxine-A. Sa reproduction dépend de petits réservoirs d’eau en forêt, notamment les inflorescences de palmiers et les coques de fruits, ce qui relie son cycle à la structure forestière et à la disponibilité de phytotelmes. Le rôle écologique exact et le risque toxique pour l’humain ne sont pas quantifiés ici.",
+    "conservation": "Aucune catégorie mondiale récente de l’UICN ni tendance de population n’a été vérifiée dans les sources utilisées pour cette fiche. Un article de terrain brésilien souligne que la reproduction est insuffisamment étudiée et l’importance de préserver les structures forestières qui retiennent l’eau pour les têtards. Ces observations indiquent un besoin d’habitat, mais ne démontrent pas à elles seules un déclin mesuré de la population."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Dendrobatoidea/Dendrobatidae/Dendrobatinae/Adelphobates/Adelphobates-quinquevittatus",
+      "title": "Amphibian Species of the World : Adelphobates quinquevittatus — American Museum of Natural History"
+    },
+    {
+      "url": "https://www.scielo.br/j/aabc/a/tZ5DwMcx9wQw5Xb7XybF9FD/?format=html",
+      "title": "Répartition et diversification d’Adelphobates, dendrobates emblématiques de l’Amazonie brésilienne — Anais da Academia Brasileira de Ciências"
+    },
+    {
+      "url": "https://doi.org/10.5281/zenodo.6867791",
+      "title": "Écologie reproductive d’Adelphobates quinquevittatus dans le sud-ouest de l’Amazonie brésilienne — Herpetologia Brasileira"
+    },
+    {
+      "url": "https://bibliotecadigital.butantan.gov.br/arquivos/42/PDF/3.pdf",
+      "title": "Sur l’identité de Dendrobates quinquevittatus — Instituto Butantan"
+    }
+  ]
+}

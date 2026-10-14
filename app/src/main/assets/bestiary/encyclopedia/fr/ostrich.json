@@ -1,0 +1,70 @@
+{
+  "id": "ostrich",
+  "name": "Autruche d’Afrique",
+  "scientific": "Struthio camelus",
+  "group": "birds",
+  "sections": {
+    "overview": "L’autruche d’Afrique est le plus grand oiseau vivant, incapable de voler et habitant les espaces ouverts d’Afrique. Sa grande foulée repose sur un pied à deux doigts, dont le doigt interne volumineux supporte la majeure partie du poids.",
+    "identification": "Le mâle adulte est en moyenne plus grand: le Muséum de Paris indique 1,75 à 1,90 m et 90 à 110 kg chez la femelle, contre 2,10 à 2,75 m et 100 à 150 kg chez le mâle. Le mâle a un plumage noir avec des plumes blanches aux ailes et à la queue; la femelle est gris-brun. Chaque pied porte deux doigts, un doigt interne volumineux et griffu et un doigt externe plus petit. Les mesures de pression montrent que le doigt principal supporte l’essentiel de la charge, tandis que le doigt externe mobile aide le pied à garder l’équilibre pendant la marche et la course. En laboratoire, deux femelles adultes ont couru à 3–6 m/s; l’étude n’a pas testé la vitesse maximale.",
+    "habitat": "Elle fréquente les savanes ouvertes, les prairies et les broussailles sèches, y compris les lieux à végétation basse ou clairsemée. La végétation clairsemée laisse voir le terrain. L’espèce vit dans une grande partie de l’Afrique.",
+    "diet": "Les feuilles, racines, fleurs et graines composent une grande partie du régime; l’autruche consomme aussi des insectes et d’autres petits animaux. Elle avale les aliments entiers. Chez des adultes domestiques, une étude décrit le broyage des aliments par des cailloux dans le gésier musculaire et une fermentation microbienne dans les cæcums et le côlon. Ces observations digestives proviennent d’oiseaux élevés en captivité; les aliments sauvages varient selon les plantes disponibles et les saisons.",
+    "behavior": "L’autruche est un oiseau social qui vit au sol. Les groupes se dispersent davantage hors reproduction et s’organisent autour de mâles territoriaux pendant la parade; leur taille varie selon le lieu et la saison. Le mâle parade par des révérences, des mouvements d’ailes et l’exposition de ses plumes, accompagnés de cris. Bien qu’incapable de voler, elle utilise ses ailes en courant pour faciliter les changements de direction et les déploie par temps chaud pour contribuer à son refroidissement.",
+    "reproduction": "L’organisation de la reproduction varie selon les populations. En Afrique de l’Est, plusieurs femelles pondaient dans une cuvette commune; une étude de terrain décrit des nids collectifs de 30 à 40 œufs d’environ 1,5 kg chacun. Des analyses génétiques à Nairobi ont trouvé plusieurs mères et pères parmi les œufs d’un même nid. Une femelle dominante et un mâle territorial assurent la garde et l’incubation; le plumage pâle de la femelle se fond dans le paysage le jour, celui du mâle la nuit. Le zoo de San Diego indique une incubation de 42 à 46 jours. Les poussins quittent le nid en quelques jours, suivent les adultes et sont protégés du soleil, de la pluie et des prédateurs. Leur duvet tacheté est remplacé par le plumage adulte; selon le zoo, ils approchent la taille adulte vers six mois. La taille adulte précède la maturité sexuelle, que le Smithsonian situe vers trois à quatre ans.",
+    "ecology": "Les autruches se déplacent de façon nomade tandis que les pluies modifient la disponibilité des nouvelles pousses. Un guide de terrain sud-africain rapporte que la reproduction et la ponte précèdent les pluies, de sorte que les poussins éclosent lorsque le fourrage devient disponible. Dans le nord de la Tanzanie, des relevés de la population masaï ont trouvé une corrélation locale entre la densité des autruches et celle de neuf espèces d’ongulés sur dix, mais leurs tendances démographiques propres aux sites étaient peu corrélées. Les autruches sont elles-mêmes des proies de grands carnivores, dont les lions, guépards, léopards et hyènes.",
+    "conservation": "L’évaluation mondiale 2025 de BirdLife International pour la Liste rouge de l’UICN classe l’autruche d’Afrique en Préoccupation mineure, avec une tendance démographique à la baisse. Cette catégorie mondiale ne décrit pas la situation de chaque population régionale. Des transects du nord du Sahel répétés en 1971-1973 et en 2004 ont documenté de forts déclins régionaux et relevé la chasse, le surpâturage et la dégradation des boisements parmi les pressions locales. La chasse historique pour les plumes et le prélèvement des œufs ont également touché l’espèce, tandis que la perte d’habitat reste préoccupante."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T45020636A280828427.en",
+      "title": "Autruche d’Afrique — évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.mnhn.fr/en/ostrich",
+      "title": "Autruche"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/ostrich?qt-animals_page_content_tabs=0",
+      "title": "Autruche"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Struthio_camelus/",
+      "title": "Struthio camelus (autruche)"
+    },
+    {
+      "url": "https://lazoo.org/explore-your-zoo/our-animals/birds/ostrich/",
+      "title": "Autruche"
+    },
+    {
+      "url": "https://journals.biologists.com/jeb/article/214/7/1123/33537/Toe-function-and-dynamic-pressure-distribution-in",
+      "title": "Rôle des doigts et répartition dynamique des pressions chez l’autruche en locomotion"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8342792/",
+      "title": "Étude du tube digestif et du contenu intestinal d’autruches adultes domestiques"
+    },
+    {
+      "url": "https://www.nature.com/articles/279233a0",
+      "title": "Les autruches reconnaissent leurs œufs et écartent ceux des autres"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12492891/",
+      "title": "Analyse génétique moléculaire de la nidification collective de l’autruche"
+    },
+    {
+      "url": "https://sandiegozoowildlifealliance.org/story-hub/zoonooz/flightless-fancy",
+      "title": "Une élégante incapable de voler"
+    },
+    {
+      "url": "https://nationalzoo.si.edu/animals/ostrich",
+      "title": "Autruche"
+    },
+    {
+      "url": "https://doi.org/10.1017/S0959270906000487",
+      "title": "Déclin marqué des grands oiseaux du nord du Sahel ouest-africain : évaluation à long terme"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.ecolind.2021.107348",
+      "title": "Densité et dynamique temporelle des autruches dans des systèmes socio-écologiques couplés"
+    }
+  ]
+}

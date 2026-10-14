@@ -12,8 +12,8 @@
       "fr": "L’anax empereur est une grande libellule de la famille des aeschnes et la plus massive des libellules de Grande-Bretagne. C’est un voilier puissant qui se pose rarement, patrouille au-dessus des étangs et des lacs, et dont l’aire s’est étendue en Grande-Bretagne depuis les années 1990."
     },
     "identification": {
-      "en": "The body is about 7.3 to 8.2 cm long and the wingspan about 10.5 cm. The male has a sky-blue abdomen and the female a green one, both with a continuous dark line along the back; the thorax is apple-green, the eyes green or blue, and the leading wing vein bright yellow. The wings are clear and unpatterned.",
-      "fr": "Le corps mesure environ 7,3 à 8,2 cm et l’envergure environ 10,5 cm. Le mâle a l’abdomen bleu ciel et la femelle vert, tous deux avec une ligne sombre continue sur le dos; le thorax est vert pomme, les yeux verts ou bleus et la nervure avant de l’aile d’un jaune vif. Les ailes sont transparentes et sans motif."
+      "en": "The body is about 7.3 to 8.2 cm long and the wingspan about 10.5 cm. The male has a sky-blue abdomen and the female a green one, both with a continuous dark line along the back; the thorax is apple-green, the eyes green or blue, and the leading wing vein bright yellow. The wings are clear and unpatterned. In a French pond study, mature males averaged 77.2 mm and 0.97 g, while females averaged 72.9 mm and 1.26 g; these are study-sample means, not universal limits.",
+      "fr": "Le corps mesure environ 7,3 à 8,2 cm et l’envergure environ 10,5 cm. Le mâle a l’abdomen bleu ciel et la femelle vert, tous deux avec une ligne sombre continue sur le dos; le thorax est vert pomme, les yeux verts ou bleus et la nervure avant de l’aile d’un jaune vif. Les ailes sont transparentes et sans motif. Dans une étude menée sur des mares françaises, les mâles adultes mesuraient en moyenne 77,2 mm et pesaient 0,97 g, contre 72,9 mm et 1,26 g chez les femelles ; ce sont les moyennes d’un échantillon, pas des limites universelles."
     },
     "habitat": {
       "en": "It lives mostly at large, well-vegetated ponds and lakes, including flooded gravel pits, and may also be found over canals, big ditches and slow-moving rivers. On the mainland it occurs across most of Europe and eastern Asia and is common in much of Africa.",
@@ -48,7 +48,16 @@
       },
       "url": "https://british-dragonflies.org.uk/species/emperor-dragonfly/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "About 78 mm long; male sky-blue abdomen, female green, central dark line; yellow costa; larvae 45–56 mm with large rounded eyes, largest of the British hawkers.",
         "Found across Wales and most of England, spread greatly since the 1990s, in Scotland since 2003; males very territorial; rarely settles and eats prey in flight; female lays alone in floating pondweed."
@@ -61,7 +70,13 @@
       },
       "url": "https://www.first-nature.com/insects/o-anax-imperator.php",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
       "facts": [
         "Wingspan about 10.5 cm; eggs hatch after about three weeks; larvae spend one or two years in water; emerge usually at night.",
         "On the wing from early June to August or early September; males patrol margins and chase intruders; occurs across most of mainland Europe and eastern Asia, common in much of Africa."
@@ -74,7 +89,10 @@
       },
       "url": "https://www.delta-intkey.com/britin/odo/www/imperato.htm",
       "consulted": "2026-10-12",
-      "supports": ["identification", "ecology"],
+      "supports": [
+        "identification",
+        "ecology"
+      ],
       "facts": [
         "Adult length about 73–82 mm; wings clear and unpatterned; nymph 45–56 mm when mature, large eyes nearly meeting at the top of the head."
       ]
@@ -86,9 +104,25 @@
       },
       "url": "https://eje.cz/doi/10.14411/eje.2019.031.html",
       "consulted": "2026-10-12",
-      "supports": ["reproduction"],
+      "supports": [
+        "reproduction"
+      ],
       "facts": [
         "Length and body mass of teneral adults were strongly related to the length of their exuviae; males longer than females, similar body mass at emergence."
+      ]
+    },
+    {
+      "title": {
+        "en": "Habitat use and movements of a large dragonfly (Odonata: Anax imperator) in a pond network — Freshwater Biology",
+        "fr": "Habitat use and movements of a large dragonfly (Odonata: Anax imperator) in a pond network — Freshwater Biology"
+      },
+      "url": "https://doi.org/10.1111/fwb.13632",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Mature dragonflies sampled in French ponds averaged 77.2 mm and 0.97 g for males, and 72.9 mm and 1.26 g for females; sample means, not species-wide bounds."
       ]
     }
   ],

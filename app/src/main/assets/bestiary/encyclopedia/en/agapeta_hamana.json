@@ -1,0 +1,38 @@
+{
+  "id": "agapeta_hamana",
+  "name": "Garden straw moth",
+  "scientific": "Agapeta hamana",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Agapeta hamana is a small tortrix moth with pale yellow forewings marked by rusty-brown patches. It is widespread across Europe and extends east through temperate parts of Asia, where its caterpillars feed on thistles. Adults are mainly active at dusk and at night, although they can be flushed from vegetation during the day. The name Garden Straw refers to the straw-yellow ground colour of the wings; in French, it is often called the thistle agapeta.",
+    "identification": "The wingspan is about 15–24 mm in British accounts; a regional Hampshire account gives 17–24 mm. No reliable body length, mass, body height or width, or sex-specific size difference was found. The forewings are straw-yellow to pale ochre, with rusty or ferruginous-brown markings that are reduced compared with many similar tortrix moths. The moth's small size and yellow ground colour distinguish it from larger brown leafrollers, but other yellow tortricids can be similar; habitat and the specific forewing pattern should be checked together. The species is described as distinctive in regional recording accounts, though close examination may be needed for worn individuals.",
+    "habitat": "It occurs in rough grassland, meadows, heathland, fens, open woodland, field margins, waste ground and gardens where thistles grow. British records are most frequent in southern and north-western England, but the species has a much wider European and Asian range. Adults are on the wing mainly from June to August in Britain; flight dates vary geographically and occasional records outside that window occur.",
+    "diet": "The larvae feed on thistles, including Carduus and Cirsium. They bore into the roots and lower stems, so their feeding may be overlooked unless the host plant is examined. Some Central European accounts also list Ononis and Trifolium as larval hosts; those records are geographically specific and should not be treated as universal. Adult feeding was not documented in the sources reviewed.",
+    "behavior": "Adults usually fly at dusk or at night and are attracted to light, but they can be disturbed from low vegetation during daylight. The larvae develop within the roots of their host plants. Regional records describe a long adult season in parts of Central Europe, potentially with two broods, while British records are concentrated in summer; local phenology should therefore not be extrapolated across the species' full range.",
+    "reproduction": "Eggs are laid on or near suitable host plants, and the caterpillars develop internally in thistle roots. British accounts describe a main adult period from June through August, while a 2024 Central European treatment reports adults from May to October and a bivoltine life cycle in Hungary. The difference may reflect geography and local climate; no single breeding calendar should be assumed for the entire range. The reviewed sources did not provide a reliable clutch-size estimate.",
+    "ecology": "The larvae are part of the herbivore community associated with thistles and other low-growing plants. Root-feeding can affect individual host plants, but the moth is not documented as a major agricultural pest in the sources reviewed. Adults and larvae are potential prey for nocturnal predators, parasitoids and insectivorous birds. Retaining flowering, structurally varied grassland with native thistles supports its known larval resources.",
+    "conservation": "Regional British sources describe the moth as common and widespread where thistles and suitable rough grassland remain. No species-specific global population trend or comprehensive conservation assessment was found in the sources reviewed, so local British abundance should not be generalized to the full European–Asian range. Loss of rough grassland, field margins and host plants could reduce local habitat, while broad distribution suggests that regional status will vary substantially."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/agapeta-hamana/",
+      "title": "Agapeta hamana — UKMoths species account"
+    },
+    {
+      "url": "https://www.naturespot.org/species/agapeta-hamana",
+      "title": "Agapeta hamana — NatureSpot regional species account"
+    },
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=49.109",
+      "title": "Agapeta hamana — Hantsmoths, Hampshire and Isle of Wight"
+    },
+    {
+      "url": "https://www.epa.hu/04100/04144/00008/pdf/EPA04144_lepidopterologica_2024_01.pdf",
+      "title": "Agapeta hamana in Hungary — Lepidopterologica Hungarica 2024"
+    },
+    {
+      "url": "https://www.essexfieldclub.org.uk/portal.php/p/Species%2BAccount/s/portal.php/p/Species%2Baccount/s/portal.php/p/Species%2BAccount/s/portal.php/p/Substrate%2Band%2Bhydrology/s/portal.php/p/Species%2BAccount/s/portal.php/p/portal.php/p/Species%2BAccount/s/Agapeta%20hamana",
+      "title": "Agapeta hamana — Essex Field Club species account"
+    }
+  ]
+}

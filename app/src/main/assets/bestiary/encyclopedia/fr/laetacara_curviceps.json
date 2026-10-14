@@ -1,0 +1,30 @@
+{
+  "id": "laetacara_curviceps",
+  "name": "Acara à tête courbe",
+  "scientific": "Laetacara curviceps",
+  "group": "fish",
+  "sections": {
+    "overview": "Laetacara curviceps est un petit cichlidé du bas bassin amazonien, au Brésil. Il fréquente les affluents et les eaux calmes ; on l’appelle aussi acara drapeau ou cichlidé nain souriant. Le profil courbe de sa tête, évoqué par son nom scientifique, et ses marques sombres aident à le reconnaître, mais l’identification parmi les Laetacara demande d’examiner les nageoires et les espèces proches.",
+    "identification": "C’est un poisson compact au corps haut, à la tête arrondie et aux marques sombres, dont une tache près de la base de la nageoire dorsale chez de nombreux individus. FishBase rapporte des maxima de 4,6 cm de longueur standard chez un individu mâle ou non sexé et de 6,6 cm de longueur totale chez une femelle : ces mesures n’emploient pas la même convention et ne sont pas directement comparables. La tache dorsale existe aussi chez des espèces proches ; par rapport à L. dorsigera, des caractères diagnostiques comprennent une tête plus profonde et l’absence du ventre rouge vif des L. dorsigera en période de reproduction. La coloration varie avec le sexe et l’état reproducteur. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici.",
+    "habitat": "Les données situent l’espèce dans les affluents inférieurs de l’Amazone au Brésil, notamment dans la région du moyen et bas Amazone. Elle est associée aux eaux peu profondes et lentes et aux marges végétalisées. FishBase la décrit comme un poisson tropical d’eau douce, benthopélagique ; les paramètres d’aquarium publiés ne doivent pas être confondus avec une mesure complète des conditions naturelles.",
+    "diet": "L’espèce est décrite comme une prédatrice de petites proies : invertébrés aquatiques tels que larves d’insectes, petits crustacés et autres organismes du zooplancton ; elle peut aussi ingérer algues et détritus organiques. Les fiches retenues ici ne quantifient pas son régime sauvage. Les conseils d’aquariophilie préconisent une nourriture variée de petite taille, mais ils relèvent de l’élevage et ne décrivent pas exactement son régime naturel.",
+    "behavior": "En dehors de la reproduction, il est considéré comme relativement paisible pour un cichlidé. Les couples défendent une petite zone lors de la ponte et l’espèce est signalée en train de chercher sa nourriture près du fond et dans les abris. Les observations en aquarium renseignent sur des comportements possibles, mais ne décrivent pas nécessairement toutes les populations sauvages.",
+    "reproduction": "Laetacara curviceps pond sur un support et les deux parents s’occupent des œufs et des jeunes. FishBase rapporte une ponte d’environ 300 œufs ; d’autres fiches décrivent des œufs déposés sur une surface nettoyée et les soins parentaux aux larves. La taille de ponte et le calendrier peuvent varier et ne sont pas présentés ici comme des constantes pour toute l’espèce.",
+    "ecology": "En consommant de petits animaux aquatiques et en fréquentant des habitats peu profonds et végétalisés, il relie les invertébrés dont il se nourrit aux prédateurs plus grands des cours d’eau amazoniens. Les sources consultées ne quantifient pas son rôle dans les populations sauvages ni ses interactions. Il est aussi vendu en aquariophilie, mais le commerce ne renseigne pas à lui seul sur son abondance ou son état de conservation.",
+    "conservation": "FishBase rapporte une évaluation mondiale de l’UICN en préoccupation mineure, datée du 7 novembre 2018. Il s’agit d’une évaluation mondiale datée, qui ne garantit pas la stabilité de chaque population locale. Les sources examinées ici ne donnent ni tendance de population plus récente ni nouvelle évaluation."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/12262",
+      "title": "Laetacara curviceps — FishBase"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/laetacara-curviceps",
+      "title": "Laetacara curviceps — Seriously Fish"
+    },
+    {
+      "url": "https://cichlidamerique.fr/laetacara-curviceps",
+      "title": "Laetacara curviceps — Cichlidamerique"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "platypus",
+  "name": "Platypus",
+  "scientific": "Ornithorhynchus anatinus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The platypus is a semi-aquatic Australian mammal and a monotreme: a mammal that lays eggs. Its streamlined, furred body, broad tail and sensitive bill suit a life of searching freshwater beds for food and resting in bank burrows. Females produce milk for their young despite having no nipples. The species occurs naturally in eastern Australia, including Tasmania, in varied freshwater habitats.",
+    "identification": "Adults have dense waterproof fur, usually dark brown above and lighter below, a flattened bill and a broad tail. The tail stores fat and helps steer. Webbed forefeet provide propulsion; their webs fold back around the claws on land. Hind feet are less webbed and help steer underwater. Males have a sharp hind-ankle spur connected to a venom gland; females lack this functional apparatus. Southern animals tend to be larger than northern ones. Adults measure 400–630 mm in males and 370–550 mm in females, including bill and tail. Reported masses are 0.8–3.0 kg for males and 0.6–1.7 kg for females; animals from cooler southern populations tend to be larger. No reliable body-width measurement was found.",
+    "habitat": "The species ranges through eastern Australia, from tropical Queensland to Tasmania and the Australian Alps. It uses rivers, streams, lakes and farm dams, but needs freshwater for feeding and earthen banks for burrows. Root-stabilised banks offer resting and nesting sites; shaded pools, riffles and gravel or cobble beds support aquatic invertebrates. Platypuses sometimes cross land between water bodies, making catchment connectivity relevant to habitat use.",
+    "diet": "It hunts small animals, especially bottom-dwelling insect larvae, worms, crustaceans and molluscs. Underwater it closes its eyes, ears and nostrils, locating prey with bill receptors that detect water movement and weak electrical fields from prey muscles. Sweeping its head from side to side helps it orient in murky water. It stores small prey in cheek pouches and grinds food at the surface with horny pads rather than teeth.",
+    "behavior": "Adults are mostly solitary and generally occupy separate resting burrows, although several may use one stretch of water. Activity often peaks from dusk through the night. Forelimbs power swimming, while hind limbs and tail steer; on land, the splayed limbs make walking less efficient. Repeated dives separated by brief surface pauses allow long foraging periods. Grooming maintains the insulating coat needed during extended time in water.",
+    "reproduction": "Breeding is seasonal and earlier in northern populations. The female lays one to three soft-shelled eggs in a long bank burrow, which she plugs with soil. Embryos develop partly before laying; external incubation lasts about a week to ten days. Hatchlings are tiny and dependent. The mother secretes milk onto abdominal skin, and young lap it from her fur because she has no nipples. They feed on milk in the burrow and commonly emerge after three to four months, with timing varying by region.",
+    "ecology": "As predators of bottom-dwelling invertebrates, platypuses are part of stream food webs. An Australian field experiment found that their feeding affected invertebrate communities differently in flowing streams and still-water habitats, so ecosystem effects depend on setting. Their reliance on aquatic prey ties them to productive waterways, while bank burrows depend on stable margins. Movement overland may connect catchments, although barriers and dry periods can interrupt dispersal.",
+    "conservation": "A 2022 Australian government report cites the IUCN global category as Near Threatened; this reports a dated assessment record, not a new population estimate. The same report said the platypus was not then listed as nationally threatened under federal or New South Wales law, while relaying a 2020 UNSW review that recommended Vulnerable status. It names threats including bank clearing, altered flows, pollution, fishing by-catch, disease, drought, fire and floods. Victoria listed the species as Vulnerable in 2021. These categories refer to different dates and geographic scales."
+  },
+  "sources": [
+    {
+      "url": "https://nre.tas.gov.au/wildlife-management/fauna-of-tasmania/mammals/echidnas-and-platypus/platypus/platypus-in-tasmania",
+      "title": "Platypus in Tasmania — Tasmanian environment department"
+    },
+    {
+      "url": "https://www.amnh.org/explore/news-blogs/platypus-electroreception-hunting",
+      "title": "Platypus electroreception — American Museum of Natural History"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/mammals/platypus/",
+      "title": "Platypus — The Australian Museum"
+    },
+    {
+      "url": "https://www.unsw.edu.au/research/platypus-conservation-initiative/ecology-and-evolution",
+      "title": "Ecology and evolution — Platypus Conservation Initiative, UNSW Sydney"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/emergency-flood-recovery-wildlife-habitat-impact-assessments-emergency-flood-recovery-wildlife-habitat.pdf",
+      "title": "Emergency flood recovery assessments — Australian environment department"
+    },
+    {
+      "url": "https://platypus.asn.au/platypus-reproduction/",
+      "title": "Platypus reproduction — Australian Platypus Conservancy"
+    },
+    {
+      "url": "https://www.premier.vic.gov.au/protecting-our-precious-platys",
+      "title": "Protecting Our Precious Platys — Premier of Victoria"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7398909/",
+      "title": "Platypus predation in stream and lake ecosystems — field study"
+    },
+    {
+      "url": "https://platypus.asn.au/platypus-vital-statistics/",
+      "title": "Platypus vital statistics | Australian Platypus Conservancy"
+    }
+  ]
+}

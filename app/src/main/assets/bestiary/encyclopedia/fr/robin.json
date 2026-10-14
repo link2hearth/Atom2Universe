@@ -1,0 +1,70 @@
+{
+  "id": "robin",
+  "name": "Rougegorge familier",
+  "scientific": "Erithacus rubecula",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Rougegorge familier est un petit passereau d’Europe, d’Asie occidentale et d’Afrique du Nord, présent dans les bois, fourrés et zones habitées. Il appartient aux Muscicapidés, famille qui comprend les gobemouches de l’Ancien Monde. Le Merle d’Amérique, Turdus migratorius, a lui aussi la poitrine orangée, mais appartient aux Turdidés : leur nom anglais commun évoque l’apparence, pas une parenté proche. Beaucoup de rougegorges restent près de leurs sites de reproduction ; ceux des régions nordiques et orientales gagnent le sud ou l’ouest en hiver.",
+    "identification": "Mâles et femelles adultes se ressemblent : face et poitrine orange bordées de gris bleuté, dos brun et ventre clair. Long d’environ 14 cm, l’adulte pèse de 14 à 25 g selon les sources ; son bec fin et ses longues pattes accompagnent une démarche dressée et bondissante. Les jeunes sortis du nid sont brun moucheté de doré, sans orange, ce qui les camoufle dans les feuilles. Lors d’une mue postjuvénile partielle en été, certaines plumes sont remplacées et des plumes orange rouge apparaissent sur la poitrine. Les sexes restent difficiles à distinguer à l’œil.",
+    "habitat": "Le rougegorge fréquente les lieux frais et ombragés : bois de feuillus, haies, broussailles, parcs et jardins. La végétation dense abrite l’oiseau et offre des perchoirs ; terre et feuilles dégagées lui donnent accès aux proies. Le nid se trouve à l’abri, dans la végétation ou parfois dans des lieux humains insolites, comme un pot de fleurs. Familier des personnes en Grande-Bretagne et en Irlande, le rougegorge se montre parfois plus méfiant ailleurs en Europe.",
+    "diet": "La majeure partie de l’année, le rougegorge chasse au sol de petits invertébrés, comme les insectes et les vers. D’un perchoir bas, il fond sur une proie visible, ou bondit dans les feuilles et la saisit après une pause. En automne et en hiver, baies et fruits peuvent aussi compléter les proies animales ; leur part varie selon la saison et la région.",
+    "behavior": "Hors période de reproduction, le rougegorge vit généralement seul et défend son espace d’alimentation. Les deux sexes chantent et défendent des territoires en hiver ; leur chant est souvent plus plaintif et prolongé qu’au printemps. Cela protège un couvert familier et des lieux d’alimentation sûrs. Les déplacements varient : certaines populations restent sur place, d’autres migrent partiellement ou gagnent l’Europe occidentale et l’Afrique du Nord depuis le nord et l’est. En Grande-Bretagne, les sédentaires côtoient des visiteurs hivernaux du nord et de l’est ; les migrations varient selon les populations.",
+    "reproduction": "La femelle bâtit une coupe de mousse, feuilles et herbes, garnie de poils ou de fibres, dans un abri. En Grande-Bretagne, elle pond généralement quatre ou cinq œufs et les couve 14 à 16 jours. Les poussins nidicoles naissent sans autonomie et ont besoin de chaleur et de nourriture. Les deux parents nourrissent les jeunes jusqu’à l’envol, vers deux semaines ; le mâle peut continuer à les nourrir quand la femelle commence une seconde nichée. Un couple élève souvent une seconde nichée si les conditions le permettent.",
+    "ecology": "En consommant des invertébrés, le rougegorge est un petit prédateur de la litière ; adulte, il peut aussi devenir la proie de rapaces. Une étude lituanienne de nichoirs a relevé martres et loirs comme prédateurs des nids ; d’autres observations décrivent des poussins de coucou éjectant les œufs ou jeunes de l’hôte. Dans le sud de la France, une étude hivernale a relevé une consommation saisonnière de fruits et en déduit que le rougegorge pourrait contribuer à la dispersion des graines en garrigue . Quand les jardiniers bêchent, les rougegorges capturent vers et larves mis à découvert .",
+    "conservation": "BirdLife International l’a classé en préoccupation mineure dans son évaluation mondiale de 2018, en raison de son aire et de sa population très vastes. Ce statut mondial ne décrit pas chaque population locale. Au Royaume-Uni, Birds of Conservation Concern 5 (2021) classe le rougegorge sur la liste verte. Les suivis montrent une hausse à long terme, malgré des baisses après des hivers rigoureux et des déclins locaux relevés dans d’anciens atlas. Le froid peut réduire la survie en rendant la nourriture moins accessible."
+  },
+  "sources": [
+    {
+      "url": "https://www.nhm.ac.uk/discover/robin-erithacus-rubecula.html",
+      "title": "Rougegorge — Natural History Museum de Londres"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/European_Robin/id",
+      "title": "Identification du Rougegorge familier — Cornell Lab of Ornithology, All About Birds"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/European_Robin",
+      "title": "Présentation du Rougegorge familier — Cornell Lab of Ornithology, All About Birds"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/European_Robin/lifehistory",
+      "title": "Histoire naturelle du Rougegorge familier — Cornell Lab of Ornithology, All About Birds"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/robin",
+      "title": "Fiche BirdFacts du Rougegorge — British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/European_Robin/maps-range",
+      "title": "Carte de répartition du Rougegorge — Cornell Lab of Ornithology, All About Birds"
+    },
+    {
+      "url": "https://doi.org/10.1186/s40657-021-00263-8",
+      "title": "Les nichoirs fermés favorisent-ils la nidification du Rougegorge ? — Avian Research"
+    },
+    {
+      "url": "https://academic.oup.com/beheco/article/36/4/araf070/8160918",
+      "title": "Les Rougegorges adaptent leur chant en hiver aux environnements bruyants — Behavioral Ecology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22709675A131953953.en",
+      "title": "Erithacus rubecula — évaluation 2018 de la Liste rouge de l’UICN, BirdLife International"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/robin",
+      "title": "Rougegorge — Royal Society for the Protection of Birds"
+    },
+    {
+      "url": "https://www.bto.org/learn/skills/bird-identification/young-birds",
+      "title": "Identifier les jeunes oiseaux — British Trust for Ornithology"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1600-0587.1985.tb01166.x",
+      "title": "Frugivorie des Rougegorges migrateurs et hivernants — Ecography"
+    },
+    {
+      "url": "https://www.bto.org/our-work/science/publications/reports/birds-conservation-concern",
+      "title": "Birds of Conservation Concern 5 — British Trust for Ornithology et partenaires"
+    }
+  ]
+}

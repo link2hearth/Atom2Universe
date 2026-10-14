@@ -57,10 +57,10 @@
         "Assessed 9 Aug 2018; amended 2019; global trend increasing; provisional estimate."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "conservation.en.1",
         "conservation.fr.1",
+        "overview.en.1",
+        "overview.fr.1",
         "reproduction.en.1",
         "reproduction.fr.1"
       ],
@@ -87,10 +87,10 @@
       ],
       "prose_claims": [
         "identification.en.1",
-        "identification.fr.1",
         "identification.en.3",
-        "identification.fr.3",
         "identification.en.4",
+        "identification.fr.1",
+        "identification.fr.3",
         "identification.fr.4"
       ],
       "budget": {
@@ -117,12 +117,12 @@
         "British nest records document clutch, incubation and fledging timings."
       ],
       "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
         "identification.en.5",
         "identification.fr.5",
         "reproduction.en.2",
-        "reproduction.fr.2",
-        "conservation.en.3",
-        "conservation.fr.3"
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -147,8 +147,8 @@
       ],
       "prose_claims": [
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.2",
+        "behavior.fr.1",
         "behavior.fr.2"
       ],
       "budget": {
@@ -175,12 +175,12 @@
         "BTO records winter arrivals, mixed flocks, and regional disease-linked trends."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
         "behavior.en.3",
         "behavior.fr.3",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.4",
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -206,8 +206,8 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
+        "diet.fr.1",
         "diet.fr.2",
         "habitat.en.1",
         "habitat.fr.1"
@@ -235,8 +235,8 @@
       ],
       "prose_claims": [
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
+        "ecology.fr.1",
         "ecology.fr.2"
       ],
       "budget": {
@@ -262,10 +262,10 @@
         "AviList 2025b is the current consensus global bird checklist."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "conservation.en.2",
-        "conservation.fr.2"
+        "conservation.fr.2",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,

@@ -1,0 +1,46 @@
+{
+  "id": "great_cormorant",
+  "name": "Great cormorant",
+  "scientific": "Phalacrocorax carbo",
+  "group": "birds",
+  "sections": {
+    "overview": "The great cormorant is a large fish-eating waterbird found across Europe, Asia, Africa, Australasia and the Atlantic coast of North America. It occupies marine coasts and inland waters; northern populations may migrate when waters freeze.",
+    "identification": "Adults are usually 84–98 cm long, with a 130–160 cm wingspan and a mass of about 2–3.7 kg; males are larger on average. The glossy dark body, hooked bill and fully webbed feet are distinctive; breeding adults show white patches on head and thighs, while young birds have pale underparts. In Europe it is larger and heavier than the European shag, with a thicker bill and no crest.",
+    "habitat": "It feeds along marine shores, estuaries, lakes and rivers, often in sheltered, relatively shallow water. Perches, cliffs and trees near fishing grounds provide places to rest, dry the plumage and nest.",
+    "diet": "Fish form most of its diet, supplemented by crustaceans, amphibians, molluscs and occasionally nestling birds. It dives from the surface and pursues prey underwater, driving itself with webbed feet and seizing fish with its hooked bill; large prey is brought up before being swallowed.",
+    "behavior": "Each body feather has a wettable outer part and a waterproof inner portion, retaining a thin layer of air that provides insulation while limiting buoyancy. After fishing it often spreads its wings to dry. The feet provide most underwater thrust, with occasional wing strokes for steering; it usually fishes alone but roosts and nests socially, calling with guttural notes in colonies.",
+    "reproduction": "Breeding timing varies with region: northern birds often nest in spring, while tropical populations may follow rainy seasons. Pairs nest in trees, on cliffs or rocky ground; three to five blue-green eggs are incubated for about a month. Both parents feed the naked hatchlings by regurgitation; chicks leave the nest at about seven weeks but remain dependent for several more weeks.",
+    "ecology": "Colonies deposit guano that changes vegetation around their regularly occupied communal roosts and nesting trees.",
+    "conservation": "The global IUCN assessment published in 2018 classified the widespread species as Least Concern. European populations were heavily persecuted as supposed competitors for fish, then recovered after protection; current pressures include persecution, bycatch, pollution, disturbance and fish-farm conflicts."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Great_cormorant",
+      "title": "Great cormorant"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Grand_Cormoran",
+      "title": "Grand Cormoran"
+    },
+    {
+      "url": "https://publications.naturalengland.org.uk/file/3897615",
+      "title": "Great cormorant: species information for marine Special Protection Area consultations"
+    },
+    {
+      "url": "https://www.birdlife.org/news/2022/06/02/seabird-of-the-month-great-cormorant-phalacrocorax-carbo/",
+      "title": "Seabird of the month: Great Cormorant (Phalacrocorax carbo)"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22696792A155523636.en",
+      "title": "Phalacrocorax carbo (Great Cormorant)"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.0908-8857.2005.03331.x",
+      "title": "Unusual feather structure allows partial plumage wettability in diving great cormorants Phalacrocorax carbo"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Phalacrocorax_carbo/",
+      "title": "Phalacrocorax carbo — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

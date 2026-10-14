@@ -1,0 +1,34 @@
+{
+  "id": "accipiter_ovampensis",
+  "name": "Ovambo sparrowhawk",
+  "scientific": "Accipiter ovampensis",
+  "group": "birds",
+  "sections": {
+    "overview": "The Ovambo sparrowhawk is a small African hawk of savanna woodland, dry forest margins and tree plantations. It is a fast, bird-eating hunter that often waits from a perch before dashing after prey. Its range spans much of sub-Saharan Africa, and BirdLife International describes it as nomadic in some parts rather than a regular long-distance migrant.",
+    "identification": "The adult has slate-grey upperparts and head, a grey rump with conspicuous white bars, finely barred pale underparts and a long tail with dark bands. The cere and legs are orange to red, and the eye is dark red. Females are larger than males, but reliable sex-specific body measurements and mass ranges were not found in the sources reviewed. A regional species account gives an overall body length of about 40 cm, mass around 250 g and wingspan near 70 cm; these are approximate summary values, not a measured range. No dependable body height or width is published. It may be confused with the smaller Shikra; compare the grey rump, tail pattern, facial markings, size and geography.",
+    "habitat": "It occupies savanna woodland, dry woodland edges, riverine trees and other open landscapes with enough cover for ambush. BirdLife records it from a very broad range of African countries and classifies its movement as nomadic. It also uses plantations and some arable landscapes, but cutting natural woodland remains a threat in parts of the range.",
+    "diet": "It feeds predominantly on birds, usually taken in a swift, low pursuit launched from a perch. Regional accounts list doves, weavers, flycatchers, woodpeckers, swallows, drongos and pipits among prey. Females can take larger birds than males. These records support a strong bird-specialist tendency, but do not establish that every population or individual eats birds exclusively.",
+    "behavior": "It hunts by watching from a perch and making a sudden attack, often weaving through trees after birds. It can also wait near waterholes where prey visits. The species may wander in response to changing local conditions. Courtship and roosting behavior are described in regional natural-history accounts, but field data are patchy across its wide range.",
+    "reproduction": "Both sexes participate in building a stick nest in a tree. A Namibian species account reports one to five eggs laid from September to November and incubation lasting more than 30 days; those dates describe a southern African region and should not be generalized across the continent. Broader comparative literature suggests incubation and nestling periods typical of small Accipiter hawks, but exact species-wide timing remains uncertain.",
+    "ecology": "This hawk is an agile predator in open woodland ecosystems and helps regulate small bird populations. It tolerates some modified habitats and can use planted forests, which may have supported an increase in parts of southern Africa. That regional pattern coexists with woodland loss and should not be interpreted as a uniform trend throughout the range.",
+    "conservation": "BirdLife International’s 2021 assessment lists the species as Least Concern and reports an increasing global trend, while noting that the estimate is suspected and data quality is poor. Habitat loss from woodland cutting remains a local threat. A Least Concern category and a suspected increase do not mean every regional population is monitored or stable."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/ovambo-sparrowhawk-accipiter-ovampensis",
+      "title": "Ovambo Sparrowhawk — BirdLife International DataZone species factsheet"
+    },
+    {
+      "url": "https://namibian.org/wildlife-species?species_name=ovambo-sparrowhawk",
+      "title": "Ovambo Sparrowhawk — Namibia Nature Foundation species account"
+    },
+    {
+      "url": "https://newmansbirds.com/ovambo-sparrowhawk/",
+      "title": "Ovambo Sparrowhawk — Newman's Birds of Southern Africa"
+    },
+    {
+      "url": "https://afo.birdlife.org.au/afo/index.php/afo/article/viewFile/1009/984",
+      "title": "Incubation and nestling periods of small Accipiter hawks — Australian Field Ornithology"
+    }
+  ]
+}

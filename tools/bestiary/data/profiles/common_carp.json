@@ -60,10 +60,10 @@
         "identification.en.2",
         "identification.fr.2",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.3",
         "reproduction.fr.5"
       ],
       "budget": {
@@ -143,8 +143,8 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
+        "diet.fr.1",
         "diet.fr.2",
         "habitat.en.2",
         "habitat.fr.2"
@@ -197,10 +197,10 @@
       ],
       "prose_claims": [
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.2",
-        "behavior.fr.2",
         "behavior.en.3",
+        "behavior.fr.1",
+        "behavior.fr.2",
         "behavior.fr.3"
       ],
       "budget": {
@@ -226,12 +226,12 @@
       ],
       "prose_claims": [
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
-        "ecology.fr.2",
         "ecology.en.3",
-        "ecology.fr.3",
         "ecology.en.4",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3",
         "ecology.fr.4"
       ],
       "budget": {
@@ -257,12 +257,12 @@
         "The 2008 account links native-range decline to floodplain loss and hybridization with introduced stocks."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.1",
+        "conservation.fr.4",
+        "habitat.en.3",
+        "habitat.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -287,8 +287,8 @@
       ],
       "prose_claims": [
         "overview.en.1",
-        "overview.fr.1",
         "overview.en.2",
+        "overview.fr.1",
         "overview.fr.2"
       ],
       "budget": {
@@ -314,8 +314,8 @@
       ],
       "prose_claims": [
         "identification.en.3",
-        "identification.fr.3",
         "identification.en.5",
+        "identification.fr.3",
         "identification.fr.5"
       ],
       "budget": {

@@ -12,8 +12,8 @@
       "fr": "Elephas maximus est le plus grand mammifère terrestre d’Asie. Plus petit que l’éléphant d’Afrique, il subsiste en populations dispersées. Trompe préhensile et corps massif facilitent la recherche de nourriture."
     },
     "identification": {
-      "en": "Adults have grey skin, sometimes pink on the ears, forehead or trunk; young are hairier and reddish. They have smaller, rounder ears than African elephants and one finger-like trunk tip. Only some males grow prominent tusks; many lack them, while females and some males have short tushes. Tusk frequency varies among populations.",
-      "fr": "L’adulte a la peau grise, parfois rosée aux oreilles, au front ou à la trompe ; le jeune est plus velu et roux. Ses oreilles arrondies sont plus petites que celles de l’éléphant d’Afrique ; sa trompe porte une excroissance préhensile. Seuls certains mâles ont de grandes défenses, beaucoup n’en ont pas. Femelles et certains mâles portent de petites défenses ; leur fréquence varie selon les populations."
+      "en": "Adults have grey skin, sometimes pink on the ears, forehead or trunk; young are hairier and reddish. They have smaller, rounder ears than African elephants and one finger-like trunk tip. Only some males grow prominent tusks; many lack them, while females and some males have short tushes. Tusk frequency varies among populations. Adult Asian elephants typically stand 1.8–3.8 m at the shoulder and weigh about 2,750–5,420 kg; males are usually larger than females. The cited institutional account does not give a body-width measurement.",
+      "fr": "L’adulte a la peau grise, parfois rosée aux oreilles, au front ou à la trompe ; le jeune est plus velu et roux. Ses oreilles arrondies sont plus petites que celles de l’éléphant d’Afrique ; sa trompe porte une excroissance préhensile. Seuls certains mâles ont de grandes défenses, beaucoup n’en ont pas. Femelles et certains mâles portent de petites défenses ; leur fréquence varie selon les populations. L’éléphant d’Asie adulte mesure généralement 1,8 à 3,8 m au garrot et pèse environ 2 750 à 5 420 kg ; les mâles sont en général plus grands que les femelles. La source institutionnelle citée ne donne pas de mesure de largeur du corps."
     },
     "habitat": {
       "en": "It survives in fragmented parts of South and Southeast Asia, including India, Sri Lanka, Sumatra and Borneo. Habitats include evergreen and deciduous forests, thorn scrub, grasslands and modified landscapes. It forages in forest clearings and moves widely for food and water.",
@@ -49,16 +49,17 @@
       "url": "https://nationalzoo.si.edu/animals/asian-elephant",
       "consulted": "2026-10-11",
       "supports": [
-        "overview",
-        "identification",
-        "habitat",
-        "diet",
         "behavior",
+        "diet",
+        "habitat",
+        "identification",
+        "overview",
         "reproduction"
       ],
       "facts": [
         "Smaller than African elephants; one trunk-tip projection; tusks vary by sex and region.",
-        "The page describes skin, feeding, social groups, communication, gestation, calf development and habitat use."
+        "The page describes skin, feeding, social groups, communication, gestation, calf development and habitat use.",
+        "Adults typically weigh 2,750–5,420 kg and stand 1.8–3.8 m at the shoulder; males are usually larger than females."
       ]
     },
     {

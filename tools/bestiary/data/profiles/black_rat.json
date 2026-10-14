@@ -12,8 +12,8 @@
       "fr": "Le rat noir, aussi appelé rat des toits ou rat des navires, est un petit rongeur adaptable dont l’histoire accompagne celle des humains. L’évaluation de l’UICN situe son aire d’origine dans la région indomalaise ; le commerce maritime l’a propagé bien au-delà, et des populations établies vivent aujourd’hui sur plusieurs continents et îles. Il prospère dans les villages comme en forêt : « rat des maisons » décrit une proximité, pas une limite d’habitat."
     },
     "identification": {
-      "en": "A black rat is usually slender, with a pointed muzzle, prominent thin ears and a tail longer than its head and body together. Coat colour is variable: animals may be blackish, charcoal, brown or lighter above, often paler below. The brown rat (Rattus norvegicus) is generally heavier and stockier, with a shorter, thicker tail and a blunter muzzle. Colour alone is unreliable, and young rats can be hard to identify.",
-      "fr": "Le rat noir est généralement élancé, avec un museau pointu, de grandes oreilles fines et une queue plus longue que la tête et le corps réunis. Son pelage varie du noirâtre au gris charbon ou au brun, parfois plus clair sur le dos, et souvent pâle dessous. Le rat brun (Rattus norvegicus) est en général plus lourd et trapu ; sa queue est plus courte et épaisse, son museau plus obtus. La couleur seule ne suffit pas et les jeunes sont difficiles à identifier."
+      "en": "A black rat is usually slender, with a pointed muzzle, prominent thin ears and a tail longer than its head and body together. Coat colour is variable: animals may be blackish, charcoal, brown or lighter above, often paler below. The brown rat (Rattus norvegicus) is generally heavier and stockier, with a shorter, thicker tail and a blunter muzzle. Colour alone is unreliable, and young rats can be hard to identify. Adults have a head-and-body length of about 16.5–20.5 cm, a tail of 18.5–25.5 cm and a reported mass of 95–340 g; these ranges are not separated by sex.",
+      "fr": "Le rat noir est généralement élancé, avec un museau pointu, de grandes oreilles fines et une queue plus longue que la tête et le corps réunis. Son pelage varie du noirâtre au gris charbon ou au brun, parfois plus clair sur le dos, et souvent pâle dessous. Le rat brun (Rattus norvegicus) est en général plus lourd et trapu ; sa queue est plus courte et épaisse, son museau plus obtus. La couleur seule ne suffit pas et les jeunes sont difficiles à identifier. Les adultes ont une longueur tête-corps d’environ 16,5 à 20,5 cm, une queue de 18,5 à 25,5 cm et une masse publiée de 95 à 340 g ; ces plages ne sont pas distinguées selon le sexe."
     },
     "habitat": {
       "en": "This species uses warm coastal districts, farms, gardens, woodland and buildings, especially where food and shelter occur together. Its climbing ability makes shrubs, tree crowns, vines, fences, wires and roof spaces accessible; nests can be built above ground in vegetation or structures. In California, roof rats often nest in trees and dense landscaping, but also descend to the ground to forage or feed within trees. They may burrow or use ground-level shelter when elevated sites are scarce, so arboreality is a tendency rather than a rule.",
@@ -182,6 +182,20 @@
       ],
       "facts": [
         "Final report released in November 2025 confirms successful rodent removal and stresses continuing biosecurity to maintain rodent-free status."
+      ]
+    },
+    {
+      "title": {
+        "en": "Black Rat — Australian Museum",
+        "fr": "Rat noir — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/mammals/black-rat/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Body 165–205 mm, tail 185–255 mm, mass 95–340 g; no sex-specific values given."
       ]
     }
   ],

@@ -1,0 +1,38 @@
+{
+  "id": "hippo",
+  "name": "Hippopotamus",
+  "scientific": "Hippopotamus amphibius",
+  "group": "mammals",
+  "sections": {
+    "overview": "This large African mammal links freshwater and grassland in its daily life. It rests in rivers, lakes or pools by day, then usually leaves after dusk to graze. This routine shapes its anatomy, feeding and social life.",
+    "identification": "Its barrel-shaped body has sparse hair, thick purple-grey skin and short, strong legs. High-set eyes, ears and nostrils let it remain submerged; nostrils close underwater. Its broad mouth bears prominent incisors and long canine tusks, especially developed in males. Adults are 3.3–5 m long and up to 1.6 m at the shoulder; females average about 1,400 kg and males about 1,600–4,500 kg.",
+    "habitat": "It ranges across sub-Saharan Africa where permanent freshwater and grazing ground remain available. Hippos rest in rivers, lakes and pools, then feed on nearby grassland. During dry periods they may crowd around shrinking water, while suitable grazing can lie farther inland.",
+    "diet": "Grass is its main food. At dusk, hippos follow familiar routes from water and graze for several hours, mainly on grasses, sometimes reeds or other plants. They feed mostly on land; when forage near the bank is scarce, they travel farther before returning.",
+    "behavior": "Hippos rest in water during much of the hot day, often in groups, and become active at night. In shallow water they push off or walk along the bottom. Dominant males defend stretches of water and mark boundaries by scattering dung with the tail; crowding can intensify disputes.",
+    "reproduction": "After a gestation of about eleven months, a female usually gives birth to one calf. Birth occurs on land or in water; the newborn can swim and nurse underwater, closing its nostrils to suckle. The mother may isolate before birth and cares for the calf. Breeding can occur year-round, though seasonal peaks are reported in some populations.",
+    "ecology": "Dung and urine carry nutrients from grassland into water. In Kenya’s Mara River, research linked hippo inputs to aquatic food webs; experiments also showed heavy waste loading in hippo pools can deplete oxygen and contribute to fish kills. These measured effects depend on local density and river conditions.",
+    "conservation": "The IUCN assessment published in 2017 and dated 2016 classified the species as Vulnerable, estimating 115,000–130,000 animals globally and a stable trend at that time. It identified habitat loss and unregulated hunting as major threats. These are historical assessment figures, not a current census."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Hippopotamus_amphibius/",
+      "title": "Hippopotamus amphibius — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/hippo",
+      "title": "Hippo — San Diego Zoo Animals & Plants"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-2.RLTS.T10103A18567364.en",
+      "title": "The IUCN Red List of Threatened Species: Hippopotamus amphibius"
+    },
+    {
+      "url": "https://www.nature.com/articles/s41467-018-04391-6",
+      "title": "Organic matter loading by hippopotami causes subsidy overload resulting in downstream hypoxia and fish kills — Nature Communications"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5530709/",
+      "title": "How large herbivores subsidize aquatic food webs in African savannas — Proceedings of the National Academy of Sciences"
+    }
+  ]
+}

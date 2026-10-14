@@ -1,0 +1,26 @@
+{
+  "id": "eidolon_helvum",
+  "name": "Roussette paillée",
+  "scientific": "Eidolon helvum",
+  "group": "mammals",
+  "sections": {
+    "overview": "La roussette paillée est l’une des plus grandes chauves-souris frugivores d’Afrique et la plus répandue. Elle dort en très grandes colonies, effectue de longues migrations et elle est classée quasi menacée.",
+    "identification": "Grande chauve-souris au corps d’environ 14 à 21 cm et pesant de 230 à 350 g, les mâles étant un peu plus grands. La nuque et le dos sont jaune paille et le dessous d’un brun ou d’un gris plus terne. Les ailes sont longues et étroites, faites pour les longs vols, et la tête est grande et pointue, avec de grands yeux et sans marque faciale blanche. L’envergure est donnée jusqu’à environ 75 cm dans une source et jusqu’à un mètre dans une autre.",
+    "habitat": "Elle vit dans la majeure partie de l’Afrique subsaharienne et dans le sud-ouest de la péninsule Arabique, en forêt et en savane, des forêts côtières aux régions sèches, et du niveau de la mer à environ 2 000 m. La forêt tropicale est son habitat de prédilection grâce à l’abondance de nourriture. Elle dort surtout dans de grands arbres et parfois dans des grottes, et fréquente aussi les villes et les terres cultivées.",
+    "diet": "Elle suce le jus des fruits et recrache la pulpe. Parmi les aliments signalés figurent mangues, dattes, figues, papayes et avocats, ainsi que les fleurs du baobab, des palmiers Borassus et des fromagers. Elle mâche aussi du bois tendre et de l’écorce, apparemment pour l’humidité. Elle se nourrit dans la strate haute et dégagée de la canopée et peut manger beaucoup en une nuit.",
+    "behavior": "Elle est sociale et nocturne : les colonies se reposent dans les arbres le jour et quittent le dortoir la nuit par petits groupes, volant en ligne droite et plus haut que les autres roussettes. Elle s’alimente jusqu’à environ 30 km du dortoir et est bruyante, bavardant au dortoir et en mangeant. C’est une grande migratrice : chaque année, des millions d’individus se rassemblent au parc national de Kasanka, en Zambie, et elle détient la plus longue migration enregistrée pour un mammifère africain.",
+    "reproduction": "Elle se reproduit une fois par an, avec des accouplements d’avril à juin, et la plupart des populations présentent une implantation retardée, si bien que les naissances ont lieu en février et mars. Un seul petit d’environ 50 g est la règle; il ne vole pas à la naissance et seule la femelle s’en occupe. Les sources ne s’accordent pas sur la durée totale de la gestation (neuf mois ou environ 275 jours).",
+    "ecology": "En visitant les fleurs, elle pollinise des arbres des familles des moracées et des bombacacées, et en transportant des fruits, elle disperse des graines. Hiboux, aigles, buses, serpents et civettes la chassent, et elle est mangée par l’humain dans certaines régions d’Afrique de l’Ouest et d’Afrique centrale. Là où les colonies dorment près de vergers, elle peut être un ravageur de cultures.",
+    "conservation": "Elle est classée quasi menacée. La chasse pour la viande est une cause majeure de déclin local en Afrique de l’Ouest et centrale, et la déforestation est la plus grande menace d’ensemble. Dans certaines régions, ces chauves-souris sont vues comme des nuisibles et leurs dortoirs sont détruits. Les effectifs des colonies varient beaucoup selon les rapports, de dizaines de milliers à des millions, et une source qualifie l’espèce de très abondante."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Eidolon_helvum/",
+      "title": "Eidolon helvum — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://www.worldlandtrust.org/species/straw-coloured-fruit-bat/",
+      "title": "Roussette paillée — World Land Trust"
+    }
+  ]
+}

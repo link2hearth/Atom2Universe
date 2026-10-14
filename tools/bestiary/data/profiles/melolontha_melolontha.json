@@ -12,8 +12,8 @@
       "fr": "Le hanneton commun est un grand scarabée européen dont les adultes volent les soirs de printemps et dont les vers blancs vivent sous terre pendant environ trois ans. Ses grands vols, autrefois classiques dans certaines régions de Suisse, se sont en grande partie estompés ces dernières décennies."
     },
     "identification": {
-      "en": "Adults are 25–30 mm long, the largest native cockchafer in Switzerland, with a dark head, a shiny black pronotum covered in short hairs and a long, flat pygidium at the tip of the abdomen. Males have longer antennae with a large fan-like club. The grub is dull white, up to about 40–46 mm, with a black abdominal tip and strong jaws, and rests curled in an arc.",
-      "fr": "L’adulte mesure 25 à 30 mm, le plus grand hanneton indigène de Suisse, avec une tête sombre, un pronotum noir luisant couvert de poils courts et un pygidium long et plat au bout de l’abdomen. Les mâles ont des antennes plus longues, terminées par une grande massue en éventail. Le ver blanc est d’un blanc mat, long d’environ 40 à 46 mm, avec le bout de l’abdomen noir et de fortes mandibules, et se tient recourbé en arc."
+      "en": "Adults are 25–30 mm long, the largest native cockchafer in Switzerland, with a dark head, a shiny black pronotum covered in short hairs and a long, flat pygidium at the tip of the abdomen. Males have longer antennae with a large fan-like club. The grub is dull white, up to about 40–46 mm, with a black abdominal tip and strong jaws, and rests curled in an arc. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "L’adulte mesure 25 à 30 mm, le plus grand hanneton indigène de Suisse, avec une tête sombre, un pronotum noir luisant couvert de poils courts et un pygidium long et plat au bout de l’abdomen. Les mâles ont des antennes plus longues, terminées par une grande massue en éventail. Le ver blanc est d’un blanc mat, long d’environ 40 à 46 mm, avec le bout de l’abdomen noir et de fortes mandibules, et se tient recourbé en arc. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
     },
     "habitat": {
       "en": "It occurs in temperate Europe, in meadows, farmland, forest edges and suburbs, and prefers soft soil with a medium cover of vegetation for egg laying. Adults fly towards forest edges, groves and trees on rounded hilltops or ridges, guided by the silhouette of the trees.",
@@ -58,7 +58,8 @@
       ],
       "facts": [
         "Adults 25–30 mm, larvae about 40–46 mm; males have a larger fan-like antennal club; adults nocturnal and crepuscular, gather at lights; about 20 eggs at a time.",
-        "Adults eat leaves of oak, beech and other trees mainly in April–May; larvae eat roots; listed with no special status."
+        "Adults eat leaves of oak, beech and other trees mainly in April–May; larvae eat roots; listed with no special status.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
       ]
     },
     {

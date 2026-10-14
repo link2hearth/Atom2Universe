@@ -1,0 +1,34 @@
+{
+  "id": "aepus_marinus",
+  "name": "Aepus marinus",
+  "scientific": "Aepus marinus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Aepus marinus est un minuscule carabe des côtes rocheuses du nord-ouest de l’Europe. Spécialisé dans l’estran, il s’abrite dans des fissures sombres et humides ainsi que sous les pierres de la partie supérieure du rivage. Son corps pâle et aplati et ses yeux réduits conviennent à cette vie cachée entre les marées.",
+    "identification": "L’adulte est jaune rougeâtre à pâle, peu pigmenté, aplati et presque parallèle sur les côtés, avec des yeux rudimentaires et une fine pilosité. Il mesure environ 2,3 mm de long ; les sources consultées ne donnent pas de mesures fiables de largeur, de hauteur ou de masse, ni de mensurations selon le sexe. Il peut être confondu avec le carabe littoral apparenté Aepus robinii : comparer la saillie des yeux, les épaules et le contour des élytres à l’aide d’une clé spécialisée, car les descriptions publiées ne qualifient pas toutes leur extrémité de la même façon.",
+    "habitat": "Il vit sur les côtes rocheuses, surtout dans des fissures abritées, sous des surplombs et sous des pierres enchâssées dans du sable grossier ou du gravier. Les observations le situent de la partie supérieure du médiolittoral jusqu’aux niveaux atteints par les hautes mers, là où les pierres restent humides et offrent des refuges remplis d’air lorsque la marée monte. Il est signalé en Grande-Bretagne, en Irlande et des côtes bretonnes vers le sud de la Norvège, mais ses stations sont souvent localisées.",
+    "diet": "Ce carabe est prédateur et capture de minuscules arthropodes parmi les pierres du rivage. La fiche d’Irlande du Nord cite précisément les collemboles maritimes parmi ses proies. Les sources consultées ne fournissent ni inventaire plus large ni proportions mesurées de son régime ; il vaut donc mieux le décrire comme un petit prédateur d’invertébrés sans lui attribuer un menu détaillé.",
+    "behavior": "Lorsque la marée recouvre son habitat, il se retire dans des fissures remplies d’air et sous les pierres ; il ressort pour chercher des proies à la décrue. Ce refuge lié au rythme des marées lui permet d’occuper un terrain périodiquement submergé. Les fiches disponibles le décrivent comme un insecte discret que l’on recherche sous les pierres, plutôt que comme un coléoptère souvent visible à découvert.",
+    "reproduction": "Un inventaire des invertébrés littoraux français indique une période de reproduction d’avril à septembre. Les sources examinées ne décrivent pas de façon suffisamment étayée la ponte, le développement larvaire ou le nombre de générations propres à l’espèce ; ces détails restent donc inconnus ici, sans extrapolation à partir d’autres carabes.",
+    "ecology": "Aepus marinus est un prédateur spécialisé de la partie supérieure de l’estran. Sa répartition dépend des côtes rocheuses abritées et de la présence de fissures ou de pierres adaptées ; ses petites proies comprennent des collemboles maritimes. Il peut côtoyer Aepus robinii, mais les deux espèces tendent à occuper des niveaux ou des microhabitats différents et ne sont pas régulièrement trouvées ensemble sur les mêmes sites.",
+    "conservation": "Les sources consultées ne permettent pas d’établir une évaluation mondiale récente de l’UICN ni une tendance mesurée de la population. Les fiches régionales décrivent une répartition côtière restreinte et morcelée et signalent une rareté locale, mais ces observations ne démontrent pas à elles seules un déclin à l’échelle de l’espèce. La protection des microhabitats rocheux abrités compte là où des stations sont connues."
+  },
+  "sources": [
+    {
+      "url": "https://www2.habitas.org.uk/beetles/species.php?item=7191",
+      "title": "Aepus marinus — Ground Beetles of Ireland, musées nationaux d’Irlande du Nord"
+    },
+    {
+      "url": "https://www.datanormandie.fr/sites/default/files/dataset/2025/03/21/6ebebce8-3ded-4b0f-954d-28c2b0bed6b2/749_2172_rapport_inventaire_invertebres__littoraux_bn_final.pdf",
+      "title": "Aepus marinus sur les côtes françaises — Inventaire des invertébrés littoraux de Basse-Normandie"
+    },
+    {
+      "url": "https://www.nature22.com/estran22/arthropodes/coleoptere.html",
+      "title": "Coléoptères des zones salées — observations de l’estran par nature22"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/305790373_Modern_and_Historic_records_Beetles_on_Arran_with_reference_to_status_in_Scotland",
+      "title": "Observations modernes et historiques : coléoptères d’Arran et statut en Écosse — The Coleopterist"
+    }
+  ]
+}

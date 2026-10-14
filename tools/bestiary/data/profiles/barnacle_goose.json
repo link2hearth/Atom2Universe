@@ -12,8 +12,8 @@
       "fr": "La Bernache nonnette est une oie arctique trapue et très grégaire, dont le cycle annuel relie les zones de reproduction nordiques aux régions européennes plus douces où elle hiverne. Trois grandes populations migratrices nichent au nord-est du Groenland, au Svalbard et dans l’Arctique russe, y compris la région baltique ; leurs quartiers d’hiver diffèrent et les suivis les distinguent."
     },
     "identification": {
-      "en": "Adults have a black head, neck and breast, sharply set off by a complete creamy-white face; the upper body is blue-grey with fine black bars, while the belly is pale. The short black bill and legs, white tail patch and compact body complete a distinctive pattern. At 58–70 cm long, with a wingspan around 132–145 cm, it is a relatively small goose. Canada Goose is larger and has a black neck with a white chinstrap, not the Barnacle Goose’s full white face.",
-      "fr": "L’adulte porte la tête, le cou et la poitrine noirs, nettement contrastés par une face entièrement blanc crème ; le dessus est gris bleuté finement barré de noir et le ventre pâle. Le bec court et noir, les pattes sombres, le miroir blanc de la queue et le corps compact complètent ce plumage caractéristique. Elle mesure 58–70 cm, pour une envergure d’environ 132–145 cm : c’est une oie relativement petite. La Bernache du Canada, plus grande, a le cou noir barré d’un menton blanc, et non la face blanche entière de la nonnette."
+      "en": "Adults have a black head, neck and breast, sharply set off by a complete creamy-white face; the upper body is blue-grey with fine black bars, while the belly is pale. Black bill and legs, white tail patch and compact body are diagnostic. Length is 58–70 cm; wingspan is 132–145 cm. Canada Goose is larger, with a black neck and white chinstrap rather than a full white face. BTO live-adult means are 1.93 kg and 421.1 mm wing length in males, versus 1.72 kg and 399.9 mm in females. These are British biometric averages; the species account does not give body width.",
+      "fr": "L’adulte porte la tête, le cou et la poitrine noirs, nettement contrastés par une face entièrement blanc crème ; le dessus est gris bleuté finement barré de noir et le ventre pâle. Bec et pattes noirs, miroir blanc et corps compact complètent les critères. Longueur : 58–70 cm ; envergure : 132–145 cm. Plus grande, la Bernache du Canada a un menton blanc sur le cou noir, non une face entièrement blanche. Les moyennes du BTO sur des adultes vivants sont de 1,93 kg et 421,1 mm de longueur d’aile chez les mâles, contre 1,72 kg et 399,9 mm chez les femelles. Ce sont des moyennes biométriques britanniques ; la fiche ne précise pas la largeur du corps."
     },
     "habitat": {
       "en": "Arctic breeders use tundra coasts, offshore islets and, in some colonies, ledges on steep cliffs; nesting on islands or heights can reduce access by terrestrial predators. After hatching, families move to tundra, coastal marshes and freshwater margins. During migration and winter, flocks use estuaries, tidal flats, saltmarshes and open grassland, and often graze on agricultural pasture. In northwestern Europe, some descendants of established or escaped birds also breed on temperate islands and lakes.",
@@ -57,14 +57,14 @@
         "Plumage, size and diet."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.3",
-        "identification.fr.3",
         "diet.en.1",
         "diet.fr.1",
         "habitat.en.4",
-        "habitat.fr.4"
+        "habitat.fr.4",
+        "identification.en.1",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -80,24 +80,25 @@
         "fr": "Fiche espèce : Bernache nonnette"
       },
       "url": "https://www.bto.org/learn/about-birds/birdfacts/barnacle-goose",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "behavior",
-        "reproduction",
-        "conservation"
+        "identification",
+        "reproduction"
       ],
       "facts": [
-        "BTO data: clutch, incubation, fledging and migration."
+        "BTO data: clutch, incubation, fledging and migration.",
+        "Live adult UK means: males 1.93 kg and 421.1 mm wing length; females 1.72 kg and 399.9 mm."
       ],
       "prose_claims": [
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.5",
+        "identification.fr.6",
         "reproduction.en.2",
-        "reproduction.fr.2",
         "reproduction.en.3",
-        "reproduction.fr.3",
-        "reproduction.en.6",
-        "reproduction.fr.6",
-        "conservation.en.1",
-        "conservation.fr.1"
+        "reproduction.fr.2",
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -122,11 +123,11 @@
         "Cliff descent follows hatching only at cliff-nesting colonies."
       ],
       "prose_claims": [
-        "reproduction.en.4",
-        "reproduction.fr.4",
         "habitat.en.3",
         "habitat.fr.3",
+        "reproduction.en.4",
         "reproduction.en.5",
+        "reproduction.fr.4",
         "reproduction.fr.5"
       ],
       "budget": {
@@ -155,17 +156,19 @@
         "Life history account covers lookalikes, habitats and plant food."
       ],
       "prose_claims": [
-        "identification.en.2",
-        "identification.fr.2",
-        "habitat.en.2",
-        "habitat.fr.2",
+        "behavior.en.2",
         "diet.en.2",
         "diet.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "identification.en.2",
         "identification.en.4",
+        "identification.fr.2",
         "identification.fr.4",
         "reproduction.en.1",
+        "reproduction.en.6",
         "reproduction.fr.1",
-        "behavior.en.2"
+        "reproduction.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -190,10 +193,10 @@
         "Norwegian assessment describes distinct breeding populations and habitats."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "habitat.en.1",
-        "habitat.fr.1"
+        "habitat.fr.1",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -269,8 +272,8 @@
       ],
       "prose_claims": [
         "conservation.en.3",
-        "conservation.fr.3",
         "conservation.en.4",
+        "conservation.fr.3",
         "conservation.fr.4",
         "ecology.en.4",
         "ecology.fr.4"
@@ -298,11 +301,11 @@
         "Predators include Arctic foxes, polar bears, gulls and raptors."
       ],
       "prose_claims": [
+        "behavior.fr.3",
         "ecology.en.2",
-        "ecology.fr.2",
         "ecology.en.3",
-        "ecology.fr.3",
-        "behavior.fr.3"
+        "ecology.fr.2",
+        "ecology.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -352,13 +355,13 @@
         "Cornell overview summarizes Arctic breeding, European migration and social flocks."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.3",
+        "behavior.en.4",
+        "behavior.fr.1",
         "behavior.fr.2",
-        "behavior.en.4"
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -367,6 +370,24 @@
         "total": 181,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Barnacle Goose species factsheet",
+        "fr": "Fiche espèce de la Bernache nonnette"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/barnacle-goose-branta-leucopsis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife/IUCN assessment history lists Least Concern through 2018."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ]
     }
   ],
   "illustration_notes": "Adult in profile with full creamy-white facial field, black head and neck, blue-grey barred back, white belly and short black bill. Include a smaller Canada Goose comparison inset showing only the white chinstrap. For Arctic nesting, distinguish cliff-ledged colonies from ground or island nests; do not depict cliff-jumping as universal.",

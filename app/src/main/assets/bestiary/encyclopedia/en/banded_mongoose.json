@@ -1,0 +1,62 @@
+{
+  "id": "banded_mongoose",
+  "name": "Banded mongoose",
+  "scientific": "Mungos mungo",
+  "group": "mammals",
+  "sections": {
+    "overview": "The banded mongoose is a small, day-active African carnivore whose dark transverse back bands distinguish it from other mongooses. It lives in mixed social groups that rear their litters communally.",
+    "identification": "Adults measure about 30–45 cm from head to rump, with a tail of 15–30 cm and a reported mass of 1.5–2.5 kg. The coarse coat ranges from pale to reddish brown, with dark bars starting midway along the back, dark feet and a black tail tip. Each forefoot bears five clawed digits and each hind foot four; rear claws are shorter and blunter, while rounded cheek teeth help crush hard prey.",
+    "habitat": "Across sub-Saharan Africa, banded mongooses occupy forest, savanna, shrubland and grassland. Field studies recorded dens in termite mounds, erosion gullies, aardvark holes and sometimes human structures; most were used briefly, though a few favored dens were reused for weeks.",
+    "diet": "In a two-year Ugandan study, beetles and millipedes dominated food records, while vertebrate remains occurred in only 12% of droppings. Other observations include termites, grasshoppers, worms, fruit, reptiles, small mammals, birds and eggs; to crack an egg or a snail’s shell, a mongoose may throw it backward between its hind legs against a stone or other hard surface.",
+    "behavior": "A Ugandan field study reported packs of six to 35 adults and subadults; group size varies, and individuals forage for prey while the pack travels together. Frequent close calls help maintain group contact during foraging, when animals often work with their heads lowered to dig. Experimental work found that recruitment calls convey urgency or risk rather than a fixed label for each stimulus. In the Ugandan study population, younger males tended to provide more babysitting than older males, so care is not divided equally among group members.",
+    "reproduction": "Females can breed from about one year old and, in the long-studied Ugandan population, several females often give birth together, sometimes on the same day; females there may breed repeatedly through the year. Gestation lasts close to two months, and typical litters contain two to six blind, sparsely furred pups; eyes begin opening at about ten days. Pups leave the den at three to four weeks, then usually form a close escort relationship with an adult that feeds, carries, grooms and protects them until nutritional independence at roughly three months; care received predicts survival to nutritional independence and greater mass at one year in that study population.",
+    "ecology": "In the studied Ugandan population, competition for food and mates across the population increased the probability of encounters between groups. Conflicts were also associated with periods of group growth and with reduced litter and adult survival.",
+    "conservation": "The global IUCN assessment completed on 28 February 2015 and published in 2016 listed the species as Least Concern, citing its broad range, common occurrence, protected-area presence and tolerance of human-modified places; that assessment reported a stable trend. A serious regional exception is documented in northern Botswana: the mongoose-associated bacterium Mycobacterium mungi caused repeated outbreaks and high mortality in troops living near people during 2000–2010. The study did not establish the pathogen’s full host range or transmission to humans, and this local disease record should not be generalized to the species across Africa."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Mungos_mungo/",
+      "title": "Animal Diversity Web: Mungos mungo"
+    },
+    {
+      "url": "https://nationalzoo.si.edu/animals/banded-mongoose",
+      "title": "Smithsonian National Zoo: Banded mongoose"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.anbehav.2009.05.002",
+      "title": "Furrer and Manser: Banded mongoose recruitment calls convey information about risk and not stimulus type"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3529192/",
+      "title": "Vocal communication in banded mongooses: segmented close calls"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6460079/",
+      "title": "Vincent et al.: Durable benefits of early-life care in banded mongooses"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4943108/",
+      "title": "Variable ecological conditions promote male helping by changing banded mongoose group composition"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.anbehav.2017.01.017",
+      "title": "Causes and consequences of intergroup conflict in cooperative banded mongooses"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T41621A45208886.en",
+      "title": "IUCN Red List: Mungos mungo"
+    },
+    {
+      "url": "https://wwwnc.cdc.gov/eid/article/16/8/10-0314_article",
+      "title": "Alexander et al.: Novel Mycobacterium tuberculosis complex pathogen M. mungi"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1365-2028.1975.tb00125.x",
+      "title": "Rood: Population dynamics and food habits of the banded mongoose"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1599779/",
+      "title": "VanderWaal et al.: Helpers benefit offspring in both the short and long term"
+    }
+  ]
+}

@@ -12,8 +12,8 @@
       "fr": "Le puma, aussi appelé cougar ou lion de montagne, est un grand félin des Amériques. Généralement solitaire, il vit de l’ouest du Canada à une grande partie de l’Amérique du Sud. Sa présence dans des paysages variés explique sa vaste répartition."
     },
     "identification": {
-      "en": "Adults have a tawny, grey-brown or reddish coat, usually paler underneath, with a small head, rounded ears, powerful hindquarters and a long, thick tail. Adults lack spots; kittens are spotted, and their markings fade as they grow.",
-      "fr": "L’adulte porte une robe fauve, gris-brun ou roussâtre, souvent plus claire dessous. Sa petite tête, ses oreilles arrondies, son arrière-train puissant et sa longue queue épaisse le distinguent. Les adultes n’ont pas de taches; celles des petits s’estompent en grandissant."
+      "en": "Adults have a tawny, grey-brown or reddish coat, usually paler underneath, with a small head, rounded ears, powerful hindquarters and a long, thick tail. Adults lack spots; kittens are spotted, and their markings fade as they grow. Size varies across this species’ wide range. A North American reference gives adult males a total length of about 2.0–2.4 m and a usual mass of 53–100 kg (average about 62 kg); females average about 2.05 m and usually weigh 29–64 kg (average about 42 kg). Shoulder height is reported at about 60–76 cm. No reliable general body-width measurement was found.",
+      "fr": "L’adulte porte une robe fauve, gris-brun ou roussâtre, souvent plus claire dessous. Sa petite tête, ses oreilles arrondies, son arrière-train puissant et sa longue queue épaisse le distinguent. Les adultes n’ont pas de taches; celles des petits s’estompent en grandissant. La taille varie dans la vaste aire de l’espèce. Une référence nord-américaine indique une longueur totale d’environ 2,0 à 2,4 m et une masse habituelle de 53 à 100 kg chez le mâle adulte (moyenne d’environ 62 kg); la femelle mesure en moyenne environ 2,05 m et pèse généralement 29 à 64 kg (moyenne d’environ 42 kg). La hauteur au garrot est donnée autour de 60 à 76 cm. Je n’ai pas trouvé de mesure générale fiable de la largeur du corps."
     },
     "habitat": {
       "en": "Pumas occupy forests, scrub, grasslands, deserts and wetlands, from lowlands to mountains. They use places with prey and cover, including dense vegetation, rocky crevices and caves. Habitat use varies locally: Florida panthers, for example, use swamp forest and wooded hammocks.",
@@ -102,6 +102,34 @@
       "facts": [
         "Yellowstone research documents male territoriality, seasonal prey tracking and scent scrapes.",
         "Describes predator interactions, cached kills and ecological research on pumas, bears, wolves and prey."
+      ]
+    },
+    {
+      "title": {
+        "en": "Puma concolor — species ecology and size data | Australian Government, Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Puma concolor — species ecology and size data | Australian Government, Department of Climate Change, Energy, the Environment and Water"
+      },
+      "url": "https://www.dcceew.gov.au/sites/default/files/env/pages/d8bf16ca-362b-4e6d-9144-4b71770bd6b6/files/puma-applicant-one-assessment-report.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Summarizes sex-specific total lengths and body-mass ranges and gives shoulder-height range."
+      ]
+    },
+    {
+      "title": {
+        "en": "Mountain Lions | Rocky Mountain National Park, National Park Service",
+        "fr": "Mountain Lions | Rocky Mountain National Park, National Park Service"
+      },
+      "url": "https://www.nps.gov/romo/learn/nature/mountain-lion.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Confirms adult males may reach 200 lb and eight feet total length; females are typically smaller."
       ]
     }
   ],

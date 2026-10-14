@@ -12,8 +12,8 @@
       "fr": "Le grand requin blanc est un grand prédateur des mers tempérées et subtropicales du monde entier. Le suivi montre que certains individus parcourent de grandes distances."
     },
     "identification": {
-      "en": "Its streamlined body has a pointed snout, triangular dorsal fin and crescent-shaped tail. Dark grey upper skin contrasts sharply with the pale underside. The skeleton is mostly cartilage. Its jaws carry broad, serrated teeth, and replacement rows move forward as teeth are lost. Males mature at roughly 3.5–4.1 metres and females at 4.5–5 metres; estimated maxima are about 5–6 metres, while reports above 7 metres are unverified. In counter-current exchangers, warm and cool blood flow in opposite directions through adjacent vessels, limiting heat loss to cold water and keeping muscles and some organs warmer.",
-      "fr": "Son corps fuselé porte un museau conique, une nageoire dorsale triangulaire et une queue en croissant. Le dos gris sombre contraste nettement avec le ventre clair. Son squelette est surtout cartilagineux. Ses mâchoires portent des dents larges et dentelées, et des rangées de remplacement avancent quand les dents tombent. Les mâles atteignent la maturité vers 3,5–4,1 mètres et les femelles vers 4,5–5 mètres ; la longueur maximale est estimée à 5–6 mètres, les records de plus de 7 mètres n’étant pas vérifiés. Dans les échangeurs à contre-courant, le sang chaud et le sang plus froid circulent en sens opposés dans des vaisseaux voisins, ce qui limite les pertes de chaleur vers l’eau froide et garde certains muscles et organes plus chauds."
+      "en": "Its streamlined body has a pointed snout, triangular dorsal fin and crescent-shaped tail. Dark grey upper skin contrasts sharply with the pale underside. The skeleton is mostly cartilage. Its jaws carry broad, serrated teeth, and replacement rows move forward as teeth are lost. Males mature at roughly 3.5–4.1 metres and females at 4.5–5 metres; estimated maxima are about 5–6 metres, while reports above 7 metres are unverified. In counter-current exchangers, warm and cool blood flow in opposite directions through adjacent vessels, limiting heat loss to cold water and keeping muscles and some organs warmer. The best-supported length figures in the cited account are about 6 m as a typical estimated maximum (possibly 6.4 m); males mature at 3.5–4.1 m and females at 4.5–5.0 m. The profile sources do not provide a sufficiently reliable adult mass or body-width range, so neither is estimated here.",
+      "fr": "Son corps fuselé porte un museau conique, une nageoire dorsale triangulaire et une queue en croissant. Le dos gris sombre contraste nettement avec le ventre clair. Son squelette est surtout cartilagineux. Ses mâchoires portent des dents larges et dentelées, et des rangées de remplacement avancent quand les dents tombent. Les mâles atteignent la maturité vers 3,5–4,1 mètres et les femelles vers 4,5–5 mètres ; la longueur maximale est estimée à 5–6 mètres, les records de plus de 7 mètres n’étant pas vérifiés. Dans les échangeurs à contre-courant, le sang chaud et le sang plus froid circulent en sens opposés dans des vaisseaux voisins, ce qui limite les pertes de chaleur vers l’eau froide et garde certains muscles et organes plus chauds. Les longueurs les mieux étayées dans la source citée sont d’environ 6 m comme maximum estimé habituel (éventuellement 6,4 m) ; les mâles atteignent la maturité vers 3,5–4,1 m et les femelles vers 4,5–5,0 m. Les sources de la fiche ne fournissent pas de plage assez fiable pour la masse adulte ou la largeur du corps ; aucune n’est donc estimée ici."
     },
     "habitat": {
       "en": "The species uses coastal shelves, islands and open ocean, often where prey are abundant. Pups and juveniles commonly use shallow, warmer nursery areas; larger sharks also visit seal colonies and pelagic waters. Tracking in the eastern North Pacific documented seasonal travel from California toward offshore waters west of Baja California. Tags in southern Africa recorded a return migration between South Africa and Australia. Individuals also dive deeply.",
@@ -49,25 +49,26 @@
       "url": "https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/white-shark/",
       "consulted": "2026-10-11",
       "supports": [
-        "identification",
         "diet",
-        "reproduction",
-        "ecology"
+        "ecology",
+        "identification",
+        "reproduction"
       ],
       "facts": [
-        "Museum species account documents morphology, teeth, size, prey, reproduction and predators."
+        "Museum species account covers morphology, prey and reproduction.",
+        "Estimated maximum length is about 6 m, possibly 6.4 m; larger reports are unconfirmed."
       ],
       "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
         "identification.en.1",
         "identification.en.2",
         "identification.fr.1",
         "identification.fr.2",
-        "diet.en.3",
-        "diet.fr.3",
-        "reproduction.en.4",
-        "reproduction.fr.4",
         "reproduction.en.3",
-        "reproduction.fr.3"
+        "reproduction.en.4",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -94,10 +95,10 @@
         "Government assessment summarizes regional biology, life history and Atlantic status history."
       ],
       "prose_claims": [
-        "identification.en.5",
-        "identification.fr.5",
         "conservation.en.2",
-        "conservation.fr.2"
+        "conservation.fr.2",
+        "identification.en.5",
+        "identification.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -124,14 +125,14 @@
         "NOAA account summarizes global range, juvenile diet, regional endothermy and protections."
       ],
       "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4",
+        "ecology.en.1",
+        "ecology.fr.1",
         "habitat.en.1",
         "habitat.en.2",
         "habitat.fr.1",
         "habitat.fr.2",
-        "ecology.en.1",
-        "ecology.fr.1",
-        "conservation.en.4",
-        "conservation.fr.4",
         "overview.en.1",
         "overview.fr.1"
       ],
@@ -218,10 +219,10 @@
         "Electronic tags documented return migration and linkage between South Africa and Australia."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "habitat.en.4",
-        "habitat.fr.4"
+        "habitat.fr.4",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -491,6 +492,26 @@
         "total": 76,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Carcharodon carcharias — FAO species catalogue for fishery purposes",
+        "fr": "Carcharodon carcharias — Catalogue FAO des espèces à fins halieutiques"
+      },
+      "url": "https://www.fao.org/docrep/pdf/009/y4160e/y4160e30.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "FAO catalogue lists estimated maximum total length near 6 m, possibly 6.4 m, and male/female maturity length ranges; it gives no adult mass or body width."
+      ],
+      "prose_claims": [
+        "identification.en.7",
+        "identification.en.8",
+        "identification.fr.7",
+        "identification.fr.8"
+      ]
     }
   ],
   "illustration_notes": "Show a single adult great white shark in accurate natural proportions, side three-quarter view: spindle-shaped body, conical snout, pointed triangular dorsal fin, crescent tail, dark grey back sharply separated from pale underside, and subtle pectoral axil mark. Sex unspecified. Plain white background only; no water, props, labels, border or watermark.",

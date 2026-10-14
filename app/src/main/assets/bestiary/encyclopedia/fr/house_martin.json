@@ -1,0 +1,38 @@
+{
+  "id": "house_martin",
+  "name": "Hirondelle de fenêtre",
+  "scientific": "Delichon urbicum",
+  "group": "birds",
+  "sections": {
+    "overview": "Cette hirondelle niche en Europe, en Afrique du Nord et en Asie tempérée, puis migre vers l’Afrique subsaharienne en suivant les ressources saisonnières en insectes volants.",
+    "identification": "L’adulte mesure environ 13 cm, pour une envergure de 26 à 29 cm; les sexes se ressemblent. Dessus bleu-noir, croupion et ventre blancs, queue peu fourchue : tels sont ses traits. L’Hirondelle rustique, à gorge rousse et longs filets, diffère; le jeune est plus terne. Les adultes britanniques pèsent en moyenne environ 17,8 g ; l’espèce mesure environ 13 cm pour une envergure de 26–29 cm.",
+    "habitat": "Elle chasse au-dessus des espaces ouverts, prairies, cultures et plans d’eau, où les insectes volent à découvert. Elle niche sur les falaises ou, souvent, à l’extérieur des bâtiments et ponts, sous un surplomb abrité. Des suivis britanniques de 2016–17 ont trouvé un succès de reproduction plus faible sur le PVC que sur la brique, le béton ou le bois, avec davantage de chutes de nids : le support compte autant que la boue disponible.",
+    "diet": "Elle capture en vol de petits insectes et des araignées. Mouches et pucerons sont des proies fréquentes en saison de nidification; les fourmis volantes comptent aussi en Afrique l’hiver.",
+    "behavior": "Elles chassent souvent en groupes lâches au-dessus de l’eau et nichent en colonies. Des gazouillis entretiennent le contact, tandis que des cris d’alarme plus aigus avertissent les oiseaux voisins d’un danger.",
+    "reproduction": "Après la parade, les deux partenaires construisent ou réparent sous un avant-toit un nid fermé en boue, doté d’une petite entrée et tapissé d’herbes et de poils. La femelle pond généralement quatre ou cinq œufs, couvés par le couple pendant environ deux semaines. Les poussins, dépendants à l’éclosion, restent au nid trois à quatre semaines; leurs parents les nourrissent encore environ une semaine après l’envol. La boue mêlée à la salive sèche en un ciment durable, permettant de réutiliser les nids d’une année à l’autre. Deux nichées au cours de la saison sont habituelles en Grande-Bretagne.",
+    "ecology": "Elle mange des insectes volants, est une proie du Faucon hobereau et ses nids de boue réutilisés peuvent abriter puces et acariens.",
+    "conservation": "La LPO signale une baisse de 26 % des effectifs nicheurs européens entre 1980 et 2019; pesticides, mauvais temps, boue rare et destruction des nids sont des pressions locales. Cette tendance régionale diffère de l’évaluation mondiale de l’UICN : datée du 1er octobre 2016 et amendée en 2017, elle classait l’espèce en préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Western_house_martin",
+      "title": "Hirondelle de fenêtre — Wikipédia"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Hirondelle_de_fen%C3%AAtre",
+      "title": "Hirondelle de fenêtre — Wikipédia"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/hirondelles-martinets/hirondelle-de-fenetre",
+      "title": "Hirondelle de fenêtre — Ligue pour la Protection des Oiseaux"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T103811886A118748864.en",
+      "title": "Delichon urbicum — Liste rouge de l’UICN, notice amendée de 2017"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/house-martin",
+      "title": "Hirondelle de fenêtre — BTO BirdFacts, British Trust for Ornithology"
+    }
+  ]
+}

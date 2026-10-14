@@ -8,20 +8,20 @@
   },
   "sections": {
     "overview": {
-      "en": "The Common Coot is a waterbird of the rail family, widespread across Europe, Africa, Asia and Australasia. Its dark body, bright white bill and frontal shield stand out on lakes, while its unusual toes help it swim, dive and walk on wet ground. Adults measure about 36–38 cm; British ringing samples averaged 880 g, with males heavier than females. The name Eurasian Coot distinguishes it from the separate American Coot, Fulica americana.",
-      "fr": "La Foulque macroule est un oiseau aquatique de la famille des rallidés, largement répandu en Europe, en Afrique, en Asie et en Australasie. Son corps sombre, son bec blanc et son bouclier frontal ressortent sur les lacs ; ses doigts singuliers l’aident à nager, plonger et marcher en terrain humide. L’adulte mesure environ 36 à 38 cm ; les échantillons britanniques de baguage indiquent une masse moyenne de 880 g, les mâles étant plus lourds que les femelles. Le nom de Foulque eurasienne la distingue de la Foulque d’Amérique, Fulica americana."
+      "en": "The Common Coot, Fulica atra, is a widespread waterbird of Europe, Africa, Asia and Australasia. Its dark body, bright white bill and frontal shield stand out on lakes, while its unusual toes help it swim, dive and walk on wet ground. Adults measure about 36–38 cm; British ringing samples averaged 880 g, with males heavier than females. The name Eurasian Coot distinguishes it from the separate American Coot, Fulica americana.",
+      "fr": "La Foulque macroule, Fulica atra, est un oiseau d’eau répandu en Europe, Afrique, Asie et Australasie. Son corps sombre, son bec blanc et son bouclier frontal ressortent sur les lacs ; ses doigts singuliers l’aident à nager, plonger et marcher en terrain humide. L’adulte mesure environ 36 à 38 cm ; les échantillons britanniques de baguage indiquent une masse moyenne de 880 g, les mâles étant plus lourds que les femelles. Le nom de Foulque eurasienne la distingue de la Foulque d’Amérique, Fulica americana."
     },
     "identification": {
-      "en": "The adult is slate-black, with a white bill rising into a smooth white shield on the forehead. This distinguishes it from the smaller Eurasian Moorhen, whose bill and shield are red, and from the American Coot, a separate species. The adult’s red iris is another field mark. Young coots are dark and downy, with a bare orange-red head and pale bill; the adult black-and-white plumage develops gradually.",
-      "fr": "L’adulte est noir ardoisé ; son bec blanc remonte en un bouclier lisse sur le front. Cette marque le distingue de la Gallinule poule-d’eau, plus petite, au bec et au bouclier rouges, ainsi que de la Foulque d’Amérique, une espèce distincte. Son iris rouge est un autre signe distinctif. Les jeunes sont sombres et duveteux, avec la tête nue orange rougeâtre et le bec pâle ; le plumage adulte noir et blanc apparaît progressivement."
+      "en": "The adult is slate-black, with a white bill rising into a smooth white shield on the forehead. This distinguishes it from the smaller Eurasian Moorhen, whose bill and shield are red, and from the American Coot, a separate species. The adult’s red iris is another field mark. Young coots are dark and downy, with a bare orange-red head and pale bill; the adult black-and-white plumage develops gradually. BTO adult British means: wing length 223.8 mm and mass 971 g (males), versus 206.2 mm and 754 g (females). These wing-chord figures do not give body length or wingspan.",
+      "fr": "L’adulte est noir ardoisé ; son bec blanc remonte en un bouclier lisse sur le front. Cette marque le distingue de la Gallinule poule-d’eau, plus petite, au bec et au bouclier rouges, ainsi que de la Foulque d’Amérique, une espèce distincte. Son iris rouge est un autre signe distinctif. Les jeunes sont sombres et duveteux, avec la tête nue orange rougeâtre et le bec pâle ; le plumage adulte noir et blanc apparaît progressivement. Moyennes du BTO pour les adultes britanniques : longueur d’aile de 223,8 mm et masse de 971 g chez les mâles, contre 206,2 mm et 754 g chez les femelles. Ces mesures d’aile ne donnent ni longueur du corps ni envergure."
     },
     "habitat": {
-      "en": "It prefers still lakes and ponds with open water. It also uses sheltered, sometimes brackish, coastal waters. Shallows let birds reach submerged plants or dive to the bottom. In Britain and Ireland, resident birds are joined in winter by arrivals from farther east; elsewhere, movements vary with weather and freezing.",
-      "fr": "Elle préfère les lacs et étangs aux eaux calmes et dégagées. Elle fréquente aussi certaines eaux côtières saumâtres. Les faibles profondeurs donnent accès aux plantes immergées et au fond. En Grande-Bretagne et en Irlande, des oiseaux venus de l’est rejoignent les résidents en hiver ; ailleurs, les déplacements varient selon le climat et le gel."
+      "en": "Winter brings eastern arrivals to Britain and Ireland; elsewhere, weather and freezing shape movements. It also uses sheltered, sometimes brackish, coastal waters. Shallows let birds reach submerged plants or dive to the bottom. In Britain and Ireland, resident birds are joined in winter by arrivals from farther east; elsewhere, movements vary with weather and freezing.",
+      "fr": "L’hiver apporte des oiseaux de l’est en Grande-Bretagne et en Irlande ; ailleurs, la météo et le gel influencent les déplacements. Elle fréquente aussi certaines eaux côtières saumâtres. Les faibles profondeurs donnent accès aux plantes immergées et au fond. En Grande-Bretagne et en Irlande, des oiseaux venus de l’est rejoignent les résidents en hiver ; ailleurs, les déplacements varient selon le climat et le gel."
     },
     "diet": {
-      "en": "Aquatic plants are its main food: coots take pondweeds, algae, seeds and shoots. They dive to forage among submerged plants. Their lobed toes propel them underwater. The diet is omnivorous rather than exclusively plant-based: snails, insect larvae and other small invertebrates are also eaten, including as food for chicks.",
-      "fr": "Les plantes aquatiques forment l’essentiel de son régime : la foulque consomme potamots, algues, graines et pousses. Elle plonge à la recherche de plantes immergées. Ses doigts lobés la propulsent sous l’eau. Son régime est omnivore : elle mange aussi des escargots, des larves d’insectes et d’autres petits invertébrés, qui nourrissent également les poussins."
+      "en": "Aquatic plants are its main food: coots take pondweeds, algae, seeds and shoots. They dive to forage among submerged plants. Their lobed toes propel them underwater. It also eats snails, insect larvae and other small invertebrates, including when feeding chicks.",
+      "fr": "Les plantes aquatiques forment l’essentiel de son régime : la foulque consomme potamots, algues, graines et pousses. Elle plonge à la recherche de plantes immergées. Ses doigts lobés la propulsent sous l’eau. Elle mange aussi escargots, larves et petits invertébrés, y compris pour nourrir ses poussins."
     },
     "behavior": {
       "en": "Each separate toe has its own flexible skin lobe. Thus, unlike a duck, it has no continuous web joining the toes. Take-off is laborious, with a noisy run across the water. Breeding pairs defend territories, rushing at intruders with wings spread. Their calls vary with social context. A study of breeding birds distinguished four call types, with structure changing according to behavior and individual identity. In winter, coots gather in flocks.",
@@ -32,12 +32,12 @@
       "fr": "Le couple construit parmi les roseaux un nid en plateforme de tiges aquatiques, parfois flottant et fixé à la végétation. Les deux adultes bâtissent le nid, couvent et soignent la nichée. En Grande-Bretagne, la ponte habituelle compte cinq à sept œufs, couvés pendant 21 à 24 jours. Les poussins duveteux nagent peu après l’éclosion, mais dépendent encore de leurs parents pour la chaleur, la protection et la nourriture. Ils prennent leur envol vers 55 à 60 jours et peuvent rester auprès des adultes en apprenant à s’alimenter seuls."
     },
     "ecology": {
-      "en": "Coots feed on aquatic plants and invertebrates, so their foraging connects submerged vegetation and small animal prey in wetland food webs. Otters can provoke alarm calls and a sudden rush away. Reeds and nest platforms shelter chicks; open water helps adults detect danger. Winter flocks gather on productive lakes, where food and resting sites are shared among many birds.",
-      "fr": "Les foulques consomment des plantes aquatiques et des invertébrés ; leur alimentation les relie donc à la végétation immergée et aux petites proies animales des zones humides. Les loutres peuvent provoquer des cris d’alarme et une fuite soudaine. Les roselières et les nids abritent les poussins ; l’eau libre aide les adultes à repérer le danger. En hiver, les bandes se réunissent sur les lacs productifs et partagent nourriture et repos."
+      "en": "By eating aquatic plants and invertebrates, coots link vegetation and animal prey in wetland food webs. Otters can provoke alarm calls and a sudden rush away. Reeds and nest platforms shelter chicks; open water helps adults detect danger. Winter flocks gather on productive lakes, where food and resting sites are shared among many birds.",
+      "fr": "En consommant plantes et invertébrés, la foulque relie végétation et proies animales dans les réseaux trophiques des zones humides. Les loutres peuvent provoquer des cris d’alarme et une fuite soudaine. Les roselières et les nids abritent les poussins ; l’eau libre aide les adultes à repérer le danger. En hiver, les bandes se réunissent sur les lacs productifs et partagent nourriture et repos."
     },
     "conservation": {
-      "en": "The global Red List assessment dated 14 August 2019 classified the species as Least Concern, with an increasing trend. BirdLife’s 2021 European assessment classified Europe’s population as Near Threatened and decreasing. In Britain, it remains Green-listed, although winter numbers have recently fallen and breeding numbers have declined in some areas. Some Irish breeding-range losses may be linked to wetland drainage.",
-      "fr": "L’évaluation mondiale de la Liste rouge, datée du 14 août 2019, classait l’espèce en préoccupation mineure, avec une tendance à la hausse. L’évaluation européenne de BirdLife publiée en 2021 classait la population d’Europe quasi menacée et en déclin. En Grande-Bretagne, l’espèce reste sur la liste verte, même si les effectifs hivernants ont récemment baissé et que la reproduction a diminué dans certaines régions. En Irlande, certaines contractions de l’aire de nidification pourraient résulter du drainage des zones humides."
+      "en": "The 2019 global Red List classed the species as Least Concern with an increasing trend. BirdLife’s 2021 European assessment classified Europe’s population as Near Threatened and decreasing. In Britain, it remains Green-listed, although winter numbers have recently fallen and breeding numbers have declined in some areas. Some Irish breeding-range losses may be linked to wetland drainage.",
+      "fr": "En 2019, la Liste rouge mondiale la classait en préoccupation mineure, en hausse. L’évaluation européenne de BirdLife publiée en 2021 classait la population d’Europe quasi menacée et en déclin. En Grande-Bretagne, l’espèce reste sur la liste verte, même si les effectifs hivernants ont récemment baissé et que la reproduction a diminué dans certaines régions. En Irlande, certaines contractions de l’aire de nidification pourraient résulter du drainage des zones humides."
     }
   },
   "sources": [
@@ -51,23 +51,24 @@
       "supports": [
         "conservation",
         "habitat",
+        "identification",
         "overview",
         "reproduction"
       ],
       "facts": [
-        "UK dimensions, nesting, trends, drainage."
+        "BTO measured adult British wing length and body mass by sex."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
-        "habitat.en.4",
-        "habitat.fr.4",
-        "reproduction.en.3",
-        "reproduction.fr.3",
         "conservation.en.3",
-        "conservation.fr.3",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.3",
+        "conservation.fr.4",
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.5",
+        "identification.fr.6",
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -94,23 +95,23 @@
         "White markings, lobed toes, territorial defense."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
-        "diet.en.3",
-        "diet.fr.3",
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.2",
-        "behavior.fr.2",
         "behavior.en.3",
-        "behavior.fr.3",
         "behavior.en.4",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "behavior.fr.3",
         "behavior.fr.4",
+        "diet.en.2",
+        "diet.en.3",
+        "diet.fr.2",
+        "diet.fr.3",
         "ecology.en.2",
         "ecology.fr.2",
-        "diet.en.2",
-        "diet.fr.2",
+        "habitat.en.1",
         "habitat.en.3",
+        "habitat.fr.1",
         "habitat.fr.3"
       ],
       "budget": {
@@ -136,19 +137,21 @@
         "overview"
       ],
       "facts": [
-        "Global assessment 2019: Least Concern, increasing."
+        "Global 2019 assessment and aquatic ecology."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "diet.en.4",
-        "diet.fr.4",
         "conservation.en.1",
         "conservation.fr.1",
+        "diet.en.4",
+        "diet.fr.4",
         "ecology.en.1",
         "ecology.fr.1",
         "habitat.en.2",
-        "habitat.fr.2"
+        "habitat.en.4",
+        "habitat.fr.2",
+        "habitat.fr.4",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -201,18 +204,18 @@
         "Australian range, habitat, diet and breeding facts."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
-        "identification.en.1",
-        "identification.fr.1",
+        "behavior.en.7",
+        "behavior.fr.7",
         "diet.en.1",
         "diet.fr.1",
         "ecology.en.4",
         "ecology.fr.4",
-        "behavior.en.7",
-        "behavior.fr.7",
+        "identification.en.1",
         "identification.en.3",
-        "identification.fr.3"
+        "identification.fr.1",
+        "identification.fr.3",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -237,8 +240,8 @@
       ],
       "prose_claims": [
         "behavior.en.5",
-        "behavior.fr.5",
         "behavior.en.6",
+        "behavior.fr.5",
         "behavior.fr.6"
       ],
       "budget": {
@@ -286,19 +289,21 @@
         "reproduction"
       ],
       "facts": [
-        "Nesting and parental care described for the species."
+        "Australian breeding ecology."
       ],
       "prose_claims": [
-        "reproduction.en.1",
-        "reproduction.fr.1",
-        "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.4",
-        "reproduction.fr.4",
-        "reproduction.en.5",
-        "reproduction.fr.5",
         "ecology.en.3",
-        "ecology.fr.3"
+        "ecology.fr.3",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,

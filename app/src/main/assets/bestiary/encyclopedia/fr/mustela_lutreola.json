@@ -1,0 +1,30 @@
+{
+  "id": "mustela_lutreola",
+  "name": "Vison d’Europe",
+  "scientific": "Mustela lutreola",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le vison d’Europe est un mustélidé semi-aquatique lié aux berges et aux zones humides. Jadis répandu dans toute l’Europe, il ne subsiste que dans quelques populations isolées et il est classé en danger critique d’extinction, parmi les carnivores les plus menacés du continent.",
+    "identification": "Mustélidé de taille moyenne au corps allongé, aux pattes et à la queue courtes, mesurant environ 32 à 50 cm et pesant d’un demi-kilo à un peu plus d’un kilo, les mâles étant plus grands. Le pelage est brun luisant à presque noir. Du blanc couvre les lèvres supérieure et inférieure, alors que le vison d’Amérique n’en a que sur la lèvre inférieure et le menton.",
+    "habitat": "Il a besoin des berges pour se nourrir et s’abriter, et vit le long de petites et moyennes rivières, de ruisseaux, de marais, de forêts riveraines et de prairies humides; les grands deltas, comme celui du Danube, sont importants. Il creuse son terrier, utilise celui d’un campagnol amphibie abandonné ou s’abrite parmi les racines d’arbres.",
+    "diet": "C’est un prédateur généraliste d’amphibiens, de petits mammifères, de poissons, d’oiseaux et d’invertébrés aquatiques. On a longtemps cru que les amphibiens dominaient son régime, mais les données du delta du Danube ne le confirment pas : son alimentation varie selon la saison et le milieu.",
+    "behavior": "Le vison d’Europe est solitaire; les adultes ne se rapprochent qu’à la saison de reproduction. Il est surtout actif au crépuscule et avant l’aube.",
+    "reproduction": "L’accouplement a lieu de fin février à mars, et la femelle ne retarde pas la gestation. Celle-ci dure 35 à 42 jours et une portée compte trois à sept petits, élevés par la seule femelle. Les jeunes sont sevrés vers dix semaines et atteignent la maturité sexuelle vers un an.",
+    "ecology": "Prédateur d’animaux aquatiques et semi-aquatiques, il occupe une place dans les chaînes alimentaires riveraines. Son principal rival actuel est le vison d’Amérique introduit, qui entre en concurrence directe avec lui pour les mêmes berges.",
+    "conservation": "Il est classé en danger critique d’extinction sur la Liste rouge de l’UICN et occupe moins d’un cinquième de son aire d’origine, en populations isolées dans le nord de l’Espagne et le sud-ouest de la France, le delta du Danube et certaines régions de Russie. Une petite population a été rétablie sur l’île de Hiiumaa, en Estonie. Là où le vison d’Amérique est absent, la destruction de l’habitat et la persécution pour sa fourrure restent les principales menaces. Il est protégé par la directive Habitats de l’UE et a disparu de Tchéquie."
+  },
+  "sources": [
+    {
+      "url": "https://www.vwt.org.uk/species/european-mink",
+      "title": "Vison d’Europe — Vincent Wildlife Trust"
+    },
+    {
+      "url": "https://en.alkawildlife.eu/species-of-interest/european-mink",
+      "title": "Vison d’Europe — ALKA Wildlife"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Mustela_lutreola/",
+      "title": "Mustela lutreola — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

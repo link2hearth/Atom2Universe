@@ -1,0 +1,58 @@
+{
+  "id": "american_beaver",
+  "name": "American beaver",
+  "scientific": "Castor canadensis",
+  "group": "mammals",
+  "sections": {
+    "overview": "The American beaver is a large freshwater herbivorous rodent, distinct from the Eurasian beaver (Castor fiber). Its webbed hind feet propel it through water; its broad flattened tail steers and supports the body on land. Families occupy ponds, lakes, wetlands and streams. Where they build dams, the deeper impounded water provides underwater access to food stores and shelter.",
+    "identification": "The adult has a stout brown body, small ears, a broad, scaly tail and large webbed hind feet. Its orange incisors grow continuously and cut branches or strip bark. Hard enamel on the front and faster wear behind keep their edges sharp. Dense underfur insulates the animal beneath longer guard hairs that shed water. Valves close the ears and nostrils underwater; a nictitating membrane protects the eyes, and the lips can close behind the incisors while the animal gnaws underwater. The U.S. National Park Service describes an average body length of about 61 cm excluding the tail and mass of 16–27 kg; males and females look alike. These are broad field-guide figures, not sex-specific measurements.",
+    "habitat": "The species ranges across much of Canada and the United States into northern Mexico. It uses fresh water beside woody or herbaceous plants, especially ponds, wetlands and slow streams with banks suitable for burrowing. A lodge of branches and mud has an underwater entrance and a dry chamber. Where lakes or rivers already hold deep, stable water, beavers may use a bank den or lodge without building a dam. Introductions have also established populations outside North America, notably in Finland and Tierra del Fuego.",
+    "diet": "Beavers eat leaves, grasses, aquatic plants, roots, buds, twigs and the soft cambium beneath bark. Aspen, willow, birch, poplar and other local trees provide woody foods; dense wood is often left for construction. Mammals cannot digest cellulose unaided, so microbes in the enlarged caecum ferment plant tissue and help release nutrients. In autumn, a colony may anchor branches underwater near its lodge. This food cache remains accessible beneath winter ice when fresh plants are scarce.",
+    "behavior": "A colony is usually a territorial family with two adults and young from one or two breeding seasons. Older offspring help maintain the lodge and dams and care for kits. They remain active year-round, often at dusk or night. In water, hind feet provide thrust and the tail steers; on land, the tail can brace the body while the animal gnaws.",
+    "reproduction": "Mating usually occurs in winter. After about 105–107 days of pregnancy, a female gives birth in spring or early summer, often to two to four kits. Newborns are furred and can see; they soon sample solid food while continuing to nurse. Parents and older siblings shelter and tend them. Young usually disperse around age two, before or near the next litter, to establish territories. Breeding dates and litter size vary with latitude, food and local population density.",
+    "ecology": "A dam slows water, raises the upstream level and may connect a stream with its floodplain. In a 2002–2005 study of two dams along 1.5 kilometres of the Colorado River in Rocky Mountain National Park, researchers measured longer inundation and a higher water table. The dams reduced summer water-table decline across parts of the 58-hectare study valley. These findings describe that reach; effects elsewhere depend on channel form and flow. In Tierra del Fuego, introduced beavers can turn native Nothofagus forest into meadows by cutting trees and flooding land.",
+    "conservation": "The Mammal Diversity Database, consulted in October 2026, reports the species’ global IUCN category as Least Concern. The species recovered in many regions after historic fur-trapping declines, but local pressures persist. British Columbia’s Conservation Data Centre assigns it provincial rank S5, last reviewed on 15 January 2024; it lists urbanization, altered waterways, severe drought, trapping and conflict control as possible local pressures. These regional assessments do not establish a current continent-wide population total."
+  },
+  "sources": [
+    {
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec/fiches-especes-fauniques/castor",
+      "title": "American Beaver — Québec Government"
+    },
+    {
+      "url": "https://www.nps.gov/glac/learn/education/beaver-natural-history-narrative.htm",
+      "title": "Beaver Natural History Narrative — Glacier National Park, National Park Service"
+    },
+    {
+      "url": "https://www.in.gov/dnr/fish-and-wildlife/wildlife-resources/animals/beaver",
+      "title": "Fish and Wildlife: Beaver — Indiana Department of Natural Resources"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Castor_canadensis/",
+      "title": "Castor canadensis — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://home.nps.gov/romo/learn/nature/beavers.htm",
+      "title": "Beavers — Rocky Mountain National Park, National Park Service"
+    },
+    {
+      "url": "https://pubs.usgs.gov/publication/70030228",
+      "title": "Beaver dams and overbank floods influence groundwater-surface water interactions of a Rocky Mountain riparian area — USGS"
+    },
+    {
+      "url": "https://a100.gov.bc.ca/pub/eswp/esr.do?id=14816",
+      "title": "Conservation Status Report: Castor canadensis — British Columbia Conservation Data Centre"
+    },
+    {
+      "url": "https://www.iucngisd.org/gisd/species.php?sc=981",
+      "title": "American beaver — IUCN SSC Global Invasive Species Database"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1001957/",
+      "title": "Castor canadensis — Mammal Diversity Database"
+    },
+    {
+      "url": "https://www.nps.gov/articles/north-american-beaver-acadia.htm",
+      "title": "North American Beaver — Acadia National Park, U.S. National Park Service"
+    }
+  ]
+}

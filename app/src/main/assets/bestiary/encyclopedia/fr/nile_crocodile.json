@@ -1,0 +1,62 @@
+{
+  "id": "nile_crocodile",
+  "name": "Crocodile du Nil",
+  "scientific": "Crocodylus niloticus",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Le crocodile du Nil est un grand crocodilien africain des rivières, lacs, marais et estuaires, dont l’aire moderne se concentre en Afrique orientale et australe ainsi qu’à Madagascar. La Liste rouge distingue désormais ce taxon de Crocodylus suchus, l’espèce d’Afrique occidentale et centrale autrefois incluse dans de nombreux récits généraux sur le crocodile du Nil. Il attend au bord de l’eau, yeux et narines seuls émergés, puis bondit lorsque des proies s’approchent. Les poissons et autres animaux aquatiques relient sa chasse aux réseaux alimentaires des zones humides africaines.",
+    "identification": "Sa queue musclée fournit l’essentiel de la propulsion dans l’eau, tandis que ses membres puissants permettent les déplacements à terre. Dans un travail sur le delta de l’Okavango, les adultes mesurent habituellement environ 3,5 m, les mâles pouvant atteindre 5 m. Des mâles exceptionnels approchent 6 m, une valeur exceptionnelle plutôt qu’une taille représentative. Le museau pointu du crocodile diffère de celui, plus large, d’un alligator ; sa quatrième dent inférieure reste visible bouche fermée. Yeux, oreilles et narines sont placés haut, et les narines se ferment sous l’eau. Une référence de la San Diego Zoo Wildlife Alliance indique une masse habituelle d’environ 70 à 100 kg pour les mâles et les femelles réunis, tout en précisant que les adultes de plus de 3,5 m sont rarement pesés; les masses maximales rapportées sont exceptionnelles et ne représentent pas une valeur typique. Je n’ai pas trouvé de plage de poids selon le sexe ni de largeur fiable du corps.",
+    "habitat": "L’espèce fréquente des eaux lentes ou calmes : rivières, lacs, marais saisonniers, réservoirs et estuaires côtiers. Elle vit aussi dans des mares d’oasis désertiques et, à Madagascar, dans des cours d’eau souterrains. Au nord de son aire, la population du Nil est localisée autour du lac Nasser, en Égypte. Les anciens récits incluent des populations occidentales désormais classées parmi C. suchus.",
+    "diet": "Son régime évolue avec la croissance. Les jeunes capturent insectes et invertébrés, puis ajoutent grenouilles, crabes, escargots, petits poissons, oiseaux et rongeurs. Les adultes mangent poissons, reptiles, oiseaux et mammifères ; les proies disponibles localement déterminent le menu. Les grands animaux terrestres sont des proies occasionnelles, pas le repas habituel de chaque crocodile. Il chasse à l’affût dans l’eau ou depuis la berge ; il peut tourner sur lui-même pour démembrer une grosse proie.",
+    "behavior": "Ectotherme, il règle sa température en alternant entre berges ensoleillées, ombre et eau. Il se chauffe souvent le jour et passe beaucoup de nuits dans l’eau ou à proximité, selon la météo et la saison. Immergé, il peut ne laisser émerger que ses yeux, ses oreilles et ses narines, puis fermer ces dernières. Les crocodiles tolèrent leurs congénères sur les sites de repos, mais les grands mâles défendent parfois une portion de rive. Les appels des nouveau-nés attirent les adultes au nid et maintiennent les petits groupés.",
+    "reproduction": "Pendant la saison sèche locale, la femelle creuse un nid dans le sable près de l’eau et y pond environ 40 à 60 œufs. L’incubation dure couramment environ 80 à 90 jours, mais sa durée varie avec la température. Celle-ci influence aussi le sexe : dans une étude menée au Zimbabwe, une incubation constante à 31 °C ou moins n’a produit que des femelles, tandis que le seuil de production des mâles variait selon les pontes au-dessus de cette plage. La femelle garde le nid et répond aux appels des jeunes prêts à éclore, les dégage puis transporte les nouveau-nés dans sa gueule jusqu’à l’eau. Les nouveau-nés mesurent environ 28 cm et restent groupés sous surveillance jusqu’à trois mois, avant de se disperser.",
+    "ecology": "Dans le delta de l’Okavango, des études décrivent la capture de poissons, le recyclage des nutriments et le maintien de refuges humides pendant les sécheresses. Œufs et jeunes nourrissent aussi d’autres animaux : poissons, hérons, cigognes, varans et mammifères peuvent les capturer, tandis que de grands crocodiles mangent parfois les petits. Ces relations varient selon le site, le niveau de l’eau et le stade de vie ; le crocodile est ainsi prédateur et proie dans une communauté humide changeante.",
+    "conservation": "L’évaluation mondiale de l’UICN achevée le 30 avril 2017 et publiée en 2019 classe l’espèce en Préoccupation mineure et estime 50 000 à 70 000 individus adultes. Selon l’évaluation, la chasse a appauvri les populations de nombreux pays des années 1940 aux années 1960, tandis que la protection légale et le contrôle du commerce par la CITES ont favorisé des reprises dans plusieurs régions. Transformation des habitats, pollution, prélèvements non contrôlés et mises à mort liées aux conflits restent des pressions régionales ; des déclins locaux et des mortalités massives sont documentés. Une partie des peaux commerciales vient de l’élevage ou de l’élevage en ranch, tandis que les prélèvements locaux de crocodiles sauvages doivent rester encadrés."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-1.RLTS.T45433088A3010181.en",
+      "title": "Crocodylus niloticus — Liste rouge de l’UICN des espèces menacées, évaluation de 2019"
+    },
+    {
+      "url": "https://doi.org/10.7717/peerj.1901",
+      "title": "Structure génétique fine du crocodile africain redécouvert, Crocodylus suchus — PeerJ"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/characteristics",
+      "title": "Caractéristiques physiques — fiche du crocodile du Nil, bibliothèque de la San Diego Zoo Wildlife Alliance"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/distribution",
+      "title": "Répartition et habitat — fiche du crocodile du Nil, bibliothèque de la San Diego Zoo Wildlife Alliance"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/diet",
+      "title": "Régime et alimentation — fiche du crocodile du Nil, bibliothèque de la San Diego Zoo Wildlife Alliance"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/behavior",
+      "title": "Comportement et écologie — fiche du crocodile du Nil, bibliothèque de la San Diego Zoo Wildlife Alliance"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-7998.1987.tb07458.x",
+      "title": "Températures d’incubation, sex-ratios et détermination du sexe chez une population de crocodiles du Nil — Journal of Zoology"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/nile_crocodile/reproduction",
+      "title": "Reproduction et développement — fiche du crocodile du Nil, bibliothèque de la San Diego Zoo Wildlife Alliance"
+    },
+    {
+      "url": "https://scielo.org.za/scielo.php?pid=S1019-91282011000300004&script=sci_arttext",
+      "title": "Étude préliminaire des maladies chez le crocodile du Nil sauvage du delta de l’Okavango — Journal of the South African Veterinary Association"
+    },
+    {
+      "url": "https://doi.org/10.1007/s00114-006-0156-4",
+      "title": "Communication parent-jeune chez le crocodile du Nil Crocodylus niloticus : les appels des nouveau-nés ont-ils une signature individuelle ? — The Science of Nature"
+    },
+    {
+      "url": "https://www.iucncsg.org/365_docs/attachments/protarea/15_C-cf25967f.pdf",
+      "title": "Crocodiles : état des populations et plan d’action pour la conservation, troisième édition — Groupe de spécialistes des crocodiles de la CSE de l’UICN"
+    }
+  ]
+}

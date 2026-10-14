@@ -12,8 +12,8 @@
       "fr": "Le chimpanzé commun (Pan troglodytes) est un grand singe d’Afrique tropicale. Il diffère du bonobo (Pan paniscus), présent au sud du Congo ; les chimpanzés vivent au nord. Omnivore social, il grimpe, se déplace au sol et apprend des traditions locales."
     },
     "identification": {
-      "en": "Adults have long arms, a robust build and dark brown to black hair; the face, palms and soles are bare. They have no tail, walk on their knuckles and climb readily. Males are generally larger than females, and coat shade varies.",
-      "fr": "L’adulte a de longs bras, un corps robuste et une fourrure brun foncé à noire ; visage, paumes et plantes sont nus. Sans queue, il marche sur ses jointures et grimpe. Les mâles sont plus grands que les femelles ; le pelage varie."
+      "en": "Adults have long arms, a robust build and dark brown to black hair; the face, palms and soles are bare. They have no tail, walk on their knuckles and climb readily. Males are generally larger than females, and coat shade varies. Adult head-to-rump length is about 0.9 m; San Diego Zoo reports masses of 32–45 kg for females and 40–55 kg for males, with males generally larger.",
+      "fr": "L’adulte a de longs bras, un corps robuste et une fourrure brun foncé à noire ; visage, paumes et plantes sont nus. Sans queue, il marche sur ses jointures et grimpe. Les mâles sont plus grands que les femelles ; le pelage varie. La longueur tête-croupe d’un adulte est d’environ 0,9 m ; le zoo de San Diego indique une masse de 32 à 45 kg chez les femelles et de 40 à 55 kg chez les mâles, les mâles étant généralement plus grands."
     },
     "habitat": {
       "en": "The range runs from West Africa to western Uganda and Tanzania, interrupted by the Congo basin of the bonobo. Chimpanzees inhabit rainforests, dry forests, woodland-savanna mosaics and mountain forests. Some populations also live in open savanna, so the species is not restricted to dense forest.",
@@ -79,7 +79,8 @@
       ],
       "facts": [
         "Documents hairless face, hands and feet; fruit, leaves, insects and occasional prey; leaf probes and sponge tools; gestation about 7.5 months and usually one young.",
-        "Describes offspring dependence and threats from hunting and habitat loss."
+        "Describes offspring dependence and threats from hunting and habitat loss.",
+        "Adult head-rump length about 0.9 m; mass 32–45 kg females and 40–55 kg males."
       ]
     },
     {

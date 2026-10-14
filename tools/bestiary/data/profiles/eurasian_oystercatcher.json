@@ -44,14 +44,23 @@
     {
       "title": {
         "en": "Oystercatcher — BTO BirdFacts, British Trust for Ornithology",
-        "fr": "Huîtrier pie — BirdFacts du BTO, British Trust for Ornithology"
+        "fr": "Huîtrier pie — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/oystercatcher",
-      "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Adults average 546 g, wing 251–275 mm; clutch 2–3 eggs, incubation 24–27 days, fledging 34–37 days; first clutch about 19 May.",
-        "UK 96,000 pairs (2016), −23% (1995–2024); IUCN Near Threatened; shellfisheries linked to Dutch declines; record age 41 years."
+        "UK 96,000 pairs (2016), −23% (1995–2024); IUCN Near Threatened; shellfisheries linked to Dutch declines; record age 41 years.",
+        "British adults average 546 g (range 465–640 g) and have a wing length of 251–275 mm."
       ]
     },
     {
@@ -61,7 +70,14 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/oystercatcher",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "diet", "behavior", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Orange-red bill, reddish-pink legs, white V on the back in flight; eats cockles and mussels, vulnerable if cockle beds are overfished.",
         "Inland breeding over the last 50 years; Morecambe Bay about 40,000 at roosts; UK Amber; average life about 12 years."

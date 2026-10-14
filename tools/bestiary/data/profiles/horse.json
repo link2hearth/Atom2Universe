@@ -12,8 +12,8 @@
       "fr": "Le cheval domestique est un mammifère brouteur à un doigt, façonné par la sélection humaine. Les génomes anciens rattachent la plupart des chevaux actuels à une lignée des steppes d’Eurasie occidentale, diffusée il y a environ 4 200 ans. Son expansion a remplacé de nombreuses populations chevalines locales en Eurasie. Des pratiques d’élevage plus anciennes n’ont pas produit la plupart des lignées domestiques actuelles. Les humains élèvent des chevaux partout pour divers usages."
     },
     "identification": {
-      "en": "Horses have a long head, mobile ears, maned neck, deep body, and long limbs with one hoof each. Breed variation spans compact ponies to tall draft horses, with different coats and proportions. Adult males are stallions, females mares, young horses foals.",
-      "fr": "Le cheval a une tête longue, des oreilles mobiles, un cou à crinière, un corps profond et de longs membres à sabot unique. Les races vont du poney compact au grand cheval de trait et varient par la robe et les proportions. Le mâle adulte est l’étalon, la femelle la jument, le jeune le poulain."
+      "en": "Horses have a long head, mobile ears, maned neck, deep body, and long limbs with one hoof each. Breed variation spans compact ponies to tall draft horses, with different coats and proportions. Adult males are stallions, females mares, young horses foals. Domestic horse size varies widely by breed: roughly 0.9–1.7 m at the shoulder and 227–900 kg across breed types; these are broad breed ranges, not a single species average.",
+      "fr": "Le cheval a une tête longue, des oreilles mobiles, un cou à crinière, un corps profond et de longs membres à sabot unique. Les races vont du poney compact au grand cheval de trait et varient par la robe et les proportions. Le mâle adulte est l’étalon, la femelle la jument, le jeune le poulain. La taille du cheval domestique varie fortement selon la race : environ 0,9–1,7 m au garrot et 227–900 kg selon les types ; ces fourchettes de races ne constituent pas une moyenne unique de l’espèce."
     },
     "habitat": {
       "en": "People keep horses in pastures, paddocks, and stables across the inhabited continents. Their surroundings depend on local land use and husbandry; domestic horses have no single natural range.",
@@ -114,6 +114,20 @@
       ],
       "facts": [
         "A Great Basin exclosure study compared feral-horse access at springs and horse-and-cattle grazing in high-elevation meadows; vegetation differences are local experimental results."
+      ]
+    },
+    {
+      "title": {
+        "en": "Equus caballus, horse — BioKIDS, University of Michigan",
+        "fr": "Equus caballus, cheval — BioKIDS, université du Michigan"
+      },
+      "url": "https://www.biokids.umich.edu/critters/Equus_caballus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Breed-dependent size ranges broadly from about 0.9–1.7 m at the shoulder and 227–900 kg; these are species-level breed ranges, not a single adult standard."
       ]
     }
   ],

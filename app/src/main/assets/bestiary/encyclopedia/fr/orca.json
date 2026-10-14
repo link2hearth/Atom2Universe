@@ -1,0 +1,38 @@
+{
+  "id": "orca",
+  "name": "Orque",
+  "scientific": "Orcinus orca",
+  "group": "mammals",
+  "sections": {
+    "overview": "L’orque est le plus grand membre de la famille des dauphins. Elle vit dans tous les océans, des eaux polaires aux tropiques. Au sein de cette espèce, les populations diffèrent nettement par leur régime, leurs vocalisations et leurs traditions sociales.",
+    "identification": "Son corps puissant et fuselé porte des motifs noirs et blancs très contrastés, dont des taches claires près des yeux et une selle grise derrière la nageoire dorsale. Sa tête arrondie n’a pas de bec distinctif ; la grande nageoire des mâles adultes facilite l’identification. Le mâle adulte mesure en moyenne environ 8 m et peut atteindre 9,75 m; la femelle mesure en moyenne environ 7 m et peut atteindre 8,5 m. La masse moyenne rapportée chez le mâle est d’environ 7 200 kg; la femelle est décrite comme un peu plus légère, sans moyenne comparable dans la source. La nageoire dorsale dressée peut atteindre 1,8 m chez le mâle adulte, contre environ 0,9 m chez les femelles et les mâles immatures. Je n’ai pas trouvé de mesure utile de largeur du corps.",
+    "habitat": "Les orques fréquentent les mers côtières, les plateaux continentaux et le large, dans tous les grands bassins océaniques. Elles sont plus abondantes dans les régions froides, mais vivent aussi sous les tropiques et en zone subtropicale. Certaines communautés parcourent le large, d’autres les côtes.",
+    "diet": "Le régime varie selon les populations et dépend souvent de techniques de chasse apprises. Dans le nord-est du Pacifique, les communautés résidentes mangent surtout des poissons, dont des saumons ; les orques de Bigg chassent des mammifères marins, celles du large des poissons et requins.",
+    "behavior": "De nombreuses orques vivent dans des groupes durables, souvent apparentés par les femelles. Clics, sifflements et appels pulsés coordonnent leurs activités et maintiennent le contact ; les répertoires vocaux s’apprennent et se transmettent au sein des communautés. Certaines populations chassent ensemble.",
+    "reproduction": "Les femelles mûrissent vers 10–13 ans et portent un seul petit environ 15–18 mois. Le jeune est allaité au moins un an et reste près de sa mère deux ans ou davantage. Les naissances ont lieu toute l’année ; leur intervalle varie.",
+    "ecology": "Prédateur, l’orque peut modifier l’abondance et le comportement de ses proies, selon le réseau alimentaire local et les traditions de chasse. Elle transfère aussi énergie et nutriments dans le réseau marin. Les polluants persistants s’accumulent dans son tissu graisseux.",
+    "conservation": "Certaines populations manquent de proies et subissent engins de pêche, bateaux et bruit sous-marin ; les contaminants affectent leur santé. En 2017, l’UICN classait l’espèce « données insuffisantes », faute de données mondiales ; ce statut ne garantit pas la sécurité de chaque population."
+  },
+  "sources": [
+    {
+      "url": "https://www.fisheries.noaa.gov/species/killer-whale",
+      "title": "Orque"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/killer-whale/science?page=0",
+      "title": "Orque : recherche scientifique"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/mammals/killer-whale/",
+      "title": "Orque"
+    },
+    {
+      "url": "https://iwc.int/about-whales/whale-species/killer-whale",
+      "title": "Orque"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Orcinus_orca/",
+      "title": "Orcinus orca (killer whale) | Animal Diversity Web"
+    }
+  ]
+}

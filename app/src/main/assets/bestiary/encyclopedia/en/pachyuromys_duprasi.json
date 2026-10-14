@@ -1,0 +1,26 @@
+{
+  "id": "pachyuromys_duprasi",
+  "name": "Fat-tailed Gerbil",
+  "scientific": "Pachyuromys duprasi",
+  "group": "mammals",
+  "sections": {
+    "overview": "The fat-tailed gerbil is a small rodent of the northern Sahara and the only species in its genus. It was first described in 1880 from Laghouat, in Algeria. It is listed as Least Concern and is best known for its short, swollen tail.",
+    "identification": "A round-bodied gerbil with a head and body of about 108 mm and a weight near 36 g. The long, fluffy fur is grey to tan, with a white belly and feet. The eyes are large and oval and the pink ears sit low on the head. The tail is shorter than the body, thick and club-shaped, without a tuft, and stores fat and water.",
+    "habitat": "It lives in sand sheets with some vegetation, and sometimes in rocky desert. The Mammal Diversity Database gives its range as the northern Sahara from Western Sahara and Morocco to northern Egypt, while Animal Diversity Web describes it mainly west of the Nile Delta, into Libya, Tunisia and Algeria. It digs burrows up to about 1 m deep and sometimes uses those of other rodents.",
+    "diet": "In the wild it is mostly insectivorous, but it also eats plants, such as the desert shrubs Anabasis articulata and Artemisia monosperma.",
+    "behavior": "It is mainly nocturnal, though often active at dusk, and spends much of its life in burrows. It is found in colonies but can also live alone. Males mark territory with scent glands on the belly. It is docile when handled and rarely bites, but can be aggressive toward others of its own species.",
+    "reproduction": "Gestation lasts 19–22 days and a litter holds 3–9 young, 4.5 on average; up to three litters a year are possible. Young are born blind and naked, are cared for by the female alone and are weaned at 3–4 weeks. Maturity comes at 3–6 months. Much of this information comes from captive animals and mostly from the Egyptian subspecies.",
+    "ecology": "Its digging may aerate desert soil, and it probably affects local insect and plant populations. Birds are likely predators, but predation is poorly documented. The pale fur and the burrowing habit may help it avoid predators.",
+    "conservation": "It is listed as Least Concern on the IUCN Red List. The sources read give no population estimate and no specific threat for wild animals."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Pachyuromys_duprasi/",
+      "title": "Pachyuromys duprasi — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1002904",
+      "title": "Pachyuromys duprasi — Mammal Diversity Database"
+    }
+  ]
+}

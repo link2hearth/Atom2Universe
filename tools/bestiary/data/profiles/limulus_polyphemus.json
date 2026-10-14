@@ -12,8 +12,8 @@
       "fr": "La limule atlantique est un arthropode marin des côtes nord-américaines. Malgré son nom, ce n’est pas un crabe : elle appartient à un groupe distinct, plus proche des arachnides, et c’est l’une des quatre espèces actuelles de limules, une lignée dont des parents fossiles remontent à environ 450 millions d’années."
     },
     "identification": {
-      "en": "It carries chelicerae, small pincer-like appendages that pass food toward the mouth, and six flap-like abdominal appendages; the first covers the genital pore and the others act as gills. Mature males have claspers used to hold a female, and females may show scars from being clasped.",
-      "fr": "Elle porte des chélicères, petits appendices en pince qui acheminent la nourriture vers la bouche, et six appendices abdominaux en lames; le premier recouvre l’orifice génital et les autres servent de branchies. Les mâles matures ont des crochets pour retenir une femelle, et les femelles peuvent garder des cicatrices de cette étreinte."
+      "en": "It carries chelicerae, small pincer-like appendages that pass food toward the mouth, and six flap-like abdominal appendages; the first covers the genital pore and the others act as gills. Mature males have claspers used to hold a female, and females may show scars from being clasped. Adult females can reach about 60 cm in total length, including the long telson; males are smaller. A reliable adult body-mass range or sex-specific width was not found, so neither is estimated here.",
+      "fr": "Elle porte des chélicères, petits appendices en pince qui acheminent la nourriture vers la bouche, et six appendices abdominaux en lames; le premier recouvre l’orifice génital et les autres servent de branchies. Les mâles matures ont des crochets pour retenir une femelle, et les femelles peuvent garder des cicatrices de cette étreinte. La femelle adulte peut atteindre environ 60 cm de longueur totale, longue queue comprise; le mâle est plus petit. Je n’ai pas trouvé de plage fiable de masse adulte ni de largeur selon le sexe, et aucune n’est donc estimée ici."
     },
     "habitat": {
       "en": "It lives along the Atlantic coast of North America and the Gulf of Mexico, from Maine to Alabama, with a separate population on the Yucatán Peninsula. It uses shallow coastal water over sandy or muddy bottoms, and tolerates a wide range of environmental conditions.",
@@ -121,6 +121,20 @@
       ],
       "facts": [
         "Males appear to mature at about 9 years (17th instar); females molt once more; spawning beaches skew male."
+      ]
+    },
+    {
+      "title": {
+        "en": "Horseshoe Crab (Limulus polyphemus) | Smithsonian Marine Invasions Research Laboratory NEMESIS",
+        "fr": "Horseshoe Crab (Limulus polyphemus) | Smithsonian Marine Invasions Research Laboratory NEMESIS"
+      },
+      "url": "https://invasions.si.edu/nemesis/species_summary/82703",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "States adult females reach 600 mm total length and males are smaller; does not give adult weight."
       ]
     }
   ],

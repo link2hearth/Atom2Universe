@@ -12,8 +12,8 @@
       "fr": "Le Hérisson d’Europe est un insectivore terrestre originaire d’une grande partie de l’Europe ; il a été introduit en Nouvelle-Zélande. Ses pattes courtes et son museau pointu facilitent la fouille dans les couverts bas. Actif surtout la nuit, il hiberne lorsque le froid raréfie ses proies. Son dos piquant le protège roulé en boule. L’évaluation UICN de 2024 le classe quasi menacé."
     },
     "identification": {
-      "en": "The adult has a pointed snout, small eyes and short limbs. Brown-and-cream keratin spines cover its crown and back; face, limbs and belly bear fur. A broad muscle sheet under the skin draws head and limbs inward while smaller muscles raise the spines, enclosing vulnerable surfaces in a defensive ball.",
-      "fr": "L’adulte a un museau pointu, de petits yeux et des membres courts. Des piquants kératinisés bruns et crème couvrent crâne et dos ; visage, membres et ventre portent des poils. Une large nappe musculaire sous la peau ramène tête et membres tandis que de petits muscles dressent les piquants, enfermant les parties vulnérables dans une boule défensive."
+      "en": "The adult has a pointed snout, small eyes and short limbs. Brown-and-cream keratin spines cover its crown and back; face, limbs and belly bear fur. A broad muscle sheet under the skin draws head and limbs inward while smaller muscles raise the spines, enclosing vulnerable surfaces in a defensive ball. The Mammal Society gives a head-and-body length of 15–30 cm, a 1–2 cm tail and a mass of up to 2 kg; the range varies with age. The source does not report a reliable male–female size difference or a body-width measure.",
+      "fr": "L’adulte a un museau pointu, de petits yeux et des membres courts. Des piquants kératinisés bruns et crème couvrent crâne et dos ; visage, membres et ventre portent des poils. Une large nappe musculaire sous la peau ramène tête et membres tandis que de petits muscles dressent les piquants, enfermant les parties vulnérables dans une boule défensive. La Mammal Society indique une longueur tête-corps de 15 à 30 cm, une queue de 1 à 2 cm et une masse pouvant atteindre 2 kg ; la plage varie avec l’âge. La source ne donne ni différence de taille fiable entre mâles et femelles ni mesure de largeur du corps."
     },
     "habitat": {
       "en": "The species uses pasture margins, hedgerows, scrub, woodland edges, parks and gardens. It benefits where cover, prey and nesting material occur together; large exposed fields offer fewer refuges. By day it rests in nests and makes a sturdier winter shelter from dry leaves, supported by nearby vegetation or other objects. The nest insulates and protects it during hibernation. Use of gardens and farmland depends on local cover and food, so habitat use varies among populations.",
@@ -144,6 +144,20 @@
       ],
       "facts": [
         "Institutional species account supports range, visible appearance and use of hedgerows, woodland edges, parks and gardens."
+      ]
+    },
+    {
+      "title": {
+        "en": "European hedgehog — The Mammal Society",
+        "fr": "European hedgehog — The Mammal Society"
+      },
+      "url": "https://mammal.org.uk/british-mammals/european-hedgehog",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Head-and-body length 150–300 mm, tail 10–20 mm, weight up to 2 kg; size depends on age."
       ]
     }
   ],

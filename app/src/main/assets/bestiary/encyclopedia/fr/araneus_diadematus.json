@@ -1,0 +1,26 @@
+{
+  "id": "araneus_diadematus",
+  "name": "Épeire diadème",
+  "scientific": "Araneus diadematus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "L’épeire diadème, aussi appelée araignée à croix, est une araignée tisserande de toiles en roue très familière. On la remarque surtout en automne, quand les femelles adultes se tiennent au centre de leur toile. Éclose au printemps, elle devient en général adulte l’été suivant, et les femelles meurent avant la fin de l’année après avoir pondu.",
+    "identification": "Les mâles mesurent 4 à 8 mm et les femelles 10 à 18 mm de long; une autre source donne jusqu’à 20 mm pour les femelles. L’abdomen, muni d’« épaules », est plus large à l’avant et va du beige paille au brun foncé ou rougeâtre, avec un dessin central plus sombre portant des marques blanches qui peuvent former une croix. Les pattes sont annelées de brun et couvertes de courtes épines. Les sources consultées ne donnent pas de plage fiable de masse adulte pour l’espèce ; la masse varie selon le sexe, l’âge et l’état nutritionnel.",
+    "habitat": "En Grande-Bretagne, c’est probablement la grande araignée la plus commune et la plus répandue, présente dans les jardins, les haies, les clôtures, les broussailles, les lisières de bois et les landes. Elle a besoin de supports pour fixer sa toile, jusqu’à environ deux mètres du sol, et entre rarement dans les maisons, sans doute trop sèches. Elle est aussi signalée dans le nord des États-Unis.",
+    "diet": "Elle se nourrit d’insectes et d’autres arthropodes pris dans sa toile. Quand une proie se débat dans la spirale collante, l’araignée accourt, l’enveloppe de soie puis la mord. La proie emballée peut être mangée aussitôt ou gardée pour plus tard.",
+    "behavior": "L’araignée tisse sa toile en roue en une demi-heure environ, guidée par le seul toucher, avec quelque 25 à 30 rayons. La poussière et le pollen ternissant vite les gouttelettes collantes, elle refait sa toile tous les jours ou presque et mange l’ancienne pour recycler les protéines de la soie. Elle reste en général la tête en bas au centre et, si on la dérange, fait vibrer la toile jusqu’à la rendre floue.",
+    "reproduction": "Les jeunes quittent le cocon en mai et restent groupés en boule dorée, puis se dispersent après une semaine environ. Ils passent l’hiver à demi-taille; les mâles atteignent la maturité en août ou septembre et les femelles deux semaines plus tard, mais dans le sud de la Grande-Bretagne certains y arrivent dès la première année. Le mâle annonce sa venue en pinçant la toile de la femelle; celle-ci pond dans un abri, dans un cocon de soie jaunâtre qu’elle garde, puis meurt avant la fin de l’année.",
+    "ecology": "Prédatrice d’insectes volants, l’épeire diadème peut contribuer à limiter les ravageurs. L’accouplement est risqué pour le mâle, qui doit signaler qu’il est un prétendant et non un repas. Les jeunes se dispersent en ballonnant, portés par des fils de soie que le vent emporte.",
+    "conservation": "Aucune menace n’est signalée pour cette espèce commune. L’Animal Diversity Web la classe sans statut particulier, mais cette fiche n’est pas une évaluation mondiale récente et aucune catégorie récente de la Liste rouge n’a été lue. En Grande-Bretagne, elle fait partie des grandes araignées les plus souvent observées."
+  },
+  "sources": [
+    {
+      "url": "https://britishspiders.org.uk/sites/default/files/2021-04/Garden_spider_preview_rev18.pdf",
+      "title": "Fiche n° 4 sur l’épeire diadème (Araneus diadematus) — British Arachnological Society"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Araneus_diadematus/",
+      "title": "Araneus diadematus — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

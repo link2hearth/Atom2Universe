@@ -1,0 +1,26 @@
+{
+  "id": "hen_harrier",
+  "name": "Hen Harrier",
+  "scientific": "Circus cyaneus",
+  "group": "birds",
+  "sections": {
+    "overview": "The hen harrier is a slim, medium-sized raptor that glides low over open ground. In the UK it is among the rarest birds of prey and the most persecuted, and its fate is tied to conflict with driven grouse shooting.",
+    "identification": "The sexes differ. The male is a pale, “ghostly” blue-grey above and paler below, with black wing tips. The female and the young are brown, streaked on the body and barred on the tail, and are called “ringtails”. Both have a white rump, an owl-like rounded face, a yellow bill with a black tip and yellow legs. A bird weighs about 425 g. Adults measure 44–52 cm with a 100–120 cm wingspan; males weigh 300–400 g and females 400–600 g.",
+    "habitat": "In the UK it breeds on upland moorland, in Orkney, the Hebrides, the Highlands, the Southern Uplands, northern England, Wales and the Isle of Man. In winter it moves to lowlands, upland fringes and coastal marshes.",
+    "diet": "In Britain it feeds mainly on voles and Meadow Pipits, both of which prefer grassland. Its name is said to come from an old habit of preying on free-range fowl.",
+    "behavior": "It glides low over the ground with its wings held in a shallow V. In spring the male performs a “sky dance”, flying high, plummeting while twisting and turning, then pulling up at the last moment. In winter, birds gather at traditional roosts, arriving from late afternoon to dusk and leaving at first light.",
+    "reproduction": "The usual clutch in Britain is four or five eggs (range two to eight), incubated by the female for about 34 days. The downy chicks fledge after about 39 days, with one brood a year. Breeding typically starts at age two. On Orkney, some males mate with several females.",
+    "ecology": "As a ground-nester, the hen harrier is sensitive to predation by crows and foxes. Its main threat is illegal persecution linked to grouse moor management, which lowers breeding success and the survival of females. Its main prey, voles and Meadow Pipits, are animals of grassland.",
+    "conservation": "The UK breeding population was estimated at 545 pairs in 2016, down from 662 in 2010, with a fall of 44% in Wales over that period. The species is Red-listed in the UK and protected under Schedule 1, while its global IUCN category is Least Concern. A bird that reaches breeding age lives about seven years; the oldest ringed bird passed 15."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/hen-harrier",
+      "title": "Hen Harrier — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/hen-harrier",
+      "title": "Hen Harrier — RSPB Birds & Wildlife"
+    }
+  ]
+}

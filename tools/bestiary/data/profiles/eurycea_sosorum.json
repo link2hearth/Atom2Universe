@@ -12,8 +12,8 @@
       "fr": "La salamandre de Barton Springs, Eurycea sosorum, est une petite salamandre entièrement aquatique des sources d’Austin, au Texas. Elle garde toute sa vie sa forme larvaire à branchies et ne quitte jamais l’eau, dépendant entièrement des eaux souterraines de l’aquifère d’Edwards."
     },
     "identification": {
-      "en": "Adults measure about 6–8 cm in total length. The head is broad and deep, with reduced eyes and three bright red, feathery gills on each side. The limbs are long and slender, and the short tail has a well-developed upper fin. The mottled upper body ranges from brown to purple, reddish or orange, and the underside is cream and often translucent. Its relative the Austin blind salamander has skin-covered eyespots.",
-      "fr": "Les adultes mesurent environ 6 à 8 cm de longueur totale. La tête est large et haute, avec des yeux réduits et trois branchies rouge vif, plumeuses, de chaque côté. Les membres sont longs et grêles, et la queue courte porte une nageoire supérieure bien développée. Le dessus du corps, marbré, va du brun au violet, au roux ou à l’orange, et le dessous est crème et souvent translucide. La salamandre aveugle d’Austin, sa proche voisine, a des taches oculaires recouvertes de peau."
+      "en": "Adults measure about 6–8 cm in total length. The head is broad and deep, with reduced eyes and three bright red, feathery gills on each side. The limbs are long and slender, and the short tail has a well-developed upper fin. The mottled upper body ranges from brown to purple, reddish or orange, and the underside is cream and often translucent. Its relative the Austin blind salamander has skin-covered eyespots. Adults reach about 63–76 mm total length; the consulted species accounts do not report a reliable adult body-mass range.",
+      "fr": "Les adultes mesurent environ 6 à 8 cm de longueur totale. La tête est large et haute, avec des yeux réduits et trois branchies rouge vif, plumeuses, de chaque côté. Les membres sont longs et grêles, et la queue courte porte une nageoire supérieure bien développée. Le dessus du corps, marbré, va du brun au violet, au roux ou à l’orange, et le dessous est crème et souvent translucide. La salamandre aveugle d’Austin, sa proche voisine, a des taches oculaires recouvertes de peau. Les adultes atteignent environ 63–76 mm de longueur totale ; les fiches consultées ne donnent pas de fourchette fiable de masse adulte."
     },
     "habitat": {
       "en": "It lives in clean water fed by the Edwards Aquifer, usually in the wet upper layer of gravel and rock in or near spring openings, pools and spring runs. The water stays near 20 °C all year. It first became known from four spring sites in Zilker Park, and has since been found at 12 more spring and cave sites in Hays and Travis Counties.",
@@ -44,14 +44,24 @@
     {
       "title": {
         "en": "Barton Springs salamander (Eurycea sosorum) — U.S. Fish and Wildlife Service",
-        "fr": "Salamandre de Barton Springs (Eurycea sosorum) — U.S. Fish and Wildlife Service"
+        "fr": "Salamandre des sources de Barton (Eurycea sosorum) — U.S. Fish and Wildlife Service"
       },
       "url": "https://www.fws.gov/species/barton-springs-salamander-eurycea-sosorum",
-      "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Adults 63–76 mm total length; reduced eyes; three red feathery gills each side; wet top layer of substrate near springs; now at 12 additional spring and cave sites; prefers planarians, then midge larvae and amphipods; eggs hatch 15–40 days after laying, larvae feed 10–11 days after hatching.",
-        "Federally listed as Endangered on 30 April 1997 because of declining water quality and quantity from urban expansion; threats include groundwater contamination, hazardous spills and water withdrawals."
+        "Federally listed as Endangered on 30 April 1997 because of declining water quality and quantity from urban expansion; threats include groundwater contamination, hazardous spills and water withdrawals.",
+        "Adults reach about 63–76 mm total length. The species account does not report an adult body-mass range."
       ]
     },
     {
@@ -61,7 +71,14 @@
       },
       "url": "https://animaldiversity.org/accounts/Eurycea_sosorum",
       "consulted": "2026-10-12",
-      "supports": ["habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Spring water constant near 20 °C; mainly eats the amphipod Hyalella azteca; secretive and nocturnal; breeding apparently year-round; predators are small fish and crayfish; wild egg-laying never observed.",
         "Declines attributed to urbanisation, pollution and reduced water quality and quantity. Its IUCN category and old population counts were not used."

@@ -1,0 +1,58 @@
+{
+  "id": "cattle",
+  "name": "Domestic cattle",
+  "scientific": "Bos taurus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Taurine cattle are large, hoofed mammals domesticated from aurochs in Southwest Asia. Ancient genomes indicate a small founding group and later mixing with other aurochs lineages as herds spread. Today people keep cattle worldwide in varied production systems.",
+    "identification": "Cattle have a sturdy body, broad muzzle, cloven hooves and a long tufted tail. Coat, size and horns vary widely among breeds; some are naturally hornless. The term includes both sexes: mature females are cows, males bulls, and young animals calves. Cattle size varies greatly among breeds: FAO reports mature-cow breed averages ranging from below 200 kg to above 400 kg. There is no useful single species-wide adult body length or withers-height range; measurements should be tied to a named breed.",
+    "habitat": "FAO livestock maps show cattle widely distributed around the world. They live in human-managed pastures, mixed farms, extensive pastoral systems, feedlots or barns. Local conditions vary with husbandry, while climate, water and forage shape where herds can be maintained.",
+    "diet": "Cattle eat grasses, leaves and other plants, then regurgitate partly digested forage to chew it again. Their four digestive compartments are the rumen, reticulum, omasum and abomasum. Microbes ferment fibrous plants in the rumen, making their energy available to the animal.",
+    "behavior": "Cattle are social grazers that feed and rest in groups. Studies of managed herds find associations among individuals and different responses to familiar and unfamiliar herd members. They communicate through posture, touch, smell and calls; group composition can affect these relationships.",
+    "reproduction": "Females cycle when not pregnant; estrus averages about 21 days between cycles, with variation. A receptive female may stand to be mounted. After fertilization, gestation lasts about 283 days on average and ends with a calf’s birth; the mother then produces milk.",
+    "ecology": "Cattle grazing removes plant shoots; dung and urine return nutrients, while hooves compact soil. In one Finnish dairy pasture, these processes altered plant growth and soil communities. Their effects arose from defoliation, patchy excreta and trampling, and depend on local pasture conditions.",
+    "conservation": "Bos taurus is domesticated and maintained in human herds, rather than a wild population with a natural range. Relevant conservation concerns include preserving domestic breed diversity and locally adapted traits. The extinct aurochs is a separate ancestral wild taxon, not the status of domestic cattle."
+  },
+  "sources": [
+    {
+      "url": "https://www.nature.com/articles/s41586-024-08112-6",
+      "title": "The genomic natural history of the aurochs"
+    },
+    {
+      "url": "https://www.msdvetmanual.com/management-and-nutrition/nutrition-beef-cattle/the-digestive-system-of-beef-cattle",
+      "title": "The Digestive System of Beef Cattle"
+    },
+    {
+      "url": "https://extension.msstate.edu/publications/the-estrous-cycle-cattle",
+      "title": "The Estrous Cycle of Cattle"
+    },
+    {
+      "url": "https://www.fao.org/livestock-systems/global-distributions/cattle/en/",
+      "title": "Global distributions: Cattle"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6581677/",
+      "title": "Impact of Group Management and Transfer on Individual Sociality in Highland Cattle"
+    },
+    {
+      "url": "https://researchportal.helsinki.fi/en/publications/defoliation-and-patchy-nutrient-return-drive-grazing-effects-on-p/",
+      "title": "Defoliation and patchy nutrient return drive grazing effects on plant and soil properties in a dairy cow pasture"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0376635723000293",
+      "title": "Social isolation of unfamiliar cattle by groups of familiar cattle"
+    },
+    {
+      "url": "https://www.aphis.usda.gov/sites/default/files/beef2017_dr_parti.pdf",
+      "title": "Polled cattle, USDA-APHIS"
+    },
+    {
+      "url": "https://www.fao.org/animal-genetics/global-policy/funding-strategy/projects/en/",
+      "title": "Conservation of animal genetic resources — FAO"
+    },
+    {
+      "url": "https://www.fao.org/4/t0095e/T0095E04.htm",
+      "title": "Crossbreeding Bos indicus and Bos taurus for milk production in the tropics — FAO"
+    }
+  ]
+}

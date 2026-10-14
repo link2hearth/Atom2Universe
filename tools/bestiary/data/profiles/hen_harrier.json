@@ -12,8 +12,8 @@
       "fr": "Le busard Saint-Martin est un rapace svelte, de taille moyenne, qui plane bas au-dessus des terrains ouverts. Au Royaume-Uni, c’est l’un des rapaces les plus rares et les plus persécutés, et son sort est lié au conflit avec la chasse au tétras."
     },
     "identification": {
-      "en": "The sexes differ. The male is a pale, “ghostly” blue-grey above and paler below, with black wing tips. The female and the young are brown, streaked on the body and barred on the tail, and are called “ringtails”. Both have a white rump, an owl-like rounded face, a yellow bill with a black tip and yellow legs. A bird weighs about 425 g.",
-      "fr": "Les sexes diffèrent. Le mâle est d’un gris bleuté pâle, « fantomatique », dessus et plus clair dessous, avec les bouts d’ailes noirs. La femelle et les jeunes sont bruns, striés sur le corps et barrés sur la queue; on les appelle « busards à queue annelée ». Tous deux ont un croupion blanc, une face arrondie de type hibou, un bec jaune à pointe noire et des pattes jaunes. Un oiseau pèse environ 425 g."
+      "en": "The sexes differ. The male is a pale, “ghostly” blue-grey above and paler below, with black wing tips. The female and the young are brown, streaked on the body and barred on the tail, and are called “ringtails”. Both have a white rump, an owl-like rounded face, a yellow bill with a black tip and yellow legs. A bird weighs about 425 g. Adults measure 44–52 cm with a 100–120 cm wingspan; males weigh 300–400 g and females 400–600 g.",
+      "fr": "Les sexes diffèrent. Le mâle est d’un gris bleuté pâle, « fantomatique », dessus et plus clair dessous, avec les bouts d’ailes noirs. La femelle et les jeunes sont bruns, striés sur le corps et barrés sur la queue; on les appelle « busards à queue annelée ». Tous deux ont un croupion blanc, une face arrondie de type hibou, un bec jaune à pointe noire et des pattes jaunes. Un oiseau pèse environ 425 g. Les adultes mesurent 44–52 cm pour une envergure de 100–120 cm ; les mâles pèsent 300–400 g et les femelles 400–600 g."
     },
     "habitat": {
       "en": "In the UK it breeds on upland moorland, in Orkney, the Hebrides, the Highlands, the Southern Uplands, northern England, Wales and the Isle of Man. In winter it moves to lowlands, upland fringes and coastal marshes.",
@@ -48,7 +48,15 @@
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/hen-harrier",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Weight 425 g; clutch 4–5 eggs (2–8), incubation about 34 days by the female, fledging about 38.7 days; breeding from age 2.",
         "UK 545 pairs (2016) versus 662 in 2010, Wales −44%; Red-listed; IUCN Least Concern; winter roosts; persecution linked to grouse moor management; record age 15 years 9 months."
@@ -60,11 +68,20 @@
         "fr": "Busard Saint-Martin — RSPB Birds & Wildlife"
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/hen-harrier",
-      "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Male blue-grey with black wing tips; female and young brown “ringtails”; white rump; owl-like face; sky dance; Orkney population polygynous.",
-        "Most persecuted UK bird of prey; Red-listed, Schedule 1; only a handful of pairs nest in England."
+        "Most persecuted UK bird of prey; Red-listed, Schedule 1; only a handful of pairs nest in England.",
+        "Adults measure 44–52 cm with 100–120 cm wingspan; males weigh about 300–400 g and females 400–600 g."
       ]
     }
   ],

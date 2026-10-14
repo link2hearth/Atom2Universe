@@ -1,0 +1,86 @@
+{
+  "id": "great_tit",
+  "name": "Great tit",
+  "scientific": "Parus major",
+  "group": "birds",
+  "sections": {
+    "overview": "The great tit, Parus major, belongs to the tit family Paridae and ranges from northwestern Africa and Europe east across temperate Eurasia to eastern Siberia. Short bill, strong feet and cavity nesting support flexible foraging and breeding.",
+    "identification": "At 12.5–15 cm long, its compact body bears a short pointed bill, black cap and throat, white cheeks, greenish back, and yellow underside with a dark central stripe. The wings and tail are blue-grey, with a white bar on the wings. Males usually have a broader, darker belly stripe; juveniles are duller with yellowish cheeks. British adults average about 18.6 g; mean mass is approximately 18.1 g for females and 19.1 g for males.",
+    "habitat": "The species is most characteristic of deciduous and mixed woodland, especially where mature trees, scrub and edges make food and nesting holes available. It also occupies parks, gardens, orchards and hedgerows, and readily uses nest boxes where natural cavities are scarce. This flexibility lets it persist near people, although local abundance still depends on vegetation, food and safe nesting sites.",
+    "diet": "Its diet changes with the demands of the year: adults take insects and other invertebrates especially during breeding, then rely more on seeds, fruit and other plant foods when cold-season prey is harder to find. To find prey, birds hop along branches, probe bark, and hang upside down; seeds are held under the feet and pecked open. In a primeval Polish forest, caterpillars formed the main food delivered to nestlings even as their availability changed, showing why breeding adults concentrate animal prey on growing young.",
+    "behavior": "During the breeding season, males sing repeatedly from exposed perches; playback experiments in southern England showed that song helps maintain territories and can delay settlement by rivals. Calls complement song: field studies of wild birds document alarm and mobbing signals used around threats. At nests, males sing to females inside cavities and females answer with calls; observations link these exchanges to mate guarding and food transfer. Outside breeding, great tits form mobile winter foraging flocks before pairs establish territories. When handling a larger food item, a bird may pin it under one or both feet and work it with the bill, a behavior that develops with age and experience. In a separate experiment, five captive males sorted unfamiliar songs by the voice characteristics of two known singers, illustrating individual recognition without describing all wild song use.",
+    "reproduction": "Courtship leads to a pair nesting in a tree hole or another cavity; the female builds a soft cup of moss, grasses and hair, and nest boxes can substitute where natural holes are scarce. In Britain, first eggs are usually laid in late April, and seven to nine eggs are typical; the female incubates for about 13–14 days. Both parents feed the helpless nestlings and bring animal prey as the young grow. They usually fledge about 18–21 days after hatching. Cavity choice balances shelter and predator access: deep holes with narrow entrances can deter martens and woodpeckers, yet small dormice may still enter and destroy nests.",
+    "ecology": "In spring, oak leafing starts the growth of leaf-eating caterpillars, which become a key food for great tit nestlings; chick demand therefore overlaps a short seasonal food window. A 48-year Dutch study found that caterpillar peaks initially advanced faster than egg-laying, then the mismatch narrowed as spring warming slowed, demonstrating that the timing link can shift through time. Predation also shapes breeding: in Białowieża, monitored nest failures were often caused by predators, including dormice able to enter cavities inaccessible to larger hunters.",
+    "conservation": "BirdLife International’s current global assessment records the great tit as Least Concern, with the assessment year listed as 2024. The species remains widespread, but abundance can vary with woodland structure, food supply and nesting sites. British surveys show a long-term rise since 1967 followed by stabilisation or a shallow decline after about 2010, a regional history rather than a uniform range-wide trend. A severe avian-pox strain was first diagnosed in a British great tit in 2006 and subsequently spread among tits, making infection a reason for continued local monitoring."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Great_Tit/id",
+      "title": "Great Tit Identification | Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/great-tit-parus-major",
+      "title": "Great Tit Parus major Species Factsheet | BirdLife DataZone"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/great-tit",
+      "title": "Great Tit — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Great_Tit/lifehistory",
+      "title": "Great Tit Life History | Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12256774/",
+      "title": "Spatio-Temporal Variation in Diet Among Age and Sex Cohorts of a Model Generalist Bird Species, the Great Tit Parus major: New Insights Revealed by DNA Metabarcoding"
+    },
+    {
+      "url": "https://bou.org.uk/branta/cholewa-m/",
+      "title": "Timing of breeding and nestling diet of the Great Tit (Parus major) in relation to food supply in primeval forest (Białowieża National Park)"
+    },
+    {
+      "url": "https://www.nature.com/articles/271539a0",
+      "title": "Song repertoires and territory defence in the great tit"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/ibi.12374",
+      "title": "Interactive vocal communication at the nest by parent Great Tits Parus major"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6484080/",
+      "title": "Subtle variations in mobbing calls are predator-specific in great tits (Parus major)"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/full/10.1111/ele.12669",
+      "title": "Social carry-over effects underpin trans-seasonally linked structure in a wild bird population"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1474-919X.1964.tb03730.x",
+      "title": "Use of the Feet in Feeding by the Great Tit Parus major"
+    },
+    {
+      "url": "https://besjournals.onlinelibrary.wiley.com/doi/10.1046/j.1365-2656.2000.00373.x",
+      "title": "Differential response by males and females to manipulation of partner contribution in the great tit (Parus major)"
+    },
+    {
+      "url": "https://nora.nerc.ac.uk/id/eprint/512534/",
+      "title": "Breeding success of the great tit Parus major in relation to attributes of natural nest cavities in a primeval forest"
+    },
+    {
+      "url": "https://eprints.whiterose.ac.uk/id/eprint/217583/8/Visser_et_al_2021_AAM.pdf",
+      "title": "Recent natural variability in global warming weakened phenological mismatch and selection on seasonal timing in great tits (Parus major)"
+    },
+    {
+      "url": "https://www.bto.org/our-work/science/publications/papers/tritrophic-phenological-match-mismatch-space-and-time",
+      "title": "Tritrophic phenological match-mismatch in space and time"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3504035/",
+      "title": "Emergence of a Novel Avian Pox Disease in British Tit Species"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0003347205802234",
+      "title": "Great tits classify songs by individual voice characteristics"
+    }
+  ]
+}

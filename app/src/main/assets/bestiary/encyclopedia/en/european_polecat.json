@@ -1,0 +1,58 @@
+{
+  "id": "european_polecat",
+  "name": "European polecat",
+  "scientific": "Mustela putorius",
+  "group": "mammals",
+  "sections": {
+    "overview": "The European polecat is a wild mustelid that ranges across much of Europe and western Eurasia, where it hunts small vertebrates. The domestic ferret is a domesticated form of the polecat, and the two can interbreed to produce fertile hybrids. Their fur and facial markings overlap enough that field identification may be uncertain, and genetic testing may be needed to distinguish hybrids from wild polecats.",
+    "identification": "Its long, low body has short legs and a comparatively short, bushy tail. Dark guard hairs over a pale yellowish underfur create a grizzled coat; the pale muzzle, eyebrows and ear margins frame a dark facial mask. Adult British males are about 33–45 cm long and 0.8–1.9 kg, while females are 32–39 cm and 0.5–1.1 kg; the tail adds 12–19 cm.",
+    "habitat": "The polecat occupies a broad range of landscapes, but in France it is especially associated with wetlands and river margins. British polecats often use hedged farmland and small woods, resting in rabbit burrows, hay bales or farm outbuildings as prey and shelter shift seasonally.",
+    "diet": "It is a carnivore whose prey changes with place and season: rabbits and other small mammals are important, with frogs, birds and other animals also taken. In a British stomach-content study of animals collected in 2012–2016, lagomorph remains occurred most often, followed by other mammals, amphibians and birds. Rabbits were more frequent in spring and summer than in autumn in that sample, illustrating how prey availability shapes a local diet. Its slender body lets it hunt rabbits inside their burrows.",
+    "behavior": "The polecat is solitary; during breeding, males may mate with several females. Its movements are mainly nocturnal or crepuscular, although it can also be active by day. Radio-tracking there found that time spent foraging and travelling varied with food categories, while mating and breeding also changed activity. In that sample, activity averaged about seven and a half hours daily; females spent more time foraging, while males travelled more. Anal scent glands release a pungent secretion under stress and may also help communicate with neighbours, possibly limiting direct aggression.",
+    "reproduction": "In France, mating usually occurs in March–April; births follow in May–June after 40–42 days of gestation, without delayed implantation. One annual litter is usual, with one to twelve kits and weaning at about six weeks. Born blind and helpless, kits stay with their mother, become independent at three months and reach sexual maturity at ten to eleven months.",
+    "ecology": "As a predator, the polecat takes rabbits, amphibians and birds, linking terrestrial and wetland food webs. In western France, tracking found marshy habitats associated with greater male mating success, while pregnant or nursing females shifted towards deciduous woodland.",
+    "conservation": "The global IUCN assessment published in 2016 classified the species as Least Concern while noting that population trends were uncertain across much of its range. A French survey in 2017 found sparse, fragmented populations in many regions, with evidence varying greatly among areas. Documented pressures include habitat loss and fragmentation, trapping, road deaths, pollution and disease. In Britain, persecution and fur hunting severely reduced the polecat’s range before the population recovered."
+  },
+  "sources": [
+    {
+      "url": "https://mammal.org.uk/british-mammals/polecat",
+      "title": "Polecat — The Mammal Society"
+    },
+    {
+      "url": "https://food.ec.europa.eu/system/files/2020-12/sci-com_scah_out67_en.pdf",
+      "title": "The welfare of animals kept for fur production — European Commission"
+    },
+    {
+      "url": "https://ofb.gouv.fr/doc/le-putois",
+      "title": "The polecat — French Office for Biodiversity"
+    },
+    {
+      "url": "https://nora.nerc.ac.uk/id/eprint/527285/",
+      "title": "Diets of European polecats in Great Britain — NERC Open Research Archive"
+    },
+    {
+      "url": "https://www.sfepm.org/le-putois-deurope.html",
+      "title": "Le Putois d’Europe — French Society for the Study and Protection of Mammals"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24896689/",
+      "title": "Time budget as related to feeding tactics of European polecats — PubMed"
+    },
+    {
+      "url": "https://www.sfepm.org/sites/default/files/inline-files/Plan_national_conservation_Putois_2021_SFEPM_web_5.pdf",
+      "title": "Plan national de conservation du Putois d’Europe en France — SFEPM"
+    },
+    {
+      "url": "https://doi.org/10.1155/2011/159462",
+      "title": "Habitat Selection and Mating Success in a Mustelid — University of Rennes study"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T41658A45214384.en",
+      "title": "Mustela putorius — IUCN Red List 2016"
+    },
+    {
+      "url": "https://nora.nerc.ac.uk/id/eprint/520322/9/JP025%20edition%201%20A%20Review%20of%20the%20Population%20and%20Conservation%20Status%20Technical%20summary.pdf",
+      "title": "Polecat population and conservation status in Britain — NERC"
+    }
+  ]
+}

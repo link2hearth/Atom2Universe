@@ -1,0 +1,78 @@
+{
+  "id": "tiger",
+  "name": "Tiger",
+  "scientific": "Panthera tigris",
+  "group": "mammals",
+  "sections": {
+    "overview": "The tiger is Asia’s largest wild cat, surviving in populations from the Russian Far East through South and Southeast Asia to Sumatra.",
+    "identification": "Its orange coat carries dark vertical stripes, a pale underside and conspicuous white marks behind the ears. The pattern is individual, so researchers can identify tigers in repeated photographs. Across populations, reported adult head-and-body lengths span about 150–230 cm, with tail length reported separately at 90–110 cm, and masses 75–325 kg; this broad interval is not one average or a record size. Males are larger than females, and large continental animals are not representative of every population. A broad skull, long canines and powerful jaw and forelimb muscles help seize and control heavy prey.",
+    "habitat": "Tigers occur in tropical rainforests and mangroves, dry forests and scrub, grasslands, and temperate forests with heavy snow. This breadth reflects ecological flexibility, but climate alone does not make a site suitable: adequate cover, water and large wild prey are essential, and prey availability influences how much space a tiger needs.",
+    "diet": "Deer and wild pigs make up much of the diet; gaur, banteng and buffalo are important prey in some regions. Tigers also take smaller mammals, birds, reptiles and fish. Livestock may be taken where people and tiger habitat overlap. A semi-arid forest study at Ranthambhore, India, found that sambar and chital supplied most recorded prey biomass, while livestock still contributed a smaller share. That local result shows why prey choice and reliance on domestic animals should not be generalized across the range. The tiger usually stalks under cover and attacks at close range instead of pursuing prey far. Its weight and forelimbs knock an animal down; a nape bite can damage the spinal cord of small prey, while a throat bite can suffocate larger prey. After a kill, the tiger may drag the carcass into cover, tear off meat with its carnassial teeth and return to feed over several days.",
+    "behavior": "Adults generally live alone. Males tend to occupy larger ranges that overlap several females; in one Thai population, neighboring females’ ranges overlapped little, while males’ ranges covered most of the female ranges they overlapped. Female home ranges tend to be smaller where prey is more abundant, though their exact area varies by landscape. Scent marks, ground scrapes, claw marks and calls let tigers exchange information without frequent direct encounters; roars, grunts and softer contact sounds serve different social purposes. Their muscular forelimbs support movement on land and help control prey. They swim well and have even been recorded hunting in water.",
+    "reproduction": "Breeding can occur in any season. After several receptive days, gestation lasts about 100 days and usually produces two or three cubs, though litter size varies. Newborns are blind and helpless; their mother nurses them in a den and protects them alone. Cubs begin following their mother at about two months; weaning generally occurs between three and six months. They join hunting trips at five or six months. Young gradually become independent; in a Chitwan field study, they left their natal ranges at 19–28 months. In Ranthambhore, males dispersed later on average than females. Females mature around three to four years and males around four to five.",
+    "ecology": "Prey-rich areas can support denser tiger populations and smaller female home ranges than landscapes where ungulates are scarce, linking tiger distribution to the prey base. Predation can shape herbivore communities, but wider effects depend on local food webs. A field experiment in northeastern China found that birds including crows, jays and woodpeckers used simulated remains of Amur tiger prey, showing how kills can also provide carrion to scavengers.",
+    "conservation": "The IUCN assessed the tiger on 15 December 2021 and published its Red List account in 2022, classifying the species as Endangered. The estimate was 3,726–5,578 wild individuals, excluding cubs, with 3,140 mature individuals as the best estimate. It combines national data collected in different years and with different methods, so it is not a synchronized census and its higher value than older editions alone does not prove growth. The assessment reports that occupied range contracted by more than half over three generations. Poaching for illegal trade, hunting of prey, habitat conversion and fragmentation remain major pressures; prey depletion and conflict with people also cause local losses and retaliatory killing."
+  },
+  "sources": [
+    {
+      "url": "https://nationalzoo.si.edu/animals/tiger",
+      "title": "Tiger — Smithsonian’s National Zoo and Conservation Biology Institute"
+    },
+    {
+      "url": "https://www.catsg.org/living-species-tiger",
+      "title": "Living Species: Tiger — IUCN SSC Cat Specialist Group"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Panthera_tigris/",
+      "title": "Panthera tigris (tiger) — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-1.RLTS.T15955A214862019.en",
+      "title": "Panthera tigris — The IUCN Red List of Threatened Species, 2022 assessment"
+    },
+    {
+      "url": "https://doi.org/10.1017/S0952836903003765",
+      "title": "Prey abundance and prey selection by tigers in a semi-arid forest — Journal of Zoology"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/oryx/article/female-tiger-panthera-tigris-home-range-size-and-prey-abundance-important-metrics-for-management/C427421DD59691CFF5C9D1D06CDEC07A",
+      "title": "Female tiger home range size and prey abundance — Oryx"
+    },
+    {
+      "url": "https://doi.org/10.1111/joa.13636",
+      "title": "Muscular anatomy of the forelimb of tiger — Journal of Anatomy"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.gecco.2024.e03161",
+      "title": "Amur tiger prey remains and avian scavengers — Global Ecology and Conservation"
+    },
+    {
+      "url": "https://www.wti.org.in/wp-content/uploads/2023/02/Action-Tiger-2nd-Edition-2011-institutional.pdf",
+      "title": "Tiger Action Plan, second edition — Wildlife Trust of India"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/tiger",
+      "title": "Tiger — San Diego Zoo Animals & Plants"
+    },
+    {
+      "url": "https://panthera.org/newsroom/global-tiger-population-stable-and-potentially-increasing-despite-extreme-threats",
+      "title": "Tiger — Panthera conservation organization"
+    },
+    {
+      "url": "https://www.worldwildlife.org/species/tiger/",
+      "title": "Tiger — World Wildlife Fund species account"
+    },
+    {
+      "url": "https://experts.umn.edu/en/publications/the-role-of-dispersal-in-structuring-the-chitwan-tiger-population/",
+      "title": "The role of dispersal in structuring the Chitwan tiger population — Behaviour"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0140196320302196",
+      "title": "Philopatric and natal dispersal of tigers in a semi-arid habitat, western India — Journal of Arid Environments"
+    },
+    {
+      "url": "https://www.pretoriazoo.org/animals/tiger/",
+      "title": "Tiger — SANBI National Zoological Garden, Pretoria"
+    }
+  ]
+}

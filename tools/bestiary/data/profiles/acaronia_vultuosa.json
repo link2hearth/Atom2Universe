@@ -2,24 +2,106 @@
   "id": "acaronia_vultuosa",
   "scientific": "Acaronia vultuosa",
   "group": "fish",
-  "name": {"en": "Acaronia vultuosa", "fr": "Acaronia vultuosa"},
+  "name": {
+    "en": "Acaronia vultuosa",
+    "fr": "Acaronia vultuosa"
+  },
   "sections": {
-    "overview": {"en": "Acaronia vultuosa is a South American cichlid recorded from the Orinoco basin and the upper Rio Negro. The common aquarium name ‘spangled cichlid’ refers to its reflective flank markings, but the species is uncommon in the hobby and its natural history is much less documented than that of familiar aquarium cichlids.", "fr": "Acaronia vultuosa est un cichlidé sud-américain signalé dans le bassin de l’Orénoque et le haut Rio Negro. Le nom d’aquarium « cichlidé pailleté » évoque les reflets de ses flancs, mais l’espèce est rare dans le commerce aquariophile et son histoire naturelle est bien moins documentée que celle des cichlidés courants."},
-    "identification": {"en": "It is an elongated cichlid with a silvery to brassy body and rows of iridescent spots or spangles on the sides. FishBase records a maximum standard length of 12.2 cm for a male or unsexed fish; it gives no comparable female size or body-mass figure. It can be confused with its congener A. nassa, so compare the complete pattern, body proportions and locality rather than relying on a general ‘spangled’ appearance.", "fr": "C’est un cichlidé allongé, au corps argenté à cuivré, avec des rangées de taches irisées sur les flancs. FishBase rapporte une longueur standard maximale de 12,2 cm chez un mâle ou un individu non sexé ; la fiche ne donne pas de mesure comparable pour les femelles ni de masse corporelle. Il peut être confondu avec son congénère A. nassa : il faut comparer le motif complet, les proportions et la provenance, plutôt que de se fier au seul aspect « pailleté »."},
-    "habitat": {"en": "The documented range includes the Orinoco system of Colombia and Venezuela, its Casiquiare connection, and the upper Negro basin. It is reported among vegetation in shallow water. This is more specific than simply calling it an Amazon fish: much of its known range is in the Orinoco drainage, with records extending into the Rio Negro.", "fr": "La répartition documentée comprend le réseau de l’Orénoque en Colombie et au Venezuela, sa connexion par le Casiquiare et le haut bassin du Negro. L’espèce est signalée parmi la végétation en eau peu profonde. La qualifier simplement de poisson amazonien serait imprécis : une grande partie de son aire connue appartient au bassin de l’Orénoque, avec des données jusque dans le Rio Negro."},
-    "diet": {"en": "FishBase characterizes the species as carnivorous and reports small fish as prey. Specialist aquarium accounts also describe acceptance of frozen and live foods, but captive feeding should not be read as a full inventory of wild prey. The sources reviewed do not quantify its diet by season or life stage.", "fr": "FishBase décrit l’espèce comme carnivore et signale les petits poissons parmi ses proies. Des fiches aquariophiles spécialisées indiquent aussi l’acceptation d’aliments congelés ou vivants, mais l’alimentation en captivité ne constitue pas un inventaire complet des proies sauvages. Les sources consultées ne quantifient pas son régime selon la saison ou le stade de vie."},
-    "behavior": {"en": "Records place it among vegetation in shallow water, and its diet indicates a predatory feeding mode. Beyond that, direct descriptions of wild social behavior, activity rhythms and territoriality are limited. Aquarium accounts warn that a piscivorous fish may be unsuitable with small tankmates, but that advice is not a direct field observation.", "fr": "Les données la situent parmi la végétation en eau peu profonde et son régime indique une alimentation prédatrice. Au-delà de ces éléments, les descriptions directes de son comportement social, de ses rythmes d’activité et de sa territorialité à l’état sauvage sont limitées. Les fiches d’aquarium préviennent qu’un poisson piscivore peut cohabiter difficilement avec de petits poissons, mais ce conseil n’est pas une observation de terrain."},
-    "reproduction": {"en": "Reliable accounts of wild spawning, clutch size, eggs and parental care were not found in the sources reviewed. Some care guides speculate from related cichlids, but the species-specific breeding process remains undocumented here and no such extrapolation is presented as fact.", "fr": "Les sources consultées ne fournissent pas de données fiables sur la ponte sauvage, le nombre d’œufs, leur développement ou les soins parentaux. Certains guides extrapolent à partir de cichlidés apparentés, mais le processus reproducteur propre à cette espèce reste ici non documenté et cette extrapolation n’est pas présentée comme un fait."},
-    "ecology": {"en": "As a shallow-water predator that takes small fish, A. vultuosa is part of food webs in Orinoco and upper Negro habitats. FishBase lists it in commercial fisheries and the aquarium trade, but the sources used do not quantify harvest, ecological impact or the state of wild populations.", "fr": "Prédateur d’eaux peu profondes consommant de petits poissons, A. vultuosa participe aux réseaux alimentaires de l’Orénoque et du haut Negro. FishBase le mentionne dans les pêcheries commerciales et le commerce aquariophile, mais les sources retenues ne quantifient ni les prélèvements, ni son impact écologique, ni l’état des populations sauvages."},
-    "conservation": {"en": "FishBase reports a global IUCN Red List assessment of Least Concern dated 28 October 2020. This is the date and category reported by the database; the profile does not infer that local populations are free of pressure, and no population trend was found in the sources reviewed.", "fr": "FishBase rapporte une évaluation mondiale de la Liste rouge de l’UICN en préoccupation mineure, datée du 28 octobre 2020. Cette date et cette catégorie sont celles indiquées par la base ; la fiche n’en déduit pas l’absence de pression locale et les sources consultées ne donnent pas de tendance de population."}
+    "overview": {
+      "en": "Acaronia vultuosa is a South American cichlid recorded from the Orinoco basin and the upper Rio Negro. The common aquarium name ‘spangled cichlid’ refers to its reflective flank markings, but the species is uncommon in the hobby and its natural history is much less documented than that of familiar aquarium cichlids.",
+      "fr": "Acaronia vultuosa est un cichlidé sud-américain signalé dans le bassin de l’Orénoque et le haut Rio Negro. Le nom d’aquarium « cichlidé pailleté » évoque les reflets de ses flancs, mais l’espèce est rare dans le commerce aquariophile et son histoire naturelle est bien moins documentée que celle des cichlidés courants."
+    },
+    "identification": {
+      "en": "It is an elongated cichlid with a silvery to brassy body and rows of iridescent spots or spangles on the sides. FishBase records a maximum standard length of 12.2 cm for a male or unsexed fish; it gives no comparable female size or body-mass figure. It can be confused with its congener A. nassa, so compare the complete pattern, body proportions and locality rather than relying on a general ‘spangled’ appearance. The FishBase account reports maximum standard length but no corresponding body-mass value, so mass is not estimated.",
+      "fr": "C’est un cichlidé allongé, au corps argenté à cuivré, avec des rangées de taches irisées sur les flancs. FishBase rapporte une longueur standard maximale de 12,2 cm chez un mâle ou un individu non sexé ; la fiche ne donne pas de mesure comparable pour les femelles ni de masse corporelle. Il peut être confondu avec son congénère A. nassa : il faut comparer le motif complet, les proportions et la provenance, plutôt que de se fier au seul aspect « pailleté ». La fiche FishBase indique une longueur standard maximale mais aucune masse corporelle correspondante ; aucune masse n’est donc estimée."
+    },
+    "habitat": {
+      "en": "The documented range includes the Orinoco system of Colombia and Venezuela, its Casiquiare connection, and the upper Negro basin. It is reported among vegetation in shallow water. This is more specific than simply calling it an Amazon fish: much of its known range is in the Orinoco drainage, with records extending into the Rio Negro.",
+      "fr": "La répartition documentée comprend le réseau de l’Orénoque en Colombie et au Venezuela, sa connexion par le Casiquiare et le haut bassin du Negro. L’espèce est signalée parmi la végétation en eau peu profonde. La qualifier simplement de poisson amazonien serait imprécis : une grande partie de son aire connue appartient au bassin de l’Orénoque, avec des données jusque dans le Rio Negro."
+    },
+    "diet": {
+      "en": "FishBase characterizes the species as carnivorous and reports small fish as prey. Specialist aquarium accounts also describe acceptance of frozen and live foods, but captive feeding should not be read as a full inventory of wild prey. The sources reviewed do not quantify its diet by season or life stage.",
+      "fr": "FishBase décrit l’espèce comme carnivore et signale les petits poissons parmi ses proies. Des fiches aquariophiles spécialisées indiquent aussi l’acceptation d’aliments congelés ou vivants, mais l’alimentation en captivité ne constitue pas un inventaire complet des proies sauvages. Les sources consultées ne quantifient pas son régime selon la saison ou le stade de vie."
+    },
+    "behavior": {
+      "en": "Records place it among vegetation in shallow water, and its diet indicates a predatory feeding mode. Beyond that, direct descriptions of wild social behavior, activity rhythms and territoriality are limited. Aquarium accounts warn that a piscivorous fish may be unsuitable with small tankmates, but that advice is not a direct field observation.",
+      "fr": "Les données la situent parmi la végétation en eau peu profonde et son régime indique une alimentation prédatrice. Au-delà de ces éléments, les descriptions directes de son comportement social, de ses rythmes d’activité et de sa territorialité à l’état sauvage sont limitées. Les fiches d’aquarium préviennent qu’un poisson piscivore peut cohabiter difficilement avec de petits poissons, mais ce conseil n’est pas une observation de terrain."
+    },
+    "reproduction": {
+      "en": "Reliable accounts of wild spawning, clutch size, eggs and parental care were not found in the sources reviewed. Some care guides speculate from related cichlids, but the species-specific breeding process remains undocumented here and no such extrapolation is presented as fact.",
+      "fr": "Les sources consultées ne fournissent pas de données fiables sur la ponte sauvage, le nombre d’œufs, leur développement ou les soins parentaux. Certains guides extrapolent à partir de cichlidés apparentés, mais le processus reproducteur propre à cette espèce reste ici non documenté et cette extrapolation n’est pas présentée comme un fait."
+    },
+    "ecology": {
+      "en": "As a shallow-water predator that takes small fish, A. vultuosa is part of food webs in Orinoco and upper Negro habitats. FishBase lists it in commercial fisheries and the aquarium trade, but the sources used do not quantify harvest, ecological impact or the state of wild populations.",
+      "fr": "Prédateur d’eaux peu profondes consommant de petits poissons, A. vultuosa participe aux réseaux alimentaires de l’Orénoque et du haut Negro. FishBase le mentionne dans les pêcheries commerciales et le commerce aquariophile, mais les sources retenues ne quantifient ni les prélèvements, ni son impact écologique, ni l’état des populations sauvages."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN Red List assessment of Least Concern dated 28 October 2020. This is the date and category reported by the database; the profile does not infer that local populations are free of pressure, and no population trend was found in the sources reviewed.",
+      "fr": "FishBase rapporte une évaluation mondiale de la Liste rouge de l’UICN en préoccupation mineure, datée du 28 octobre 2020. Cette date et cette catégorie sont celles indiquées par la base ; la fiche n’en déduit pas l’absence de pression locale et les sources consultées ne donnent pas de tendance de population."
+    }
   },
   "sources": [
-    {"title": {"en": "Acaronia vultuosa — FishBase", "fr": "Acaronia vultuosa — FishBase"}, "url": "https://www.fishbase.se/summary/acaronia-vultuosa.html", "consulted": "2026-10-14", "supports": ["overview", "identification", "habitat", "diet", "behavior", "ecology", "conservation"], "facts": ["Records Orinoco and upper Negro distribution, shallow-water vegetation habitat, carnivory on small fish, maximum standard length 12.2 cm and an IUCN assessment of Least Concern dated 2020-10-28."]},
-    {"title": {"en": "Acaronia vultuosa care, habitat and breeding — Aquarist Atlas", "fr": "Acaronia vultuosa : milieu, habitat et reproduction — Aquarist Atlas"}, "url": "https://www.aquaristatlas.com/species/acaronia-vultuosa/", "consulted": "2026-10-14", "supports": ["identification", "habitat", "diet", "behavior", "reproduction"], "facts": ["Describes iridescent flank pattern, specialized feeding reports, rarity in aquaria, and explicitly notes that reliable species-specific spawning documentation is lacking."]},
-    {"title": {"en": "Acaronia vultuosa — Nordiska Ciklidsällskapet species register", "fr": "Acaronia vultuosa — registre des espèces de la Nordiska Ciklidsällskapet"}, "url": "https://www.ciklid.org/artregister/art.php?ID=1418", "consulted": "2026-10-14", "supports": ["overview", "identification", "ecology"], "facts": ["Nordic cichlid society species-register entry provides an independent specialist reference for this uncommon cichlid."]}
+    {
+      "title": {
+        "en": "Acaronia vultuosa — FishBase",
+        "fr": "Acaronia vultuosa — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/acaronia-vultuosa.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation",
+        "diet",
+        "ecology",
+        "habitat",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "Records Orinoco and upper Negro distribution, shallow-water vegetation habitat, carnivory on small fish, maximum standard length 12.2 cm and an IUCN assessment of Least Concern dated 2020-10-28.",
+        "FishBase lists maximum standard length 12.2 cm for male or unsexed fish, with no body-mass value."
+      ]
+    },
+    {
+      "title": {
+        "en": "Acaronia vultuosa care, habitat and breeding — Aquarist Atlas",
+        "fr": "Acaronia vultuosa : milieu, habitat et reproduction — Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/acaronia-vultuosa/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Describes iridescent flank pattern, specialized feeding reports, rarity in aquaria, and explicitly notes that reliable species-specific spawning documentation is lacking."
+      ]
+    },
+    {
+      "title": {
+        "en": "Acaronia vultuosa — Nordiska Ciklidsällskapet species register",
+        "fr": "Acaronia vultuosa — registre des espèces de la Nordiska Ciklidsällskapet"
+      },
+      "url": "https://www.ciklid.org/artregister/art.php?ID=1418",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Nordic cichlid society species-register entry provides an independent specialist reference for this uncommon cichlid."
+      ]
+    }
   ],
   "illustration_notes": "Acaronia vultuosa cichlid with elongated body, brassy-silver base and fine iridescent pearl-like flank spots, naturalistic fins, white background.",
-  "uncertainties": ["Wild breeding biology and detailed social behavior remain poorly documented in sources consulted.", "FishBase status is dated 2020; no later reassessment or trend was verified."],
+  "uncertainties": [
+    "Wild breeding biology and detailed social behavior remain poorly documented in sources consulted.",
+    "FishBase status is dated 2020; no later reassessment or trend was verified."
+  ],
   "reviewed": true,
   "review_note": "FishBase cross-checked against specialist aquarium account; unsupported reproductive claims explicitly excluded."
 }

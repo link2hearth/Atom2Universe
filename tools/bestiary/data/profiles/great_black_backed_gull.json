@@ -44,14 +44,22 @@
     {
       "title": {
         "en": "Great Black-backed Gull — BTO BirdFacts, British Trust for Ornithology",
-        "fr": "Goéland marin — BirdFacts du BTO, British Trust for Ornithology"
+        "fr": "Goéland marin — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/great-black-backed-gull",
-      "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "reproduction", "ecology", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Adult weight 1.56 kg, wing 473.9 mm; one brood, 2–3 eggs; incubation 27–28 days by both sexes; fledging 50–55 days; breeds from about 4 years; record age 26 years 8 months.",
-        "UK 15,000 pairs (2015), 77,000 in winter (2003–06); UK Red; IUCN Least Concern; out-competes other gulls for fishery discards."
+        "UK 15,000 pairs (2015), 77,000 in winter (2003–06); UK Red; IUCN Least Concern; out-competes other gulls for fishery discards.",
+        "British adults average about 1.56 kg and have a mean wing length of about 474 mm."
       ]
     },
     {
@@ -61,7 +69,14 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/great-black-backed-gull",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
       "facts": [
         "About 78 cm, the world’s largest gull; black back, white head and body, pink legs; aggressive, chases other gulls for food; loud bark; nests on cliff ledges or scrapes; usually three eggs in April–May.",
         "Resident in the UK; Red status."
@@ -74,7 +89,12 @@
       },
       "url": "https://animaldiversity.org/accounts/Larus_marinus/",
       "consulted": "2026-10-12",
-      "supports": ["identification", "diet", "behavior", "ecology"],
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
       "facts": [
         "Length 64–79 cm; young are brown and white and gain adult plumage over their first three winters; omnivorous, kleptoparasitic; no known natural predators, cannibalism causes much chick mortality.",
         "Oil pollution a major cause of death; used as an indicator in beached-bird surveys."

@@ -12,8 +12,8 @@
       "fr": "L’épeire diadème, aussi appelée araignée à croix, est une araignée tisserande de toiles en roue très familière. On la remarque surtout en automne, quand les femelles adultes se tiennent au centre de leur toile. Éclose au printemps, elle devient en général adulte l’été suivant, et les femelles meurent avant la fin de l’année après avoir pondu."
     },
     "identification": {
-      "en": "Males measure 4–8 mm and females 10–18 mm in body length; another source gives up to 20 mm for females. The abdomen has ‘shoulders’, so it is wider at the front, and ranges from pale straw to dark brown or reddish with a darker central pattern holding white markings that can form a cross. The legs are banded brown and carry many short spines.",
-      "fr": "Les mâles mesurent 4 à 8 mm et les femelles 10 à 18 mm de long; une autre source donne jusqu’à 20 mm pour les femelles. L’abdomen, muni d’« épaules », est plus large à l’avant et va du beige paille au brun foncé ou rougeâtre, avec un dessin central plus sombre portant des marques blanches qui peuvent former une croix. Les pattes sont annelées de brun et couvertes de courtes épines."
+      "en": "Males measure 4–8 mm and females 10–18 mm in body length; another source gives up to 20 mm for females. The abdomen has ‘shoulders’, so it is wider at the front, and ranges from pale straw to dark brown or reddish with a darker central pattern holding white markings that can form a cross. The legs are banded brown and carry many short spines. A reliable species-wide adult body-mass range was not found in the consulted sources; spider mass varies with sex, age and feeding condition.",
+      "fr": "Les mâles mesurent 4 à 8 mm et les femelles 10 à 18 mm de long; une autre source donne jusqu’à 20 mm pour les femelles. L’abdomen, muni d’« épaules », est plus large à l’avant et va du beige paille au brun foncé ou rougeâtre, avec un dessin central plus sombre portant des marques blanches qui peuvent former une croix. Les pattes sont annelées de brun et couvertes de courtes épines. Les sources consultées ne donnent pas de plage fiable de masse adulte pour l’espèce ; la masse varie selon le sexe, l’âge et l’état nutritionnel."
     },
     "habitat": {
       "en": "In Britain it is probably the most common and widespread large spider, found in gardens, hedges, fences, scrub, woodland edges and heathland. It needs supports to anchor its web, up to about two metres above the ground, and is rarely found indoors, probably because houses are too dry. It has also been recorded across the northern United States.",
@@ -60,7 +60,8 @@
       ],
       "facts": [
         "Males 4–8 mm, females 10–18 mm; abdomen with shoulders, white cross-like marks; habitats; most common and widespread large spider in Britain.",
-        "Web built in half an hour, rebuilt daily with old silk eaten; spiderlings emerge in May; maturity Aug–Sept; female guards sac and dies before new year."
+        "Web built in half an hour, rebuilt daily with old silk eaten; spiderlings emerge in May; maturity Aug–Sept; female guards sac and dies before new year.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
       ]
     },
     {

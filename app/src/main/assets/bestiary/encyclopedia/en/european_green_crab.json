@@ -1,0 +1,42 @@
+{
+  "id": "european_green_crab",
+  "name": "European green crab",
+  "scientific": "Carcinus maenas",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The European green crab is a common shore crab native to the north-east Atlantic and nearby European and North African coasts. Human transport has also established it on distant shores, where it can become invasive.",
+    "identification": "Its broad carapace may reach about 9 cm across, with records near 10 cm outside its native range. Five teeth sit behind each eye and three lobes between them; C. aestuarii, its Mediterranean relative, has a smoother, projecting front. The first of its five pairs of legs bears claws; the other four are walking legs. Colour varies from green to orange or red. Carapace width is typically about 65 mm; maxima are around 90 mm in males and 75 mm in females. No reliable general adult mass range was found in the consulted sources.",
+    "habitat": "It inhabits sheltered shores, estuaries and shallow subtidal waters, on mud, sand, rock or submerged vegetation. Its tolerance of changing salinity helps it live across tidal creeks and estuarine margins.",
+    "diet": "It is an omnivore, eating mussels, clams, worms, small crustaceans, algae and carrion. Its claws handle or crush prey, while smaller mouthparts move food to the mouth.",
+    "behavior": "Growth requires moulting: the crab sheds its rigid exoskeleton, expands beneath a soft replacement, which then hardens. Female urine carries sex pheromones that attract males before mating. Feeding often peaks at night around high tide.",
+    "reproduction": "Males guard females before mating, which follows the female’s moult while her new shell is soft. The male transfers spermatophores, or sperm packets; the female can store sperm and later attach fertilized eggs beneath her abdomen. Eggs hatch into planktonic zoeae, pass through four stages, then become megalopae, crab-shaped larvae that settle and moult into bottom-living juveniles. In a North American monitoring report, the zoea phase lasted 17–80 days and the megalopa 5.5–26 days, with temperature affecting timing.",
+    "ecology": "Eelgrass beds provide nursery habitat for juvenile fish and invertebrates, so crab damage can reduce this shelter. Adults can uproot shoots while digging for prey, and juveniles may graze the soft tissue at their bases. Waves and currents can dislodge shoots whose roots have been weakened.",
+    "conservation": "Introduced populations can threaten shellfish and coastal habitats through predation and disturbance. Monitoring in introduced regions aims to limit further spread and protect local shellfish and habitats."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Carcinus_maenas",
+      "title": "Carcinus maenas"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Carcinus_maenas",
+      "title": "Carcinus maenas"
+    },
+    {
+      "url": "https://wsg.washington.edu/wordpress/wp-content/uploads/GreenCrabProjectFinalEPAReport.pdf",
+      "title": "European Green Crab Early Detection and Monitoring — Washington Sea Grant, final report (2017)"
+    },
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/1497",
+      "title": "Common shore crab (Carcinus maenas)"
+    },
+    {
+      "url": "https://academic.oup.com/icesjms/article/68/9/1852/670391",
+      "title": "Disruption of essential habitat by a coastal invader: new evidence of the effects of green crabs on eelgrass beds"
+    },
+    {
+      "url": "https://nimpis.marinepests.gov.au/species/species/84",
+      "title": "European green crab — National Introduced Marine Pest Information System (NIMPIS)"
+    }
+  ]
+}

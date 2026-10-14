@@ -1,0 +1,50 @@
+{
+  "id": "alauda_arvensis",
+  "name": "Eurasian skylark",
+  "scientific": "Alauda arvensis",
+  "group": "birds",
+  "sections": {
+    "overview": "The Eurasian skylark is a ground-foraging songbird of open landscapes across Europe and temperate Asia, reaching North Africa. It uses natural grasslands, moors and steppes as well as cultivated fields. Streaked brown plumage conceals it on the ground, while the male’s sustained song flight makes it conspicuous over its territory. Movement varies geographically: some populations remain near breeding grounds year-round, while birds from colder or northern regions move south or west for winter.",
+    "identification": "This compact bird has streaked brown upperparts, a pale underside, marked breast and short raisable crest. The sexes look alike, though British ringing samples show males average larger. Long broad wings and white outer tail feathers show in flight. Compared with the smaller woodlark, the skylark has a longer tail and lacks its pale eyebrow. Mottled plumage conceals it as it walks and feeds among low plants; undulating flight and pale wing edges help identify it in the air. BTO live-bird measurements give mean adult mass of 39.7 g in males and 35.5 g in females; mean wing length is 114.2 mm and 104 mm respectively. These UK sample means complement the reported larger average size of males.",
+    "habitat": "Skylarks use open ground with low or patchy vegetation: natural steppe, heath, saltmarsh and mountain grassland as well as crops and pasture. A breeding site allows movement and display but also offers cover for a shallow ground nest. Tall crops obstruct access; bare ground conceals little. Birds may leave a field as vegetation grows too high. In winter, stubbles provide spilled grain and weed seeds. The species depends on a mosaic of open ground, low cover and food rather than on one crop.",
+    "diet": "Skylarks glean seeds, grains, leaves and small invertebrates from the ground, with proportions varying by season and habitat. Winter samples from southern Britain contained cereal grain and leaves, weed leaves and seeds, grass leaves and arthropods. Stubbles supplied grain; winter cereals supplied leaves. Weed leaves were eaten disproportionately to their cover. During breeding, invertebrates provide protein for chicks, while adults also eat plants. Harvest, herbicides and stubble removal alter access to these foods.",
+    "behavior": "In breeding season a male sings while climbing on fluttering wings, circling high above its territory, then descends. The aerial display signals territorial occupation. Playback experiments found that level-flight song can help neighbours recognize individual singers; song tempo increases on ascent, perhaps reflecting respiratory demands. Skylarks also sing on the ground and walk as they forage. Territorial in spring, they gather in autumn and winter flocks. Some European populations migrate at night; others are resident, and passage can also be seen by day.",
+    "reproduction": "The nest is a shallow cup on the ground, often beside a grass tuft or in a low crop. The female incubates three or four eggs for about 12–14 days. Chicks usually leave the nest after eight to ten days, before they can fly; flight develops around 16–20 days after hatching. Both parents feed the dependent young. More than one brood is possible when season and habitat allow. Among 995 nests monitored in southern England, predation caused most failures; trampling and farm operations also mattered in grass. Cereal nest survival was lower near tractor tracks and later in the season.",
+    "ecology": "The skylark links open-field plants with invertebrate prey, while eggs and young are vulnerable to predators and farm disturbance. Studies describe its diet and nest outcomes but do not establish broad control of insects or weeds. Crops may provide food but become too dense for nesting; winter flocks use patches where seeds and green plants persist. The bird responds to vegetation, food and disturbance together, not to farmland as a uniform habitat.",
+    "conservation": "The 2018 global IUCN assessment lists the skylark as Least Concern: its range and population remain above threatened thresholds despite a decreasing trend. This does not describe every regional population. In the UK it is Red-listed; BTO monitoring records a 9% breeding-population decline from 1995 to 2024, following a sharper earlier fall. British evidence links decline chiefly to agricultural intensification, especially the shift from spring to autumn cereal sowing: dense winter crops can close nesting habitat and loss of stubbles reduces winter food. Local studies also find nest losses to predators, trampling and machinery. Open plots in cereals, spring crops, managed grass and seed-rich stubbles can maintain nesting access or winter feeding."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/skylark",
+      "title": "Skylark — BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Skylark/overview",
+      "title": "Eurasian Skylark — All About Birds, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0072768",
+      "title": "Flight Phases in the Song of Skylarks: Impact on Acoustic Parameters and Coding Strategy — PLOS ONE"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1046/j.1474-919X.2002.00101.x",
+      "title": "Survival rates, causes of failure and productivity of Skylark nests on lowland farmland — Ibis"
+    },
+    {
+      "url": "https://besjournals.onlinelibrary.wiley.com/doi/10.1046/j.1365-2664.2001.00618.x",
+      "title": "Habitat use and diet of skylarks wintering on lowland farmland in southern Britain — Journal of Applied Ecology"
+    },
+    {
+      "url": "https://crbpo.mnhn.fr/les-programmes-de-recherche/axe-2-migration-et-dispersion/article/suivi-de-la-migration-nocturne-de-l-alouette-des-champs-smac",
+      "title": "Suivi de la migration nocturne de l’Alouette des champs — CRBPO, Muséum national d’Histoire naturelle"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T102998555A132039889.en",
+      "title": "Eurasian Skylark — BirdLife International Species Factsheet"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Skylark/lifehistory",
+      "title": "Eurasian Skylark: life history — Cornell Lab of Ornithology"
+    }
+  ]
+}

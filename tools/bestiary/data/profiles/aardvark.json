@@ -12,8 +12,8 @@
       "fr": "L’oryctérope est le seul mammifère vivant de l’ordre des Tubulidentés. Originaire d’Afrique subsaharienne, il mange fourmis et termites. Sa ressemblance avec le fourmilier sud-américain vient de ce régime semblable, et non d’une parenté proche."
     },
     "identification": {
-      "en": "An adult has a heavy arched body, sparse yellow-grey coat, long tapered tail, narrow snout and tall ears that fold back. It has four large digging claws on each forefoot and five on each hind foot. Its cheek teeth are enamel-free dentine tubes; adults lack incisors and canines.",
-      "fr": "L’adulte a un corps massif et arqué, un pelage clairsemé gris-jaune, une longue queue effilée, un museau étroit et de grandes oreilles rabattables. Il porte quatre fortes griffes fouisseuses à chaque patte avant et cinq à l’arrière. Ses dents jugales sont des tubes de dentine sans émail; l’adulte n’a ni incisives ni canines."
+      "en": "An adult has a heavy arched body, sparse yellow-grey coat, long tapered tail, narrow snout and tall ears that fold back. It has four large digging claws on each forefoot and five on each hind foot. Its cheek teeth are enamel-free dentine tubes; adults lack incisors and canines. South African National Biodiversity Institute gives a broad adult length of 1.05–2.20 m and mass of 60–80 kg. The source does not split these figures by sex or provide a standard body-width measurement.",
+      "fr": "L’adulte a un corps massif et arqué, un pelage clairsemé gris-jaune, une longue queue effilée, un museau étroit et de grandes oreilles rabattables. Il porte quatre fortes griffes fouisseuses à chaque patte avant et cinq à l’arrière. Ses dents jugales sont des tubes de dentine sans émail; l’adulte n’a ni incisives ni canines. Le South African National Biodiversity Institute indique une longueur adulte générale de 1,05 à 2,20 m et une masse de 60 à 80 kg. La source ne ventile pas ces valeurs selon le sexe et ne donne pas de mesure standard de largeur du corps."
     },
     "habitat": {
       "en": "Aardvarks range widely across sub-Saharan Africa, where soils are diggable and prey is available. They inhabit savanna, grassland, woodland and thicket. Hard rocky ground, waterlogged sites and hyper-arid deserts limit them because they need diggable earth for both feeding and shelter. Deep burrows provide daytime refuge.",
@@ -79,10 +79,12 @@
       "url": "https://www.sanbi.org/animal-of-the-week/orycteropus-afer/",
       "consulted": "2026-10-11",
       "supports": [
+        "identification",
         "reproduction"
       ],
       "facts": [
-        "Gestation about seven months; usually one young, nursed to roughly three months."
+        "Gestation about seven months; usually one young, nursed to roughly three months.",
+        "Adult total length is 1.05–2.20 m and mass 60–80 kg; no sex-specific range is stated."
       ]
     },
     {

@@ -1,0 +1,30 @@
+{
+  "id": "thymallus_arcticus",
+  "name": "Ombre arctique",
+  "scientific": "Thymallus arcticus",
+  "group": "fish",
+  "sections": {
+    "overview": "L’ombre arctique est un poisson d’eau douce froide du nord de l’Amérique du Nord et de la Sibérie, reconnaissable à son immense nageoire dorsale en voile. Parmi les salmonidés, il exige l’une des eaux les plus froides, et il effectue de longues migrations saisonnières entre ses zones d’hivernage, de reproduction et d’alimentation.",
+    "identification": "La nageoire dorsale est très agrandie, avec 17 à 25 rayons, surtout chez les mâles. Le dos est violet foncé à noir bleuté, les flancs gris à bleu foncé avec des reflets rosés, et le ventre gris à blanc, avec des taches sombres éparses. La bouche est petite. La longueur courante est d’environ 34 cm, et le maximum d’environ 76 cm et 3,8 kg.",
+    "habitat": "Les adultes vivent en eau libre dans des rivières et des lacs clairs, froids, de taille moyenne à grande, de la baie d’Hudson à l’Alaska et vers le sud au Canada et dans le haut Missouri, au Montana; en Eurasie, on le trouve de l’Ob à l’Ienisseï. Les températures supérieures à 15 °C sont pénibles, et au-delà de 20 °C il ne les supporte pas longtemps. Une population du Michigan a disparu.",
+    "diet": "Les jeunes se nourrissent de zooplancton, puis passent peu à peu aux insectes immatures. Les adultes mangent surtout des insectes de surface, mais aussi des poissons, des œufs de poisson, des crustacés planctoniques et des lemmings.",
+    "behavior": "Chaque année, il se déplace entre ses sites d’hivernage, ses cours d’eau de frai et ses zones d’alimentation d’été, parcourant parfois bien plus de 100 miles. À l’automne, il quitte beaucoup de petits affluents avant qu’ils ne gèlent ou s’assèchent. Les adultes se tiennent dans les eaux plus rapides, et les plus gros poissons restent plutôt dans les cours supérieurs, plus frais.",
+    "reproduction": "Le frai a lieu au printemps, vers la débâcle, sur des radiers peu profonds de petit gravier. Les poissons ne construisent pas de nid; les vibrations de la queue du couple en frai laissent une légère dépression. Une femelle pond de 1 500 à 30 000 œufs d’environ 2,5 mm, qui éclosent en deux semaines et demie environ, et les poissons mûrissent vers trois à quatre ans. Les mâles défendent une zone de frai jusqu’à une semaine et déploient leur nageoire devant les femelles.",
+    "ecology": "Sa répartition estivale est déterminée par la température de l’eau et par des concurrents comme la truite arc-en-ciel. Il est la proie de brochets, de truites, de pygargues à tête blanche, de balbuzards, de loutres de rivière et de visons.",
+    "conservation": "L’UICN le classe en préoccupation mineure (évaluation de 2008, d’après FishBase). En Alaska, il est abondant et répandu, bien que les populations près de Nome soient jugées vulnérables, et le faible renouvellement de la péninsule de Seward laisse de petites populations lentes à se rétablir. L’exploitation minière, les routes, l’assèchement et l’ensablement sont les principales menaces pour son habitat, et les populations nord-américaines ont été décrites comme en déclin."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Thymallus-arcticus.html",
+      "title": "Thymallus arcticus, ombre arctique — FishBase"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Thymallus_arcticus/",
+      "title": "Thymallus arcticus — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://westernnativetrout.org/wp-content/uploads/2019/07/wnti-species_assessment_arctic-grayling_adfg_20130318.pdf",
+      "title": "Examen du statut de l’ombre arctique — Western Native Trout Initiative, avec données du Département de la pêche et du gibier de l’Alaska (2013)"
+    }
+  ]
+}

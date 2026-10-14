@@ -12,8 +12,8 @@
       "fr": "Le coq bankiva est un oiseau galliforme de la famille des Phasianidés, originaire d’Asie du Sud et du Sud-Est, et le principal ancêtre sauvage de la poule domestique. Les comparaisons de génomes entiers appuient une contribution initiale de la sous-espèce d’Asie du Sud-Est Gallus gallus spadiceus, suivie de flux génétiques entre populations de poules et autres coqs sauvages ; la domestication ne fut pas un événement simple et isolé. Certains génomes régionaux de poules portent aussi de l’ADN introgressé du coq de Sonnerat (Gallus sonneratii), avec des signaux moindres ou plus rares du coq de Ceylan (Gallus lafayettii) et du coq vert (Gallus varius) ; ces résultats ne remplacent pas le coq bankiva comme ancêtre principal."
     },
     "identification": {
-      "en": "The wild adult male has a bright red comb and wattles, orange-gold neck feathers, a dark iridescent body, and long curved feathers over the tail; total length can reach about 70 centimetres including that tail. Females are smaller-looking and mottled brown, with a short tail and camouflage suited to nesting on the ground. A study of the Thai subspecies Gallus gallus spadiceus found breeding males with long golden neck hackles, unlike the shorter black feathers outside the breeding period. A wild-type outline alone cannot establish genetic purity, because domestic ancestry may be invisible in appearance. Domestic chickens have also been selected for rapid growth, so breed size and body form are not reliable norms for wild birds.",
-      "fr": "Le mâle adulte sauvage porte une crête et des caroncules rouge vif, des plumes du cou orange doré, un corps sombre irisé et de longues plumes courbées au-dessus de la queue ; la longueur totale peut atteindre environ 70 centimètres, queue comprise. Les femelles paraissent plus petites, sont brun moucheté et ont une queue courte ainsi qu’un camouflage adapté à la nidification au sol. Une étude de la sous-espèce thaïlandaise Gallus gallus spadiceus a observé chez les mâles reproducteurs de longues plumes dorées au cou, contrairement aux plumes noires plus courtes hors de la période de reproduction. Une silhouette de type sauvage ne permet pas à elle seule d’établir la pureté génétique, car une ascendance domestique peut rester invisible. Les poules domestiques ont aussi été sélectionnées pour une croissance rapide ; la taille et la forme des races ne donnent pas des normes fiables pour les oiseaux sauvages."
+      "en": "Males reach 65–78 cm in total length and 672–1,450 g; females are smaller at 41–46 cm and 485–1,050 g. These ranges include marked sexual size dimorphism and are Cornell Lab’s reference measurements. The wild adult male has a bright red comb and wattles, orange-gold neck feathers, a dark iridescent body, and long curved feathers over the tail. Females are smaller-looking and mottled brown, with a short tail and camouflage suited to nesting on the ground. A study of the Thai subspecies Gallus gallus spadiceus found breeding males with long golden neck hackles, unlike the shorter black feathers outside the breeding period. A wild-type outline alone cannot establish genetic purity, because domestic ancestry may be invisible in appearance. Domestic chickens have also been selected for rapid growth, so breed size and body form are not reliable norms for wild birds.",
+      "fr": "Le coq mesure 65 à 78 cm de longueur totale et pèse 672 à 1 450 g ; la poule est plus petite, avec 41 à 46 cm et 485 à 1 050 g. Ces fourchettes reflètent un dimorphisme marqué et correspondent aux mesures de référence du Cornell Lab. Le mâle adulte sauvage porte une crête et des caroncules rouge vif, des plumes du cou orange doré, un corps sombre irisé et de longues plumes courbées au-dessus de la queue. Les femelles paraissent plus petites, sont brun moucheté et ont une queue courte ainsi qu’un camouflage adapté à la nidification au sol. Une étude de la sous-espèce thaïlandaise Gallus gallus spadiceus a observé chez les mâles reproducteurs de longues plumes dorées au cou, contrairement aux plumes noires plus courtes hors de la période de reproduction. Une silhouette de type sauvage ne permet pas à elle seule d’établir la pureté génétique, car une ascendance domestique peut rester invisible. Les poules domestiques ont aussi été sélectionnées pour une croissance rapide ; la taille et la forme des races ne donnent pas des normes fiables pour les oiseaux sauvages."
     },
     "habitat": {
       "en": "Its native range spans the Indian subcontinent and much of mainland and island Southeast Asia, with regional subspecies occupying different areas. It uses old and secondary forest, mangroves, and forest edges, often feeding in a clearing or plantation beside cover.",
@@ -57,12 +57,12 @@
         "Seasonal seeds, fruits, insects; ground scratching"
       ],
       "prose_claims": [
-        "habitat.en.2",
-        "habitat.fr.2",
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
-        "diet.fr.2"
+        "diet.fr.1",
+        "diet.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -89,8 +89,8 @@
       ],
       "prose_claims": [
         "identification.en.1",
-        "identification.fr.1",
         "identification.en.2",
+        "identification.fr.1",
         "identification.fr.2",
         "reproduction.en.4",
         "reproduction.fr.4"
@@ -120,8 +120,8 @@
       ],
       "prose_claims": [
         "behavior.en.2",
-        "behavior.fr.2",
         "behavior.en.3",
+        "behavior.fr.2",
         "behavior.fr.3",
         "ecology.en.1",
         "ecology.fr.1"
@@ -150,8 +150,8 @@
       ],
       "prose_claims": [
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
+        "reproduction.fr.1",
         "reproduction.fr.2"
       ],
       "budget": {
@@ -177,10 +177,10 @@
         "Spadiceus ancestry and selection for growth"
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "identification.en.5",
-        "identification.fr.5"
+        "identification.fr.5",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -206,10 +206,10 @@
         "Domestic ancestry varies among populations"
       ],
       "prose_claims": [
-        "identification.en.4",
-        "identification.fr.4",
         "conservation.en.3",
-        "conservation.fr.3"
+        "conservation.fr.3",
+        "identification.en.4",
+        "identification.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -287,12 +287,12 @@
         "Secretive bird; small groups"
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
         "habitat.en.1",
         "habitat.fr.1",
-        "behavior.en.1",
-        "behavior.fr.1"
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -345,7 +345,8 @@
       ],
       "prose_claims": [
         "identification.en.3",
-        "identification.fr.3"
+        "identification.fr.3",
+        "identification.fr.7"
       ],
       "budget": {
         "limit": 200,
@@ -406,6 +407,25 @@
         "total": 97,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Red Junglefowl Identification — Cornell Lab of Ornithology",
+        "fr": "Identification du Coq bankiva — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Red_Junglefowl/id",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Male 65–78 cm and 672–1,450 g; female 41–46 cm and 485–1,050 g."
+      ],
+      "prose_claims": [
+        "identification.en.6",
+        "identification.en.7",
+        "identification.fr.6"
+      ]
     }
   ],
   "illustration_notes": "Illustration: existing adult male red junglefowl image; no new image requested.",

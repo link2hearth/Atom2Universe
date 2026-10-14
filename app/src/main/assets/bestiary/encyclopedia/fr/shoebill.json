@@ -1,0 +1,46 @@
+{
+  "id": "shoebill",
+  "name": "Bec-en-sabot du Nil",
+  "scientific": "Balaeniceps rex",
+  "group": "birds",
+  "sections": {
+    "overview": "Le bec-en-sabot est un oiseau des marais africains, seul représentant vivant des Balaenicipitidés. Malgré sa silhouette de cigogne, il est plus proche des pélicans que des cigognes ou des hérons. Son corps gris ardoise, ses longues pattes et son large bec en sabot le distinguent.",
+    "identification": "L’adulte mesure environ 1,2 m de long et 1,1 à 1,4 m de haut, pour une envergure proche de 2,4 m. BirdLife indique une masse moyenne de 5,6 kg chez le mâle et de 4,9 kg chez la femelle. Ces valeurs de référence ne sont pas des maxima universels. L’adulte est gris bleuté, avec des rémiges sombres, un œil pâle et de longs doigts écartés pour marcher sur la végétation flottante. Son immense bec a une base profonde et renflée, des bords tranchants et une pointe crochue; le mâle est légèrement plus grand.",
+    "habitat": "Il fréquente les marécages d’eau douce et les plaines inondables saisonnières d’Afrique centrale et orientale, du Soudan du Sud à la Zambie. Les roseaux, les laîches et le papyrus forment des abris; des clairières et tapis végétaux flottants servent à pêcher et à nicher.",
+    "diet": "Les poissons dominent son régime, notamment les dipneustes, les polyptères et les poissons-chats; il capture aussi des serpents d’eau et des grenouilles, et plus rarement d’autres vertébrés aquatiques. Il attend sans bouger ou avance lentement, puis s’abat vers l’avant pour saisir sa proie.",
+    "behavior": "Solitaire, le bec-en-sabot garde ses distances avec les autres oiseaux qui se nourrissent, même en période de nidification. Une attaque peut ramener un poisson mêlé de végétaux, que l’oiseau secoue avant d’avaler. Il est plutôt sédentaire, mais les variations d’eau entraînent des déplacements locaux.",
+    "reproduction": "Les couples nichent sur une plateforme végétale posée sur un tapis flottant ou un monticule. La ponte compte un à trois œufs, souvent deux; les deux parents couvent et nourrissent les petits. Souvent, un seul jeune survit, faute de nourriture ou après l’agression du cadet.",
+    "ecology": "Le bec-en-sabot dépend d’une mosaïque: couvert dense pour se dissimuler, eaux poissonneuses et sol dégagé pour reprendre son équilibre après l’attaque. Dans le Bangweulu, en Zambie, le suivi a révélé surtout de courts déplacements liés à l’alimentation et à la recherche de sites adaptés.",
+    "conservation": "Dans sa notice consultée en octobre2026, BirdLife International classe le bec-en-sabot comme vulnérable et rapporte une estimation de3 300–5 300 individus matures. Il s’agit d’estimations d’évaluation, pas d’un nouveau recensement. Disparition des marais, chasse, dérangement des nids, captures illégales et sécheresse figurent parmi les pressions."
+  },
+  "sources": [
+    {
+      "url": "https://www.birdlife.org/birds/shoebill/?m=0&sid=3808",
+      "title": "Bec-en-sabot"
+    },
+    {
+      "url": "https://www.unep-aewa.org/sites/default/files/document/mop6_29_shoebill_issap.pdf",
+      "title": "Plan d’action international pour la conservation du bec-en-sabot"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Balaeniceps_rex/",
+      "title": "Balaeniceps rex (bec-en-sabot)"
+    },
+    {
+      "url": "https://ueaeprints.uea.ac.uk/id/eprint/85279/1/2022SerraAcacioMPhD.pdf",
+      "title": "La surface de l’eau détermine les déplacements des becs-en-sabot"
+    },
+    {
+      "url": "https://doi.org/10.1046/j.1439-0361.2003.03002.x",
+      "title": "Les affinités phylogénétiques du bec-en-sabot (Balaeniceps rex)"
+    },
+    {
+      "url": "https://www.city.chiba.jp/zoo/zone/data-shoebill.html",
+      "title": "Bec-en-sabot du Nil — parc zoologique de Chiba"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/shoebill",
+      "title": "Bec-en-sabot du Nil — San Diego Zoo Wildlife Alliance"
+    }
+  ]
+}

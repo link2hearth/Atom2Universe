@@ -1,0 +1,42 @@
+{
+  "id": "bonobo",
+  "name": "Bonobo",
+  "scientific": "Pan paniscus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le bonobo (Pan paniscus) est un grand singe présent uniquement en République démocratique du Congo, au sud du fleuve Congo. Il partage le genre Pan avec le chimpanzé commun (P. troglodytes). Les communautés cherchent leur nourriture en sous-groupes changeants et leurs comportements varient.",
+    "identification": "L’adulte est élancé, avec de longues jambes, un pelage noir et la peau sombre au visage, aux mains et aux pieds. Les poils du sommet du crâne forment souvent une raie centrale ; le petit porte une touffe blanche au croupion. Lèvres roses et museau moins saillant le distinguent du chimpanzé commun, plus robuste. La longueur tête-croupe des adultes est d’environ 70 à 83 cm ; les masses adultes publiées sont de 27 à 38 kg chez les femelles et de 37 à 61 kg chez les mâles, avec un chevauchement important entre les sexes.",
+    "habitat": "L’aire se trouve dans le bassin central du Congo, entre le fleuve Congo et le système Kasaï–Sankuru, en République démocratique du Congo. Le bonobo fréquente les forêts de plaine primaires, secondaires et marécageuses ; certains vivent aussi dans des mosaïques forêt-savane. L’habitat varie localement.",
+    "diet": "Le bonobo mange surtout des fruits, mais aussi des feuilles, pousses et fleurs ; des insectes et petits vertébrés sont signalés. Le régime varie selon le site et la saison. À LuiKotale, les fruits apparaissaient dans 66 % des séances d’une communauté habituée. Il se nourrit dans les arbres et au sol.",
+    "behavior": "Les communautés se divisent en groupes temporaires qui se séparent ou se retrouvent : c’est la fission-fusion. Les femelles quittent souvent leur communauté natale à maturité ; les mâles restent généralement. Les femelles coopèrent autour de la nourriture, mais agressivité et compétition existent aussi. Les comportements varient selon les sites : les bonobos ne sont pas toujours paisibles.",
+    "reproduction": "La femelle a généralement un seul petit après environ huit mois de gestation. Elle l’allaite et le porte longtemps ; plusieurs années séparent les naissances. À Wamba, l’intervalle moyen entre naissances vivantes était de 4,8 ans ; le rythme varie. La mère accompagne son petit dans l’apprentissage des déplacements et de l’alimentation.",
+    "ecology": "Après avoir mangé des fruits, les bonobos rejettent les graines loin des arbres parents. À LuiKotale, les chercheurs ont relevé plus de 91 espèces végétales et une distance moyenne de dispersion de 1,2 kilomètre ; les graines ingérées germaient mieux lors d’essais. Cela étaye leur rôle local à la régénération forestière.",
+    "conservation": "L’évaluation mondiale de l’UICN de 2016 classait le bonobo « En danger », en raison de la chasse, de la perte et de la dégradation de l’habitat, et de l’application insuffisante des lois. Le Bonobo Conservation Initiative signale aussi l’avancée humaine et les maladies. Les estimations sont difficiles ; cette évaluation n’est pas un nouveau recensement."
+  },
+  "sources": [
+    {
+      "url": "https://strapi.eaza.net/uploads/Bonobo_BPG_final_version_2020_ab295642cd.pdf",
+      "title": "EAZA Best Practice Guidelines : Bonobo (Pan paniscus)"
+    },
+    {
+      "url": "https://www.storre.stir.ac.uk/bitstream/1893/26839/1/10.2305_IUCN.UK.2016-2.RLTS.T15932A17964305.en.pdf",
+      "title": "Pan paniscus — Liste rouge de l’UICN, évaluation de 2016"
+    },
+    {
+      "url": "https://www.bonobosworld.org/images/zotero/Moscovice_et_al.-2017-Stable_and_fluctuating_social_preferences.pdf",
+      "title": "Préférences sociales stables et fluctuantes chez les femelles bonobos — Animal Behaviour"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/journal-of-tropical-ecology/article/abs/ecological-services-performed-by-the-bonobo-pan-paniscus-seed-dispersal-effectiveness-in-tropical-forest/A581415D4111271BDCD5AA7D0E9519B",
+      "title": "Services écologiques du bonobo (Pan paniscus) : efficacité de la dispersion des graines en forêt tropicale — Journal of Tropical Ecology"
+    },
+    {
+      "url": "https://www.bonobo.org/threats",
+      "title": "Menaces — Bonobo Conservation Initiative"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Pan_paniscus/",
+      "title": "Pan paniscus (bonobo) — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

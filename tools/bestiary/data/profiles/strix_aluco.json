@@ -12,8 +12,8 @@
       "fr": "La chouette hulotte est un rapace forestier trapu et sédentaire, présent dans une grande partie de l’Europe ainsi que dans des régions d’Asie et d’Afrique du Nord. Elle chasse surtout la nuit, souvent depuis un perchoir, et reste toute l’année près d’un territoire familier. Sa tête arrondie sans aigrettes, ses yeux sombres et son plumage brun ou gris fortement marqué la caractérisent, même lorsque son plumage se confond avec l’écorce. La forme nord-africaine mauritanica, parfois séparée comme chouette du Maghreb, est incluse dans Strix aluco par la liste Clements de 2025."
     },
     "identification": {
-      "en": "Adults have a rounded head, a plain facial disc, a short hooked bill and no raised ear tufts. The eyes are dark brown to nearly black and face forward. Across Europe, plumage ranges from chestnut red-brown through grey-brown to paler grey; these are colour forms within the species, not separate sexes. Males and females look alike, although females are larger on average and the size ranges overlap. Fine streaks and mottling break up the outline against bark. The broad, rounded wings and compact body suit manoeuvring among trees.",
-      "fr": "L’adulte porte une tête arrondie, un disque facial peu marqué, un bec court et crochu, et aucune aigrette dressée. Ses yeux brun foncé à presque noirs sont orientés vers l’avant. En Europe, le plumage varie du brun roux au gris brun et au gris plus clair : ce sont des formes de couleur au sein de l’espèce, et non des différences entre les sexes. Mâles et femelles se ressemblent, mais les femelles sont en moyenne plus grandes, avec des tailles qui se chevauchent. Les fines stries et marbrures brouillent sa silhouette sur l’écorce. Ses ailes larges et arrondies et son corps compact facilitent les manœuvres entre les arbres."
+      "en": "In BTO ringing samples, adult females averaged 502 g and a 274 mm wing, while males averaged 396 g and a 259 mm wing. A general reference gives 37–46 cm body length and 81–104 cm wingspan; no reliable body-width measure was found. Adults have a rounded head, a plain facial disc, a short hooked bill and no raised ear tufts. The eyes are dark brown to nearly black and face forward. Across Europe, plumage ranges from chestnut red-brown through grey-brown to paler grey; these are colour forms within the species, not separate sexes. Males and females look alike, although females are larger on average and the size ranges overlap. Fine streaks and mottling break up the outline against bark. The broad, rounded wings and compact body suit manoeuvring among trees.",
+      "fr": "Dans les échantillons de baguage du BTO, les femelles adultes pesaient en moyenne 502 g et avaient une aile de 274 mm, contre 396 g et 259 mm chez les mâles. Une référence générale donne 37 à 46 cm de longueur corporelle et 81 à 104 cm d’envergure ; aucune largeur corporelle fiable n’a été trouvée. L’adulte porte une tête arrondie, un disque facial peu marqué, un bec court et crochu, et aucune aigrette dressée. Ses yeux brun foncé à presque noirs sont orientés vers l’avant. En Europe, le plumage varie du brun roux au gris brun et au gris plus clair : ce sont des formes de couleur au sein de l’espèce, et non des différences entre les sexes. Mâles et femelles se ressemblent, mais les femelles sont en moyenne plus grandes, avec des tailles qui se chevauchent. Les fines stries et marbrures brouillent sa silhouette sur l’écorce. Ses ailes larges et arrondies et son corps compact facilitent les manœuvres entre les arbres."
     },
     "habitat": {
       "en": "Broad-leaved and mixed woodland provide mature trees, sheltered roosts and cavities for nesting. Tawny owls also occupy conifer plantations, wooded parks and large gardens, provided that trees or nest boxes offer a suitable cavity and nearby ground supplies prey. They avoid extensive open country and uplands without tree cover. Adults remain on established territories year-round; young birds usually disperse only a few kilometres, and large stretches of water can impede their spread. Habitat quality therefore depends on both nesting sites and connected, huntable cover.",
@@ -56,7 +56,8 @@
       ],
       "facts": [
         "ADW describes the species as a resident owl, gives its broad Eurasian and North African range, and summarizes variation in plumage, dark forward-set eyes and female-biased size.",
-        "Its species account describes nocturnal perch hunting, varied prey and pellet regurgitation; older research citations are treated as secondary context."
+        "Its species account describes nocturnal perch hunting, varied prey and pellet regurgitation; older research citations are treated as secondary context.",
+        "Species averages: 38 cm length, 99 cm wingspan, 420 g male and 520 g female; females more than 25% heavier and 5% longer on average."
       ],
       "budget": {
         "limit": 200,
@@ -306,10 +307,12 @@
       "consulted": "2026-10-11",
       "supports": [
         "conservation",
-        "ecology"
+        "ecology",
+        "identification"
       ],
       "facts": [
-        "BTO BirdFacts summarizes UK habitat, nesting and life-cycle measures from BTO monitoring, and reports UK population-index decline and Amber status."
+        "BTO BirdFacts summarizes UK habitat, nesting and life-cycle measures from BTO monitoring, and reports UK population-index decline and Amber status.",
+        "BTO biometrics: adult female wing 273.9 mm and mass 502.2 g; male wing 259 mm and mass 396 g; UK ringing sample."
       ],
       "budget": {
         "limit": 200,

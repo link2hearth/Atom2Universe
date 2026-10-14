@@ -1,0 +1,34 @@
+{
+  "id": "murray_cod",
+  "name": "Morue de Murray",
+  "scientific": "Maccullochella peelii",
+  "group": "fish",
+  "sections": {
+    "overview": "La morue de Murray est un grand prédateur d’eau douce d’Australie orientale. Contrairement aux vraies morues, elle appartient aux Percichthyidés, comme la morue à truite et la morue d’eau douce orientale. Elle est le plus grand poisson d’eau douce australien.",
+    "identification": "Son corps robuste et allongé porte une tête large et aplatie, de petits yeux, une grande bouche aux dents fines et un museau concave. Les adultes mesurent souvent moins de 70 cm, mais des spécimens historiques exceptionnels ont atteint 1,8 m et 113,5 kg. Ses flancs vert olive marbrés de sombre s’éclaircissent vers le ventre pâle. Ses nageoires sont arrondies; une encoche sépare les parties épineuse et molle de la dorsale. La bouche dépasse les yeux; la mâchoire inférieure peut avancer. Les estimations de longévité maximale vont de 75 à 114 ans.",
+    "habitat": "Les fosses profondes, les blocs rocheux, les berges creusées et les troncs immergés lui offrent des postes d’affût et des abris. L’espèce caractérise surtout les rivières de plaine, mais vit aussi dans certains tronçons d’altitude. Elle peuple le bassin Murray–Darling, au Queensland, en Nouvelle-Galles du Sud, au Victoria et en Australie-Méridionale, sauf dans les secteurs supérieurs les plus froids.",
+    "diet": "Les adultes capturent écrevisses, crevettes d’eau douce et poissons, notamment des carpes et des perches introduites lorsqu’elles sont disponibles; mollusques et parfois petits animaux du bord complètent le régime. Elle chasse à l’affût depuis un abri.",
+    "behavior": "Territoriale, elle préfère les fosses profondes, les troncs, rochers et berges surplombantes. Le jour, elle s’abrite; la nuit, elle chasse parfois hauts-fonds ou surface.",
+    "reproduction": "La maturité survient vers cinq ans, mais varie avec la croissance et le lieu. Au printemps, les couples paradent et choisissent des surfaces dures, souvent des troncs ou roches immergés. La femelle y dépose des œufs adhésifs de fond, que le mâle féconde extérieurement. Le mâle garde et ventile les œufs jusqu’à l’éclosion des larves nageant en pleine eau. Les larves dérivent, résorbent leurs réserves vitellines, puis consomment de minuscules invertébrés en grandissant.",
+    "ecology": "Prédateur supérieur, elle mange poissons indigènes, crustacés et carpes introduites dans les mêmes réseaux fluviaux.",
+    "conservation": "La surpêche a réduit les stocks dès le XIXe siècle; barrages, débits modifiés, eaux froides et retrait des troncs dégradent encore l’habitat et le recrutement. L’espèce est classée Vulnérable au titre de l’EPBC australien; ce statut national de conservation est distinct des règles locales de pêche."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/fishes/murray-cod-maccullochella-peelii/",
+      "title": "Morue de Murray, Maccullochella peelii (Mitchell, 1838)"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/4655",
+      "title": "Morue de Murray, Maccullochella peelii (Mitchell 1838)"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Murray_cod",
+      "title": "Morue de Murray"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/conservation-advices/maccullochella-peelii-peelii",
+      "title": "Maccullochella peelii peelii (morue de Murray, cod, goodoo)"
+    }
+  ]
+}

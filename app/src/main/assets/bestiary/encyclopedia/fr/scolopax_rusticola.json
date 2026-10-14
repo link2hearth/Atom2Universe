@@ -1,0 +1,30 @@
+{
+  "id": "scolopax_rusticola",
+  "name": "Bécasse des bois",
+  "scientific": "Scolopax rusticola",
+  "group": "birds",
+  "sections": {
+    "overview": "La bécasse des bois est un limicole trapu et discret qui vit en forêt plutôt que sur le littoral. Surtout active au crépuscule et la nuit, elle passe la journée dans un couvert dense, où son plumage cryptique la rend difficile à voir.",
+    "identification": "Oiseau rond de 33 à 38 cm, dont un bec droit de 6 à 8 cm, pour 55 à 65 cm d’envergure. Les adultes britanniques pèsent environ 305 g, avec une aile voisine de 200 mm. Le plumage cryptique est brun roux dessus, chamois et barré dessous. Les grands yeux, placés haut et en arrière de la tête, lui offrent une vision très étendue.",
+    "habitat": "C’est surtout un oiseau de forêt, qui sort la nuit pour se nourrir dans les champs voisins. Il niche dans de grands bois de feuillus ou mixtes, non fragmentés, au sous-bois dense, préférant le bouleau et évitant les hêtraies. La nidification demande des zones assez ouvertes, qui se raréfient quand les plantations de conifères vieillissent.",
+    "diet": "Elle mange surtout des vers de terre, ainsi que des insectes et leurs larves, des mollusques d’eau douce et quelques graines. Elle sonde le sol meuble de son long bec, ce qui la rend vulnérable quand le sol gèle.",
+    "behavior": "Au crépuscule, les mâles nicheurs effectuent un vol de parade appelé « croule », volant en lignes droites au-dessus de leur territoire en émettant un cri grognant. La plupart des oiseaux britanniques sont sédentaires, mais d’autres arrivent à l’automne de Finlande et de Russie pour passer l’hiver.",
+    "reproduction": "Le nid est une cuvette au sol dans un couvert forestier bas. Une ponte compte en général 4 œufs (de 2 à 5), couvés par la femelle pendant 21 à 24 jours. Les poussins, couverts de duvet, quittent aussitôt le nid et s’envolent après 15 à 20 jours. La reproduction débute en général à deux ans.",
+    "ecology": "La bécasse est un gibier important dans de nombreux pays. Une étude menée en Bretagne a trouvé une survie annuelle de 0,86 chez les adultes et de 0,67 chez les jeunes, et ses auteurs ont appelé à la prudence dans les prélèvements. La fragmentation des forêts est la principale menace dans son aire de reproduction.",
+    "conservation": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure. Au Royaume-Uni, elle figure sur la liste rouge : environ 57 000 mâles nichaient en 2016 et un recensement de 2013 a montré un déclin de 29 % depuis 2003, tandis qu’environ 1,4 million d’oiseaux hivernaient en 2003-2004. L’espérance de vie typique est de quatre ans, et le plus vieil oiseau bagué a dépassé 15 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/woodcock",
+      "title": "Bécasse des bois — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/woodcock",
+      "title": "Bécasse des bois — RSPB"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Eurasian_woodcock",
+      "title": "Bécasse des bois — Wikipédia"
+    }
+  ]
+}

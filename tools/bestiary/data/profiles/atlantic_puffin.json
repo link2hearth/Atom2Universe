@@ -12,8 +12,8 @@
       "fr": "Le macareux moine est un petit alcidé trapu de l’Atlantique Nord ; il passe la majeure partie de l’année en mer et revient nicher en colonies. Son cycle relie petits poissons et terriers abrités où il élève un poussin.\nComme les adultes peuvent se reproduire pendant de nombreuses années, l’évolution des effectifs dépend à la fois de leur survie et du recrutement ultérieur des jeunes."
     },
     "identification": {
-      "en": "Adults are generally 26–29 cm long, with a wingspan near 53 cm.\nThe black back and crown contrast with white underparts and a pale breeding-season face; the bill’s bright plates and facial ornaments fade or fall away after breeding, revealing darker facial feathers and a smaller, duller winter bill.",
-      "fr": "Les adultes mesurent généralement 26 à 29 cm, pour une envergure proche de 53 cm .\nLe dos et la calotte noirs contrastent avec le dessous blanc et la face claire de la saison nuptiale ; après la reproduction, les plaques colorées du bec et les ornements faciaux s’estompent ou tombent, révélant une face plus sombre et un bec hivernal plus petit et terne."
+      "en": "Adults are generally 26–29 cm long, with a wingspan near 53 cm.\nThe black back and crown contrast with white underparts and a pale breeding-season face; the bill’s bright plates and facial ornaments fade or fall away after breeding, revealing darker facial feathers and a smaller, duller winter bill. Adults weigh about 320–480 g; the consulted source does not give separate ranges by sex.",
+      "fr": "Les adultes mesurent généralement 26 à 29 cm, pour une envergure proche de 53 cm .\nLe dos et la calotte noirs contrastent avec le dessous blanc et la face claire de la saison nuptiale ; après la reproduction, les plaques colorées du bec et les ornements faciaux s’estompent ou tombent, révélant une face plus sombre et un bec hivernal plus petit et terne. Les adultes pèsent environ 320 à 480 g ; la source consultée ne donne pas de plages distinctes selon le sexe."
     },
     "habitat": {
       "en": "Puffins breed on islands, headlands, and sea cliffs, digging burrows in soft ground or nesting in rock crevices and beneath boulders where soil is shallow. The tunnel shelters egg and chick from exposure and many surface predators.\nOutside the breeding season, birds disperse across the North Atlantic; during chick-rearing, adults must find suitable prey within practical commuting distance of the colony.",
@@ -57,12 +57,12 @@
         "Specialist account reviews North American field studies and natural history."
       ],
       "prose_claims": [
-        "diet.en.3",
-        "diet.fr.3",
-        "diet.en.4",
-        "diet.fr.4",
         "behavior.en.1",
         "behavior.fr.1",
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.3",
+        "diet.fr.4",
         "habitat.en.2",
         "habitat.fr.2"
       ],
@@ -90,12 +90,12 @@
         "Field-guide ranges combine measurements from multiple birds and settings."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
         "identification.en.1",
         "identification.fr.1",
-        "habitat.en.1",
-        "habitat.fr.1"
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -145,8 +145,8 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
+        "diet.fr.1",
         "diet.fr.2"
       ],
       "budget": {
@@ -197,8 +197,8 @@
       ],
       "prose_claims": [
         "conservation.en.4",
-        "conservation.fr.4",
         "conservation.en.7",
+        "conservation.fr.4",
         "conservation.fr.7"
       ],
       "budget": {
@@ -224,8 +224,8 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.3",
+        "conservation.fr.1",
         "conservation.fr.3"
       ],
       "budget": {
@@ -251,10 +251,10 @@
         "Four populations compared; scarce prey coincided with longer trips and reduced provisioning."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
         "ecology.en.4",
-        "ecology.fr.4"
+        "ecology.fr.4",
+        "habitat.en.3",
+        "habitat.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -279,8 +279,8 @@
       ],
       "prose_claims": [
         "behavior.en.3",
-        "behavior.fr.3",
         "behavior.en.4",
+        "behavior.fr.3",
         "behavior.fr.4"
       ],
       "budget": {
@@ -333,10 +333,10 @@
       "prose_claims": [
         "overview.en.3",
         "overview.fr.3",
-        "reproduction.en.5",
-        "reproduction.fr.5",
         "reproduction.en.4",
-        "reproduction.fr.4"
+        "reproduction.en.5",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -361,8 +361,8 @@
       ],
       "prose_claims": [
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
+        "ecology.fr.1",
         "ecology.fr.2"
       ],
       "budget": {
@@ -388,14 +388,14 @@
         "Cornell summarizes one egg, incubation, brooding, and fledging periods."
       ],
       "prose_claims": [
-        "reproduction.en.1",
-        "reproduction.fr.1",
-        "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.3",
-        "reproduction.fr.3",
         "overview.en.2",
-        "overview.fr.2"
+        "overview.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -504,6 +504,24 @@
         "total": 64,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Top 10 facts about Puffins — WWF UK",
+        "fr": "10 faits sur les macareux — WWF UK"
+      },
+      "url": "https://www.wwf.org.uk/learn/fascinating-facts/puffins",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Atlantic puffins weigh 320–480 g and measure 26–29 cm long, with wingspans of 47–63 cm; no sex-specific range given."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ]
     }
   ],
   "illustration_notes": {

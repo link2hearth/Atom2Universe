@@ -1,0 +1,50 @@
+{
+  "id": "house_mouse",
+  "name": "Souris domestique",
+  "scientific": "Mus musculus",
+  "group": "mammals",
+  "sections": {
+    "overview": "La souris domestique, Mus musculus, est un petit rongeur dont la dispersion a suivi les réserves et transports humains. Originaire d’Asie, elle vit sur la plupart des continents et de nombreuses îles. Certaines populations occupent bâtiments et fermes, d’autres cherchent leur nourriture dehors. Un régime souple et une reproduction rapide quand les conditions le permettent favorisent son adaptation. Les populations diffèrent : près des réserves, les souris restent souvent près des nids, tandis que celles du plein air se dispersent davantage. Introduites sur des îles, elles peuvent devenir envahissantes.",
+    "identification": "L’adulte mesure 65 à 95 millimètres du museau au croupion ; sa queue est presque aussi longue et sa masse atteint 12 à 30 grammes. Grandes oreilles arrondies, yeux sombres et queue presque nue aux écailles annelées aident à l’identifier ; sa queue le distingue des campagnols. Les vibrisses perçoivent l’air et les surfaces proches. Les incisives poussent sans cesse : l’émail dur recouvre l’avant, tandis que la dentine plus tendre s’use plus vite à l’arrière et conserve un tranchant biseauté. Les molaires broient.",
+    "habitat": "L’espèce fréquente bâtiments, granges, champs, haies et lisières boisées. Une souris peut passer l’été dans un champ puis gagner une maison lorsque l’automne refroidit. Fissures, cavités murales et débris offrent un abri près de la nourriture ; dehors, terriers et crevasses rocheuses dissimulent les nids. Elle garnit son nid de fibres déchiquetées. Les établissements humains lui permettent de vivre dans des lieux trop froids ou secs pour une survie autonome. Navires et cargaisons l’ont transportée vers des îles éloignées.",
+    "diet": "La souris est omnivore et opportuniste. À l’état sauvage, elle mange graines, céréales, plantes vertes, racines et insectes ; près des humains, elle exploite réserves et restes. Changer d’aliment l’aide à subsister lorsqu’une ressource diminue. Elle mange par petites prises fréquentes : l’Université de Californie indique jusqu’à un cinquième de sa masse corporelle par jour et environ 200 prises nocturnes. Les aliments humides l’abreuvent, mais les régimes secs et la chaleur accroissent le besoin de boire.",
+    "behavior": "Souvent nocturnes, les souris s’orientent grâce à l’odorat, l’ouïe et leurs vibrisses. Les odeurs transmettent des signaux sociaux et reproductifs ; les mâles peuvent émettre des chants ultrasonores de parade. La structure sociale varie selon la densité et le milieu. Dans les colonies commensales, un mâle dominant peut défendre un territoire avec femelles et petits ; la famille en repousse les intrus. À l’état sauvage, les domaines sont moins exclusifs et peuvent se chevaucher. Dans une grange suisse, une étude a relevé des contacts sociaux structurés, mais certains motifs s’expliquaient par de simples déplacements. Les jeunes mâles partent souvent après un conflit ; les femelles restent plus volontiers près du groupe.",
+    "reproduction": "Avec nourriture et abris, les souris peuvent se reproduire toute l’année ; dehors, la reproduction est souvent saisonnière. La gestation dure 19 à 21 jours et une portée compte généralement cinq ou six petits. Aveugles et nus, ils ont du poil vers dix jours, ouvrent les yeux vers deux semaines et sont sevrés autour de trois semaines. La maturité sexuelle arrive vers cinq à sept semaines, mais les populations sauvages varient selon les conditions. Dans certaines populations sauvages, des femelles partagent les nids et allaitent les petits en commun. Les jeunes femelles restent plus souvent près du territoire maternel ; l’agressivité des adultes pousse les jeunes mâles à partir.",
+    "ecology": "Les souris mangent graines et invertébrés ; elles sont la proie des chouettes, rapaces, serpents, renards, belettes et chats. En grand nombre, elles consomment des céréales utiles à d’autres animaux. Sur des îles isolées, les souris introduites attaquent aussi œufs et poussins d’oiseaux marins. À Gough, en 2021, des chercheurs ont trouvé des albatros de Tristan adultes blessés par des souris ; une femelle a ensuite été retrouvée morte près de son nid. À Marion, en 2023, ils ont trouvé deux albatros hurleurs blessés et huit carcasses. La cause des morts à Marion est restée indéterminée, bien que deux carcasses fraîches portent des blessures compatibles avec des attaques de souris. Ces effets sont locaux.",
+    "conservation": "La Mammal Diversity Database, consultée en octobre 2026, relaie la catégorie mondiale « Préoccupation mineure » de l’UICN, cohérente avec la vaste répartition de l’espèce. Cette catégorie mondiale ne décrit pas tous les impacts locaux. Sur les îles, les souris introduites peuvent menacer la faune native. Près des humains, la lutte vise la contamination des aliments, les dégâts matériels et les agents pathogènes ; les rodenticides peuvent aussi nuire aux espèces non ciblées. Les priorités varient donc : l’espèce reste répandue mondialement, tandis que certaines îles subissent les effets de populations introduites."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Mus_musculus/",
+      "title": "Mus musculus — Animal Diversity Web, musée de zoologie de l’université du Michigan"
+    },
+    {
+      "url": "https://ipm.ucanr.edu/home-and-landscape/house-mouse/",
+      "title": "Souris domestique — programme intégré de lutte contre les nuisibles de l’Université de Californie"
+    },
+    {
+      "url": "https://cdn.elifesciences.org/articles/05959/elife-05959-v1.pdf",
+      "title": "Ce que la souris domestique sauvage révèle de la biologie des mammifères — eLife"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1095-8312.2005.00455.x",
+      "title": "Dispersion chez la souris domestique — Biological Journal of the Linnean Society"
+    },
+    {
+      "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002786",
+      "title": "Le comportement social est-il aléatoire ? Analyse d’une population sauvage de souris — PLOS Computational Biology"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1007/s10530-023-03177-2",
+      "title": "Premières preuves de souris prédatrices ayant tué des grands albatros adultes — Biological Invasions"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003372/",
+      "title": "Mus musculus — Mammal Diversity Database, American Society of Mammalogists"
+    },
+    {
+      "url": "https://digimorph.org/specimens/Mus_musculus/heterozygous/juvenile/head/",
+      "title": "Mus musculus (souris domestique) — DigiMorph, Université du Texas à Austin"
+    }
+  ]
+}

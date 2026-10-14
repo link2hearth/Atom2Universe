@@ -12,8 +12,8 @@
       "fr": "L’hippocampe Hippocampus reidi, aussi appelé hippocampe à long museau, est un petit poisson de l’Atlantique occidental, de la Caroline du Nord et des Bermudes au sud du Brésil en passant par les Caraïbes. Comme chez tous les hippocampes, c’est le mâle qui porte les petits dans une poche incubatrice."
     },
     "identification": {
-      "en": "It has a narrow body covered in rings of bony plates, a long thick snout and a large rounded coronet on the head. The tubercles are low and rounded, with no spines except over the eyes, and there are no skin filaments. Colour ranges from black to yellow, red, orange or brown, often with white dots on the tail, and can change. It reaches about 17.5 cm.",
-      "fr": "Il a un corps étroit recouvert d’anneaux de plaques osseuses, un long museau épais et une grande couronne arrondie sur la tête. Les tubercules sont bas et arrondis, sans épines sauf au-dessus des yeux, et il n’y a pas de filaments cutanés. La couleur va du noir au jaune, au rouge, à l’orange ou au brun, souvent avec des points blancs sur la queue, et peut changer. Il atteint environ 17,5 cm."
+      "en": "It has a narrow body covered in rings of bony plates, a long thick snout and a large rounded coronet on the head. The tubercles are low and rounded, with no spines except over the eyes, and there are no skin filaments. Colour ranges from black to yellow, red, orange or brown, often with white dots on the tail, and can change. It reaches about 17.5 cm. The maximum reported length is about 17.5 cm; no reliable adult body-mass estimate was found in the consulted species accounts.",
+      "fr": "Il a un corps étroit recouvert d’anneaux de plaques osseuses, un long museau épais et une grande couronne arrondie sur la tête. Les tubercules sont bas et arrondis, sans épines sauf au-dessus des yeux, et il n’y a pas de filaments cutanés. La couleur va du noir au jaune, au rouge, à l’orange ou au brun, souvent avec des points blancs sur la queue, et peut changer. Il atteint environ 17,5 cm. La longueur maximale rapportée est d’environ 17,5 cm ; les fiches d’espèce consultées ne donnent pas d’estimation fiable de la masse adulte."
     },
     "habitat": {
       "en": "It is usually attached to mangroves, seagrasses or gorgonian corals in water from the surface down to about 55–60 m, in marine and brackish conditions. It sometimes swims freely in midwater or drifts with floating Sargassum, and it is uncommon overall though locally common in places.",
@@ -44,14 +44,22 @@
     {
       "title": {
         "en": "Hippocampus reidi, Slender seahorse — FishBase",
-        "fr": "Hippocampus reidi — FishBase"
+        "fr": "Hippocampus reidi, hippocampe long-nez — FishBase"
       },
       "url": "https://www.fishbase.se/summary/Hippocampus-reidi.html",
-      "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "behavior", "reproduction", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Max 17.5 cm; North Carolina to Brazil; 0–60 m; attached to gorgonians or seagrasses, sometimes floating Sargassum; pairs in home ranges without exclusive territories; egg diameter 1.2 mm, gestation about 2 weeks, young about 7 mm.",
-        "IUCN Near Threatened (A2d+4d), assessed 4 October 2016; CITES Appendix II."
+        "IUCN Near Threatened (A2d+4d), assessed 4 October 2016; CITES Appendix II.",
+        "Maximum reported length is about 17.5 cm. The consulted species account gives no reliable adult body-mass estimate."
       ]
     },
     {
@@ -61,7 +69,16 @@
       },
       "url": "https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/longsnout-seahorse/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Narrow body, rounded coronet, low rounded tubercles, no skin appendages; eats small crustaceans by ambush suction; wraps its tail around a holdfast at night; up to 1,600 eggs per pouch; breeding at least 8 months a year with a peak October–February; lives 1–4 years.",
         "Declines from aquarium trade, folk medicine and curios; shrimp trawl bycatch; found in stomachs of red snapper, dorado, rays, tuna and dolphinfish."

@@ -1,0 +1,30 @@
+{
+  "id": "dytiscus_marginalis",
+  "name": "Dytique bordé",
+  "scientific": "Dytiscus marginalis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le dytique bordé est l’un des plus grands coléoptères de Grande-Bretagne et d’Irlande, et un redoutable prédateur des eaux douces calmes. Il vit dans l’eau aussi bien à l’état de larve que d’adulte, mais vole la nuit pour coloniser de nouvelles mares.",
+    "identification": "Les adultes mesurent environ 3 cm, avec un corps brun olive foncé, en forme d’amande et aplati de haut en bas. Le pronotum, la plaque derrière la tête, est entièrement bordé de jaune, et les élytres ont un bord jaune brunâtre. Les femelles ont en général des élytres striés et les mâles des élytres lisses, mais certaines femelles d’Europe continentale sont lisses. Les sources consultées ne donnent pas de plage fiable de masse adulte ; une valeur secondaire contradictoire a été écartée.",
+    "habitat": "Il vit dans les eaux douces stagnantes ou très lentes, riches en végétation immergée. Il est originaire de la région paléarctique, en Europe, en Asie et en Afrique du Nord.",
+    "diet": "Les adultes comme les larves sont des prédateurs. Ils mangent d’autres insectes aquatiques, des têtards et de très petits poissons, en chassant parmi les plantes immergées.",
+    "behavior": "L’adulte monte de temps en temps à la surface et sort l’extrémité de son abdomen pour renouveler la réserve d’air gardée sous ses élytres. C’est un bon voilier, surtout la nuit. Quand on le saisit, il émet un liquide malodorant contenant de l’acide benzoïque et des composés voisins.",
+    "reproduction": "Les femelles pondent leurs œufs un à un dans des tiges de plantes immergées au début du printemps, et ils éclosent en 18 jours environ. Les larves grandissent vite, atteignent environ 5 cm et, à la fin de l’été, quittent l’eau pour se nymphoser dans la terre humide au bord de l’eau. Les jeunes adultes émergent en général à la mi-automne mais restent enfouis tout l’hiver.",
+    "ecology": "Malgré son corps mou, la larve peut s’attaquer à de grosses proies comme de jeunes tritons, des grenouillettes et de petits poissons. L’adulte vole pour coloniser de nouvelles mares, et les mares de jardin récentes sont souvent atteintes dès leur première année.",
+    "conservation": "Aucune évaluation mondiale de conservation n’a été trouvée. En Grande-Bretagne, l’espèce est décrite comme assez commune et répandue, et l’Animal Diversity Web n’indique aucun statut de protection particulier, tout en signalant que des spécialistes européens cherchent une protection allant au-delà de la limitation des prélèvements."
+  },
+  "sources": [
+    {
+      "url": "https://www.naturespot.org/species/great-diving-beetle",
+      "title": "Dytique bordé, Dytiscus marginalis — NatureSpot (faune de Leicestershire et Rutland)"
+    },
+    {
+      "url": "https://www.first-nature.com/insects/c-dytiscus-marginalis.php",
+      "title": "Dytiscus marginalis, dytique bordé — First Nature"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Dytiscus_marginalis/",
+      "title": "Dytiscus marginalis — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

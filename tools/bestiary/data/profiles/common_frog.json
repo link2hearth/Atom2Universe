@@ -12,8 +12,8 @@
       "fr": "La Grenouille rousse est largement répandue en Europe et partage sa vie entre l’eau et la terre. Son cycle relie les mares, où se développent œufs et larves, aux milieux terrestres humides où les adultes se nourrissent et s’abritent. Chez l’adulte, les échanges gazeux se font par les poumons et par la peau humide ; celle-ci permet aussi des échanges sous l’eau, tandis que les puissantes pattes arrière assurent saut et nage."
     },
     "identification": {
-      "en": "Adults are compact frogs with smooth, damp skin and a dark patch behind the eye covering the eardrum. Their hind legs are moderately long and robust, unlike the agile frog Rana dalmatina, whose legs are very long and slender; exceptions occur, so use several traits together. Colour and markings vary widely, from brown and olive to grey, reddish, yellowish or greenish; colour alone is not enough for identification. In Britain, reported adult lengths reach about 9 cm in males and 13 cm in females, which are generally larger; these are upper figures, not typical sizes everywhere. Where similar brown frogs co-occur, combine several cues, including the eye patch, leg pattern, call and local range, rather than relying on one universal mark.",
-      "fr": "L’adulte est une grenouille trapue à peau lisse et humide, avec une tache sombre derrière l’œil qui recouvre le tympan. Ses pattes arrière sont modérément longues et robustes, contrairement à celles de la Grenouille agile (Rana dalmatina), très longues et fines ; il existe des exceptions, donc plusieurs critères doivent être croisés. La couleur et les marques varient fortement, du brun et de l’olive au gris, au rougeâtre, au jaunâtre ou au verdâtre ; la couleur seule ne suffit pas à l’identification. En Grande-Bretagne, les longueurs adultes rapportées atteignent environ 9 cm chez le mâle et 13 cm chez la femelle, généralement plus grande ; ce sont des maxima, non des tailles habituelles partout. Là où coexistent d’autres grenouilles brunes, croisez plusieurs indices, dont la tache oculaire, les motifs des pattes, le chant et la répartition locale, plutôt que de vous fier à un critère universel."
+      "en": "Adults are compact frogs with smooth, damp skin and a dark patch behind the eye covering the eardrum. Their hind legs are moderately long and robust, unlike the agile frog Rana dalmatina, whose legs are very long and slender; exceptions occur, so use several traits together. Colour and markings vary widely, from brown and olive to grey, reddish, yellowish or greenish; colour alone is not enough for identification. In Britain, reported adult lengths reach about 9 cm in males and 13 cm in females, which are generally larger; these are upper figures, not typical sizes everywhere. Where similar brown frogs co-occur, combine several cues, including the eye patch, leg pattern, call and local range, rather than relying on one universal mark. A comparable, reliable adult body-mass range was not found in the consulted sources; body mass varies with sex, season and condition.",
+      "fr": "L’adulte est une grenouille trapue à peau lisse et humide, avec une tache sombre derrière l’œil qui recouvre le tympan. Ses pattes arrière sont modérément longues et robustes, contrairement à celles de la Grenouille agile (Rana dalmatina), très longues et fines ; il existe des exceptions, donc plusieurs critères doivent être croisés. La couleur et les marques varient fortement, du brun et de l’olive au gris, au rougeâtre, au jaunâtre ou au verdâtre ; la couleur seule ne suffit pas à l’identification. En Grande-Bretagne, les longueurs adultes rapportées atteignent environ 9 cm chez le mâle et 13 cm chez la femelle, généralement plus grande ; ce sont des maxima, non des tailles habituelles partout. Là où coexistent d’autres grenouilles brunes, croisez plusieurs indices, dont la tache oculaire, les motifs des pattes, le chant et la répartition locale, plutôt que de vous fier à un critère universel. Les sources consultées ne donnent pas de plage fiable de masse adulte comparable ; la masse varie selon le sexe, la saison et l’état corporel."
     },
     "habitat": {
       "en": "Across its range, the species uses cool or damp landscapes, from woodland edges, grassland and moor to gardens and farmland. Adults may travel away from water after breeding, so a pond is only one part of their habitat: nearby cover and moist feeding grounds matter too. It breeds in shallow freshwater, including small ponds, lake margins, ditches and sometimes temporary puddles; local populations use the sites available in their landscape.",
@@ -55,17 +55,18 @@
         "reproduction"
       ],
       "facts": [
-        "UK adult maxima: male 9 cm; female 13 cm."
+        "UK adult maxima: male 9 cm; female 13 cm.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
       ],
       "prose_claims": [
-        "identification.en.3",
-        "identification.fr.3",
+        "conservation.en.3",
+        "conservation.fr.3",
         "diet.en.1",
         "diet.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
         "reproduction.en.2",
-        "reproduction.fr.2",
-        "conservation.en.3",
-        "conservation.fr.3"
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -90,14 +91,14 @@
         "UK hatch and metamorphosis timings vary with pond conditions."
       ],
       "prose_claims": [
-        "reproduction.en.4",
-        "reproduction.fr.4",
-        "reproduction.en.6",
-        "reproduction.fr.6",
-        "reproduction.en.7",
-        "reproduction.fr.7",
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.2",
+        "reproduction.en.4",
+        "reproduction.en.6",
+        "reproduction.en.7",
+        "reproduction.fr.4",
+        "reproduction.fr.6",
+        "reproduction.fr.7"
       ],
       "budget": {
         "limit": 200,
@@ -123,12 +124,12 @@
         "Garden ponds partly offset English farm pond losses."
       ],
       "prose_claims": [
-        "identification.en.4",
-        "identification.fr.4",
         "conservation.en.4",
-        "conservation.fr.4",
         "conservation.en.5",
-        "conservation.fr.5"
+        "conservation.fr.4",
+        "conservation.fr.5",
+        "identification.en.4",
+        "identification.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -152,12 +153,12 @@
         "NeedsUpdating: global assessment dated 14 December 2008, published 2009; Least Concern, stable."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
-        "conservation.fr.2"
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -210,10 +211,10 @@
       ],
       "prose_claims": [
         "habitat.en.1",
-        "habitat.fr.1",
         "habitat.en.2",
-        "habitat.fr.2",
         "habitat.en.3",
+        "habitat.fr.1",
+        "habitat.fr.2",
         "habitat.fr.3"
       ],
       "budget": {
@@ -239,8 +240,8 @@
       ],
       "prose_claims": [
         "diet.en.3",
-        "diet.fr.3",
         "diet.en.4",
+        "diet.fr.3",
         "diet.fr.4"
       ],
       "budget": {
@@ -317,12 +318,12 @@
         "External fertilisation; nocturnal feeding reported."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2",
         "diet.en.2",
         "diet.fr.2",
-        "behavior.en.2",
-        "behavior.fr.2"
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -350,12 +351,12 @@
       "prose_claims": [
         "behavior.en.4",
         "behavior.fr.4",
+        "ecology.en.1",
+        "ecology.fr.1",
         "identification.en.1",
         "identification.fr.1",
         "reproduction.en.3",
-        "reproduction.fr.3",
-        "ecology.en.1",
-        "ecology.fr.1"
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -381,8 +382,8 @@
       ],
       "prose_claims": [
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.5",
+        "reproduction.fr.1",
         "reproduction.fr.5"
       ],
       "budget": {
@@ -408,9 +409,11 @@
       ],
       "prose_claims": [
         "identification.en.2",
-        "identification.fr.2",
         "identification.en.5",
-        "identification.fr.5"
+        "identification.en.6",
+        "identification.fr.2",
+        "identification.fr.5",
+        "identification.fr.6"
       ],
       "budget": {
         "limit": 200,

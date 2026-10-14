@@ -12,8 +12,8 @@
       "fr": "Le cygne chanteur est un grand oiseau d’eau migrateur du nord de l’Eurasie, au plumage blanc, au long cou dressé et aux appels sonores ; il niche de l’Islande à la Sibérie et hiverne plus au sud."
     },
     "identification": {
-      "en": "Adults measure about 140–165 cm long and span 205–275 cm; males are heavier, and their black bill bears more yellow than the smaller, mostly black-billed Bewick’s swan.",
-      "fr": "L’adulte mesure environ 140 à 165 cm et son envergure atteint 205 à 275 cm ; le mâle est plus lourd, et son bec noir porte plus de jaune que celui du plus petit cygne de Bewick."
+      "en": "Adults are 1.4–1.65 m long with a 2.05–2.75 m wingspan. Males weigh 7.4–14 kg (mean 9.8 kg), while females weigh 8.2–9.2 kg; a male’s neck is usually longer and thinner. Adults measure about 140–165 cm long and span 205–275 cm; males are heavier, and their black bill bears more yellow than the smaller, mostly black-billed Bewick’s swan.",
+      "fr": "L’adulte mesure 1,4 à 1,65 m, pour une envergure de 2,05 à 2,75 m. Le mâle pèse 7,4 à 14 kg (moyenne 9,8 kg), contre 8,2 à 9,2 kg chez la femelle ; son cou est généralement plus long et plus fin. L’adulte mesure environ 140 à 165 cm et son envergure atteint 205 à 275 cm ; le mâle est plus lourd, et son bec noir porte plus de jaune que celui du plus petit cygne de Bewick."
     },
     "habitat": {
       "en": "It nests beside shallow lakes and marshes in Eurasian taiga and subarctic tundra, where waterside vegetation offers cover; wintering birds also use estuaries, sheltered coasts and farmland.",
@@ -58,12 +58,14 @@
         "Adult size, bill markings, incubation and juvenile fledging."
       ],
       "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
         "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
         "identification.fr.1",
         "reproduction.en.1",
-        "reproduction.fr.1",
-        "ecology.en.1",
-        "ecology.fr.1"
+        "reproduction.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -88,10 +90,10 @@
         "Eurasian breeding and winter ranges; aquatic plants, field grazing and shallow-water habitats."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
         "diet.en.1",
-        "diet.fr.1"
+        "diet.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -120,14 +122,14 @@
         "Swan Specialist Group account distinguishes Bewick’s bill markings and describes wetland use."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "behavior.en.1",
         "behavior.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2",
         "ecology.en.2",
         "ecology.fr.2",
-        "conservation.en.2",
-        "conservation.fr.2"
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -152,7 +154,9 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1"
+        "conservation.fr.1",
+        "identification.fr.2",
+        "identification.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -172,18 +176,20 @@
       "supports": [
         "behavior",
         "reproduction",
-        "ecology"
+        "ecology",
+        "identification"
       ],
       "facts": [
-        "Pair bonds, parental care and vulnerability of eggs and young."
+        "Pair bonds, parental care and vulnerability of eggs and young.",
+        "Adult length 1.4–1.65 m; wingspan 2.05–2.75 m; male mass 7.4–14 kg, female 8.2–9.2 kg; neck dimorphism."
       ],
       "prose_claims": [
         "behavior.en.2",
         "behavior.fr.2",
-        "reproduction.en.2",
-        "reproduction.fr.2",
         "ecology.en.3",
-        "ecology.fr.3"
+        "ecology.fr.3",
+        "reproduction.en.2",
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,

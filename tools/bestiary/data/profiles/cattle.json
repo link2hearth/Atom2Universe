@@ -12,8 +12,8 @@
       "fr": "Les bovins taurins sont de grands mammifères à sabots, domestiqués à partir d’aurochs du sud-ouest de l’Asie. Les génomes anciens indiquent un petit groupe fondateur, puis des croisements avec d’autres lignées d’aurochs lors de l’expansion des troupeaux. Aujourd’hui, les humains élèvent des bovins partout dans le monde selon divers systèmes."
     },
     "identification": {
-      "en": "Cattle have a sturdy body, broad muzzle, cloven hooves and a long tufted tail. Coat, size and horns vary widely among breeds; some are naturally hornless. The term includes both sexes: mature females are cows, males bulls, and young animals calves.",
-      "fr": "Les bovins ont un corps robuste, un large mufle, des sabots fendus et une longue queue terminée par une touffe. Pelage, taille et cornes varient selon les races ; certaines sont naturellement sans cornes. Le terme désigne les deux sexes : femelles adultes, vaches ; mâles, taureaux ; jeunes, veaux."
+      "en": "Cattle have a sturdy body, broad muzzle, cloven hooves and a long tufted tail. Coat, size and horns vary widely among breeds; some are naturally hornless. The term includes both sexes: mature females are cows, males bulls, and young animals calves. Cattle size varies greatly among breeds: FAO reports mature-cow breed averages ranging from below 200 kg to above 400 kg. There is no useful single species-wide adult body length or withers-height range; measurements should be tied to a named breed.",
+      "fr": "Les bovins ont un corps robuste, un large mufle, des sabots fendus et une longue queue terminée par une touffe. Pelage, taille et cornes varient selon les races ; certaines sont naturellement sans cornes. Le terme désigne les deux sexes : femelles adultes, vaches ; mâles, taureaux ; jeunes, veaux. La taille des bovins varie beaucoup selon la race : la FAO rapporte des moyennes de poids de vaches adultes allant de moins de 200 kg à plus de 400 kg selon les races. Il n’existe pas de plage unique utile de longueur ou de hauteur au garrot pour l’ensemble des bovins ; les mesures doivent préciser la race."
     },
     "habitat": {
       "en": "FAO livestock maps show cattle widely distributed around the world. They live in human-managed pastures, mixed farms, extensive pastoral systems, feedlots or barns. Local conditions vary with husbandry, while climate, water and forage shape where herds can be maintained.",
@@ -177,6 +177,20 @@
       ],
       "facts": [
         "FAO projects conserve local cattle breeds and locally adapted genetic resources, including Busha cattle in the Balkans and native cattle in Mozambique."
+      ]
+    },
+    {
+      "title": {
+        "en": "Crossbreeding Bos indicus and Bos taurus for milk production in the tropics — FAO",
+        "fr": "Croisement de Bos indicus et Bos taurus pour la production laitière en zone tropicale — FAO"
+      },
+      "url": "https://www.fao.org/4/t0095e/T0095E04.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Cattle body size varies widely by breed; mature cow breed averages have been reported from below 200 kg to above 400 kg."
       ]
     }
   ],

@@ -1,0 +1,30 @@
+{
+  "id": "solea_solea",
+  "name": "Sole commune",
+  "scientific": "Solea solea",
+  "group": "fish",
+  "sections": {
+    "overview": "La sole commune est un poisson plat de l’Atlantique oriental et de la Méditerranée qui vit à demi enfoui sur les fonds sableux et vaseux. Ses jeunes grandissent dans des nourriceries côtières peu profondes, et c’est une espèce de grande valeur commerciale pour les pays du sud de la mer du Nord.",
+    "identification": "La sole commune atteint 70 cm de longueur standard, pour une longueur courante d’environ 35 cm, et une masse maximale publiée de 3 kg ; les sources consultées ne donnent pas de comparaison fiable de la taille adulte entre sexes. La largeur et la hauteur ne sont pas rapportées comme mesures usuelles d’identification. Le corps est ovale et très aplati, avec les deux yeux sur le côté droit de la tête. Le côté oculaire est brun grisâtre à rougeâtre, marqué de grandes taches sombres diffuses, tandis que la face inférieure est blanche. La nageoire pectorale du côté oculaire porte une tache sombre sur sa moitié externe. Elle atteint environ 70 cm au maximum et mesure couramment 15 à 45 cm.",
+    "habitat": "Elle vit dans l’Atlantique oriental, du fjord de Trondheim, en Norvège, jusqu’au Sénégal, en mer du Nord et dans l’ouest de la Baltique, ainsi que dans toute la Méditerranée. Elle reste sur les fonds sableux et vaseux, le plus souvent entre 10 et 60 m et jusqu’à environ 150 m, et gagne des eaux plus profondes en hiver.",
+    "diet": "Les adultes se nourrissent la nuit sur le fond marin, en prenant surtout des vers polychètes, des mollusques et de petits crustacés présents dans le sable et la vase.",
+    "behavior": "Les adultes s’enfouissent dans les fonds sableux et vaseux et vivent le plus souvent seuls. Après leur installation, les juvéniles se déplacent peu et restent dans la même nourricerie, une zone côtière peu profonde au fond vaseux à sableux.",
+    "reproduction": "Elle pond par lots en eau côtière peu profonde, entre 6 et 12 °C, surtout de février à mai, et commence à se reproduire à 3-5 ans, vers 25-30 cm. Dans le sud de la mer du Nord, les œufs éclosent de début avril à la mi-mai. La phase larvaire pélagique dure environ 34 jours, et les jeunes s’installent dans les nourriceries entre la mi-mai et la mi-juin.",
+    "ecology": "Dans le sud de la mer du Nord, les jeunes soles dépendent de nourriceries côtières peu profondes comme la côte belge, l’estuaire de l’Ems-Dollard et la mer des Wadden, la plus importante. Prédatrice du fond, la sole se nourrit de vers, de mollusques et de petits crustacés. Son cycle de vie relie donc la ponte au large à ces habitats côtiers abrités.",
+    "conservation": "La Liste rouge de l’UICN classe l’espèce en données insuffisantes (évaluation de 2014). Elle a une grande valeur commerciale dans le sud de la mer du Nord, où existent un risque de surexploitation et de fortes captures accessoires de juvéniles sous-taille ; la gestion vise donc à réduire ces captures."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Solea-solea.html",
+      "title": "Solea solea, sole commune — FishBase"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8457496/",
+      "title": "Validation d’un modèle biophysique de dispersion avec les traits de vie précoces de la sole commune (Solea solea L.) — PLOS ONE, 2021"
+    },
+    {
+      "url": "https://www.fao.org/fi/static-media/FI/CDrom/ARTFIMED/ArtFiWeb/descript/Species/SOLSOVUL.HTML",
+      "title": "Solea vulgaris Quensel, 1806 — fiche descriptive de la FAO"
+    }
+  ]
+}

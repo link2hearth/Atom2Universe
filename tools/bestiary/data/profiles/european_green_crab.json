@@ -12,8 +12,8 @@
       "fr": "Le Crabe vert est un crabe littoral commun, indigène dans l’Atlantique nord-est et sur les côtes voisines d’Europe et d’Afrique du Nord. Les transports humains l’ont aussi établi sur des rivages éloignés, où il peut devenir envahissant."
     },
     "identification": {
-      "en": "Its broad carapace may reach about 9 cm across, with records near 10 cm outside its native range. Five teeth sit behind each eye and three lobes between them; C. aestuarii, its Mediterranean relative, has a smoother, projecting front. The first of its five pairs of legs bears claws; the other four are walking legs. Colour varies from green to orange or red.",
-      "fr": "Sa large carapace peut atteindre environ 9 cm, avec des spécimens proches de 10 cm hors de son aire d’origine. Cinq dents se trouvent derrière chaque œil et trois lobes entre eux ; C. aestuarii, son parent méditerranéen, a un front plus lisse et avancé. La première de ses cinq paires de pattes porte des pinces ; les quatre autres servent à marcher. La coloration varie du vert à l’orange ou au rouge."
+      "en": "Its broad carapace may reach about 9 cm across, with records near 10 cm outside its native range. Five teeth sit behind each eye and three lobes between them; C. aestuarii, its Mediterranean relative, has a smoother, projecting front. The first of its five pairs of legs bears claws; the other four are walking legs. Colour varies from green to orange or red. Carapace width is typically about 65 mm; maxima are around 90 mm in males and 75 mm in females. No reliable general adult mass range was found in the consulted sources.",
+      "fr": "Sa large carapace peut atteindre environ 9 cm, avec des spécimens proches de 10 cm hors de son aire d’origine. Cinq dents se trouvent derrière chaque œil et trois lobes entre eux ; C. aestuarii, son parent méditerranéen, a un front plus lisse et avancé. La première de ses cinq paires de pattes porte des pinces ; les quatre autres servent à marcher. La coloration varie du vert à l’orange ou au rouge. La carapace mesure typiquement environ 65 mm de large ; les maxima sont d’environ 90 mm chez les mâles et 75 mm chez les femelles. Les sources consultées ne donnent pas de fourchette générale fiable de masse adulte."
     },
     "habitat": {
       "en": "It inhabits sheltered shores, estuaries and shallow subtidal waters, on mud, sand, rock or submerged vegetation. Its tolerance of changing salinity helps it live across tidal creeks and estuarine margins.",
@@ -58,16 +58,16 @@
         "Native distribution, morphology, habitats, colour and introduced-range impacts."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.en.2",
+        "conservation.en.1",
+        "habitat.en.1",
         "identification.en.1",
         "identification.en.2",
         "identification.en.3",
-        "habitat.en.1",
-        "conservation.en.1",
-        "overview.fr.2",
+        "identification.fr.3",
+        "overview.en.1",
+        "overview.en.2",
         "overview.fr.1",
-        "identification.fr.3"
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -96,17 +96,17 @@
         "French account cross-checks anatomy, mating and larval development."
       ],
       "prose_claims": [
-        "identification.fr.1",
-        "habitat.fr.1",
-        "habitat.fr.2",
-        "reproduction.fr.2",
-        "conservation.fr.1",
-        "reproduction.en.2",
-        "habitat.en.2",
         "behavior.en.2",
         "behavior.fr.2",
+        "conservation.fr.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
         "identification.en.4",
-        "identification.fr.4"
+        "identification.fr.1",
+        "identification.fr.4",
+        "reproduction.en.2",
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -131,12 +131,12 @@
         "North American report describes larval duration and invasive monitoring."
       ],
       "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
         "reproduction.en.3",
         "reproduction.en.4",
         "reproduction.fr.3",
-        "reproduction.fr.4",
-        "conservation.en.2",
-        "conservation.fr.2"
+        "reproduction.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -163,15 +163,15 @@
         "Species account covers omnivory, moulting, mating and foraging."
       ],
       "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.3",
+        "behavior.fr.1",
+        "behavior.fr.3",
         "diet.en.1",
         "diet.en.2",
         "diet.fr.1",
         "diet.fr.2",
-        "behavior.en.1",
-        "behavior.fr.1",
         "identification.fr.2",
-        "behavior.en.3",
-        "behavior.fr.3",
         "reproduction.en.1",
         "reproduction.fr.1"
       ],
@@ -199,9 +199,9 @@
       "prose_claims": [
         "ecology.en.1",
         "ecology.en.2",
+        "ecology.en.3",
         "ecology.fr.1",
         "ecology.fr.2",
-        "ecology.en.3",
         "ecology.fr.3"
       ],
       "budget": {
@@ -211,6 +211,26 @@
         "total": 118,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "European green crab — National Introduced Marine Pest Information System (NIMPIS)",
+        "fr": "Crabe vert européen — National Introduced Marine Pest Information System (NIMPIS)"
+      },
+      "url": "https://nimpis.marinepests.gov.au/species/species/84",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Carapace width can reach about 90 mm in males and 75 mm in females; 65 mm is more typical. No reliable general adult body-mass range was located."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.5",
+        "identification.fr.6"
+      ]
     }
   ],
   "illustration_notes": "No illustration requested; image work is handled separately.",

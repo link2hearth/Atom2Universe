@@ -12,8 +12,8 @@
       "fr": "Le chameau de Bactriane à deux bosses est un animal domestique d’Asie centrale et orientale, élevé pour le transport, le lait, la viande et les fibres. Le chameau sauvage, distinct, est Camelus ferus."
     },
     "identification": {
-      "en": "Two separated humps distinguish it from the dromedary. Domestic Bactrians are sturdy, shaggy-haired camels, often dark to sandy brown; males tend to be larger. Humps store fat, not water, and the thick winter coat is shed in warmer weather.",
-      "fr": "Ses deux bosses le distinguent du dromadaire. Le Bactrien domestique est robuste et hirsute, souvent brun foncé à sable ; les mâles sont plus grands. Les bosses stockent de la graisse, non de l’eau ; son pelage d’hiver tombe au printemps."
+      "en": "Two separated humps distinguish it from the dromedary. Domestic Bactrians are sturdy, shaggy-haired camels, often dark to sandy brown; males tend to be larger. Humps store fat, not water, and the thick winter coat is shed in warmer weather. For domestic Bactrian camels, the San Francisco Zoo gives a height of about 2.3–2.4 m, a body length of about 2.1–3.4 m and a mass of about 295–680 kg; males are larger than females. These are broad zoo reference ranges, not a wild-camel measurement series; the source does not specify body width.",
+      "fr": "Ses deux bosses le distinguent du dromadaire. Le Bactrien domestique est robuste et hirsute, souvent brun foncé à sable ; les mâles sont plus grands. Les bosses stockent de la graisse, non de l’eau ; son pelage d’hiver tombe au printemps. Pour le chameau de Bactriane domestique, le zoo de San Francisco indique une hauteur d’environ 2,3 à 2,4 m, une longueur corporelle d’environ 2,1 à 3,4 m et une masse d’environ 295 à 680 kg ; les mâles sont plus grands que les femelles. Ce sont de larges repères zoologiques, pas une série de mesures sur des chameaux sauvages ; la source ne précise pas la largeur du corps."
     },
     "habitat": {
       "en": "Domestic herds occur across Inner, Central and East Asia, notably Mongolia and China. Herders keep them in steppe, semi-desert and desert environments, moving with seasonal forage and temperature; these managed ranges are not a single wild habitat.",
@@ -49,17 +49,18 @@
       "url": "https://www.sfzoo.org/animals-exhibits/a-to-z/bactrian-camel/",
       "consulted": "2026-10-11",
       "supports": [
-        "overview",
-        "identification",
-        "diet",
         "behavior",
-        "reproduction",
-        "conservation"
+        "conservation",
+        "diet",
+        "identification",
+        "overview",
+        "reproduction"
       ],
       "facts": [
         "Identifies zoo animals as domesticated C. bactrianus and distinguishes wild C. ferus.",
         "Describes two humps, coat, sex size difference, broad diet, social groups and camel husbandry.",
-        "Says critically endangered status applies to C. ferus and domestic Bactrian camels are not endangered."
+        "Says critically endangered status applies to C. ferus and domestic Bactrian camels are not endangered.",
+        "For domestic Bactrian camels, the zoo reports height 7.5–8 ft, body length 7–11 ft and mass 650–1,500 lb; males are larger than females."
       ]
     },
     {

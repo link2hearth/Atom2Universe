@@ -1,0 +1,38 @@
+{
+  "id": "western_gorilla",
+  "name": "Gorille de l’Ouest",
+  "scientific": "Gorilla gorilla",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le gorille de l’Ouest (Gorilla gorilla) est l’une des deux espèces de gorilles ; le gorille de l’Est (G. beringei) vit plus à l’est. Le gorille de l’Ouest habite l’Afrique équatoriale occidentale et centrale et comprend deux sous-espèces : le gorille des plaines de l’Ouest et le gorille de la rivière Cross.",
+    "identification": "Le Smithsonian indique que les mâles adultes du gorille des plaines de l’Ouest pèsent en moyenne 136 kg, peuvent atteindre 1,8 m debout et ont une envergure de bras d’environ 2,4 m ; les femelles pèsent environ 68 à 91 kg, atteignent 1,4 m et ont une envergure de bras de 2 m. Ce sont des valeurs de référence zoologiques, pas des limites observées sur toute la population sauvage. L’adulte a le pelage sombre, de longs bras et une poitrine large ; le mâle est bien plus grand. Sa selle argentée peut couvrir le croupion et les cuisses chez le gorille des plaines de l’Ouest. Le petit a une touffe claire au croupion. Le gorille marche sur ses phalanges ; ses crêtes crâniennes ancrent les muscles de la mâchoire.",
+    "habitat": "Le gorille des plaines de l’Ouest fréquente les forêts marécageuses et de terre ferme du bassin du Congo ; celui de la rivière Cross vit dans les forêts fragmentées de la frontière Nigeria-Cameroun. Les gorilles passent beaucoup de temps au sol, mais grimpent et nichent aussi dans les arbres ou à terre.",
+    "diet": "Feuilles, tiges, pousses et fruits dominent, en proportions variables selon saison et lieu. Dans trois sites de gorilles des plaines, les fruits représentaient environ 35 % du temps d’alimentation, les feuilles et herbes environ la moitié ; les espèces différaient. Certaines populations mangent aussi des noix ou insectes.",
+    "behavior": "Les groupes réunissent souvent un mâle argenté, des femelles, des jeunes et parfois d’autres mâles ; leur composition varie. Le jour, les gorilles s’alimentent, se reposent, nichent et communiquent par cris, postures et battements de poitrine. Les femelles quittent leur groupe natal ; de jeunes mâles vivent seuls ou entre mâles durant des années.",
+    "reproduction": "Chez le gorille des plaines de l’Ouest, la gestation dure environ huit mois et demi ; un seul petit naît généralement, sans saison fixe. Il s’agrippe à sa mère, qui le porte ; il peut rester sur son dos des années. Les femelles changent de groupe en grandissant ; plusieurs années séparent les naissances. Ces données concernent cette sous-espèce.",
+    "ecology": "Les gorilles des plaines de l’Ouest mangent des fruits puis rejettent leurs graines intactes, les éloignant des arbres parents. Des études au Gabon et au Cameroun ont trouvé des graines de nombreuses espèces, parfois germinables. Dispersion et germination varient selon régime, site et plante.",
+    "conservation": "En 2016, l’UICN classait le gorille de l’Ouest « En danger critique », citant chasse illégale, maladies et perte d’habitat. Les routes forestières exposent les forêts reculées aux chasseurs. Cette évaluation datée n’est pas un nouveau recensement. L’aire du gorille de la rivière Cross est très limitée et fragmentée ; les pressions varient selon les régions."
+  },
+  "sources": [
+    {
+      "url": "https://www.nationalzoo.si.edu/animals/western-lowland-gorilla",
+      "title": "Gorille des plaines de l’Ouest — zoo national et institut de biologie de la conservation Smithsonian"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0271576",
+      "title": "Variabilité alimentaire des gorilles de l’Ouest (Gorilla gorilla gorilla) — PLOS ONE"
+    },
+    {
+      "url": "https://popups.uliege.be/1780-4507/index.php?id=10293&lang=en",
+      "title": "Rôle du gorille des plaines de l’Ouest dans la dispersion des graines des forêts tropicales — Université de Liège"
+    },
+    {
+      "url": "https://dspace.stir.ac.uk/handle/1893/26838",
+      "title": "Gorilla gorilla — évaluation de la Liste rouge de l’UICN (2016), dépôt de l’Université de Stirling"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/gorilla",
+      "title": "Gorille — San Diego Zoo Animals & Plants"
+    }
+  ]
+}

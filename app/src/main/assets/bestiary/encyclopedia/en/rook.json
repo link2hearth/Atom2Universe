@@ -1,0 +1,38 @@
+{
+  "id": "rook",
+  "name": "Rook",
+  "scientific": "Corvus frugilegus",
+  "group": "birds",
+  "sections": {
+    "overview": "The rook is a social Eurasian crow of open farmland, ranging from western Europe across northern Asia to eastern Siberia. Most western populations stay near their breeding grounds, while birds farther north and east move south for winter.",
+    "identification": "Adults average about 47 cm long, with an 81–94 cm wingspan and a mass of 337–531 g. Males are slightly larger than females; the BTO’s British ringing sample averages 485 g for males and 425 g for females. Their black plumage often shines blue or violet in sunlight. Bare pale skin around the slim bill distinguishes adults from carrion crows; juveniles retain facial feathers until roughly six months old.",
+    "habitat": "Rooks are most common in rural fields and villages, nesting in mature trees between farmland; they also enter towns when suitable habitat is available. They use parks and churchyards where large trees provide nesting sites.",
+    "diet": "As an omnivore, the rook eats earthworms and insect larvae, while grain and other plant foods also make up a major part of its diet. In spring it may pull up germinating crops, and occasionally eats small vertebrates, eggs or carrion.",
+    "behavior": "Rooks feed in noisy flocks and gather at dusk before flying to communal night roosts, sometimes alongside jackdaws. Their varied calls signal recognition between mates or aggression, while long-term pair bonds persist within the colony.",
+    "reproduction": "Established pairs build or repair a cup of twigs high in a tree, often reusing a site in a rookery that may persist for years. The female usually incubates three or four eggs for about 15–16 days while the male brings food; after hatching, both parents feed the helpless chicks. Young leave the nest at about 32–34 days but remain dependent on parental feeding for some time before becoming independent.",
+    "ecology": "By eating soil invertebrates, rooks remove some crop pests, yet their taste for newly sown grain and emerging seedlings can bring them into conflict with farmers. Their feeding therefore links the seasonal supply of field prey and seeds with both agricultural benefits and losses.",
+    "conservation": "Its global conservation status is Least Concern, although local fortunes differ. In Britain, breeding numbers have declined since around 2000, while the causes remain unclear. Across its range, changing farmland, pesticide-treated seed and persecution are documented pressures."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Rook_(bird)",
+      "title": "Rook (bird)"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Corbeau_freux",
+      "title": "Corbeau freux"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/rook",
+      "title": "Rook BirdFacts"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Corvus_frugilegus/",
+      "title": "Rook — Animal Diversity Web"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/rook/",
+      "title": "Rook"
+    }
+  ]
+}

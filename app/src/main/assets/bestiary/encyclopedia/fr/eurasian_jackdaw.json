@@ -1,0 +1,42 @@
+{
+  "id": "eurasian_jackdaw",
+  "name": "Choucas des tours",
+  "scientific": "Corvus monedula",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Choucas des tours, également classé sous le nom de Coloeus monedula, est un petit corvidé d’Europe, d’Asie occidentale et du nord-ouest de l’Afrique. La plupart des populations sont sédentaires ; celles du nord et de l’est migrent vers le sud en hiver.",
+    "identification": "L’adulte mesure 34 à 39 cm et pèse environ 240 g. Les échantillons britanniques de baguage indiquent 242 g en moyenne chez les mâles et 226 g chez les femelles. Son plumage noir brillant, sa nuque et ses joues grises, son bec court et son iris blanc argenté le distinguent. Le jeune est plus brun et a l’œil bleu.",
+    "habitat": "Il cherche sa nourriture dans les champs ouverts et les parcs, mais niche dans des cavités abritées : arbres creux et fissures rocheuses, ou cheminées et tours en ville.",
+    "diet": "Cet omnivore cherche surtout au sol insectes et autres invertébrés dans l’herbe courte et à la surface du sol. En période de reproduction, il prélève des proies en surface ou dans l’herbe courte et sous les bouses ; les poussins mangent surtout des insectes et des larves. En hiver, les végétaux, notamment les grains et les graines de mauvaises herbes, prennent davantage d’importance. Fruits, charognes et déchets complètent aussi son régime. Les choucas pillent parfois les nids d’autres oiseaux pour prendre œufs ou oisillons.",
+    "behavior": "Les couples se nourrissent et dorment ensemble, restant proches au sein de bandes bruyantes. Leurs cris métalliques « tchac-tchac » maintiennent le contact, tandis qu’un cri plus rauque signale le danger. En expérience, les choucas ont tenu compte de l’attention humaine en situation de compétition pour la nourriture et utilisé les signaux communicatifs d’une personne familière pour trouver de la nourriture cachée dans une tâche coopérative.",
+    "reproduction": "Les couples restent souvent unis pour la vie, se reproduisent dès leur deuxième année et nichent en colonie. Ils construisent une plateforme de brindilles dans une cavité et la tapissent de poils, de laine ou de plumes. La femelle pond quatre ou cinq œufs bleu-vert pâle et les couve environ 20 jours, nourrie par le mâle. Nus et incapables de se débrouiller seuls, les poussins sont nourris par les deux parents. Les données britanniques indiquent un envol vers 32 jours. Les jeunes restent ensuite près d’un mois en famille, tout en apprenant à se nourrir seuls.",
+    "ecology": "Les choucas consomment des insectes du sol, mais aussi des graines et des charognes. D’autres oiseaux peuvent convoiter leurs cavités de nidification, et les dortoirs communs rassemblent de grandes bandes.",
+    "conservation": "À l’échelle mondiale, l’espèce est classée en préoccupation mineure ; la tendance générale des populations européennes est stable. En Grande-Bretagne, les effectifs nicheurs ont augmenté des années 1960 à 2024. Autrefois, les choucas étaient chassés pour les dégâts aux cultures et leur nidification dans les clochers."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Western_jackdaw",
+      "title": "Choucas des tours — Wikipédia en anglais"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Choucas_des_tours",
+      "title": "Choucas des tours — Wikipédia"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/jackdaw",
+      "title": "Choucas des tours : BirdFacts — British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Jackdaw/lifehistory",
+      "title": "Cycle de vie du Choucas des tours — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.cub.2009.02.062",
+      "title": "Les choucas répondent à l’attention et aux signaux communicatifs humains selon le contexte"
+    },
+    {
+      "url": "https://www.bto.org/sites/default/files/shared_documents/publications/research-reports/2007/rr485v2.pdf",
+      "title": "Predicting the impact of future agricultural change and uptake of Entry Level Stewardship on farmland birds (rapport de recherche BTO no 485)"
+    }
+  ]
+}

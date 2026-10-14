@@ -1,0 +1,62 @@
+{
+  "id": "wood_pigeon",
+  "name": "Pigeon ramier",
+  "scientific": "Columba palumbus",
+  "group": "birds",
+  "sections": {
+    "overview": "Grand pigeon adaptable, le Pigeon ramier fréquente les bois, campagnes, parcs et jardins d’Europe. Les adultes mesurent 40 à 42 cm, pèsent environ 480 à 550 g et présentent une envergure de 75 à 80 cm. Certaines populations restent près de leurs sites de reproduction; d’autres migrent et se rassemblent en hiver là où la nourriture abonde.",
+    "identification": "L’adulte mesure environ 40 à 42 cm, pour une envergure de 75 à 80 cm et une masse typique de 480 à 550 g. Dans les échantillons de baguage du BTO, les mâles adultes pesaient en moyenne 529 g et les femelles 488 g ; ces valeurs par sexe proviennent d’un petit échantillon britannique. Son corps gris massif, sa poitrine rosée, son œil jaune et son bec rouge orangé le distinguent. L’adulte porte deux taches blanches au cou, bordées de reflets verts et violets, et de larges bandes alaires blanches visibles en vol. Le jeune n’a pas les taches du cou, mais possède déjà les bandes alaires. Plus grand que le Pigeon biset, Columba livia, aux barres alaires sombres, il se distingue aussi du Pigeon colombin, Columba oenas, plus petit et sans taches blanches au cou.",
+    "habitat": "Il niche dans les bois ouverts, leurs lisières et les haies, puis se nourrit dans les champs, prairies et pelouses. En ville, les parcs et jardins arborés offrent des branches pour nicher, de l’herbe et des plantes nourricières; certains oiseaux y cherchent leur nourriture, d’autres gagnent les terres agricoles. Cette souplesse a favorisé sa présence dans les villes européennes, à des dates variables selon les régions.",
+    "diet": "Il mange surtout des végétaux: graines, céréales, bourgeons, feuilles, fleurs, baies et fruits. Il picore au sol graines et céréales, et prélève fruits et bourgeons dans les arbres; le colza peut être une ressource saisonnière importante. Le jabot, poche extensible au bas de la gorge, stocke les aliments avant leur passage dans l’estomac: l’oiseau peut les récolter rapidement puis les digérer. Les petits invertébrés sont consommés à l’occasion, sans constituer l’essentiel du régime.",
+    "behavior": "Les couples gardent le contact par un roucoulement grave et répété, souvent lancé d’un perchoir. En parade, l’oiseau monte brusquement, fait claquer ses ailes puis plane vers le bas, ailes raides; il signale ainsi son territoire et courtise un partenaire. Hors nidification, des groupes lâches se nourrissent ensemble et de grandes bandes rejoignent des dortoirs hivernaux. Les déplacements varient: certains oiseaux urbains restent près des parcs, tandis que des individus suivis en Europe centrale gagnent les champs à plusieurs kilomètres.",
+    "reproduction": "La parade mène à une simple plate-forme de brindilles, dans un arbre, une haie ou parfois un bâtiment; les deux parents couvent généralement deux œufs blancs. L’incubation dure environ 17 jours; les poussins duveteux s’envolent vers 33 à 34 jours. Les deux parents les nourrissent. Dans les derniers jours d’incubation, les cellules du jabot, poche de stockage au bas de la gorge, s’épaississent puis se détachent en une sécrétion nutritive appelée lait de jabot. Les jeunes en dépendent d’abord; vers le dixième jour, les parents ajoutent des graines ramollies et d’autres aliments solides. La longue saison permet une ou deux nichées par an, selon le lieu et les conditions.",
+    "ecology": "En mangeant des fruits, le Pigeon ramier peut disperser des graines; dans le sud de l’Espagne, de nombreuses graines d’olives cultivées ont traversé son appareil digestif intactes et gagné la végétation naturelle voisine. Certains couples nichent près de Faucons hobereaux: malgré le risque d’être capturé, leur voisinage peut décourager d’autres intrus. La consommation de céréales peut créer des conflits agricoles; localement, la croissance des populations a accompagné l’accès à de nouvelles ressources agricoles et le recul de la chasse.",
+    "conservation": "L’espèce a progressé dans plusieurs régions d’Europe et figure en préoccupation mineure dans l’évaluation européenne de BirdLife publiée en 2021, qui estime sa population en hausse. La RSPB estime à environ 5,2 millions les couples nicheurs au Royaume-Uni, où les oiseaux continentaux renforcent les effectifs en hiver. Dans le nord de l’Algérie, une population a augmenté tandis que la pression de chasse baissait et que l’agriculture apportait de nouvelles ressources; les effets de l’usage des terres varient donc selon les régions. Les évaluations nationales et européennes couvrent des échelles différentes et peuvent attribuer des catégories distinctes."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/woodpigeon",
+      "title": "Pigeon ramier : BirdFacts"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/woodpigeon",
+      "title": "Woodpigeon"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/identifying-birds/pigeons-and-doves-an-id-guide",
+      "title": "Colombes et pigeons : quelles différences ?"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Common_Wood-Pigeon/overview",
+      "title": "Common Wood-Pigeon : présentation"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Common_Wood-Pigeon/lifehistory",
+      "title": "Common Wood-Pigeon : cycle de vie"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/behaviour/crop-milk",
+      "title": "Lait de jabot"
+    },
+    {
+      "url": "https://www.bto.org/our-work/news/blog/amazing-nesters-journey-through-bird-breeding-season",
+      "title": "Nicheurs remarquables : parcours dans la saison de reproduction"
+    },
+    {
+      "url": "https://www.birdlife.org/wp-content/uploads/2022/05/BirdLife-European-Red-List-of-Birds-2021.pdf.pdf",
+      "title": "Liste rouge européenne des oiseaux de BirdLife 2021"
+    },
+    {
+      "url": "https://jlupub.ub.uni-giessen.de/items/133c5b6a-6a01-4715-a269-228968259839",
+      "title": "Rester ou partir ? Phénologie migratoire et quête alimentaire saisonnière du Pigeon ramier"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1186/s40657-015-0027-9",
+      "title": "Augmentation rapide des effectifs et changement d’usage des terres chez deux Columbidés en expansion"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S1146609X15300205",
+      "title": "Introduction d’arbres cultivés dans la nature : le Pigeon ramier disperse des graines d’olivier domestique"
+    }
+  ]
+}

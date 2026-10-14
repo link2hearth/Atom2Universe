@@ -57,14 +57,14 @@
         "Largest living penguin; layered feathers, circulation, prey and dive benchmarks."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "overview.en.2",
-        "overview.fr.2",
-        "diet.en.5",
-        "diet.fr.5",
         "behavior.en.1",
         "behavior.fr.1",
+        "diet.en.5",
+        "diet.fr.5",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2",
         "reproduction.en.5",
         "reproduction.fr.5"
       ],
@@ -79,15 +79,16 @@
     {
       "title": {
         "en": "Penguins — British Antarctic Survey",
-        "fr": "Les manchots — British Antarctic Survey"
+        "fr": "Manchots — British Antarctic Survey"
       },
       "url": "https://legacy.bas.ac.uk/about_antarctica/wildlife/birds/penguins/index.php",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "identification"
       ],
       "facts": [
-        "Approximate emperor adult height 115 cm and maximum mass 40 kg; king comparison."
+        "Approximate emperor adult height 115 cm and maximum mass 40 kg; king comparison.",
+        "Adults are about 115 cm tall and can weigh up to 40 kg at the start of breeding; mass varies seasonally, and the king penguin is smaller."
       ],
       "prose_claims": [
         "identification.en.1",
@@ -116,12 +117,12 @@
         "Neck-patch distinction; fast-ice colonies commonly near open-water polynyas."
       ],
       "prose_claims": [
-        "identification.en.3",
-        "identification.fr.3",
-        "identification.en.4",
-        "identification.fr.4",
         "habitat.en.3",
-        "habitat.fr.3"
+        "habitat.fr.3",
+        "identification.en.3",
+        "identification.en.4",
+        "identification.fr.3",
+        "identification.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -195,18 +196,18 @@
         "Autumn arrival, single egg, male incubation fast, chick growth, fledging and moult."
       ],
       "prose_claims": [
-        "reproduction.en.1",
-        "reproduction.fr.1",
-        "reproduction.en.3",
-        "reproduction.fr.3",
-        "reproduction.en.4",
-        "reproduction.fr.4",
-        "reproduction.en.7",
-        "reproduction.fr.7",
-        "reproduction.en.8",
-        "reproduction.fr.8",
         "behavior.en.4",
-        "behavior.fr.4"
+        "behavior.fr.4",
+        "reproduction.en.1",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.en.7",
+        "reproduction.en.8",
+        "reproduction.fr.1",
+        "reproduction.fr.3",
+        "reproduction.fr.4",
+        "reproduction.fr.7",
+        "reproduction.fr.8"
       ],
       "budget": {
         "limit": 200,
@@ -256,12 +257,12 @@
         "Observed colony huddles reorganized through coordinated steps every 30–60 seconds."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
         "behavior.en.2",
-        "behavior.fr.2",
         "behavior.en.3",
-        "behavior.fr.3"
+        "behavior.fr.2",
+        "behavior.fr.3",
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -286,8 +287,8 @@
       ],
       "prose_claims": [
         "diet.en.3",
-        "diet.fr.3",
         "diet.en.4",
+        "diet.fr.3",
         "diet.fr.4",
         "ecology.en.3",
         "ecology.fr.3"
@@ -314,12 +315,12 @@
         "Regional stomach sampling identifies silverfish as a zooplankton-to-seabird food-web link."
       ],
       "prose_claims": [
-        "ecology.en.1",
-        "ecology.fr.1",
-        "ecology.en.2",
-        "ecology.fr.2",
         "diet.en.2",
-        "diet.fr.2"
+        "diet.fr.2",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -369,8 +370,8 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
+        "conservation.fr.1",
         "conservation.fr.2"
       ],
       "budget": {
@@ -396,10 +397,10 @@
       ],
       "prose_claims": [
         "conservation.en.3",
-        "conservation.fr.3",
         "conservation.en.4",
-        "conservation.fr.4",
         "conservation.en.5",
+        "conservation.fr.3",
+        "conservation.fr.4",
         "conservation.fr.5"
       ],
       "budget": {
@@ -451,14 +452,14 @@
         "Seasonal mass; female lays one egg; calls locate mates; males feed hatchlings."
       ],
       "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5",
         "identification.en.2",
         "identification.fr.2",
         "reproduction.en.2",
-        "reproduction.fr.2",
         "reproduction.en.6",
-        "reproduction.fr.6",
-        "behavior.en.5",
-        "behavior.fr.5"
+        "reproduction.fr.2",
+        "reproduction.fr.6"
       ],
       "budget": {
         "limit": 200,

@@ -1,0 +1,58 @@
+{
+  "id": "baikal_seal",
+  "name": "Phoque du Baïkal",
+  "scientific": "Pusa sibirica",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le phoque du Baïkal, appelé nerpa en russe, est un phoque véritable dont toute l’aire naturelle se trouve dans le lac Baïkal, en Sibérie méridionale. C’est le seul mammifère indigène du lac et la seule espèce de phoque vivant exclusivement en eau douce.",
+    "identification": "L’adulte mesure environ 1,1 à 1,4 mètre ; les mâles sont légèrement plus grands à maturité physique. Le guide de la FAO indique un poids adulte d’environ 80 à 90 kilogrammes. Comme les autres phoques véritables, le phoque du Baïkal n’a pas de pavillons externes visibles ; ses nageoires antérieures le dirigent tandis que ses nageoires postérieures le propulsent sous l’eau.",
+    "habitat": "Ce phoque d’eau douce est endémique du lac Baïkal et des cours d’eau qui le relient. En hiver, les phoques respirent par des trous dans la glace, tandis que les femelles abritent les nouveau-nés dans des tanières de neige sur le lac gelé.",
+    "diet": "Sous l’eau, le phoque capture surtout de petites golomyankas endémiques et des chabots, mais aussi d’autres poissons d’eau douce ; le menu varie selon la saison et le lieu. Il mange également des amphipodes, de minuscules crustacés qui forment des essaims denses dans certaines zones du lac. Des vidéos et des données d’instruments montrent qu’il poursuit ces proies la nuit, lorsque les amphipodes remontent dans la colonne d’eau et que les poissons gagnent des profondeurs moindres. Derrière les canines, les dents portent des pointes rapprochées formant un filtre en peigne. Il peut ainsi rejeter l’eau tout en retenant les petites proies, ce qui rend les captures successives plus efficaces.",
+    "behavior": "La plupart des phoques chassent seuls et restent dispersés sur le lac en hiver, même si plusieurs peuvent utiliser le même accès à travers la glace. Les phoques équipés d’instruments plongent généralement pendant 10 à 20 minutes, à 50–200 mètres de profondeur ; le guide de la FAO rapporte une profondeur maximale de 300 mètres. Des vocalisations du phoque du Baïkal ont été entendues hors de l’eau et sous l’eau, et les types de sons rapportés diffèrent selon le sexe ; les enregistrements restent rares et leur fonction sociale n’est donc pas établie.",
+    "reproduction": "Les petits naissent dans des tanières de neige sur la glace du lac, de la mi-février à la fin mars. À la naissance, ils mesurent 64–66 centimètres, pèsent 4–4,2 kilogrammes et portent un lanugo blanc, un duvet doux. Ils restent dans la tanière et évitent généralement l’eau pendant leurs deux ou trois premières semaines. L’accouplement a lieu dans l’eau, surtout durant la première moitié d’avril, et la gestation dure environ onze mois. L’allaitement dure environ deux mois et demi et chevauche la période d’accouplement.",
+    "ecology": "En mangeant directement les amphipodes, il prélève l’énergie à un niveau plus bas de la chaîne alimentaire que lorsqu’il consomme les poissons qui mangent ces crustacés. Ce trajet plus court limite les pertes d’énergie entre consommateurs successifs et contribue à expliquer comment un lac pauvre en nutriments peut abriter de nombreux phoques.",
+    "conservation": "L’évaluation de Goodman pour l’UICN classe l’espèce dans la catégorie « Préoccupation mineure » ; elle a été réalisée le 10 juillet 2015 et publiée en 2016. La chasse commerciale s’est intensifiée au XXe siècle ; la population a augmenté après les prélèvements du début du siècle, puis a reculé avec les captures et les épizooties de maladie de Carré. Une épidémie de morbillivirus apparenté à la maladie de Carré a touché la population en 1987–1988. La pollution, les prises accessoires, le braconnage et la réduction de la glace de reproduction restent préoccupants. Un projet de terrain mené en 2022 a signalé que le tourisme peut déranger les phoques sur les reposoirs des îles Ouchkany."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Pusa_sibirica/",
+      "title": "Pusa sibirica (Phoque du Baïkal)"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T41676A45231738.en",
+      "title": "Pusa sibirica : Liste rouge de l’UICN des espèces menacées, 2016"
+    },
+    {
+      "url": "https://www.fao.org/4/t0725e/t0725e39.pdf",
+      "title": "Carnivora - Pinnipedia - Phocidae"
+    },
+    {
+      "url": "https://doi.org/10.1073/pnas.2014021117",
+      "title": "Le rythme de chasse élevé du phoque du Baïkal rend rentables de minuscules amphipodes endémiques"
+    },
+    {
+      "url": "https://baikalfoundation.ru/en/new-information-on-the-number-and-status-of-the-baikal-seals-in-2023-has-been-obtained/",
+      "title": "De nouvelles informations sur le nombre et l’état des phoques du Baïkal en 2023"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/1481361/",
+      "title": "Table ronde sur les morbillivirus chez les mammifères marins"
+    },
+    {
+      "url": "https://www.pinnipeds.org/seal-information/species-information-pages",
+      "title": "Informations sur les espèces - The Pinnipeds"
+    },
+    {
+      "url": "https://link.springer.com/chapter/10.1007/978-3-031-77022-7_5",
+      "title": "Les sons des pinnipèdes"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0128314",
+      "title": "Une histoire de 9 000 ans de chasse au phoque sur le lac Baïkal : l’archéozoologie de Sagan-Zaba II"
+    },
+    {
+      "url": "https://www.nipr.ac.jp/english/info/notice/20201127.html",
+      "title": "Le mystère de l’alimentation du phoque d’eau douce sibérien résolu"
+    }
+  ]
+}

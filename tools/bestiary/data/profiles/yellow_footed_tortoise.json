@@ -12,8 +12,8 @@
       "fr": "La tortue charbonnière à pattes jaunes est une grande tortue terrestre originaire d’Amérique du Sud tropicale. Son nom scientifique est Chelonoidis denticulatus ; les noms anciens comprennent C. denticulata et Geochelone denticulata. Elle vit surtout en forêt humide et cherche au sol nourriture tombée et abris. Les données de terrain proviennent principalement de quelques sites étudiés."
     },
     "identification": {
-      "en": "Its rounded, domed carapace is bone covered by horny scutes, above a flatter plastron. The shell is brown, often with pale yellow or orange scute centers; yellow-orange scales mark the head and limbs. This pattern helps separate it from the red-footed tortoise (Chelonoidis carbonarius), but colors vary and should not be used alone. Adult males have a longer, thicker tail and a somewhat concave plastron. The species is generally larger, though size also varies by region. Elongated prefrontal scales on the head are another useful distinction from the smaller, fragmented scales typical of red-footed tortoises.",
-      "fr": "Sa carapace arrondie et bombée est formée d’os recouverts de scutelles cornées, au-dessus d’un plastron plus plat. La carapace est brune, souvent avec un centre jaune pâle ou orange sur les scutelles ; la tête et les membres portent des écailles jaune orangé. Ce motif aide à la distinguer de la tortue à pattes rouges (Chelonoidis carbonarius), mais les couleurs varient et ne suffisent pas seules. Le mâle adulte a une queue plus longue et épaisse et un plastron légèrement concave. L’espèce est généralement plus grande, avec des variations régionales. Les écailles préfrontales allongées de la tête constituent un autre caractère utile, comparées aux petites écailles fragmentées typiques de la tortue à pattes rouges."
+      "en": "Adult yellow-footed tortoises usually have a carapace length of about 35 cm (reported range 29–44 cm) and mass around 6 kg (2.5–14 kg); exceptional records reach roughly 70 cm and 50 kg. Males have a concave plastron, while the female plastron is flatter or convex. These ranges are broad and the extreme values are uncommon. Its rounded, domed carapace is bone covered by horny scutes, above a flatter plastron. The shell is brown, often with pale yellow or orange scute centers; yellow-orange scales mark the head and limbs. This pattern helps separate it from the red-footed tortoise (Chelonoidis carbonarius), but colors vary and should not be used alone. Adult males have a longer, thicker tail and a somewhat concave plastron. The species is generally larger, though size also varies by region. Elongated prefrontal scales on the head are another useful distinction from the smaller, fragmented scales typical of red-footed tortoises.",
+      "fr": "La carapace des tortues charbonnières à pattes jaunes adultes mesure généralement environ 35 cm (plage rapportée : 29 à 44 cm) et la masse tourne autour de 6 kg (2,5 à 14 kg) ; des individus exceptionnels atteignent environ 70 cm et 50 kg. Le plastron du mâle est concave, celui de la femelle plus plat ou convexe. Les fourchettes sont larges et les valeurs extrêmes sont rares. Sa carapace arrondie et bombée est formée d’os recouverts de scutelles cornées, au-dessus d’un plastron plus plat. La carapace est brune, souvent avec un centre jaune pâle ou orange sur les scutelles ; la tête et les membres portent des écailles jaune orangé. Ce motif aide à la distinguer de la tortue à pattes rouges (Chelonoidis carbonarius), mais les couleurs varient et ne suffisent pas seules. Le mâle adulte a une queue plus longue et épaisse et un plastron légèrement concave. L’espèce est généralement plus grande, avec des variations régionales. Les écailles préfrontales allongées de la tête constituent un autre caractère utile, comparées aux petites écailles fragmentées typiques de la tortue à pattes rouges."
     },
     "habitat": {
       "en": "The species is associated mainly with humid tropical forests, including Amazonian rainforest. It shelters in leaf litter, beneath fallen logs and among roots or dense plants, which buffer heat and drying. In a six-month Central Amazon study, tortoises usually sheltered when encountered; smaller animals often used leaf litter. Tracked individuals used an average 1.56 hectares, with larger areas used by larger tortoises. This local estimate is not a universal home range.",
@@ -173,6 +173,20 @@
       ],
       "facts": [
         "Head scalation: elongated prefrontals in yellow-footed tortoises versus small fragmented prefrontals in red-footed tortoises. Historical habitat claims not used."
+      ]
+    },
+    {
+      "title": {
+        "en": "Turtles: species characteristics — FAO",
+        "fr": "Tortues : caractéristiques des espèces — FAO"
+      },
+      "url": "https://www.fao.org/4/T0750E/t0750e09.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "FAO species account reports adult C. denticulata carapace length about 35 cm (29–44 cm), mass about 6 kg (2.5–14 kg), rare reports up to 70 cm and 50 kg."
       ]
     }
   ],

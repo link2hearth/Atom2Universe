@@ -12,8 +12,8 @@
       "fr": "La fourmi noire des jardins est la petite fourmi sombre bien connue des pelouses, des allées et des trottoirs d’Europe. Ses colonies sont dirigées par une reine d’une longévité exceptionnelle pour un insecte, avec des durées de vie de 20 ans et plus signalées, tandis que les ouvrières vivent bien moins longtemps et de façon plus variable."
     },
     "identification": {
-      "en": "Workers are small, about 3 to 5 mm long, and dark brown to almost black. The winged females seen during swarms are larger, up to about 9 mm, while winged males measure about 3.5 to 4.5 mm.",
-      "fr": "Les ouvrières sont petites, d’environ 3 à 5 mm, brun foncé à presque noires. Les femelles ailées observées lors des essaimages sont plus grandes, jusqu’à 9 mm environ, tandis que les mâles ailés mesurent à peu près 3,5 à 4,5 mm."
+      "en": "Workers are small, about 3 to 5 mm long, and dark brown to almost black. The winged females seen during swarms are larger, up to about 9 mm, while winged males measure about 3.5 to 4.5 mm. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "Les ouvrières sont petites, d’environ 3 à 5 mm, brun foncé à presque noires. Les femelles ailées observées lors des essaimages sont plus grandes, jusqu’à 9 mm environ, tandis que les mâles ailés mesurent à peu près 3,5 à 4,5 mm. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
     },
     "habitat": {
       "en": "It is common in built-up areas and often found in drier places. Nests lie in the ground, in lawns, flower pots, compost bins and among plant roots, often under rocks or paving. The main sign of a nest is a small heap of fine soil at the surface.",
@@ -48,7 +48,11 @@
       },
       "url": "https://www.nhm.ac.uk/discover/when-why-winged-ants-swarm-nuptial-flight.html",
       "consulted": "2026-10-12",
-      "supports": ["behavior", "reproduction", "ecology"],
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "Swarms July–August in hot, humid weather, from June to early September, over several weeks; males live a day or two; queen usually mates with several males and stores sperm for life.",
         "After mating the queen chews off her wings, digs a chamber and raises the first workers without eating for weeks; large nests hold more than 20,000 workers; queens up to about 15 years in the wild, 28 in captivity."
@@ -61,7 +65,13 @@
       },
       "url": "https://www.rhs.org.uk/biodiversity/ants",
       "consulted": "2026-10-12",
-      "supports": ["habitat", "diet", "behavior", "ecology", "conservation"],
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Nests of many hundreds, sometimes thousands, in lawns, pots, compost bins and among roots; ants eat invertebrates and collect honeydew and may guard aphids from ladybirds.",
         "Soil excavation can bury low plants and disturb pot roots; ants are best tolerated as part of garden biodiversity."
@@ -74,10 +84,16 @@
       },
       "url": "https://www.gedlingconservationtrust.org/?p=11656",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
       "facts": [
         "Body length 3–5 mm, dark brown almost black; winged females up to 9 mm, winged males 3.5–4.5 mm.",
-        "Often in drier areas and common in built-up areas; nests under rocks; often seen farming aphids."
+        "Often in drier areas and common in built-up areas; nests under rocks; often seen farming aphids.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
       ]
     },
     {
@@ -87,7 +103,9 @@
       },
       "url": "https://www.demogr.mpg.de/en/publications_databases_6118/publications_1904/journal_articles/worker_lifespan_is_an_adaptive_trait_during_colony_establishment_in_the_long_lived_ant_lasius_niger_5674",
       "consulted": "2026-10-12",
-      "supports": ["overview"],
+      "supports": [
+        "overview"
+      ],
       "facts": [
         "Queens reach extraordinary lifespans of 20 years and more; worker lifespan is short and variable."
       ]

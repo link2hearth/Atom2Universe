@@ -1,0 +1,34 @@
+{
+  "id": "bactrian_camel",
+  "name": "Bactrian camel",
+  "scientific": "Camelus bactrianus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The two-humped Bactrian camel is a domestic livestock species of Central and East Asia, valued for transport, milk, meat and fibre. Its scientific name is Camelus bactrianus; the distinct wild camel is Camelus ferus.",
+    "identification": "Two separated humps distinguish it from the dromedary. Domestic Bactrians are sturdy, shaggy-haired camels, often dark to sandy brown; males tend to be larger. Humps store fat, not water, and the thick winter coat is shed in warmer weather. For domestic Bactrian camels, the San Francisco Zoo gives a height of about 2.3–2.4 m, a body length of about 2.1–3.4 m and a mass of about 295–680 kg; males are larger than females. These are broad zoo reference ranges, not a wild-camel measurement series; the source does not specify body width.",
+    "habitat": "Domestic herds occur across Inner, Central and East Asia, notably Mongolia and China. Herders keep them in steppe, semi-desert and desert environments, moving with seasonal forage and temperature; these managed ranges are not a single wild habitat.",
+    "diet": "It grazes grasses and browses dry, salty or thorny plants. A split upper lip helps it take coarse forage; it regurgitates and rechews food. In snowy winters, Bactrians dig through snow for plants. Hump fat supplies energy when feed is scarce.",
+    "behavior": "Social groups commonly include females, young and a dominant male; excluded males may form bachelor groups. Males display or fight for mates. Calls and scent aid communication. Herders guide managed groups between pastures and use camels for riding or carrying loads.",
+    "reproduction": "Spring mating is commonly reported. After about 12–14 months’ gestation, females usually bear one calf; twins are rare. Newborns walk within a day and nurse for roughly one to two years.",
+    "ecology": "Domestic camels convert sparse steppe and desert vegetation into transport, milk, meat and fibre for herding households. Their grazing occurs within managed systems; effects on plants depend on local herd density, mobility and pasture conditions.",
+    "conservation": "Critical-endangerment listings for the “wild Bactrian camel” concern Camelus ferus, not this domestic species. Camelus bactrianus remains livestock; a wildlife extinction-risk category is not a measure of the condition of its domestic herds. Conditions and pressures affecting domestic herds require region-specific assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.sfzoo.org/animals-exhibits/a-to-z/bactrian-camel/",
+      "title": "Bactrian camel"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Camelus_bactrianus/",
+      "title": "Camelus bactrianus (Bactrian camel)"
+    },
+    {
+      "url": "https://www.fao.org/dad-is/stories/story-detail/bactrian-camels--an-invaluable-resource-of-the-gobi-desert/en",
+      "title": "Bactrian camels—an invaluable resource of the Gobi Desert"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1186/s13570-020-0159-3",
+      "title": "Dromedary and Bactrian camel crossbreeding husbandry practices in Turkey and Kazakhstan: an in-depth review"
+    }
+  ]
+}

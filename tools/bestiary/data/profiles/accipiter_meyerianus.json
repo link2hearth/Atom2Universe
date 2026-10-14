@@ -1,0 +1,133 @@
+{
+  "id": "accipiter_meyerianus",
+  "scientific": "Accipiter meyerianus",
+  "group": "birds",
+  "name": {
+    "en": "Meyer’s goshawk",
+    "fr": "Autour de Meyer"
+  },
+  "sections": {
+    "overview": {
+      "en": "Meyer’s goshawk is a large forest raptor of the Moluccas, New Guinea, the Bismarck Archipelago and the Solomon Islands. It was traditionally placed in Accipiter; some modern bird checklists use Astur meyerianus. Adults show a bold black-and-white pattern, while juveniles are browner and less sharply marked. It is secretive and seldom observed, so many details of its ecology remain based on scattered records.",
+      "fr": "L’autour de Meyer est un grand rapace forestier des Moluques, de Nouvelle-Guinée, de l’archipel Bismarck et des îles Salomon. Il a longtemps été classé dans le genre Accipiter ; certaines listes ornithologiques récentes emploient Astur meyerianus. L’adulte présente un contraste marqué de noir et de blanc, tandis que le jeune est plus brun et moins nettement dessiné. Discret et rarement observé, il reste mal connu dans plusieurs aspects de son écologie."
+    },
+    "identification": {
+      "en": "The adult has dark slate to black upperparts, white underparts finely barred grey-brown, a dark barred tail and red eyes; the cere and legs are yellowish. A rare dark morph has much darker underparts. Juveniles are brown above with buff-edged feathers and heavier streaking below. Standard reference works give a total length of about 43–53 cm and a wingspan of 86–105 cm. Published mass figures are sparse: one reported adult male weighed about 530 g and one female about 1,100 g, illustrating pronounced female-biased size dimorphism but not defining population averages. No dependable body height or width range was found. Its large size, strongly barred pale underside and broad goshawk-like build help distinguish it from smaller island accipiters; check plumage age and locality as well.",
+      "fr": "L’adulte a le dessus ardoisé foncé à noir, le dessous blanc finement barré de gris-brun, une queue sombre barrée et les yeux rouges ; la cire et les pattes sont jaunâtres. Une forme sombre rare présente un dessous beaucoup plus foncé. Le jeune est brun dessus, avec des liserés chamois aux plumes et un dessous davantage strié. Les ouvrages de référence indiquent une longueur totale d’environ 43 à 53 cm et une envergure de 86 à 105 cm. Les données de masse publiées sont rares : un mâle adulte rapporté pesait environ 530 g et une femelle environ 1 100 g ; cela illustre un fort dimorphisme en faveur des femelles, sans représenter des moyennes de population. Aucune fourchette fiable de hauteur ou de largeur du corps n’a été trouvée. Sa grande taille, son dessous clair fortement barré et sa silhouette massive d’autour aident à le distinguer des petits éperviers insulaires ; tenir compte aussi de l’âge du plumage et de la provenance."
+    },
+    "habitat": {
+      "en": "It inhabits lowland, hill and montane forest, including forest edges and nearby wooded gardens. Its island range extends from the Moluccas east through New Guinea and the Bismarck group to the Solomon Islands. It has been recorded from low elevations up to around 1,800 m in some species references; local occurrence and elevation vary between islands. Forest loss is a concern in parts of this range.",
+      "fr": "Il fréquente les forêts de plaine, de collines et de montagne, ainsi que leurs lisières et les jardins arborés voisins. Son aire insulaire s’étend des Moluques vers l’est, à travers la Nouvelle-Guinée et l’archipel Bismarck jusqu’aux îles Salomon. Certaines références le signalent depuis les basses altitudes jusqu’à environ 1 800 m ; sa présence et son altitude varient selon les îles. La perte des forêts représente une préoccupation dans une partie de cette aire."
+    },
+    "diet": {
+      "en": "It is a carnivorous hunter that takes birds and lizards; small mammals are also considered probable prey. Reports suggest it may pursue pigeons and other birds with a fast low flight through or beside forest. Direct diet studies and prey-frequency data are limited, so a detailed menu cannot be quantified confidently.",
+      "fr": "C’est un prédateur carnivore qui capture des oiseaux et des lézards ; les petits mammifères sont également considérés comme des proies probables. Des observations indiquent qu’il peut poursuivre les pigeons et d’autres oiseaux par un vol rapide et bas dans la forêt ou le long de ses lisières. Les études directes du régime et les données sur la fréquence des proies sont limitées ; son menu ne peut pas être quantifié précisément."
+    },
+    "behavior": {
+      "en": "Meyer’s goshawk is diurnal and generally difficult to see in dense forest. It hunts from cover or a perch and can make a rapid attack on prey. Available records are too sparse to establish regular movements, social organization or a detailed daily activity pattern. Its conspicuous calls and behavior are not well documented in field sources reviewed.",
+      "fr": "L’autour de Meyer est actif le jour et reste généralement difficile à observer dans la forêt dense. Il chasse à couvert ou depuis un perchoir et peut fondre rapidement sur une proie. Les observations disponibles sont trop peu nombreuses pour établir ses déplacements réguliers, son organisation sociale ou le détail de son rythme quotidien. Les cris et les comportements sont peu documentés dans les références de terrain consultées."
+    },
+    "reproduction": {
+      "en": "The species nests in forest, but published accounts provide little dependable detail on nest structure, clutch size, incubation or breeding season across its range. As with other raptors, the female is larger, but that size difference should not be used alone to sex birds in the field. More island-specific breeding observations are needed.",
+      "fr": "L’espèce niche en forêt, mais les sources publiées fournissent peu de données fiables sur la structure du nid, la taille de ponte, l’incubation ou la saison de reproduction à l’échelle de son aire. Comme chez d’autres rapaces, la femelle est plus grande, mais ce dimorphisme ne suffit pas à sexer un individu sur le terrain. Des observations de reproduction propres à chaque île sont nécessaires."
+    },
+    "ecology": {
+      "en": "As a forest predator, it occupies the upper levels of island food webs and may regulate populations of medium-sized birds and other vertebrates. Its secretive nature and low encounter rates make population estimates difficult. Habitat quality and the continuity of forest are likely important, but the exact response of local populations to forest change is not well quantified.",
+      "fr": "En tant que prédateur forestier, il occupe un niveau élevé des réseaux alimentaires insulaires et peut réguler les populations d’oiseaux de taille moyenne et d’autres vertébrés. Son caractère discret et le faible nombre de rencontres rendent les estimations de population difficiles. La qualité de l’habitat et la continuité des forêts sont vraisemblablement importantes, mais la réaction exacte des populations locales aux changements forestiers est peu quantifiée."
+    },
+    "conservation": {
+      "en": "The 2016 IUCN Red List assessment classified the species as Least Concern, citing its broad island range, while also reporting a decreasing population trend and ongoing habitat loss. That assessment is not the latest; status should be checked against the current IUCN record before being treated as current. A broad range does not mean every island population is secure, especially where forest is being cleared.",
+      "fr": "L’évaluation de la Liste rouge de l’UICN de 2016 classait l’espèce en préoccupation mineure en raison de sa vaste aire insulaire, tout en signalant une tendance démographique à la baisse et la perte continue d’habitats. Cette évaluation n’est pas la plus récente ; il faut consulter la fiche UICN actuelle avant de présenter ce statut comme à jour. Une vaste répartition ne garantit pas la sécurité de chaque population insulaire, surtout là où la forêt est défrichée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Meyer’s Goshawk — IUCN Red List, BirdLife International assessment",
+        "fr": "Autour de Meyer — Liste rouge de l’UICN, évaluation de BirdLife International"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22695689A93523669.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife International's 2016 IUCN assessment lists the species as Least Concern, describes a broad range across Indonesia, Papua New Guinea and Solomon Islands, reports a decreasing trend and identifies habitat loss; the IUCN page warns this is not the latest assessment."
+      ]
+    },
+    {
+      "title": {
+        "en": "Meyer’s Goshawk — Oiseaux.net English species account",
+        "fr": "Autour de Meyer — fiche espèce Oiseaux.net en anglais"
+      },
+      "url": "https://www.oiseaux.net/en/oiseaux/meyer.s.goshawk.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Species reference compiles habitat observations for hill and montane forest, forest edges and nearby gardens; cites diurnal activity, carnivory and taxonomic references. Its habitat range is presented as approximate and source-based."
+      ]
+    },
+    {
+      "title": {
+        "en": "Raptors of the World — Ferguson-Lees and Christie, species measurements",
+        "fr": "Raptors of the World — Ferguson-Lees et Christie, mensurations de l’espèce"
+      },
+      "url": "https://www.bloomsbury.com/uk/raptors-of-the-world-9780713680263/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Standard raptor handbook is cited for approximate total length 43–53 cm and wingspan 86–105 cm; these are reference ranges rather than sex-specific measurements."
+      ]
+    },
+    {
+      "title": {
+        "en": "CRC Handbook of Avian Body Masses — John B. Dunning Jr.",
+        "fr": "CRC Handbook of Avian Body Masses — John B. Dunning Jr."
+      },
+      "url": "https://doi.org/10.1201/9781420064452",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The avian mass handbook is cited for sparse reported values of approximately 530 g for a male and 1,100 g for a female; these individual reference values do not constitute a population mean or full sex-specific range."
+      ]
+    },
+    {
+      "title": {
+        "en": "Meyer's Goshawk — Birds of New Guinea and the Adjacent Papuan Islands, historic ornithological source",
+        "fr": "Autour de Meyer — Birds of New Guinea and the Adjacent Papuan Islands, source ornithologique ancienne"
+      },
+      "url": "https://www.biodiversitylibrary.org/item/119233",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Historical ornithological treatment provides early description and island specimen context; used as a historical source only, not for modern conservation status or population claims."
+      ]
+    }
+  ],
+  "illustration_notes": "Large forest goshawk with dark slate-black upperparts, white finely barred underparts, red eyes and broad dark-banded tail; show the yellow cere and legs. A brown juvenile is a distinct age plumage; do not portray both as a single colour state.",
+  "uncertainties": [
+    "Some current checklists transfer the species from Accipiter to Astur; the profile preserves the catalog name used by the project while noting the alternate combination.",
+    "Body masses are based on very few published individuals and are not population averages; no height or body-width measurements were located.",
+    "Field data on prey proportions, breeding biology and island population trends remain limited; the 2016 IUCN assessment is not the latest."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked the IUCN/BirdLife assessment with an English-language species account and standard international raptor and avian-mass references; labelled sparse sexed masses as individual records and dated the conservation assessment."
+}

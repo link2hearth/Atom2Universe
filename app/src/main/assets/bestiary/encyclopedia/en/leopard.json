@@ -1,0 +1,42 @@
+{
+  "id": "leopard",
+  "name": "Leopard",
+  "scientific": "Panthera pardus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The leopard is a powerful cat native to Africa and Asia. It occupies a broad range of environments, from tropical forest to desert and mountains. Its flexible hunting and climbing abilities help it persist where other large cats may not.",
+    "identification": "Adults have a long body, short muscular legs, broad paws and a long tail. Their coats range from pale gold to ochre, with dark rosettes and smaller solid spots. Some are melanistic; their markings remain visible in suitable light. Adult size varies geographically. Published reported length ranges are 1.6–2.3 m for males and 1.7–1.9 m for females; corresponding reported masses are 31–65 kg and 17–58 kg. Males are generally larger, but the overlap and geographic variation mean size alone does not identify sex. A dependable general shoulder-height range was not found.",
+    "habitat": "Leopards use rainforest, woodland, savanna, scrub, rocky slopes and desert where cover and prey are available. They also occur in some human-used landscapes. Himalayan records reach about 5,200 metres, an exceptional local record rather than a typical habitat.",
+    "diet": "This carnivore hunts prey from small mammals and birds to larger ungulates. Its menu depends on locally available animals: a Gabon study found forest ungulates important, while research in Tanzania recorded substantial primate consumption. Leopards may also take livestock near farms.",
+    "behavior": "Leopards generally live alone, except when females travel with cubs or adults meet to mate. Activity varies: many studied savanna populations are mainly nocturnal, while some in Gabonese rainforest were largely active by day. Scent marks, calls and scratches signal presence.",
+    "reproduction": "After about three months of pregnancy, a female gives birth in a concealed den, commonly to two or three cubs. They remain hidden, then follow her and learn to hunt. Independence is gradual; reported ages vary among populations, from about one year to two years.",
+    "ecology": "The leopard consumes different prey in different habitats, so no single species defines its diet everywhere. It may carry a kill into a tree, making it less accessible to competitors. When wild prey is scarce, livestock may enter its diet and cause conflict with people.",
+    "conservation": "The IUCN SSC Cat Specialist Group’s account, citing Red List version 2024-2, classifies leopards as Vulnerable and reports an 11% contraction of extant range during 2016–2023. It identifies habitat loss, prey depletion, illegal killing and trade, retaliation, and poorly managed trophy hunting as pressures."
+  },
+  "sources": [
+    {
+      "url": "https://www.catsg.org/living-species-leopard",
+      "title": "Living Species: Leopard — IUCN SSC Cat Specialist Group"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/leopard",
+      "title": "Leopard — San Diego Zoo Animals & Plants"
+    },
+    {
+      "url": "https://www.stir.ac.uk/research/hub/publication/650195",
+      "title": "Leopard food habits in the Lopé National Park, Gabon, Central Africa — University of Stirling"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/aje.12714",
+      "title": "Primates are an important food resource for leopards in Mahale, Tanzania — African Journal of Ecology"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11428743/",
+      "title": "Cub Survival in a Wild Leopard Population — PMC"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Panthera_pardus/",
+      "title": "Panthera pardus | Animal Diversity Web"
+    }
+  ]
+}

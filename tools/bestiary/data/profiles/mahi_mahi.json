@@ -12,8 +12,8 @@
       "fr": "La dorade coryphène, ou mahi-mahi, est un poisson pélagique à croissance rapide des mers tropicales et tempérées chaudes du monde entier. Malgré son nom anglais de dolphinfish, elle n’a aucun lien avec les dauphins, qui sont des mammifères."
     },
     "identification": {
-      "en": "Its laterally flattened, streamlined body carries a single dorsal fin that runs from above the head almost to the deeply forked tail. The back is metallic blue-green, the sides flash gold and silver with dark spots, and these vivid colours fade quickly after death. Adult males develop a high, squared forehead, while females have a more rounded head. The related pompano dolphinfish, Coryphaena equiselis, is deeper-bodied and has a trapezoid-shaped tooth patch on the tongue; C. hippurus has an oval patch.",
-      "fr": "Son corps fuselé et comprimé sur les côtés porte une nageoire dorsale unique, longue, qui va de la tête presque jusqu’à la queue très fourchue. Le dos bleu-vert métallique contraste avec les flancs argentés et dorés tachetés de sombre, mais ces couleurs vives pâlissent rapidement après la mort. Le mâle adulte développe un front haut et carré, tandis que la tête de la femelle est plus arrondie. La coryphène pompano, Coryphaena equiselis, est plus trapue et porte sur la langue une plaque dentaire trapézoïdale ; celle de C. hippurus est ovale."
+      "en": "Its laterally flattened, streamlined body carries a single dorsal fin that runs from above the head almost to the deeply forked tail. The back is metallic blue-green, the sides flash gold and silver with dark spots, and these vivid colours fade quickly after death. Adult males develop a high, squared forehead, while females have a more rounded head. The related pompano dolphinfish, Coryphaena equiselis, is deeper-bodied and has a trapezoid-shaped tooth patch on the tongue; C. hippurus has an oval patch. NOAA reports that the species can reach almost 2.1 m and 40 kg. These are upper limits, not typical adult measurements; the source does not give a sex-specific weight range or body width.",
+      "fr": "Son corps fuselé et comprimé sur les côtés porte une nageoire dorsale unique, longue, qui va de la tête presque jusqu’à la queue très fourchue. Le dos bleu-vert métallique contraste avec les flancs argentés et dorés tachetés de sombre, mais ces couleurs vives pâlissent rapidement après la mort. Le mâle adulte développe un front haut et carré, tandis que la tête de la femelle est plus arrondie. La coryphène pompano, Coryphaena equiselis, est plus trapue et porte sur la langue une plaque dentaire trapézoïdale ; celle de C. hippurus est ovale. La NOAA indique que l’espèce peut atteindre près de 2,1 m et 40 kg. Ce sont des limites maximales, non des mensurations typiques d’adulte; la source ne donne ni plage de poids selon le sexe ni largeur du corps."
     },
     "habitat": {
       "en": "It lives near the surface of offshore tropical, subtropical and warm temperate waters across the Atlantic, Indian and Pacific oceans, entering the Mediterranean occasionally. Floating seaweed rafts and other drifting objects offer shelter and concentrated feeding grounds, especially for smaller fish. Adults commonly reach about one metre; rare specimens approach 2.1 metres.",
@@ -60,16 +60,16 @@
         "Worldwide pelagic range; colours and fins; schooling; warm-water spawning; diverse prey."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.en.2",
-        "identification.en.1",
-        "identification.en.2",
-        "habitat.en.1",
+        "conservation.en.1",
+        "conservation.fr.1",
         "diet.en.1",
         "ecology.en.1",
         "ecology.en.2",
-        "conservation.en.1",
-        "conservation.fr.1"
+        "habitat.en.1",
+        "identification.en.1",
+        "identification.en.2",
+        "overview.en.1",
+        "overview.en.2"
       ],
       "budget": {
         "limit": 200,
@@ -97,13 +97,13 @@
         "French page confirms tropical oceans, Mediterranean occurrence, predatory ecology and fishing interest."
       ],
       "prose_claims": [
-        "overview.fr.1",
-        "habitat.fr.1",
-        "habitat.fr.2",
+        "behavior.fr.1",
         "diet.fr.1",
         "ecology.fr.1",
         "ecology.fr.2",
-        "behavior.fr.1",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "overview.fr.1",
         "overview.fr.2"
       ],
       "budget": {
@@ -131,15 +131,15 @@
         "NOAA details Atlantic size, sex traits, maturity, spawning, prey, predators, stock limits and bycatch."
       ],
       "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "habitat.en.2",
         "reproduction.en.1",
         "reproduction.en.2",
         "reproduction.fr.1",
-        "reproduction.fr.2",
-        "conservation.en.2",
-        "conservation.fr.2",
-        "behavior.en.2",
-        "behavior.fr.2",
-        "habitat.en.2"
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -164,12 +164,15 @@
         "Museum source verifies comparison and ordinary versus maximum size."
       ],
       "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3",
         "identification.en.3",
         "identification.en.4",
-        "habitat.en.3",
+        "identification.en.5",
         "identification.fr.3",
         "identification.fr.4",
-        "habitat.fr.3"
+        "identification.fr.5",
+        "identification.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -198,6 +201,7 @@
         "behavior.en.1",
         "diet.en.2",
         "diet.fr.2",
+        "identification.en.6",
         "identification.fr.1",
         "identification.fr.2"
       ],

@@ -1,0 +1,30 @@
+{
+  "id": "black_stork",
+  "name": "Black Stork",
+  "scientific": "Ciconia nigra",
+  "group": "birds",
+  "sections": {
+    "overview": "The black stork is a shy, large stork of quiet forests and wetlands. It breeds across the Palearctic from Spain to China and, in most populations, migrates south for the winter.",
+    "identification": "A bird stands 95–100 cm tall, spans 144–155 cm and weighs about 3 kg. The plumage is black with a green and purple gloss, with a white breast and belly. The bill and legs are scarlet red, brighter in the breeding season and duller in winter. Young birds are duller than adults.",
+    "habitat": "It inhabits old, undisturbed, open forests from sea level to mountains at about 2,000–2,500 m. It forages in shallow streams, pools, marshes and damp meadows, and generally avoids large bodies of water and dense forest. The nest is a large stick structure 4–25 m up in a big tree, or on cliffs in Spain.",
+    "diet": "It is mainly a fish-eater, but it also takes amphibians, insects, snails, crabs, small reptiles, small mammals and birds. It hunts by sight, often standing in shallow water.",
+    "behavior": "Outside the breeding season it is shy and mostly solitary, and it nests alone, with pairs rarely closer than about one kilometre. It migrates singly or in small groups of up to about 100 birds, along well-defined routes. Some populations, such as those in Spain, do not migrate.",
+    "reproduction": "In a study in Dadia National Park, north-eastern Greece (2006–2008), eggs were laid on average on 8 April, the mean clutch was 3.9 eggs, and pairs that succeeded raised an average of 3.26 young. Both parents build the nest and incubate, which takes about 32–38 days, and young fledge at 63–71 days. Maturity comes at 3–5 years.",
+    "ecology": "The species commonly reuses its nests from year to year and may take over nests built by other birds. Large old trees with strong canopies are a limiting resource, and the birds depend on clean streams and wetlands for food. In Greece, small-scale farming that created shallow feeding grounds helped the local population to increase.",
+    "conservation": "The 2015 European assessment by BirdLife International rated it Least Concern, with 9,800–13,900 pairs in Europe and an increasing trend. The main threat is habitat degradation, including loss of large nesting trees, dams and drainage, with hunting in southern Europe and collisions with power lines as further causes of death."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Ciconia_nigra/",
+      "title": "Ciconia nigra (black stork) — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.vogelbescherming.nl/docs/55bb3154-acd0-4977-a431-4904e28b7a4f.pdf",
+      "title": "Ciconia nigra — European Red List assessment, BirdLife International (2015)"
+    },
+    {
+      "url": "https://biozoojournals.ro/nwjz/content/v12n1/nwjz_e151602_Bakaloudis.pdf",
+      "title": "Breeding density, nest-site spacing and breeding performance of black storks in Dadia-Lefkimi-Soufli National Park — North-Western Journal of Zoology"
+    }
+  ]
+}

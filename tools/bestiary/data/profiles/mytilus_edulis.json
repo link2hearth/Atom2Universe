@@ -12,8 +12,8 @@
       "fr": "La moule commune est un mollusque bivalve des côtes froides de l’hémisphère nord. Elle se fixe aux rochers et aux autres moules par des fils résistants et forme des bancs denses qui abritent de nombreux autres animaux et algues. Elle est aussi très consommée et élevée."
     },
     "identification": {
-      "en": "The solid shell is roughly triangular and smooth, with concentric growth lines but no ribs, usually purple or blue and sometimes brown, with a pearl-white interior. Adults are typically 5 to 10 cm, though some populations stay at 2 to 3 cm and the largest reach 15 to 20 cm. It is easily confused with the Mediterranean mussel, and no single feature separates the species reliably.",
-      "fr": "La coquille solide est à peu près triangulaire et lisse, avec des lignes de croissance concentriques mais sans côtes, en général violette ou bleue et parfois brune, avec un intérieur blanc nacré. Les adultes mesurent typiquement 5 à 10 cm, mais certaines populations restent à 2 ou 3 cm et les plus grands atteignent 15 à 20 cm. Elle se confond facilement avec la moule méditerranéenne, et aucun caractère unique ne permet de séparer les espèces de façon fiable."
+      "en": "The solid shell is roughly triangular and smooth, with concentric growth lines but no ribs, usually purple or blue and sometimes brown, with a pearl-white interior. Adults are typically 5 to 10 cm, though some populations stay at 2 to 3 cm and the largest reach 15 to 20 cm. It is easily confused with the Mediterranean mussel, and no single feature separates the species reliably. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "La coquille solide est à peu près triangulaire et lisse, avec des lignes de croissance concentriques mais sans côtes, en général violette ou bleue et parfois brune, avec un intérieur blanc nacré. Les adultes mesurent typiquement 5 à 10 cm, mais certaines populations restent à 2 ou 3 cm et les plus grands atteignent 15 à 20 cm. Elle se confond facilement avec la moule méditerranéenne, et aucun caractère unique ne permet de séparer les espèces de façon fiable. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
     },
     "habitat": {
       "en": "It lives from the high intertidal zone to shallow subtidal water, roughly 0 to 5 m deep, on open rocky coasts, in crevices, on piers and in estuaries. In the north-east Atlantic it ranges from the White Sea to southern France, and in the west Atlantic from the Canadian Maritimes to North Carolina.",
@@ -48,10 +48,19 @@
       },
       "url": "https://www.marlin.ac.uk/species/detail/1421",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Usually 5–10 cm, up to 15–20 cm; depth about 0–5 m; byssus beds up to five or six layers; detached mussels re-attach within 24 hours; spawning April–September; maturity at 1–2 years; larvae 1–6 months in plankton.",
-        "Predation is the main mortality (dog whelks, starfish, crabs, birds; 72% of production in the Ythan estuary); over-exploitation of small beds can reduce recruitment; can accumulate pathogens and algal toxins."
+        "Predation is the main mortality (dog whelks, starfish, crabs, birds; 72% of production in the Ythan estuary); over-exploitation of small beds can reduce recruitment; can accumulate pathogens and algal toxins.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
       ]
     },
     {
@@ -61,7 +70,15 @@
       },
       "url": "https://animaldiversity.org/accounts/Mytilus_edulis/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Smooth shell usually purple, blue or dark brown with a pearl-white interior; attached by byssus; filter feeder; separate sexes, external fertilisation; females up to 40 million eggs; used in food and aquaculture.",
         "Fairly common and abundant; no special status on the Red List page it cites, an entry that may be out of date and is not relied on for a category."

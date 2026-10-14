@@ -12,8 +12,8 @@
       "fr": "Le lombric terrestre, aussi appelé « night crawler » en Amérique du Nord, est l’un des plus grands vers de terre d’Europe. C’est une espèce épi-anécique : elle vit dans un terrier profond, surtout vertical, et monte à la surface pour se nourrir. Elle est hermaphrodite, mais chaque ver a tout de même besoin d’un partenaire pour se reproduire."
     },
     "identification": {
-      "en": "It measures roughly 9 to 30 cm, and the largest individuals are reported at up to 35 cm when stretched in motion. The back is brownish to purplish red and the underside yellow-orange, and the tail end is flattened and paddle-shaped, which lets the worm grip its burrow walls.",
-      "fr": "Il mesure environ 9 à 30 cm, et les plus grands individus atteindraient 35 cm en extension. Le dos est brun à rouge pourpre et le dessous jaune orangé; l’extrémité de la queue est aplatie en palette, ce qui permet au ver de s’agripper aux parois de son terrier."
+      "en": "It measures roughly 9 to 30 cm, and the largest individuals are reported at up to 35 cm when stretched in motion. The back is brownish to purplish red and the underside yellow-orange, and the tail end is flattened and paddle-shaped, which lets the worm grip its burrow walls. A German educational reference reports that a mature individual may reach nearly 25 g; mass varies with length and body condition. No sex difference or standard body width was found.",
+      "fr": "Il mesure environ 9 à 30 cm, et les plus grands individus atteindraient 35 cm en extension. Le dos est brun à rouge pourpre et le dessous jaune orangé; l’extrémité de la queue est aplatie en palette, ce qui permet au ver de s’agripper aux parois de son terrier. Une référence pédagogique allemande indique qu’un individu adulte peut approcher 25 g; la masse varie selon la longueur et l’état corporel. Aucune différence selon le sexe ni largeur corporelle standard n’a été trouvée."
     },
     "habitat": {
       "en": "It prefers undisturbed soil and is common in lawns and grassland. Its permanent burrow normally reaches 1 to 2 m deep, though one source gives up to 2.5 m. On a very thin topsoil over an inert subsoil in north-west England, worms built shallow U-shaped burrows only about 0.11 m deep and still formed a breeding population.",
@@ -48,7 +48,15 @@
       },
       "url": "https://www.naturespot.org/node/2100",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Britain’s largest earthworm, up to 35 cm when moving; brownish to purplish red above, yellow-orange below, paddle-shaped tail end used to grip the burrow.",
         "Surface mating in wet weather, head to tail, up to 4 hours; 20–40 worms per square metre in an average lawn; common, widespread and badly under-recorded in Britain."
@@ -61,7 +69,15 @@
       },
       "url": "https://micro.magnet.fsu.edu/optics/olympusmicd/galleries/brightfield/lumbricus.html",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "90–300 mm long; burrows up to 2.5 m; middens at tunnel entrances; detritivore that aerates soil; up to 70 per square metre.",
         "Hermaphroditic with obligate sexual reproduction; about 38 cocoons per year; matures in a year and lives up to 6 years."
@@ -74,10 +90,28 @@
       },
       "url": "https://knowledge.lancashire.ac.uk/50302",
       "consulted": "2026-10-12",
-      "supports": ["overview", "habitat", "behavior"],
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior"
+      ],
       "facts": [
         "Epi-anecic species normally living in a 1–2 m deep vertical burrow.",
         "On topsoil under 0.15 m over inert subsoil, mean burrow depth was about 0.11 m after four days, unchanged after 14 months; adults, juveniles and hatchlings found after five years; worms made U-shaped burrows in lab boxes."
+      ]
+    },
+    {
+      "title": {
+        "en": "Body size of earthworms | University of Münster HyperSoil",
+        "fr": "Taille des vers de terre | HyperSoil, université de Münster"
+      },
+      "url": "https://hypersoil.uni-muenster.de/1/02/08.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Reports mature Lumbricus terrestris up to about 30 cm and nearly 25 g; notes earthworm body diameter and mass vary substantially."
       ]
     }
   ],

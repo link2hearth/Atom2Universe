@@ -12,8 +12,8 @@
       "fr": "La grenouille verte est une grenouille aquatique verte d’Europe centrale et du nord-est. Ce n’est pas une espèce au sens habituel mais un hybride fertile de la grenouille de Lessona et de la grenouille rieuse, qui se perpétue en s’accouplant avec l’un de ses parents."
     },
     "identification": {
-      "en": "It reaches up to 12 cm but is mostly under 10 cm, females being larger. The back is light to dark green or brownish with dark spots, often with a light green stripe down the middle, and the backs of the thighs are yellowish or orange with dark bars. The skin is usually smooth and the hind legs long and well webbed. Males have grey nuptial pads on the thumbs and white to grey vocal sacs.",
-      "fr": "Elle atteint 12 cm au plus mais mesure le plus souvent moins de 10 cm, les femelles étant plus grandes. Le dos est vert clair à foncé ou brunâtre, tacheté de sombre, souvent avec une raie vert clair au milieu, et l’arrière des cuisses est jaunâtre ou orange avec des barres sombres. La peau est le plus souvent lisse et les pattes postérieures sont longues et bien palmées. Les mâles ont des callosités nuptiales grises sur les pouces et des sacs vocaux blancs à gris."
+      "en": "It reaches up to 12 cm but is mostly under 10 cm, females being larger. The back is light to dark green or brownish with dark spots, often with a light green stripe down the middle, and the backs of the thighs are yellowish or orange with dark bars. The skin is usually smooth and the hind legs long and well webbed. Males have grey nuptial pads on the thumbs and white to grey vocal sacs. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "Elle atteint 12 cm au plus mais mesure le plus souvent moins de 10 cm, les femelles étant plus grandes. Le dos est vert clair à foncé ou brunâtre, tacheté de sombre, souvent avec une raie vert clair au milieu, et l’arrière des cuisses est jaunâtre ou orange avec des barres sombres. La peau est le plus souvent lisse et les pattes postérieures sont longues et bien palmées. Les mâles ont des callosités nuptiales grises sur les pouces et des sacs vocaux blancs à gris. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
     },
     "habitat": {
       "en": "It uses many sun-exposed waters with well-overgrown margins and shallows, from woodland ponds to ditches, lakes and rivers, sometimes in brackish water. It ranges across mid and north-eastern Europe as far as Russia. Introduced colonies in southern England probably all came from releases.",
@@ -48,10 +48,17 @@
       },
       "url": "https://reptiles-and-amphibians.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=98994",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Up to 12 cm, mostly under 10 cm; colour and thigh markings; males with grey nuptial pads and vocal sacs; eggs April–mid-July, 3,000–8,000 per season; maturity 2–3 years; hibernates mostly in soil.",
-        "Often the most numerous green frog; range mid and north-east Europe to Russia; colonies in southern England probably introduced."
+        "Often the most numerous green frog; range mid and north-east Europe to Russia; colonies in southern England probably introduced.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
       ]
     },
     {
@@ -61,7 +68,10 @@
       },
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2709657",
       "consulted": "2026-10-12",
-      "supports": ["overview", "ecology"],
+      "supports": [
+        "overview",
+        "ecology"
+      ],
       "facts": [
         "P. esculentus (LR) is a hybrid of the pool frog (P. lessonae) and the lake frog (P. ridibundus); in the LE system it transmits clonal R gametes and mates with P. lessonae; in the RE system it mates with P. ridibundus.",
         "All-hybrid populations occur, with triploid LLR and LRR frogs letting them persist without the parent species."
@@ -74,7 +84,10 @@
       },
       "url": "https://oaj.fupress.net/index.php/ah/article/view/13529",
       "consulted": "2026-10-12",
-      "supports": ["diet", "conservation"],
+      "supports": [
+        "diet",
+        "conservation"
+      ],
       "facts": [
         "221 adult frogs, 1,477 prey items: insects 88%; Hymenoptera 28%, Coleoptera 18%, Lepidoptera 17%, Diptera 11%; opportunistic foragers, diet varies by site.",
         "Mixed populations of the three taxa occur only along the Danube in Serbia, where they are rare."

@@ -12,8 +12,8 @@
       "fr": "Le bonobo (Pan paniscus) est un grand singe présent uniquement en République démocratique du Congo, au sud du fleuve Congo. Il partage le genre Pan avec le chimpanzé commun (P. troglodytes). Les communautés cherchent leur nourriture en sous-groupes changeants et leurs comportements varient."
     },
     "identification": {
-      "en": "Adults are slender, long-legged apes with black hair and dark skin on face, hands and feet. Crown hair often parts centrally; infants have a white rump tuft. Pink lips and a less projecting muzzle distinguish them from the more robust common chimpanzee.",
-      "fr": "L’adulte est élancé, avec de longues jambes, un pelage noir et la peau sombre au visage, aux mains et aux pieds. Les poils du sommet du crâne forment souvent une raie centrale ; le petit porte une touffe blanche au croupion. Lèvres roses et museau moins saillant le distinguent du chimpanzé commun, plus robuste."
+      "en": "Adults are slender, long-legged apes with black hair and dark skin on face, hands and feet. Crown hair often parts centrally; infants have a white rump tuft. Pink lips and a less projecting muzzle distinguish them from the more robust common chimpanzee. Adult head-to-rump length is about 70–83 cm; reported adult masses are 27–38 kg for females and 37–61 kg for males, with substantial overlap between sexes.",
+      "fr": "L’adulte est élancé, avec de longues jambes, un pelage noir et la peau sombre au visage, aux mains et aux pieds. Les poils du sommet du crâne forment souvent une raie centrale ; le petit porte une touffe blanche au croupion. Lèvres roses et museau moins saillant le distinguent du chimpanzé commun, plus robuste. La longueur tête-croupe des adultes est d’environ 70 à 83 cm ; les masses adultes publiées sont de 27 à 38 kg chez les femelles et de 37 à 61 kg chez les mâles, avec un chevauchement important entre les sexes."
     },
     "habitat": {
       "en": "The range lies in the central Congo Basin, between the Congo River and Kasai–Sankuru system, within the Democratic Republic of the Congo. Bonobos use lowland primary, secondary and swamp forests; some also inhabit forest–savanna mosaics. Habitat varies locally.",
@@ -115,6 +115,20 @@
       ],
       "facts": [
         "Describes poaching, habitat degradation, human encroachment and disease transmission concerns, and notes that estimating wild population size is difficult."
+      ]
+    },
+    {
+      "title": {
+        "en": "Pan paniscus (bonobo) — Animal Diversity Web, University of Michigan",
+        "fr": "Pan paniscus (bonobo) — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Pan_paniscus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult head-rump length 70–83 cm; reported female mass 27–38 kg and male mass 37–61 kg, with overlap."
       ]
     }
   ],

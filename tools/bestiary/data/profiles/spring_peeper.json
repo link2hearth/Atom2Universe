@@ -12,8 +12,8 @@
       "fr": "La rainette crucifère est une petite grenouille chanteuse indigène de l’est de l’Amérique du Nord, du sud-est du Canada à une grande partie de l’est des États-Unis. Son pépiement aigu et répété compte parmi les premiers chants de grenouilles entendus au retour du printemps."
     },
     "identification": {
-      "en": "Adult males are often 20–30 mm long and females 30–40 mm; measurements vary among populations. Tan, brown or grey skin usually bears a dark X-shaped mark; the forefeet have four digits and the hindfeet five, tipped with adhesive pads.",
-      "fr": "Les mâles adultes mesurent souvent 20 à 30 mm et les femelles 30 à 40 mm ; les mesures varient selon les populations. La peau beige, brune ou grise porte souvent un X sombre ; les pattes avant ont quatre doigts et les arrière cinq, terminés par des disques adhésifs."
+      "en": "Adults are about 1.9–3.2 cm long; females are generally larger, while males are smaller and darker. The consulted authoritative species account gives no dependable adult mass, so weight and body width are left unspecified. Adult males are often 20–30 mm long and females 30–40 mm; measurements vary among populations. Tan, brown or grey skin usually bears a dark X-shaped mark; the forefeet have four digits and the hindfeet five, tipped with adhesive pads.",
+      "fr": "L’adulte mesure environ 1,9 à 3,2 cm ; les femelles sont généralement plus grandes, tandis que les mâles sont plus petits et plus sombres. La fiche spécialisée consultée ne donne pas de masse adulte fiable ; le poids et la largeur corporelle restent donc non précisés. Les mâles adultes mesurent souvent 20 à 30 mm et les femelles 30 à 40 mm ; les mesures varient selon les populations. La peau beige, brune ou grise porte souvent un X sombre ; les pattes avant ont quatre doigts et les arrière cinq, terminés par des disques adhésifs."
     },
     "habitat": {
       "en": "It can climb but often stays near the ground, hiding in leaf litter in marshy woods or lowlands near ponds and swamps. It breeds in shallow freshwater pools, often temporary, where plants or debris can hold eggs.",
@@ -57,11 +57,11 @@
         "Eastern range; northern freeze tolerance"
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.en.2",
         "behavior.en.2",
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.2",
+        "overview.en.1",
+        "overview.en.2"
       ],
       "budget": {
         "limit": 200,
@@ -87,11 +87,11 @@
         "French range, body form and call"
       ],
       "prose_claims": [
-        "overview.fr.1",
-        "overview.fr.2",
+        "behavior.fr.2",
         "identification.en.1",
         "identification.fr.1",
-        "behavior.fr.2"
+        "overview.fr.1",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -120,12 +120,12 @@
       "prose_claims": [
         "diet.en.2",
         "diet.fr.2",
-        "reproduction.en.3",
-        "reproduction.fr.3",
         "ecology.en.1",
         "ecology.fr.1",
         "habitat.en.1",
-        "habitat.fr.1"
+        "habitat.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -153,14 +153,14 @@
         "North Carolina profile: courtship, young and predators"
       ],
       "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
         "habitat.en.2",
         "habitat.fr.2",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
-        "reproduction.fr.2",
-        "diet.en.1",
-        "diet.fr.1"
+        "reproduction.fr.1",
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -210,7 +210,8 @@
       ],
       "prose_claims": [
         "identification.en.2",
-        "identification.fr.2"
+        "identification.fr.2",
+        "identification.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -235,8 +236,8 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
+        "conservation.fr.1",
         "conservation.fr.2"
       ],
       "budget": {
@@ -246,6 +247,25 @@
         "total": 95,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Spring Peepers and the Department of Defense — U.S. Department of Defense Partners in Amphibian and Reptile Conservation",
+        "fr": "Rainette crucifère — fiche du programme Partners in Amphibian and Reptile Conservation du Department of Defense"
+      },
+      "url": "https://home.army.mil/bragg/3815/4592/8976/Spring_Peeper_Fact_Sheet.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adults typically 1.9–3.2 cm; males usually smaller than females; no body mass stated."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.en.4",
+        "identification.fr.4"
+      ]
     }
   ],
   "illustration_notes": "Tiny tan or grey frog, dark X on back, small toe pads; show four foretoes and five hindtoes.",

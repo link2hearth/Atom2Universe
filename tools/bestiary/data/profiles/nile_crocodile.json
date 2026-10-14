@@ -12,8 +12,8 @@
       "fr": "Le crocodile du Nil est un grand crocodilien africain des rivières, lacs, marais et estuaires, dont l’aire moderne se concentre en Afrique orientale et australe ainsi qu’à Madagascar. La Liste rouge distingue désormais ce taxon de Crocodylus suchus, l’espèce d’Afrique occidentale et centrale autrefois incluse dans de nombreux récits généraux sur le crocodile du Nil. Il attend au bord de l’eau, yeux et narines seuls émergés, puis bondit lorsque des proies s’approchent. Les poissons et autres animaux aquatiques relient sa chasse aux réseaux alimentaires des zones humides africaines."
     },
     "identification": {
-      "en": "Its muscular tail supplies the main thrust in water, while strong limbs support movement on land. An Okavango account describes typical adults around 3.5 m long, with males able to reach 5 m. Exceptional males may approach 6 m, an exceptional value rather than a representative adult size. The pointed crocodile muzzle differs from an alligator’s broader one, and its fourth lower tooth remains visible when the jaws close. Eyes, ears and nostrils sit high on the head, and nostrils can close underwater.",
-      "fr": "Sa queue musclée fournit l’essentiel de la propulsion dans l’eau, tandis que ses membres puissants permettent les déplacements à terre. Dans un travail sur le delta de l’Okavango, les adultes mesurent habituellement environ 3,5 m, les mâles pouvant atteindre 5 m. Des mâles exceptionnels approchent 6 m, une valeur exceptionnelle plutôt qu’une taille représentative. Le museau pointu du crocodile diffère de celui, plus large, d’un alligator ; sa quatrième dent inférieure reste visible bouche fermée. Yeux, oreilles et narines sont placés haut, et les narines se ferment sous l’eau."
+      "en": "Its muscular tail supplies the main thrust in water, while strong limbs support movement on land. An Okavango account describes typical adults around 3.5 m long, with males able to reach 5 m. Exceptional males may approach 6 m, an exceptional value rather than a representative adult size. The pointed crocodile muzzle differs from an alligator’s broader one, and its fourth lower tooth remains visible when the jaws close. Eyes, ears and nostrils sit high on the head, and nostrils can close underwater. A San Diego Zoo Wildlife Alliance reference gives a usual mass of about 70–100 kg for males and females together, while noting that adults above 3.5 m are rarely weighed; the largest reported masses are exceptional and should not be read as typical. No sex-specific weight range or reliable body width was found.",
+      "fr": "Sa queue musclée fournit l’essentiel de la propulsion dans l’eau, tandis que ses membres puissants permettent les déplacements à terre. Dans un travail sur le delta de l’Okavango, les adultes mesurent habituellement environ 3,5 m, les mâles pouvant atteindre 5 m. Des mâles exceptionnels approchent 6 m, une valeur exceptionnelle plutôt qu’une taille représentative. Le museau pointu du crocodile diffère de celui, plus large, d’un alligator ; sa quatrième dent inférieure reste visible bouche fermée. Yeux, oreilles et narines sont placés haut, et les narines se ferment sous l’eau. Une référence de la San Diego Zoo Wildlife Alliance indique une masse habituelle d’environ 70 à 100 kg pour les mâles et les femelles réunis, tout en précisant que les adultes de plus de 3,5 m sont rarement pesés; les masses maximales rapportées sont exceptionnelles et ne représentent pas une valeur typique. Je n’ai pas trouvé de plage de poids selon le sexe ni de largeur fiable du corps."
     },
     "habitat": {
       "en": "The species uses slow and still waters, including rivers, lakes, seasonal swamps, reservoirs and coastal estuaries. It also occurs in desert oasis pools and, in Madagascar, underground streams. Around the Nile, its northernmost modern population is localized at Lake Nasser in Egypt. Older accounts include western populations now assigned to C. suchus.",
@@ -57,12 +57,14 @@
         "2017 global assessment: Least Concern, 50,000–70,000 mature animals; hunting recovery and regional pressures."
       ],
       "prose_claims": [
-        "identification.en.3",
-        "identification.fr.3",
         "conservation.en.1",
         "conservation.en.2",
         "conservation.fr.1",
-        "conservation.fr.2"
+        "conservation.fr.2",
+        "identification.en.3",
+        "identification.en.7",
+        "identification.fr.3",
+        "identification.fr.7"
       ],
       "budget": {
         "limit": 200,
@@ -87,10 +89,10 @@
         "Genetic evidence separates western and central African C. suchus from eastern and southern C. niloticus."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "habitat.en.4",
-        "habitat.fr.4"
+        "habitat.fr.4",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -115,14 +117,15 @@
         "Records crocodilian tooth placement, closing nostrils, high-set senses, appearance, tail propulsion and sexual size dimorphism."
       ],
       "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
         "identification.en.1",
         "identification.en.4",
         "identification.en.5",
+        "identification.en.6",
         "identification.fr.1",
         "identification.fr.4",
-        "identification.fr.5",
-        "behavior.en.3",
-        "behavior.fr.3"
+        "identification.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -147,14 +150,14 @@
         "Summarizes modern range, Lake Nasser limit, Madagascar, wetland types, oasis pools and cave streams."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "habitat.en.1",
         "habitat.en.2",
         "habitat.en.3",
         "habitat.fr.1",
         "habitat.fr.2",
-        "habitat.fr.3"
+        "habitat.fr.3",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -178,8 +181,6 @@
         "Juvenile and adult prey differ; fish, varied vertebrates, ambush and prey rotation are documented."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
         "diet.en.1",
         "diet.en.2",
         "diet.en.3",
@@ -189,7 +190,9 @@
         "diet.fr.2",
         "diet.fr.3",
         "diet.fr.4",
-        "diet.fr.5"
+        "diet.fr.5",
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -272,14 +275,14 @@
         "Clutch, nest care, mouth transport, hatchling size, guarded groups and juvenile dispersal are described."
       ],
       "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
         "reproduction.en.1",
         "reproduction.en.4",
         "reproduction.en.5",
         "reproduction.fr.1",
         "reproduction.fr.4",
-        "reproduction.fr.5",
-        "ecology.en.2",
-        "ecology.fr.2"
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -304,14 +307,14 @@
         "Okavango account reports fish predation, nutrient recycling, wet refuges, basking thermoregulation and local adult lengths."
       ],
       "prose_claims": [
-        "overview.en.4",
-        "overview.fr.4",
         "ecology.en.1",
         "ecology.en.3",
         "ecology.fr.1",
         "ecology.fr.3",
         "identification.en.2",
-        "identification.fr.2"
+        "identification.fr.2",
+        "overview.en.4",
+        "overview.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -336,7 +339,8 @@
       ],
       "prose_claims": [
         "behavior.en.5",
-        "behavior.fr.5"
+        "behavior.fr.5",
+        "identification.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -361,8 +365,8 @@
       ],
       "prose_claims": [
         "conservation.en.3",
-        "conservation.fr.3",
         "conservation.en.4",
+        "conservation.fr.3",
         "conservation.fr.4"
       ],
       "budget": {

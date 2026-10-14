@@ -12,8 +12,8 @@
       "fr": "Le Bouvreuil pivoine est un fringille trapu des bois d’Europe et d’Asie tempérée. Les populations nordiques gagnent souvent le sud en hiver, tandis que beaucoup restent sédentaires."
     },
     "identification": {
-      "en": "Adults measure about 14.5–16 cm and show a stout black bill, grey back, black cap and wings, and white rump. Males have rose-red underparts; females are grey-brown, and juveniles lack the black cap.",
-      "fr": "L’adulte mesure environ 14,5 à 16 cm ; son bec noir est épais, son dos gris, ses ailes et sa calotte noires, et son croupion blanc. Le mâle a le dessous rouge rosé ; la femelle est gris-brun et le jeune n’a pas de calotte noire."
+      "en": "Adults measure about 14.5–16 cm and show a stout black bill, grey back, black cap and wings, and white rump. Males have rose-red underparts; females are grey-brown, and juveniles lack the black cap. Adults average about 22.5 g in British ringing data; male and female means are close (about 22.2 and 23.0 g).",
+      "fr": "L’adulte mesure environ 14,5 à 16 cm ; son bec noir est épais, son dos gris, ses ailes et sa calotte noires, et son croupion blanc. Le mâle a le dessous rouge rosé ; la femelle est gris-brun et le jeune n’a pas de calotte noire. Les données britanniques de baguage donnent environ 22,5 g en moyenne ; les moyennes des mâles et femelles sont proches (environ 22,2 et 23,0 g)."
     },
     "habitat": {
       "en": "It nests in mixed woodland, scrub and hedgerows, including wooded parks and gardens. Shrubs and leafy cover offer nest sites and sheltered feeding routes; it generally avoids open, treeless country.",
@@ -59,17 +59,17 @@
         "Range, movement, social habits and orchard conflicts."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.2",
-        "habitat.en.1",
-        "habitat.en.2",
         "behavior.en.1",
         "behavior.en.2",
         "behavior.fr.1",
         "behavior.fr.2",
-        "ecology.en.2",
         "conservation.en.2",
-        "overview.fr.1"
+        "ecology.en.2",
+        "habitat.en.1",
+        "habitat.en.2",
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -98,15 +98,15 @@
         "Adult size, plumage, bill, diet."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.en.2",
-        "identification.fr.1",
-        "identification.fr.2",
         "diet.en.1",
         "diet.en.2",
         "diet.fr.1",
         "diet.fr.2",
         "ecology.fr.2",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
         "overview.en.2"
       ],
       "budget": {
@@ -119,27 +119,29 @@
     },
     {
       "title": {
-        "en": "Bullfinch: BirdFacts",
-        "fr": "Bouvreuil : BirdFacts"
+        "en": "Bullfinch: BirdFacts — British Trust for Ornithology",
+        "fr": "Bouvreuil pivoine : BirdFacts — British Trust for Ornithology"
       },
       "url": "https://www.bto.org/learn/about-birds/birdfacts/bullfinch",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "reproduction",
         "conservation",
-        "habitat"
+        "habitat",
+        "identification"
       ],
       "facts": [
-        "British nesting and population records."
+        "British nesting and population records.",
+        "Adult UK ringing records average 22.5 g; reported male and female means are 22.2 g and 23.0 g, respectively; adults average 82.3 mm in wing length."
       ],
       "prose_claims": [
+        "conservation.fr.2",
         "habitat.fr.1",
         "habitat.fr.2",
         "reproduction.en.1",
         "reproduction.en.2",
         "reproduction.fr.1",
-        "reproduction.fr.2",
-        "conservation.fr.2"
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -164,7 +166,9 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1"
+        "conservation.fr.1",
+        "identification.en.3",
+        "identification.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -192,10 +196,10 @@
       "prose_claims": [
         "diet.en.3",
         "diet.fr.3",
-        "reproduction.en.3",
-        "reproduction.fr.3",
         "ecology.en.1",
-        "ecology.fr.1"
+        "ecology.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,

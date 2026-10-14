@@ -1,0 +1,30 @@
+{
+  "id": "ophiophagus_hannah",
+  "name": "Cobra royal",
+  "scientific": "Ophiophagus hannah",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Le cobra royal est le plus long serpent venimeux du monde, vivant dans les forêts d’Asie du Sud et du Sud-Est. Son nom scientifique signifie mangeur de serpents : il se nourrit surtout d’autres serpents. C’est aussi le seul serpent connu pour construire un nid, que la femelle garde.",
+    "identification": "Les adultes mesurent d’ordinaire environ 3 à 4 m, et le plus long individu connu atteignait 5,85 m. Ils sont olive, bruns, jaunes ou presque noirs, souvent avec des barres ou des chevrons pâles, et la gorge est jaune clair ou crème. Menacé, il redresse l’avant du corps et déploie son capuchon. Les jeunes sont noirs, avec des barres jaunes ou blanches. Les références consultées ne donnent pas de plage fiable de masse adulte, de largeur corporelle ni de différence de taille selon le sexe; aucune n’est estimée ici.",
+    "habitat": "Son aire va du nord de l’Inde au sud de la Chine vers l’est, et vers le sud à travers la péninsule malaise jusqu’à l’ouest de l’Indonésie et aux Philippines. Il vit près des cours d’eau en forêt dense ou claire, dans les bambouseraies, les cultures voisines et les mangroves denses. Au Bhoutan, un relevé l’a noté entre 650 et 2 057 m, surtout plus bas, et principalement là où les perturbations humaines étaient faibles.",
+    "diet": "Il se nourrit surtout d’autres serpents, dont de grandes espèces le plus souvent inoffensives comme les ptyas et les pythons, ainsi que d’autres cobras et des kraits. Certains individus ne mangent qu’une seule espèce de serpent. Quand la nourriture manque, il peut aussi prendre des lézards, des oiseaux et d’autres petits vertébrés.",
+    "behavior": "Il est actif le jour et préfère d’ordinaire se retirer plutôt qu’attaquer, mais il défend son nid avec férocité. Dans sa posture de menace, il dresse l’avant du corps à environ un mètre du sol, étale son capuchon, siffle fort et peut frapper de loin. Son venin est une puissante neurotoxine qui peut provoquer la mort par insuffisance respiratoire.",
+    "reproduction": "Il se reproduit de janvier à avril. La femelle rassemble feuilles et branches en tas et y dépose ses œufs, que la chaleur de la décomposition incube. Les pontes comptent environ 21 à 40 œufs selon une source et 7 à 43 selon une autre, avec une incubation d’environ 66 à 105 jours. Elle garde le nid, souvent depuis le dessus, tandis que le mâle reste à proximité, et les femelles peuvent être très agressives envers les intrus.",
+    "ecology": "Superprédateur qui mange surtout d’autres serpents, le cobra royal se situe très haut dans les chaînes alimentaires forestières. Dans une étude au Bhoutan, un nid de 37 œufs a été suivi et s’est révélé gardé par la femelle. C’est aussi un animal très présent dans les zoos.",
+    "conservation": "Le cobra royal est classé vulnérable sur la Liste rouge de l’UICN et figure à l’annexe II de la CITES. Les principales menaces sont la destruction de son habitat et la persécution par des gens qui craignent les serpents. Il est protégé par la loi dans plusieurs pays, dont la Chine, le Vietnam et l’Inde."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Ophiophagus_hannah/",
+      "title": "Ophiophagus hannah — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://thainationalparks.com/species/ophiophagus-hannah",
+      "title": "Cobra royal (Ophiophagus hannah) — fiche espèce des parcs nationaux de Thaïlande"
+    },
+    {
+      "url": "https://journals.ku.edu/reptilesandamphibians/article/view/15786/version/17630",
+      "title": "Distribution, utilisation de l’habitat et nidification du cobra royal (Ophiophagus hannah) dans la division forestière de Trashigang, Bhoutan oriental — Reptiles & Amphibians, 2021"
+    }
+  ]
+}

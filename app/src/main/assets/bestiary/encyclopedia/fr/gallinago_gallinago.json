@@ -1,0 +1,30 @@
+{
+  "id": "gallinago_gallinago",
+  "name": "Bécassine des marais",
+  "scientific": "Gallinago gallinago",
+  "group": "birds",
+  "sections": {
+    "overview": "La bécassine des marais est un limicole discret au long bec, des terrains humides, si bien camouflé qu’on ne le voit d’ordinaire que lorsqu’il s’envole en zigzag. Au printemps, le mâle produit un curieux bruit de tambourinage pendant son vol de parade.",
+    "identification": "L’adulte pèse environ 108 g, avec une aile d’environ 14 cm, pour une longueur d’environ 23 à 28 cm. Le plumage est tacheté de brun dessus, avec des bandes beige clair le long du dos, une poitrine striée et le dessous clair. Le bec est long et droit, d’environ 6 cm, et les pattes sont courtes. Les sexes se ressemblent.",
+    "habitat": "En période de reproduction en Grande-Bretagne, elle est surtout fréquente autour des lacs et aussi dans les tourbières et les marais, avec les plus fortes densités en Écosse, dans le nord-ouest de l’Angleterre, au pays de Galles et dans l’ouest de l’Irlande. En hiver, elle utilise une grande variété de milieux humides de plaine et de montagne. Elle niche sur un sol herbeux plus sec, près de ses zones de nourrissage.",
+    "diet": "Elle sonde le sol humide de son long bec à la recherche d’invertébrés. D’avril à août, les vers de terre et les larves d’insectes forment l’essentiel de son alimentation ; dans une étude du Northumberland, les vers de terre représentaient environ 61 % du régime en masse sèche, suivis des larves de tipules à environ 24 %. Elle mange aussi un peu de matière végétale et de graines.",
+    "behavior": "Oiseau discret, elle reste à couvert et s’envole en zigzaguant. En parade, le mâle plonge en piqué de sorte que l’air passe dans ses rectrices externes, produisant le tambourinage ; les femelles semblent préférer les mâles qui tambourinent bien. Mâles et femelles participent aussi à des combats de parade.",
+    "reproduction": "En Grande-Bretagne, la première ponte a lieu en moyenne vers le 30 avril ; elle compte typiquement quatre œufs, pour une seule nichée. La femelle couve seule pendant 18 à 20 jours. Les poussins, couverts de duvet, quittent le nid et s’envolent après environ 19 à 20 jours, soignés par les deux parents. La reproduction débute en général à deux ans.",
+    "ecology": "Prédatrice de vers de terre et de larves, la bécassine fait partie des chaînes alimentaires des prairies humides, et elle est la proie du renard roux, de la corneille noire et de l’hermine. Elle est aussi chassée pour la table et le sport, à raison d’environ 1,5 million d’oiseaux par an en Europe. En Grande-Bretagne, de fortes baisses ont été constatées dans les prairies humides de plaine.",
+    "conservation": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale, mais les effectifs ont baissé dans toute l’Europe depuis 1980. Au Royaume-Uni, elle figure sur la liste ambre : environ 67 000 couples nicheurs en 2016, avec une aire de reproduction réduite de 31,5 % par rapport à 1968-1972. Une bécassine vit en général environ trois ans une fois adulte, et le plus vieil oiseau bagué a dépassé 16 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/snipe",
+      "title": "Bécassine des marais — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/snipe",
+      "title": "Bécassine des marais — RSPB"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Gallinago_gallinago/",
+      "title": "Gallinago gallinago — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

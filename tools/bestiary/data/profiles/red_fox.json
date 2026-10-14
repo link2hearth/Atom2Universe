@@ -12,8 +12,8 @@
       "fr": "Le renard roux est un canidé adaptable, naturellement présent dans une grande partie de l’hémisphère Nord, de l’Arctique à l’Afrique du Nord, l’Amérique centrale et l’Asie. Il fréquente milieux naturels, agricoles et urbains, selon ressources, abris et pressions humaines."
     },
     "identification": {
-      "en": "Its familiar coat is rusty red above, pale underneath, with dark lower legs and a bushy tail often tipped white. Colour is variable: individuals may be pale, dark or cross-patterned. The pointed muzzle, upright ears and slender build remain useful features across these forms.",
-      "fr": "Son pelage classique est roux dessus, clair dessous, avec le bas des pattes sombre et une queue touffue souvent terminée de blanc. La couleur varie: certains individus sont pâles, foncés ou marqués d’une croix dorsale. Museau pointu et oreilles dressées restent caractéristiques."
+      "en": "Adults have a head-and-body length of about 45.5–90 cm, a tail of 30–55.5 cm and a mass of roughly 3–14 kg; males are generally slightly larger than females. Reliable species-wide shoulder height and body width were not found in the consulted references. Its familiar coat is rusty red above, pale underneath, with dark lower legs and a bushy tail often tipped white. Colour is variable: individuals may be pale, dark or cross-patterned. The pointed muzzle, upright ears and slender build remain useful features across these forms.",
+      "fr": "L’adulte mesure environ 45,5 à 90 cm de la tête au corps, avec une queue de 30 à 55,5 cm, et pèse approximativement 3 à 14 kg ; les mâles sont généralement un peu plus grands que les femelles. Les références consultées ne donnent pas de hauteur au garrot ni de largeur fiables à l’échelle de l’espèce. Son pelage classique est roux dessus, clair dessous, avec le bas des pattes sombre et une queue touffue souvent terminée de blanc. La couleur varie: certains individus sont pâles, foncés ou marqués d’une croix dorsale. Museau pointu et oreilles dressées restent caractéristiques."
     },
     "habitat": {
       "en": "Red foxes use forests, scrub, grasslands, deserts, mountains, farmland and city edges; they often benefit from a patchwork of cover and open feeding ground. In Australia they were introduced for hunting in the nineteenth century and spread widely, though distribution remains uneven.",
@@ -71,7 +71,8 @@
         "behavior"
       ],
       "facts": [
-        "Coat variation; omnivorous diet; seasonal breeding, den-reared blind pups and variation in mating and family structure."
+        "Coat variation; omnivorous diet; seasonal breeding, den-reared blind pups and variation in mating and family structure.",
+        "Species account gives 455–900 mm head-body length, 300–555 mm tail, 3–14 kg range and male-larger sexual dimorphism."
       ]
     },
     {

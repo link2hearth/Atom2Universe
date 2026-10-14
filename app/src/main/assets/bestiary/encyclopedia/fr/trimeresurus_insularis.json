@@ -1,0 +1,34 @@
+{
+  "id": "trimeresurus_insularis",
+  "name": "Trimeresurus insularis",
+  "scientific": "Trimeresurus insularis",
+  "group": "reptiles",
+  "sections": {
+    "overview": "La vipère des îles à lèvres blanches est un serpent venimeux entièrement arboricole de Java et des petites îles de la Sonde, en Indonésie, ainsi que du Timor oriental. Elle est apparentée à la vipère à lèvres blanches de l’Asie du Sud-Est continentale et se distingue par ses formes colorées, dont une rare forme bleue.",
+    "identification": "Un échantillon de serpents adultes de l’est de Java étudié pour son venin mesurait 40 à 69 cm du museau au cloaque ; il s’agit de l’étendue de cet échantillon, pas de la longueur totale ni d’un maximum de l’espèce. Les sources consultées ne donnent pas de masse adulte, de largeur ou de comparaison de taille entre sexes fiables. Il existe trois formes de couleur assez distinctes : verte, présente dans toutes les petites îles de la Sonde, bleue, signalée seulement à Komodo et à Padar, et jaune, à Florès. L’extrémité de la queue porte une raie rouge bien visible sur le dessus. Les sources lues ne donnent aucune longueur, elle n’est donc pas indiquée.",
+    "habitat": "Elle vit à Bali, Java, Florès, Lombok, Sumba, Sumbawa, Timor, Komodo et sur d’autres îles, ainsi qu’au Timor oriental, la localité type étant Soe, à Timor. Elle reste en général dans la brousse et les forêts de bambous, mais entre parfois dans les zones habitées à la recherche de nourriture.",
+    "diet": "Elle mange des souris et des lézards. Un naturaliste de terrain a suggéré que les scinques du genre Sphenomorphus, très communs sur les îles qu’il a visitées, constituent probablement une grande part de son régime, mais il s’agit d’une déduction et non d’une mesure.",
+    "behavior": "C’est un serpent entièrement arboricole, bien qu’un individu ait été vu traversant le sol de la forêt de nuit à Komodo. Elle pratique le leurre caudal, en dressant et en agitant la queue comme un ver pour attirer ses proies. On la décrit comme un prédateur agressif, qui tend à tenir tête plutôt qu’à fuir.",
+    "reproduction": "La Reptile Database indique que l’espèce est ovovivipare : les œufs se développent dans la femelle, qui met bas des petits vivants. Un récit de terrain note que des formes de couleurs différentes peuvent naître dans une même portée. La taille des portées et la saison de reproduction n’ont pas été trouvées.",
+    "ecology": "Prédatrice de petits lézards et de rongeurs dans la brousse et la forêt des îles, elle occupe une place dans les réseaux alimentaires locaux. Son leurre caudal est la seule tactique de chasse décrite dans les sources lues. Ses formes de couleur varient en abondance d’une île à l’autre, pour des raisons restées obscures.",
+    "conservation": "La Reptile Database l’indique comme préoccupation mineure sur la Liste rouge de l’UICN. Elle est l’une des causes les plus fréquentes de morsures venimeuses à Bali, d’après un article de magazine citant un herpétologue du musée australien; son venin hémorragique tue rarement mais peut provoquer un gonflement sévère, des lésions des tissus et des saignements. Sa taxonomie n’est pas fixée de la même façon selon les auteurs."
+  },
+  "sources": [
+    {
+      "url": "https://reptile-database.reptarium.cz/Trimeresurus/insularis",
+      "title": "Trimeresurus insularis — The Reptile Database"
+    },
+    {
+      "url": "https://www.australiangeographic.com.au/blogs/creatura-with-bec-crew/2017/09/beware-the-impossibly-beautiful-blue-viper/",
+      "title": "Attention à la sublime vipère bleue — Australian Geographic"
+    },
+    {
+      "url": "https://alephrocco.com/2018/05/02/white-lipped-island-pit-viper-trimeresurus-insularis/",
+      "title": "Vipère des îles à lèvres blanches — récit de terrain d’un naturaliste (Aleph Rocco)"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9261747/",
+      "title": "Composition du venin de Trimeresurus indonésiens — étude évaluée par les pairs"
+    }
+  ]
+}

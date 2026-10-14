@@ -1,0 +1,30 @@
+{
+  "id": "littorina_littorea",
+  "name": "Common Periwinkle",
+  "scientific": "Littorina littorea",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The common periwinkle is a sea snail of European rocky shores and the largest British periwinkle. It grazes on algae, is gathered by hand for food, and has been introduced to the north-west Atlantic, where it became the most abundant large invertebrate grazer of the coast.",
+    "identification": "The shell is sharply conical with a pointed tip, usually black or dark grey-brown with darker spiral lines and a white central column. It is typically about 3 cm high and reaches 5 cm at most. Young shells with spiral ridges can be confused with Littorina saxatilis. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+    "habitat": "It occurs on rocky shores from the upper shore into shallow subtidal water, except in the most exposed places, and also on sand or mud in sheltered estuaries. It tolerates brackish water. Its native range runs from northern Spain to the White Sea.",
+    "diet": "It is a grazer feeding mainly on fine green, brown and red algae such as sea lettuce, Cladophora and Ectocarpus. It occasionally eats small animals and the egg capsules of other snails.",
+    "behavior": "In northern Britain it moves down the shore in autumn and back up in spring, depending on local winter temperatures. It hosts several parasitic flatworms, and parasitism by trematodes may cause sterility.",
+    "reproduction": "Sexes are separate and fertilisation is internal. Females release egg capsules of about 1 mm, each with usually two or three eggs, directly into the sea, timed with spring tides; a large female can produce up to about 100,000 eggs a year. The larvae feed in the plankton for several weeks, up to six, and the snails mature at 2 to 3 years and live 5 to 10 years.",
+    "ecology": "It is often the dominant grazing snail on the lower shore, and it accumulates trace elements such as silver, cadmium and lead, so it is a suitable bioindicator of marine contamination. It is prey for crabs, fish and birds. In New England its grazing has strongly changed algal communities.",
+    "conservation": "No global conservation category was found. It is hand-gathered without regulation for food, with commercial value in Scotland and Ireland, where collectors have noted fewer large snails. In North America it was first recorded at Pictou, Nova Scotia, in 1840, and is established from Newfoundland to Virginia."
+  },
+  "sources": [
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/1328",
+      "title": "Common periwinkle (Littorina littorea) — MarLIN, Marine Biological Association"
+    },
+    {
+      "url": "https://invasions.si.edu/nemesis/calnemo/species_summary/70419",
+      "title": "Littorina littorea — Invasion History, NEMESIS, Smithsonian Environmental Research Center"
+    },
+    {
+      "url": "https://www.iucngisd.org/gisd/species.php?sc=400",
+      "title": "Littorina littorea — Global Invasive Species Database, IUCN Invasive Species Specialist Group"
+    }
+  ]
+}

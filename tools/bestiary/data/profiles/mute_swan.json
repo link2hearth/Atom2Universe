@@ -12,8 +12,8 @@
       "fr": "Le Cygne tuberculé est un grand oiseau d’eau d’Eurasie, présent sur les lacs, cours d’eau lents, marais et côtes abritées, où il se nourrit et niche près de l’eau."
     },
     "identification": {
-      "en": "Adults are white, with black legs, a bright orange bill and a black knob at its base; typical birds measure 127–152 cm long, with a wingspan of 208–238 cm. Males are generally larger than females, although the sexes look alike. Young cygnets are downy and pale grey, with dark bills and legs; older juveniles may show brown-grey feathers as their plumage gradually turns white during the first year. The orange bill and black knob distinguish this species from the Whooper Swan (Cygnus cygnus) and Tundra Swan (Cygnus columbianus), whose bills lack that knob. Both sexes bear the fleshy black knob; it is usually larger in males and varies seasonally, peaking near hatching in one monitored population, so size alone cannot reliably determine sex.",
-      "fr": "Les adultes sont blancs, avec les pattes noires, un bec orange vif et un tubercule noir à sa base ; ils mesurent typiquement de 127 à 152 cm de long, pour une envergure de 208 à 238 cm. Les mâles sont généralement plus grands que les femelles, bien que les sexes se ressemblent. Les cygneaux sont couverts de duvet gris pâle, avec le bec et les pattes sombres ; les juvéniles plus âgés peuvent porter des plumes gris-brun, leur plumage devenant progressivement blanc au cours de la première année. Le bec orange et son tubercule noir distinguent cette espèce du Cygne chanteur (Cygnus cygnus) et du Cygne siffleur (Cygnus columbianus), dont le bec n’a pas ce tubercule. Les deux sexes portent ce tubercule charnu noir ; il est généralement plus grand chez le mâle et varie selon la saison, avec un maximum près de l’éclosion dans une population suivie, si bien que sa taille seule ne permet pas de déterminer sûrement le sexe."
+      "en": "Adults are white, with black legs, a bright orange bill and a black knob at its base; typical birds measure 127–152 cm long, with a wingspan of 208–238 cm. Males are generally larger than females, although the sexes look alike. Young cygnets are downy and pale grey, with dark bills and legs; older juveniles may show brown-grey feathers as their plumage gradually turns white during the first year. The orange bill and black knob distinguish this species from the Whooper Swan (Cygnus cygnus) and Tundra Swan (Cygnus columbianus), whose bills lack that knob. Both sexes bear the fleshy black knob; it is usually larger in males and varies seasonally, peaking near hatching in one monitored population, so size alone cannot reliably determine sex. British ringing measurements average 10.75 kg for adult males and 8.54 kg for adult females; the adults’ mean wing lengths are about 618 mm and 571 mm respectively. No body width or standing height was found in the consulted references.",
+      "fr": "Les adultes sont blancs, avec les pattes noires, un bec orange vif et un tubercule noir à sa base ; ils mesurent typiquement de 127 à 152 cm de long, pour une envergure de 208 à 238 cm. Les mâles sont généralement plus grands que les femelles, bien que les sexes se ressemblent. Les cygneaux sont couverts de duvet gris pâle, avec le bec et les pattes sombres ; les juvéniles plus âgés peuvent porter des plumes gris-brun, leur plumage devenant progressivement blanc au cours de la première année. Le bec orange et son tubercule noir distinguent cette espèce du Cygne chanteur (Cygnus cygnus) et du Cygne siffleur (Cygnus columbianus), dont le bec n’a pas ce tubercule. Les deux sexes portent ce tubercule charnu noir ; il est généralement plus grand chez le mâle et varie selon la saison, avec un maximum près de l’éclosion dans une population suivie, si bien que sa taille seule ne permet pas de déterminer sûrement le sexe. Les mesures de baguage britanniques donnent une masse moyenne de 10,75 kg chez le mâle adulte et de 8,54 kg chez la femelle; leurs longueurs moyennes d’aile sont respectivement d’environ 618 mm et 571 mm. Je n’ai pas trouvé de largeur du corps ni de hauteur debout dans les références consultées."
     },
     "habitat": {
       "en": "It uses freshwater and brackish wetlands, including ponds, lakes, estuaries and sheltered bays, nesting on islands or vegetated banks near water.",
@@ -56,10 +56,10 @@
       ],
       "prose_claims": [
         "identification.en.1",
-        "identification.fr.1",
         "identification.en.3",
-        "identification.fr.3",
         "identification.en.4",
+        "identification.fr.1",
+        "identification.fr.3",
         "identification.fr.4"
       ],
       "budget": {
@@ -85,7 +85,10 @@
       ],
       "prose_claims": [
         "identification.en.5",
-        "identification.fr.5"
+        "identification.en.6",
+        "identification.en.7",
+        "identification.fr.5",
+        "identification.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -112,12 +115,12 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
+        "diet.fr.1",
         "diet.fr.2",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.3",
+        "reproduction.fr.1",
         "reproduction.fr.3"
       ],
       "budget": {
@@ -195,12 +198,12 @@
         "British clutch, incubation and fledging records; population history and lead."
       ],
       "prose_claims": [
-        "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.4",
-        "reproduction.fr.4",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.4",
+        "reproduction.en.2",
+        "reproduction.en.4",
+        "reproduction.fr.2",
+        "reproduction.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -226,12 +229,13 @@
         "University of Michigan species account summarizes Eurasian distribution and habitat."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
         "identification.en.2",
         "identification.fr.2",
-        "habitat.en.1",
-        "habitat.fr.1"
+        "identification.fr.7",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -256,8 +260,8 @@
       ],
       "prose_claims": [
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
+        "ecology.fr.1",
         "ecology.fr.2"
       ],
       "budget": {
@@ -283,10 +287,10 @@
         "Chesapeake population history; contrast with migratory tundra swans."
       ],
       "prose_claims": [
-        "ecology.en.3",
-        "ecology.fr.3",
         "conservation.en.3",
-        "conservation.fr.3"
+        "conservation.fr.3",
+        "ecology.en.3",
+        "ecology.fr.3"
       ],
       "budget": {
         "limit": 200,

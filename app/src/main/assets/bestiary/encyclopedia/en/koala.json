@@ -1,0 +1,82 @@
+{
+  "id": "koala",
+  "name": "Koala",
+  "scientific": "Phascolarctos cinereus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The koala is an Australian marsupial whose range follows eucalypt forests and woodlands across Queensland, New South Wales, Victoria and a small part of South Australia. Its distribution is broad but patchy: suitable food trees, soils and local conditions determine where animals can persist. It is the sole living member of the family Phascolarctidae and spends most of its life in trees.",
+    "identification": "Adults have a large rounded head, conspicuous furry ears, a broad black nose and dense grey to brown fur, usually paler on the chest, inner limbs and rump. Their strong limbs and curved claws grip trunks; two opposable digits on each forepaw help secure a hold while climbing. Males tend to be larger and have a prominent chest scent gland, while females have a pouch opening towards the rear. Size and coat thickness vary geographically, with northern animals generally smaller and lighter than southern ones. In southern Australia, adults measure about 750–820 mm from head to body in males and 680–730 mm in females; their corresponding average masses are 11.8 kg and 7.9 kg. Across the wider range, government sources give broader weight ranges (about 4–14 kg for males and 4–10 kg for females), reflecting geographic variation. No useful body-width measurement was found.",
+    "habitat": "Koalas occupy open forests and woodlands from tropical Queensland to temperate southern Australia, including some fragmented and urban landscapes. Habitat quality depends especially on the local mixture and abundance of food trees; fertile soils and watercourses often support higher densities. Koalas also use non-food trees for resting and shelter, including during extreme weather. Because preferred tree species differ by region and season, suitable habitat is a network of feeding and refuge trees rather than simply any stand of eucalypts.",
+    "diet": "Leaves of selected Eucalyptus, Corymbia and related trees make up almost all the diet; a koala may eat roughly half a kilogram of foliage daily, although intake varies. It does not choose every tree of a favoured species: leaf water and nutrients matter, as do defensive chemicals such as terpenes and phenolic compounds. The koala’s ridged molars crush leaves, and its liver processes some absorbed toxins. In the hindgut, an enlarged caecum and proximal colon retain fluids, microbes and fine particles for extended fermentation, while less digestible coarse material passes more quickly. This slow, selective processing extracts nutrients from fibrous leaves but yields little energy, so activity is economical and rest is prolonged. Free-ranging females have been observed increasing foliage intake during peak lactation, with digestive adjustments that preserve nutrient extraction.",
+    "behavior": "Koalas are mainly solitary, but neighbouring home ranges often overlap and allow encounters. They rest for much of the day, commonly wedged in a tree fork, and feed or move more often at night and around dawn and dusk. Ground travel between trees exposes them to danger, so connected tree cover matters. Males advertise during the breeding season with deep bellows and scent marks from the chest gland; interactions and movement increase as animals seek mates or compete. These signals help coordinate contact across a dispersed population rather than forming stable social groups.",
+    "reproduction": "After a gestation of about 35 days, a female usually gives birth to one very small, hairless joey. It crawls unaided to the rear-opening pouch and attaches to a teat, where it continues developing for around six months. At first emergence it begins tasting the mother’s soft faecal pap, which transfers maternal gut microbes that contribute to foliage digestion. The young then rides on her back and continues nursing while learning to feed; weaning is usually complete near its first birthday. It may remain within its mother’s range before dispersing, often around two to three years old. Timing of births and breeding varies with region and conditions.",
+    "ecology": "The koala’s close dependence on a short list of tree species ties its distribution to the composition and condition of forest. It uses several tree types for shelter as well as food, and moves among them to forage, rest and meet other koalas. Fragmentation can therefore separate feeding patches and make ground crossings more frequent. Drought, heat and fire can reduce foliage quality or availability, while disease, dogs and vehicles add direct mortality; effects differ among regions and populations.",
+    "conservation": "The koala’s conservation situation varies geographically. Under Australia’s EPBC Act, the combined populations of Queensland, New South Wales and the Australian Capital Territory were listed as Endangered on 12 February 2022. Queensland also changed its state category to Endangered on 8 April 2022, and New South Wales did so on 20 May 2022. The 2022 national recovery plan reports the whole species as Vulnerable on the IUCN Red List, while Victoria and South Australia are outside that federal endangered listing. Habitat loss and fragmentation, climate-related heat and drought, disease, vehicle strikes and dog attacks are interacting pressures. The recovery plan therefore prioritizes connected habitat and coordinated action across jurisdictions; local population trends and legal categories should not be generalized to the entire range."
+  },
+  "sources": [
+    {
+      "url": "https://www.qld.gov.au/environment/plants-animals/animals/living-with/koalas/koala-information/koala-facts",
+      "title": "Koala facts — Queensland Government"
+    },
+    {
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/native-animals/native-animal-facts/koala/koala-habitat",
+      "title": "Koala habitat and feed trees — NSW Department of Climate Change, Energy, the Environment and Water"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1965198/",
+      "title": "Eucalyptus foliar chemistry explains selective feeding by koalas — Proceedings of the Royal Society B"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1365-2435.2007.01279.x",
+      "title": "A flexible digestive strategy accommodates the nutritional demands of reproduction in a free-living folivore, the Koala — Functional Ecology"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8833420/",
+      "title": "Movement of Free-Ranging Koalas in Response to Male Vocalisation Playbacks — Animals"
+    },
+    {
+      "url": "https://embryology.med.unsw.edu.au/embryology/index.php?title=Koala_Development",
+      "title": "Koala Development — UNSW Embryology"
+    },
+    {
+      "url": "https://www.legislation.gov.au/F2022L00555/asmade/2022-04-07/text/original/epub/OEBPS/document_1/document_1.html",
+      "title": "National Recovery Plan for the Koala — Australian Government and New South Wales Government, March 2022"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/species/koalas/listing-under-national-environmental-law",
+      "title": "Koala listing under national environmental law — Australian Government Department of Climate Change, Energy, the Environment and Water"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/mammals/koala/",
+      "title": "Koala — The Australian Museum"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3817117/",
+      "title": "Activity patterns of free-ranging koalas revealed by accelerometry — PLOS ONE"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12827418/",
+      "title": "Meeting the energy demands of reproduction in female koalas — Journal of Comparative Physiology B"
+    },
+    {
+      "url": "https://www.qld.gov.au/environment/plants-animals/conservation/threatened-species/classes/conservation-status/changes-categories-april-2022",
+      "title": "Koala state category change, 8 April 2022 — Queensland Government"
+    },
+    {
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/threatened-species/nsw-threatened-species-scientific-committee/determinations/final-determinations/2022/phascolarctos-cinereus-endangered-species-listing",
+      "title": "Koala Endangered listing, 20 May 2022 — NSW Scientific Committee"
+    },
+    {
+      "url": "https://enviromicro-journals.onlinelibrary.wiley.com/doi/abs/10.1111/1462-2920.15858",
+      "title": "Maternal inheritance of the koala gut microbiome — Blyton et al. (2022)"
+    },
+    {
+      "url": "https://www.environment.sa.gov.au/files/sharedassets/public/plants_and_animals/pa-fact-koalalife.pdf",
+      "title": "Koala life – up close and personal | South Australian Department for Environment and Water"
+    },
+    {
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/native-animals/native-animal-facts/koala",
+      "title": "Koala | NSW Department of Climate Change, Energy, the Environment and Water"
+    }
+  ]
+}

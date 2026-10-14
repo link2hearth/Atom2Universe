@@ -12,8 +12,8 @@
       "fr": "L’ornithorynque est un mammifère semi-aquatique australien et un monotrème, c’est-à-dire un mammifère qui pond des œufs. Son corps fuselé et fourré, sa large queue et son bec sensible conviennent à la recherche de nourriture sur les fonds d’eau douce et au repos dans des terriers de berge. Les femelles produisent du lait sans mamelons. L’espèce vit naturellement dans l’est australien, Tasmanie comprise."
     },
     "identification": {
-      "en": "Adults have dense waterproof fur, usually dark brown above and lighter below, a flattened bill and a broad tail. The tail stores fat and helps steer. Webbed forefeet provide propulsion; their webs fold back around the claws on land. Hind feet are less webbed and help steer underwater. Males have a sharp hind-ankle spur connected to a venom gland; females lack this functional apparatus. Southern animals tend to be larger than northern ones.",
-      "fr": "L’adulte porte une fourrure dense et imperméable, généralement brune dessus et plus claire dessous, un bec aplati et une large queue. Celle-ci stocke de la graisse et aide à diriger. Les pattes avant palmées propulsent l’animal ; à terre, leur palmure se replie autour des griffes. Les pattes arrière, moins palmées, contribuent à la direction sous l’eau. Les mâles possèdent un éperon à venin aux chevilles arrière ; les femelles n’ont pas cet appareil fonctionnel. Les individus du sud sont généralement plus grands."
+      "en": "Adults have dense waterproof fur, usually dark brown above and lighter below, a flattened bill and a broad tail. The tail stores fat and helps steer. Webbed forefeet provide propulsion; their webs fold back around the claws on land. Hind feet are less webbed and help steer underwater. Males have a sharp hind-ankle spur connected to a venom gland; females lack this functional apparatus. Southern animals tend to be larger than northern ones. Adults measure 400–630 mm in males and 370–550 mm in females, including bill and tail. Reported masses are 0.8–3.0 kg for males and 0.6–1.7 kg for females; animals from cooler southern populations tend to be larger. No reliable body-width measurement was found.",
+      "fr": "L’adulte porte une fourrure dense et imperméable, généralement brune dessus et plus claire dessous, un bec aplati et une large queue. Celle-ci stocke de la graisse et aide à diriger. Les pattes avant palmées propulsent l’animal ; à terre, leur palmure se replie autour des griffes. Les pattes arrière, moins palmées, contribuent à la direction sous l’eau. Les mâles possèdent un éperon à venin aux chevilles arrière ; les femelles n’ont pas cet appareil fonctionnel. Les individus du sud sont généralement plus grands. L’adulte mesure de 400 à 630 mm chez le mâle et de 370 à 550 mm chez la femelle, bec et queue compris. Les masses rapportées sont de 0,8 à 3,0 kg chez le mâle et de 0,6 à 1,7 kg chez la femelle; les populations méridionales, plus froides, tendent à être plus grandes. Je n’ai pas trouvé de mesure fiable de largeur du corps."
     },
     "habitat": {
       "en": "The species ranges through eastern Australia, from tropical Queensland to Tasmania and the Australian Alps. It uses rivers, streams, lakes and farm dams, but needs freshwater for feeding and earthen banks for burrows. Root-stabilised banks offer resting and nesting sites; shaded pools, riffles and gravel or cobble beds support aquatic invertebrates. Platypuses sometimes cross land between water bodies, making catchment connectivity relevant to habitat use.",
@@ -165,6 +165,20 @@
       ],
       "facts": [
         "Experimental comparison found differing invertebrate effects in flowing and still-water habitats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Platypus vital statistics | Australian Platypus Conservancy",
+        "fr": "Platypus vital statistics | Australian Platypus Conservancy"
+      },
+      "url": "https://platypus.asn.au/platypus-vital-statistics/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Provides sex-specific adult length and mass ranges and notes geographic size variation."
       ]
     }
   ],

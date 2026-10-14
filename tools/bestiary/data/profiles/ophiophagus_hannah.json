@@ -12,8 +12,8 @@
       "fr": "Le cobra royal est le plus long serpent venimeux du monde, vivant dans les forêts d’Asie du Sud et du Sud-Est. Son nom scientifique signifie mangeur de serpents : il se nourrit surtout d’autres serpents. C’est aussi le seul serpent connu pour construire un nid, que la femelle garde."
     },
     "identification": {
-      "en": "Adults usually measure about 3–4 m, and the longest known individual was 5.85 m. Adults are olive, brown, yellow or nearly black, often with pale cross-bars or chevrons, and the throat is light yellow or cream. When threatened it raises the front of the body and spreads its hood. Juveniles are black with yellow or white cross-bars.",
-      "fr": "Les adultes mesurent d’ordinaire environ 3 à 4 m, et le plus long individu connu atteignait 5,85 m. Ils sont olive, bruns, jaunes ou presque noirs, souvent avec des barres ou des chevrons pâles, et la gorge est jaune clair ou crème. Menacé, il redresse l’avant du corps et déploie son capuchon. Les jeunes sont noirs, avec des barres jaunes ou blanches."
+      "en": "Adults usually measure about 3–4 m, and the longest known individual was 5.85 m. Adults are olive, brown, yellow or nearly black, often with pale cross-bars or chevrons, and the throat is light yellow or cream. When threatened it raises the front of the body and spreads its hood. Juveniles are black with yellow or white cross-bars. A reliable adult body-mass range, body width or sex-specific size difference was not found in the consulted species references, so none is estimated here.",
+      "fr": "Les adultes mesurent d’ordinaire environ 3 à 4 m, et le plus long individu connu atteignait 5,85 m. Ils sont olive, bruns, jaunes ou presque noirs, souvent avec des barres ou des chevrons pâles, et la gorge est jaune clair ou crème. Menacé, il redresse l’avant du corps et déploie son capuchon. Les jeunes sont noirs, avec des barres jaunes ou blanches. Les références consultées ne donnent pas de plage fiable de masse adulte, de largeur corporelle ni de différence de taille selon le sexe; aucune n’est estimée ici."
     },
     "habitat": {
       "en": "It ranges from northern India east to southern China and south through the Malay Peninsula to western Indonesia and the Philippines. It lives near streams in dense or open forest, in bamboo thickets, nearby farmland and dense mangroves. In Bhutan, one survey recorded it between 650 and 2,057 m, mostly lower, and mainly where human disturbance was low.",
@@ -48,10 +48,19 @@
       },
       "url": "https://animaldiversity.org/accounts/Ophiophagus_hannah/",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Range from northern India to southern China, Malay Peninsula, western Indonesia and the Philippines; near streams in forest, bamboo, farmland and mangroves; mainly eats other snakes; diurnal; eggs 21–40, nest of leaves guarded by the female; breeding January–April.",
-        "Threats: habitat destruction and persecution. Its Vulnerable status line was checked against two other sources."
+        "Threats: habitat destruction and persecution. Its Vulnerable status line was checked against two other sources.",
+        "The consulted species descriptions report length but do not provide a dependable adult body mass or width."
       ]
     },
     {
@@ -61,7 +70,15 @@
       },
       "url": "https://thainationalparks.com/species/ophiophagus-hannah",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Adults average 3.18–4 m, longest 5.85 m; clutches 7–43 eggs, incubation 66–105 days; only snake known to build such a nest; venom of three-finger toxins, up to about 420 mg dry venom per bite.",
         "Vulnerable on the IUCN Red List since 2010, CITES Appendix II, protected in China, Vietnam and India; shy, defends nests aggressively."
@@ -74,7 +91,12 @@
       },
       "url": "https://journals.ku.edu/reptilesandamphibians/article/view/15786/version/17630",
       "consulted": "2026-10-12",
-      "supports": ["habitat", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Elevation 650–2,057 m, most sightings lower; no clear habitat preference; most records where human disturbance was minimal; 18 king cobras recorded in a one-year survey.",
         "A nest of 37 eggs was monitored, guarded by a female; the species is described as Vulnerable and globally threatened."

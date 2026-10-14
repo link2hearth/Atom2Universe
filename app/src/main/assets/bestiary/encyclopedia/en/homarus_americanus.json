@@ -1,0 +1,26 @@
+{
+  "id": "homarus_americanus",
+  "name": "American Lobster",
+  "scientific": "Homarus americanus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The American lobster is a large marine crustacean of the north-western Atlantic and the basis of a major fishery. It lives on the sea floor, grows by moulting and is long-lived, with some animals thought to reach 100 years, although age is hard to measure.",
+    "identification": "It can reach about 20 kg (44 pounds), though a typical catch is far smaller, around 25 cm and 0.5 kg. It has ten legs, the first pair ending in two unequal claws: a heavy crusher and a finer-edged ripper. Live animals are olive-green or greenish-brown, sometimes speckled, and turn red only when cooked. Males have larger, stiffer first swimmerets than females.",
+    "habitat": "It ranges from Labrador to Cape Hatteras, North Carolina, and is most abundant in coastal waters from Maine through New Jersey. Coastal lobsters prefer rocky areas with crevices and burrows but sometimes dig into mud, while offshore populations gather along the continental shelf edge near underwater canyons, down to about 700 m (2,300 feet).",
+    "diet": "Adults are omnivores that eat crabs, molluscs, worms, sea urchins, sea stars, fish and seaweed, and they feed mainly at night. Larvae and postlarvae eat zooplankton during their first year.",
+    "behavior": "The lobster is mostly solitary and nocturnal, spending the day in burrows or among rocks and foraging at night. It forms social hierarchies, in which dominant males tend to secure shelter. Offshore lobsters make seasonal migrations of roughly 80–300 km in spring.",
+    "reproduction": "Mating follows the female’s moult, and she can store sperm for up to a year. She carries 5,000 to more than 100,000 eggs, depending on her size, for 9 to 11 months, moving inshore in late spring or early summer to hatch them. Larvae moult four times before settling on the bottom, and lobsters moult 20 to 25 times over 5 to 8 years before they can breed and reach legal size.",
+    "ecology": "Cod, flounder, sculpins, eels, crabs and seals eat lobsters, young ones above all, and humans are the main predator. Warm water and low oxygen caused die-offs in western Long Island Sound in 1999 and 2002, and warming in southern New England may push lobsters to cooler offshore waters.",
+    "conservation": "Animal Diversity Web lists no special status, but a 2025 stock assessment (Atlantic States Marine Fisheries Commission, as reported by NOAA) found the Gulf of Maine and Georges Bank stock not overfished though subject to overfishing, and the southern New England stock overfished and severely depleted. The 2024 U.S. commercial catch was 113 million pounds worth $720 million. Rules include a ban on landing egg-bearing females and limits on the number of traps."
+  },
+  "sources": [
+    {
+      "url": "https://www.fisheries.noaa.gov/species/american-lobster",
+      "title": "American Lobster — NOAA Fisheries"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Homarus_americanus/",
+      "title": "Homarus americanus — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

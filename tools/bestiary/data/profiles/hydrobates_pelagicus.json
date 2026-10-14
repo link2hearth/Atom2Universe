@@ -44,14 +44,21 @@
     {
       "title": {
         "en": "Storm Petrel — BTO BirdFacts, British Trust for Ornithology",
-        "fr": "Océanite tempête — BirdFacts du BTO, British Trust for Ornithology"
+        "fr": "Océanite tempête — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/storm-petrel",
-      "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Adults average 25.6 g, wing 122.6 mm; breeds on remote rat-free islands; one egg, incubation 38–50 days by both sexes, fledging 56–73 days, breeding at ~4 years.",
-        "UK ~26,000 nests (1998–2002), trend uncertain, Mousa doubled; IUCN Least Concern; UK Amber; max age 38 years."
+        "UK ~26,000 nests (1998–2002), trend uncertain, Mousa doubled; IUCN Least Concern; UK Amber; max age 38 years.",
+        "British adults average about 25.6 g and have a mean wing length of about 123 mm."
       ]
     },
     {
@@ -61,7 +68,15 @@
       },
       "url": "https://www.wildlifetrusts.org/wildlife-explorer/birds/seabirds/storm-petrel",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "14–18 cm, wingspan 36–39 cm; takes small fish, crustaceans and plankton from the surface, pattering with wings in a V; strong sense of smell; purring song from burrow.",
         "Nests among rocks or in burrows on islands without rats and other mammalian predators; Amber under BoCC5 (2021)."
@@ -74,7 +89,12 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/storm-petrel",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "behavior", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "conservation"
+      ],
       "facts": [
         "Looks all black with a white rump; tail not forked unlike Leach’s petrel; flutters with wings in a V, feet pattering; follows ships, especially trawlers.",
         "Amber-listed in the UK."

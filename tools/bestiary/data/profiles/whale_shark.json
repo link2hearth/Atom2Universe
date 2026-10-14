@@ -12,8 +12,8 @@
       "fr": "Le requin-baleine est le plus grand poisson vivant : ce requin nage lentement et sa taille immense s’accompagne d’un régime spécialisé en petites proies. Il parcourt les mers tropicales et tempérées chaudes, traverse des bassins océaniques et revient souvent dans certains secteurs d’alimentation saisonniers."
     },
     "identification": {
-      "en": "Its broad, flattened head bears a very wide mouth at the tip of the snout; five pairs of large gill slits open behind it. Pale spots and bars form a checkerboard over the dark back, and the pattern is distinctive enough for researchers to identify individuals in photographs. Individuals recorded at feeding sites often measure around 4–10 m, but this is an observation range that includes juveniles, and many coastal sites are dominated by young males. The 2025 IUCN assessment estimates male maturity at 6.8–9.2 m by region and female maturity at about 9–10 m. A Ningaloo re-sighting model estimated average eventual lengths—the limits approached as growth slows—of 8.5–9 m for males and 14.5 m for females; rare records approach 18 m, and these modelled averages are not maximum lengths.",
-      "fr": "Sa tête large et aplatie porte une très grande bouche au bout du museau ; cinq paires de grandes fentes branchiales s’ouvrent derrière elle. Des taches et des barres claires dessinent un damier sur le dos sombre, motif assez singulier pour identifier les individus sur des photographies. Les individus observés sur les sites d’alimentation mesurent souvent autour de 4 à 10 m, mais cette fourchette d’observations inclut des juvéniles et de nombreux sites côtiers sont dominés par de jeunes mâles. L’évaluation UICN 2025 estime la maturité des mâles entre 6,8 et 9,2 m selon la région, et celle des femelles vers 9 à 10 m. Un modèle de réobservations à Ningaloo estime une longueur limite moyenne, vers laquelle la croissance tend en ralentissant, de 8,5 à 9 m chez les mâles et de 14,5 m chez les femelles ; de rares observations approchent 18 m, mais ces moyennes modélisées ne sont pas des maxima."
+      "en": "Reliable body mass is not routinely measured for free-swimming whale sharks: even major aquariums note that weighing them accurately is very difficult. Length data are therefore more dependable than published mass estimates; the consulted sources provide no standard width or height. Its broad, flattened head bears a very wide mouth at the tip of the snout; five pairs of large gill slits open behind it. Pale spots and bars form a checkerboard over the dark back, and the pattern is distinctive enough for researchers to identify individuals in photographs. Individuals recorded at feeding sites often measure around 4–10 m, but this is an observation range that includes juveniles, and many coastal sites are dominated by young males. The 2025 IUCN assessment estimates male maturity at 6.8–9.2 m by region and female maturity at about 9–10 m. A Ningaloo re-sighting model estimated average eventual lengths—the limits approached as growth slows—of 8.5–9 m for males and 14.5 m for females; rare records approach 18 m, and these modelled averages are not maximum lengths.",
+      "fr": "La masse fiable des requins-baleines nageant librement n’est généralement pas mesurée : même les grands aquariums indiquent qu’il est très difficile de les peser avec précision. La longueur est donc mieux documentée que les estimations de masse publiées ; les sources consultées ne donnent pas de largeur ou de hauteur standard. Sa tête large et aplatie porte une très grande bouche au bout du museau ; cinq paires de grandes fentes branchiales s’ouvrent derrière elle. Des taches et des barres claires dessinent un damier sur le dos sombre, motif assez singulier pour identifier les individus sur des photographies. Les individus observés sur les sites d’alimentation mesurent souvent autour de 4 à 10 m, mais cette fourchette d’observations inclut des juvéniles et de nombreux sites côtiers sont dominés par de jeunes mâles. L’évaluation UICN 2025 estime la maturité des mâles entre 6,8 et 9,2 m selon la région, et celle des femelles vers 9 à 10 m. Un modèle de réobservations à Ningaloo estime une longueur limite moyenne, vers laquelle la croissance tend en ralentissant, de 8,5 à 9 m chez les mâles et de 14,5 m chez les femelles ; de rares observations approchent 18 m, mais ces moyennes modélisées ne sont pas des maxima."
     },
     "habitat": {
       "en": "The species occurs in coastal waters and the open ocean, usually in warm seas, and spends much of its time near the surface. It can also dive into cold deep water; a satellite-tagged shark off Yucatán reached 1,928 m, although the purpose of such exceptional dives is not settled. Seasonal prey pulses bring sharks together at regional feeding sites, but their movements differ among regions and individuals.",
@@ -60,10 +60,10 @@
         "Institutional profile describes anatomy, range, feeding, grouping and fisheries history."
       ],
       "prose_claims": [
-        "identification.en.2",
-        "identification.fr.2",
         "habitat.en.1",
         "habitat.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
         "overview.en.2",
         "overview.fr.2"
       ],
@@ -124,10 +124,10 @@
         "behavior.en.2",
         "behavior.fr.1",
         "behavior.fr.2",
-        "identification.en.3",
-        "identification.fr.3",
         "habitat.en.3",
-        "habitat.fr.3"
+        "habitat.fr.3",
+        "identification.en.3",
+        "identification.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -152,12 +152,12 @@
         "Qatar satellite tags showed regional movements, depth use and returns."
       ],
       "prose_claims": [
-        "habitat.en.2",
-        "habitat.fr.2",
         "behavior.en.3",
         "behavior.en.4",
         "behavior.fr.3",
-        "behavior.fr.4"
+        "behavior.fr.4",
+        "habitat.en.2",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -184,7 +184,8 @@
       ],
       "prose_claims": [
         "identification.en.5",
-        "identification.fr.5"
+        "identification.fr.5",
+        "identification.fr.7"
       ],
       "budget": {
         "limit": 200,
@@ -269,12 +270,12 @@
         "Global assessment dated 31 March 2025 lists Endangered, decline 50–79%."
       ],
       "prose_claims": [
-        "identification.en.4",
-        "identification.fr.4",
         "conservation.en.1",
         "conservation.en.2",
         "conservation.fr.1",
-        "conservation.fr.2"
+        "conservation.fr.2",
+        "identification.en.4",
+        "identification.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -401,7 +402,8 @@
       ],
       "prose_claims": [
         "identification.en.1",
-        "identification.fr.1"
+        "identification.fr.1",
+        "identification.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -410,6 +412,24 @@
         "total": 59,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Whale Shark — Georgia Aquarium",
+        "fr": "Requin-baleine — Georgia Aquarium"
+      },
+      "url": "https://www.georgiaaquarium.org/animal/whale-shark/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Notes that accurate weighing is very difficult; common length 5.5–10 m, largest measured 18.8 m."
+      ],
+      "prose_claims": [
+        "identification.en.6",
+        "identification.en.7"
+      ]
     }
   ],
   "illustration_notes": "Single adult whale shark, side three-quarter view, natural proportions, flattened broad head and terminal mouth, five gill slits, dark blue-grey back with clear pale checkerboard spots and bars, large pectoral fins and crescent tail. Sex unspecified. Plain white background, no water, props, labels, border or watermark.",

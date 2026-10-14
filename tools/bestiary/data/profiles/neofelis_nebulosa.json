@@ -12,8 +12,8 @@
       "fr": "La panthère nébuleuse est un félin asiatique de taille moyenne du genre Neofelis. Les données génétiques et morphologiques la distinguent de la panthère nébuleuse de la Sonde, N. diardi, présente à Sumatra et à Bornéo. Neofelis nebulosa vit dans certaines régions d’Asie du Sud et du Sud-Est. Sa longue queue et sa robe en nuages la caractérisent, mais sa discrétion laisse une grande part de sa biologie mal connue."
     },
     "identification": {
-      "en": "Adults have sturdy short legs, broad paws and longer hind legs. Dark-edged, pale-centred blotches mark a yellowish, grey or brown coat; the tail is banded. Nearly as long as the head and body, it helps balance the cat on branches. The skull has exceptionally long upper canines for a living cat. This anatomy alone does not imply unusually large prey: accounts describe a nape bite when it subdues larger animals.",
-      "fr": "L’adulte a des pattes courtes et robustes, de larges pieds et des membres arrière plus longs. Des taches sombres à centre clair marquent sa robe jaunâtre, grise ou brune ; la queue est annelée. Presque aussi longue que la tête et le corps, elle aide l’animal à garder l’équilibre dans les arbres. Son crâne porte des canines supérieures exceptionnellement longues pour un félin actuel. Cette anatomie ne prouve pas qu’il chasse de grandes proies : il mord à la nuque pour maîtriser les animaux plus grands."
+      "en": "Adults have sturdy short legs, broad paws and longer hind legs. Dark-edged, pale-centred blotches mark a yellowish, grey or brown coat; the tail is banded. Nearly as long as the head and body, it helps balance the cat on branches. The skull has exceptionally long upper canines for a living cat. This anatomy alone does not imply unusually large prey: accounts describe a nape bite when it subdues larger animals. Adults weigh about 18–22 kg and stand 50–60 cm at the shoulder; head-and-body length is 75–105 cm and the tail 79–90 cm. Females are slightly smaller, but no separate sex-specific measurement range was found. No reliable body-width measurement is published in the source consulted.",
+      "fr": "L’adulte a des pattes courtes et robustes, de larges pieds et des membres arrière plus longs. Des taches sombres à centre clair marquent sa robe jaunâtre, grise ou brune ; la queue est annelée. Presque aussi longue que la tête et le corps, elle aide l’animal à garder l’équilibre dans les arbres. Son crâne porte des canines supérieures exceptionnellement longues pour un félin actuel. Cette anatomie ne prouve pas qu’il chasse de grandes proies : il mord à la nuque pour maîtriser les animaux plus grands. L’adulte pèse environ 18 à 22 kg et mesure 50 à 60 cm au garrot; la tête et le corps font 75 à 105 cm, et la queue 79 à 90 cm. La femelle est légèrement plus petite, mais je n’ai pas trouvé de mensurations distinctes selon le sexe. La source consultée ne publie pas de mesure fiable de la largeur du corps."
     },
     "habitat": {
       "en": "Its range includes Nepal, India, southern China and the Indochinese Peninsula. It is strongly associated with dense evergreen and tropical forests, although secondary and logged forests are also used. Camera-trap surveys in Peninsular Malaysia found local differences in habitat use, including associations with elevation and distance from water; these relationships are not universal habitat requirements.",
@@ -186,6 +186,20 @@
       ],
       "facts": [
         "Four radio-collared clouded leopards in Phu Khieo: annual ranges 22.9–45.1 km², 1,932 m mean daily travel, activity in 58% of diel readings."
+      ]
+    },
+    {
+      "title": {
+        "en": "Neofelis nebulosa (clouded leopard) | Animal Diversity Web",
+        "fr": "Neofelis nebulosa (clouded leopard) | Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Neofelis_nebulosa/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Reports adult mass, shoulder height, head–body and tail lengths, and slight female size difference."
       ]
     }
   ],

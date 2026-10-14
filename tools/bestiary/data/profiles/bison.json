@@ -12,8 +12,8 @@
       "fr": "Le bison d’Amérique est un grand ruminant à sabots d’Amérique du Nord. Avant la colonisation européenne, il vivait du nord du Mexique à l’intérieur de l’Alaska. On distingue couramment deux formes : le bison des plaines au sud et le bison des bois plus au nord."
     },
     "identification": {
-      "en": "Its massive head, shoulder hump and short hindquarters create a distinctive profile. Both sexes have short, curved horns. Long hair covers the head, shoulders and forelegs, but the rear coat is shorter. Adults shed much of this winter coat in spring. Plains bison usually have a smaller, rounder hump than wood bison.",
-      "fr": "Sa tête massive, sa bosse et son arrière-train court forment une silhouette typique. Les deux sexes ont des cornes courtes et recourbées. De longs poils couvrent tête, épaules et pattes avant ; le pelage arrière est plus court. L’adulte perd sa toison hivernale au printemps. La bosse du bison des plaines est plus petite et arrondie que celle du bison des bois."
+      "en": "Its massive head, shoulder hump and short hindquarters create a distinctive profile. Both sexes have short, curved horns. Long hair covers the head, shoulders and forelegs, but the rear coat is shorter. Adults shed much of this winter coat in spring. Plains bison usually have a smaller, rounder hump than wood bison. Typical adults are about 2.7–3.8 m long and 1.8–2.0 m high; bulls commonly weigh about 907–998 kg and cows about 454 kg. Bulls are markedly larger, although values vary among subspecies and populations.",
+      "fr": "Sa tête massive, sa bosse et son arrière-train court forment une silhouette typique. Les deux sexes ont des cornes courtes et recourbées. De longs poils couvrent tête, épaules et pattes avant ; le pelage arrière est plus court. L’adulte perd sa toison hivernale au printemps. La bosse du bison des plaines est plus petite et arrondie que celle du bison des bois. Les adultes mesurent généralement environ 2,7 à 3,8 m de long et 1,8 à 2,0 m de haut ; les mâles pèsent souvent autour de 907 à 998 kg et les femelles environ 454 kg. Les mâles sont nettement plus grands, avec des variations selon la sous-espèce et la population."
     },
     "habitat": {
       "en": "Bison use grasslands, prairies, sedge meadows, shrublands and some woods. Historically, herds moved over immense areas. Today, free-ranging and conservation herds occupy fragments of the former range; fences and management often limit movement.",
@@ -79,7 +79,8 @@
       "facts": [
         "Both sexes have short up-curving horns; the forebody is shaggy, and the heavy coat is shed in spring.",
         "Conservation herds are fragmented; females and young form bands, while mature bulls may group separately.",
-        "The zoo distinguishes approximately 30,000 bison in conservation herds from approximately 500,000 commercially managed animals; its page notes the IUCN scope excludes commercial herds."
+        "The zoo distinguishes approximately 30,000 bison in conservation herds from approximately 500,000 commercially managed animals; its page notes the IUCN scope excludes commercial herds.",
+        "Mature bulls may reach 1.9 m at the hump, 2.7–3.8 m long and 816–1,088 kg; females are smaller, about 2.2–3.2 m long and 1.5 m at the hump."
       ]
     },
     {
@@ -111,6 +112,20 @@
       "facts": [
         "The global assessment is Near Threatened; it was assessed on 1 September 2016 and published in 2017.",
         "Its scope excludes commercial herds and identifies dependence on conservation programs, few viable populations, and numerous small isolated populations."
+      ]
+    },
+    {
+      "title": {
+        "en": "About Bison — U.S. National Park Service",
+        "fr": "À propos du bison — U.S. National Park Service"
+      },
+      "url": "https://www.nps.gov/subjects/bison/about.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Typical adult bison are 1.8–2.0 m high and 3–3.8 m long; bulls about 907–998 kg and cows about 454 kg."
       ]
     }
   ],

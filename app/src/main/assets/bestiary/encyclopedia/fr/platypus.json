@@ -1,0 +1,54 @@
+{
+  "id": "platypus",
+  "name": "Ornithorynque",
+  "scientific": "Ornithorhynchus anatinus",
+  "group": "mammals",
+  "sections": {
+    "overview": "L’ornithorynque est un mammifère semi-aquatique australien et un monotrème, c’est-à-dire un mammifère qui pond des œufs. Son corps fuselé et fourré, sa large queue et son bec sensible conviennent à la recherche de nourriture sur les fonds d’eau douce et au repos dans des terriers de berge. Les femelles produisent du lait sans mamelons. L’espèce vit naturellement dans l’est australien, Tasmanie comprise.",
+    "identification": "L’adulte porte une fourrure dense et imperméable, généralement brune dessus et plus claire dessous, un bec aplati et une large queue. Celle-ci stocke de la graisse et aide à diriger. Les pattes avant palmées propulsent l’animal ; à terre, leur palmure se replie autour des griffes. Les pattes arrière, moins palmées, contribuent à la direction sous l’eau. Les mâles possèdent un éperon à venin aux chevilles arrière ; les femelles n’ont pas cet appareil fonctionnel. Les individus du sud sont généralement plus grands. L’adulte mesure de 400 à 630 mm chez le mâle et de 370 à 550 mm chez la femelle, bec et queue compris. Les masses rapportées sont de 0,8 à 3,0 kg chez le mâle et de 0,6 à 1,7 kg chez la femelle; les populations méridionales, plus froides, tendent à être plus grandes. Je n’ai pas trouvé de mesure fiable de largeur du corps.",
+    "habitat": "L’espèce parcourt l’est australien, du Queensland tropical à la Tasmanie et aux Alpes australiennes. Elle fréquente rivières, ruisseaux, lacs et retenues agricoles, mais a besoin d’eau douce pour s’alimenter et de berges terreuses pour creuser. Les racines stabilisent les sites de repos et de nidification ; vasques ombragées, rapides et fonds de graviers ou de galets abritent des invertébrés aquatiques. L’ornithorynque traverse parfois la terre entre deux eaux, ce qui rend importante la continuité des bassins versants.",
+    "diet": "Il chasse de petits animaux, surtout des larves d’insectes du fond, des vers, crustacés et mollusques. Sous l’eau, il ferme yeux, oreilles et narines ; les récepteurs du bec détectent mouvements de l’eau et faibles champs électriques produits par les muscles des proies. En balayant la tête latéralement, il s’oriente en eau trouble. Il garde les petites prises dans ses abajoues et broie sa nourriture en surface avec des plaques cornées plutôt qu’avec des dents.",
+    "behavior": "Les adultes sont surtout solitaires et occupent généralement des terriers distincts, même si plusieurs fréquentent le même secteur aquatique. L’activité culmine souvent du crépuscule à la nuit. Les pattes avant propulsent l’animal, tandis que pattes arrière et queue dirigent sa nage ; à terre, ses membres écartés rendent la marche moins efficace. Des plongées entrecoupées de brèves pauses permettent de longues périodes de recherche alimentaire. Le toilettage entretient la fourrure isolante nécessaire aux séjours dans l’eau.",
+    "reproduction": "La reproduction est saisonnière et commence plus tôt dans les populations du nord. La femelle pond un à trois œufs à coquille souple dans une longue galerie de berge, qu’elle ferme avec de la terre. Les embryons se développent en partie avant la ponte ; l’incubation externe dure environ une semaine à dix jours. Les nouveau-nés sont minuscules et dépendants. La mère sécrète du lait sur la peau abdominale, que les petits lèchent dans sa fourrure puisqu’elle n’a pas de mamelons. Ils s’alimentent de lait au terrier et en sortent souvent après trois ou quatre mois, selon la région.",
+    "ecology": "Prédateur d’invertébrés du fond, l’ornithorynque appartient aux réseaux trophiques des cours d’eau. Une expérience australienne a montré que son alimentation affectait différemment les communautés d’invertébrés des eaux courantes et stagnantes : les effets écologiques dépendent donc du milieu. Sa dépendance aux proies aquatiques le lie à des eaux productives, tandis que ses terriers nécessitent des berges stables. Les déplacements terrestres peuvent relier des bassins, mais obstacles et sécheresses interrompent parfois cette dispersion.",
+    "conservation": "Un rapport australien de 2022 cite la catégorie mondiale Quasi menacée de l’UICN ; il rapporte une évaluation datée et ne constitue pas une nouvelle estimation de population. Le même rapport indiquait qu’alors l’ornithorynque n’était inscrit comme menacé ni par la loi fédérale ni par celle de Nouvelle-Galles du Sud, tout en relayant l’avis d’un examen de l’UNSW de 2020 recommandant Vulnérable. Il cite le défrichement des berges, la modification des débits, la pollution, les prises accessoires, les maladies, les sécheresses, incendies et inondations. Le Victoria a classé l’espèce Vulnérable en 2021. Ces statuts portent sur des dates et échelles différentes."
+  },
+  "sources": [
+    {
+      "url": "https://nre.tas.gov.au/wildlife-management/fauna-of-tasmania/mammals/echidnas-and-platypus/platypus/platypus-in-tasmania",
+      "title": "L’ornithorynque en Tasmanie — ministère tasmanien de l’Environnement"
+    },
+    {
+      "url": "https://www.amnh.org/explore/news-blogs/platypus-electroreception-hunting",
+      "title": "Électroréception de l’ornithorynque — Muséum américain d’histoire naturelle"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/mammals/platypus/",
+      "title": "Ornithorynque — Australian Museum"
+    },
+    {
+      "url": "https://www.unsw.edu.au/research/platypus-conservation-initiative/ecology-and-evolution",
+      "title": "Écologie et évolution — initiative de conservation de l’ornithorynque, université UNSW Sydney"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/emergency-flood-recovery-wildlife-habitat-impact-assessments-emergency-flood-recovery-wildlife-habitat.pdf",
+      "title": "Évaluations après les inondations — ministère australien de l’Environnement"
+    },
+    {
+      "url": "https://platypus.asn.au/platypus-reproduction/",
+      "title": "Reproduction de l’ornithorynque — Australian Platypus Conservancy"
+    },
+    {
+      "url": "https://www.premier.vic.gov.au/protecting-our-precious-platys",
+      "title": "Protéger nos précieux ornithorynques — Premier ministre du Victoria"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7398909/",
+      "title": "Prédation de l’ornithorynque en rivière et en lac — étude de terrain"
+    },
+    {
+      "url": "https://platypus.asn.au/platypus-vital-statistics/",
+      "title": "Platypus vital statistics | Australian Platypus Conservancy"
+    }
+  ]
+}

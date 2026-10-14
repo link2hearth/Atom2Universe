@@ -12,8 +12,8 @@
       "fr": "L’élan est le plus grand cervidé vivant. Il habite les forêts nordiques d’Amérique du Nord et d’Eurasie, de l’Alaska au Canada, en Scandinavie, en Russie, au nord de la Chine et en Mongolie. En anglais britannique, il est souvent appelé « elk »."
     },
     "identification": {
-      "en": "A shoulder hump, heavy body, long legs and drooping muzzle define its shape. Only males grow annual antlers: broad palms are common in North America, narrower forms occur in Eurasia. Coat colour ranges from brown to nearly black. Long legs cross deep snow; nostrils close underwater, aiding submerged feeding.",
-      "fr": "Une bosse, un corps massif, de longues pattes et un museau tombant définissent sa silhouette. Seuls les mâles portent des bois annuels : les palettes sont fréquentes en Amérique du Nord, les formes étroites en Eurasie. Le pelage va du brun au presque noir. Les longues pattes franchissent la neige profonde ; les narines se ferment sous l’eau pour brouter immergé."
+      "en": "A shoulder hump, heavy body, long legs and drooping muzzle define its shape. Only males grow annual antlers: broad palms are common in North America, narrower forms occur in Eurasia. Coat colour ranges from brown to nearly black. Long legs cross deep snow; nostrils close underwater, aiding submerged feeding. Adults typically stand about 1.5–2.1 m at the shoulder. British Columbia reports average masses of about 450–500 kg for males and 340–420 kg for females; very large males can reach about 680 kg. The antlers of males can span about 1.5 m, but antler width varies and is not body width.",
+      "fr": "Une bosse, un corps massif, de longues pattes et un museau tombant définissent sa silhouette. Seuls les mâles portent des bois annuels : les palettes sont fréquentes en Amérique du Nord, les formes étroites en Eurasie. Le pelage va du brun au presque noir. Les longues pattes franchissent la neige profonde ; les narines se ferment sous l’eau pour brouter immergé. L’adulte mesure généralement environ 1,5 à 2,1 m au garrot. La Colombie-Britannique indique des masses moyennes d’environ 450 à 500 kg chez les mâles et 340 à 420 kg chez les femelles; les très grands mâles peuvent atteindre environ 680 kg. Les bois du mâle peuvent mesurer environ 1,5 m d’envergure, mais cette largeur variable n’est pas celle du corps."
     },
     "habitat": {
       "en": "Moose favour northern woodland, young forest, wetlands and shores. In Alaska they use river corridors, timberline plateaus and burns where willow, birch and aspen regrow. Lakes and marshes offer food and cover. Seasonal movements link feeding, calving, rutting and wintering areas.",
@@ -123,6 +123,34 @@
       "facts": [
         "The global assessment was last assessed on 27 September 2015, published in 2016, and classified the moose as Least Concern with an increasing overall trend.",
         "The assessment cites habitat alteration as a principal human-caused threat and describes the species as widespread and abundant despite hunting pressure."
+      ]
+    },
+    {
+      "title": {
+        "en": "Moose | Rocky Mountain National Park, National Park Service",
+        "fr": "Moose | Rocky Mountain National Park, National Park Service"
+      },
+      "url": "https://www.nps.gov/romo/learn/nature/moose.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Reports typical shoulder height of 5–7 feet and very large male mass up to 1,500 lb; notes females are smaller."
+      ]
+    },
+    {
+      "title": {
+        "en": "Moose | Government of British Columbia",
+        "fr": "Moose | Government of British Columbia"
+      },
+      "url": "https://www2.gov.bc.ca/gov/content/environment/plants-animals-ecosystems/wildlife/wildlife-conservation/moose",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Reports average masses of 450–500 kg for males and 340–420 kg for females."
       ]
     }
   ],

@@ -1,0 +1,58 @@
+{
+  "id": "canada_goose",
+  "name": "Bernache du Canada",
+  "scientific": "Branta canadensis",
+  "group": "birds",
+  "sections": {
+    "overview": "La Bernache du Canada est un grand oiseau d’eau adaptable, originaire d’Amérique du Nord, des côtes arctiques et de la toundra aux zones humides tempérées. Ses vols bruyants occupent aussi de nombreuses villes et terres agricoles, où pelouses et grains perdus offrent une nourriture régulière. L’espèce présente de fortes variations selon les régions, les formes nordiques étant généralement plus petites que les formes méridionales. Les quatre formes les plus petites, autrefois incluses ici, sont aujourd’hui classées dans l’espèce distincte Branta hutchinsii, la Bernache de Hutchins.",
+    "identification": "L’adulte porte une tête noire, un long cou noir, une large plage blanche reliant les joues sous le menton, un dos brun, une poitrine pâle, ainsi qu’un bec et des pattes noirs. Cette mentonnière blanche est une bande caractéristique qui traverse le bas du visage et la gorge, et non un visage entièrement blanc. L’adulte mesure environ 76–110 cm, pour une envergure de 127–170 cm, avec des variations géographiques. En vol, une bande blanche sur le croupion tranche avec la queue sombre. Les mesures de baguage du BTO donnent des masses adultes moyennes de 4,27 kg chez les mâles et 3,67 kg chez les femelles, et des longueurs d’aile moyennes de 541 et 506 mm respectivement ; les plages plus générales de longueur totale et d’envergure varient géographiquement.",
+    "habitat": "L’espèce fréquente marais, lacs, rivières, estuaires, baies côtières et mares de toundra, surtout lorsque l’eau libre jouxte des terrains herbeux. Elle se repose et échappe au danger sur l’eau, mais trouve souvent l’essentiel de sa nourriture à terre. Dans les paysages habités, elle utilise volontiers pelouses de parcs, golfs, réservoirs et champs après récolte. Les couples nicheurs privilégient îles, rives ou autres sites offrant une bonne visibilité près de l’eau, même si certaines bernaches urbaines nichent sur des toits ou des structures.",
+    "diet": "Les Bernaches du Canada sont herbivores. Elles broutent feuilles et pousses de graminées et de laîches, consomment des plantes aquatiques, ainsi que graines, baies et cultures comme les céréales et le maïs. Leur large bec aplati coupe la végétation et prélève des végétaux en eau peu profonde ; elles peuvent basculer le corps pour atteindre les pousses immergées. L’herbe jeune est tendre et riche en protéines, ce qui aide les oisons en croissance et les adultes qui renouvellent leurs plumes, tandis que les grains d’automne et d’hiver alimentent les réserves de graisse. Cette souplesse alimentaire leur permet d’exploiter milieux humides et terres agricoles.",
+    "behavior": "Les couples restent souvent unis toute l’année, fréquemment pour la vie, et rejoignent des groupes plus grands hors de la saison de reproduction. Les familles structurent les déplacements : les bernaches voyagent de jour ou de nuit en vols lâches, souvent en V, et se relaient à l’avant. Les cris maintiennent le contact et coordonnent le groupe ; mouvements de tête, sifflements et battements d’ailes avertissent les intrus près des nids ou des zones nourricières. Les populations nordiques gagnent généralement le sud pour l’hiver, tandis que beaucoup de populations tempérées bougent peu, même si jeunes et non-nicheurs peuvent remonter vers le nord pour muer, renouvellement annuel des rémiges qui rend les adultes incapables de voler pendant plusieurs semaines.",
+    "reproduction": "Les Bernaches du Canada commencent généralement à se reproduire vers deux ou trois ans. Le couple défend un territoire ; la femelle construit au sol un nid garni de végétaux, souvent près de l’eau, y pond habituellement cinq à sept œufs et les couve environ 28 à 30 jours, tandis que le mâle garde les environs. Les oisons couverts de duvet éclosent les yeux ouverts et quittent le nid en un ou deux jours. Les deux parents veillent au nid, et les jeunes peuvent marcher, nager et se nourrir peu après l’éclosion. Ils prennent généralement leur envol vers six ou sept semaines et peuvent rester avec la famille durant leur première année.",
+    "ecology": "Le broutage maintient parfois les pelouses rases et transforme la production végétale en proies pour renards, coyotes, aigles et autres prédateurs, surtout lorsque les bernaches nichent ou ne peuvent voler. Sur l’eau, familles et groupes partagent aussi les lieux de nourrissage et de repos avec d’autres oiseaux aquatiques. L’usage des cultures et des pelouses rapproche ces oiseaux des humains : des groupes denses peuvent consommer des récoltes, laisser des déjections et présenter un risque de collision avec les avions près des aéroports. Ces effets sont surtout marqués là où nourriture abondante et reposoirs sûrs concentrent les oiseaux, plutôt que d’être inévitables partout.",
+    "conservation": "La population migratrice de l’Atlantique a fortement décliné après avoir approché le million d’oiseaux dans les années 1970 ; les autorités ont fermé sa chasse sportive de 1995 à 1999, puis la population s’est rétablie. Son abondance continentale est aujourd’hui élevée, favorisée par des sites de nidification protégés, les pelouses urbaines et les grains agricoles ; le profil canadien archivé indique une évaluation mondiale en Préoccupation mineure datée de 2018. En Grande-Bretagne, elle a été introduite comme oiseau d’ornement au XVIIe siècle, puis s’est étendue après d’autres lâchers ; elle y est désormais répandue mais reste issue d’une introduction. La gestion locale répond aux dégâts agricoles, aux déjections et à la sécurité aérienne, tandis que les populations migratrices font l’objet d’une chasse réglementée."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Canada_goose/id/",
+      "title": "Identification de la Bernache du Canada"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Canada_Goose/overview",
+      "title": "Présentation de la Bernache du Canada"
+    },
+    {
+      "url": "https://www.canada.ca/en/environment-climate-change/services/migratory-bird-conservation/publications/handbook-managing-cackling-geese-southern/chapter-1.html",
+      "title": "Biologie des Bernaches du Canada, Manuel de gestion des bernaches dans le sud du Canada, chapitre 1"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/canada_goose/lifehistory",
+      "title": "Cycle de vie de la Bernache du Canada"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/canada-goose",
+      "title": "BirdFacts : Bernache du Canada"
+    },
+    {
+      "url": "https://apps.fws.gov/rcgr/resources/canada-goose-nesting",
+      "title": "Gestion de la nidification de la Bernache du Canada"
+    },
+    {
+      "url": "https://wildlife-species.canada.ca/bird-status/oiseau-bird-eng.aspx?sB=CANG_SBP&sL=e&sM=a&sY=2019",
+      "title": "Bernache du Canada - populations nicheuses subarctiques"
+    },
+    {
+      "url": "https://www.canada.ca/en/environment-climate-change/services/migratory-bird-conservation/managing-conflicts/goose-cackling-best-practices-planning.html",
+      "title": "Bernaches du Canada et de Hutchins : bonnes pratiques de gestion"
+    },
+    {
+      "url": "https://www.ducks.org/hunting/waterfowl-id/canada-goose",
+      "title": "Bernache du Canada"
+    },
+    {
+      "url": "https://research.fs.usda.gov/feis/species-reviews/brca",
+      "title": "Branta canadensis, Bernache du Canada"
+    }
+  ]
+}

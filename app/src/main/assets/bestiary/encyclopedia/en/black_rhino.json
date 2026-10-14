@@ -1,0 +1,42 @@
+{
+  "id": "black_rhino",
+  "name": "Black rhinoceros",
+  "scientific": "Diceros bicornis",
+  "group": "mammals",
+  "sections": {
+    "overview": "The black rhinoceros is a large African mammal that browses shrubs and woody plants. Its hooked, grasping upper lip distinguishes it from the square-lipped, grass-grazing white rhinoceros. Both species are generally grey; colour does not explain their common names.",
+    "identification": "Adults stand about 1.4–1.8 metres at the shoulder. Their thick skin is nearly hairless, and they carry two keratin horns, usually with the front one longer. The pointed, flexible upper lip grasps leaves and twigs. Soil and wallowing can change the apparent skin shade; neither species has a black or white coat. Adults are about 3.0–3.75 m long and 1.4–1.8 m high at the shoulder. Adult mass is commonly reported around 800–1,400 kg; females are generally smaller than males, but a robust species-wide sex-specific mass range was not found.",
+    "habitat": "Its fragmented range lies in eastern and southern Africa. It uses semi-arid scrub, savanna, woodland and forest edges, where browse is available; water access also matters, though succulent plants provide moisture. In Namibia it inhabits arid north-western landscapes. Local habitat conditions influence the area each animal uses.",
+    "diet": "It browses leaves, shoots, twigs, thorny shrubs and sometimes fruit; grass is occasional rather than its main fare. The prehensile lip gathers branches and guides them to cheek teeth for grinding. Food choices vary with local vegetation and season, so a plant list from one reserve is not universal.",
+    "behavior": "They are often solitary, though females may stay with calves and temporary groups occur. Rhinos feed and travel more in cool morning and evening hours, resting in shade or mud during midday heat. Urine and dung scent marks signal presence and can mark a range; wallowing also cools the body.",
+    "reproduction": "After courtship and 15–17 months of gestation, a female gives birth to one calf in a sheltered place. The newborn can usually stand within hours. It stays with its mother for about two to four years, nursing and learning to browse. Long birth intervals slow population recovery after losses.",
+    "ecology": "Browsing removes leaves and twigs and can shape woody vegetation where rhinos feed. The effect depends on local animal density and plant communities, so it is not identical across habitats. Dung piles also carry scent information used by other rhinos.",
+    "conservation": "The IUCN assessment published in 2020 classified the species as Critically Endangered; this dated category is not a new count. Poaching for horn, habitat loss and fragmentation, and insecurity threaten populations. Protected areas, anti-poaching work and carefully planned moves to suitable sites support recovery, though slow reproduction makes losses hard to reverse."
+  },
+  "sources": [
+    {
+      "url": "https://www.sanparks.org/conservation/parks/marakele-national-park/primary-consumers-herbivores/black-rhino",
+      "title": "Black Rhino — South African National Parks"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Diceros_bicornis/",
+      "title": "Diceros bicornis (black rhinoceros) — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.savetherhino.org/rhino-info/rhino-species/black-rhinos/",
+      "title": "Black Rhino — Save the Rhino International"
+    },
+    {
+      "url": "https://www.worldwildlife.org/species/rhino/black-rhino/",
+      "title": "Black Rhino — World Wide Fund for Nature"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6842456/",
+      "title": "Mesoscale movement and recursion behaviors of Namibian black rhinos — Movement Ecology"
+    },
+    {
+      "url": "https://strapi.eaza.net/uploads/2020_EAZA_Black_rhinoceros_Best_Practice_Guidelines_NV_a2e09f245a.pdf",
+      "title": "EAZA Best Practice Guidelines for Black Rhinoceros"
+    }
+  ]
+}

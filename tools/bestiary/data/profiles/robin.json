@@ -57,14 +57,14 @@
         "Adult size, juvenile plumage and garden feeding."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.5",
-        "identification.fr.5",
+        "conservation.en.5",
+        "conservation.fr.5",
         "diet.en.1",
         "diet.fr.1",
-        "conservation.en.5",
-        "conservation.fr.5"
+        "identification.en.1",
+        "identification.en.5",
+        "identification.fr.1",
+        "identification.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -116,14 +116,14 @@
         "Distinguishes European from American robins."
       ],
       "prose_claims": [
+        "habitat.en.4",
+        "habitat.fr.4",
         "overview.en.1",
         "overview.en.2",
         "overview.en.3",
         "overview.fr.1",
         "overview.fr.2",
-        "overview.fr.3",
-        "habitat.en.4",
-        "habitat.fr.4"
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -150,14 +150,14 @@
         "Woodland and foraging."
       ],
       "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
         "habitat.en.1",
         "habitat.en.2",
         "habitat.fr.1",
         "habitat.fr.2",
-        "diet.en.2",
-        "diet.fr.2",
-        "behavior.en.1",
-        "behavior.fr.1",
         "reproduction.en.4",
         "reproduction.fr.4"
       ],
@@ -185,12 +185,12 @@
         "British records show breeding timing and local trends."
       ],
       "prose_claims": [
-        "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.3",
-        "reproduction.fr.3",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.4",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -215,14 +215,14 @@
         "Populations differ in winter movements."
       ],
       "prose_claims": [
-        "overview.en.4",
-        "overview.fr.4",
         "behavior.en.3",
-        "behavior.fr.3",
         "behavior.en.4",
-        "behavior.fr.4",
         "behavior.en.5",
-        "behavior.fr.5"
+        "behavior.fr.3",
+        "behavior.fr.4",
+        "behavior.fr.5",
+        "overview.en.4",
+        "overview.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -247,10 +247,10 @@
         "Lithuanian study documents mammal predation on nests."
       ],
       "prose_claims": [
-        "reproduction.en.5",
-        "reproduction.fr.5",
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.2",
+        "reproduction.en.5",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -303,8 +303,8 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
+        "conservation.fr.1",
         "conservation.fr.2"
       ],
       "budget": {
@@ -332,12 +332,12 @@
         "RSPB describes nest sites and garden feeding."
       ],
       "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4",
         "habitat.en.3",
         "habitat.fr.3",
         "reproduction.en.1",
-        "reproduction.fr.1",
-        "ecology.en.4",
-        "ecology.fr.4"
+        "reproduction.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -362,8 +362,8 @@
       ],
       "prose_claims": [
         "identification.en.3",
-        "identification.fr.3",
         "identification.en.4",
+        "identification.fr.3",
         "identification.fr.4"
       ],
       "budget": {

@@ -12,8 +12,8 @@
       "fr": "L’abeille mellifère occidentale est un insecte social dont la colonie repose sur la coopération de milliers de femelles et d’un nombre plus réduit de mâles. Son aire naturelle couvre l’Afrique, l’Europe et l’Asie occidentale, tandis que l’humain a largement déplacé des colonies élevées pour le miel et la pollinisation agricole. Dans certaines régions, des colonies sauvages nichent encore de façon autonome : l’espèce ne se réduit donc pas aux ruches domestiques."
     },
     "identification": {
-      "en": "Adults have a hairy thorax, a banded abdomen and two pairs of wings joined by tiny hooks in flight. Worker females are usually about 10–15 millimetres long, drones about 15–17 millimetres, and egg-laying queens roughly 18–20 millimetres; these are indicative caste ranges, not fixed limits. A worker’s hind-leg pollen basket, or corbicula, and its branched body hairs help carry pollen, while the male’s very large eyes aid aerial mate-searching.",
-      "fr": "Les adultes ont un thorax velu, un abdomen annelé et deux paires d’ailes reliées en vol par de minuscules crochets. Les ouvrières mesurent généralement environ 10 à 15 millimètres, les mâles 15 à 17 millimètres et les reines pondeuses quelque 18 à 20 millimètres ; ces fourchettes indicatives varient selon la caste. La corbeille à pollen des pattes postérieures et les poils ramifiés de l’ouvrière transportent le pollen, tandis que les très grands yeux du mâle facilitent la recherche d’une partenaire en vol."
+      "en": "Adults have a hairy thorax, a banded abdomen and two pairs of wings joined by tiny hooks in flight. Worker females are usually about 10–15 millimetres long, drones about 15–17 millimetres, and egg-laying queens roughly 18–20 millimetres; these are indicative caste ranges, not fixed limits. A worker’s hind-leg pollen basket, or corbicula, and its branched body hairs help carry pollen, while the male’s very large eyes aid aerial mate-searching. Workers are about 10–15 mm long and queens about 18–20 mm; a reliable general adult body-mass range by caste was not found in the consulted sources.",
+      "fr": "Les adultes ont un thorax velu, un abdomen annelé et deux paires d’ailes reliées en vol par de minuscules crochets. Les ouvrières mesurent généralement environ 10 à 15 millimètres, les mâles 15 à 17 millimètres et les reines pondeuses quelque 18 à 20 millimètres ; ces fourchettes indicatives varient selon la caste. La corbeille à pollen des pattes postérieures et les poils ramifiés de l’ouvrière transportent le pollen, tandis que les très grands yeux du mâle facilitent la recherche d’une partenaire en vol. Les ouvrières mesurent environ 10–15 mm et les reines 18–20 mm ; les sources consultées ne donnent pas de fourchette fiable de masse adulte selon la caste."
     },
     "habitat": {
       "en": "Colonies need repeated access to flowering plants, water and a protected nesting cavity; hollow trees are natural nest sites, and buildings or managed hives can provide alternatives. The species uses meadows, open woodland, gardens and agricultural landscapes, and may persist in drier or wetter settings where forage and shelter remain available.",
@@ -57,14 +57,14 @@
         "Caste morphology."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "identification.en.1",
-        "identification.fr.1",
         "identification.en.2",
-        "identification.fr.2",
         "identification.en.3",
-        "identification.fr.3"
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -86,14 +86,14 @@
         "behavior"
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.3",
-        "behavior.fr.3",
         "behavior.en.4",
-        "behavior.fr.4"
+        "behavior.fr.1",
+        "behavior.fr.3",
+        "behavior.fr.4",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "facts": [
         "Workers regulate brood-nest temperature."
@@ -152,8 +152,8 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
+        "diet.fr.1",
         "diet.fr.2",
         "reproduction.en.6",
         "reproduction.fr.6"
@@ -180,6 +180,7 @@
         "Queens emerge after 16 days, workers after 21, and drones after 24 days."
       ],
       "prose_claims": [
+        "identification.fr.4",
         "reproduction.en.5",
         "reproduction.fr.5"
       ],
@@ -231,8 +232,8 @@
       ],
       "prose_claims": [
         "diet.en.3",
-        "diet.fr.3",
         "diet.en.4",
+        "diet.fr.3",
         "diet.fr.4"
       ],
       "budget": {
@@ -259,8 +260,8 @@
       ],
       "prose_claims": [
         "ecology.en.3",
-        "ecology.fr.3",
         "ecology.en.4",
+        "ecology.fr.3",
         "ecology.fr.4"
       ],
       "budget": {
@@ -287,14 +288,14 @@
         "The release cites free-living colony declines and multiple threats."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
-        "conservation.fr.2",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "conservation.fr.4",
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -319,7 +320,8 @@
       ],
       "prose_claims": [
         "conservation.en.5",
-        "conservation.fr.5"
+        "conservation.fr.5",
+        "identification.en.4"
       ],
       "budget": {
         "limit": 200,
@@ -332,24 +334,25 @@
     {
       "title": {
         "en": "Honey Bees as Pollinators, Their Habitats and Products — University of Missouri Extension",
-        "fr": "Les abeilles mellifères comme pollinisatrices, leurs habitats et leurs produits — service de vulgarisation de l’Université du Missouri"
+        "fr": "Abeilles mellifères : pollinisation, habitats et produits — University of Missouri Extension"
       },
       "url": "https://extension.missouri.edu/publications/m403",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "habitat",
-        "ecology"
+        "ecology",
+        "identification"
       ],
       "facts": [
-        "Free-living colonies nest in protected cavities and forage among flowering plants."
+        "Free-living colonies nest in protected cavities and forage among flowering plants.",
+        "Workers are about 10–15 mm long; BioKIDS at the University of Michigan reports queens about 18–20 mm. No reliable general caste-specific adult body-mass range was located."
       ],
       "prose_claims": [
+        "ecology.fr.1",
         "habitat.en.1",
-        "habitat.fr.1",
         "habitat.en.2",
-        "habitat.fr.2",
-        "ecology.en.1",
-        "ecology.fr.1"
+        "habitat.fr.1",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -373,6 +376,7 @@
         "Across crop systems, increased wild-insect visitation enhanced fruit set more than equivalent honey-bee visitation."
       ],
       "prose_claims": [
+        "ecology.en.1",
         "ecology.en.2",
         "ecology.fr.2"
       ],
@@ -449,8 +453,8 @@
       ],
       "prose_claims": [
         "reproduction.en.2",
-        "reproduction.fr.2",
         "reproduction.en.3",
+        "reproduction.fr.2",
         "reproduction.fr.3"
       ],
       "budget": {

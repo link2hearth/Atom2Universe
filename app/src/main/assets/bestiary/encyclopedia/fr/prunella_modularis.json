@@ -1,0 +1,30 @@
+{
+  "id": "prunella_modularis",
+  "name": "Accenteur mouchet",
+  "scientific": "Prunella modularis",
+  "group": "birds",
+  "sections": {
+    "overview": "L’accenteur mouchet est un petit oiseau brun et gris, discret, qui se faufile sous les haies et les buissons. Derrière son allure modeste se cache l’un des systèmes d’appariement les plus compliqués que l’on connaisse chez les oiseaux.",
+    "identification": "Long d’environ 13 à 14,5 cm, à peu près comme un moineau domestique, pour un poids d’environ 21 g. Le dos est brun strié de noir, la tête et la poitrine sont grises, les pattes rosâtres et le bec fin et pointu, contrairement à celui d’un moineau. Les sexes se ressemblent; les jeunes sont plus bruns et moins gris.",
+    "habitat": "Il vit dans une grande partie de l’Europe et du sud-ouest de l’Asie. En Grande-Bretagne, il est le plus fréquent dans les villages, et aussi courant dans les jardins, les broussailles, les terres agricoles, les bois et les villes, partout où une végétation basse et dense offre un abri.",
+    "diet": "Il se nourrit surtout d’araignées et d’insectes, qu’il trouve en sautillant au sol, et mange aussi des graines. Il visite parfois les mangeoires, mais ramasse plus souvent la nourriture tombée en dessous.",
+    "behavior": "Timide et discret, il se glisse dans les broussailles à la manière d’une souris, en agitant souvent les ailes. Les mâles chantent un gazouillis fort et criard depuis des perchoirs élevés, surtout de mars à mai, et les mâles rivaux battent des ailes et crient fort.",
+    "reproduction": "Mâles et femelles peuvent s’accoupler avec plusieurs partenaires, si bien qu’une femelle peut être aidée par deux mâles pour élever ses poussins. Le nid en coupe, bâti bas dans les buissons denses, contient en général 4 à 5 œufs bleus non tachetés, couvés par la femelle pendant 14 à 15 jours. Les jeunes s’envolent après 12 à 14,5 jours. La reproduction débute en général à un an.",
+    "ecology": "Mangeur d’insectes et de graines au sol, l’accenteur dépend d’un couvert bas et dense. La nourriture naturelle, surtout les graines, se raréfie à la fin de l’hiver, et à partir de la mi-février les accenteurs des terres agricoles se tournent vers les points d’alimentation.",
+    "conservation": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure. Au Royaume-Uni, elle est sur la liste orange : environ 2,5 millions de territoires étaient estimés en 2016, et les effectifs ont baissé de 43 % entre 1967 et 2024, avec la chute la plus forte du milieu des années 1970 au milieu des années 1980 et un rétablissement partiel depuis. Le plus vieil oiseau bagué a dépassé 10 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/dunnock",
+      "title": "Accenteur mouchet — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/dunnock",
+      "title": "Accenteur mouchet — RSPB"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Dunnock",
+      "title": "Accenteur mouchet — Wikipédia"
+    }
+  ]
+}

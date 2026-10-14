@@ -1,0 +1,30 @@
+{
+  "id": "adela_reaumurella",
+  "name": "Green longhorn moth",
+  "scientific": "Adela reaumurella",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Adela reaumurella is a small day-flying moth in the longhorn moth family Adelidae. It occurs widely in Europe and can be locally conspicuous in spring, when groups of males dance above shrubs and trees. Its metallic green wings and extraordinarily long male antennae make it one of the more recognizable European micro-moths.",
+    "identification": "The adult has unpatterned metallic green to bronze-green forewings and a wingspan around 14–18 mm. Males have very long pale antennae, often longer than the body; female antennae are shorter. The contrast in antenna length and the green, unmarked wings help distinguish it from similar small moths, though close views and the flight season aid identification. The sources describe wingspan and sexual differences in antennae, but do not provide a dependable body-mass range.",
+    "habitat": "The species is recorded widely in Britain and across continental Europe. It is associated with bright deciduous woodland, especially warm, relatively dry sites with oak and beech, and can be seen around trees and bushes. Regional records also include woodland edges and places with leaf litter, which provides food for the case-bearing larva.",
+    "diet": "The larva feeds on dead leaves and detritus rather than chewing fresh foliage. It carries a small portable case made from leaf pieces while feeding in the litter. Adult feeding is not described in detail by the species accounts used here.",
+    "behavior": "Adults fly in sunshine during spring. Males commonly form swarms above the tops of trees and bushes, while females remain lower in the undergrowth and fly up to join the swarm; mating occurs in flight. This visible swarming behavior is a useful clue when identifying the species in the field.",
+    "reproduction": "Females lay eggs on or in the stems of low plants. The young larva makes a flattened, two-sided portable case and feeds on dead leaves; it may overwinter as a nearly full-grown larva. Pupation takes place in the case in early spring, and adults usually fly in one generation from mid-April into early June, with regional records extending later.",
+    "ecology": "The larva recycles leaf litter and is itself prey for small predators and parasitoids. Adult swarms provide a seasonal food resource for insectivores. The sources reviewed describe these life-history links but do not quantify the species’ contribution to decomposition or woodland food webs.",
+    "conservation": "The species is described as common in much of Britain and Belgium, although abundance varies locally. The reviewed sources do not provide a current global Red List category or a measured long-term population trend. Its use of bright deciduous woodland and leaf-litter habitat identifies the kinds of sites important for its local persistence."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/adela-reaumurella/",
+      "title": "Adela reaumurella — UKMoths"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5290/",
+      "title": "Adela reaumurella — Belgian Catalogue of Lepidoptera"
+    },
+    {
+      "url": "https://dgmoths.info/moths/adela-reaumurella/",
+      "title": "Green Long-horn — Dumfries & Galloway Moths"
+    }
+  ]
+}

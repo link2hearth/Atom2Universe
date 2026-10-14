@@ -12,8 +12,8 @@
       "fr": "Ce grand mammifère africain relie eaux douces et prairies dans son quotidien. Il se repose le jour dans les rivières, lacs ou mares, puis en sort généralement après le crépuscule pour brouter. Ce rythme façonne son anatomie, son alimentation et sa vie sociale."
     },
     "identification": {
-      "en": "Its barrel-shaped body has sparse hair, thick purple-grey skin and short, strong legs. High-set eyes, ears and nostrils let it remain submerged; nostrils close underwater. Its broad mouth bears prominent incisors and long canine tusks, especially developed in males.",
-      "fr": "Son corps en tonneau porte peu de poils, une peau épaisse gris violacé et des pattes courtes. Yeux, oreilles et narines placés haut lui permettent de rester immergé ; ses narines se ferment sous l’eau. Sa bouche porte de longues canines, surtout chez le mâle."
+      "en": "Its barrel-shaped body has sparse hair, thick purple-grey skin and short, strong legs. High-set eyes, ears and nostrils let it remain submerged; nostrils close underwater. Its broad mouth bears prominent incisors and long canine tusks, especially developed in males. Adults are 3.3–5 m long and up to 1.6 m at the shoulder; females average about 1,400 kg and males about 1,600–4,500 kg.",
+      "fr": "Son corps en tonneau porte peu de poils, une peau épaisse gris violacé et des pattes courtes. Yeux, oreilles et narines placés haut lui permettent de rester immergé ; ses narines se ferment sous l’eau. Sa bouche porte de longues canines, surtout chez le mâle. Les adultes mesurent 3,3–5 m de long et jusqu’à 1,6 m au garrot ; les femelles pèsent en moyenne environ 1 400 kg et les mâles environ 1 600–4 500 kg."
     },
     "habitat": {
       "en": "It ranges across sub-Saharan Africa where permanent freshwater and grazing ground remain available. Hippos rest in rivers, lakes and pools, then feed on nearby grassland. During dry periods they may crowd around shrinking water, while suitable grazing can lie farther inland.",
@@ -66,17 +66,19 @@
         "fr": "Hippopotame — San Diego Zoo Animals & Plants"
       },
       "url": "https://animals.sandiegozoo.org/animals/hippo",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "overview",
         "habitat",
         "diet",
         "behavior",
         "reproduction",
-        "conservation"
+        "conservation",
+        "identification"
       ],
       "facts": [
-        "Describes daytime water use, nocturnal grazing, shallow-water movement, group territories and mother-calf care; zoo-specific feeding and captive records were excluded."
+        "Describes daytime water use, nocturnal grazing, shallow-water movement, group territories and mother-calf care; zoo-specific feeding and captive records were excluded.",
+        "Adults are 3.3–5 m long and up to 1.6 m at the shoulder; females average about 1,400 kg and males about 1,600–4,500 kg."
       ]
     },
     {

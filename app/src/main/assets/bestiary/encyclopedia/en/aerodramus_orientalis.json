@@ -1,0 +1,38 @@
+{
+  "id": "aerodramus_orientalis",
+  "name": "Mayr's swiftlet",
+  "scientific": "Aerodramus orientalis",
+  "group": "birds",
+  "sections": {
+    "overview": "Mayr's swiftlet is a little-known swiftlet of the Bismarck and Solomon Islands, recorded from New Ireland and Guadalcanal. It belongs to the echolocating swiftlet genus Aerodramus and is believed to feed on insects caught in flight. The global Red List assessment is Data Deficient, reflecting the lack of information on its population and ecology; consequently, many details available for better-studied swiftlets should not be assumed for this species.",
+    "identification": "The French Oiseaux.net account reports a length of about 13–14 cm and a mass of 13.4 g. These are compiled species-level values without sex-specific measurements; no dependable body height, width, wingspan or male–female difference was found. Like other swiftlets, it has a compact body, long narrow wings, a short bill and a shallowly forked tail. Field identification relies on its appearance together with the island and habitat: New Ireland and Guadalcanal populations are assigned to two subspecies, and the taxon may be confused with other dark swiftlets occurring across Melanesia. The available sources do not provide a sufficiently detailed diagnostic plumage description to claim subtle field marks confidently.",
+    "habitat": "Its documented range is highly restricted to Guadalcanal in the Solomon Islands and central New Ireland in Papua New Guinea. It is treated as a resident, non-migratory species by compiled ornithological datasets. Species-specific habitat descriptions are sparse; other Aerodramus swiftlets commonly forage over forest and open areas and roost or nest in caves, but those genus-level habits should be regarded as expectations rather than well-documented facts for Mayr's swiftlet.",
+    "diet": "The likely feeding mode is aerial insectivory: swiftlets take small insects and other flying invertebrates while on the wing. No species-specific prey analysis was found for Mayr's swiftlet, so the exact prey, foraging height and daily schedule remain undocumented in the sources reviewed.",
+    "behavior": "Aerodramus swiftlets are adapted to sustained, agile flight and use echolocation clicks to move through dark cavities. These are genus-level traits; the reviewed literature did not provide detailed observations of flocking, daily movements or cave use specifically for A. orientalis. It is regarded as sedentary, so any movements are presumed local rather than long-distance migration.",
+    "reproduction": "A species-specific breeding account, clutch size and nesting calendar were not found in the sources reviewed. Many Aerodramus nest in colonies on cave walls, but this is not sufficiently documented for Mayr's swiftlet here and is not stated as a confirmed species-level fact. The two named subspecies occupy different island groups, which makes targeted surveys of nesting sites especially useful for clarifying its breeding distribution.",
+    "ecology": "If, as expected for a swiftlet, it feeds on flying insects, it is part of the aerial insectivore community linking island forests and open landscapes. The species' restricted distribution and limited study mean that its ecological role, nesting-site requirements and interactions with other swiftlets remain poorly known. Cave-roosting behavior is plausible from its genus but needs species-specific confirmation.",
+    "conservation": "The IUCN Red List category is Data Deficient; no reliable global population estimate or trend was available in the sources reviewed. Its range is confined to a small number of islands, but restricted distribution alone does not determine its threat category when abundance and trend are unknown. Surveys are needed to establish population size, confirm habitat and nesting requirements, and assess any pressures at occupied sites before stronger conservation conclusions can be made."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/mayrs-swiftlet-aerodramus-orientalis",
+      "title": "Mayr's Swiftlet — BirdLife International DataZone factsheet"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/salangane.de.mayr.html",
+      "title": "Salangane de Mayr — Oiseaux.net French species account"
+    },
+    {
+      "url": "https://www.aviansystematics.org/checklist?viewfamilies=78",
+      "title": "Mayr's Swiftlet — H&M4 Checklist, Trust for Avian Systematics"
+    },
+    {
+      "url": "https://www.itis.gov/SingleRpt/SingleRpt?search_topic=TSN&search_value=178017",
+      "title": "Aerodramus orientalis — ITIS taxonomic report"
+    },
+    {
+      "url": "https://afo.birdlife.org.au/afo/index.php/afo/article/viewFile/2127/2149",
+      "title": "Mayr's Swiftlet — Australian Field Ornithology record"
+    }
+  ]
+}

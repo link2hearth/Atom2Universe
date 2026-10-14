@@ -1,0 +1,62 @@
+{
+  "id": "cavia_porcellus",
+  "name": "Domestic guinea pig",
+  "scientific": "Cavia porcellus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The domestic guinea pig is a small caviid rodent whose populations are primarily maintained by people. The domesticated lineage is recognized as Cavia porcellus, taxonomically distinguished from the wild species C. aperea and C. tschudii. Genetic comparisons identify the Andean montane guinea pig, C. tschudii, as its closest wild relative, while ancient DNA points to a more complex domestication history than a single simple origin. Genomic project accounts place Andean domestication more than four millennia ago. Today people keep guinea pigs as companions and research animals, and raise them for food in parts of South America.",
+    "identification": "A guinea pig has a compact, low-set body, short limbs, a blunt head and no external tail. Each forefoot has four digits and each hind foot three. Its coat may be short or long, smooth or rough, and comes in many colours and patterns; these differences reflect selective breeding. Smithsonian measurements place typical adults at about 20–25 centimetres long, although size varies among breeds. Merck gives average adult masses of 700–900 g for females and 900–1,200 g for males; body length varies among breeds.",
+    "habitat": "Cavia porcellus is associated with human settlements rather than a self-sustaining wild range: it lives in household enclosures, farms and research facilities, and has travelled globally through human keeping and trade. The high Andean grasslands sometimes described as guinea-pig habitat belong to wild relatives, especially C. tschudii, not automatically to the domestic species. That montane cavy is reported from Peru, Bolivia, north-western Argentina and north-eastern Chile.",
+    "diet": "Guinea pigs are obligate herbivores and hindgut fermenters. Their large caecum contains microbes that process plant fibre after it passes through the stomach and small intestine. One published estimate attributes about 30–40% of maintenance energy to short-chain fatty acids from gut fermentation. Guinea pigs also eat faecal pellets (coprophagy); preventing this behaviour reduces fibre digestion and body weight, although its precise nutritional contribution remains uncertain. The Merck Veterinary Manual states that guinea pigs do not produce cecotropes, the distinct soft pellets associated with caecotrophy. They also cannot synthesize vitamin C: evolutionary research reports loss of the GULO gene, which encodes the final enzyme in the animal pathway.",
+    "behavior": "Guinea pigs are social and commonly remain close to other individuals, resting or huddling together. In domestic groups, males can form dominance relationships. Calls documented in laboratory recordings include purrs and rumbles during interactions between males, with whines and chutters also heard; the sound pattern depended on the social setting, so a call should not be assigned one universal meaning.",
+    "reproduction": "Pregnancy lasts about 59–72 days, according to a veterinary-school natural-history account. Pups are born furred, with eyes and ears open; they can stand and move soon after birth and nibble solid food within a day. This precocial development contrasts with the helpless young of many rodents, yet pups still remain attached to their mother. Their early mobility does not mean they are independent at birth.",
+    "ecology": "The domestic guinea pig occupies an ecological setting built around people. In Andean societies, animals are raised in household settings and form part of local food traditions; elsewhere they are kept as pets or used in biomedical research. These uses explain the species’ wide distribution without implying a wild ecological role. Habitat and ecological relationships described for wild cavies belong to those wild species unless independently demonstrated for domestic C. porcellus.",
+    "conservation": "The domestic species is maintained through breeding and is not treated by the Smithsonian National Zoo as a threatened wild animal. That description should not be transferred to C. tschudii or other wild Cavia species: they are separate taxa with their own distributions and conservation evidence. The domestic guinea pig’s global presence does not mean that it has a naturally widespread wild population."
+  },
+  "sources": [
+    {
+      "url": "https://nationalzoo.si.edu/animals/guinea-pig",
+      "title": "Guinea pig"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25147626/",
+      "title": "Similarities and differences among the chromosomes of the wild guinea pig Cavia tschudii and the domestic guinea pig Cavia porcellus"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32483316/",
+      "title": "Ancient DNA of Guinea Pigs (Cavia spp.) Indicates a Probable New Center of Domestication and Pathways of Global Distribution"
+    },
+    {
+      "url": "https://healthtopics.vetmed.ucdavis.edu/health-topics/exotics/guinea-pig-care",
+      "title": "Guinea Pig Care"
+    },
+    {
+      "url": "https://www.merckvetmanual.com/exotic-and-laboratory-animals/guinea-pigs/anatomy-physiology-and-behavior-of-guinea-pigs",
+      "title": "Anatomy, Physiology, and Behavior of Guinea Pigs"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35752765/",
+      "title": "The evolution of vitamin C biosynthesis and transport in animals"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36099806/",
+      "title": "Updates to the guinea pig animal model for in-vivo auditory neuroscience in the low-frequency hearing range"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24733361/",
+      "title": "Filial Attachment and its Disruption: Insights from the Guinea Pig"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11064281/",
+      "title": "Effects of animal or plant protein diets on cecal fermentation in guinea pigs, rats and chicks"
+    },
+    {
+      "url": "https://www.broadinstitute.org/guinea-pig/guinea-pig-genome-project",
+      "title": "Guinea Pig Genome Project"
+    },
+    {
+      "url": "https://www.merckvetmanual.com/exotic-and-laboratory-animals/guinea-pigs/restraint-and-physical-examination-of-guinea-pigs",
+      "title": "Restraint and Physical Examination of Guinea Pigs — Merck Veterinary Manual"
+    }
+  ]
+}

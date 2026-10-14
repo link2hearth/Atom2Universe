@@ -1,0 +1,74 @@
+{
+  "id": "mute_swan",
+  "name": "Mute Swan",
+  "scientific": "Cygnus olor",
+  "group": "birds",
+  "sections": {
+    "overview": "The Mute Swan is a large Eurasian waterfowl of lakes, slow rivers, marshes and sheltered coasts, feeding and nesting close to water.",
+    "identification": "Adults are white, with black legs, a bright orange bill and a black knob at its base; typical birds measure 127–152 cm long, with a wingspan of 208–238 cm. Males are generally larger than females, although the sexes look alike. Young cygnets are downy and pale grey, with dark bills and legs; older juveniles may show brown-grey feathers as their plumage gradually turns white during the first year. The orange bill and black knob distinguish this species from the Whooper Swan (Cygnus cygnus) and Tundra Swan (Cygnus columbianus), whose bills lack that knob. Both sexes bear the fleshy black knob; it is usually larger in males and varies seasonally, peaking near hatching in one monitored population, so size alone cannot reliably determine sex. British ringing measurements average 10.75 kg for adult males and 8.54 kg for adult females; the adults’ mean wing lengths are about 618 mm and 571 mm respectively. No body width or standing height was found in the consulted references.",
+    "habitat": "It uses freshwater and brackish wetlands, including ponds, lakes, estuaries and sheltered bays, nesting on islands or vegetated banks near water.",
+    "diet": "Aquatic vegetation is the main food, though Mute Swans also take animal prey such as snails, insects and small aquatic animals. They skim plants from the surface, tip forward to reach submerged growth and rake the bottom with their feet to uncover tubers. In the eastern Gulf of Finland, one study found a seasonal shift from stranded filamentous algae in late winter to new plant growth during egg laying and incubation.",
+    "behavior": "In one Midlands study, 85% of paired breeders retained the same mate from year to year if both survived. During nesting, pairs defend nest territories with raised-wing displays and arched necks. Though called mute, the swan is not silent: it hisses and snorts when disturbed and gives muffled calls during territorial encounters. After breeding, adults shed all their flight feathers at once and cannot fly for roughly six to eight weeks.",
+    "reproduction": "Pairs build a large nest from reeds and other plants; males choose the site and begin the platform, while females shape the cup. British records give a typical clutch of four to seven eggs, usually incubated by the female for about 34–44 days. Newly hatched cygnets can move around the nest, feed and enter the water once their down dries. British records report a typical fledging duration of 120–150 days.",
+    "ecology": "Grazing submerged vegetation can change the biomass and structure of shallow plant beds, although effects vary with local conditions. In an Illinois experiment, swan access was associated with lower below-ground plant biomass, while above-ground biomass did not differ detectably. In Chesapeake Bay, introduced Mute Swans (Cygnus olor) remain year-round, unlike Tundra Swans (Cygnus columbianus), which migrate there for winter. Across Europe, populations are generally resident, although cold weather can displace birds locally.",
+    "conservation": "BirdLife International’s 2016 global IUCN Red List assessment classified the Mute Swan as Least Concern. The species is native across much of Eurasia and introduced in North America. Locally dense introduced flocks can compete with native waterbirds and affect aquatic vegetation. In Britain, population recovery followed severe declines associated with lead poisoning from swallowed fishing weights and shot; restrictions on lead weights and improved protection helped recovery."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Mute_Swan/id",
+      "title": "Mute Swan Identification"
+    },
+    {
+      "url": "https://nsojournals.onlinelibrary.wiley.com/doi/10.1111/j.1600-048X.2008.04515.x",
+      "title": "Seasonal changes in male and female bill knob size in the mute swan Cygnus olor"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Mute_Swan/lifehistory",
+      "title": "Mute Swan Life History"
+    },
+    {
+      "url": "https://tidsskrift.dk/Wildfowl/article/view/153433",
+      "title": "Seasonal changes in the diet of Mute Swans Cygnus olor in the recently colonised eastern Gulf of Finland"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Mute_Swan/sounds",
+      "title": "Mute Swan Sounds"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/mute-swan",
+      "title": "Mute Swan BirdFacts"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Cygnus_olor/",
+      "title": "Cygnus olor: Animal Diversity Web"
+    },
+    {
+      "url": "https://pubs.usgs.gov/publication/70173501",
+      "title": "Impacts of mute swans on submerged aquatic vegetation in Illinois River Valley backwaters"
+    },
+    {
+      "url": "https://pubs.usgs.gov/publication/5211225",
+      "title": "The exotic mute swan in Chesapeake Bay, USA"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22679839A85946855.en",
+      "title": "The IUCN Red List of Threatened Species 2016: Cygnus olor"
+    },
+    {
+      "url": "https://www.fws.gov/media/ecological-risk-screening-summary-mute-swan-cygnus-olor-uncertain-risk",
+      "title": "Ecological Risk Screening Summary - Mute Swan (Cygnus olor) - Uncertain Risk"
+    },
+    {
+      "url": "https://swansg.org/the-swans/mute/",
+      "title": "Mute Swan - Swan Specialist Group"
+    },
+    {
+      "url": "https://www.bto.org/sites/default/files/moult-in-birds-web.pdf",
+      "title": "Moult in Birds"
+    },
+    {
+      "url": "https://tidsskrift.dk/Wildfowl/article/view/154512",
+      "title": "Pairing and breeding of mute swans"
+    }
+  ]
+}

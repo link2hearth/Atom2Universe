@@ -60,16 +60,16 @@
         "Range, adult measurements, plumage and parental feeding."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.en.2",
-        "identification.en.1",
-        "identification.en.2",
-        "reproduction.en.5",
         "conservation.en.1",
-        "habitat.en.2",
         "diet.en.2",
         "diet.en.3",
-        "habitat.fr.2"
+        "habitat.en.2",
+        "habitat.fr.2",
+        "identification.en.1",
+        "identification.en.2",
+        "overview.en.1",
+        "overview.en.2",
+        "reproduction.en.5"
       ],
       "budget": {
         "limit": 200,
@@ -97,12 +97,12 @@
         "French account confirms seasonal form, diet and foot stamping."
       ],
       "prose_claims": [
-        "overview.fr.1",
-        "overview.fr.2",
+        "conservation.fr.1",
+        "diet.fr.2",
         "identification.fr.1",
         "identification.fr.2",
-        "diet.fr.2",
-        "conservation.fr.1",
+        "overview.fr.1",
+        "overview.fr.2",
         "reproduction.fr.5"
       ],
       "budget": {
@@ -128,8 +128,8 @@
       ],
       "prose_claims": [
         "reproduction.en.4",
-        "reproduction.fr.4",
         "reproduction.en.6",
+        "reproduction.fr.4",
         "reproduction.fr.6"
       ],
       "budget": {
@@ -157,13 +157,13 @@
         "UK diet, nest sites, trends and threats."
       ],
       "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
         "diet.fr.1",
         "habitat.en.1",
         "habitat.fr.1",
         "reproduction.en.3",
-        "reproduction.fr.3",
-        "conservation.en.2",
-        "conservation.fr.2"
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -192,14 +192,14 @@
       "prose_claims": [
         "behavior.en.1",
         "behavior.fr.1",
+        "diet.en.1",
         "diet.fr.3",
-        "reproduction.en.1",
-        "reproduction.fr.1",
         "ecology.en.1",
         "ecology.fr.1",
+        "reproduction.en.1",
         "reproduction.en.2",
-        "reproduction.fr.2",
-        "diet.en.1"
+        "reproduction.fr.1",
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,

@@ -1,0 +1,26 @@
+{
+  "id": "european_herring_gull",
+  "name": "Goéland argenté",
+  "scientific": "Larus argentatus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le goéland argenté est le grand goéland typique des côtes d’Europe. À l’origine oiseau côtier nichant sur les falaises, il s’est adapté aux villes, nichant sur les toits, mais ses effectifs ont fortement diminué en Grande-Bretagne.",
+    "identification": "Un grand goéland de 54 à 60 cm. En Grande-Bretagne, les adultes pèsent en moyenne environ 970 g, avec une aile de 415 mm. Les adultes ont le dos gris clair, le dessous blanc, le bout des ailes noir tacheté de blanc, des pattes roses et un gros bec jaune portant une tache rouge. Les oiseaux de première année sont brun moucheté.",
+    "habitat": "Les nicheurs sont surtout fréquents sur les rivages ouverts et les falaises, mais certains nichent sur les bâtiments en ville. Hors saison de reproduction, il est répandu dans les basses terres de Grande-Bretagne, surtout près de la côte, et à l’intérieur des terres autour des décharges, des champs, des réservoirs et des lacs.",
+    "diet": "Il se nourrit surtout d’animaux marins, le crabe vert étant l’un de ses favoris, ainsi que de poissons, d’insectes, de charognes et de déchets. C’est un opportuniste ; il piétine même le sol pour imiter la pluie et faire remonter les vers de terre.",
+    "behavior": "Les goélands argentés se nourrissent en grands groupes sur les décharges et défendent vivement leurs nids et leurs jeunes. Les couples restent souvent unis toute la vie et reviennent chaque année au même site de nid. En ville, la nidification sur les toits leur offre beaucoup de nourriture et moins de prédateurs.",
+    "reproduction": "Un couple élève une nichée par an et pond en général trois œufs (deux à quatre), le plus souvent à partir de la mi-avril, au sol, sur des corniches de falaise ou sur des toits. La femelle assure l’essentiel des 28 à 30 jours de couvaison. Les poussins s’envolent à 35 à 40 jours et picorent la tache rouge du bec d’un parent pour réclamer de la nourriture. La reproduction débute en général à quatre ans.",
+    "ecology": "Charognard et prédateur des animaux du littoral, le goéland argenté exploite des sources de nourriture naturelles comme humaines. Le suivi d’oiseaux nicheurs d’une colonie a montré que la plupart se nourrissaient sur les bancs de moules et dans les zones intertidales, tandis que la raréfaction de la nourriture marine pousserait les oiseaux à chercher davantage à l’intérieur des terres.",
+    "conservation": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure, mais elle figure sur la liste rouge du Royaume-Uni. Environ 130 000 couples y ont niché en 1998-2002 et quelque 740 000 oiseaux y ont hiverné en 2003-2006 ; la population nicheuse côtière a diminué de plus de 50 % entre 1969-1970 et 1998-2002 et semble avoir continué à baisser. Selon les données de baguage, les plus vieux oiseaux atteignent environ 12 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/herring-gull",
+      "title": "Goéland argenté — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/herring-gull",
+      "title": "Goéland argenté — RSPB"
+    }
+  ]
+}

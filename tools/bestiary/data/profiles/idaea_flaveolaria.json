@@ -2,25 +2,122 @@
   "id": "idaea_flaveolaria",
   "scientific": "Idaea flaveolaria",
   "group": "invertebrates",
-  "name": {"en": "Yellow wave", "fr": "Acidalie jaune"},
+  "name": {
+    "en": "Yellow wave",
+    "fr": "Acidalie jaune"
+  },
   "sections": {
-    "overview": {"en": "Idaea flaveolaria is a small geometrid moth associated in Europe with alpine habitats. French naturalist records place it in the Alpine massif, where its bright coloration makes it noticeable in sunny mountain meadows. Its caterpillar and feeding ecology are much less well known than its adult appearance and distribution.", "fr": "Idaea flaveolaria est un petit papillon de nuit de la famille des Géométridés, associé aux milieux alpins en Europe. Les données naturalistes françaises le situent dans le massif alpin, où sa couleur vive le rend repérable dans les prairies de montagne ensoleillées. Sa chenille et son écologie alimentaire sont beaucoup moins connues que l’adulte et sa répartition."},
-    "identification": {"en": "The adult is a small moth with vivid yellow-orange to warm-brown wings and fine transverse lines that may be clearer underneath; a dark discal spot can also show below. Lepidoptera Mundi gives a wingspan of about 12–16 mm. The combination of color and markings helps separate it from similar Idaea, but worn specimens and locality still matter.", "fr": "L’adulte est un petit papillon aux ailes jaune orangé vif à brun chaud, traversées de fines lignes parfois plus visibles au revers ; une tache discale sombre peut aussi apparaître dessous. Lepidoptera Mundi indique une envergure d’environ 12 à 16 mm. La combinaison de couleurs et de marques aide à le distinguer des Idaea proches, mais l’usure et la provenance restent utiles."},
-    "habitat": {"en": "In France, the species is recorded from the Alpine massif; European records are likewise associated with mountain regions. French observations describe sunny, flower-rich high-altitude meadows. This is a localized alpine distribution, not a general species of lowland gardens or farmland.", "fr": "En France, l’espèce est signalée dans le massif alpin ; les données européennes la rattachent également aux régions montagneuses. Les observations françaises décrivent des prairies fleuries et ensoleillées en altitude. Sa répartition alpine est localisée : ce n’est pas un papillon généralement associé aux jardins ou aux terres agricoles de plaine."},
-    "diet": {"en": "The larva is thought to be polyphagous, but its food plants and feeding behavior have not been observed adequately in the field according to the French species account. Adult feeding details are not established in the sources reviewed. The food-plant gap is therefore part of the species’ known natural-history uncertainty.", "fr": "La chenille est considérée comme probablement polyphage, mais ses plantes nourricières et son comportement alimentaire n’ont pas été suffisamment observés dans la nature selon la fiche française. Les sources consultées n’établissent pas non plus l’alimentation de l’adulte. Cette lacune sur les plantes-hôtes fait partie des incertitudes connues de son histoire naturelle."},
-    "behavior": {"en": "Adults may be seen flying in sunshine over alpine meadows. The French observatory describes this as a sun-loving, conspicuous small moth. Detailed observations of daily activity, courtship and overwintering stages were not available in the sources used for this profile.", "fr": "On peut observer les adultes voler au soleil au-dessus des prairies alpines. L’observatoire français décrit ce petit papillon comme actif au soleil et facile à repérer. Les sources utilisées pour cette fiche ne donnent pas de détails sur son activité quotidienne, sa parade ou ses stades d’hivernage."},
-    "reproduction": {"en": "The sources reviewed do not document the egg, larval and pupal schedule of I. flaveolaria in enough detail to describe it confidently. The caterpillar’s natural food plants and habits are explicitly noted as unobserved, so a fuller breeding account would be speculative.", "fr": "Les sources consultées ne documentent pas assez précisément le calendrier des œufs, de la chenille et de la chrysalide d’I. flaveolaria pour en proposer une description fiable. Les plantes nourricières et les mœurs de la chenille sont explicitement signalées comme non observées dans la nature ; une description plus complète de la reproduction serait spéculative."},
-    "ecology": {"en": "The species is part of the alpine moth community and is linked to sunny meadow habitat. The French observatory considers it rare at the scale of its recording grid and notes that larval ecology remains unresolved. No specific pollination, prey or population effect is quantified by the reviewed sources.", "fr": "L’espèce fait partie des communautés de papillons alpins et dépend des prairies ensoleillées. L’observatoire français la considère comme assez rare à l’échelle de sa maille d’observation et signale que l’écologie larvaire reste à élucider. Les sources examinées ne quantifient aucun rôle particulier de pollinisation, de prédation ou d’effet sur les populations."},
-    "conservation": {"en": "A French moth observatory describes the species as rare on its survey grid and its French distribution as limited to the Alps. That local observation is not a global conservation assessment. No verified global IUCN category or population trend was found for this profile.", "fr": "Un observatoire français des papillons de nuit décrit l’espèce comme assez rare sur sa maille de prospection et limite sa présence française aux Alpes. Cette observation locale n’est pas une évaluation mondiale de conservation. Aucune catégorie mondiale vérifiée de l’UICN ni tendance de population n’a été trouvée pour cette fiche."}
+    "overview": {
+      "en": "Idaea flaveolaria is a small geometrid moth associated in Europe with alpine habitats. French naturalist records place it in the Alpine massif, where its bright coloration makes it noticeable in sunny mountain meadows. Its caterpillar and feeding ecology are much less well known than its adult appearance and distribution.",
+      "fr": "Idaea flaveolaria est un petit papillon de nuit de la famille des Géométridés, associé aux milieux alpins en Europe. Les données naturalistes françaises le situent dans le massif alpin, où sa couleur vive le rend repérable dans les prairies de montagne ensoleillées. Sa chenille et son écologie alimentaire sont beaucoup moins connues que l’adulte et sa répartition."
+    },
+    "identification": {
+      "en": "Adult wingspan is about 12–16 mm. No dependable body mass or measured body-width data were found in the specialist references consulted; male and female wingspans are not separated there. The adult is a small moth with vivid yellow-orange to warm-brown wings and fine transverse lines that may be clearer underneath; a dark discal spot can also show below. The combination of color and markings helps separate it from similar Idaea, but worn specimens and locality still matter.",
+      "fr": "L’envergure adulte est d’environ 12 à 16 mm. Les références spécialisées consultées ne donnent pas de masse corporelle fiable ni de largeur mesurée ; elles ne distinguent pas l’envergure du mâle et de la femelle. L’adulte est un petit papillon aux ailes jaune orangé vif à brun chaud, traversées de fines lignes parfois plus visibles au revers ; une tache discale sombre peut aussi apparaître dessous. La combinaison de couleurs et de marques aide à le distinguer des Idaea proches, mais l’usure et la provenance restent utiles."
+    },
+    "habitat": {
+      "en": "In France, the species is recorded from the Alpine massif; European records are likewise associated with mountain regions. French observations describe sunny, flower-rich high-altitude meadows. This is a localized alpine distribution, not a general species of lowland gardens or farmland.",
+      "fr": "En France, l’espèce est signalée dans le massif alpin ; les données européennes la rattachent également aux régions montagneuses. Les observations françaises décrivent des prairies fleuries et ensoleillées en altitude. Sa répartition alpine est localisée : ce n’est pas un papillon généralement associé aux jardins ou aux terres agricoles de plaine."
+    },
+    "diet": {
+      "en": "The larva is thought to be polyphagous, but its food plants and feeding behavior have not been observed adequately in the field according to the French species account. Adult feeding details are not established in the sources reviewed. The food-plant gap is therefore part of the species’ known natural-history uncertainty.",
+      "fr": "La chenille est considérée comme probablement polyphage, mais ses plantes nourricières et son comportement alimentaire n’ont pas été suffisamment observés dans la nature selon la fiche française. Les sources consultées n’établissent pas non plus l’alimentation de l’adulte. Cette lacune sur les plantes-hôtes fait partie des incertitudes connues de son histoire naturelle."
+    },
+    "behavior": {
+      "en": "Adults may be seen flying in sunshine over alpine meadows. The French observatory describes this as a sun-loving, conspicuous small moth. Detailed observations of daily activity, courtship and overwintering stages were not available in the sources used for this profile.",
+      "fr": "On peut observer les adultes voler au soleil au-dessus des prairies alpines. L’observatoire français décrit ce petit papillon comme actif au soleil et facile à repérer. Les sources utilisées pour cette fiche ne donnent pas de détails sur son activité quotidienne, sa parade ou ses stades d’hivernage."
+    },
+    "reproduction": {
+      "en": "The sources reviewed do not document the egg, larval and pupal schedule of I. flaveolaria in enough detail to describe it confidently. The caterpillar’s natural food plants and habits are explicitly noted as unobserved, so a fuller breeding account would be speculative.",
+      "fr": "Les sources consultées ne documentent pas assez précisément le calendrier des œufs, de la chenille et de la chrysalide d’I. flaveolaria pour en proposer une description fiable. Les plantes nourricières et les mœurs de la chenille sont explicitement signalées comme non observées dans la nature ; une description plus complète de la reproduction serait spéculative."
+    },
+    "ecology": {
+      "en": "The species is part of the alpine moth community and is linked to sunny meadow habitat. The French observatory considers it rare at the scale of its recording grid and notes that larval ecology remains unresolved. No specific pollination, prey or population effect is quantified by the reviewed sources.",
+      "fr": "L’espèce fait partie des communautés de papillons alpins et dépend des prairies ensoleillées. L’observatoire français la considère comme assez rare à l’échelle de sa maille d’observation et signale que l’écologie larvaire reste à élucider. Les sources examinées ne quantifient aucun rôle particulier de pollinisation, de prédation ou d’effet sur les populations."
+    },
+    "conservation": {
+      "en": "A French moth observatory describes the species as rare on its survey grid and its French distribution as limited to the Alps. That local observation is not a global conservation assessment. No verified global IUCN category or population trend was found for this profile.",
+      "fr": "Un observatoire français des papillons de nuit décrit l’espèce comme assez rare sur sa maille de prospection et limite sa présence française aux Alpes. Cette observation locale n’est pas une évaluation mondiale de conservation. Aucune catégorie mondiale vérifiée de l’UICN ni tendance de population n’a été trouvée pour cette fiche."
+    }
   },
   "sources": [
-    {"title": {"en": "Idaea flaveolaria — Artemisiae / Observatoire des hétérocères", "fr": "Idaea flaveolaria — Artemisiae / Observatoire des hétérocères"}, "url": "https://oreina.org/artemisiae/observatoire/index.php?action=fiche&d=hetero&id=248419&module=fiche", "consulted": "2026-10-14", "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"], "facts": ["French account gives the name Acidalie jaune, alpine distribution, sunny flower-rich high-altitude meadow habitat, rarity on its grid, and says larval food and habits remain unobserved."]},
-    {"title": {"en": "Idaea flaveolaria — LepiWiki", "fr": "Idaea flaveolaria — LepiWiki"}, "url": "https://lepiforum.org/wiki/page/Idaea_flaveolaria", "consulted": "2026-10-14", "supports": ["identification", "habitat", "behavior", "reproduction"], "facts": ["German-language specialist moth reference provides adult identification imagery, taxonomic history and records from Alpine localities."]},
-    {"title": {"en": "Acidalie jaune, Idaea flaveolaria — Randoscartes", "fr": "Acidalie jaune, Idaea flaveolaria — Randoscartes"}, "url": "https://randoscartes.fr/papillons/papillon.php?numero=248419", "consulted": "2026-10-14", "supports": ["identification"], "facts": ["French field page describes wing coloration and comparison with a similar alpine Idaea; its wingspan estimate differs from other accounts and is not used as a profile measurement."]},
-    {"title": {"en": "Idaea flaveolaria — Lepidoptera Mundi", "fr": "Idaea flaveolaria — Lepidoptera Mundi"}, "url": "https://lepidoptera.eu/species/5484", "consulted": "2026-10-14", "supports": ["overview", "identification", "habitat", "ecology"], "facts": ["European moth catalogue gives a wingspan of 12–16 mm, provides views identified as male and female, and links to descriptive records."]}
+    {
+      "title": {
+        "en": "Idaea flaveolaria — Artemisiae / Observatoire des hétérocères",
+        "fr": "Idaea flaveolaria — Artemisiae / Observatoire des hétérocères"
+      },
+      "url": "https://oreina.org/artemisiae/observatoire/index.php?action=fiche&d=hetero&id=248419&module=fiche",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French account gives the name Acidalie jaune, alpine distribution, sunny flower-rich high-altitude meadow habitat, rarity on its grid, and says larval food and habits remain unobserved."
+      ]
+    },
+    {
+      "title": {
+        "en": "Idaea flaveolaria — LepiWiki",
+        "fr": "Idaea flaveolaria — LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/page/Idaea_flaveolaria",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "German-language specialist moth reference provides adult identification imagery, taxonomic history and records from Alpine localities."
+      ]
+    },
+    {
+      "title": {
+        "en": "Acidalie jaune, Idaea flaveolaria — Randoscartes",
+        "fr": "Acidalie jaune, Idaea flaveolaria — Randoscartes"
+      },
+      "url": "https://randoscartes.fr/papillons/papillon.php?numero=248419",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French field page describes wing coloration and comparison with a similar alpine Idaea; its wingspan estimate differs from other accounts and is not used as a profile measurement."
+      ]
+    },
+    {
+      "title": {
+        "en": "Idaea flaveolaria — Lepidoptera Mundi",
+        "fr": "Idaea flaveolaria — Lepidoptera Mundi"
+      },
+      "url": "https://lepidoptera.eu/species/5484",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "European moth catalogue gives a wingspan of 12–16 mm, provides views identified as male and female, and links to descriptive records.",
+        "Adult wingspan 12–16 mm; the reference illustrates male and female but does not provide separate sex-specific measurements or body mass."
+      ]
+    }
   ],
   "illustration_notes": "Small bright yellow-orange geometrid moth with fine transverse lines across both pairs of wings and a dark discal mark, shown with wings spread on white background.",
-  "uncertainties": ["Larval host plants and life history remain unobserved or poorly documented in the sources consulted.", "Wingspan estimates differ among references; the profile uses the 12–16 mm range in Lepidoptera Mundi.", "French records are alpine and localized; do not imply a broad lowland range."],
+  "uncertainties": [
+    "Larval host plants and life history remain unobserved or poorly documented in the sources consulted.",
+    "Wingspan estimates differ among references; the profile uses the 12–16 mm range in Lepidoptera Mundi.",
+    "French records are alpine and localized; do not imply a broad lowland range."
+  ],
   "reviewed": true,
   "review_note": "French field-observatory account and German/European lepidopteran references compared; unknown larval ecology stated directly."
 }

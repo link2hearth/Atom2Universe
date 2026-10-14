@@ -12,8 +12,8 @@
       "fr": "Le Lièvre d’Europe est un grand lagomorphe terrestre des milieux ouverts, présent dans une grande partie de l’Europe et de l’Asie occidentale. Contrairement aux lapins, il ne s’abrite pas dans un terrier collectif : il se repose dans une dépression superficielle et compte sur le camouflage, ses sens aiguisés et la fuite. Son cycle de vie dépend des ressources saisonnières des prairies et des terres agricoles."
     },
     "identification": {
-      "en": "Adults are typically tawny or reddish brown, with paler flanks, a light underside and a black upper surface to the tail. The long ears have dark tips; the hind legs are much longer and more powerful than the forelegs. These proportions support fast running and sharp turns across open ground. Compared with a European rabbit, a hare is larger, longer-legged and lacks the rabbit’s burrow-dwelling build.",
-      "fr": "L’adulte est généralement fauve ou brun roux, avec les flancs plus pâles, le ventre clair et le dessus de la queue noir. Ses longues oreilles ont l’extrémité sombre; ses membres postérieurs sont beaucoup plus longs et puissants que les antérieurs. Ces proportions favorisent la course et les virages brusques en terrain découvert. Plus grand et plus haut sur pattes que le lapin de garenne, il n’a pas sa morphologie fouisseuse."
+      "en": "Adults are typically tawny or reddish brown, with paler flanks, a light underside and a black upper surface to the tail. The long ears have dark tips; the hind legs are much longer and more powerful than the forelegs. These proportions support fast running and sharp turns across open ground. Compared with a European rabbit, a hare is larger, longer-legged and lacks the rabbit’s burrow-dwelling build. Adults have a head-and-body length of about 55–65 cm and weigh around 3.5–5 kg; these sources report seasonal and individual variation rather than a dependable sex-specific range.",
+      "fr": "L’adulte est généralement fauve ou brun roux, avec les flancs plus pâles, le ventre clair et le dessus de la queue noir. Ses longues oreilles ont l’extrémité sombre; ses membres postérieurs sont beaucoup plus longs et puissants que les antérieurs. Ces proportions favorisent la course et les virages brusques en terrain découvert. Plus grand et plus haut sur pattes que le lapin de garenne, il n’a pas sa morphologie fouisseuse. Les adultes ont une longueur tête-corps d’environ 55 à 65 cm et pèsent autour de 3,5 à 5 kg ; les sources signalent des variations saisonnières et individuelles plutôt qu’une plage fiable selon le sexe."
     },
     "habitat": {
       "en": "The species uses grassland, pasture, arable fields and other open or lightly covered ground. Hares remain above ground through the year. A resting hollow, called a form, may lie among grasses or crop plants, in a dry sheltered patch or on a slight rise. The animal presses into the hollow with its ears laid back, so its outline is difficult to see; it does not excavate a warren like a rabbit.",
@@ -60,7 +60,8 @@
       "facts": [
         "Species account reports hares living above ground year-round in forms rather than rabbit warrens.",
         "Describes long ears, powerful hind limbs, pelage, herbivory, caecotrophy, boxing and precocial young.",
-        "Notes species-specific European distribution and red fox as a predator in Europe."
+        "Notes species-specific European distribution and red fox as a predator in Europe.",
+        "Adults 550–650 mm head-body length and 3.5–5.0 kg; mass varies seasonally in both sexes."
       ]
     },
     {

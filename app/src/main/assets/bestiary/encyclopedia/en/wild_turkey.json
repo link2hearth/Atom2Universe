@@ -1,0 +1,58 @@
+{
+  "id": "wild_turkey",
+  "name": "Wild turkey",
+  "scientific": "Meleagris gallopavo",
+  "group": "birds",
+  "sections": {
+    "overview": "The wild turkey is a large North American forest bird that moves between woods and clearings. It walks and scratches for much of the day, yet flies strongly enough to reach night roosts in trees and escape danger.",
+    "identification": "Adult males are substantially larger than females: usual masses are about 6.8–11 kilograms for males and 3.6–5.4 kilograms for hens, varying among populations and seasons. A male’s bare blue-red head bears small fleshy caruncles; a soft flap called a snood hangs above the bill, red throat wattles and a black bristly breast beard stand out, and long legs carry sharp spurs. Hens are smaller and browner, usually without a beard. Both sexes have barred wings and a broad rounded tail, closed at rest and fanned during display.",
+    "habitat": "Across much of North America, turkeys use mature mixed or hardwood forest with fields and grassy openings. In the southeastern United States, trees supply roosts and acorns, while open low cover helps birds spot predators and shelters nests and insect-rich brood habitat.",
+    "diet": "Turkeys are omnivores, though plant foods dominate: they eat seeds, acorns, nuts, berries and green plants, plus insects and other invertebrates, especially when young. They scratch leaf litter and peck food from the ground, sometimes reaching fruit in shrubs. They swallow grit; in the muscular gizzard, contractions and hard particles grind coarse seeds and plant matter into smaller pieces for digestion.",
+    "behavior": "Turkeys are social, but flock structure varies by season and sex: males often associate together outside breeding, while hens travel with young and may join other families. At dusk, birds fly up into sheltered trees to roost; their powerful burst flight also helps them escape danger. Many broad-breasted commercial strains have been selected for heavy bodies and have limited flight ability. In spring, males gobble, strut with lowered wings and fan the tail, using sound and plumage to attract females and signal to rivals.",
+    "reproduction": "A male may display to several females and does not help build the nest or raise young; females visit display grounds to mate. A genetic study of eastern wild turkeys in Georgia and South Carolina found that some clutches had multiple fathers. The hen scratches a shallow nest in leaf litter or low cover and usually lays one seasonal clutch of roughly 4–17 eggs; she incubates for about 25–31 days. The down-covered poults hatch well developed, leave the nest within about a day, and follow their mother, who broods and protects them. They feed themselves early, often taking many insects, and typically can fly to tree roosts at two to three weeks; this is a vulnerable transition because they sleep on the ground before then.",
+    "ecology": "Turkeys eat seeds and nuts, and their young consume many insects; they in turn feed predators such as coyotes, bobcats, eagles and owls, while raccoons and snakes take eggs and young.",
+    "conservation": "The IUCN global assessment completed on 9 August 2018 and published in 2018 classified the wild turkey as Least Concern; this worldwide category is not a guarantee that every local population is secure. Hunting and forest clearance caused severe declines in the nineteenth and early twentieth centuries. Early releases of farm-raised birds often failed, but wildlife agencies later restored populations by trapping wild birds and moving them into suitable habitat; New York’s program began in 1959 and supplied other northeastern states and Ontario. The bird is also the ancestor of domestic turkeys: Indigenous peoples in Mexico domesticated it centuries before Europeans carried domestic birds to Europe. Hunting remains an important human use and a management consideration, with seasons and rules determined locally."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Wild_Turkey/id",
+      "title": "Wild Turkey Identification — All About Birds, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Meleagris_gallopavo/",
+      "title": "Meleagris gallopavo (wild turkey) — Animal Diversity Web"
+    },
+    {
+      "url": "https://content.ces.ncsu.edu/wild-turkey",
+      "title": "Wild Turkey — NC State Extension Publications"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/wild_turkey/lifehistory",
+      "title": "Wild Turkey Life History — All About Birds, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.pa.gov/agencies/pgc/wildlife/discover-pa-wildlife/turkey",
+      "title": "Turkey — Pennsylvania Game Commission"
+    },
+    {
+      "url": "https://academic.oup.com/auk/article/143/1/1/8279657",
+      "title": "Genetic analysis provides insight into the mating system of Meleagris gallopavo (Wild Turkey) and reveals frequent extra-pair paternity"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/wild_turkey",
+      "title": "Wild Turkey Overview — All About Birds, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://dec.ny.gov/nature/animals-fish-plants/wild-turkey",
+      "title": "Wild Turkey — New York State Department of Environmental Conservation"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22679525A132051953.en",
+      "title": "Wild turkey, Meleagris gallopavo — IUCN Red List of Threatened Species 2018"
+    },
+    {
+      "url": "https://www.dnr.sc.gov/news/2019/nov/nov25_turkeys.php",
+      "title": "The difference between wild and domestic turkeys — South Carolina Department of Natural Resources"
+    }
+  ]
+}

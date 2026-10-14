@@ -1,0 +1,42 @@
+{
+  "id": "red_deer",
+  "name": "Cerf élaphe",
+  "scientific": "Cervus elaphus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le cerf élaphe est un grand ruminant à sabots, indigène d’Europe, de l’Atlas, d’Anatolie, du Caucase et du nord-ouest de l’Iran. Les classifications actuelles le distinguent du wapiti et du cerf d’Asie centrale. Des populations introduites vivent ailleurs, notamment en Nouvelle-Zélande.",
+    "identification": "En Grande-Bretagne, le cerf adulte mesure 1,07 à 1,37 m au garrot et pèse 90 à 190 kg ; la biche mesure 1,07 à 1,22 m et pèse 63 à 120 kg. Ces valeurs varient selon l’habitat et la population ; la source consultée ne donne pas la longueur du corps. Son pelage brun roux en été devient plus gris ou sombre en hiver ; il n’est pas tacheté. Le cerf est généralement plus grand et plus foncé que la biche. Les bois ramifiés des mâles tombent chaque année, repoussent sous le velours puis sont frottés à maturité. Leur nombre de pointes n’indique pas sûrement l’âge.",
+    "habitat": "Il fréquente forêts, lisières, fourrés, prairies et landes, se nourrissant en terrain ouvert avec un couvert proche. Son habitat varie selon les régions. Introduits depuis 1851, les cerfs occupent forêts et prairies à touffes des principales îles néo-zélandaises.",
+    "diet": "Il broute graminées et herbes, et prélève feuilles, pousses et arbustes. Jeunes pousses au printemps, écorce et fougères en hiver : les aliments varient selon saison et lieu. Ruminant, il régurgite et remâche les végétaux ; son régime diffère entre forêt et milieux ouverts.",
+    "behavior": "Les biches vivent souvent avec les jeunes ; les cerfs adultes restent à l’écart hors reproduction. En automne, les mâles brament et paradent. Les rivaux marchent parfois côte à côte, puis s’affrontent bois entrecroisés ; les vainqueurs forment des harems temporaires. Les sexes se séparent après le rut.",
+    "reproduction": "En Europe, le rut a généralement lieu en automne, mais varie selon latitude et hémisphère. Après environ huit mois, la biche met bas un faon à la fin du printemps ou au début de l’été. Son pelage roux tacheté pâlit en quelques mois. D’abord, il se cache pendant que sa mère se nourrit à proximité.",
+    "ecology": "Pâturage et broutage modifient la végétation selon la densité et le milieu. Dans des prairies subalpines suisses, des graines dans les déjections ont montré que les cerfs dispersent des plantes entre zones d’alimentation et de repos. L’effet sur les communautés végétales varie selon les sites.",
+    "conservation": "L’évaluation mondiale UICN, réalisée le 12 octobre 2015 et publiée en 2018, classait l’espèce « Préoccupation mineure », vu sa vaste aire et ses populations supposées nombreuses. Ce statut daté n’est pas un nouveau dénombrement ; des régressions et baisses locales probables étaient aussi signalées. En Nouvelle-Zélande, les cerfs introduits endommagent parfois les plantes indigènes et la régénération forestière, d’où leur contrôle. Les limites taxonomiques en Asie ont changé depuis cette évaluation."
+  },
+  "sources": [
+    {
+      "url": "https://bds.org.uk/information-advice/about-deer/deer-species/red-deer/",
+      "title": "Cerf élaphe — The British Deer Society"
+    },
+    {
+      "url": "https://www.mnhn.fr/en/red-deer",
+      "title": "Cerf élaphe — Muséum national d’Histoire naturelle"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T55997072A142404453.en",
+      "title": "Cervus elaphus — Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.doc.govt.nz/nature/pests-and-threats/animal-pests-and-threats/deer/",
+      "title": "Cerfs : menaces pour la faune — Department of Conservation, Nouvelle-Zélande"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1007/s10344-025-01922-7",
+      "title": "Le rôle essentiel mais complexe du cerf élaphe dans les services écosystémiques : revue européenne — European Journal of Wildlife Research"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1006313/",
+      "title": "Cervus elaphus — Mammal Diversity Database, American Society of Mammalogists"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "id": "mallard",
+  "name": "Canard colvert",
+  "scientific": "Anas platyrhynchos",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Colvert, canard répandu de l’hémisphère Nord, fréquente marais, fermes et parcs urbains. Son succès tient à un régime souple, à sa tolérance des eaux peu profondes et à la capacité de nombreuses populations à hiverner près d’eaux libres. En Amérique du Nord, l’adulte mesure généralement 50 à 65 cm, pour 82 à 95 cm d’envergure ; les sexes ont une taille proche et pèsent souvent de 0,9 à 1,4 kg. Ces repères varient selon les populations et l’état des individus.",
+    "identification": "En plumage nuptial, le mâle adulte se reconnaît à sa tête vert irisé, son fin collier blanc, sa poitrine marron, son corps gris et ses plumes caudales noires recourbées. La femelle, brun moucheté, porte un trait sombre à l’œil et un bec orange et noir ; ce plumage se fond dans les abris de nidification. Les deux sexes ont un miroir alaire bleu violet bordé de blanc, visible lorsque l’aile s’ouvre. Après la reproduction, le mâle prend un plumage d’éclipse terne proche de celui de la femelle et renouvelle ses rémiges, ce qui le rend temporairement incapable de voler ; une mue ultérieure lui rend ses couleurs vives. L’adulte mesure environ 50 à 65 cm de long, pour une envergure de 82 à 95 cm. Les mesures de baguage britanniques donnent une masse moyenne de 1 270 g chez les mâles et de 1 130 g chez les femelles; ce sont des moyennes de population et la masse varie avec la saison. Je n’ai pas trouvé de mesure utile de hauteur ou de largeur du corps.",
+    "habitat": "Le Colvert privilégie les eaux abritées et peu profondes : marais, mares, petits lacs, estuaires et champs inondés offrent nourriture et couvert proches. Il pâture aussi à terre, notamment dans les chaumes, et fréquente volontiers les bassins artificiels et les parcs urbains. Le nid se trouve généralement sur un sol sec, dans l’herbe ou une végétation dense, parfois à bonne distance de l’eau ; après l’éclosion, la femelle conduit les canetons du nid vers l’eau. L’association d’eaux nourricières et d’un couvert tranquille compte davantage qu’une formation végétale précise. En Amérique du Nord, les petites zones humides saisonnières des Prairies à mares jouent un rôle majeur pour la reproduction et l’élevage des jeunes.",
+    "diet": "Le large bec aplati du Colvert porte des lamelles en peigne qui retiennent les particules comestibles dans l’eau et la vase. Il se nourrit généralement en barbotant en surface ou bascule le corps pour atteindre plantes immergées et invertébrés, plutôt qu’en poursuivant ses proies sous l’eau. L’eau et les aliments traversent le bec ; les lamelles retiennent les particules tandis que l’eau et les débris fins s’évacuent. Graines, végétaux aquatiques, insectes, vers, escargots et crustacés composent un régime dont l’équilibre varie selon la saison et les ressources locales. À terre, il prélève aussi des grains et d’autres végétaux, puis rejoint l’eau pour rincer et séparer les matières indigestes de la bouchée.",
+    "behavior": "Hors nidification, les Colverts se rassemblent en groupes pour se nourrir ou se reposer, et les couples se forment bien avant la ponte. La parade mêle hochements de tête, cris et poursuites ; la femelle lance le coin-coin sonore, le mâle un rauque discret. De nombreux oiseaux nordiques gagnent le sud lorsque les zones humides gèlent, mais les déplacements diffèrent : certaines populations sont sédentaires, d’autres mêlent résidents et visiteurs saisonniers.",
+    "reproduction": "Les couples se forment souvent en automne ou en hiver, plusieurs mois avant la ponte, et durent généralement une saison plutôt que toute la vie. La femelle aménage au sol une coupe d’herbes garnie de duvet prélevé sur sa poitrine, puis pond une couvée qui compte le plus souvent 11 à 14 œufs dans les relevés britanniques. Elle seule couve pendant environ 27 à 28 jours ; le mâle rejoint alors d’autres mâles. Les canetons naissent couverts de duvet, quittent vite le nid, nagent et se nourrissent sous la conduite de leur mère. Nidifuges, ils restent exposés aux prédateurs et dépendent d’elle pour leur protection et l’accès aux zones nourricières. Ils prennent généralement leur envol entre 50 et 60 jours. Le Colvert atteint sa maturité reproductive vers un an.",
+    "ecology": "En consommant végétaux aquatiques, graines, invertébrés et cultures, le Colvert prélève la production végétale et de petites proies animales dans les zones humides comme les terres agricoles. Son large bec et son régime opportuniste recoupent ceux d’autres canards barboteurs ; la taille des proies et la quantité de débris modifient la part de nourriture filtrée dans une même eau. Les invertébrés aquatiques sont particulièrement importants pour les canetons en croissance : dans des mares expérimentales des Prairies nord-américaines, leur abondance accrue était associée à une croissance initiale plus rapide. Mammifères, oiseaux, reptiles et poissons prennent œufs ou jeunes ; couvert dense et mares productives influencent donc leur survie. Le Colvert s’hybride aussi avec des canards apparentés ; des lâchers d’oiseaux d’élevage ont introduit une ascendance domestique dans certaines populations sauvages d’Europe et d’Amérique du Nord.",
+    "conservation": "L’évaluation mondiale de BirdLife International pour la Liste rouge de l’UICN, datée du 5 juin 2025, classe le Colvert en préoccupation mineure tout en indiquant une tendance démographique décroissante. Cette catégorie mondiale tient compte de son immense aire et de ses effectifs ; elle ne signifie pas que toutes les populations régionales sont stables. En Amérique du Nord, les suivis et la gestion mesurent depuis longtemps les effectifs nicheurs, l’état des habitats et les prélèvements, tandis que les zones humides restent essentielles aux nids et à la survie des nichées. Les lâchers d’oiseaux d’élevage constituent une autre pression documentée : des études génomiques détectent encore une introgression domestique dans certaines régions d’Europe et d’Amérique du Nord. Le Colvert est aussi l’ancêtre de la plupart des races de canards domestiques ; oiseaux échappés ou férals peuvent donc compliquer la conservation locale de canards sauvages apparentés."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Mallard",
+      "title": "Canard colvert — All About Birds, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.fws.gov/species/mallard-anas-platyrhynchos",
+      "title": "Canard colvert — U.S. Fish and Wildlife Service"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/mallard",
+      "title": "Mallard BirdFacts — British Trust for Ornithology"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/birds/mallard/",
+      "title": "Canard colvert — Australian Museum"
+    },
+    {
+      "url": "https://research.fs.usda.gov/feis/species-reviews/anpl",
+      "title": "Anas platyrhynchos, mallard — US Forest Service FEIS"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/17230398/",
+      "title": "Prédire le partage des ressources chez les canards filtreurs à partir de leur morphologie — The American Naturalist"
+    },
+    {
+      "url": "https://tidsskrift.dk/Wildfowl/article/view/154592",
+      "title": "Les interruptions de l’alimentation terrestre réduisent la fraction non digestible — Wildfowl"
+    },
+    {
+      "url": "https://digitalcommons.unl.edu/usgsnpwrc/224/",
+      "title": "Croissance et survie des canetons colverts selon les invertébrés aquatiques — Journal of Wildlife Management"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T22680186A281835571.en",
+      "title": "Anas platyrhynchos — Liste rouge de l’UICN, évaluation 2025"
+    },
+    {
+      "url": "https://www.fws.gov/library/collections/waterfowl-population-status-reports",
+      "title": "Rapports sur l’état des populations de sauvagine — U.S. Fish and Wildlife Service"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10404241/",
+      "title": "Ce que signifie être sauvage : effets génétiques des lâchers de colverts domestiques — Molecular Ecology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Anas_platyrhynchos/",
+      "title": "Anas platyrhynchos — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Mallard/id",
+      "title": "Mallard Identification | Cornell Lab of Ornithology, All About Birds"
+    }
+  ]
+}

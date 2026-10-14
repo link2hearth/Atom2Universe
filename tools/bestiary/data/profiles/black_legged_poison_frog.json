@@ -12,8 +12,8 @@
       "fr": "Cette grenouille à peau toxique est endémique des forêts du Chocó, sur le versant pacifique de la Colombie, où elle marche et bondit dans la litière humide. Son corps jaune ou orange et ses membres sombres avertissent les prédateurs de ses alcaloïdes défensifs cutanés."
     },
     "identification": {
-      "en": "Reported adult lengths vary by source, around 32–43 millimetres from snout to vent; females are usually slightly larger. The back and upper limbs are golden yellow to orange, while the legs are mainly black, sometimes spotted blue or gold. Four forelimb fingers and five hind toes have adhesive tips for climbing.",
-      "fr": "Les longueurs adultes publiées varient selon les sources, autour de 32 à 43 millimètres du museau au cloaque; les femelles sont généralement un peu plus grandes. Le dos et le haut des membres sont jaune doré à orange, tandis que les pattes sont surtout noires, parfois tachetées de bleu ou de doré. Quatre doigts antérieurs et cinq orteils postérieurs portent des extrémités adhésives pour grimper."
+      "en": "Reported adult lengths vary by source, around 32–43 millimetres from snout to vent; females are usually slightly larger. The back and upper limbs are golden yellow to orange, while the legs are mainly black, sometimes spotted blue or gold. Four forelimb fingers and five hind toes have adhesive tips for climbing. A reliable adult body-mass range was not found in the consulted sources; the measurements below are snout-to-vent lengths, not total length.",
+      "fr": "Les longueurs adultes publiées varient selon les sources, autour de 32 à 43 millimètres du museau au cloaque; les femelles sont généralement un peu plus grandes. Le dos et le haut des membres sont jaune doré à orange, tandis que les pattes sont surtout noires, parfois tachetées de bleu ou de doré. Quatre doigts antérieurs et cinq orteils postérieurs portent des extrémités adhésives pour grimper. Les sources consultées ne donnent pas de plage fiable de masse adulte ; les mesures ci-dessous sont des longueurs du museau au cloaque, et non la longueur totale."
     },
     "habitat": {
       "en": "It inhabits humid tropical forests on Colombia’s Pacific slope, from Chocó to western Andean foothills. Records span roughly 400–1,500 metres; it shelters and forages in damp leaf litter near streams.",
@@ -59,16 +59,16 @@
         "Summarizes Chocó distribution, appearance, breeding, threats and the dated IUCN listing."
       ],
       "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "identification.en.2",
+        "identification.fr.2",
         "overview.en.1",
         "overview.en.2",
         "overview.fr.1",
         "overview.fr.2",
-        "identification.en.2",
-        "identification.fr.2",
         "reproduction.en.1",
-        "reproduction.fr.1",
-        "conservation.en.2",
-        "conservation.fr.2"
+        "reproduction.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -94,14 +94,14 @@
         "University of Michigan account describes prey, calling, clutches, parental transport and larval timing."
       ],
       "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
         "diet.en.1",
         "diet.en.2",
         "diet.fr.1",
         "diet.fr.2",
-        "behavior.en.1",
-        "behavior.fr.1",
-        "behavior.en.2",
-        "behavior.fr.2",
         "reproduction.en.3",
         "reproduction.fr.3"
       ],
@@ -129,14 +129,14 @@
         "French account gives Colombian departments, elevation, morphology, tadpole development and IUCN label."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.3",
-        "identification.fr.3",
         "habitat.en.1",
-        "habitat.fr.1",
         "habitat.en.2",
+        "habitat.fr.1",
         "habitat.fr.2",
+        "identification.en.1",
+        "identification.en.3",
+        "identification.fr.1",
+        "identification.fr.3",
         "reproduction.en.2",
         "reproduction.fr.2"
       ],
@@ -166,8 +166,8 @@
         "diet.en.3",
         "diet.fr.3",
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
+        "ecology.fr.1",
         "ecology.fr.2"
       ],
       "budget": {
@@ -193,7 +193,9 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1"
+        "conservation.fr.1",
+        "identification.en.4",
+        "identification.fr.4"
       ],
       "budget": {
         "limit": 200,

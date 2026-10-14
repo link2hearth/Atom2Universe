@@ -1,0 +1,82 @@
+{
+  "id": "wolverine",
+  "name": "Wolverine",
+  "scientific": "Gulo gulo",
+  "group": "mammals",
+  "sections": {
+    "overview": "The wolverine is a wide-ranging member of the weasel family found across northern Eurasia and North America. It occupies boreal forest, tundra and mountains, usually at low density and across large individual ranges. ",
+    "identification": "The wolverine has a broad head, small rounded ears, a stout neck, short powerful legs, large feet and a bushy tail. Adults measure about 65–105 cm from nose to rump, with a 13–26 cm tail. In Alaska, adult males are reported at 11–18 kg and females at 6–12 kg. Dense, coarse fur is usually dark brown, often with pale face or throat markings and lighter bands along the flanks. Its broad skull and strong teeth can crush bones.",
+    "habitat": "The circumpolar range extends from northern forests and taiga to Arctic and alpine tundra. In Canada, wolverines occupy northern and western forests, western mountain tundra and Arctic tundra. At the southern edge of the North American range, populations are sparse and fragmented in mountain landscapes. Individuals travel among forest, open slopes, rock and tundra as seasons and prey change. Low natural densities and large home ranges make connected habitat important.",
+    "diet": "Wolverines are primarily scavengers, often using ungulate carcasses left by wolves and other predators. They also hunt small mammals and birds and occasionally kill larger prey, including moose or caribou calves. In the studies synthesized by USFS, hunts for large ungulates were most successful in early spring, when deep, soft snow limited their movement. Diet shifts with season and local prey. In Arctic Alaska, cached ground squirrels and caribou remains were important winter foods. Surplus meat is cached under snow, in soil or trees.",
+    "behavior": "Wolverines are mostly solitary and active throughout the year, by day or night. Adult ranges can be very large; a male’s range may overlap those of several females, while same-sex overlap is more restricted in some studied populations. A 12-year analysis of genetically identified scats in central Norway found larger male than female ranges and avoidance between same-sex individuals; avoidance weakened after a territory holder died. A USFS review describes scent marks as advertising an animal’s current position.",
+    "reproduction": "Mating takes place in the warm season, commonly from late spring into summer. After fertilization, the embryo may pause before implanting, so birth follows months after mating. Active gestation lasts 30–40 days. Females give birth in late winter or early spring, usually to two or three kits, in a sheltered den. Snow tunnels are common in northern and mountain settings, but roots, logs and rocks also provide den sites. Newborns depend on their mother’s milk and protection; she may move them among dens as they grow. Young leave dens in spring and continue learning to forage before dispersing. In the Scandinavian population studied, females first reproduced at about three years.",
+    "ecology": "Carrion creates a feeding link with larger predators and human hunting of ungulates. In eastern Finland, moose killed by people or wolves made up 55% of diet occurrences in samples from four breeding females; mountain hare was most frequent among males and non-breeding females. This small study is a regional example. A Swedish monitoring study recorded 1,589 reproductive events from 2000 to 2018 and found events expanding into areas with less persistent spring snow. Associations differed among regions and periods: April snow depth remained positively associated with reproductive-event occurrence in the Alpine-Reindeer region, while the snow-cover relationship changed in other regions.",
+    "conservation": "The IUCN global assessment completed on 15 May 2015 and published in 2016 classified the wolverine as Least Concern, citing its broad range and large remaining populations while noting decline from persecution and land-use change. This dated global category does not describe every population. Trapping historically removed wolverines from parts of their range; harvest, conflict, roads, development and fragmentation remain concerns in some regions. Canada’s 2014 COSEWIC assessment treated the species as one national population and designated it Special Concern. Southern mountain populations are vulnerable to isolation from the northern core. Long-term monitoring, connected habitat and mortality management matter alongside climate projections. "
+  },
+  "sources": [
+    {
+      "url": "https://www.adfg.alaska.gov/index.cfm?adfg=wolverine.main",
+      "title": "Wolverine Species Profile — Alaska Department of Fish and Game"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Gulo_gulo/",
+      "title": "Gulo gulo (wolverine) — Animal Diversity Web, University of Michigan Museum of Zoology"
+    },
+    {
+      "url": "https://mnmammals.d.umn.edu/wolverine",
+      "title": "Wolverine — Minnesota Mammals, University of Minnesota Duluth"
+    },
+    {
+      "url": "https://doi.org/10.5735/086.050.0109",
+      "title": "Effect of Reproductive Status on the Diet Composition of Wolverines in Eastern Finland — Annales Zoologici Fennici"
+    },
+    {
+      "url": "https://www.adfg.alaska.gov/static/home/library/pdfs/wildlife/propubs/87_magoun_summer_winter_diets_wolverine_arctic_ak.pdf",
+      "title": "Summer and Winter Diets of Wolverine in Arctic Alaska — Alaska Department of Fish and Game"
+    },
+    {
+      "url": "https://uu.diva-portal.org/smash/get/diva2%3A917173/FULLTEXT01.pdf",
+      "title": "Noninvasive Genetic Sampling Reveals Intrasex Territoriality in Wolverines — Ecology and Evolution"
+    },
+    {
+      "url": "https://research.fs.usda.gov/feis/species-reviews/gugu",
+      "title": "Gulo gulo, wolverine — US Forest Service Fire Effects Information System"
+    },
+    {
+      "url": "https://research.slu.se/en/publications/population-ecology-of-scandinavian-wolverines/",
+      "title": "Population Ecology of Scandinavian Wolverines — Swedish University of Agricultural Sciences"
+    },
+    {
+      "url": "https://digitalcommons.unl.edu/parasitologyfacpubs/526/",
+      "title": "Reproduction in the Wolverine, Gulo gulo — Journal of Mammalogy"
+    },
+    {
+      "url": "https://doi.org/10.1111/gcb.16908",
+      "title": "Recolonization following past persecution questions the importance of persistent snow cover as a range limiting factor for wolverines — Global Change Biology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T9561A45198537.en",
+      "title": "Gulo gulo — The IUCN Red List of Threatened Species (assessment completed 2015)"
+    },
+    {
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/wolverine-status-2014.html",
+      "title": "Wolverine: COSEWIC Assessment and Status Report — Government of Canada (2014)"
+    },
+    {
+      "url": "https://www.science.smith.edu/departments/biology/VHAYSSEN/msi/pdf/i0076-3519-499-01-0001.pdf",
+      "title": "Wolverine — Mammalian Species account 499, American Society of Mammalogists"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.gecco.2022.e02019",
+      "title": "Wolverines in a Changing Landscape and Warming Climate — Global Ecology and Conservation"
+    },
+    {
+      "url": "https://doi.org/10.1139/er-2024-0125",
+      "title": "Wolverines and Wilderness: A Review of Response to Human Disturbance — Environmental Reviews"
+    },
+    {
+      "url": "https://research.fs.usda.gov/treesearch/29680",
+      "title": "Wolverine Conservation and Management — Journal of Wildlife Management"
+    }
+  ]
+}

@@ -44,14 +44,20 @@
     {
       "title": {
         "en": "Snipe — BTO BirdFacts, British Trust for Ornithology",
-        "fr": "Bécassine des marais — BirdFacts du BTO, British Trust for Ornithology"
+        "fr": "Bécassine des marais — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/snipe",
-      "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "reproduction", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Adults average 108.2 g, wing 136 mm; first clutch average 30 April, 4 eggs, incubation 18–20 days by female, fledging 19–20 days; breeding at 2 years; max age 16 years.",
-        "UK ~67,000 pairs (2016); breeding range −31.5% 1968–72 to 2008–11; Europe declining since 1980; UK Amber; IUCN Least Concern."
+        "UK ~67,000 pairs (2016); breeding range −31.5% 1968–72 to 2008–11; Europe declining since 1980; UK Amber; IUCN Least Concern.",
+        "British adults average about 108 g and have a mean wing length of about 136 mm."
       ]
     },
     {
@@ -61,7 +67,12 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/snipe",
       "consulted": "2026-10-12",
-      "supports": ["identification", "behavior", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Mottled brown above with paler buff back stripes, streaked chest, long straight bill, short legs; skulking wader.",
         "Amber-listed; moderate UK decline over 25 years, particularly steep in lowland wet grassland."
@@ -74,7 +85,15 @@
       },
       "url": "https://animaldiversity.org/accounts/Gallinago_gallinago/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "Length about 23–28 cm, bill about 6.4 cm; probes wet soil; Northumberland diet study: earthworms about 61% and crane fly larvae about 24% by dry mass; males drum by diving, air passing through outer tail feathers; females prefer dominant males.",
         "Predators: red fox, carrion crow, ermine; hunted, about 1.5 million birds per year in Europe."

@@ -1,0 +1,34 @@
+{
+  "id": "wolf",
+  "name": "Grey wolf",
+  "scientific": "Canis lupus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The grey wolf is a highly adaptable wild canid whose former range covered much of the Northern Hemisphere. It persists in parts of North America, Europe and Asia. Populations differ in size, coat and prey with local climate, food and human pressures.",
+    "identification": "In Yellowstone, adult males average about 50 kg and 81 cm at the shoulder; females average 41 kg and 77 cm. Average total length is 181 cm in that regional reference. These figures vary across the species’ large range; dependable species-wide width data were not found. This large, long-legged canid has a broad muzzle, upright ears, powerful jaws and a bushy tail. Dense underfur insulates it in cold conditions. Coat shades range from white through grey, brown and cinnamon to nearly black; northern populations tend to be larger.",
+    "habitat": "Wolves occupy Arctic tundra, forests, grasslands, mountains and some arid landscapes. They need prey and room to move, but not only untouched wilderness; some populations live near settlements. Abundance tends to track prey availability, while roads and development can fragment habitat.",
+    "diet": "Wolves mainly eat mammals. Packs hunt ungulates such as deer, elk, moose, reindeer or bison; lone wolves also take beavers, rabbits and small prey. They scavenge too. Diet shifts seasonally: elk dominate winter prey in Yellowstone, deer more in summer.",
+    "behavior": "A wild pack is usually a family: a breeding pair and offspring, some helping care for pups. Young wolves may disperse to form packs. Howling and scent marks signal territory.",
+    "reproduction": "Breeding is seasonal and timing shifts across the range; Yellowstone wolves usually mate in February. After 62–63 days, a female gives birth in a den. Newborns are blind and deaf; their eyes open at about two weeks. Adults bring food as they grow.",
+    "ecology": "Wolves affect prey through hunting, but effects depend on prey vulnerability, weather, other predators and human hunting. Carcasses also feed scavengers: Yellowstone observations record ravens, magpies, coyotes, bears, eagles and invertebrates at wolf kills. These relationships vary over time and place.",
+    "conservation": "The global IUCN assessment dated 30 August 2018 classified the species as Least Concern and noted competition with people over livestock and game, persecution and habitat fragmentation. A global category can conceal regional decline or recovery: legal protection, prey, connectivity and conflict differ among populations."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Canis_lupus/",
+      "title": "Canis lupus (gray wolf) — Animal Diversity Web, University of Michigan Museum of Zoology"
+    },
+    {
+      "url": "https://www.nps.gov/yell/learn/nature/wolf.htm",
+      "title": "Wolf Ecology — Yellowstone National Park, U.S. National Park Service"
+    },
+    {
+      "url": "https://www.nationalzoo.si.edu/animals/gray-wolf",
+      "title": "Gray Wolf — Smithsonian’s National Zoo and Conservation Biology Institute"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T3746A163508960.en",
+      "title": "Canis lupus — The IUCN Red List of Threatened Species (2018 assessment)"
+    }
+  ]
+}

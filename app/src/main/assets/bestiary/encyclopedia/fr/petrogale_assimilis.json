@@ -1,0 +1,30 @@
+{
+  "id": "petrogale_assimilis",
+  "name": "Petrogale assimilis",
+  "scientific": "Petrogale assimilis",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le petrogale assimilis est un marsupial de taille moyenne du nord-est du Queensland, en Australie, qui vit parmi les affleurements rocheux, les falaises et les amas de blocs. Il s’abrite dans les rochers le jour et sort au crépuscule pour se nourrir.",
+    "identification": "Les mâles pèsent en moyenne environ 4,7 kg et les femelles 4,3 kg. Le pelage est gris chez les animaux fraîchement mués puis devient brun plus pâle ou plus foncé au fil de l’année, avec le dessous et les membres plus clairs, couleur sable, les pattes foncées, et une queue qui fonce vers un pinceau indistinct à l’extrémité. Certains individus ont une bande pâle sur la joue et une bande sombre sur la tête.",
+    "habitat": "Il vit en terrain rocheux, sur des falaises, des pentes, des affleurements et des amas de blocs, le plus souvent dans une forêt tropicale claire, d’où une répartition fragmentée. On le trouve de Townsville vers le sud jusqu’aux basses vallées des rivières Burdekin et Bowen, vers le nord-ouest jusqu’à Croydon, vers le sud-ouest jusqu’à Hughenden, et sur les îles Palm et Magnetic.",
+    "diet": "C’est un herbivore généraliste, qui mange de l’herbe nouvelle après la pluie, des feuilles de ligneux et de petites herbacées, complétées par des fruits, des graines, des fleurs et un peu de matière animale comme des larves d’insectes. Animal Diversity Web le décrit de façon plus étroite comme un mangeur de feuilles.",
+    "behavior": "Il se nourrit souvent la nuit et se voit surtout le soir, quand il quitte ses abris rocheux pour des zones dégagées, et il reste fidèle à sa zone d’abris. Des liens stables unissent un mâle adulte à une ou deux femelles, qui partagent les abris de jour, se toilettent mutuellement et défendent leur territoire, bien que des études génétiques montrent que ces liens ne sont pas strictement exclusifs.",
+    "reproduction": "La reproduction est continue, mais une sécheresse prolongée peut réduire le nombre de jeunes qui survivent. La gestation dure environ 29 à 34 jours et la femelle a en général un seul petit, qui reste dans la poche pendant six à sept mois environ et est sevré vers 11 mois. Les femelles sont matures vers 18 à 19 mois et les mâles vers deux ans.",
+    "ecology": "Son domaine vital s’étend en saison des pluies et se réduit en fin de saison sèche, en fonction de la nourriture disponible. Ses prédateurs connus comprennent les chats errants et les renards roux, mais la prédation le menace rarement.",
+    "conservation": "La base Mammal Diversity Database l’indique comme préoccupation mineure sur la Liste rouge de l’UICN, et Animal Diversity Web décrit des populations assez stables. Les prédateurs introduits, surtout pendant les sécheresses, sont une menace possible."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Petrogale_assimilis/",
+      "title": "Petrogale assimilis — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://rootourism.com/fsheet37.htm",
+      "title": "Fiche sur le petrogale assimilis — Rootourism"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000293",
+      "title": "Petrogale assimilis — Mammal Diversity Database"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "jaguar",
+  "name": "Jaguar",
+  "scientific": "Panthera onca",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le jaguar est le plus grand félin des Amériques et le seul représentant actuel de son genre sur ce continent. Son aire s’étend du Mexique à l’Amérique du Sud, avec les populations les plus continues concentrées autour du bassin amazonien.",
+    "identification": "Le jaguar a un corps compact et musclé, une tête large, des membres courts et un pelage fauve ou roux. Ses rosettes sombres contiennent souvent une tache centrale ; leur disposition diffère entre les flancs. Certains individus mélaniques portent des rosettes peu visibles sur fond noir. L’adulte mesure environ 1,5 à 1,8 m de la tête au corps, avec une queue de 0,7 à 0,9 m. La taille varie fortement selon la région : au Pantanal brésilien, les mâles et les femelles pèsent en moyenne environ 100 et 76 kg, contre 57 et 42 kg au Honduras. Ces valeurs régionales ne constituent pas une plage universelle selon le sexe; je n’ai pas trouvé de hauteur au garrot générale suffisamment fiable.",
+    "habitat": "Il fréquente surtout les forêts denses de basse altitude, zones humides et berges, mais aussi broussailles, savanes et bois secs. Dans le sud-ouest des États-Unis et le nord-ouest du Mexique, il utilise des corridors boisés et riverains.",
+    "diet": "Carnivore, il capture des proies allant des poissons aux grands mammifères. Son régime régional inclut pécaris, cerfs, capybaras, tapirs, caïmans et tortues. Il peut aussi prendre du bétail quand les proies sauvages diminuent. Ses mâchoires puissantes percent parfois les carapaces.",
+    "behavior": "Les jaguars vivent et chassent généralement seuls ; odeurs et griffures signalent le territoire. Leur activité est surtout nocturne, mais ils peuvent se déplacer à toute heure selon les conditions. La chasse privilégie dissimulation, accélération brève et bond puissant plutôt qu’une longue poursuite.",
+    "reproduction": "La reproduction peut avoir lieu toute l’année dans une grande partie de l’aire, mais semble saisonnière à ses marges nord et sud. Après environ 100 jours de gestation, la femelle met bas un à quatre petits, généralement deux, dans un abri et les élève seule.",
+    "ecology": "Grand prédateur, le jaguar consomme de nombreuses espèces et peut influencer les populations de proies. Il dépend aussi de territoires connectés, d’eau douce et de proies suffisantes. La fragmentation des forêts peut perturber ses déplacements et son accès à la nourriture ou aux partenaires.",
+    "conservation": "La conversion et la fragmentation des habitats, le recul des proies, le commerce illégal et les représailles menacent les jaguars. Les pertes de bétail peuvent provoquer des conflits près des élevages. Protéger les paysages connectés, les proies sauvages et la coexistence répond à plusieurs pressions."
+  },
+  "sources": [
+    {
+      "url": "https://www.fws.gov/species/jaguar-panthera-onca",
+      "title": "Jaguar (Panthera onca) — Service américain de la pêche et de la faune"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Panthera_onca/",
+      "title": "Panthera onca (jaguar) — Animal Diversity Web, Université du Michigan"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/jaguar",
+      "title": "Jaguar — San Diego Zoo Animals & Plants"
+    },
+    {
+      "url": "https://ielc.libguides.com/sdzg/factsheets/jaguar/reproduction",
+      "title": "Fiche Jaguar : reproduction et développement — Bibliothèque de la San Diego Zoo Wildlife Alliance"
+    },
+    {
+      "url": "https://www.worldwildlife.org/species/jaguar/",
+      "title": "Jaguar — Fonds mondial pour la nature"
+    }
+  ]
+}

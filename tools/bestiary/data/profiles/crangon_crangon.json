@@ -12,8 +12,8 @@
       "fr": "La crevette grise est un petit crustacé des côtes européennes peu profondes, qui s’enfouit dans le sable et qui fait l’objet d’une pêche commerciale. C’est l’un des animaux les plus abondants des baies sableuses et des estuaires, et une proie essentielle pour les poissons et les oiseaux de rivage."
     },
     "identification": {
-      "en": "The body is long, thin and mottled brown, slightly flattened from top to bottom, and its colour matches the sediment. The rostrum is short and blunt, the first walking leg is subchelate (a small hook-like claw), and the telson has two pairs of lateral spines. Females grow larger than males, with a reported maximum of about 8.5–9.5 cm, rarely reached.",
-      "fr": "Le corps est long, mince et marbré de brun, un peu aplati de haut en bas, et sa couleur imite celle du sédiment. Le rostre est court et émoussé, la première patte marcheuse est subchélée (petite pince en crochet) et le telson porte deux paires d’épines latérales. Les femelles sont plus grandes que les mâles, avec un maximum signalé d’environ 8,5 à 9,5 cm, rarement atteint."
+      "en": "The body is long, thin and mottled brown, slightly flattened from top to bottom, and its colour matches the sediment. The rostrum is short and blunt, the first walking leg is subchelate (a small hook-like claw), and the telson has two pairs of lateral spines. Females grow larger than males, with a reported maximum of about 8.5–9.5 cm, rarely reached. A reliable adult body-mass range was not found in the consulted sources; reported size is chiefly given as total length and varies with sex and population.",
+      "fr": "Le corps est long, mince et marbré de brun, un peu aplati de haut en bas, et sa couleur imite celle du sédiment. Le rostre est court et émoussé, la première patte marcheuse est subchélée (petite pince en crochet) et le telson porte deux paires d’épines latérales. Les femelles sont plus grandes que les mâles, avec un maximum signalé d’environ 8,5 à 9,5 cm, rarement atteint. Les sources consultées ne donnent pas de plage fiable de masse adulte ; la taille publiée est surtout exprimée en longueur totale et varie selon le sexe et la population."
     },
     "habitat": {
       "en": "It lives on sandy and muddy bottoms from the intertidal zone to about 150 m deep, in open coast, estuaries, lagoons and bays, and prefers sediment with grains of 125–710 µm. Its range runs along European coasts from the White Sea to Morocco, and into the Mediterranean and Black Seas. It tolerates a very wide range of salinity.",
@@ -59,7 +59,8 @@
       ],
       "facts": [
         "Max length 8.5 cm; subchelate first walking leg, two pairs of telson spines; depth to 150 m; burial in 9–10 s; summer eggs up to 4,500, winter eggs up to 2,800; larvae 1–6 months.",
-        "Predators include gulls, terns, redshank, gadoids, flatfish, gurnards, bass; densities to 60/m²; European landings about 5,000 t (1950) to nearly 29,000 t (1997); no status given."
+        "Predators include gulls, terns, redshank, gadoids, flatfish, gurnards, bass; densities to 60/m²; European landings about 5,000 t (1950) to nearly 29,000 t (1997); no status given.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
       ]
     },
     {

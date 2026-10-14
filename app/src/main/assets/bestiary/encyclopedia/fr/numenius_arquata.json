@@ -1,0 +1,30 @@
+{
+  "id": "numenius_arquata",
+  "name": "Courlis cendré",
+  "scientific": "Numenius arquata",
+  "group": "birds",
+  "sections": {
+    "overview": "Le courlis cendré est le plus grand des limicoles d’Europe, reconnaissable à son long bec courbé vers le bas et à son cri bouillonnant qui porte loin sur les landes et les estuaires. C’est aujourd’hui une espèce très préoccupante, en fort déclin sur une grande partie de son aire.",
+    "identification": "Le courlis mesure 50 à 60 cm, avec une envergure d’environ 90 cm, et pèse de 770 g à 1 kg environ ; les femelles sont plus grandes que les mâles et ont un bec plus long. Le plumage est tacheté de brun et de gris, les pattes sont longues et bleutées, et un coin blanc apparaît sur le croupion en vol.",
+    "habitat": "En période de reproduction en Grande-Bretagne, il est surtout fréquent sur les landes et aussi dans les marais, et occupe les pâtures d’altitude, les landes à bruyère, les tourbières et les prairies humides. En hiver, il gagne la côte et les terres agricoles voisines, avec les plus fortes densités dans les grands estuaires.",
+    "diet": "Il trouve vers, coquillages et crevettes en sondant le sol avec l’extrémité sensible de son long bec. Il saisit sa proie du bout du bec et la lance souvent en l’air avant de l’avaler, car sa langue ne peut pas l’atteindre assez loin pour la déplacer.",
+    "behavior": "Ses cris « cour-li » et ses trilles bouillonnants s’entendent sur les sites de nidification de février à juillet. À partir de juillet, beaucoup d’oiseaux gagnent la côte, où ils dorment en groupes à marée haute et s’alimentent sur les vasières à marée basse. Les groupes hivernants britanniques sont rejoints par des migrateurs de Fennoscandie.",
+    "reproduction": "En Grande-Bretagne, la première ponte a lieu en moyenne vers le 2 mai ; elle compte typiquement quatre œufs, pour une seule nichée. La femelle, parfois le mâle, couve pendant 27 à 29 jours. Les poussins, couverts de duvet, courent peu après l’éclosion et s’envolent après 32 à 38 jours. La reproduction débute en général à deux ans.",
+    "ecology": "La prédation des nids est un problème majeur : elle a causé l’échec de jusqu’à 97 % des nids dans une étude d’Irlande du Nord dans les années 1990, et les renards en étaient la cause principale dans une étude du Breckland. Le contrôle des prédateurs a augmenté le succès de reproduction sur un site du Northumberland, mais l’effet de certains prédateurs semble dépendre du lieu. L’évolution des pratiques agricoles et la perte d’habitats de nidification et d’élevage des jeunes aggravent aussi le déclin.",
+    "conservation": "L’UICN classe l’espèce comme quasi menacée. La population nicheuse britannique était d’environ 59 000 couples en 2016 et a diminué de 51 % entre 1995 et 2024 ; le Royaume-Uni abriterait plus de 30 % de la population d’Europe de l’Ouest, et l’espèce figure sur la liste rouge britannique. Un courlis adulte vit en général environ 11 ans, et le plus vieil oiseau bagué a dépassé 32 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/curlew",
+      "title": "Courlis cendré — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.wwt.org.uk/wildlife/curlews/",
+      "title": "Courlis — Wildfowl & Wetlands Trust"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/curlew",
+      "title": "Courlis cendré — RSPB"
+    }
+  ]
+}

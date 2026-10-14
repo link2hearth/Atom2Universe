@@ -1,0 +1,54 @@
+{
+  "id": "rabbit",
+  "name": "European rabbit",
+  "scientific": "Oryctolagus cuniculus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The European rabbit is a burrowing lagomorph native to the Iberian Peninsula and parts of southwestern Europe. Human transport and escape from domestication have spread it far beyond that range, so the same species can be a threatened native animal in one landscape and an invasive grazer in another. It is also the wild ancestor of domestic rabbits.",
+    "identification": "A wild adult is usually 38–50 cm long and weighs 1.5–2.5 kg. Its compact body, short ears and strong hind legs support quick dashes between feeding ground and cover. The grey-brown coat is paler underneath; the white underside of its short tail flashes as it bounds away. Compared with a hare, it has shorter ears and legs and relies on underground refuge. Its young are helpless at birth, unlike furred, mobile leverets.",
+    "habitat": "In its native range the rabbit favours open, short-grass ground near dense cover, especially where soft soil allows digging. Scrub, grassland, woodland edges and some farms or urban spaces provide food and shelter, though ploughing can destroy burrows. A warren’s linked entrances and chambers offer escape routes and protected places to rest or nest. Where soil is unsuitable, rabbits use surface cover such as dense vegetation.",
+    "diet": "The rabbit selectively eats grasses, tender shoots, leaves and buds, sometimes roots or bark. Because plant fibre is difficult to digest, microbes ferment fine particles in its enlarged caecum while coarse particles pass quickly through the gut. The rabbit periodically re-ingests soft, nutrient-rich caecotrophs, allowing their contents another passage through the small intestine. These differ from ordinary firm, dry pellets, which carry much of the indigestible fibre and are not recycled.",
+    "behavior": "European rabbits are unusually social for a leporid. Where food and soil permit, groups share warrens and defend a territory. Several females and males may live together; dominance shapes access to space and mates, with conflict clearest between males. Rabbits feed mainly at dusk and night, then retreat underground by day. Scent marks signal occupancy, while a hind-foot thump warns nearby animals of danger. Group boundaries and a familiar warren provide security.",
+    "reproduction": "Wild breeding is seasonal and responds to food and local conditions. After mating-triggered ovulation, gestation lasts about 30 days and litters commonly contain five or six young. A doe digs a nursery burrow and lines its nest with dry plants and fur. Kittens are born naked and blind, unlike furred, open-eyed hare leverets. The mother returns briefly to nurse, then leaves the nest concealed. Young leave the nest and are weaned at about four weeks; first-year mortality can be high from predation, weather and disease.",
+    "ecology": "In Mediterranean Iberia, rabbits are key prey for many predators, including the Iberian lynx and Spanish imperial eagle. Their grazing changes plant cover, while burrows shelter other animals and communal latrines concentrate nutrients that affect plant growth. Rabbits therefore act as ecosystem engineers, with effects that depend on density and habitat. Their role in native food webs can become damaging when dense introduced populations overgraze and compete with local wildlife.",
+    "conservation": "The latest global IUCN assessment located was published in 2019 from an assessment dated 15 August 2018. It classified rabbits as Endangered across their native range in Spain, Portugal and southern France. Myxomatosis, rabbit haemorrhagic disease and habitat degradation drove declines; GI.2/RHDV2 added pressure after reaching Iberia in 2011–12. A 2025 study of hunting records from about 6,000 central-Spain estates found declines in most areas without emergency crop-damage control during 2009–22, but trends differed where rabbits damage crops. In Australia, feral rabbits are widespread and harm native vegetation and threatened species. Conservation priorities therefore differ between the native range and introduced populations."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Oryctolagus_cuniculus/",
+      "title": "Oryctolagus cuniculus (European rabbit) — Animal Diversity Web, University of Michigan Museum of Zoology"
+    },
+    {
+      "url": "https://www.msdvetmanual.com/en/exotic-and-laboratory-animals/rabbits/nutrition-of-rabbits",
+      "title": "Nutrition of Rabbits — MSD Veterinary Manual, authored by a University of Georgia veterinary faculty member"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5113872/",
+      "title": "The Social Nature of European Rabbits (Oryctolagus cuniculus) — Journal of the American Association for Laboratory Animal Science"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8388719/",
+      "title": "What Are the Keys to the Adaptive Success of European Wild Rabbit in the Iberian Peninsula? — Animals (MDPI), peer-reviewed review"
+    },
+    {
+      "url": "https://academic.oup.com/mspecies/article/52/997/125/6046128",
+      "title": "Lepus europaeus (Lagomorpha: Leporidae) — Mammalian Species, Oxford University Press"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T41291A170619657.en",
+      "title": "Oryctolagus cuniculus (European Rabbit) — The IUCN Red List of Threatened Species, 2019 assessment"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10344-024-01888-y",
+      "title": "Negative trends in rabbit populations in pest and non-pest areas of central Spain after rabbit haemorrhagic disease virus 2 — European Journal of Wildlife Research"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18680504/",
+      "title": "Key role of European rabbits in the conservation of the Western Mediterranean basin hotspot — Conservation Biology"
+    },
+    {
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/pest-animals-and-weeds/pest-animals/rabbits",
+      "title": "Rabbits — NSW Department of Climate Change, Energy, the Environment and Water"
+    }
+  ]
+}

@@ -92,29 +92,33 @@ def android_text(text):
 
 
 def generate(records):
-    resource_groups = {
-        "a_c": lambda record: record["id"][0] <= "c",
-        "d_l": lambda record: "d" <= record["id"][0] <= "l",
-        "m_r": lambda record: "m" <= record["id"][0] <= "r",
-        "s_z": lambda record: "s" <= record["id"][0] <= "z",
-    }
-    for locale, resource_dir in (("en", "values"), ("fr", "values-fr")):
-        for group, include in resource_groups.items():
-            root = ET.Element("resources")
-            for record in records:
-                if not include(record):
-                    continue
-                prefix = "animal_encyclopedia_" + record["id"]
-                values = {"name": record["name"][locale], "latin": record["scientific"]}
-                values.update({s: record["sections"][s][locale] for s in SECTIONS})
-                values.update({f"source_{i}": source["title"][locale]
-                               for i, source in enumerate(record["sources"], 1)})
-                for suffix, value in values.items():
-                    ET.SubElement(root, "string", name=f"{prefix}_{suffix}", formatted="false").text = android_text(value)
-            ET.indent(root, space="    ")
-            ET.ElementTree(root).write(
-                ROOT / f"app/src/main/res/{resource_dir}/strings_bestiary_encyclopedia_{group}.xml",
-                encoding="utf-8", xml_declaration=True)
+    # Long encyclopedia prose lives in localized assets so R$string stays within
+    # Android's class-file size limit as the catalog grows.
+    assets = ROOT / "app/src/main/assets/bestiary/encyclopedia"
+    for locale in ("en", "fr"):
+        directory = assets / locale
+        directory.mkdir(parents=True, exist_ok=True)
+        for record in records:
+            payload = {
+                "id": record["id"],
+                "name": record["name"][locale],
+                "scientific": record["scientific"],
+                "group": record["group"],
+                "sections": {section: record["sections"][section][locale] for section in SECTIONS},
+                "sources": [{"url": source["url"], "title": source["title"][locale]}
+                            for source in record["sources"]],
+            }
+            (directory / f"{record['id']}.json").write_text(
+                json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    # Retire the old generated string resources. Keeping the prose in XML made
+    # the single generated R$string class exceed the JVM class-file limit.
+    for locale_dir in ("values", "values-fr"):
+        for group in ("a_c", "d_l", "m_r", "s_z"):
+            old_xml = ROOT / f"app/src/main/res/{locale_dir}/strings_bestiary_encyclopedia_{group}.xml"
+            if old_xml.exists():
+                old_xml.unlink()
+
     # Small functions avoid the JVM method-size limit as the collection grows.
     lines = ["package com.Atom2Universe.app.science.bestiary", "",
              "import com.Atom2Universe.app.R", "",
@@ -126,19 +130,30 @@ def generate(records):
     for i, chunk in enumerate(chunks):
         lines += ["", f"    private fun batch{i}(): List<AnimalSpecies> = listOf("]
         for record in chunk:
-            prefix = "R.string.animal_encyclopedia_" + record["id"] + "_"
             string = lambda value: json.dumps(value, ensure_ascii=False).replace("$", "\\$")
-            references = ", ".join(f"AnimalReference({string(s['url'])}, {prefix}source_{j})"
-                                   for j, s in enumerate(record["sources"], 1))
             lines += ["        AnimalSpecies(",
                       f"            id = {string(record['id'])}, scientific = {string(record['scientific'])},",
-                      f"            name = {prefix}name, group = {string(record['group'])},",
-                      f"            description = {prefix}overview, identification = {prefix}identification,",
-                      f"            habitat = {prefix}habitat, diet = {prefix}diet, behavior = {prefix}behavior,",
-                      f"            reproduction = {prefix}reproduction, ecology = {prefix}ecology, conservation = {prefix}conservation,",
-                      f"            latin = {prefix}latin, sourceUrl = {string(record['sources'][0]['url'])}, sourceTitle = {prefix}source_1,",
-                      f"            references = listOf({references})", "        ),"]
+                      f"            name = R.string.be_encyclopedia_placeholder, group = {string(record['group'])},",
+                      "            description = null, habitat = null, diet = null, behavior = null, identification = null,",
+                      "            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,",
+                      "            reproduction = null, ecology = null, conservation = null, references = emptyList(),",
+                      f"            encyclopediaId = {string(record['id'])}", "        ),"]
         lines.append("    )")
+
+    name_chunks = [records[i:i + 80] for i in range(0, len(records), 80)]
+    for locale, prefix in (("en", "namesEn"), ("fr", "namesFr")):
+        chunk_names = []
+        for i, chunk in enumerate(name_chunks):
+            fn = f"{prefix}{i}"
+            chunk_names.append(f"{fn}()")
+            lines += ["", f"    private fun {fn}(): Map<String, String> = mapOf("]
+            for record in chunk:
+                string = lambda value: json.dumps(value, ensure_ascii=False).replace("$", "\\$")
+                lines.append(f"        {string(record['id'])} to {string(record['name'][locale])},")
+            lines.append("    )")
+        lines += ["", f"    private val {prefix}: Map<String, String> = " + " + ".join(chunk_names)]
+    lines += ["", "    fun name(id: String, language: String): String? =",
+              "        if (language == \"fr\") namesFr[id] else namesEn[id]"]
     lines += ["}", ""]
     destination = ROOT / "app/src/main/java/com/Atom2Universe/app/science/bestiary/BestiaryEncyclopediaCatalog.kt"
     destination.write_text("\n".join(lines), encoding="utf-8")

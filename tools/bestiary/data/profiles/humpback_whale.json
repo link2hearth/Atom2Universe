@@ -12,8 +12,8 @@
       "fr": "La baleine à bosse est un cétacé à fanons présent dans tous les grands océans. La plupart migrent entre zones d’alimentation de haute latitude et lieux de reproduction chauds ; celle de la mer d’Arabie reste résidente. Les mâles émettent des chants structurés ; des travaux dans le Pacifique Sud documentent la diffusion sociale de thèmes entre populations."
     },
     "identification": {
-      "en": "Adults have a stocky dark-grey body, a broad flattened head and a small dorsal fin behind the midpoint; the fin varies in shape. Females average about 15 metres and are slightly longer than males in NOAA’s Pacific Marine Environmental Laboratory account. The pectoral fins reach roughly one-third of body length; fleshy tubercles on the head and lower jaw bear sensory hairs. Researchers identify individuals by the distinctive black-and-white pattern beneath each broad fluke.",
-      "fr": "L’adulte a un corps trapu gris foncé, une tête large et aplatie et une petite nageoire dorsale située derrière le milieu du corps ; sa forme varie. Selon NOAA PMEL, les femelles mesurent en moyenne 15 mètres et dépassent légèrement les mâles. Les nageoires pectorales atteignent environ le tiers de la longueur du corps ; les tubercules charnus de la tête et de la mâchoire portent des poils sensoriels. La face inférieure de chaque large nageoire caudale présente des motifs noir et blanc distinctifs que les chercheurs utilisent pour reconnaître les individus d’une observation à l’autre."
+      "en": "Adults have a stocky dark-grey body, a broad flattened head and a small dorsal fin behind the midpoint; the fin varies in shape. Females average about 15 metres and are slightly longer than males in NOAA’s Pacific Marine Environmental Laboratory account. The pectoral fins reach roughly one-third of body length; fleshy tubercles on the head and lower jaw bear sensory hairs. Researchers identify individuals by the distinctive black-and-white pattern beneath each broad fluke. Adults reach about 11–16 m and 40 US tons (roughly 36 metric tonnes); females are slightly larger than males.",
+      "fr": "L’adulte a un corps trapu gris foncé, une tête large et aplatie et une petite nageoire dorsale située derrière le milieu du corps ; sa forme varie. Selon NOAA PMEL, les femelles mesurent en moyenne 15 mètres et dépassent légèrement les mâles. Les nageoires pectorales atteignent environ le tiers de la longueur du corps ; les tubercules charnus de la tête et de la mâchoire portent des poils sensoriels. La face inférieure de chaque large nageoire caudale présente des motifs noir et blanc distinctifs que les chercheurs utilisent pour reconnaître les individus d’une observation à l’autre. Les adultes atteignent environ 11–16 m et 40 tonnes américaines (environ 36 tonnes métriques) ; les femelles sont légèrement plus grandes que les mâles."
     },
     "habitat": {
       "en": "Migratory populations typically feed in cold, productive high-latitude waters in summer and move to tropical or subtropical breeding grounds in winter. Some whales travel up to 8,000 kilometres between feeding and breeding grounds; routes differ among populations and hemispheres. Southern populations commonly breed from July to October and feed near Antarctica from November to March; northern populations follow the opposite seasonal cycle. Arabian Sea whales are resident rather than migratory, using warm regional waters that also provide feeding opportunities through seasonal upwelling.",
@@ -59,10 +59,10 @@
         "IWC account: seasonal timing and maternal migration."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "habitat.en.3",
         "habitat.fr.3",
+        "overview.en.2",
+        "overview.fr.2",
         "reproduction.en.2",
         "reproduction.fr.2"
       ],
@@ -89,12 +89,12 @@
       ],
       "prose_claims": [
         "identification.en.1",
-        "identification.fr.1",
         "identification.en.2",
-        "identification.fr.2",
         "identification.en.3",
-        "identification.fr.3",
         "identification.en.4",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
         "identification.fr.4"
       ],
       "budget": {
@@ -118,14 +118,14 @@
         "NOAA: range, migration and regional prey."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.2",
-        "habitat.fr.2",
         "diet.en.1",
-        "diet.fr.1"
+        "diet.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -174,10 +174,10 @@
         "Primary South Pacific research on cultural song change."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
         "behavior.en.4",
-        "behavior.fr.4"
+        "behavior.fr.4",
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -201,8 +201,8 @@
       ],
       "prose_claims": [
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
+        "diet.fr.2",
         "diet.fr.3"
       ],
       "budget": {
@@ -227,8 +227,8 @@
       ],
       "prose_claims": [
         "diet.en.4",
-        "diet.fr.4",
         "diet.en.5",
+        "diet.fr.4",
         "diet.fr.5"
       ],
       "budget": {
@@ -253,8 +253,8 @@
       ],
       "prose_claims": [
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.2",
+        "behavior.fr.1",
         "behavior.fr.2"
       ],
       "budget": {
@@ -290,21 +290,25 @@
     },
     {
       "title": {
-        "en": "Humpback Whale",
-        "fr": "Baleine à bosse"
+        "en": "Humpback Whale — NOAA Fisheries species guide",
+        "fr": "Baleine à bosse — guide NOAA Fisheries"
       },
       "url": "https://repository.library.noaa.gov/view/noaa/35695/noaa_35695_DS1.pdf",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
-        "reproduction"
+        "reproduction",
+        "identification"
       ],
       "facts": [
-        "NOAA account of gestation, calf interval and nursing."
+        "NOAA account of gestation, calf interval and nursing.",
+        "Adults reach about 11–16 m and 40 US tons (about 36 metric tonnes); females are slightly larger than males."
       ],
       "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.3",
+        "reproduction.fr.1",
         "reproduction.fr.3"
       ],
       "budget": {
@@ -377,10 +381,10 @@
       ],
       "prose_claims": [
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
-        "ecology.fr.2",
         "ecology.en.3",
+        "ecology.fr.1",
+        "ecology.fr.2",
         "ecology.fr.3"
       ],
       "budget": {
@@ -405,10 +409,10 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.5",
-        "conservation.fr.5",
         "conservation.en.6",
+        "conservation.fr.1",
+        "conservation.fr.5",
         "conservation.fr.6"
       ],
       "budget": {

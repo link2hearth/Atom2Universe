@@ -1,0 +1,54 @@
+{
+  "id": "ramphastos_sulfuratus",
+  "name": "Toucan à carène",
+  "scientific": "Ramphastos sulfuratus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le toucan à carène est un oiseau sédentaire de la canopée des forêts humides, du sud du Mexique à l’Amérique centrale et au nord-ouest de l’Amérique du Sud. Son grand bec multicolore lui vaut aussi le nom de toucan arc-en-ciel. Dans un paysage mexicain dominé par les pâturages, les oiseaux suivis choisissaient les fragments forestiers tout en utilisant plusieurs milieux boisés et agricoles.",
+    "identification": "L’adulte mesure environ 50 cm. Le corps est noir, avec la gorge et la poitrine jaunes, le croupion blanc, les plumes sous-caudales rouges, la peau autour des yeux et les pieds bleus. Les sexes se ressemblent, bien que le mâle puisse être un peu plus grand. Le grand bec vert, marqué d’orange, de rouge et de bleu, approche le tiers de la longueur du corps. Une fiche sur l’espèce décrit un cœur léger en nid d’abeilles sous une enveloppe de kératine ; les essais mécaniques directs ont porté sur le toucan toco, une espèce apparentée. Deux doigts vers l’avant et deux vers l’arrière agrippent les branches.",
+    "habitat": "L’espèce fréquente les forêts tropicales humides, surtout dans les strates moyenne et supérieure de la canopée. Elle visite aussi les lisières, les forêts secondaires et les arbres conservés dans les pâturages ou cultures. À Los Tuxtlas, au Mexique, six oiseaux suivis pendant 349 heures préféraient les fragments forestiers à l’échelle du paysage comme à l’échelle locale. Leurs activités variaient peu selon les milieux, signe que certaines parcelles modifiées fournissaient des ressources. Ce résultat régional ne signifie pas que les espaces ouverts remplacent la forêt intacte.",
+    "diet": "Les fruits, notamment figues et fruits de palmier, forment la base du régime. Le toucan peut cueillir ceux qui pendent à des branches trop fines pour porter son poids, les avaler entiers, puis régurgiter ou rejeter les graines loin de l’arbre parent. Il mange aussi des insectes et de petits vertébrés ; des œufs et oisillons sont des proies attestées. Une observation publiée décrit un toucan à carène consommant une carcasse de vertébré, ressource opportuniste inhabituelle plutôt qu’habitude régulière.",
+    "behavior": "Les toucans à carène passent d’un arbre fruitier à l’autre, souvent en petits groupes ; des récits anciens indiquent six à douze individus. Ils sautent de branche en branche et volent par battements rapides suivis d’une glissade. Dans une étude mexicaine, recherche de nourriture et repos perché occupaient chacun environ 35 à 40 % du temps observé ; appels et interactions sociales, 10 % ou moins. Ils dorment aussi dans des cavités d’arbres ; la composition des groupes et la stabilité des liens sociaux restent peu documentées.",
+    "reproduction": "Le toucan niche dans une cavité naturelle d’arbre ou un ancien trou creusé par un autre oiseau. Les comptes rendus de l’espèce indiquent deux à quatre œufs, couvés par les deux parents qui nourrissent aussi les poussins dépendants. Ceux-ci éclosent après environ 16 à 20 jours et restent dans la cavité pendant leur croissance ; l’envol est rapporté vers huit ou neuf semaines. Ces durées viennent de sources naturalistes limitées et en partie anciennes ; elles peuvent varier localement.",
+    "ecology": "La consommation de fruits transporte des graines entre lieux d’alimentation et de repos. Une étude panaméenne sur Virola surinamensis a trouvé davantage d’attaques de charançons sous et près des arbres parents ; la dispersion au-delà de vingt mètres par de grands oiseaux, dont le toucan à carène, semblait plus favorable à la survie des plantules. Le transit digestif agit différemment selon les plantes. Dans une expérience avec des toucans à carène captifs, les graines de Ficus insipida extraites des fèces ne germaient pas significativement mieux que les témoins non ingérés. Transport des graines et amélioration de leur germination sont donc des processus distincts.",
+    "conservation": "L’évaluation mondiale de BirdLife International dans la Liste rouge de l’UICN, datée du 18 mars 2021, classe l’espèce « quasi menacée » et indique une tendance à la baisse. Elle estime 50 000 à 499 999 individus matures et associe le déclin à la perte et à la dégradation des habitats, à la chasse et au piégeage. Les évaluations jusqu’en 2016 indiquaient une préoccupation mineure ; ce statut n’est plus actuel."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T22682102A168670038.en",
+      "title": "Ramphastos sulfuratus — Liste rouge de l’UICN, évaluation de BirdLife International"
+    },
+    {
+      "url": "https://doi.org/10.1093/condor/103.4.776",
+      "title": "Sélection de l’habitat et budgets d’activité du toucan à carène à l’échelle du paysage — The Condor, Oxford University Press"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Ramphastos_sulfuratus/",
+      "title": "Ramphastos sulfuratus (toucan à carène) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/cams/a-closer-look-at-the-keel-billed-toucans-incredible-bill/",
+      "title": "Observer de près l’impressionnant bec du toucan à carène — Cornell Lab Bird Cams"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.jmbbm.2011.08.003",
+      "title": "Structure et modélisation par éléments finis du bec du toucan à partir de microtomographie — Journal of the Mechanical Behavior of Biomedical Materials"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.fooweb.2022.e00223",
+      "title": "Plus que des fruits : le toucan à carène consomme des charognes de vertébrés — Food Webs"
+    },
+    {
+      "url": "https://www.sfzoodocents.org/notebook/FactSheets/BIRDS/Piciformes/ToucanKeelbilled.pdf",
+      "title": "Toucan à carène — fiche des guides bénévoles du zoo de San Francisco"
+    },
+    {
+      "url": "https://esajournals.onlinelibrary.wiley.com/doi/10.2307/1940539",
+      "title": "Conséquences précoces de la dispersion des graines d’un arbre tropical — Howe et al. (1985)"
+    },
+    {
+      "url": "https://www.scielo.sa.cr/scielo.php?pid=S0034-77442006000200016&script=sci_arttext",
+      "title": "Germination de graines de Ficus insipida issues de fèces de toucans et de singes-araignées (2006)"
+    }
+  ]
+}

@@ -12,8 +12,8 @@
       "fr": "La Cigogne blanche est un grand échassier qui niche en Europe, en Afrique du Nord et en Asie occidentale, puis hiverne en Afrique ou plus près."
     },
     "identification": {
-      "en": "Adults are unmistakable at a distance: most of the body is white, the flight feathers are black, and the long bill and legs are red. The recorded maximum height is about 1.15 metres and maximum wingspan 2.15 metres. Males average slightly larger, although the sexes share the same plumage. Newly hatched young have dark bills and dull yellow-grey legs, which turn red as they mature.",
-      "fr": "L’adulte se reconnaît de loin: le corps est surtout blanc, les rémiges sont noires, et le long bec comme les pattes sont rouges. La hauteur maximale documentée est d’environ 1,15 m et l’envergure maximale de 2,15 m. Le mâle est en moyenne un peu plus grand, bien que les sexes aient le même plumage. Les poussins ont le bec sombre et les pattes jaune grisâtre, qui deviennent rouges avec l’âge."
+      "en": "Adults are about 95–110 cm long, 100–125 cm tall, span 155–200 cm and weigh 2.3–4.5 kg. Males average slightly larger, but the sexes share the same plumage. The source reports species ranges rather than a separate male/female mass table. Newly hatched young have dark bills and dull yellow-grey legs, which turn red as they mature.",
+      "fr": "L’adulte mesure environ 95 à 110 cm de long, 100 à 125 cm de haut, avec une envergure de 155 à 200 cm et une masse de 2,3 à 4,5 kg. Le mâle est en moyenne un peu plus grand, mais les sexes ont le même plumage. La source donne des fourchettes d’espèce sans tableau de masse distinct pour chaque sexe. Les poussins ont le bec sombre et les pattes jaune grisâtre, qui deviennent rouges avec l’âge."
     },
     "habitat": {
       "en": "The species favours open landscapes where it can see and reach prey: floodplains, marsh edges, wet meadows, pastures and cultivated fields. In Alsace, Rhine-valley ried meadows are characteristic; across its range, nests also stand on trees, roofs, chimneys and purpose-built platforms.",
@@ -58,16 +58,16 @@
         "Michigan account: dimensions, sex and feeding."
       ],
       "prose_claims": [
-        "identification.en.3",
-        "identification.fr.3",
-        "diet.en.1",
-        "diet.fr.1",
         "behavior.en.2",
         "behavior.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
         "ecology.en.1",
         "ecology.en.2",
         "ecology.fr.1",
-        "ecology.fr.2"
+        "ecology.fr.2",
+        "identification.en.3",
+        "identification.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -93,13 +93,13 @@
         "French museum source covers nests, migration, chicks and power-line hazards."
       ],
       "prose_claims": [
-        "identification.en.2",
-        "identification.fr.2",
         "behavior.en.3",
         "behavior.fr.3",
+        "identification.en.2",
+        "identification.fr.2",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
+        "reproduction.fr.1",
         "reproduction.fr.2"
       ],
       "budget": {
@@ -125,12 +125,12 @@
         "LPO Alsace documents ried meadows, feeding sites and nest locations."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.2",
-        "habitat.fr.2",
         "behavior.en.1",
-        "behavior.fr.1"
+        "behavior.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -230,12 +230,12 @@
         "GPS study links Iberian and Moroccan landfills with wetlands and rice fields."
       ],
       "prose_claims": [
-        "ecology.en.3",
-        "ecology.fr.3",
-        "ecology.en.4",
-        "ecology.fr.4",
         "conservation.en.6",
-        "conservation.fr.6"
+        "conservation.fr.6",
+        "ecology.en.3",
+        "ecology.en.4",
+        "ecology.fr.3",
+        "ecology.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -260,8 +260,8 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
+        "conservation.fr.1",
         "conservation.fr.2"
       ],
       "budget": {
@@ -287,8 +287,8 @@
       ],
       "prose_claims": [
         "conservation.en.3",
-        "conservation.fr.3",
         "conservation.en.4",
+        "conservation.fr.3",
         "conservation.fr.4"
       ],
       "budget": {
@@ -315,12 +315,12 @@
         "BirdLife International notes the migratory species identity and adult white, black and red field marks."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
+        "behavior.en.4",
+        "behavior.fr.4",
         "identification.en.1",
         "identification.fr.1",
-        "behavior.en.4",
-        "behavior.fr.4"
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -345,10 +345,10 @@
         "BirdLife South Africa describes juvenile bill and plumage differences from adults."
       ],
       "prose_claims": [
-        "identification.en.4",
-        "identification.fr.4",
         "conservation.en.5",
-        "conservation.fr.5"
+        "conservation.fr.5",
+        "identification.en.4",
+        "identification.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -373,8 +373,8 @@
       ],
       "prose_claims": [
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
+        "diet.fr.2",
         "diet.fr.3"
       ],
       "budget": {
@@ -384,6 +384,21 @@
         "total": 88,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "White Stork species account — Department of National Parks and Wildlife Conservation, Nepal",
+        "fr": "Fiche Cigogne blanche — Department of National Parks and Wildlife Conservation, Népal"
+      },
+      "url": "https://dnpwc.gov.np/media/files/Profiling_of_Protected_and_Human__Wildlife_Conflicts_-Final_Report.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Species dimensions: height 100–125 cm, mass 2.3–4.5 kg, length 95–110 cm, wingspan 155–200 cm."
+      ],
+      "prose_claims": []
     }
   ],
   "illustration_notes": "Depict one adult Ciconia ciconia standing naturally on a pure white background: white body, black flight feathers, red straight bill and red legs; do not depict the Oriental stork.",

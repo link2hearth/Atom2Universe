@@ -12,8 +12,8 @@
       "fr": "Le phasme morose, aussi appelé phasme de laboratoire ou phasme indien, est un phasme sans ailes qui imite une brindille. Originaire du sud de l’Inde, il est élevé en Europe depuis la fin du XIXe siècle et se rencontre aujourd’hui comme animal de compagnie et de laboratoire."
     },
     "identification": {
-      "en": "Females measure about 70 to 84 mm in one source and up to roughly 100 mm in another, and are thicker than the shorter, thinner, brown males. The body is stick-like and wingless, coloured dull green to brown, sometimes mottled, with antennae about as long as the legs. Adult females show red patches at the base of the front legs.",
-      "fr": "Les femelles mesurent environ 70 à 84 mm selon une source et jusqu’à 100 mm environ selon une autre, et sont plus épaisses que les mâles, plus courts, plus minces et bruns. Le corps est en forme de bâton et sans ailes, de couleur vert terne à brun, parfois marbré, avec des antennes à peu près aussi longues que les pattes. Les femelles adultes ont des taches rouges à la base des pattes avant."
+      "en": "Females measure about 70 to 84 mm in one source and up to roughly 100 mm in another, and are thicker than the shorter, thinner, brown males. The body is stick-like and wingless, coloured dull green to brown, sometimes mottled, with antennae about as long as the legs. Adult females show red patches at the base of the front legs. No reliable adult body-mass figure was found in the consulted species sources.",
+      "fr": "Les femelles mesurent environ 70 à 84 mm selon une source et jusqu’à 100 mm environ selon une autre, et sont plus épaisses que les mâles, plus courts, plus minces et bruns. Le corps est en forme de bâton et sans ailes, de couleur vert terne à brun, parfois marbré, avec des antennes à peu près aussi longues que les pattes. Les femelles adultes ont des taches rouges à la base des pattes avant. Aucune masse adulte fiable n’a été trouvée dans les sources consultées sur l’espèce."
     },
     "habitat": {
       "en": "The species was first described from Shembagonor and Trichinopoly in southern India, and is also reported from the Palni Hills. Introduced populations are known from Australia, the Azores, Madagascar, Madeira, South Africa, the United Kingdom and the United States, probably from escaped insects and discarded eggs.",
@@ -48,10 +48,18 @@
       },
       "url": "https://www.biodiversityexplorer.info/insects/phasmida/carausius_morosus.htm",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
       "facts": [
         "Males 48.5–61 mm, females 70–84 mm; dull green to brown; native to India; introduced populations all parthenogenetic; eggs dropped, hatching in 4–6 months; six moults, 4–7 months to mature.",
-        "Disturbed insects sway, drop or emit fluid; kept in culture in Europe since the late 1800s."
+        "Disturbed insects sway, drop or emit fluid; kept in culture in Europe since the late 1800s.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
       ]
     },
     {
@@ -61,7 +69,13 @@
       },
       "url": "https://www.uksafari.com/stickinsects.htm",
       "consulted": "2026-10-12",
-      "supports": ["identification", "diet", "behavior", "reproduction", "ecology"],
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "About 80 mm; antennae as long as legs; feeds on bramble or privet; eggs hatch in 8–15 weeks; six moults; mainly active at night.",
         "Frosts normally kill them in Britain; milder winters have helped numbers."
@@ -74,7 +88,12 @@
       },
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11256777/",
       "consulted": "2026-10-12",
-      "supports": ["habitat", "diet", "ecology", "conservation"],
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Described from Shembagonor and Trichinopoly, Madura Province; introduced to Australia, Azores, Madagascar, Madeira, South Africa, UK and USA, likely by escapes and discarded eggs.",
         "Large polyphagous species; pest of ornamentals in California, high environmental impact score but low overall pest rating."
@@ -87,7 +106,12 @@
       },
       "url": "https://en.wikipedia.org/wiki/Carausius_morosus",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "behavior", "reproduction"],
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
       "facts": [
         "Kept as a pet; females about 80–100 mm with red patches at the base of the front legs; culture stocks parthenogenetic; feigning death and swaying as defences; nocturnal."
       ]

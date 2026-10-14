@@ -47,23 +47,23 @@
         "fr": "Testudo hermanni (Gmelin 1789) – Hermann’s Tortoise, Conservation Biology of Freshwater Turtles and Tortoises, Chelonian Research Monographs no 5 (2011)"
       },
       "url": "https://iucn-tftsg.org/wp-content/uploads/file/Accounts/crm_5_059_hermanni_v1_2011.pdf",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "overview",
         "identification"
       ],
       "facts": [
-        "Account details shell and sex traits."
+        "Western females average 15–18 cm, males 13–15 cm straight carapace; Balkan tortoises are generally larger."
       ],
       "prose_claims": [
         "identification.en.2",
-        "identification.fr.2",
         "identification.en.3",
-        "identification.fr.3",
-        "identification.en.6",
-        "identification.fr.6",
         "identification.en.5",
-        "identification.fr.5"
+        "identification.en.6",
+        "identification.fr.2",
+        "identification.fr.3",
+        "identification.fr.5",
+        "identification.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -113,10 +113,10 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
+        "diet.fr.1",
+        "diet.fr.2",
         "diet.fr.3",
         "ecology.en.1",
         "ecology.fr.1"
@@ -146,17 +146,17 @@
       ],
       "prose_claims": [
         "behavior.en.3",
-        "behavior.fr.3",
         "behavior.en.5",
+        "behavior.fr.3",
         "behavior.fr.5",
-        "reproduction.en.1",
-        "reproduction.fr.1",
-        "reproduction.en.4",
-        "reproduction.fr.4",
-        "reproduction.en.5",
-        "reproduction.fr.5",
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -182,15 +182,15 @@
         "French Var account gives female size, incubation duration and average maturity age."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.4",
-        "identification.fr.4",
         "behavior.en.4",
         "behavior.fr.4",
+        "identification.en.1",
+        "identification.en.4",
+        "identification.fr.1",
+        "identification.fr.4",
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.6",
+        "reproduction.fr.3",
         "reproduction.fr.6"
       ],
       "budget": {
@@ -241,12 +241,12 @@
         "Central Italian study found small selected habitat patches combined bare ground and dense vegetation; tortoises basked and thermoregulated."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.2",
-        "habitat.fr.2",
         "behavior.en.2",
-        "behavior.fr.2"
+        "behavior.fr.2",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -273,14 +273,14 @@
         "Global assessment dated 5 May 2024: Vulnerable with decreasing trend; errata appeared in 2025."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "behavior.en.1",
         "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
         "ecology.en.3",
         "ecology.fr.3",
-        "conservation.en.1",
-        "conservation.fr.1"
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -305,8 +305,8 @@
       ],
       "prose_claims": [
         "conservation.en.3",
-        "conservation.fr.3",
         "conservation.en.4",
+        "conservation.fr.3",
         "conservation.fr.4"
       ],
       "budget": {
@@ -332,8 +332,8 @@
       ],
       "prose_claims": [
         "conservation.en.2",
-        "conservation.fr.2",
         "conservation.en.5",
+        "conservation.fr.2",
         "conservation.fr.5"
       ],
       "budget": {

@@ -58,22 +58,23 @@
         "reproduction"
       ],
       "facts": [
-        "Range, appearance, feeding, social and nesting cross-check."
+        "Range, appearance, feeding, social and nesting cross-check.",
+        "Adults measure 34–39 cm in length."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.en.2",
+        "behavior.en.2",
+        "conservation.en.3",
+        "conservation.fr.3",
+        "diet.en.5",
+        "ecology.en.1",
+        "ecology.en.2",
         "identification.en.1",
         "identification.en.3",
         "identification.en.4",
-        "behavior.en.2",
+        "overview.en.1",
+        "overview.en.2",
         "reproduction.en.1",
-        "reproduction.en.2",
-        "ecology.en.1",
-        "ecology.en.2",
-        "conservation.en.3",
-        "conservation.fr.3",
-        "diet.en.5"
+        "reproduction.en.2"
       ],
       "budget": {
         "limit": 200,
@@ -102,17 +103,17 @@
         "French cross-check of range, morphology and social biology."
       ],
       "prose_claims": [
-        "overview.fr.1",
-        "overview.fr.2",
+        "behavior.fr.2",
+        "diet.fr.5",
+        "ecology.fr.1",
+        "ecology.fr.2",
         "identification.fr.1",
         "identification.fr.3",
         "identification.fr.4",
-        "behavior.fr.2",
+        "overview.fr.1",
+        "overview.fr.2",
         "reproduction.fr.1",
-        "reproduction.fr.2",
-        "ecology.fr.1",
-        "ecology.fr.2",
-        "diet.fr.5"
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -125,29 +126,30 @@
     {
       "title": {
         "en": "Jackdaw BirdFacts — British Trust for Ornithology",
-        "fr": "Fiche du Choucas des tours — British Trust for Ornithology"
+        "fr": "Choucas des tours : BirdFacts — British Trust for Ornithology"
       },
       "url": "https://www.bto.org/learn/about-birds/birdfacts/jackdaw",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "conservation",
         "identification",
         "reproduction"
       ],
       "facts": [
-        "British ringing, breeding and population-trend data."
+        "British ringing, breeding and population-trend data.",
+        "British ringing samples averaged 242 g for males and 226 g for females."
       ],
       "prose_claims": [
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
         "identification.en.2",
         "identification.fr.2",
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.5",
-        "reproduction.fr.5",
-        "conservation.en.1",
-        "conservation.fr.1",
-        "conservation.en.2",
-        "conservation.fr.2"
+        "reproduction.fr.3",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -174,18 +176,18 @@
         "Habitat, flocking, parental care and IUCN summary."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
         "behavior.en.1",
         "behavior.fr.1",
-        "reproduction.en.4",
-        "reproduction.fr.4",
-        "reproduction.en.6",
-        "reproduction.fr.6",
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.4",
-        "diet.fr.4"
+        "diet.fr.1",
+        "diet.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.4",
+        "reproduction.en.6",
+        "reproduction.fr.4",
+        "reproduction.fr.6"
       ],
       "budget": {
         "limit": 200,
@@ -235,8 +237,8 @@
       ],
       "prose_claims": [
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
+        "diet.fr.2",
         "diet.fr.3"
       ],
       "budget": {

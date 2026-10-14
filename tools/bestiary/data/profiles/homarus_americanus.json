@@ -43,11 +43,11 @@
   "sources": [
     {
       "title": {
-        "en": "American Lobster (Homarus americanus) — NOAA Fisheries species page",
-        "fr": "Homard américain (Homarus americanus) — page espèce de NOAA Fisheries"
+        "en": "American Lobster — NOAA Fisheries",
+        "fr": "Homard américain — NOAA Fisheries"
       },
       "url": "https://www.fisheries.noaa.gov/species/american-lobster",
-      "consulted": "2026-10-12",
+      "consulted": "2026-10-14",
       "supports": [
         "overview",
         "identification",
@@ -60,7 +60,8 @@
       ],
       "facts": [
         "Up to 44 lb, possibly 100 years; Labrador to Cape Hatteras; to 2,300 ft; offshore migrations 50–190 miles; 20–25 moults over 5–8 years; 5,000 to over 100,000 eggs carried 9–11 months.",
-        "2025 ASMFC assessment: Gulf of Maine/Georges Bank not overfished but subject to overfishing; Southern New England overfished; 2024 landings 113 million lb, $720 million."
+        "2025 ASMFC assessment: Gulf of Maine/Georges Bank not overfished but subject to overfishing; Southern New England overfished; 2024 landings 113 million lb, $720 million.",
+        "Large American lobsters can reach around 20 kg; typical catches are much smaller (about 25 cm, around 0.5 kg). Males have larger, stiffer first swimmerets."
       ]
     },
     {

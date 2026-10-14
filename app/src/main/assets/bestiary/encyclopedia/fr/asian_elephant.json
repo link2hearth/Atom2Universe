@@ -1,0 +1,34 @@
+{
+  "id": "asian_elephant",
+  "name": "Éléphant d’Asie",
+  "scientific": "Elephas maximus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Elephas maximus est le plus grand mammifère terrestre d’Asie. Plus petit que l’éléphant d’Afrique, il subsiste en populations dispersées. Trompe préhensile et corps massif facilitent la recherche de nourriture.",
+    "identification": "L’adulte a la peau grise, parfois rosée aux oreilles, au front ou à la trompe ; le jeune est plus velu et roux. Ses oreilles arrondies sont plus petites que celles de l’éléphant d’Afrique ; sa trompe porte une excroissance préhensile. Seuls certains mâles ont de grandes défenses, beaucoup n’en ont pas. Femelles et certains mâles portent de petites défenses ; leur fréquence varie selon les populations. L’éléphant d’Asie adulte mesure généralement 1,8 à 3,8 m au garrot et pèse environ 2 750 à 5 420 kg ; les mâles sont en général plus grands que les femelles. La source institutionnelle citée ne donne pas de mesure de largeur du corps.",
+    "habitat": "Il subsiste en Asie du Sud et du Sud-Est, notamment en Inde, au Sri Lanka, à Sumatra et Bornéo. Il fréquente forêts sempervirentes ou décidues, broussailles, prairies et milieux aménagés. Il cherche aussi sa nourriture dans les clairières et se déplace pour trouver eau et végétaux.",
+    "diet": "Cet herbivore mange graminées, feuilles, racines, lianes, pousses, rameaux, écorce et fruits. Son régime varie selon le milieu et la saison ; dans le sud de l’Inde, des études ont relevé davantage de feuillage ligneux en saison sèche. Il s’alimente longtemps, car sa digestion extrait seulement une partie de l’énergie végétale.",
+    "behavior": "Les femelles apparentées et leurs petits forment des communautés matrilinéaires ; leurs groupes se séparent et se réunissent parfois. Les jeunes mâles quittent le groupe natal ; les adultes vivent souvent seuls ou s’associent à d’autres mâles. Ils communiquent par odeurs, toucher et appels graves, et explorent avec leur trompe.",
+    "reproduction": "Les femelles ont généralement leur premier petit à l’adolescence. La gestation dure environ 21,5 à 22 mois ; les naissances sont uniques, parfois gémellaires. Le nouveau-né se lève et tète rapidement, puis mange des végétaux vers six mois. Plusieurs années séparent les naissances, selon l’environnement.",
+    "ecology": "Les éléphants transportent des graines loin des plantes mères. Dans une forêt du Kerala, une étude a trouvé dans leurs déjections des graines viables de 27 espèces ligneuses ; elles ont germé plus vite que les témoins. Ce résultat montre une dispersion locale, sans l’étendre à toute l’aire de l’espèce.",
+    "conservation": "L’évaluation de l’UICN publiée en 2020 classe l’espèce « en danger », d’après un examen de 2019. Elle estime un déclin d’au moins 50 % sur trois générations, lié à la perte et dégradation de l’habitat. La fragmentation bloque les déplacements et rapproche les éléphants des cultures et villages. Ces données sont celles de cette évaluation datée."
+  },
+  "sources": [
+    {
+      "url": "https://nationalzoo.si.edu/animals/asian-elephant",
+      "title": "Éléphant d’Asie — Zoo national et Institut de biologie de la conservation du Smithsonian"
+    },
+    {
+      "url": "https://asesg.org/PDFfiles/Asian%20Elephant%20Red%20List%20Assessment%202020.pdf",
+      "title": "Elephas maximus — évaluation 2020 de la Liste rouge de l’UICN, Groupe de spécialistes de l’éléphant d’Asie de la CSE-UICN"
+    },
+    {
+      "url": "https://www.worldwildlife.org/species/elephant/asian-elephant/",
+      "title": "Éléphant d’Asie — Fonds mondial pour la nature"
+    },
+    {
+      "url": "https://doi.org/10.1017/S0266467413000060",
+      "title": "Frugivorie et dispersion des graines par l’éléphant d’Asie dans une forêt sempervirente d’Inde — Journal of Tropical Ecology"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "white_tailed_eagle",
+  "name": "Pygargue à queue blanche",
+  "scientific": "Haliaeetus albicilla",
+  "group": "birds",
+  "sections": {
+    "overview": "Le pygargue à queue blanche est le plus grand rapace du Royaume-Uni, un aigle côtier massif surnommé la « porte de grange volante ». Persécuté jusqu’à disparaître de Grande-Bretagne, il n’y est revenu que grâce à des programmes de réintroduction.",
+    "identification": "Le corps est brun, avec une tête et un cou clairs qui peuvent paraître presque blancs chez les vieux oiseaux; l’adulte a la queue blanche en coin. Le bec est grand et jaune (sombre chez les jeunes) et les pattes sont jaunes. Les ailes, très larges, aux extrémités « digitées », restent à plat en vol plané. Un oiseau pèse environ 4,9 kg.",
+    "habitat": "Il affectionne les côtes, d’où son nom d’aigle de mer. En Grande-Bretagne, l’aire de reproduction se concentre en quatre zones : les Hébrides extérieures, le Wester Ross, Skye et les petites îles voisines, et le nord de l’Argyll autour de Mull. Le nid se trouve sur une corniche de falaise ou dans un grand arbre.",
+    "diet": "Contrairement à l’aigle royal, il capture des poissons, parfois en plongeant les serres en avant dans la mer ou un lac. Il mange aussi des lapins, des lièvres et d’autres mammifères, des oiseaux comme les goélands et les canards, ainsi que des charognes.",
+    "behavior": "Les couples se forment pour la vie et restent fidèles à leur site de nid. Ils ajoutent des brindilles et de l’herbe à chaque saison de reproduction : le nid grossit d’année en année et peut atteindre environ 1,8 m de large.",
+    "reproduction": "Une ponte compte en général deux œufs (un à trois), couvés par les deux parents pendant environ 38 jours. Les poussins, couverts de duvet et sans défense, quittent le nid après 70 à 75 jours. Il n’y a généralement qu’une couvée par an, et le premier essai de reproduction a lieu vers cinq ans.",
+    "ecology": "Prédateur de poissons, de mammifères et d’oiseaux qui mange aussi des charognes, il occupe le sommet des chaînes alimentaires côtières. Il vivait jadis dans tout le Royaume-Uni, mais la persécution l’a chassé d’Angleterre dès le début du XIXe siècle, et le dernier oiseau écossais a été abattu au début du XXe siècle. Les lâchers ont commencé sur Rum en 1975 et sur l’île de Wight en 2019.",
+    "conservation": "La population nicheuse du Royaume-Uni comptait 123 couples en 2017; l’espèce figure sur la liste ambre britannique et relève de l’annexe 1, qui interdit de la déranger. La catégorie mondiale de l’UICN est « préoccupation mineure ». Un oiseau qui atteint l’âge adulte peut vivre environ 20 ans; le plus âgé bagué a presque atteint 17 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/white-tailed-eagle",
+      "title": "Pygargue à queue blanche — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/white-tailed-eagle",
+      "title": "Pygargue à queue blanche — RSPB Birds & Wildlife"
+    }
+  ]
+}

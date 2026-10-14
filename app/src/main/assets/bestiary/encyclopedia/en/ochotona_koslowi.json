@@ -1,0 +1,30 @@
+{
+  "id": "ochotona_koslowi",
+  "name": "Kozlov’s Pika",
+  "scientific": "Ochotona koslowi",
+  "group": "mammals",
+  "sections": {
+    "overview": "Kozlov’s pika is a rare pika living only in the high mountains of western China. It was collected in 1884 and described in 1894, then went unseen by scientists for about a century until its rediscovery in 1984. It is listed as Endangered, largely because so little is known about it.",
+    "identification": "A medium-sized pika with a body of 170–240 mm and a weight of 100–300 g. White lips and an almost cubic skull set it apart from the Ladakh pika and the plateau pika, two species it can be mistaken for: some museum specimens labelled as Kozlov’s pika actually belong to those species.",
+    "habitat": "It lives in alpine grassland and mountain steppe at about 4,100–4,800 m, on high, isolated mountains near the meeting point of Qinghai, Xinjiang and Tibet. Records come from the Kunlun Mountains, the Kongka mountains and the Aerjin Mountain Nature Reserve. The first animals, in 1884, were found in burrows dug in mounds of salty loess. Its range is very fragmented, with about 800 km between some subpopulations.",
+    "diet": "It eats green plants, and 15 plant species have been recorded in its diet. No hay-making has been documented for it.",
+    "behavior": "It is active by day and lives in communal family groups, in burrows with several entrances. Densities of roughly 300–400 animals per km² have been reported, but the sources warn that some older studies may have involved other pika species, so these figures deserve caution.",
+    "reproduction": "Little is known. Litters of 4–8 embryos have been recorded and a second breeding in the same season has been reported. Gestation, weaning and lifespan are not documented in the sources read.",
+    "ecology": "Its role in its ecosystem has not been studied. It is probably a sister species of the Ladakh pika and may be an ancestral lineage in decline, according to a review of the genus.",
+    "conservation": "It is listed as Endangered because little is known about its distribution and abundance. Little new information has appeared since 1998, and its current status is unknown at two of its three known locations. A climate model has predicted a decrease in the species, with no date given. More fieldwork is needed to plan its protection."
+  },
+  "sources": [
+    {
+      "url": "https://zenodo.org/records/6617953",
+      "title": "Ochotona koslowi — Handbook of the Mammals of the World treatment (Zenodo record)"
+    },
+    {
+      "url": "https://www.redalyc.org/journal/4023/402336276002/html/",
+      "title": "State of knowledge and conservation of endangered and critically endangered lagomorphs worldwide — Therya (2015)"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1001164",
+      "title": "Ochotona koslowi — Mammal Diversity Database"
+    }
+  ]
+}

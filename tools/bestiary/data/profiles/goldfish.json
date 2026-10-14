@@ -12,8 +12,8 @@
       "fr": "Originaire d’Asie orientale, notamment de Chine, ce cyprinidé d’eau douce a été sélectionné comme poisson d’ornement, aujourd’hui élevé partout. Plus de mille ans de sélection en Chine ont produit des couleurs et des formes corporelles ensuite diffusées par le commerce des poissons d’ornement."
     },
     "identification": {
-      "en": "The wild-looking form is elongated, bronze-grey and single-tailed; ordinary domestic fish retain this shape but are often orange. Adults commonly reach 20 cm, though exceptional wild or pond fish approach 45 cm. Lifespan varies; reports beyond 40 years are exceptional, not normal. Selected varieties may have a rounded body, double tail, enlarged eyes or head growths, and some lack a dorsal fin; these traits differ from the ordinary single-tailed form.",
-      "fr": "La forme sauvage est allongée, gris doré à bronze, avec une queue simple ; le poisson rouge ordinaire garde cette silhouette, souvent orange. Les adultes atteignent souvent 20 cm, mais certains poissons sauvages ou de bassin approchent 45 cm. La longévité varie ; dépasser 40 ans reste exceptionnel. Les variétés sélectionnées peuvent avoir un corps arrondi, une queue double, des yeux agrandis ou des excroissances sur la tête, et certaines sont dépourvues de nageoire dorsale ; ces caractères diffèrent de ceux de la forme ordinaire à queue simple."
+      "en": "The wild-looking form is elongated, bronze-grey and single-tailed; ordinary domestic fish retain this shape but are often orange. Adults commonly reach 20 cm, though exceptional wild or pond fish approach 45 cm. Lifespan varies; reports beyond 40 years are exceptional, not normal. Selected varieties may have a rounded body, double tail, enlarged eyes or head growths, and some lack a dorsal fin; these traits differ from the ordinary single-tailed form. Wild and feral fish typically reach 12–22 cm standard length and 100–300 g; exceptional records reach 41 cm standard length and about 3 kg. Standard length excludes the tail fin.",
+      "fr": "La forme sauvage est allongée, gris doré à bronze, avec une queue simple ; le poisson rouge ordinaire garde cette silhouette, souvent orange. Les adultes atteignent souvent 20 cm, mais certains poissons sauvages ou de bassin approchent 45 cm. La longévité varie ; dépasser 40 ans reste exceptionnel. Les variétés sélectionnées peuvent avoir un corps arrondi, une queue double, des yeux agrandis ou des excroissances sur la tête, et certaines sont dépourvues de nageoire dorsale ; ces caractères diffèrent de ceux de la forme ordinaire à queue simple. Les poissons sauvages ou retournés à l’état sauvage atteignent typiquement 12–22 cm de longueur standard et 100–300 g ; des records exceptionnels atteignent 41 cm de longueur standard et environ 3 kg. La longueur standard exclut la nageoire caudale."
     },
     "habitat": {
       "en": "It inhabits temperate ponds, lakes, wetlands and slow rivers; introductions have spread it beyond East Asia. It can survive temporary oxygen deprivation, especially in cold conditions, using stored energy; survival becomes shorter at higher temperatures.",
@@ -58,14 +58,14 @@
         "Goldfish learn routines and associations lasting beyond a few seconds."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "behavior.en.1",
         "behavior.fr.1",
-        "overview.en.2",
-        "overview.fr.2",
         "habitat.en.2",
-        "habitat.fr.2"
+        "habitat.fr.2",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -90,10 +90,10 @@
       ],
       "prose_claims": [
         "identification.en.1",
-        "identification.fr.1",
         "identification.en.3",
-        "identification.fr.3",
         "identification.en.4",
+        "identification.fr.1",
+        "identification.fr.3",
         "identification.fr.4"
       ],
       "budget": {
@@ -121,15 +121,15 @@
         "Females lay eggs externally fertilized; adults provide no care."
       ],
       "prose_claims": [
-        "identification.en.2",
-        "identification.fr.2",
         "habitat.en.1",
         "habitat.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
-        "reproduction.fr.2",
         "reproduction.en.3",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
         "reproduction.fr.3"
       ],
       "budget": {
@@ -155,10 +155,10 @@
       ],
       "prose_claims": [
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
-        "diet.fr.3",
         "diet.en.4",
+        "diet.fr.2",
+        "diet.fr.3",
         "diet.fr.4"
       ],
       "budget": {
@@ -185,13 +185,13 @@
         "Introduced populations affect native fishes and aquatic habitat through predation and benthic disturbance."
       ],
       "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
         "diet.en.1",
         "diet.fr.1",
         "ecology.en.1",
-        "ecology.fr.1",
-        "conservation.en.2",
-        "conservation.fr.2",
         "ecology.en.2",
+        "ecology.fr.1",
         "ecology.fr.2"
       ],
       "budget": {
@@ -226,6 +226,26 @@
         "total": 29,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Goldfish (Carassius auratus) — U.S. Geological Survey Nonindigenous Aquatic Species Database",
+        "fr": "Poisson rouge (Carassius auratus) — base de données USGS sur les espèces aquatiques non indigènes"
+      },
+      "url": "https://nas.er.usgs.gov/queries/factsheet.aspx?speciesid=508",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Typically 120–220 mm standard length, maximum 410 mm standard length; typical mass 100–300 g and reported maximum up to 3 kg. Standard length differs from total length."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.5",
+        "identification.fr.6"
+      ]
     }
   ],
   "illustration_notes": "Show one ordinary domesticated goldfish, streamlined with single forked tail and normal fins, orange scales, visible opercula, anatomically realistic head and gills. Adult, sex unspecified, three-quarter side view on a pure white background; no water, aquarium, text or watermark.",

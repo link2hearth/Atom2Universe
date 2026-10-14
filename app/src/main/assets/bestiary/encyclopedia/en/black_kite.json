@@ -1,0 +1,26 @@
+{
+  "id": "black_kite",
+  "name": "Black Kite",
+  "scientific": "Milvus migrans",
+  "group": "birds",
+  "sections": {
+    "overview": "The black kite is a medium-sized, fork-tailed bird of prey, largely a scavenger, with a very wide range. Most northern populations migrate to Africa for the winter, while tropical birds often stay put. In Britain it is only a rare visitor, typically seen in April and May.",
+    "identification": "It measures about 47–60 cm, with a wingspan of 140–150 cm; females are slightly larger. The plumage is mostly brown, with a paler head, a yellow cere, a dark hooked bill and yellow legs with black talons. The tail is forked, though less deeply than the red kite’s, and the bird looks more uniformly dark. Young birds are lighter and have a shorter fork. Published weights vary, from roughly 0.5 kg to over 0.8 kg.",
+    "habitat": "It favours open country near water, such as rivers, lakes, ponds and wetlands, but also uses woodland, open savanna and even large cities where food is plentiful. It is rarely found in deserts, high mountains or dense forest.",
+    "diet": "Mainly a scavenger, it eats carrion, including roadkill and refuse, but also takes fish, insects, reptiles, amphibians, small mammals and birds. It finds food by soaring on thermals and has been seen hovering over fires to catch fleeing insects.",
+    "behavior": "The black kite is often sociable, though pairs are more solitary while breeding. It is territorial around its roost and calls loudly with high-pitched notes. Pairs perform aerial courtship in March, including a display in which they lock talons and spiral towards the ground.",
+    "reproduction": "Eggs are laid in April and May, usually two or three, and the female incubates them for about 32 days while the male brings food. The nest is a bulky platform of sticks lined with soft material, built by both parents in a tree, on a cliff edge or on a pylon. Chicks stay in the nest for 42–56 days, and birds mature at two to three years.",
+    "ecology": "As an efficient scavenger, it helps break down dead animals. Humans are its main source of mortality, mostly unintentionally, through collisions with vehicles and the ingestion of poisoned items; other black kites sometimes steal eggs from its nests.",
+    "conservation": "The IUCN Red List classes the species as Least Concern because of its wide range and large population. Some local populations are declining because of water pollution, agricultural pesticides, hunting and poisoning of carcasses. In the UK it is a rare vagrant, with no current population data and no routine monitoring."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/black-kite",
+      "title": "Black Kite — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Milvus_migrans/",
+      "title": "Milvus migrans — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

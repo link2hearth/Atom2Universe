@@ -1,0 +1,26 @@
+{
+  "id": "troglodytes_troglodytes",
+  "name": "Troglodyte mignon",
+  "scientific": "Troglodytes troglodytes",
+  "group": "birds",
+  "sections": {
+    "overview": "Le troglodyte mignon est un minuscule passereau arrondi, parmi les oiseaux nicheurs les plus nombreux de Grande-Bretagne. On l’entend souvent avant de le voir : le mâle défend son territoire par un chant bien plus puissant que sa taille ne le laisse penser.",
+    "identification": "L’adulte pèse environ 10 g, avec une aile d’environ 49 mm. Son plumage est brun, barré de sombre sur les ailes, la queue et le dessous, avec un sourcil clair et une gorge plus pâle. La queue courte est souvent relevée. Les sexes se ressemblent; les jeunes sont plus sombres.",
+    "habitat": "En Grande-Bretagne, il est le plus fréquent dans les bois de feuillus, mais vit aussi dans les broussailles, les prairies d’élevage, les villages, les villes et les bois de conifères. Il préfère la végétation dense près du sol, où il chasse et trouve ses sites de nid.",
+    "diet": "Le troglodyte cherche surtout sa nourriture au sol : insectes et leurs larves, araignées et mille-pattes. Au bord de l’eau, il peut aussi prendre des invertébrés aquatiques.",
+    "behavior": "Les mâles établissent et défendent leur territoire par le chant, souvent depuis des perchoirs bas. Chaque mâle construit aussi plusieurs nids en dôme de mousse, d’herbe et de brindilles, souvent dans des cavités; on les appelle « nids de mâle ».",
+    "reproduction": "En Grande-Bretagne, la ponte commence en moyenne début mai. Une couvée compte en général cinq ou six œufs, couvés par la femelle pendant 16 à 18 jours. Les poussins, couverts de duvet et sans défense, s’envolent après environ 14,5 à 18 jours. La femelle élève généralement la nichée. La reproduction débute en général à un an.",
+    "ecology": "Les troglodytes contribuent à réguler les populations d’insectes et sont eux-mêmes la proie des chats domestiques et d’oiseaux comme les geais et les pies; corneilles et geais pillent aussi les nids. Le coucou gris parasite parfois les nids de troglodyte.",
+    "conservation": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure. La population nicheuse britannique était estimée à 11 millions de territoires en 2016 et a augmenté de 127 % depuis 1967, mais ses effectifs chutent après les hivers rigoureux avant de se rétablir. Un troglodyte vit en général environ deux ans; le plus âgé enregistré en Grande-Bretagne a dépassé sept ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/wren",
+      "title": "Troglodyte — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Troglodytes_troglodytes/",
+      "title": "Troglodytes troglodytes — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

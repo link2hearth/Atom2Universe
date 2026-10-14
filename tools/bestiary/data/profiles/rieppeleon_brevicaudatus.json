@@ -12,8 +12,8 @@
       "fr": "Le caméléon nain barbu est un minuscule caméléon à queue courte des forêts de l’est de la Tanzanie et du sud-est du Kenya. Il vit près du sol, parmi la litière de feuilles et les buissons bas. Son nom scientifique signifie à queue courte."
     },
     "identification": {
-      "en": "A very small chameleon, about 8 cm long, named for its scaly throat with two chin lobes. It can change colour among brown, yellow, green, orange and black, to show stress or attract a mate. Sleeping in the open, it can flatten its body and show a side stripe that looks like a dead leaf.",
-      "fr": "Un très petit caméléon, long d’environ 8 cm, qui doit son nom à sa gorge écailleuse portant deux lobes sous le menton. Il peut passer du brun au jaune, au vert, à l’orange et au noir pour montrer son stress ou attirer un partenaire. Quand il dort à découvert, il peut aplatir son corps et laisser voir une raie latérale qui ressemble à une feuille morte."
+      "en": "Adults are around 8 cm long. The sources consulted do not publish a dependable adult body mass or sex-specific length range, so neither is estimated here. A very small chameleon, about 8 cm long, named for its scaly throat with two chin lobes. It can change colour among brown, yellow, green, orange and black, to show stress or attract a mate. Sleeping in the open, it can flatten its body and show a side stripe that looks like a dead leaf.",
+      "fr": "L’adulte mesure environ 8 cm. Les sources consultées ne publient pas de masse corporelle adulte fiable ni de fourchette de longueur selon le sexe ; ces données ne sont donc pas estimées ici. Un très petit caméléon, long d’environ 8 cm, qui doit son nom à sa gorge écailleuse portant deux lobes sous le menton. Il peut passer du brun au jaune, au vert, à l’orange et au noir pour montrer son stress ou attirer un partenaire. Quand il dort à découvert, il peut aplatir son corps et laisser voir une raie latérale qui ressemble à une feuille morte."
     },
     "habitat": {
       "en": "It lives in lowland forest of eastern Tanzania and south-eastern Kenya, including submontane and coastal forest, on the leafy forest floor and in low bushes. The Rondo Plateau in Tanzania is one confirmed locality, and the type locality is Derema in the Usambara Mountains.",
@@ -48,10 +48,19 @@
       },
       "url": "https://www.worldlandtrust.org/species/bearded-pygmy-chameleon/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "About 8 cm; scaly throat with two chin lobes; colour change; dead-leaf side stripe when sleeping; lowland, submontane and coastal forest in eastern Tanzania and south-eastern Kenya; Rondo Plateau.",
-        "Diurnal; small insects; habitat loss the main threat; extent 163,800 km², forest under 10 %; Least Concern."
+        "Diurnal; small insects; habitat loss the main threat; extent 163,800 km², forest under 10 %; Least Concern.",
+        "Species profile gives approximately 8 cm adult length; no reliable mass found."
       ]
     },
     {
@@ -61,7 +70,12 @@
       },
       "url": "https://reptile-database.reptarium.cz/Rieppeleon/brevicaudatus",
       "consulted": "2026-10-12",
-      "supports": ["overview", "habitat", "reproduction", "conservation"],
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Common name bearded pygmy chameleon; eastern Tanzania and Kenya; type locality Derema, Usambara Mts.; oviparous; etymology brevis + cauda; Least Concern badge. Diagnosis text not available on the page."
       ]

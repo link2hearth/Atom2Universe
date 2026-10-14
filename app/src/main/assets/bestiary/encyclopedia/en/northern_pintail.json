@@ -1,0 +1,30 @@
+{
+  "id": "northern_pintail",
+  "name": "Northern Pintail",
+  "scientific": "Anas acuta",
+  "group": "birds",
+  "sections": {
+    "overview": "The northern pintail is an elegant dabbling duck, slightly bigger than a Mallard, with a long neck and a small head. In Britain it is mainly a winter visitor, and breeding there is rare.",
+    "identification": "In Britain adult males average about 1,030 g with a wing of 277 mm; females are smaller, about 819 g and 259 mm. Both sexes have a long, slender, dark grey bill. The male has a chocolate-brown head, a creamy throat and a long central tail feather of up to about 10 cm. In flight the curved back, pointed wings and tapering tail are distinctive.",
+    "habitat": "In winter it favours sheltered coasts, grazing marshes, river floodplains and estuaries. Breeding in Britain is localised, mainly on the coast of East Anglia and in the northern and western isles of Scotland. Elsewhere it uses marshes, ponds, lakes and flooded grain fields.",
+    "diet": "The pintail is omnivorous. It eats grain and wild seeds, aquatic plant roots, insects, small crustaceans and snails, reaching food in deeper water by upending, helped by its longer neck.",
+    "behavior": "It is social and migratory, often mixing with other waterfowl, and can cover long distances quickly. In Britain it is a locally common winter visitor, present from late August to May. In courtship the males whistle and display to the females.",
+    "reproduction": "In Britain a pair raises one brood a year. The female lays typically 7–9 eggs and incubates them alone for 22–24 days. The precocial ducklings feed themselves soon after hatching and fledge after roughly 40–45 days. Breeding usually starts at one year of age.",
+    "ecology": "The pintail feeds on seeds, plants and small invertebrates and is itself prey for foxes, coyotes and other predators; crows, gulls, skunks and foxes take its eggs. It is a quarry species in winter, though in Britain shooting does not appear to affect its population status.",
+    "conservation": "The IUCN Red List classes the species as Least Concern, but it is Vulnerable in Europe and Amber-listed in the UK. About 27 pairs bred in the UK in 2013–17 and some 20,000 birds winter there; the winter population fell by 6% between 1998 and 2023. The typical life expectancy is about three years."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/pintail",
+      "title": "Pintail — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/pintail",
+      "title": "Pintail — RSPB"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Anas_acuta/",
+      "title": "Anas acuta — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

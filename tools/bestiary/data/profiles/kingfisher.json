@@ -87,10 +87,10 @@
         "identification.en.5",
         "identification.fr.5",
         "reproduction.en.2",
-        "reproduction.fr.2",
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.6",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
         "reproduction.fr.6"
       ],
       "budget": {
@@ -118,16 +118,16 @@
         "RSPB notes habitat, dives, territories and nesting banks."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "overview.en.4",
-        "overview.fr.4",
-        "habitat.en.1",
-        "habitat.fr.1",
         "behavior.en.2",
         "behavior.fr.2",
         "conservation.en.1",
-        "conservation.fr.1"
+        "conservation.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "overview.en.1",
+        "overview.en.4",
+        "overview.fr.1",
+        "overview.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -156,8 +156,8 @@
         "behavior.en.1",
         "behavior.fr.1",
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.4",
+        "diet.fr.2",
         "diet.fr.4",
         "ecology.en.1",
         "ecology.fr.1"
@@ -317,13 +317,13 @@
         "Maharashtra observations recorded courtship and biparental chick feeding."
       ],
       "prose_claims": [
-        "identification.en.4",
-        "identification.fr.4",
         "behavior.en.3",
         "behavior.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.5",
+        "reproduction.fr.1",
         "reproduction.fr.5"
       ],
       "budget": {
@@ -349,14 +349,14 @@
         "The state lists bank works, channel change, pollution, sediment and nest disturbance as pressures."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
-        "habitat.en.4",
-        "habitat.fr.4",
         "conservation.en.2",
-        "conservation.fr.2",
         "conservation.en.3",
-        "conservation.fr.3"
+        "conservation.fr.2",
+        "conservation.fr.3",
+        "habitat.en.3",
+        "habitat.en.4",
+        "habitat.fr.3",
+        "habitat.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -380,12 +380,12 @@
         "BirdLife classifies the species globally as Least Concern in its 2024 IUCN record."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "conservation.en.4",
-        "conservation.fr.4",
         "conservation.en.6",
-        "conservation.fr.6"
+        "conservation.fr.4",
+        "conservation.fr.6",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -437,8 +437,8 @@
       ],
       "prose_claims": [
         "identification.en.1",
-        "identification.fr.1",
         "identification.en.2",
+        "identification.fr.1",
         "identification.fr.2"
       ],
       "budget": {

@@ -12,8 +12,8 @@
       "fr": "Le bec-en-sabot est un oiseau des marais africains, seul représentant vivant des Balaenicipitidés. Malgré sa silhouette de cigogne, il est plus proche des pélicans que des cigognes ou des hérons. Son corps gris ardoise, ses longues pattes et son large bec en sabot le distinguent."
     },
     "identification": {
-      "en": "Adults are mainly blue-grey, with darker flight feathers, a pale eye, and long, widely spread toes suited to walking over floating vegetation. The enormous bill has a deep, bulbous base, sharp cutting edges, and a hooked tip; males average slightly larger.",
-      "fr": "L’adulte est gris bleuté, avec des rémiges sombres, un œil pâle et de longs doigts écartés pour marcher sur la végétation flottante. Son immense bec a une base profonde et renflée, des bords tranchants et une pointe crochue; le mâle est légèrement plus grand."
+      "en": "Adults are about 1.2 m long and 1.1–1.4 m tall, with a wingspan near 2.4 m. BirdLife reports average mass of 5.6 kg for males and 4.9 kg for females. These reference figures are not universal maxima. Adults are mainly blue-grey, with darker flight feathers, a pale eye, and long, widely spread toes suited to walking over floating vegetation. The enormous bill has a deep, bulbous base, sharp cutting edges, and a hooked tip; males average slightly larger.",
+      "fr": "L’adulte mesure environ 1,2 m de long et 1,1 à 1,4 m de haut, pour une envergure proche de 2,4 m. BirdLife indique une masse moyenne de 5,6 kg chez le mâle et de 4,9 kg chez la femelle. Ces valeurs de référence ne sont pas des maxima universels. L’adulte est gris bleuté, avec des rémiges sombres, un œil pâle et de longs doigts écartés pour marcher sur la végétation flottante. Son immense bec a une base profonde et renflée, des bords tranchants et une pointe crochue; le mâle est légèrement plus grand."
     },
     "habitat": {
       "en": "It occupies freshwater swamps and seasonally flooded marshes across central and eastern Africa, from South Sudan south to Zambia. Dense reeds, sedges, or papyrus provide cover, while small open patches and floating plant mats offer places to fish and nest.",
@@ -54,11 +54,13 @@
         "diet",
         "behavior",
         "reproduction",
-        "conservation"
+        "conservation",
+        "identification"
       ],
       "facts": [
         "BirdLife identifies it as the sole species in Balaenicipitidae and closer to pelicans than storks.",
-        "Its profile describes range from South Sudan to Zambia, solitary feeding, fish-based diet, nesting, and threats; it gives a 3,300–5,300 mature-individual estimate."
+        "Its profile describes range from South Sudan to Zambia, solitary feeding, fish-based diet, nesting, and threats; it gives a 3,300–5,300 mature-individual estimate.",
+        "Average mass reported by sex: females 4.9 kg, males 5.6 kg."
       ]
     },
     {
@@ -126,6 +128,34 @@
       "facts": [
         "Mayr’s 2003 anatomical analysis supports affinity between Balaenicipitidae and the pelican group and shows traditional stork and pelican orders as polyphyletic in that analysis.",
         "The article supports the broad relationship stated here, not a claim that the shoebill is itself a pelican."
+      ]
+    },
+    {
+      "title": {
+        "en": "Shoebill — Chiba Zoological Park",
+        "fr": "Bec-en-sabot du Nil — parc zoologique de Chiba"
+      },
+      "url": "https://www.city.chiba.jp/zoo/zone/data-shoebill.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Zoological species card lists total length 1.2 m."
+      ]
+    },
+    {
+      "title": {
+        "en": "Shoebill — San Diego Zoo Wildlife Alliance",
+        "fr": "Bec-en-sabot du Nil — San Diego Zoo Wildlife Alliance"
+      },
+      "url": "https://animals.sandiegozoo.org/animals/shoebill",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult height 110–140 cm and wingspan about 2.4 m; bill length over 19 cm."
       ]
     }
   ],

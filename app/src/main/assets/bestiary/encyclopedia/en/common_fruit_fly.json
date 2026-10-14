@@ -1,0 +1,46 @@
+{
+  "id": "common_fruit_fly",
+  "name": "Common fruit fly",
+  "scientific": "Drosophila melanogaster",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Despite its common name, Drosophila melanogaster is a vinegar fly in the family Drosophilidae, not a tephritid true fruit fly. Its short generations and well-studied genetics made it a landmark model for studying animal heredity and development.",
+    "identification": "Adults are about 3 millimetres long, with females slightly larger than males. The thorax bears six legs and clear forewings; small knob-shaped halteres, the altered hindwings, help stabilize flight. Wild-type flies have reddish eyes and a yellow-brown body with dark abdominal bands; the male’s abdomen is darker toward the rear. In one laboratory study, mean wet mass was 0.693 ± 0.050 mg for females and 0.505 ± 0.047 mg for males; mass depends on rearing conditions and is not a fixed field measurement.",
+    "habitat": "Originally African, it now occurs worldwide. It gathers where fruit, plant juices and other foods ferment, from orchards and markets to kitchens and restaurants.",
+    "diet": "Larvae and adults exploit fermenting fruit together with its yeasts, bacteria and other microbes; the patch supplies microbial food as well as a suitable place for young flies to develop.",
+    "behavior": "Adults often gather around fermenting food. During courtship, a male follows and taps a female, vibrates one wing to sing, then licks her before attempting to mate; she may reject him. The exchange combines sound, touch and chemical cues.",
+    "reproduction": "After mating, the female stores sperm and lays successive fertilized eggs on suitable decaying food; she can lay roughly 400 eggs over time. At about 25 °C in standard laboratory conditions, eggs hatch in roughly a day; larvae feed and moult twice through three stages, then pupate before adults emerge. This egg-to-adult cycle takes about ten days under those laboratory conditions. Females may become receptive to mating within about 8–12 hours of emergence, depending on temperature.",
+    "ecology": "By feeding and breeding in decomposing fruit, flies ingest microbes and return them to the substrate in their droppings, helping maintain a shared fruit–microbe–fly community and carrying microbes between temporary patches of decay. Yeasts and bacteria do not just share the patch: they shape its food value and microbial conditions for the next brood.",
+    "conservation": "The species is globally widespread and commonly gathers in homes, restaurants and other places where food is served, where people often regard it as a nuisance."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Drosophila_melanogaster",
+      "title": "Drosophila melanogaster"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Drosophila_melanogaster",
+      "title": "Drosophila melanogaster"
+    },
+    {
+      "url": "https://www.fml.tuebingen.mpg.de/68672/fruit-flies",
+      "title": "Fruit flies (Drosophila melanogaster)"
+    },
+    {
+      "url": "https://entomology.ucr.edu/ebelingchapter6",
+      "title": "Chapter 6: Pest On or Near Food"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4592592/",
+      "title": "Sexual Communication in the Drosophila Genus"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3463489/",
+      "title": "Gut-associated microbes of Drosophila melanogaster"
+    },
+    {
+      "url": "https://doi.org/10.1242/bio.023994",
+      "title": "Metabolic rate and hypoxia tolerance are affected by group interactions and sex in the fruit fly (Drosophila melanogaster): new data and a literature survey — Biology Open"
+    }
+  ]
+}

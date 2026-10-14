@@ -1,0 +1,86 @@
+{
+  "id": "humpback_whale",
+  "name": "Baleine à bosse",
+  "scientific": "Megaptera novaeangliae",
+  "group": "mammals",
+  "sections": {
+    "overview": "La baleine à bosse est un cétacé à fanons présent dans tous les grands océans. La plupart migrent entre zones d’alimentation de haute latitude et lieux de reproduction chauds ; celle de la mer d’Arabie reste résidente. Les mâles émettent des chants structurés ; des travaux dans le Pacifique Sud documentent la diffusion sociale de thèmes entre populations.",
+    "identification": "L’adulte a un corps trapu gris foncé, une tête large et aplatie et une petite nageoire dorsale située derrière le milieu du corps ; sa forme varie. Selon NOAA PMEL, les femelles mesurent en moyenne 15 mètres et dépassent légèrement les mâles. Les nageoires pectorales atteignent environ le tiers de la longueur du corps ; les tubercules charnus de la tête et de la mâchoire portent des poils sensoriels. La face inférieure de chaque large nageoire caudale présente des motifs noir et blanc distinctifs que les chercheurs utilisent pour reconnaître les individus d’une observation à l’autre. Les adultes atteignent environ 11–16 m et 40 tonnes américaines (environ 36 tonnes métriques) ; les femelles sont légèrement plus grandes que les mâles.",
+    "habitat": "Les populations migratrices s’alimentent en été dans les eaux froides des hautes latitudes, puis hivernent dans des zones tropicales de reproduction. Certaines parcourent jusqu’à 8 000 kilomètres entre alimentation et reproduction ; les routes varient selon les populations. Les populations australes se reproduisent généralement de juillet à octobre et s’alimentent près de l’Antarctique de novembre à mars ; celles du Nord suivent le cycle inverse. Résidentes, les baleines de la mer d’Arabie trouvent des ressources dans les remontées saisonnières d’eaux profondes.",
+    "diet": "Les baleines australes consomment surtout du krill antarctique ; celles du Nord prennent des poissons en bancs, dont harengs, anchois et lançons. En ruée, elle engloutit l’eau chargée de proies ; les sillons extensibles dilatent bouche et poche ventrale. Elle expulse l’eau à travers ses fanons, qui retiennent les proies. Dans le sud-est de l’Alaska, des baleines solitaires balisées formaient des rideaux de bulles autour du krill avant de traverser les proies. Ce mécanisme documenté en Alaska ne prouve pas que le filet de bulles soit universel.",
+    "behavior": "Les groupes sont changeants : une femelle et son petit peuvent être escortés par un mâle, rejoint par des rivaux qui se disputent la proximité. Au large de l’Australie orientale, des mâles escortaient ou chantaient ; le rôle du chant dans l’attraction ou la compétition reste débattu. À Hawaï, les « wops » et « grumbles » variaient selon le groupe et baissaient de volume en présence d’un chanteur proche. Dans le Pacifique Sud, des thèmes se propageaient entre populations ; certains chanteurs mêlaient éléments anciens et nouveaux lors de changements rapides.",
+    "reproduction": "L’accouplement et les naissances ont surtout lieu en hiver, dans les eaux chaudes ; la gestation dure environ 11 à 11,5 mois. Une femelle gestante s’alimente aux latitudes tempérées ou polaires, puis revient mettre bas ; elle peut arriver tôt. Les femelles ont généralement un baleineau tous les deux ou trois ans ; mères et petits fréquentent souvent des eaux peu profondes et abritées. Les baleineaux tètent 10 à 11 mois ; des estimations donnent 4,3 mètres à la naissance et 8,8 mètres au sevrage. Dans le golfe d’Exmouth, les femelles allaitantes au repos respiraient deux fois moins souvent que les adultes en alimentation, signe possible d’économie d’énergie.",
+    "ecology": "Les matières excrétées des baleines à fanons apportent azote, phosphore et fer près de la surface, nutriments susceptibles de favoriser le phytoplancton. Un modèle multi-espèces estime des effets du recyclage des nutriments sur la production primaire, variables selon régions et saisons. Le modèle n’isole pas la contribution mondiale des seules baleines à bosse.",
+    "conservation": "Selon NOAA, la chasse commerciale avait réduit toutes les populations et la plupart de plus de 95 % avant le moratoire sur la chasse commerciale. La CBI constate le rétablissement du Pacifique Nord depuis 1966 environ, un pic en 2014 puis des baisses régionales liées à la vague de chaleur de 2014–2016. En 2025-2, le CSG classe l’espèce en préoccupation mineure, mais les sous-populations de la mer d’Arabie et d’Océanie en danger. L’évaluation mondiale « préoccupation mineure » date de novembre 2018 ; celle de la mer d’Arabie, distincte, date de 2008. Les pressions comprennent engins de pêche et débris, collisions et perturbations liées au trafic maritime, bruit sous-marin et changements de proies liés au climat ; leurs effets varient. Selon NOAA, l’enchevêtrement gêne parfois l’alimentation, blesse ou tue ; les changements de proies peuvent altérer nutrition et reproduction."
+  },
+  "sources": [
+    {
+      "url": "https://iwc.int/about-whales/whale-species/humpback-whale",
+      "title": "Baleine à bosse"
+    },
+    {
+      "url": "https://www.pmel.noaa.gov/acoustics/whales/whale-biology-hump.html",
+      "title": "Biologie de la baleine à bosse"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/humpback-whale?page=1",
+      "title": "Baleine à bosse"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2008.RLTS.T132835A3464679.en",
+      "title": "Megaptera novaeangliae (sous-population de la mer d’Arabie)"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5543391/",
+      "title": "Les hybridations de chants lors de changements rapides éclairent la transmission culturelle chez les baleines à bosse"
+    },
+    {
+      "url": "https://www.nhm.ac.uk/discover/baleen-whales-filter-feeding-explained.html",
+      "title": "Les baleines à fanons : le filtrage alimentaire expliqué"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11336686/",
+      "title": "Des baleines à bosse solitaires fabriquent des filets de bulles pour accroître leur capture de proies"
+    },
+    {
+      "url": "https://www.nature.com/articles/s42003-024-06908-w",
+      "title": "Les mâles baleines à bosse passent au chant en présence de canons à air sismiques"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4859862/",
+      "title": "Variation des paramètres vocaux selon le contexte social chez la baleine à bosse"
+    },
+    {
+      "url": "https://repository.library.noaa.gov/view/noaa/35695/noaa_35695_DS1.pdf",
+      "title": "Baleine à bosse — guide NOAA Fisheries"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4778463/",
+      "title": "Énergétique optimale de la migration et implications des perturbations chez la baleine à bosse"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6347592/",
+      "title": "Bénéfices énergétiques du repos chez les couples mère-baleineau révélés par biologging et photogrammétrie aérienne"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12582259/",
+      "title": "Impact des baleines à fanons sur la production primaire océanique dans l’espace et le temps"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/humpback-whale/management?page=1",
+      "title": "Baleine à bosse : gestion"
+    },
+    {
+      "url": "https://iwc.int/about-whales/intro-to-population-status/status-of-whales-text-summaries",
+      "title": "Synthèses des statuts"
+    },
+    {
+      "url": "https://iucn-csg.org/red-list-status-of-cetaceans/",
+      "title": "Statut des cétacés sur la Liste rouge"
+    },
+    {
+      "url": "https://iucn-csg.org/35-updated-cetacean-red-list-assessments-published-in-nov-2018/",
+      "title": "35 évaluations actualisées de la Liste rouge des cétacés publiées en novembre 2018"
+    }
+  ]
+}

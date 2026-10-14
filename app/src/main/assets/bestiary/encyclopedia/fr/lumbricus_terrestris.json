@@ -1,0 +1,34 @@
+{
+  "id": "lumbricus_terrestris",
+  "name": "Lombric terrestre",
+  "scientific": "Lumbricus terrestris",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le lombric terrestre, aussi appelé « night crawler » en Amérique du Nord, est l’un des plus grands vers de terre d’Europe. C’est une espèce épi-anécique : elle vit dans un terrier profond, surtout vertical, et monte à la surface pour se nourrir. Elle est hermaphrodite, mais chaque ver a tout de même besoin d’un partenaire pour se reproduire.",
+    "identification": "Il mesure environ 9 à 30 cm, et les plus grands individus atteindraient 35 cm en extension. Le dos est brun à rouge pourpre et le dessous jaune orangé; l’extrémité de la queue est aplatie en palette, ce qui permet au ver de s’agripper aux parois de son terrier. Une référence pédagogique allemande indique qu’un individu adulte peut approcher 25 g; la masse varie selon la longueur et l’état corporel. Aucune différence selon le sexe ni largeur corporelle standard n’a été trouvée.",
+    "habitat": "Il préfère les sols peu perturbés et abonde dans les pelouses et les prairies. Son terrier permanent atteint normalement 1 à 2 m de profondeur, une source allant jusqu’à 2,5 m. Sur une très mince couche de terre au-dessus d’un sous-sol inerte, dans le nord-ouest de l’Angleterre, des vers ont creusé des galeries en U de seulement 0,11 m environ et y ont formé une population qui se reproduit.",
+    "diet": "Il se nourrit surtout de feuilles tombées et d’autres matières végétales en décomposition, et avale de la terre et des débris végétaux en creusant. C’est un détritivore qui sort la nuit.",
+    "behavior": "Il sort surtout la nuit et s’ancre dans son terrier grâce à sa queue élargie. À l’entrée du terrier, il édifie de petits monticules en forme de tourelle, appelés middens. Sa façon de creuser est souple : en sol mince, il adapte la forme de la galerie plutôt que de s’enfoncer dans un sous-sol hostile.",
+    "reproduction": "L’accouplement a lieu à la surface par temps humide, les deux vers étant placés tête-bêche, et peut durer jusqu’à quatre heures. Chaque ver produit en moyenne environ 38 cocons par an selon une source. Les individus mûrissent en général en un an et peuvent vivre jusqu’à six ans environ.",
+    "ecology": "En ingérant puis en rejetant de la matière minérale et organique, il aère et brasse le sol. On cite 20 à 40 vers par mètre carré dans une pelouse britannique moyenne, et jusqu’à 70 par mètre carré ailleurs, ce qui place l’espèce parmi celles de plus forte biomasse animale par hectare sur terre.",
+    "conservation": "Aucune évaluation mondiale de conservation n’a été trouvée. En Grande-Bretagne, l’espèce est décrite comme commune et répandue, mais très insuffisamment recensée."
+  },
+  "sources": [
+    {
+      "url": "https://www.naturespot.org/node/2100",
+      "title": "Lombric terrestre, Lumbricus terrestris — NatureSpot (faune de Leicestershire et Rutland)"
+    },
+    {
+      "url": "https://micro.magnet.fsu.edu/optics/olympusmicd/galleries/brightfield/lumbricus.html",
+      "title": "Lombric terrestre (Lumbricus terrestris) — Molecular Expressions, université d’État de Floride"
+    },
+    {
+      "url": "https://knowledge.lancashire.ac.uk/50302",
+      "title": "Souplesse du comportement de creusement chez Lumbricus terrestris — Butt et Nuutinen, European Journal of Soil Biology, 2024 (résumé)"
+    },
+    {
+      "url": "https://hypersoil.uni-muenster.de/1/02/08.htm",
+      "title": "Taille des vers de terre | HyperSoil, université de Münster"
+    }
+  ]
+}

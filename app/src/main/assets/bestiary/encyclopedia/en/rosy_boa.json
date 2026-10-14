@@ -1,0 +1,38 @@
+{
+  "id": "rosy_boa",
+  "name": "Desert rosy boa",
+  "scientific": "Lichanura trivirgata",
+  "group": "reptiles",
+  "sections": {
+    "overview": "The desert rosy boa, Lichanura trivirgata, is a small boa native to the southwestern United States and northwestern Mexico.",
+    "identification": "Females are generally larger than males. Arizona individuals reach 95 centimetres; three dark lengthwise bands and vertical oval pupils are characteristic. The head is small and the tail relatively blunt. A stout body usually has a pale grey background with brown or orange bands.",
+    "habitat": "Its range covers western Arizona, Sonora and most of Baja California; California records are limited to far southern San Diego County. It shelters in rocky desert foothills, scrub and canyon crevices, and may use burrows where surface cover is scarce. Coastal California populations formerly grouped with this boa are now treated as Lichanura orcutti.",
+    "diet": "Small mammals and birds are its main prey. It subdues them by constriction, wrapping its body around the animal.",
+    "behavior": "Usually solitary, it moves slowly and stays sheltered under rocks, in crevices or inside burrows. In Arizona it is mostly nocturnal or crepuscular, yet may move on spring mornings and on mild or overcast days.",
+    "reproduction": "During spring courtship, a male follows the female’s scent, tongue-flicks over her body and strokes her flanks with pelvic spurs before mating. After several months of internal development, females bear live young that soon become independent. In Arizona, births occur in late summer or early autumn, with three to fourteen young recorded per litter.",
+    "ecology": "It hunts rodents in rocky desert habitats, acting as a ground-level predator in arid food webs.",
+    "conservation": "Wild collection for pets occurred historically, while captive breeding later met much of the demand. An IUCN assessment published in 2007 classified the species as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Desert_rosy_boa",
+      "title": "Desert rosy boa"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Charina_trivirgata/",
+      "title": "Charina trivirgata (Rosy Boa), Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://reptilesofaz.org/snakes-subpages/h-l-trivirgata/",
+      "title": "Rosy Boa, The Reptiles and Amphibians of Arizona"
+    },
+    {
+      "url": "https://nrm.dfg.ca.gov/FileHandler.ashx?DocumentID=2745",
+      "title": "Rosy Boa, California Wildlife Habitat Relationships System"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Lichanura_trivirgata",
+      "title": "Lichanura trivirgata — Wikipédia"
+    }
+  ]
+}

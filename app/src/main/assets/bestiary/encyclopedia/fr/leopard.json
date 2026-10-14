@@ -1,0 +1,42 @@
+{
+  "id": "leopard",
+  "name": "Léopard",
+  "scientific": "Panthera pardus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le léopard est un félin puissant présent en Afrique et en Asie. Il vit dans divers milieux, des forêts tropicales aux déserts et aux montagnes. Ses capacités de chasse et d’escalade l’aident à subsister dans des paysages où d’autres félins sont absents.",
+    "identification": "L’adulte a un corps allongé, des pattes courtes et musclées, de larges pieds et une longue queue. Son pelage va du doré pâle à l’ocre, avec des rosettes sombres et de petites taches. Chez les individus mélaniques, les motifs restent visibles sous un éclairage favorable. La taille adulte varie selon les régions. Les plages de longueur rapportées sont de 1,6 à 2,3 m chez les mâles et de 1,7 à 1,9 m chez les femelles; les masses rapportées sont respectivement de 31 à 65 kg et de 17 à 58 kg. Les mâles sont généralement plus grands, mais les plages se chevauchent et varient selon la région : la taille seule ne permet donc pas de déterminer le sexe. Je n’ai pas trouvé de hauteur au garrot générale fiable.",
+    "habitat": "Le léopard fréquente forêts tropicales, boisements, savanes, broussailles, pentes rocheuses et déserts lorsque couvert et proies sont présents. Il vit aussi dans certains paysages humains. Dans l’Himalaya, des observations atteignent environ 5 200 mètres ; cette altitude exceptionnelle ne décrit pas son habitat ordinaire.",
+    "diet": "Ce carnivore chasse de petits mammifères et oiseaux, mais aussi de grands ongulés. Son menu dépend des proies locales : au Gabon, les ongulés forestiers comptaient beaucoup ; en Tanzanie, les primates étaient importants. Près des fermes, il peut aussi prendre du bétail.",
+    "behavior": "Le léopard vit seul, sauf lorsqu’une femelle accompagne ses petits ou que des adultes s’accouplent. Son activité varie : beaucoup de populations de savane sont surtout nocturnes, tandis que certaines forêts gabonaises abritent des animaux diurnes. Odeurs, cris et griffures signalent sa présence.",
+    "reproduction": "Après environ trois mois de gestation, la femelle met bas dans une tanière cachée, souvent deux ou trois petits. Ils restent dissimulés, puis suivent leur mère et apprennent à chasser. Selon les populations, l’autonomie survient vers un an, deux ans ou plus tard.",
+    "ecology": "Le léopard consomme des proies différentes selon le milieu ; aucune espèce ne caractérise partout son régime. Il peut hisser une carcasse dans un arbre, la rendant moins accessible aux concurrents. Si les proies sauvages manquent, le bétail peut provoquer des conflits avec les humains.",
+    "conservation": "La fiche du Groupe de spécialistes des félins de l’UICN (Liste rouge 2024-2) classe le léopard Vulnérable et indique une baisse de 11 % de son aire entre 2016 et 2023. Les pressions citées sont perte d’habitat, raréfaction des proies, commerce illégal et représailles."
+  },
+  "sources": [
+    {
+      "url": "https://www.catsg.org/living-species-leopard",
+      "title": "Espèces actuelles : Léopard — Groupe de spécialistes des félins de l’UICN"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/leopard",
+      "title": "Léopard — San Diego Zoo Animals & Plants"
+    },
+    {
+      "url": "https://www.stir.ac.uk/research/hub/publication/650195",
+      "title": "Régime alimentaire du léopard au parc national de Lopé, Gabon — University of Stirling"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/aje.12714",
+      "title": "Les primates sont une ressource alimentaire importante pour les léopards de Mahale, Tanzanie — African Journal of Ecology"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11428743/",
+      "title": "Survie des petits dans une population sauvage de léopards — PMC"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Panthera_pardus/",
+      "title": "Panthera pardus | Animal Diversity Web"
+    }
+  ]
+}

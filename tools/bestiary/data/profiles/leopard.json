@@ -12,8 +12,8 @@
       "fr": "Le léopard est un félin puissant présent en Afrique et en Asie. Il vit dans divers milieux, des forêts tropicales aux déserts et aux montagnes. Ses capacités de chasse et d’escalade l’aident à subsister dans des paysages où d’autres félins sont absents."
     },
     "identification": {
-      "en": "Adults have a long body, short muscular legs, broad paws and a long tail. Their coats range from pale gold to ochre, with dark rosettes and smaller solid spots. Some are melanistic; their markings remain visible in suitable light.",
-      "fr": "L’adulte a un corps allongé, des pattes courtes et musclées, de larges pieds et une longue queue. Son pelage va du doré pâle à l’ocre, avec des rosettes sombres et de petites taches. Chez les individus mélaniques, les motifs restent visibles sous un éclairage favorable."
+      "en": "Adults have a long body, short muscular legs, broad paws and a long tail. Their coats range from pale gold to ochre, with dark rosettes and smaller solid spots. Some are melanistic; their markings remain visible in suitable light. Adult size varies geographically. Published reported length ranges are 1.6–2.3 m for males and 1.7–1.9 m for females; corresponding reported masses are 31–65 kg and 17–58 kg. Males are generally larger, but the overlap and geographic variation mean size alone does not identify sex. A dependable general shoulder-height range was not found.",
+      "fr": "L’adulte a un corps allongé, des pattes courtes et musclées, de larges pieds et une longue queue. Son pelage va du doré pâle à l’ocre, avec des rosettes sombres et de petites taches. Chez les individus mélaniques, les motifs restent visibles sous un éclairage favorable. La taille adulte varie selon les régions. Les plages de longueur rapportées sont de 1,6 à 2,3 m chez les mâles et de 1,7 à 1,9 m chez les femelles; les masses rapportées sont respectivement de 31 à 65 kg et de 17 à 58 kg. Les mâles sont généralement plus grands, mais les plages se chevauchent et varient selon la région : la taille seule ne permet donc pas de déterminer le sexe. Je n’ai pas trouvé de hauteur au garrot générale fiable."
     },
     "habitat": {
       "en": "Leopards use rainforest, woodland, savanna, scrub, rocky slopes and desert where cover and prey are available. They also occur in some human-used landscapes. Himalayan records reach about 5,200 metres, an exceptional local record rather than a typical habitat.",
@@ -119,6 +119,20 @@
       ],
       "facts": [
         "Camera-trap study of Indian leopards at Jhalana, India, followed 33 cubs in 16 litters; den residence, maternal accompaniment and dispersal timings vary, and 61% survived to independence at two years in this population."
+      ]
+    },
+    {
+      "title": {
+        "en": "Panthera pardus | Animal Diversity Web",
+        "fr": "Panthera pardus | Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Panthera_pardus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Gives sex-specific total-length and body-mass ranges and notes geographic variation and larger males."
       ]
     }
   ],

@@ -1,0 +1,54 @@
+{
+  "id": "ramphastos_sulfuratus",
+  "name": "Keel-billed toucan",
+  "scientific": "Ramphastos sulfuratus",
+  "group": "birds",
+  "sections": {
+    "overview": "The keel-billed toucan is a resident canopy bird of humid forests, ranging from southern Mexico through Central America to northwestern South America. Its large, multicoloured bill gives it the alternate name rainbow-billed toucan. In a pasture-dominated landscape in Mexico, tracked birds selected forest remnants while also using several wooded and agricultural habitats.",
+    "identification": "Adults are about 50 cm long. The body is black with a yellow throat and chest, white rump, red undertail feathers, blue eye skin and blue feet. The sexes look alike, though males may be slightly larger. The oversized green bill has orange, red and blue accents and can approach a third of body length. A species sheet describes a lightweight honeycomb-like core under a keratin covering; direct mechanical tests used the related toco toucan. Two toes point forward and two back to grip branches.",
+    "habitat": "The species occupies humid tropical forest, mainly in the middle and upper canopy. It also visits edges, secondary growth and trees retained in pasture or cropland. In Los Tuxtlas, Mexico, six birds followed for 349 hours preferred forest remnants at both landscape and local scales. Their activities were similar among habitat types, suggesting some altered patches still supplied resources. This regional result does not mean open land replaces intact forest across the range.",
+    "diet": "Fruit is the staple, including figs and palm fruits. A toucan can pluck fruit from branches too slender to support its body, swallow it whole, then regurgitate or pass seeds away from the parent tree. It also eats insects and small vertebrates; eggs and nestlings are recorded prey. One published observation documents a keel-billed toucan taking vertebrate carrion, an unusual opportunistic food rather than evidence of a regular habit.",
+    "behavior": "Keel-billed toucans move between fruiting trees, often in small flocks; older accounts report groups of six to twelve. They hop along branches and fly between trees with rapid wingbeats followed by a glide. In one Mexican study, foraging and perching each occupied about 35–40% of observed time, while calling and social interactions each took 10% or less. They also roost in tree cavities; group composition and year-round social bonds remain poorly documented.",
+    "reproduction": "The toucan nests in a natural tree hollow or an old cavity made by another bird. Species accounts report two to four eggs, incubated by both parents, who also feed the helpless chicks. They hatch after about 16–20 days and remain in the cavity while growing; fledging is reported around eight to nine weeks. These timings come from limited, partly older natural-history sources and may vary locally.",
+    "ecology": "Fruit feeding carries seeds between feeding and resting sites. A Panamanian study of Virola surinamensis found heavier weevil attack beneath and near parent trees; dispersal beyond 20 metres by large birds, including keel-billed toucans, appeared more favorable for seedling survival. Gut passage has different effects in different plants. In an experiment with captive keel-billed toucans, Ficus insipida seeds recovered from droppings did not germinate significantly better than uneaten controls. Seed transport and enhanced germination are therefore distinct processes.",
+    "conservation": "BirdLife International’s global IUCN assessment, dated 18 March 2021, lists the species as Near Threatened with a decreasing trend. It estimates 50,000–499,999 mature birds and links decline to habitat loss, degradation, hunting and trapping. Earlier assessments through 2016 listed Least Concern; that category is no longer current."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T22682102A168670038.en",
+      "title": "Ramphastos sulfuratus — IUCN Red List of Threatened Species, BirdLife International assessment"
+    },
+    {
+      "url": "https://doi.org/10.1093/condor/103.4.776",
+      "title": "Habitat Selection and Activity Budgets of Keel-Billed Toucans at the Landscape Level — The Condor, Oxford University Press"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Ramphastos_sulfuratus/",
+      "title": "Ramphastos sulfuratus (Keel-billed Toucan) — Animal Diversity Web, University of Michigan Museum of Zoology"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/cams/a-closer-look-at-the-keel-billed-toucans-incredible-bill/",
+      "title": "A Closer Look At The Keel-billed Toucan’s Incredible Bill — Cornell Lab Bird Cams"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.jmbbm.2011.08.003",
+      "title": "Structure and micro-computed tomography-based finite element modeling of Toucan beak — Journal of the Mechanical Behavior of Biomedical Materials"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.fooweb.2022.e00223",
+      "title": "More than Froot Loops: Keel-billed toucans (Ramphastos sulfuratus) consume vertebrate carrion — Food Webs"
+    },
+    {
+      "url": "https://www.sfzoodocents.org/notebook/FactSheets/BIRDS/Piciformes/ToucanKeelbilled.pdf",
+      "title": "Keel-billed Toucan — San Francisco Zoo Docents Fact Sheet"
+    },
+    {
+      "url": "https://esajournals.onlinelibrary.wiley.com/doi/10.2307/1940539",
+      "title": "Early Consequences of Seed Dispersal for a Neotropical Tree — Howe et al. (1985)"
+    },
+    {
+      "url": "https://www.scielo.sa.cr/scielo.php?pid=S0034-77442006000200016&script=sci_arttext",
+      "title": "Germination of Ficus insipida seeds from toucan and spider-monkey feces (2006)"
+    }
+  ]
+}

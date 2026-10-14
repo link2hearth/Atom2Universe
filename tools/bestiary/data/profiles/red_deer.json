@@ -12,8 +12,8 @@
       "fr": "Le cerf élaphe est un grand ruminant à sabots, indigène d’Europe, de l’Atlas, d’Anatolie, du Caucase et du nord-ouest de l’Iran. Les classifications actuelles le distinguent du wapiti et du cerf d’Asie centrale. Des populations introduites vivent ailleurs, notamment en Nouvelle-Zélande."
     },
     "identification": {
-      "en": "Adults have a reddish-brown summer coat, greyer or darker in winter; it is not spotted. Stags are generally larger and darker than hinds and have a pale rump. Males grow branching antlers, shed annually and regrow them beneath velvet, which they rub off when growth ends. Point count does not reliably show age.",
-      "fr": "Son pelage brun roux en été devient plus gris ou sombre en hiver ; il n’est pas tacheté. Le cerf est généralement plus grand et plus foncé que la biche. Les bois ramifiés des mâles tombent chaque année, repoussent sous le velours puis sont frottés à maturité. Leur nombre de pointes n’indique pas sûrement l’âge."
+      "en": "In Britain, adult stags stand 1.07–1.37 m at the shoulder and weigh 90–190 kg; hinds stand 1.07–1.22 m and weigh 63–120 kg. These figures vary with habitat and population; the consulted source does not give body length. Adults have a reddish-brown summer coat, greyer or darker in winter; it is not spotted. Stags are generally larger and darker than hinds and have a pale rump. Males grow branching antlers, shed annually and regrow them beneath velvet, which they rub off when growth ends. Point count does not reliably show age.",
+      "fr": "En Grande-Bretagne, le cerf adulte mesure 1,07 à 1,37 m au garrot et pèse 90 à 190 kg ; la biche mesure 1,07 à 1,22 m et pèse 63 à 120 kg. Ces valeurs varient selon l’habitat et la population ; la source consultée ne donne pas la longueur du corps. Son pelage brun roux en été devient plus gris ou sombre en hiver ; il n’est pas tacheté. Le cerf est généralement plus grand et plus foncé que la biche. Les bois ramifiés des mâles tombent chaque année, repoussent sous le velours puis sont frottés à maturité. Leur nombre de pointes n’indique pas sûrement l’âge."
     },
     "habitat": {
       "en": "It uses deciduous and coniferous woods, edges, scrub, grasslands and moorland, feeding in open areas with cover nearby. Habitat use varies regionally. Introduced deer released in New Zealand since 1851 now occupy forest and tussock country on the main islands.",
@@ -57,7 +57,8 @@
       ],
       "facts": [
         "Describes seasonal coat colour, sex differences, antler shedding and velvet, annual autumn rut, social group patterns, varied habitat use and grazing/browsing in the British context.",
-        "The page timed out when opened directly; indexed source text was accessible and used for these facts."
+        "The page timed out when opened directly; indexed source text was accessible and used for these facts.",
+        "In Britain, stags are 1.07–1.37 m at shoulder and 90–190 kg; hinds are 1.07–1.22 m and 63–120 kg; habitat affects size."
       ]
     },
     {

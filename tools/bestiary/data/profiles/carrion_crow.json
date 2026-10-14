@@ -58,16 +58,16 @@
         "All-black adult plumage; body length about 48–52 cm and mass 400–600 g."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2",
         "habitat.en.1",
         "habitat.fr.1",
-        "behavior.en.2",
-        "behavior.fr.2"
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -93,14 +93,14 @@
         "Sexes look alike; black crow differs from grey-mantled crow."
       ],
       "prose_claims": [
-        "identification.en.3",
-        "identification.fr.3",
-        "identification.en.4",
-        "identification.fr.4",
         "behavior.en.3",
         "behavior.fr.3",
         "ecology.en.1",
-        "ecology.fr.1"
+        "ecology.fr.1",
+        "identification.en.3",
+        "identification.en.4",
+        "identification.fr.3",
+        "identification.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -129,8 +129,8 @@
         "diet.en.1",
         "diet.fr.1",
         "reproduction.en.2",
-        "reproduction.fr.2",
         "reproduction.en.3",
+        "reproduction.fr.2",
         "reproduction.fr.3"
       ],
       "budget": {
@@ -183,14 +183,14 @@
         "LPO describes species ecology, nesting and French hunting classification."
       ],
       "prose_claims": [
-        "diet.en.2",
-        "diet.fr.2",
         "behavior.en.1",
         "behavior.fr.1",
-        "reproduction.en.1",
-        "reproduction.fr.1",
         "conservation.en.2",
-        "conservation.fr.2"
+        "conservation.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
       ],
       "budget": {
         "limit": 200,

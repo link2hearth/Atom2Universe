@@ -1,0 +1,50 @@
+{
+  "id": "aedes_vexans",
+  "name": "Inland floodwater mosquito",
+  "scientific": "Aedes vexans",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Aedes vexans, often called the inland floodwater mosquito, is a widespread mosquito whose sudden local swarms follow flooding. Its eggs lie in damp ground and hatch when water covers the site, allowing it to exploit temporary pools and floodplains that dry between rains.",
+    "identification": "The adult is brown to dark, with narrow pale rings at the bases of the tarsal segments and pale, indented bands at the bases of the abdominal plates; viewed from the side, the markings can resemble a row of B shapes. The body is about 5–7 mm long and the wing about 3.5–4 mm. Reliable standard figures for body width or mass, and a consistent adult size difference between sexes, were not found; males instead have conspicuously feathery antennae and longer palps. Reliable mass figures were not found in the consulted sources.",
+    "habitat": "Larvae develop in shallow, temporary water after river or lake margins, floodplains, meadows and other low ground are inundated. The European identification guide also reports fluctuating lake levels and rapid larval development. Adults can disperse well beyond the breeding pools; the guide gives flights of up to 15 km, so a biting adult may be far from where it hatched.",
+    "diet": "Both sexes use nectar and other plant sugars. Females also take blood from vertebrates to mature their eggs and often bite people when they are available; cattle are another reported host. Males do not take blood meals. These feeding differences matter when interpreting nuisance reports, which concern the biting females rather than every adult mosquito present.",
+    "behavior": "Females may bite during the day as well as around dusk, and can be persistent and abundant after flooding. Adults are strong fliers and may travel many kilometres from larval sites. A South African field report describes adults appearing only four days after the first rain at a temporary pool, illustrating how quickly a local population can emerge under suitable conditions.",
+    "reproduction": "After a blood meal, females lay drought-resistant eggs on moist soil in places likely to flood, rather than directly on open water. The eggs can remain viable through dry periods and hatch when inundated; a research review reports viability of up to three years. Larvae and pupae are aquatic, and development can be rapid in warm, newly flooded pools.",
+    "ecology": "The species is tightly linked to flood pulses: its eggs persist through dry periods and large groups of larvae can emerge when temporary pools refill. This makes its local abundance fluctuate sharply with rainfall and water levels. Females can be important nuisance biters, and the species has been implicated as a carrier of several pathogens; this does not mean that every population is transmitting disease. Local risk depends on the pathogen, host and setting.",
+    "conservation": "This is a widespread and often locally abundant species, not one for which a current global threatened-species assessment was verified in the sources used here. The European Centre for Disease Prevention and Control tracks its presence across Europe, while UK authorities describe it as uncommon but widespread in Britain. Such regional occurrence records are not population trend assessments."
+  },
+  "sources": [
+    {
+      "url": "https://www.ecdc.europa.eu/sites/default/files/documents/Reverse-identification-key-for-invasive-mosquito-species.pdf",
+      "title": "Reverse identification key for invasive mosquito species — ECDC"
+    },
+    {
+      "url": "https://www.scielo.br/j/zool/a/y4GTWSBf6L8PbYPr3b56Vxp/?format=html&lang=en",
+      "title": "Global phylogeography of the flood mosquito, Aedes vexans — Zoologia (SciELO)"
+    },
+    {
+      "url": "https://ph.health.mil/resources/Aedes%28Aedimorphus%29vexans%28Meigen%29WRBUspecimenAEvex_TA-274-0116.pdf",
+      "title": "Aedes (Aedimorphus) vexans — Walter Reed Biosystematics Unit specimen page"
+    },
+    {
+      "url": "https://www.gov.uk/guidance/mosquitoes-species-profiles",
+      "title": "Native mosquito species profiles — UK Health Security Agency"
+    },
+    {
+      "url": "https://wwwnc.cdc.gov/eid/article/4/2/98-0218_article",
+      "title": "New Vectors of Rift Valley Fever in West Africa — Emerging Infectious Diseases (CDC)"
+    },
+    {
+      "url": "https://linnet.geog.ubc.ca/efauna/Atlas/Atlas.aspx?sciname=Aedes+vexans",
+      "title": "Aedes vexans — Electronic Atlas of the Wildlife of British Columbia"
+    },
+    {
+      "url": "https://insektarium.net/diptera-2/culicidae-komarowate/aedes-vexans-doskwier-pastwiskowy/",
+      "title": "Aedes vexans — Insektarium"
+    },
+    {
+      "url": "https://www.onehealthsecure.com/sites/default/files/2023-02/Mosquitoes%20Toolkit.pdf",
+      "title": "Aedes (Aedimorphus) vexans — MedilabSecure mosquito toolkit"
+    }
+  ]
+}

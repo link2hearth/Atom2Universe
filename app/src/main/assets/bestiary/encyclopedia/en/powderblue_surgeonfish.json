@@ -1,0 +1,54 @@
+{
+  "id": "powderblue_surgeonfish",
+  "name": "Powderblue surgeonfish",
+  "scientific": "Acanthurus leucosternon",
+  "group": "fish",
+  "sections": {
+    "overview": "The powderblue surgeonfish is a reef-dwelling member of the surgeonfish family, Acanthuridae, native to the tropical Indian Ocean. Its blue body, dark head and white chest make it distinctive. It grazes on algae growing on reefs and may feed alone or join other fish. The species is best known from shallow reefs, where feeding grounds and territorial behaviour are tied to patches of algal growth.",
+    "identification": "Its deep body is flattened from side to side. A broad white band crosses the chest from the pectoral-fin bases, and a narrow pale line outlines the lower face. The dorsal fin is yellow with a pale edge and dark submarginal line; the tail base and paired spines are yellow. A pale crescent marks the dark tail fin. Each side of the tail base bears a sharp spine that folds into a groove and can be raised when the fish bends its tail. The Andaman Sea account reports specimens up to 23 cm. FishBase lists a maximum total length of 54 cm. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+    "habitat": "It ranges through the tropical Indian Ocean, from eastern Africa to the Andaman Sea and Indonesia, reaching Bali; records include Cocos (Keeling) and Christmas islands. It occupies shallow coastal and island reefs, especially reef flats and upper outer slopes, generally down to about 25 metres. These sunlit surfaces support the benthic algae it eats, although feeding grounds vary among reef zones.",
+    "diet": "Adults are herbivores that crop benthic algae, including short microalgal turf on hard reef surfaces. At Aldabra, researchers observed adults defending permanent feeding territories containing these algal mats. FishBase also records feeding on scattered algae and small growths in crevices. Each jaw bears a row of incisor-like teeth. High-speed recordings show the fish grasping algae, then pulling them free by rotating its head and closed jaws downward. An articulation within the lower jaw enables this movement without turning the whole body sideways. This may help feeding in strong currents, although that ecological advantage remains an interpretation of the mechanics.",
+    "behavior": "Individuals forage alone or gather in feeding groups. At Aldabra, adults defended permanent algal territories against other fishes, protecting access to food. The study describes territorial defence within and between species among surgeonfishes.",
+    "reproduction": "The sexes are separate, and observations describe paired spawning during the breeding period. FishBase describes the species as monogamous. At Aldabra, the study documented pairs among permanently territorial surgeonfishes and no parental care in its study group. Eggs and sperm are released into open water for external fertilization. Surgeonfish yolk-sac larvae float near the surface, then swim and feed after the yolk is absorbed. They pass through a pelagic acronurus stage before reef settlement.",
+    "ecology": "By cropping attached algae, this fish uses food produced on reef surfaces and participates in grazing those patches. Herbivorous reef fishes can limit algae that impede coral recruitment, although the strength of this effect varies among species. At Aldabra, adults defended small turf plots against competitors, dividing access to algal resources. Territories focus grazing on defended patches. Feeding aggregations bring several fish to shared food areas.",
+    "conservation": "The IUCN Red List account lists the species as Least Concern, assessed on 3 May 2010 and published in 2012. On the Kenyan coast, people harvest it for subsistence and commercial fisheries. This species is also collected for the aquarium trade. Along Kenya’s southern coast, a fishery study found 27% of sampled Acanthurus leucosternon below estimated maturity length; beach seines caught the largest share of immature fish (64%). Its exploitation estimate was below the sustainable-yield threshold, unlike that of sympatric Acanthurus triostegus. Reef Life Survey recorded it at 27% of surveyed sites, averaging six fish per transect where present."
+  },
+  "sources": [
+    {
+      "url": "https://fishesofaustralia.net.au/Home/species/4959",
+      "title": "Fishes of Australia: Powderblue Surgeonfish"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/acanthurus-leucosternon",
+      "title": "FishBase: Acanthurus leucosternon"
+    },
+    {
+      "url": "https://www.kahaku.go.jp/research/db/zoology/Fishes_of_Andaman_Sea/contents/acanthuridae/02.html",
+      "title": "Fishes of the Andaman Sea: Acanthurus leucosternon"
+    },
+    {
+      "url": "https://doi.org/10.1007/BF00005448",
+      "title": "Robertson, Polunin & Leighton (1979), behavioral ecology of three surgeonfishes"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Acanthurus-leucosternon-Chirurgien-a-poitrine-blanche-2199",
+      "title": "DORIS: Chirurgien à poitrine blanche"
+    },
+    {
+      "url": "https://reeflife.org/species/acanthurus-leucosternon/",
+      "title": "Reef Life Survey: Acanthurus leucosternon"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0039825",
+      "title": "Comeros-Raynal et al. (2012), reef herbivores and extinction risk"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.rsma.2021.101979",
+      "title": "Otwoma (2021), exploitation and life history of two Acanthurus on the Kenyan coast"
+    },
+    {
+      "url": "https://fishlab.ucdavis.edu/wp-content/uploads/sites/397/2024/01/Mihalitsis_CommunicationsBiology_2024.pdf",
+      "title": "Mihalitsis & Wainwright (2024) — Surgeonfish feeding mechanics"
+    }
+  ]
+}

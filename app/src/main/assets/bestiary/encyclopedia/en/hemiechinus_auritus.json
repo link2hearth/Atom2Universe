@@ -1,0 +1,30 @@
+{
+  "id": "hemiechinus_auritus",
+  "name": "Long-eared Hedgehog",
+  "scientific": "Hemiechinus auritus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The long-eared hedgehog is a small, fast, nocturnal hedgehog of the dry steppes and deserts of western and central Asia and the eastern Mediterranean region. Its large ears and banded spines mark it out from the common hedgehogs of Europe.",
+    "identification": "Head and body measure about 120–270 mm and the tail 10–50 mm. It weighs roughly 250–400 g, less than the European hedgehog. The spines are banded dark brown and white, the underparts whitish and the ears long, more than half the length of the head. The ears are thought to help shed heat in the desert.",
+    "habitat": "It lives in arid steppes, semi-deserts and deserts, from the steppe zone of eastern Ukraine to Mongolia in the north and from Libya to western Pakistan in the south. It favours dry river valleys, gullies, shrubby areas and oases, and often lives near villages and farmland. It tends to avoid very hot deserts and cold northern mountains.",
+    "diet": "It is omnivorous but eats mainly small invertebrates, such as grasshoppers and beetles. It also takes eggs, fruit and plants, and sometimes small vertebrates such as lizards and snakes. In the laboratory it survived up to ten weeks without food or water.",
+    "behavior": "It is nocturnal and solitary, and may range up to 9 km in a night in search of food. By day it rests under rocks or in hollows, or in a burrow of about 45 cm with a single entrance, often dug under a bush. It can run fast and rarely curls into a ball. It enters torpor in summer, and some populations hibernate in winter.",
+    "reproduction": "It breeds once a year, generally from July to September. Gestation lasts 35–42 days. Litters are small, with sources giving one to four young, and the young are fully covered in spines after about two weeks. The eyes open after about a week and the young eat solid food after about three weeks.",
+    "ecology": "By eating insects including termites and scorpions, it takes many pests, and since it lives mostly in open wasteland it is not known to damage crops. Predators include owls: the Eurasian eagle-owl has been found to take hedgehogs, which formed about 14% of its prey in one study.",
+    "conservation": "It is classified as Least Concern on the IUCN Red List and appears plentiful across its wide range. Little is known about its actual abundance in many places, and its status is not known to be threatened."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Hemiechinus_auritus/",
+      "title": "Hemiechinus auritus — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003812",
+      "title": "Hemiechinus auritus — Mammal Diversity Database"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Long-eared_hedgehog",
+      "title": "Long-eared hedgehog — Wikipedia (supporting source)"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "cattle",
+  "name": "Bovin domestique",
+  "scientific": "Bos taurus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Les bovins taurins sont de grands mammifères à sabots, domestiqués à partir d’aurochs du sud-ouest de l’Asie. Les génomes anciens indiquent un petit groupe fondateur, puis des croisements avec d’autres lignées d’aurochs lors de l’expansion des troupeaux. Aujourd’hui, les humains élèvent des bovins partout dans le monde selon divers systèmes.",
+    "identification": "Les bovins ont un corps robuste, un large mufle, des sabots fendus et une longue queue terminée par une touffe. Pelage, taille et cornes varient selon les races ; certaines sont naturellement sans cornes. Le terme désigne les deux sexes : femelles adultes, vaches ; mâles, taureaux ; jeunes, veaux. La taille des bovins varie beaucoup selon la race : la FAO rapporte des moyennes de poids de vaches adultes allant de moins de 200 kg à plus de 400 kg selon les races. Il n’existe pas de plage unique utile de longueur ou de hauteur au garrot pour l’ensemble des bovins ; les mesures doivent préciser la race.",
+    "habitat": "Les cartes de la FAO montrent que les bovins sont largement répartis dans le monde. Ils vivent dans des pâturages, des fermes mixtes, des systèmes pastoraux extensifs, des parcs d’engraissement ou des étables. Les conditions locales dépendent de l’élevage, tandis que climat, eau et fourrage déterminent où les troupeaux peuvent être entretenus.",
+    "diet": "Les bovins mangent des graminées, des feuilles et d’autres végétaux, puis régurgitent une partie du fourrage pour la remâcher. Leur appareil digestif comporte quatre compartiments : rumen, réticulum, feuillet et caillette. Dans le rumen, les microbes fermentent les fibres végétales et rendent leur énergie accessible à l’animal.",
+    "behavior": "Les bovins sont des herbivores sociaux qui s’alimentent et se reposent en groupe. Des études de troupeaux conduits par l’humain observent des associations entre individus et des réactions différentes aux congénères familiers ou inconnus. Ils communiquent par la posture, le contact, l’odorat et les vocalisations ; la composition du groupe influence ces relations.",
+    "reproduction": "Hors gestation, les femelles ont des cycles ; l’intervalle entre chaleurs est en moyenne d’environ 21 jours, avec des variations. Une femelle réceptive peut rester immobile lorsqu’un congénère la monte. Après fécondation, la gestation dure en moyenne 283 jours et se termine par la naissance d’un veau ; la mère produit ensuite du lait.",
+    "ecology": "Le pâturage retire des pousses ; bouses et urine restituent des nutriments, tandis que les sabots tassent le sol. Dans une prairie laitière finlandaise, ces processus ont modifié la croissance végétale et les communautés du sol. Leurs effets venaient de la défoliation, des déjections localisées et du piétinement, et dépendent des conditions locales.",
+    "conservation": "Bos taurus est domestiqué et entretenu dans des troupeaux humains, plutôt qu’une population sauvage occupant une aire naturelle. La conservation concerne notamment la diversité des races domestiques et leurs caractères adaptés localement. L’aurochs éteint est un taxon sauvage ancestral distinct, et son statut ne s’applique pas aux bovins domestiques."
+  },
+  "sources": [
+    {
+      "url": "https://www.nature.com/articles/s41586-024-08112-6",
+      "title": "Histoire naturelle génomique de l’aurochs"
+    },
+    {
+      "url": "https://www.msdvetmanual.com/management-and-nutrition/nutrition-beef-cattle/the-digestive-system-of-beef-cattle",
+      "title": "Le système digestif des bovins à viande"
+    },
+    {
+      "url": "https://extension.msstate.edu/publications/the-estrous-cycle-cattle",
+      "title": "Le cycle œstral des bovins"
+    },
+    {
+      "url": "https://www.fao.org/livestock-systems/global-distributions/cattle/en/",
+      "title": "Répartitions mondiales : bovins"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6581677/",
+      "title": "Effets de la gestion et du transfert de groupes sur la sociabilité des bovins Highland"
+    },
+    {
+      "url": "https://researchportal.helsinki.fi/en/publications/defoliation-and-patchy-nutrient-return-drive-grazing-effects-on-p/",
+      "title": "La défoliation et le retour localisé des nutriments expliquent les effets du pâturage sur les plantes et le sol d’une prairie laitière"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0376635723000293",
+      "title": "Isolement social de bovins inconnus par des groupes de bovins familiers"
+    },
+    {
+      "url": "https://www.aphis.usda.gov/sites/default/files/beef2017_dr_parti.pdf",
+      "title": "Bovins naturellement sans cornes, USDA-APHIS"
+    },
+    {
+      "url": "https://www.fao.org/animal-genetics/global-policy/funding-strategy/projects/en/",
+      "title": "Conservation des ressources génétiques animales — FAO"
+    },
+    {
+      "url": "https://www.fao.org/4/t0095e/T0095E04.htm",
+      "title": "Croisement de Bos indicus et Bos taurus pour la production laitière en zone tropicale — FAO"
+    }
+  ]
+}

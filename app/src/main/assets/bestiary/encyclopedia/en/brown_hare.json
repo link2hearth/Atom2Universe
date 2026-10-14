@@ -1,0 +1,54 @@
+{
+  "id": "brown_hare",
+  "name": "European hare",
+  "scientific": "Lepus europaeus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The European hare is a large, ground-dwelling lagomorph of open country across much of Europe and western Asia. Unlike rabbits, it does not shelter in a communal burrow: it rests in a shallow surface hollow and depends on concealment, keen senses and rapid flight. Its life is closely tied to the seasonal food and cover of grasslands and farmland.",
+    "identification": "Adults are typically tawny or reddish brown, with paler flanks, a light underside and a black upper surface to the tail. The long ears have dark tips; the hind legs are much longer and more powerful than the forelegs. These proportions support fast running and sharp turns across open ground. Compared with a European rabbit, a hare is larger, longer-legged and lacks the rabbit’s burrow-dwelling build. Adults have a head-and-body length of about 55–65 cm and weigh around 3.5–5 kg; these sources report seasonal and individual variation rather than a dependable sex-specific range.",
+    "habitat": "The species uses grassland, pasture, arable fields and other open or lightly covered ground. Hares remain above ground through the year. A resting hollow, called a form, may lie among grasses or crop plants, in a dry sheltered patch or on a slight rise. The animal presses into the hollow with its ears laid back, so its outline is difficult to see; it does not excavate a warren like a rabbit.",
+    "diet": "This herbivore eats grasses, wild herbs and crops, with the available menu changing through the year. In an Austrian arable study, hares selected forage richer in energy, fat and protein and lower in fibre; they also used weeds and grasses rather than relying only on crops. When green food is scarce, woody shoots and bark can enter the diet. Like other leporids, hares ferment plant material in the caecum and re-ingest soft caecal droppings, recovering nutrients from this hindgut digestion.",
+    "behavior": "Hares are mostly solitary, though several may feed in the same open area. They spend much of the day at or near a form and forage mainly at night or around twilight. When disturbed, a hare can burst from cover and run at high speed, using long hind legs and abrupt changes of direction to evade pursuit. Springtime boxing is often a female striking an insistent courting male with her forepaws, rather than two males fighting.",
+    "reproduction": "In Central Europe, breeding can extend from winter into autumn. Females may produce several litters, with litter size varying by season and commonly one to four in the cited regional studies. Leverets are precocial: they are born furred, with eyes open, and can move soon after birth. The mother leaves them concealed apart from brief nursing visits, usually once each night; this limits the time adults gather at a vulnerable litter. Weaning occurs at about five weeks.",
+    "ecology": "By grazing selectively, hares use both wild vegetation and cultivated plants, while their feeding can affect young crops and woody growth. They are also prey, particularly when young: foxes are an important predator in parts of Europe. Their dependence on both food and hiding cover makes the arrangement of fields matter. Studies in Germany show that harvest and other farm operations can change how hares use fields, with responses depending on the management and landscape.",
+    "conservation": "A widespread species can still be scarce locally. The Mammal Society lists the European hare as Least Concern globally, while documenting declines and habitat problems in Britain. This regional picture should not be mistaken for the status of every population. Intensive, specialised farming can reduce the mix of forage and cover, and machinery may kill hares; local outcomes also vary with predation and land use. The broad global category therefore sits alongside substantial regional conservation concern."
+  },
+  "sources": [
+    {
+      "url": "https://academic.oup.com/mspecies/article/52/997/125/6046128",
+      "title": "Lepus europaeus (Lagomorpha: Leporidae)"
+    },
+    {
+      "url": "https://mammal.org.uk/british-mammals/brown-hare",
+      "title": "Brown hare"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4521881/",
+      "title": "The European Hare: A Picky Herbivore Searching for Plant Parts Rich in Fat"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6733508/",
+      "title": "Living on the edge: circadian habitat usage in pre-weaning European hares in an intensively used agricultural area"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0167880920300049",
+      "title": "How do agricultural practices affect the movement behaviour of European brown hares?"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4309574/",
+      "title": "In Vitro Study of Caecal Fermentation in the Brown Hare and Domestic Rabbit"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S1616504717302069",
+      "title": "The effect of landscape heterogeneity on European hare density and habitat preferences"
+    },
+    {
+      "url": "https://www.mdpi.com/1424-2818/14/6/465",
+      "title": "Why Did Brown Hare Disappear from Some Areas in Central Poland?"
+    },
+    {
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/10.1111/j.1469-7998.1974.tb03140.x",
+      "title": "Reproduction and ‘March madness’ in the brown hare, Lepus europaeus"
+    }
+  ]
+}

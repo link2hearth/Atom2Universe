@@ -12,8 +12,8 @@
       "fr": "La piéride du chou est un grand papillon blanc d’Europe, d’Afrique du Nord et d’Asie tempérée, bon voilier et migrateur. Ses chenilles se nourrissent en groupe de plantes de la famille du chou, ce qui en fait un ravageur bien connu des jardins et des cultures."
     },
     "identification": {
-      "en": "Wingspan is about 58–63 mm in one source and 63–70 mm in another. The wings are white with black forewing tips extending down the edge; females have two black forewing spots and a hindwing spot, which males lack. The underside is creamy white. The caterpillar is yellowish green with black spots, and its eggs are yellow and skittle-shaped.",
-      "fr": "L’envergure est d’environ 58 à 63 mm selon une source et de 63 à 70 mm selon une autre. Les ailes sont blanches, avec l’apex des ailes antérieures noir se prolongeant sur le bord; les femelles portent deux taches noires aux ailes antérieures et une aux ailes postérieures, absentes chez les mâles. Le dessous est blanc crème. La chenille est jaune verdâtre tachetée de noir, et les œufs sont jaunes, en forme de quille."
+      "en": "Wingspan is about 58–63 mm in one source and 63–70 mm in another. The wings are white with black forewing tips extending down the edge; females have two black forewing spots and a hindwing spot, which males lack. The underside is creamy white. The caterpillar is yellowish green with black spots, and its eggs are yellow and skittle-shaped. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "L’envergure est d’environ 58 à 63 mm selon une source et de 63 à 70 mm selon une autre. Les ailes sont blanches, avec l’apex des ailes antérieures noir se prolongeant sur le bord; les femelles portent deux taches noires aux ailes antérieures et une aux ailes postérieures, absentes chez les mâles. Le dessous est blanc crème. La chenille est jaune verdâtre tachetée de noir, et les œufs sont jaunes, en forme de quille. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
     },
     "habitat": {
       "en": "It breeds mainly in gardens, allotments and farmland where cabbages grow, and adults also visit meadows, heaths, parks and woodland rides. It occurs across Europe, North Africa and temperate Asia as far as the Himalayas, and was accidentally introduced to Chile.",
@@ -56,7 +56,8 @@
       ],
       "facts": [
         "Wingspan 58–63 mm; females have two forewing spots, males none; foodplants include cabbage, Brussels sprouts, oilseed rape, nasturtium, wild mignonette, sea-kale.",
-        "GB Red List 2022 Least Concern; European status not threatened; abundance −32% (1976–2019), distribution −18% (1973–2019)."
+        "GB Red List 2022 Least Concern; European status not threatened; abundance −32% (1976–2019), distribution −18% (1973–2019).",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
       ]
     },
     {

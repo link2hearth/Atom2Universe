@@ -12,8 +12,8 @@
       "fr": "La Bernache du Canada est un grand oiseau d’eau adaptable, originaire d’Amérique du Nord, des côtes arctiques et de la toundra aux zones humides tempérées. Ses vols bruyants occupent aussi de nombreuses villes et terres agricoles, où pelouses et grains perdus offrent une nourriture régulière. L’espèce présente de fortes variations selon les régions, les formes nordiques étant généralement plus petites que les formes méridionales. Les quatre formes les plus petites, autrefois incluses ici, sont aujourd’hui classées dans l’espèce distincte Branta hutchinsii, la Bernache de Hutchins."
     },
     "identification": {
-      "en": "Adults have a black head and long black neck, a broad white patch joining the cheeks beneath the chin, a brown back, pale breast, and black bill and feet. This white chinstrap is a diagnostic band across the lower face and throat, not a wholly white face. Adults measure about 76–110 cm long with a 127–170 cm wingspan, varying geographically. In flight, a white band across the rump contrasts with the dark tail.",
-      "fr": "L’adulte porte une tête noire, un long cou noir, une large plage blanche reliant les joues sous le menton, un dos brun, une poitrine pâle, ainsi qu’un bec et des pattes noirs. Cette mentonnière blanche est une bande caractéristique qui traverse le bas du visage et la gorge, et non un visage entièrement blanc. L’adulte mesure environ 76–110 cm, pour une envergure de 127–170 cm, avec des variations géographiques. En vol, une bande blanche sur le croupion tranche avec la queue sombre."
+      "en": "Adults have a black head and long black neck, a broad white patch joining the cheeks beneath the chin, a brown back, pale breast, and black bill and feet. This white chinstrap is a diagnostic band across the lower face and throat, not a wholly white face. Adults measure about 76–110 cm long with a 127–170 cm wingspan, varying geographically. In flight, a white band across the rump contrasts with the dark tail. BTO ringing measurements give adult mean masses of 4.27 kg for males and 3.67 kg for females, and mean wing lengths of 541 and 506 mm respectively; the broader total-length and wingspan ranges vary geographically.",
+      "fr": "L’adulte porte une tête noire, un long cou noir, une large plage blanche reliant les joues sous le menton, un dos brun, une poitrine pâle, ainsi qu’un bec et des pattes noirs. Cette mentonnière blanche est une bande caractéristique qui traverse le bas du visage et la gorge, et non un visage entièrement blanc. L’adulte mesure environ 76–110 cm, pour une envergure de 127–170 cm, avec des variations géographiques. En vol, une bande blanche sur le croupion tranche avec la queue sombre. Les mesures de baguage du BTO donnent des masses adultes moyennes de 4,27 kg chez les mâles et 3,67 kg chez les femelles, et des longueurs d’aile moyennes de 541 et 506 mm respectivement ; les plages plus générales de longueur totale et d’envergure varient géographiquement."
     },
     "habitat": {
       "en": "The species uses marshes, lakes, rivers, estuaries, coastal bays, and tundra pools, usually where open water lies beside grassy feeding ground. It rests and escapes danger on water, but often obtains most of its food on land. In settled landscapes it readily uses park lawns, golf courses, reservoirs, and harvested fields. Nesting pairs favor islands, shorelines, or other sites with clear views and nearby water, though some urban birds nest on roofs or structures.",
@@ -56,13 +56,13 @@
       ],
       "prose_claims": [
         "identification.en.1",
-        "identification.fr.1",
         "identification.en.2",
-        "identification.fr.2",
-        "identification.en.4",
-        "identification.fr.4",
         "identification.en.3",
-        "identification.fr.3"
+        "identification.en.4",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "identification.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -86,11 +86,12 @@
         "Native North American species; urban lawns attract birds."
       ],
       "prose_claims": [
+        "identification.fr.5",
         "overview.en.1",
-        "overview.fr.1",
         "overview.en.2",
-        "overview.fr.2",
         "overview.en.3",
+        "overview.fr.1",
+        "overview.fr.2",
         "overview.fr.3"
       ],
       "budget": {
@@ -119,14 +120,14 @@
         "Food, water, nesting, molt, migration, restoration and population growth."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
-        "habitat.en.4",
-        "habitat.fr.4",
         "diet.en.4",
-        "diet.fr.4",
         "diet.en.5",
+        "diet.fr.4",
         "diet.fr.5",
+        "habitat.en.3",
+        "habitat.en.4",
+        "habitat.fr.3",
+        "habitat.fr.4",
         "reproduction.en.1",
         "reproduction.fr.1"
       ],
@@ -154,11 +155,12 @@
       ],
       "prose_claims": [
         "behavior.en.1",
-        "behavior.fr.1",
         "behavior.en.2",
-        "behavior.fr.2",
         "behavior.en.3",
-        "behavior.fr.3"
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "behavior.fr.3",
+        "identification.en.5"
       ],
       "budget": {
         "limit": 200,
@@ -177,18 +179,19 @@
       "consulted": "2026-10-11",
       "supports": [
         "reproduction",
-        "conservation"
+        "conservation",
+        "identification"
       ],
       "facts": [
-        "UK introduction history; egg, incubation and fledging timings."
+        "UK introduction history; egg, incubation and fledging timings.",
+        "Live-bird adult means: males 4.27 kg and 541 mm wing length; females 3.67 kg and 506 mm wing length."
       ],
       "prose_claims": [
-        "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.5",
-        "reproduction.fr.5",
         "conservation.en.3",
-        "conservation.fr.3"
+        "conservation.fr.3",
+        "reproduction.en.2",
+        "reproduction.en.5",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -213,12 +216,13 @@
         "Nesting, flightless goslings, summer molt."
       ],
       "prose_claims": [
-        "reproduction.en.3",
-        "reproduction.fr.3",
-        "reproduction.en.4",
-        "reproduction.fr.4",
         "behavior.en.4",
-        "behavior.fr.4"
+        "behavior.fr.4",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
+        "reproduction.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -243,8 +247,8 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
+        "conservation.fr.1",
         "conservation.fr.2"
       ],
       "budget": {
@@ -270,12 +274,12 @@
         "Airport strike risk and local land-use conflicts."
       ],
       "prose_claims": [
-        "ecology.en.3",
-        "ecology.fr.3",
-        "ecology.en.4",
-        "ecology.fr.4",
         "conservation.en.4",
-        "conservation.fr.4"
+        "conservation.fr.4",
+        "ecology.en.3",
+        "ecology.en.4",
+        "ecology.fr.3",
+        "ecology.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -301,10 +305,10 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
+        "diet.fr.1",
+        "diet.fr.2",
         "diet.fr.3",
         "overview.en.4",
         "overview.fr.4"
@@ -333,14 +337,14 @@
         "Wetland plant communities, predators, and feeding ecology."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.2",
-        "habitat.fr.2",
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,

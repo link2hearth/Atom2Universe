@@ -1,0 +1,50 @@
+{
+  "id": "common_crane",
+  "name": "Common crane",
+  "scientific": "Grus grus",
+  "group": "birds",
+  "sections": {
+    "overview": "The common crane, also called the Eurasian crane, is a tall, migratory wetland bird: Grus grus links northern breeding grounds with southern wintering areas. It ranges across northern Eurasia, from western Europe to Siberia, and different populations winter in Iberia, Africa, the Middle East or Asia.",
+    "identification": "Adults are about 115 centimetres tall, weigh around 5.5 kilograms and span roughly 210 centimetres; males average slightly larger and heavier than females. Slate-grey plumage, long dark legs and a long neck create a tall silhouette. The adult has a bare red crown, black forehead and throat, and a white stripe behind the eye. Long wing feathers drape over the short tail like a false train; juveniles have a greyer body and cinnamon-brown head.",
+    "habitat": "Breeding pairs choose quiet, shallow wetlands: bogs, marshes, reedbeds and pools, often with dense shore vegetation. The nest sits in or close to shallow water, which helps conceal it; in winter cranes also use flooded ground, meadows and cultivated fields, returning to communal wetland roosts.",
+    "diet": "The crane is omnivorous and changes its menu with season and place. It probes soil and shallow water for roots, tubers, seeds and grain, but also eats insects, snails, worms, amphibians, reptiles and small mammals; animal foods become especially important while feeding chicks.",
+    "behavior": "Its loud, trumpeting calls keep birds in contact over open wetlands and warn of danger. Paired cranes answer in a coordinated unison call that reinforces their bond; spring courtship also includes bows, leaps and wing displays. Outside breeding, family groups join larger, shifting flocks that feed by day and gather at traditional roosts at night.",
+    "reproduction": "Pairs maintain long-lasting bonds and defend a nesting territory. The female usually lays two eggs in a mound of stems and leaves; both parents incubate them for about 30 days, chiefly the female. Downy chicks leave the nest soon after hatching, walk with their parents and learn to forage; they fledge at about 65–70 days, remain with the family through their first winter, and usually breed successfully at around four years.",
+    "ecology": "Seasonal journeys depend on a chain of wetlands where cranes can nest, rest and roost, while nearby fields provide food. Eggs and small chicks are vulnerable to crows and ravens; foxes and eagles can take older young, and adults defend nests vigorously against ground predators.",
+    "conservation": "The global population is large and the species is assessed as Least Concern, yet local populations have disappeared or declined. Wetland loss, agricultural change and hunting in some regions remain threats, and wintering and migration sites matter as much as breeding marshes. Britain lost its breeding cranes after centuries of wetland drainage; birds returned to Norfolk in 1979, and a WWT–RSPB–Pensthorpe project released 93 young in Somerset between 2010 and 2014, helping rebuild a small regional population."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Common_crane",
+      "title": "Common crane"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Grue_cendr%C3%A9e",
+      "title": "Grue cendrée — Wikipédia"
+    },
+    {
+      "url": "https://savingcranes.org/species/eurasian-crane/",
+      "title": "Eurasian Crane"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/crane",
+      "title": "Crane BirdFacts"
+    },
+    {
+      "url": "https://savingcranes.org/glossary/",
+      "title": "Glossary"
+    },
+    {
+      "url": "https://www.wwt.org.uk/discover-wetlands/wetland-wildlife/species-factfiles/common-crane",
+      "title": "Common crane factfile"
+    },
+    {
+      "url": "https://www.wwt.org.uk/our-work/projects/reintroducing-common-cranes",
+      "title": "Reintroducing common cranes"
+    },
+    {
+      "url": "https://savingcranes.org/wp-content/uploads/2024/10/crane_conservation_strategy_eurasian_crane.pdf",
+      "title": "Eurasian Crane Conservation Strategy"
+    }
+  ]
+}

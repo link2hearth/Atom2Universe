@@ -1,0 +1,46 @@
+{
+  "id": "goldfish",
+  "name": "Poisson rouge",
+  "scientific": "Carassius auratus",
+  "group": "fish",
+  "sections": {
+    "overview": "Originaire d’Asie orientale, notamment de Chine, ce cyprinidé d’eau douce a été sélectionné comme poisson d’ornement, aujourd’hui élevé partout. Plus de mille ans de sélection en Chine ont produit des couleurs et des formes corporelles ensuite diffusées par le commerce des poissons d’ornement.",
+    "identification": "La forme sauvage est allongée, gris doré à bronze, avec une queue simple ; le poisson rouge ordinaire garde cette silhouette, souvent orange. Les adultes atteignent souvent 20 cm, mais certains poissons sauvages ou de bassin approchent 45 cm. La longévité varie ; dépasser 40 ans reste exceptionnel. Les variétés sélectionnées peuvent avoir un corps arrondi, une queue double, des yeux agrandis ou des excroissances sur la tête, et certaines sont dépourvues de nageoire dorsale ; ces caractères diffèrent de ceux de la forme ordinaire à queue simple. Les poissons sauvages ou retournés à l’état sauvage atteignent typiquement 12–22 cm de longueur standard et 100–300 g ; des records exceptionnels atteignent 41 cm de longueur standard et environ 3 kg. La longueur standard exclut la nageoire caudale.",
+    "habitat": "Il fréquente étangs, lacs, marais et rivières lentes ; des introductions l’ont dispersé hors d’Asie orientale. Il peut survivre à un manque temporaire d’oxygène, surtout au froid, en utilisant ses réserves énergétiques ; cette survie se raccourcit lorsque la température augmente.",
+    "diet": "Omnivore, il mange algues, plantes, larves, crustacés, œufs et débris. Il aspire nourriture et sédiments, trie les particules puis les traite dans le pharynx. Une structure musculaire du plafond buccal, l’organe palatin, détecte les particules par le goût et aide à séparer la nourriture des graviers avant leur déglutition. Les graviers rejetés sont recrachés : des mouvements ressemblant à une mastication peuvent ainsi correspondre au tri d’une bouchée mêlant nourriture et sédiments.",
+    "behavior": "Il vit en bancs lâches et apprend les signaux alimentaires ; sa mémoire dépasse trois secondes.",
+    "reproduction": "Au frai printanier, les mâles poursuivent les femelles ; leurs œufs adhésifs sont fécondés dans l’eau. Les alevins éclosent en environ deux à neuf jours sans soins parentaux. Longs d’environ 5 mm et d’abord sombres, ils mûrissent vers trois ou quatre ans.",
+    "ecology": "Il mange des animaux aquatiques et des œufs de poissons indigènes ; introduit, il concurrence les poissons locaux et remue les fonds. L’alimentation sur le fond peut déraciner les plantes et remettre les sédiments en suspension, ce qui accroît la turbidité de l’eau et modifie les conditions de vie d’autres organismes aquatiques.",
+    "conservation": "L’évaluation mondiale 2013 de l’UICN le classait en préoccupation mineure. Les poissons relâchés deviennent envahissants localement."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Goldfish",
+      "title": "Goldfish — Wikipédia en anglais"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Poisson_rouge",
+      "title": "Poisson rouge — Wikipédia"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Carassius_auratus/",
+      "title": "Carassius auratus — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2543128/",
+      "title": "Sorting Food from Stones: The Vagal Taste System in Goldfish, Carassius auratus"
+    },
+    {
+      "url": "https://nas.er.usgs.gov/queries/factsheet.aspx?SpeciesID=508",
+      "title": "Goldfish (Carassius auratus) — fiche Nonindigenous Aquatic Species, U.S. Geological Survey"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2013-1.RLTS.T166083A1110472.en",
+      "title": "Carassius auratus — Liste rouge de l’UICN des espèces menacées (évaluation de 2013)"
+    },
+    {
+      "url": "https://nas.er.usgs.gov/queries/factsheet.aspx?speciesid=508",
+      "title": "Poisson rouge (Carassius auratus) — base de données USGS sur les espèces aquatiques non indigènes"
+    }
+  ]
+}

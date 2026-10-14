@@ -1,0 +1,30 @@
+{
+  "id": "dytiscus_marginalis",
+  "name": "Great Diving Beetle",
+  "scientific": "Dytiscus marginalis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The great diving beetle is one of the largest beetles of Britain and Ireland and a fierce predator of still fresh water. It lives in the water as both larva and adult, yet it flies at night to colonise new ponds.",
+    "identification": "Adults are about 3 cm long, with a dark olive-brown, almond-shaped body flattened from top to bottom. The pronotum, the plate behind the head, is bordered all round with yellow, and the wing cases have a brownish-yellow edge. Females usually have ribbed wing cases while males have smooth ones, although some mainland European females are smooth. A reliable adult body-mass range was not found in the consulted sources; one conflicting secondary figure was excluded.",
+    "habitat": "It lives in still or very slow-flowing fresh water with plenty of submerged vegetation. It is native to the Palearctic, across Europe, Asia and northern Africa.",
+    "diet": "Adults and larvae are both predators. They eat other water insects, tadpoles and very small fish, hunting among submerged plants.",
+    "behavior": "The adult comes to the surface from time to time and pushes out the tip of its abdomen to renew an air supply kept under its wing cases. It is a strong flier, mostly at night. When seized, it releases a foul-smelling fluid containing benzoic acid and related compounds.",
+    "reproduction": "Females lay eggs singly in submerged plant stems in early spring, and the eggs take about 18 days to hatch. The larvae grow quickly, reach about 5 cm, and by late summer leave the water to pupate in damp soil at the water’s edge. Young adults usually emerge in mid-autumn but stay buried through the winter.",
+    "ecology": "Despite its soft body, the larva can tackle large prey such as young newts, froglets and small fish. The adult flies to colonise new ponds, and newly created garden ponds are often reached in their first year.",
+    "conservation": "No global conservation assessment was found. In Britain the species is described as quite common and widespread, and the Animal Diversity Web lists no special protection status, while noting that European specialists are seeking protection beyond limits on collecting."
+  },
+  "sources": [
+    {
+      "url": "https://www.naturespot.org/species/great-diving-beetle",
+      "title": "Great Diving Beetle, Dytiscus marginalis — NatureSpot (Leicestershire and Rutland wildlife)"
+    },
+    {
+      "url": "https://www.first-nature.com/insects/c-dytiscus-marginalis.php",
+      "title": "Dytiscus marginalis, Great Diving Beetle — First Nature"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Dytiscus_marginalis/",
+      "title": "Dytiscus marginalis — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

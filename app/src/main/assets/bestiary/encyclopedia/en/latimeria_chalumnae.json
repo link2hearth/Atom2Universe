@@ -1,0 +1,30 @@
+{
+  "id": "latimeria_chalumnae",
+  "name": "West Indian Ocean Coelacanth",
+  "scientific": "Latimeria chalumnae",
+  "group": "fish",
+  "sections": {
+    "overview": "The West Indian Ocean coelacanth is a large, deep-water fish of the western Indian Ocean. Its paired fins sit on fleshy lobes and move in a diagonal pattern, like the legs of a four-limbed land animal. The best-known population lives around the Comoro Islands.",
+    "identification": "The body is dark metallic blue with irregular white or pale bluish spots, a pattern unique to each fish, and it turns brownish after death. The head is naked, the lower jaw has two large overlapping plates, and the brain fills only about 1% of the cranial cavity. Females are larger, reaching about 2 m, while males stay around 1.7 m. The maximum published mass is about 95 kg; this is a recorded maximum, not a typical weight. The available length records differ by sex, but a reliable general body-width measure was not found.",
+    "habitat": "It lives on steep rocky slopes at 150–700 m, usually 180–250 m, in water of 13–25 °C, and shelters in caves by day. Besides Grande Comore and Anjouan in the Comoros, populations are known from South Africa, Madagascar and Mozambique.",
+    "diet": "It preys on fishes and squid, and known prey includes Beryx fishes, cardinalfishes, a skate, an eel and a swell shark. It does not chase prey but snaps up animals that pass within about 20 cm of its mouth.",
+    "behavior": "It is nocturnal. By day several fish gather in caves, though no social interaction has been seen; at night each drifts alone in search of food, covering several kilometres. Tagged fish travelled 2–8 km in a day, and the species can swim in any direction, even upside down.",
+    "reproduction": "It is ovoviviparous: the eggs, about 9 cm across, develop inside the female, who gives birth to fully formed young of 35–38 cm. Litters of 5 to 29 young have been reported. Gestation is estimated at 13 months or about three years, so females may breed only every second or third year; males give no known care.",
+    "ecology": "The coelacanth is a predator high in the food web, with a trophic level of about 4.4. Humans are its only known predator, and its spotted pattern may help it blend into cave walls.",
+    "conservation": "The IUCN lists it as Critically Endangered (assessed 2000, as reported by FishBase), and international trade is banned under CITES Appendix I. It is not eaten but is caught by accident, mainly in gill nets and deep-water fishing for other species, and the population is believed to be small and declining."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Latimeria-chalumnae.html",
+      "title": "Latimeria chalumnae, Coelacanth — FishBase"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Latimeria_chalumnae/",
+      "title": "Latimeria chalumnae — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.fishbase.se/Summary/Latimeria-chalumnae",
+      "title": "Latimeria chalumnae summary | FishBase"
+    }
+  ]
+}

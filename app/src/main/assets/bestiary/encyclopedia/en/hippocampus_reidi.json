@@ -1,0 +1,26 @@
+{
+  "id": "hippocampus_reidi",
+  "name": "Slender Seahorse",
+  "scientific": "Hippocampus reidi",
+  "group": "fish",
+  "sections": {
+    "overview": "The slender seahorse, also called longsnout seahorse, is a small fish of the western Atlantic, from North Carolina and Bermuda through the Caribbean to southern Brazil. Like all seahorses, it is the male that carries the young in a brood pouch.",
+    "identification": "It has a narrow body covered in rings of bony plates, a long thick snout and a large rounded coronet on the head. The tubercles are low and rounded, with no spines except over the eyes, and there are no skin filaments. Colour ranges from black to yellow, red, orange or brown, often with white dots on the tail, and can change. It reaches about 17.5 cm. The maximum reported length is about 17.5 cm; no reliable adult body-mass estimate was found in the consulted species accounts.",
+    "habitat": "It is usually attached to mangroves, seagrasses or gorgonian corals in water from the surface down to about 55–60 m, in marine and brackish conditions. It sometimes swims freely in midwater or drifts with floating Sargassum, and it is uncommon overall though locally common in places.",
+    "diet": "It eats small crustaceans such as ghost shrimp, grass shrimp, opossum shrimp and amphipods. It is an ambush feeder that sucks prey into its toothless snout and swallows it whole, and it feeds only in daylight.",
+    "behavior": "It swims upright by rapidly rippling its dorsal and pectoral fins. At night it stops feeding and wraps its tail around a holdfast until dawn. Males tend to have smaller home ranges than females, and pairs live within overlapping home ranges without defending exclusive territories.",
+    "reproduction": "Pairs form lasting bonds and court with colour changes and displays. The female places up to about 1,600 eggs of roughly 1.2 mm in the male’s pouch, where they are fertilised. The pouch seals and reopens after about two weeks, when the male releases fully formed young of about 5–7 mm. Breeding lasts at least eight months a year, with a peak from October to February.",
+    "ecology": "Thanks to its camouflage and bony armour, the slender seahorse has few natural predators, though seahorses have been found in the stomachs of larger fishes such as red snapper, dorado, rays, tuna and dolphinfish. It usually lives one to four years.",
+    "conservation": "The IUCN lists it as Near Threatened (assessed 2016, as reported by FishBase), and it is in CITES Appendix II. Declines are linked to collection for the aquarium trade, folk medicine and curios, and it is also caught as bycatch in shrimp trawl fisheries."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Hippocampus-reidi.html",
+      "title": "Hippocampus reidi, Slender seahorse — FishBase"
+    },
+    {
+      "url": "https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/longsnout-seahorse/",
+      "title": "Longsnout seahorse — Florida Museum, Discover Fish"
+    }
+  ]
+}

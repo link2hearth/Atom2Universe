@@ -12,8 +12,8 @@
       "fr": "L’éléphant de savane d’Afrique est un herbivore de très grande taille dont les déplacements et l’alimentation façonnent le milieu, tout en exigeant de vastes ressources en nourriture et en eau. Il vit surtout en Afrique subsaharienne orientale et australe, dans des mosaïques de prairies, de broussailles et de boisements plutôt que dans un seul type de savane. C’est une espèce distincte de l’éléphant de forêt d’Afrique, Loxodonta cyclotis, généralement plus petit et adapté aux forêts denses ; des individus de la zone de transition forêt-savane peuvent présenter des caractères mixtes."
     },
     "identification": {
-      "en": "Adults have grey, deeply folded skin, very large triangular ears, a concave or saddle-shaped back, and a long trunk; these traits together help distinguish them from the smaller, round-eared forest species. A SANParks comparison guide lists broad adult-male ranges of 3–4 m at the shoulder and 4–6.3 tonnes; females are smaller, and size varies with age and population. Known-age Amboseli data were fitted with growth curves: the estimated sex difference widened after about ten years, with males 60–70 cm taller at age 65. The trunk is an elongated upper lip and nose made of muscle, connective tissue, nerves and skin, with no bones; it smells, breathes, touches, lifts and manipulates food. Its sensitive tip has two small opposing projections, often called fingers, which pinch small objects while the flexible trunk can also wrap around larger loads. Tusks are enlarged upper incisors, not horns; both sexes generally grow them, and males tend to have thicker, faster-growing tusks. Some populations show local exceptions: in Gorongosa, Mozambique, ivory poaching during the civil war favored female tusklessness, and researchers implicated tooth-development genes.",
-      "fr": "L’adulte a une peau grise très plissée, de grandes oreilles triangulaires, un dos concave ou ensellé et une longue trompe ; l’ensemble aide à le distinguer de l’espèce forestière, plus petite et aux oreilles arrondies. Un guide comparatif de SANParks indique des fourchettes larges pour les mâles adultes : 3 à 4 m au garrot et 4 à 6,3 tonnes ; les femelles sont plus petites, et la taille varie selon l’âge et la population. Les données d’Amboseli sur des éléphants d’âge connu ont servi à ajuster des courbes de croissance : l’écart estimé s’accentue après dix ans, les mâles dépassant les femelles de 60 à 70 cm à 65 ans. La trompe prolonge la lèvre supérieure et le nez ; faite de muscles, de tissus conjonctifs, de nerfs et de peau, sans os, elle sert à sentir, respirer, toucher, soulever et manipuler les aliments. Son extrémité sensible porte deux petites saillies opposées, comparables à des doigts, qui pincent les petits objets, tandis que la trompe enroule des charges plus grandes. Les défenses sont des incisives supérieures agrandies, et non des cornes ; les deux sexes en portent généralement, celles des mâles étant plus épaisses et poussant plus vite. Certaines populations font exception : à Gorongosa, au Mozambique, le braconnage pour l’ivoire durant la guerre civile a favorisé l’absence de défenses chez les femelles, avec des gènes du développement dentaire impliqués."
+      "en": "Adults have grey, deeply folded skin, very large triangular ears, a concave or saddle-shaped back, and a long trunk; these traits together help distinguish them from the smaller, round-eared forest species. A SANParks comparison guide lists broad adult-male ranges of 3–4 m at the shoulder and 4–6.3 tonnes; females are smaller, and size varies with age and population. Known-age Amboseli data were fitted with growth curves: the estimated sex difference widened after about ten years, with males 60–70 cm taller at age 65. The trunk is an elongated upper lip and nose made of muscle, connective tissue, nerves and skin, with no bones; it smells, breathes, touches, lifts and manipulates food. Its sensitive tip has two small opposing projections, often called fingers, which pinch small objects while the flexible trunk can also wrap around larger loads. Tusks are enlarged upper incisors, not horns; both sexes generally grow them, and males tend to have thicker, faster-growing tusks. Some populations show local exceptions: in Gorongosa, Mozambique, ivory poaching during the civil war favored female tusklessness, and researchers implicated tooth-development genes. San Diego Zoo references average adult masses of about 2.8 tonnes for females and 6.0 tonnes for males, with shoulder heights of 2.5–3.0 m and 2.9–3.7 m respectively. Body size varies by population; no standard body-width measurement is reported.",
+      "fr": "L’adulte a une peau grise très plissée, de grandes oreilles triangulaires, un dos concave ou ensellé et une longue trompe ; l’ensemble aide à le distinguer de l’espèce forestière, plus petite et aux oreilles arrondies. Un guide comparatif de SANParks indique des fourchettes larges pour les mâles adultes : 3 à 4 m au garrot et 4 à 6,3 tonnes ; les femelles sont plus petites, et la taille varie selon l’âge et la population. Les données d’Amboseli sur des éléphants d’âge connu ont servi à ajuster des courbes de croissance : l’écart estimé s’accentue après dix ans, les mâles dépassant les femelles de 60 à 70 cm à 65 ans. La trompe prolonge la lèvre supérieure et le nez ; faite de muscles, de tissus conjonctifs, de nerfs et de peau, sans os, elle sert à sentir, respirer, toucher, soulever et manipuler les aliments. Son extrémité sensible porte deux petites saillies opposées, comparables à des doigts, qui pincent les petits objets, tandis que la trompe enroule des charges plus grandes. Les défenses sont des incisives supérieures agrandies, et non des cornes ; les deux sexes en portent généralement, celles des mâles étant plus épaisses et poussant plus vite. Certaines populations font exception : à Gorongosa, au Mozambique, le braconnage pour l’ivoire durant la guerre civile a favorisé l’absence de défenses chez les femelles, avec des gènes du développement dentaire impliqués. Le San Diego Zoo indique des masses adultes moyennes d’environ 2,8 tonnes pour les femelles et 6,0 tonnes pour les mâles, avec des hauteurs au garrot de 2,5 à 3,0 m et de 2,9 à 3,7 m respectivement. La taille varie selon les populations ; aucune mesure standard de largeur du corps n’est fournie."
     },
     "habitat": {
       "en": "The species uses grassland, savanna, scrub, and open woodland, shifting among them as seasonal rains change the availability of grass, leaves, and surface water. In arid regions, waterholes anchor dry-season movements, and ranges expand when local forage and water become scarce. Their large ears help limit overheating: flapping moves air across the broad surface and exposes blood vessels on the inner surface of the ear flap, increasing heat loss.",
@@ -57,12 +57,12 @@
         "SANParks describes male dispersal and heat loss through the ear pinna."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
+        "behavior.en.4",
+        "behavior.fr.4",
         "habitat.en.3",
         "habitat.fr.3",
-        "behavior.en.4",
-        "behavior.fr.4"
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -113,12 +113,12 @@
         "Savanna and forest elephants differ in size, range and typical form."
       ],
       "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
         "overview.en.2",
         "overview.en.3",
         "overview.fr.2",
-        "overview.fr.3",
-        "identification.en.1",
-        "identification.fr.1"
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -143,8 +143,8 @@
       ],
       "prose_claims": [
         "identification.en.2",
-        "identification.fr.2",
         "identification.en.6",
+        "identification.fr.2",
         "identification.fr.6"
       ],
       "budget": {
@@ -169,12 +169,12 @@
         "African trunk fingers pinch; trunk-tip anatomy supports grasping."
       ],
       "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
         "identification.en.4",
         "identification.en.5",
         "identification.fr.4",
-        "identification.fr.5",
-        "diet.en.2",
-        "diet.fr.2"
+        "identification.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -359,14 +359,14 @@
         "Account summarizes habitat use, diet, gestation and nursing."
       ],
       "prose_claims": [
-        "habitat.en.2",
-        "habitat.fr.2",
         "diet.en.1",
         "diet.fr.1",
-        "reproduction.en.3",
-        "reproduction.fr.3",
         "habitat.en.1",
-        "habitat.fr.1"
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -582,6 +582,26 @@
         "total": 64,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "African Elephants — San Diego Zoo Wildlife Alliance Library, Physical Characteristics",
+        "fr": "Éléphants d’Afrique — bibliothèque du San Diego Zoo Wildlife Alliance, caractéristiques physiques"
+      },
+      "url": "https://ielc.libguides.com/sdzg/factsheets/african_elephant/characteristics",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Savanna-elephant average mass: 2,800 kg in females and 6,000 kg in males; shoulder height 2.5–3.0 m and 2.9–3.7 m, respectively."
+      ],
+      "prose_claims": [
+        "identification.en.8",
+        "identification.en.9",
+        "identification.fr.8",
+        "identification.fr.9"
+      ]
     }
   ],
   "illustration_notes": "Show an adult African savanna elephant with very large triangular ears, a concave back, grey folded skin and tusks, on a pure white background. Keep proportions and tusks realistic; do not depict the compact, round-eared African forest elephant.",

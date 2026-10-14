@@ -1,0 +1,26 @@
+{
+  "id": "tinca_tinca",
+  "name": "Tanche",
+  "scientific": "Tinca tinca",
+  "group": "fish",
+  "sections": {
+    "overview": "La tanche est un poisson d’eau douce trapu, de la famille des carpes, qui vit dans les eaux calmes et herbeuses de la plus grande partie de l’Europe et de l’Asie occidentale. C’est une espèce lente, vivant près du fond, qui tolère le manque d’oxygène, et qui a été introduite dans de nombreuses autres régions.",
+    "identification": "Poisson trapu de taille moyenne, à grosse tête, museau obtus, petits yeux rouge orangé et un petit barbillon à chaque coin de la bouche. Les nageoires sont épaisses et arrondies, les écailles très petites et couvertes d’un épais mucus. La couleur va de l’olive foncé au doré. Les mâles matures ont des nageoires pelviennes plus grandes, dont le deuxième rayon est épaissi. La longueur courante est d’environ 20 cm et le maximum d’environ 70 cm et 7,5 kg.",
+    "habitat": "Elle préfère les eaux calmes ou lentes à fond vaseux et riches en plantes, typiquement des lacs peu profonds et des bras morts très végétalisés, et évite le courant fort. Elle est native de la plus grande partie de l’Europe, sauf l’Irlande, le nord de la Scandinavie et une partie des Balkans, et vers l’est jusqu’à la Sibérie occidentale. Les adultes tolèrent le manque d’oxygène et passent souvent l’hiver enfouis dans la vase.",
+    "diet": "Les adultes se nourrissent sur le fond, surtout de mollusques, d’autres animaux benthiques et de matière végétale, ainsi que de débris. D’autres descriptions mentionnent des insectes aquatiques et de petits crustacés, et les jeunes consomment des proies plus petites comme des microcrustacés et des larves de chironomes.",
+    "behavior": "La tanche est nocturne et repère sa nourriture plus par le goût et l’odorat que par la vue, ce qui l’aide en eau trouble. Sa croissance est lente et elle vit longtemps, parfois 20 ans ou plus, bien que les chiffres de longévité des sources viennent de populations introduites.",
+    "reproduction": "Les mâles mûrissent à 2-3 ans et les femelles à 3-7 ans. La ponte a lieu de mai à septembre, dans une végétation dense, vers 19-20 °C. Les femelles pondent des œufs collants en plusieurs lots sur environ deux mois, et les œufs éclosent en quelques jours. Les larves restent accrochées aux plantes pendant plusieurs jours.",
+    "ecology": "Se nourrissant sur le fond des eaux peu profondes envahies d’herbiers, la tanche mange des mollusques et d’autres animaux benthiques et dépend de la végétation pour frayer. Introduite hors d’Europe, par exemple en Tasmanie en 1876, elle s’y est installée par endroits ; dans le bassin Murray-Darling, en Australie, elle est aujourd’hui en déclin et rare.",
+    "conservation": "La tanche est classée en préoccupation mineure sur la Liste rouge de l’UICN (évaluation de 2022). Elle est répandue et souvent introduite ; elle n’est donc pas considérée comme menacée sur l’ensemble de son aire."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Tinca-tinca.html",
+      "title": "Tinca tinca, tanche — FishBase"
+    },
+    {
+      "url": "https://www.mdb.fish/fish-fact-sheets/tench",
+      "title": "Tanche — fiche poisson de l’autorité du bassin Murray-Darling"
+    }
+  ]
+}

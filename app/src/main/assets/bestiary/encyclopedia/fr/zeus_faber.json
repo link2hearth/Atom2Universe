@@ -1,0 +1,26 @@
+{
+  "id": "zeus_faber",
+  "name": "Saint-Pierre",
+  "scientific": "Zeus faber",
+  "group": "fish",
+  "sections": {
+    "overview": "Le saint-pierre est un poisson marin au corps extrêmement aplati et à la grande bouche qui se projette vers l’avant pour saisir ses proies. Il vit près du fond dans les mers chaudes et tempérées, et se rencontre dans l’Atlantique oriental, la Méditerranée, l’océan Indien et le Pacifique occidental.",
+    "identification": "Le poisson atteint couramment environ 40 cm et une longueur totale maximale documentée de 90 cm ; la masse maximale publiée est de 8 kg. Les données FishBase sur longueur et masse sont mâles ou de sexe non précisé ; aucune différence entre sexes n’est avancée. Le corps est haut, très comprimé et couvert de minuscules écailles. La nageoire dorsale compte 9 à 11 longues épines dont les membranes se prolongent en filaments flottants, et de grandes plaques osseuses se trouvent à la base des nageoires dorsale et anale. Chaque flanc porte une grande tache sombre entourée d’un anneau plus clair.",
+    "habitat": "Il vit entre 5 et 400 m de profondeur, le plus souvent entre 50 et 150 m. Dans l’Atlantique oriental, il va de la Norvège à l’Afrique du Sud, et il habite aussi la Méditerranée et la mer Noire.",
+    "diet": "Il se nourrit surtout de poissons osseux grégaires, et parfois de céphalopodes et de crustacés. Il s’approche de sa proie de face, puis projette ses mâchoires protractiles pour la saisir.",
+    "behavior": "Les saints-pierres sont généralement solitaires et vivent près du fond. On sait peu de choses de leur comportement dans la nature, et ce qui est connu concerne surtout leur façon d’approcher leurs proies.",
+    "reproduction": "Dans l’Atlantique nord-est, la ponte a lieu à la fin de l’hiver et au début du printemps, et plus tôt en Méditerranée; au large de l’Australie, elle se déroule en été et au début de l’automne. Les œufs sont pélagiques. La maturité est atteinte vers quatre ans, à environ 35 cm.",
+    "ecology": "Le saint-pierre est un prédateur de poissons vivant près du fond, et son âge maximal rapporté est de 12 ans. Le codage ADN suggère que les populations d’Europe et celles d’Afrique du Sud et d’Australasie appartiennent à deux espèces distinctes.",
+    "conservation": "L’UICN classait l’espèce en données insuffisantes en 2013 (d’après FishBase), ce qui signifie qu’on en sait trop peu pour juger son risque. Sa biologie reste mal documentée, et la possible séparation en deux espèces complique toute évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Zeus-faber.html",
+      "title": "Zeus faber, saint-pierre — FishBase"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/1492",
+      "title": "Saint-Pierre, Zeus faber — Fishes of Australia (Museums Victoria)"
+    }
+  ]
+}

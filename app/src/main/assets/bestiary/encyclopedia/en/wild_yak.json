@@ -1,0 +1,66 @@
+{
+  "id": "wild_yak",
+  "name": "Wild yak",
+  "scientific": "Bos mutus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Wild yaks inhabit the cold, high Tibetan Plateau. The wild species is Bos mutus; the domestic yak, Bos grunniens, is its close relative, raised by people on the Asian highlands. Its remaining range is concentrated in northern Tibet and western Qinghai, with a small, documented occurrence in Nepal.",
+    "identification": "A mature wild yak has a deep, compact body, short sturdy legs, small ears and broad rounded hooves. Long coarse guard hairs hang from the chest, flanks and thighs over a dense insulating undercoat; large lungs and a strong heart, alongside abundant red blood cells, help it obtain oxygen in thin air. Adult bulls stand about 175–203 cm at the shoulder and weigh over 800 kg, with estimates reaching 1,200 kg; cows stand 137–156 cm and average about 350 kg.",
+    "habitat": "Wild yaks occupy alpine meadows, cold steppe and high-desert grassland, generally between about 4,000 and 6,100 m. The plateau is windy and arid, with temperatures below −40 °C in some areas; yaks shift to lower valleys in winter. Field research in Arjin Shan found seasonal habitat choices, including use of rugged, higher ground during summer.",
+    "diet": "The wild yak grazes grasses, sedges and other low alpine plants, with the mix changing as plants mature and snow limits access. It is a ruminant: swallowed vegetation is first fermented by microbes in the rumen, then brought back to the mouth as cud and chewed again; later stomach chambers digest and absorb the released nutrients. This microbial fermentation makes fibrous cell walls usable as energy. A 2025 field study using DNA from wild-yak droppings found clear seasonal shifts in plant foods, consistent with flexible foraging through the short growing season and lean winter.",
+    "behavior": "Wild yaks are social: females and calves form nursery groups, while adult males may join them, remain solitary or gather in small bachelor groups. In the summer rut, bulls join female herds, compete for mates, display and fight. Wild yaks vocalize and can be noisy. In the growing season, they use higher, more rugged ground; seasonal habitat use shifts with climate and snow.",
+    "reproduction": "Mating occurs in summer, and calves are born from April through June, with timing varying with elevation and seasonal food. After about 258–270 days of gestation, a cow usually gives birth to one calf; wild females commonly calve every two or three years, depending partly on forage and weather. A calf can stand soon after birth and learn to walk within hours; it soon follows its mother back to the herd. The maternal group offers protection while the young animal begins to graze and grow.",
+    "ecology": "As a large grazer, the wild yak shares alpine forage with Tibetan wild asses, argali, blue sheep and other plateau herbivores. In summer, movement into higher meadows can reduce overlap with animals using lower ground; competition becomes more consequential where domestic livestock concentrate on the same productive pastures. Its need for connected ranges ties survival to highland land use.",
+    "conservation": "The IUCN assessment published in 2016 is based on a global assessment dated 9 July 2014: it classifies Bos mutus as Vulnerable and estimates 7,500–9,999 mature animals, with a continuing decline projected. Earlier surveys placed about 15,000 wild yaks across the plateau in 1995, while the Wildlife Conservation Society later reported imprecise global estimates of 15,000–20,000; these figures come from different dates and methods. Poaching for meat, shrinking and fragmented habitat, competition with livestock, and hybridization with domestic yaks threaten the species. Nepal’s presence was confirmed again in 2014 after decades without records. China’s nature reserves and anti-poaching protection offer important refuges, but the global trend remains uncertain and negative in many areas."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1644/836.1",
+      "title": "Bos grunniens and Bos mutus (Artiodactyla: Bovidae) — Mammalian Species"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-2.RLTS.T2892A101293528.en",
+      "title": "Bos mutus (Wild Yak) — IUCN Red List of Threatened Species"
+    },
+    {
+      "url": "https://china.wcs.org/%E9%87%8E%E7%94%9F%E7%94%9F%E7%89%A9/%E9%87%8E%E7%89%A6%E7%89%9B.aspx",
+      "title": "Wild Yak — Wildlife Conservation Society China"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/oryx/article/understanding-habitat-selection-of-the-vulnerable-wild-yak-bos-mutus-on-the-tibetan-plateau/9A166DD55F1B07688BB2EFB8A53A8EDC",
+      "title": "Understanding habitat selection of the Vulnerable wild yak Bos mutus on the Tibetan Plateau — Oryx"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12729762/",
+      "title": "Seasonal dietary shifts drive gut microbiome plasticity and metabolic adaptation in wild yaks on the Qinghai-Xizang Plateau — Microbiome"
+    },
+    {
+      "url": "https://doi.org/10.1002/ece3.7731",
+      "title": "Phylogeographical analysis shows the need to protect the wild yaks’ last refuge in Nepal — Ecology and Evolution"
+    },
+    {
+      "url": "https://repository.paulsmiths.edu/files/pdf?fileid=3258544d-1808-442f-95dc-614b0db59d36",
+      "title": "Thirty-year Wild Yak (Bos mutus) Management Plan for the Chang Tang Nature Reserve, China"
+    },
+    {
+      "url": "https://extension.msstate.edu/publications/understanding-the-ruminant-animal-digestive-system",
+      "title": "Understanding the Ruminant Animal Digestive System — Mississippi State University Extension"
+    },
+    {
+      "url": "https://www.asianwildcattle.org/wild-yak.html",
+      "title": "Wild yak — Asian Wild Cattle Specialist Group"
+    },
+    {
+      "url": "https://www.usgs.gov/publications/bos-grunniens-and-bos-mutus-artiodactyla-bovidae",
+      "title": "Bos grunniens and Bos mutus (Artiodactyla: Bovidae) — U.S. Geological Survey"
+    },
+    {
+      "url": "https://doi.org/10.1007/s11434-014-0247-0",
+      "title": "Sexual/aggressive behavior of wild yak (Bos mutus) during the rut: influence of female choice — Chinese Science Bulletin"
+    },
+    {
+      "url": "https://tibet.net/wp-content/uploads/2011/08/TheEndageredMammalsOfTibet.pdf",
+      "title": "The Endangered Mammals of Tibet — Department of Information and International Relations Publications"
+    }
+  ]
+}

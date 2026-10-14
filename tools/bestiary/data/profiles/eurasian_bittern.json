@@ -48,7 +48,13 @@
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/bittern",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Mean weight 1.2 kg; strongly cryptic; clutch typically 4–6; incubation 25–26 days by the female; fledging 50–55 days.",
         "UK 191 booming males (2017), low of 11 in 1997; Amber-listed; IUCN Least Concern; record age 11 years 11 months."
@@ -60,11 +66,20 @@
         "fr": "Botaurus stellaris — Animal Diversity Web, université du Michigan"
       },
       "url": "https://animaldiversity.org/accounts/Botaurus_stellaris/",
-      "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "Length 64–80 cm, wingspan 125–135 cm; diet of fish, amphibians, insects, crustaceans; freezes with neck stretched and sways; polygynous, females do all parental care.",
-        "Predators include Eurasian mink and raccoon dogs; nest loss from starvation and predation; umbrella species. Its mass range (243–874 g) was not used."
+        "Predators include Eurasian mink and raccoon dogs; nest loss from starvation and predation; umbrella species. Its mass range (243–874 g) was not used.",
+        "Total length 64–80 cm and wingspan 125–135 cm; males are larger than females."
       ]
     }
   ],

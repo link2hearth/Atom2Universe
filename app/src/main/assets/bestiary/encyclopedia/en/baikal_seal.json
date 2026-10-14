@@ -1,0 +1,58 @@
+{
+  "id": "baikal_seal",
+  "name": "Baikal seal",
+  "scientific": "Pusa sibirica",
+  "group": "mammals",
+  "sections": {
+    "overview": "The Baikal seal, or nerpa, is a true seal whose entire natural range lies in Lake Baikal, southern Siberia. It is the only mammal native to the lake and the only seal species living exclusively in freshwater.",
+    "identification": "Adults are about 1.1–1.4 metres long; males are slightly larger at physical maturity. The FAO guide reports adults around 80–90 kilograms. Like other true seals, the Baikal seal has no visible external ear flaps; its foreflippers steer while its hind flippers propel it underwater.",
+    "habitat": "This freshwater seal is endemic to Lake Baikal and its connecting streams. In winter, seals breathe through holes in the ice, while females shelter newborns in snow lairs on the frozen lake.",
+    "diet": "Baikal seals hunt underwater, taking small endemic golomyanka and sculpins as well as other freshwater fishes; the mix changes with season and location. They also eat amphipods, tiny crustaceans that form dense swarms in some parts of the lake. Video and tag data show seals pursuing these prey at night, when amphipods rise in the water column and fish shift into shallower depths. Behind the canines, its cheek teeth have closely spaced cusps that form a comb-like filter. This lets it expel water while retaining tiny prey, making repeated captures more efficient.",
+    "behavior": "Most seals forage alone and remain spread across the lake in winter, although several may share access to an ice hole. Instrumented seals commonly dived for 10–20 minutes to depths of 50–200 metres; the greatest depth reported in the FAO guide was 300 metres. Baikal seals have been heard vocalizing both above and below water, and reported sound types differ between sexes; recordings remain scarce, so their social function is not settled.",
+    "reproduction": "Pups are born in snow lairs on lake ice from mid-February through March. Newborns measure about 64–66 centimetres, weigh 4–4.2 kilograms and have white lanugo, a soft first coat. They stay in the den and generally avoid water for their first two or three weeks. Mating takes place in water, mainly in the first half of April, and pregnancy lasts about 11 months. Lactation lasts around 2.5 months and overlaps with the mating season.",
+    "ecology": "By eating amphipods directly, it draws energy from a lower level of the food chain than when it eats fish that consume those crustaceans. This shorter pathway loses less energy between successive consumers and helps explain how a nutrient-poor lake supports many seals.",
+    "conservation": "Goodman’s IUCN assessment lists Least Concern; it was assessed on 10 July 2015 and published in 2016. Commercial hunting rose in the twentieth century; the population grew after early-century hunting but later declined with harvest and distemper outbreaks. A distemper-related morbillivirus epidemic struck the population in 1987–1988. Pollution, bycatch, illegal hunting and shrinking breeding ice remain concerns. A 2022 field project reported that tourist activity can disturb seals at the Ushkanyi Islands haul-outs."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Pusa_sibirica/",
+      "title": "Pusa sibirica (Baikal seal)"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T41676A45231738.en",
+      "title": "Pusa sibirica: The IUCN Red List of Threatened Species 2016"
+    },
+    {
+      "url": "https://www.fao.org/4/t0725e/t0725e39.pdf",
+      "title": "Carnivora - Pinnipedia - Phocidae"
+    },
+    {
+      "url": "https://doi.org/10.1073/pnas.2014021117",
+      "title": "Ultrahigh foraging rates of Baikal seals make tiny endemic amphipods profitable in Lake Baikal"
+    },
+    {
+      "url": "https://baikalfoundation.ru/en/new-information-on-the-number-and-status-of-the-baikal-seals-in-2023-has-been-obtained/",
+      "title": "New Information on the Number and Status of the Baikal seals in 2023 has been obtained"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/1481361/",
+      "title": "Round table on morbilliviruses in marine mammals"
+    },
+    {
+      "url": "https://www.pinnipeds.org/seal-information/species-information-pages",
+      "title": "Species Information - The Pinnipeds"
+    },
+    {
+      "url": "https://link.springer.com/chapter/10.1007/978-3-031-77022-7_5",
+      "title": "Pinniped Sounds"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0128314",
+      "title": "A 9,000 Year History of Seal Hunting on Lake Baikal, Siberia: The Zooarchaeology of Sagan-Zaba II"
+    },
+    {
+      "url": "https://www.nipr.ac.jp/english/info/notice/20201127.html",
+      "title": "Mystery of Siberian freshwater seal food choice solved"
+    }
+  ]
+}

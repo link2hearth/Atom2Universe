@@ -12,8 +12,8 @@
       "fr": "L’Écureuil roux est un petit rongeur arboricole répandu en Europe et dans le nord de l’Asie. Ses griffes recourbées et ses puissants membres postérieurs facilitent grimpe et bonds ; sa longue queue touffue contribue à l’équilibre et à la thermorégulation. Il mange surtout des végétaux, selon les ressources forestières et les saisons. Il cherche généralement sa nourriture seul, mais peut partager un nid en hiver. À l’automne, il disperse des réserves alimentaires et parfois des graines. L’espèce reste largement répandue à l’échelle mondiale, malgré de forts déclins régionaux dans certaines parties de la Grande-Bretagne et de l’Italie."
     },
     "identification": {
-      "en": "This slender squirrel has prominent eyes, a long bushy tail and, in winter, often tufted ears. Its coat ranges from bright red or chestnut to brown, greyish or nearly black, commonly with a pale underside; the name does not describe every animal. In a Hokkaido subspecies, specimens had lighter winter coats and more pronounced seasonal colour shifts, but appearance also varies geographically. The North American eastern grey squirrel, Sciurus carolinensis, is a different species; colour alone cannot distinguish them because red squirrels may also be grey or dark.",
-      "fr": "Cet écureuil élancé a de grands yeux, une longue queue touffue et souvent des pinceaux auriculaires en hiver. Son pelage va du roux vif ou châtain au brun, grisâtre ou presque noir, généralement avec le ventre clair ; son nom ne décrit donc pas tous les individus. Chez une sous-espèce d’Hokkaido, les spécimens avaient un pelage hivernal plus clair et des variations saisonnières de couleur plus marquées, mais l’apparence varie aussi selon les régions. L’Écureuil gris d’Amérique du Nord, Sciurus carolinensis, est une autre espèce ; la couleur seule ne les distingue pas, car l’écureuil roux peut lui aussi être gris ou sombre."
+      "en": "Adults typically have a 20–25 cm head-and-body length, a 14–24 cm tail and a mass of 200–475 g. Males and females are very similar in external size; seasonal and regional variation affects mass. The consulted references do not provide a reliable standard body width or height. This slender squirrel has prominent eyes, a long bushy tail and, in winter, often tufted ears. Its coat ranges from bright red or chestnut to brown, greyish or nearly black, commonly with a pale underside; the name does not describe every animal. In a Hokkaido subspecies, specimens had lighter winter coats and more pronounced seasonal colour shifts, but appearance also varies geographically. The North American eastern grey squirrel, Sciurus carolinensis, is a different species; colour alone cannot distinguish them because red squirrels may also be grey or dark.",
+      "fr": "L’adulte mesure généralement 20 à 25 cm de la tête au corps, avec une queue de 14 à 24 cm, et pèse 200 à 475 g. Mâles et femelles ont une taille externe très proche ; la masse varie selon la saison et la région. Les références consultées ne donnent pas de largeur ni de hauteur standard fiables. Cet écureuil élancé a de grands yeux, une longue queue touffue et souvent des pinceaux auriculaires en hiver. Son pelage va du roux vif ou châtain au brun, grisâtre ou presque noir, généralement avec le ventre clair ; son nom ne décrit donc pas tous les individus. Chez une sous-espèce d’Hokkaido, les spécimens avaient un pelage hivernal plus clair et des variations saisonnières de couleur plus marquées, mais l’apparence varie aussi selon les régions. L’Écureuil gris d’Amérique du Nord, Sciurus carolinensis, est une autre espèce ; la couleur seule ne les distingue pas, car l’écureuil roux peut lui aussi être gris ou sombre."
     },
     "habitat": {
       "en": "Red squirrels inhabit boreal conifer forests, mixed and broad-leaved woods, wooded parks and some fragmented landscapes. Local food and tree structure shape their use of habitat: conifer seeds may be dependable, while deciduous woods supply seasonal nuts, buds and fruit. In one northern Greek mixed forest, four adults used the canopy extensively, especially small branches and terminal twigs. This study illustrates how connected crowns provide feeding and escape routes, not a universal habitat preference. Squirrels build twig nests high in trees and line them with softer material; they may also use cavities.",
@@ -146,6 +146,20 @@
       ],
       "facts": [
         "Gazzard’s 2023 global assessment lists Sciurus vulgaris as Least Concern; this global category is distinct from regional status and does not establish security of every population."
+      ]
+    },
+    {
+      "title": {
+        "en": "Red Squirrel — British Wildlife Centre",
+        "fr": "Écureuil roux — British Wildlife Centre"
+      },
+      "url": "https://britishwildlifecentre.co.uk/planyourvisit/animals/red-squirrel/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Head-body 20–25 cm, tail 14–24 cm, mass 200–475 g; broader species overview."
       ]
     }
   ],

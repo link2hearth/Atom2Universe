@@ -1,0 +1,90 @@
+{
+  "id": "atlantic_puffin",
+  "name": "Atlantic puffin",
+  "scientific": "Fratercula arctica",
+  "group": "birds",
+  "sections": {
+    "overview": "The Atlantic puffin is a small, stocky auk of the North Atlantic that spends most of the year at sea and comes ashore to breed in colonies. Its cycle links small fish at sea with sheltered burrows where it raises one chick.\nBecause adults can breed repeatedly over many years, population change reflects both their survival and the later recruitment of young birds.",
+    "identification": "Adults are generally 26–29 cm long, with a wingspan near 53 cm.\nThe black back and crown contrast with white underparts and a pale breeding-season face; the bill’s bright plates and facial ornaments fade or fall away after breeding, revealing darker facial feathers and a smaller, duller winter bill. Adults weigh about 320–480 g; the consulted source does not give separate ranges by sex.",
+    "habitat": "Puffins breed on islands, headlands, and sea cliffs, digging burrows in soft ground or nesting in rock crevices and beneath boulders where soil is shallow. The tunnel shelters egg and chick from exposure and many surface predators.\nOutside the breeding season, birds disperse across the North Atlantic; during chick-rearing, adults must find suitable prey within practical commuting distance of the colony.",
+    "diet": "The puffin hunts by pursuit-diving: it beats its short wings underwater to propel itself and uses its webbed feet to steer toward prey.\nAt Skomer, Wales, instrumented birds averaged 11.8 m depth and about 40 seconds per dive; most dives were shallow and V-shaped, so those measurements describe that breeding population rather than a species-wide maximum.\nSmall fish dominate the diet, including sandeels, herring, and capelin, although crustaceans and marine worms are also eaten. Adults can hold several fish crosswise in the bill, braced by backward-pointing spines on the roof of the mouth and tongue, and carry the catch back to a chick.\nA Gulf of Maine study found that adult diets included more kinds of prey than chick meals and shifted across breeding stages and warm years; this flexibility did not fully compensate for apparent prey shortages.",
+    "behavior": "Breeding colonies are dense, but each pair attends its own nest burrow. Partners renew their bond with a bill-rattling display, and males give low grunts in courtship.\nAnnual moult also changes how the bird moves: in the North Sea, flightless adults have been recorded from September to March, with peaks in October and March. The dates vary among individuals; each bird replaces its flight feathers during only part of that window.",
+    "reproduction": "A pair usually lays one egg in a burrow excavated with bill and feet, or in a rock crevice, and both parents share incubation for about 40–45 days. The newly hatched, dark-down chick is brooded continuously for its first week or so, then stays in the nest while adults forage.\nParents deliver whole fish until the chick fledges at roughly 38–44 days; it leaves at night and heads out to sea, then lives independently. Young birds spend several years at sea before breeding. At Hornøya, ringed immatures often returned to the natal colony at age three, while the estimated local mean age at first breeding was five; this shows that visiting a colony can precede recruitment, not that all populations share that schedule.",
+    "ecology": "Puffins are both consumers of forage fish and prey for larger seabirds: gulls may rob returning adults or take eggs and chicks, while great skuas kill adults at some colonies. These interactions shape where and how safely a colony can raise young.\nOn Fair Isle, a 27-year study estimated a roughly 50% population decline from 1986 to 2012 alongside lower breeding success and fewer fish delivered to chicks, although adult survival stayed comparatively high. Across four North Atlantic populations, poor local prey supply was associated with longer trips, fewer chick feeds, and lower-energy diets.",
+    "conservation": "The global IUCN assessment dated 1 October 2017 and published that year classed the puffin as Vulnerable, reporting rapid declines across much of Europe and projecting a 50–79% European population decrease over 2000–2065. A 2021 pan-European regional assessment classified it as Endangered and recorded a decreasing trend; these assessments describe extinction risk at different geographic scales. Threats include warming-driven prey shifts, fishing and bycatch, introduced predators, disturbance, and pollution, with effects varying among colonies.\nIn Maine, hunting for meat, feathers, and eggs, followed by introduced grazing and predators, had nearly eliminated puffins by 1900. Project Puffin began at Eastern Egg Rock in 1973, moving chicks from Newfoundland and using decoys and recorded calls to re-establish breeding. A separate restoration on Seal Island began in 1984. A 2003 Maine agency profile records the state’s 1997 threatened listing."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2173/bna.709",
+      "title": "Atlantic Puffin"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Atlantic_Puffin/id",
+      "title": "Atlantic Puffin Identification"
+    },
+    {
+      "url": "https://seabirdgroup.org.uk/journals/seabird-27/seabird-27-21.pdf",
+      "title": "Aging Atlantic Puffins in summer and winter"
+    },
+    {
+      "url": "https://doi.org/10.3354/meps11080",
+      "title": "Foraging behaviour of sympatric razorbills and puffins"
+    },
+    {
+      "url": "https://doi.org/10.3389/fmars.2024.1410805",
+      "title": "Multiple methods of diet assessment reveal differences in Atlantic puffin diet between ages, breeding stages, and years"
+    },
+    {
+      "url": "https://www.maine.gov/ifw/docs/endangered/atlanticpuffin_56_57.pdf",
+      "title": "Atlantic Puffin (Fratercula arctica) Species Profile"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T22694927A117606911.en",
+      "title": "Fratercula arctica"
+    },
+    {
+      "url": "https://doi.org/10.1111/1365-2656.13442",
+      "title": "Local prey shortages drive foraging costs and breeding success in a declining seabird, the Atlantic puffin"
+    },
+    {
+      "url": "https://doi.org/10.1080/00063657.2014.909382",
+      "title": "When are Atlantic puffins Fratercula arctica in the North Sea and around the Faroe Islands flightless?"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0131527",
+      "title": "Decline in an Atlantic Puffin Population: Evaluation of Magnitude and Mechanisms"
+    },
+    {
+      "url": "https://doi.org/10.1525/auk.2008.07059",
+      "title": "High Survival of Immatures in a Long-Lived Seabird: Insights from a Long-Term Study of the Atlantic Puffin"
+    },
+    {
+      "url": "https://doi.org/10.1016/0006-3207(83)90044-7",
+      "title": "Gull-Puffin Interactions on Great Island, Newfoundland"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Atlantic_Puffin/lifehistory",
+      "title": "Atlantic Puffin Life History"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Atlantic_Puffin/sounds",
+      "title": "Atlantic Puffin Sounds"
+    },
+    {
+      "url": "https://sora.unm.edu/sites/default/files/journals/jfo/v059n02/p0161-p0170.pdf",
+      "title": "Re-establishment of Atlantic Puffins (Fratercula arctica) at a former breeding site in the Gulf of Maine"
+    },
+    {
+      "url": "https://www.fws.gov/sites/default/files/documents/Program_highlights_2004_Maine_Coastal_Islands_NWR.pdf",
+      "title": "2004 Program Highlights, Maine Coastal Islands National Wildlife Refuge"
+    },
+    {
+      "url": "https://birdlifedata.blob.core.windows.net/sub-global/3321_fratercula_arctica.pdf",
+      "title": "European Red List of Birds 2021"
+    },
+    {
+      "url": "https://www.wwf.org.uk/learn/fascinating-facts/puffins",
+      "title": "Top 10 facts about Puffins — WWF UK"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "accipiter_ovampensis",
+  "name": "Épervier des Ovampos",
+  "scientific": "Accipiter ovampensis",
+  "group": "birds",
+  "sections": {
+    "overview": "L’épervier des Ovampos est un petit rapace africain des savanes boisées, des lisières de forêts sèches et des plantations d’arbres. Il chasse surtout les oiseaux : il attend souvent sur un perchoir avant de se lancer rapidement à leur poursuite. Son aire couvre une grande partie de l’Afrique subsaharienne ; BirdLife International le décrit comme nomade dans certaines régions plutôt que comme un migrateur régulier sur de longues distances.",
+    "identification": "L’adulte a le dessus et la tête gris ardoise, le croupion gris marqué de barres blanches, le dessous pâle finement barré et une longue queue portant des bandes sombres. La cire et les pattes sont orange à rouges, et l’œil rouge sombre. La femelle est plus grande que le mâle, mais les sources consultées ne donnent pas de mensurations fiables selon le sexe ni de fourchettes de masses. Une fiche régionale indique une longueur totale d’environ 40 cm, une masse proche de 250 g et une envergure voisine de 70 cm ; ce sont des valeurs indicatives, et non une plage mesurée. Aucune hauteur ni largeur corporelle fiable n’est publiée. Il peut être confondu avec le plus petit épervier shikra ; comparer le croupion gris, le dessin de la queue, les marques faciales, la taille et la répartition.",
+    "habitat": "Il fréquente les savanes boisées, les bordures de forêts sèches, les arbres riverains et d’autres paysages ouverts où subsistent des couverts propices à l’affût. BirdLife le signale dans un grand nombre de pays africains et qualifie ses déplacements de nomades. Il utilise aussi les plantations et certains paysages cultivés, mais la coupe des boisements naturels reste une menace dans une partie de son aire.",
+    "diet": "Il se nourrit principalement d’oiseaux, généralement capturés au cours d’une poursuite rapide et basse déclenchée depuis un perchoir. Des fiches régionales citent des colombes, tisserins, gobemouches, pics, hirondelles, drongos et pipits parmi ses proies. Les femelles peuvent prendre des oiseaux plus grands que les mâles. Ces observations indiquent une forte spécialisation sur les oiseaux, sans prouver que chaque population ou individu se nourrisse exclusivement de ceux-ci.",
+    "behavior": "Il chasse en observant depuis un perchoir puis en lançant une attaque soudaine, souvent en slalomant entre les arbres à la poursuite d’oiseaux. Il peut également attendre près des points d’eau fréquentés par ses proies. L’espèce se déplace parfois en fonction des conditions locales. Les comportements de parade et de repos nocturne sont décrits dans des sources régionales d’histoire naturelle, mais les données de terrain restent fragmentaires sur cette vaste aire.",
+    "reproduction": "Les deux sexes participent à la construction d’un nid de brindilles dans un arbre. Une fiche namibienne rapporte une à cinq pontes de septembre à novembre et une incubation de plus de 30 jours ; ces dates concernent l’Afrique australe et ne doivent pas être généralisées à tout le continent. La littérature comparative suggère des durées d’incubation et de séjour au nid proches de celles d’autres petits Accipiter, mais le calendrier général de l’espèce reste incertain.",
+    "ecology": "Ce rapace est un prédateur agile des écosystèmes de boisements ouverts et contribue à réguler les populations de petits oiseaux. Il tolère certains milieux modifiés et peut utiliser les plantations forestières, qui auraient favorisé une hausse locale dans certaines régions d’Afrique australe. Cette tendance régionale coexiste avec la perte de boisements et ne doit pas être interprétée comme une évolution uniforme sur toute l’aire.",
+    "conservation": "L’évaluation de BirdLife International de 2021 classe l’espèce en préoccupation mineure et indique une tendance mondiale à la hausse, tout en précisant que cette tendance est supposée et que la qualité des données est faible. La perte d’habitat par coupe des boisements demeure une menace locale. La catégorie « préoccupation mineure » et cette hausse supposée ne signifient pas que toutes les populations régionales soient suivies ou stables."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/ovambo-sparrowhawk-accipiter-ovampensis",
+      "title": "Épervier des Ovampos — fiche espèce BirdLife International DataZone"
+    },
+    {
+      "url": "https://namibian.org/wildlife-species?species_name=ovambo-sparrowhawk",
+      "title": "Épervier des Ovampos — fiche espèce Namibia Nature Foundation"
+    },
+    {
+      "url": "https://newmansbirds.com/ovambo-sparrowhawk/",
+      "title": "Épervier des Ovampos — Newman's Birds of Southern Africa"
+    },
+    {
+      "url": "https://afo.birdlife.org.au/afo/index.php/afo/article/viewFile/1009/984",
+      "title": "Durées d’incubation et de séjour au nid de petits Accipiter — Australian Field Ornithology"
+    }
+  ]
+}

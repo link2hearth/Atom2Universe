@@ -1,0 +1,30 @@
+{
+  "id": "prunella_modularis",
+  "name": "Dunnock",
+  "scientific": "Prunella modularis",
+  "group": "birds",
+  "sections": {
+    "overview": "The dunnock is a small, unobtrusive brown-and-grey bird that creeps about under hedges and shrubs. Behind its modest looks lies one of the most complicated mating systems found among birds.",
+    "identification": "About 13–14.5 cm long, roughly the size of a house sparrow, and weighing about 21 g. The back is brown streaked with black, the head and breast are grey, the legs pinkish and the bill is thin and pointed, unlike a sparrow’s. The sexes look alike; juveniles are browner and less grey.",
+    "habitat": "It lives in much of Europe and south-west Asia. In Britain it is most frequent in villages, and is also common in gardens, scrub, farmland, woodland and towns, wherever dense low vegetation gives cover.",
+    "diet": "It feeds mainly on spiders and insects, which it finds by hopping on the ground, and eats seeds as well. It sometimes visits feeders but more often picks up spilt food beneath them.",
+    "behavior": "Shy and secretive, it creeps through undergrowth in a mouse-like way, often flicking its wings. Males sing a loud, squeaky warble from high perches, mostly from March to May, and rival males flick their wings and call loudly.",
+    "reproduction": "Both males and females may mate with several partners, so a female can be helped by two males to raise her chicks. The cup nest is built low in dense shrubs and holds typically 4–5 unspotted blue eggs, incubated by the female for 14–15 days. Chicks fledge after 12–14.5 days. Breeding typically starts at one year.",
+    "ecology": "A ground-feeding insect and seed eater, the dunnock depends on dense low cover. Natural food, especially seed, runs short in late winter, and from mid-February dunnocks on farmland turn to feeding stations.",
+    "conservation": "The IUCN Red List classes the species as Least Concern. In the UK it is Amber-listed: about 2.5 million territories were estimated in 2016, and numbers fell by 43% between 1967 and 2024, with the sharpest drop from the mid-1970s to the mid-1980s and a partial recovery since. The oldest ringed bird lived over 10 years."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/dunnock",
+      "title": "Dunnock — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/dunnock",
+      "title": "Dunnock — RSPB"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Dunnock",
+      "title": "Dunnock — Wikipedia"
+    }
+  ]
+}

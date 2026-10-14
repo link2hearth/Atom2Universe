@@ -12,8 +12,8 @@
       "fr": "Le dytique bordé est l’un des plus grands coléoptères de Grande-Bretagne et d’Irlande, et un redoutable prédateur des eaux douces calmes. Il vit dans l’eau aussi bien à l’état de larve que d’adulte, mais vole la nuit pour coloniser de nouvelles mares."
     },
     "identification": {
-      "en": "Adults are about 3 cm long, with a dark olive-brown, almond-shaped body flattened from top to bottom. The pronotum, the plate behind the head, is bordered all round with yellow, and the wing cases have a brownish-yellow edge. Females usually have ribbed wing cases while males have smooth ones, although some mainland European females are smooth.",
-      "fr": "Les adultes mesurent environ 3 cm, avec un corps brun olive foncé, en forme d’amande et aplati de haut en bas. Le pronotum, la plaque derrière la tête, est entièrement bordé de jaune, et les élytres ont un bord jaune brunâtre. Les femelles ont en général des élytres striés et les mâles des élytres lisses, mais certaines femelles d’Europe continentale sont lisses."
+      "en": "Adults are about 3 cm long, with a dark olive-brown, almond-shaped body flattened from top to bottom. The pronotum, the plate behind the head, is bordered all round with yellow, and the wing cases have a brownish-yellow edge. Females usually have ribbed wing cases while males have smooth ones, although some mainland European females are smooth. A reliable adult body-mass range was not found in the consulted sources; one conflicting secondary figure was excluded.",
+      "fr": "Les adultes mesurent environ 3 cm, avec un corps brun olive foncé, en forme d’amande et aplati de haut en bas. Le pronotum, la plaque derrière la tête, est entièrement bordé de jaune, et les élytres ont un bord jaune brunâtre. Les femelles ont en général des élytres striés et les mâles des élytres lisses, mais certaines femelles d’Europe continentale sont lisses. Les sources consultées ne donnent pas de plage fiable de masse adulte ; une valeur secondaire contradictoire a été écartée."
     },
     "habitat": {
       "en": "It lives in still or very slow-flowing fresh water with plenty of submerged vegetation. It is native to the Palearctic, across Europe, Asia and northern Africa.",
@@ -48,10 +48,20 @@
       },
       "url": "https://www.naturespot.org/species/great-diving-beetle",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "About 3 cm; dark olive-brown almond-shaped body, pronotum bordered with yellow; females ribbed, males smooth wing cases; still or slow fresh water with vegetation.",
-        "Predator as adult and larva (water insects, tadpoles, small fish); adults renew air under the wings; fly to colonise ponds; larvae need damp soil to pupate; quite common and widespread in Britain."
+        "Predator as adult and larva (water insects, tadpoles, small fish); adults renew air under the wings; fly to colonise ponds; larvae need damp soil to pupate; quite common and widespread in Britain.",
+        "This source reports body-size traits but gives no reliable species-wide adult body-mass range or sex-specific mass figures."
       ]
     },
     {
@@ -61,7 +71,13 @@
       },
       "url": "https://www.first-nature.com/insects/c-dytiscus-marginalis.php",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "behavior", "reproduction", "ecology"],
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "One of the largest beetles of Britain and Ireland; elytra dark brown with olive tinge and yellowish border; some mainland European females smooth.",
         "Eggs laid singly in submerged stems in early spring, about 18 days to hatch; larva about 5 cm tackles newts, froglets, small fish; pupation in wet marginal soil; strong night fliers colonising garden ponds. Its family line (Lucanidae) is wrong and was ignored."
@@ -74,7 +90,12 @@
       },
       "url": "https://animaldiversity.org/accounts/Dytiscus_marginalis/",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "behavior", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
       "facts": [
         "Palearctic: Europe, Asia and northern Africa; ejects a foul-smelling liquid when seized, with benzoic acid and related compounds.",
         "No special status listed; European scientists seek protection beyond limiting collection. Its listed mass (30 g) and hibernation-under-stones statement were not used, as they conflict with other sources."

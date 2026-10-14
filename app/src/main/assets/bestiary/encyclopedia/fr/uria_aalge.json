@@ -1,0 +1,30 @@
+{
+  "id": "uria_aalge",
+  "name": "Guillemot de Troïl",
+  "scientific": "Uria aalge",
+  "group": "birds",
+  "sections": {
+    "overview": "Le guillemot de Troïl est un oiseau marin plongeur qui ne vient à terre que pour se reproduire. Il niche côte à côte dans de denses colonies sur les falaises, certaines comptant des dizaines de milliers d’oiseaux, et passe le reste de sa vie en mer.",
+    "identification": "L’adulte nicheur mesure environ 38 à 43 cm, avec la tête, le cou et le dos brun sombre et le dessous blanc. En hiver, les joues et la gorge deviennent blanches. Il est moins noir que le petit pingouin, et une forme « à lunettes » porte un anneau blanc autour de l’œil et un trait blanc derrière. Les adultes britanniques pèsent environ 770 à 1 010 g.",
+    "habitat": "Il se reproduit sur des falaises rocheuses abruptes, des îlots et des îles. Sur les falaises continentales, les couples utilisent d’étroites corniches inaccessibles aux prédateurs, et sur les îles sans prédateurs ils nichent parmi les rochers ou sur le sol nu. En dehors de la reproduction, il vit dans les eaux côtières, surtout dans le nord de la mer du Nord et au large des côtes occidentales.",
+    "diet": "Les lançons sont une proie clé en Grande-Bretagne, et le régime comprend aussi du hareng, du capelan, des vers marins, des amphipodes, des crevettes, des mollusques et des calmars. Il plonge pour se nourrir, en général jusqu’à environ 30 m, et peut rester sous l’eau jusqu’à une minute.",
+    "behavior": "Il utilise ses ailes puissantes pour « voler » sous l’eau. Il vole bien dans les airs, mais doit courir sur l’eau pour décoller. Les violentes tempêtes hivernales peuvent l’empêcher de se nourrir et provoquer la famine; d’importants échouages d’oiseaux marins ont eu lieu sur les côtes britanniques durant l’hiver 2013-2014.",
+    "reproduction": "Un couple pond un seul œuf piriforme sur la roche nue, une fois par an. Les deux parents le couvent pendant 28 à 37 jours. Le poussin duveteux quitte la corniche après seulement 18 à 25 jours, sautant dans la mer et suivant le mâle, et vole vers 39 à 46 jours. La reproduction commence en général à cinq ans.",
+    "ecology": "Les corneilles et les goélands argentés prennent œufs et poussins, surtout dans les petites colonies qui offrent moins de protection. Les variations de la température de la mer modifient l’abondance et la répartition des lançons, ce qui peut contraindre les oiseaux à des proies moins nourrissantes et réduire le succès de reproduction. Vivant sur l’eau, l’espèce est vulnérable aux marées noires.",
+    "conservation": "La catégorie mondiale de l’UICN est « préoccupation mineure », et l’espèce figure sur la liste ambre du Royaume-Uni. La population nicheuse britannique était de 950 000 couples en 1998-2002; le recensement Seabirds Count, plus récent, a trouvé environ 8 % d’oiseaux en moins, avec des baisses au nord et des hausses au sud. Un oiseau qui atteint l’âge adulte vit environ 23 ans; le plus âgé bagué a dépassé 40 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/guillemot",
+      "title": "Guillemot de Troïl — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Uria_aalge/",
+      "title": "Uria aalge (guillemot de Troïl) — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/guillemot",
+      "title": "Guillemot de Troïl — RSPB Birds & Wildlife"
+    }
+  ]
+}

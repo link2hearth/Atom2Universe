@@ -12,8 +12,8 @@
       "fr": "Cet herbivore asiatique est originaire du nord du sous-continent indien. Ses populations sauvages subsistent en Inde et au Népal, surtout dans les plaines inondables. Sa répartition reflète le lien entre pâturages, abondance des herbes, eau et zones humides saisonnières."
     },
     "identification": {
-      "en": "Adults bear one dark nasal horn of compacted keratin, not bone. Thick grey-brown skin folds at the neck, shoulder and hindquarters, with raised bumps on the shoulders and upper legs. Its flexible upper lip gathers food; young rhinos develop adult folds as they mature.",
-      "fr": "L’adulte porte une corne nasale sombre en kératine, et non en os. Sa peau épaisse gris-brun forme des plis au cou, aux épaules et à l’arrière-train, avec des protubérances sur les épaules et le haut des pattes. Sa lèvre supérieure mobile saisit la nourriture ; les plis adultes apparaissent en grandissant."
+      "en": "Adult males can approach 2,200 kg and stand up to 2 m at the shoulder. Toronto Zoo lists male head-and-body length at 3.68–3.80 m and females at 3.10–3.40 m, with female mass around 1,600 kg; the broad figures vary with age and population. No reliable body-width measurement was found. Adults bear one dark nasal horn of compacted keratin, not bone. Thick grey-brown skin folds at the neck, shoulder and hindquarters, with raised bumps on the shoulders and upper legs. Its flexible upper lip gathers food; young rhinos develop adult folds as they mature.",
+      "fr": "Le mâle adulte peut approcher 2 200 kg et mesurer jusqu’à 2 m au garrot. Le zoo de Toronto indique une longueur tête-corps de 3,68 à 3,80 m chez le mâle et de 3,10 à 3,40 m chez la femelle, cette dernière pesant autour de 1 600 kg ; ces valeurs générales varient selon l’âge et la population. Aucune largeur corporelle fiable n’a été trouvée. L’adulte porte une corne nasale sombre en kératine, et non en os. Sa peau épaisse gris-brun forme des plis au cou, aux épaules et à l’arrière-train, avec des protubérances sur les épaules et le haut des pattes. Sa lèvre supérieure mobile saisit la nourriture ; les plis adultes apparaissent en grandissant."
     },
     "habitat": {
       "en": "It favours low alluvial grasslands beside large rivers, with marshes, reed beds, pools and woodland. Flooding renews the plains, producing patches of tall grass and wet ground. Rhinos bathe and wallow, may move higher as floods rise, and also use dry grassland and forest edges.",
@@ -133,6 +133,34 @@
         "The 2019 global assessment classified the species as Vulnerable.",
         "It estimated 2,100–2,200 mature individuals in 11 subpopulations and noted continuing decline in habitat area, extent or quality.",
         "The assessment predates later population estimates and is explicitly dated in the article."
+      ]
+    },
+    {
+      "title": {
+        "en": "Greater one-horned rhinoceros — IUCN SSC Asian Rhino Specialist Group",
+        "fr": "Rhinocéros unicorne — Groupe de spécialistes UICN/SSC des rhinocéros d’Asie"
+      },
+      "url": "https://asianrhinos.group/rhinos/greater-one-horned/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Large males approach 2,200 kg and stand up to 2 m at the shoulder; one horn usually 20–60 cm."
+      ]
+    },
+    {
+      "title": {
+        "en": "Greater one-horned rhinoceros — Toronto Zoo",
+        "fr": "Rhinocéros unicorne — zoo de Toronto"
+      },
+      "url": "https://www.torontozoo.com/animals/Greater%20one-horned%20rhinoceros",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Head-body length: male 368–380 cm, female 310–340 cm; mass up to 2,200 kg males and around 1,600 kg females."
       ]
     }
   ],

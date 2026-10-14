@@ -1,0 +1,66 @@
+{
+  "id": "eurasian_jay",
+  "name": "Eurasian jay",
+  "scientific": "Garrulus glandarius",
+  "group": "birds",
+  "sections": {
+    "overview": "The Eurasian jay is a woodland corvid whose conspicuous blue wing patch contrasts with a life spent moving quietly through foliage. It forages both in trees and on the ground, shifting between seasonal food sources across its broad Eurasian range. Its reputation as an acorn carrier is well earned, but insects, fruits, seeds and animal prey also shape its diet and ecological effects.",
+    "identification": "In the European form, the body is warm pinkish brown, with a pale throat, black facial moustache and a crown of black-and-white streaked feathers that can be raised. The folded wing shows a vivid blue panel barred with black, beside white and black markings; in flight, the white rump flashes against the dark tail. In the British sample, adults averaged 167 grams; 90% of the 1,113 recorded weights fell between 144 and 189 grams. In northern Europe and France the nominate form has a pale, black-spotted crown, while British island forms are darker russet. The European form is about 34 cm long; British adults averaged 167 g (90% of recorded weights: 144–189 g).",
+    "habitat": "The species ranges from western Europe and North Africa east through much of temperate Asia, with local forms differing across this enormous span. It occupies mature deciduous, mixed and conifer woods, as well as parks and wooded farmland with cover.",
+    "diet": "This omnivore takes insects and other invertebrates, especially during the breeding season, as well as acorns, beech nuts, seeds, berries and cultivated fruit. It searches foliage and branches for caterpillars and beetle larvae, probes leaf litter and soil, and takes eggs or nestlings when opportunities arise. A strong bill helps open hard foods, while its seasonal variety reduces dependence on any single crop and supplies protein to growing chicks.",
+    "behavior": "A rough, rasping screech often gives away a bird hidden in the canopy; calls can alert nearby animals, and playback experiments found that red squirrels increased vigilance or fled after hearing jay alarms. In autumn, jays carry acorns away from oak crowns and bury them singly or in small caches, then retrieve many later. In a laboratory food-hiding task, seven jays that watched an experimenter hide mealworms under cups later used incidental visual details of that event in an unexpected test after a delay.",
+    "reproduction": "Pairs usually produce one brood a year, laying commonly four or five eggs in a well-concealed nest of twigs in a tree or shrub. Both sexes incubate for about 18 days, and the naked, helpless nestlings typically remain in the nest for roughly 21 days before fledging. Parents continue feeding young after they leave, while breeding timing and success vary with food and local conditions.",
+    "ecology": "By carrying viable acorns and burying them away from parent trees, jays provide seed dispersal: some unrecovered seeds can germinate in suitable conditions and establish new oaks. In a four-country Central European field study, jays foraged on oak trees whose acorns were narrower than those on the nearest unused trees. Nest cameras in Britain and Ireland also recorded jays taking songbird broods, showing how seed dispersal coexists with predation on other birds. A diet study in southern Finland recorded Eurasian jays among the prey of northern goshawks.",
+    "conservation": "The global IUCN Red List assessment published in 2025 classifies the Eurasian jay as Least Concern. The 2021 European Red List classifies it as Least Concern with a stable EU population trend. European monitoring reported a moderate increase; in France, counts rose 23 percent between 2001 and 2019. These broad indicators do not describe every local population."
+  },
+  "sources": [
+    {
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=130979",
+      "title": "Garrulus glandarius (Eurasian Jay), Birds of Europe 3.1"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/jay",
+      "title": "Jay BirdFacts"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T103723684A153832514.en",
+      "title": "Garrulus glandarius, IUCN Red List assessment"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Garrulus_glandarius/",
+      "title": "Garrulus glandarius, Animal Diversity Web"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11095760/",
+      "title": "Eurasian jays show episodic-like memory through incidental encoding"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1439-0310.2006.01191.x",
+      "title": "Red Squirrels Respond to Alarm Calls of Eurasian Jays"
+    },
+    {
+      "url": "https://doi.org/10.2478/orhu-2020-0010",
+      "title": "Foraging Eurasian Jays prefer oaks and acorns in central Europe"
+    },
+    {
+      "url": "https://www.bto.org/our-work/science/publications/papers/identity-predators-bird-nests-british-islands",
+      "title": "Nest cameras identify predators of wild birds’ nests in Britain and Ireland"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/geai-des-chenes",
+      "title": "Geai des chênes, LPO species account"
+    },
+    {
+      "url": "https://www.mapa.gob.es/dam/mapa/contenido/ganaderia/temas/produccion-y-mercados-ganaderos/caza/aspectos-generales/documentos/kcd_speciesaccounts_2021_11_14.pdf",
+      "title": "Jay Garrulus glandarius species account"
+    },
+    {
+      "url": "https://doi.org/10.3390/ani15040512",
+      "title": "Vulnerability of Prey Species to Predation by Two Sympatric Accipitrine Hawks in Rural and Peri-Urban Landscapes in Southern Finland"
+    },
+    {
+      "url": "https://www.birdlife.org/wp-content/uploads/2022/05/BirdLife-European-Red-List-of-Birds-2021.pdf.pdf",
+      "title": "European Red List of Birds 2021"
+    }
+  ]
+}

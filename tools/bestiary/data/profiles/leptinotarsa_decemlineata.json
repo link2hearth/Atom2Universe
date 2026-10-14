@@ -12,8 +12,8 @@
       "fr": "Le doryphore est un chrysomèle d’Amérique du Nord devenu l’un des ravageurs les plus sérieux de la pomme de terre. Il vivait d’abord sur des morelles sauvages, est passé à la pomme de terre cultivée au XIXe siècle, puis s’est répandu en Europe et en Asie."
     },
     "identification": {
-      "en": "Adults are oval, dome-shaped and 8–10 mm long. Each wing cover bears five black stripes on a yellow ground, and the orange thorax carries black spots. Larvae are soft, plump and hump-backed, with a row of black spots along each side; the eggs are yellow-orange and about 1.7–1.8 mm long.",
-      "fr": "L’adulte est ovale, bombé et mesure 8 à 10 mm. Chaque élytre porte cinq bandes noires sur fond jaune, et le thorax orangé est orné de taches noires. Les larves sont molles, dodues et bossues, avec une rangée de points noirs sur chaque flanc; les œufs sont jaune-orangé et mesurent environ 1,7 à 1,8 mm."
+      "en": "Adults are oval, dome-shaped and 8–10 mm long. Each wing cover bears five black stripes on a yellow ground, and the orange thorax carries black spots. Larvae are soft, plump and hump-backed, with a row of black spots along each side; the eggs are yellow-orange and about 1.7–1.8 mm long. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "L’adulte est ovale, bombé et mesure 8 à 10 mm. Chaque élytre porte cinq bandes noires sur fond jaune, et le thorax orangé est orné de taches noires. Les larves sont molles, dodues et bossues, avec une rangée de points noirs sur chaque flanc; les œufs sont jaune-orangé et mesurent environ 1,7 à 1,8 mm. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
     },
     "habitat": {
       "en": "It lives mostly in fields of potato and other nightshade crops such as tomato, eggplant and pepper, and on wild nightshades in grassland and suburbs. The species originated in the south-western United States and Mexico, spread east of the Rockies, and is now established across Europe, Asia Minor, Iran, Central Asia and China.",
@@ -58,7 +58,8 @@
       ],
       "facts": [
         "Adults 8–10 mm, five black stripes per wing cover, orange thorax with black spots; eggs 1.7–1.8 mm; day-active; flight of several km; aggregation pheromone.",
-        "Origin in south-western U.S. and Mexico; IUCN listed as Not Evaluated; resistance to nearly all insecticide classes."
+        "Origin in south-western U.S. and Mexico; IUCN listed as Not Evaluated; resistance to nearly all insecticide classes.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
       ]
     },
     {

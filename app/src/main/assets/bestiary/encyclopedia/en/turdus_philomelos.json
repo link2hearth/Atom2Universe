@@ -1,0 +1,30 @@
+{
+  "id": "turdus_philomelos",
+  "name": "Song Thrush",
+  "scientific": "Turdus philomelos",
+  "group": "birds",
+  "sections": {
+    "overview": "The song thrush is a medium-sized thrush known for its loud, musical song, often delivered at first light and at dusk. It is also famous for smashing snails on a stone to get at the soft body inside.",
+    "identification": "About 20–23.5 cm long, smaller and browner than a mistle thrush, and smaller than a blackbird. British adults weigh about 75 g and have a wing near 119 mm. The upperparts are warm brown and the creamy breast is speckled with small, upside-down heart-shaped spots.",
+    "habitat": "In Britain it is most frequent in deciduous woodland, and is also common in scrub, villages and conifer woods. It has adapted to using parks and gardens for feeding and breeding. In winter it may join mixed thrush flocks in fields and orchards.",
+    "diet": "It is omnivorous, eating mainly snails and earthworms, plus soft fruit and berries. It breaks snail shells against a favourite stone, called an anvil; broken shells beside a stone or wall reveal its presence. Nestlings are fed mostly worms, slugs and insect larvae.",
+    "behavior": "The song is made of short phrases, each repeated two or three times, which earned it the old name “thricecock”. It sings at dawn and as darkness falls. The species is a partial migrant: some northern European birds winter in Britain and Ireland, others go farther south.",
+    "reproduction": "The female builds a cup nest lined with mud and dry grass, usually in a bush or tree, and lays typically 4 glossy blue eggs lightly spotted with black or purple. She incubates for about 14 days; the chicks fledge after about 14 days. Two or three broods a year are normal. Breeding typically starts at one year.",
+    "ecology": "Adults are taken by cats, little owls and sparrowhawks; magpies, jays and grey squirrels raid eggs and nestlings. Earthworm availability, which depends on soil conditions such as field drainage, affects how well thrushes can feed.",
+    "conservation": "The IUCN Red List classes the species as Least Concern, and Europe holds an estimated 40–71 million birds. In the UK, about 1.3 million territories were estimated in 2016, but numbers fell by 45% between 1967 and 2024 and the species is Amber-listed. Suspected causes include loss of hedgerows and changes in farming."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/song-thrush",
+      "title": "Song Thrush — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/song-thrush",
+      "title": "Song Thrush — RSPB"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Song_thrush",
+      "title": "Song thrush — Wikipedia"
+    }
+  ]
+}

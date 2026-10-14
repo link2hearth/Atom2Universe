@@ -1,0 +1,34 @@
+{
+  "id": "orectolobus_maculatus",
+  "name": "Orectolobus maculatus",
+  "scientific": "Orectolobus maculatus",
+  "group": "fish",
+  "sections": {
+    "overview": "Orectolobus maculatus est un requin-tapis aplati des eaux côtières du sud et de l’est de l’Australie. Il passe la journée immobile sur le fond et chasse la nuit, en comptant sur le camouflage et l’embuscade plutôt que sur la vitesse.",
+    "identification": "La tête est plate et frangée de chaque côté de 6 à 10 lobes charnus ramifiés. Le corps est jaunâtre à brun verdâtre, avec de grandes selles sombres et des anneaux blanchâtres en forme de O, et il porte deux nageoires dorsales sans épines. La plupart des adultes mesurent de 150 à 180 cm, même si le maximum cité est d’environ 320 cm, et les nouveau-nés font environ 21 à 23 cm. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici.",
+    "habitat": "Il vit sur le plateau continental, de la zone de marée jusqu’à environ 218 m, surtout en eau peu profonde, sur les récifs rocheux et coralliens, le sable, les herbiers et sous les jetées. Son aire s’étend du Queensland au pourtour sud de l’Australie jusqu’à l’Australie-Occidentale; les mentions du Japon et de la mer de Chine méridionale sont probablement des erreurs d’identification.",
+    "diet": "Il mange des invertébrés du fond comme les crabes, les langoustes et les poulpes, ainsi que des poissons osseux, dont des serrans, des rascasses et le luderick. Il capture aussi de plus petits requins. Il attrape ses proies en les aspirant par une ouverture soudaine des mâchoires.",
+    "behavior": "Il est lent et reste souvent longtemps immobile sur le fond, surtout de jour. La frange de lobes autour de sa tête brise sa silhouette et sert d’appât, et des proies viennent parfois la grignoter avant d’être saisies. Il paraît placide, mais peut mordre fort s’il est provoqué ou piétiné, et lâche souvent difficilement sa prise.",
+    "reproduction": "Il est ovovivipare : les œufs se développent dans la femelle, et les petits naissent indépendants. Les portées atteignent 37 petits après une gestation de 10 à 11 mois, avec des naissances au printemps. Les femelles ont un cycle d’environ trois ans, et le mâle retient la femelle en la mordant près des branchies pendant l’accouplement.",
+    "ecology": "Prédateur nocturne à l’affût, au niveau trophique d’environ 4,2, il se nourrit à la fois d’invertébrés et de poissons des récifs et du sable. Il héberge de nombreux parasites, dont 33 espèces de ténias signalées dans une synthèse.",
+    "conservation": "L’UICN le classe en préoccupation mineure (évaluation de 2015, d’après FishBase). Il est capturé accessoirement dans les chaluts et les casiers à langoustes et à la chasse sous-marine. En Nouvelle-Galles du Sud, le chalutage a provoqué des déclins au début des années 1990 et l’espèce y a été classée vulnérable; les effectifs se sont ensuite stabilisés, et des limites de prise et de taille s’appliquent désormais à la pêche de loisir."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Orectolobus-maculatus.html",
+      "title": "Orectolobus maculatus, requin-tapis tacheté — FishBase"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/1975",
+      "title": "Orectolobus maculatus — Fishes of Australia (Museums Victoria)"
+    },
+    {
+      "url": "https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/spotted-wobbegong/",
+      "title": "Requin-tapis tacheté — Florida Museum, Discover Fish"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Orectolobus_maculatus/",
+      "title": "Orectolobus maculatus — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

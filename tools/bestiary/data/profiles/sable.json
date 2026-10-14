@@ -58,14 +58,14 @@
         "Body form, pine-marten comparison, solitary habits, and sheltering."
       ],
       "prose_claims": [
-        "identification.en.6",
-        "identification.fr.6",
         "behavior.en.1",
+        "behavior.en.2",
         "behavior.fr.1",
+        "behavior.fr.2",
         "habitat.en.1",
         "habitat.fr.1",
-        "behavior.en.2",
-        "behavior.fr.2",
+        "identification.en.6",
+        "identification.fr.6",
         "reproduction.en.6",
         "reproduction.fr.6"
       ],
@@ -94,14 +94,14 @@
         "Dated global assessment, distribution, status, and reproductive estimates."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "reproduction.en.3",
-        "reproduction.fr.3",
         "conservation.en.3",
         "conservation.fr.3",
         "ecology.en.3",
-        "ecology.fr.3"
+        "ecology.fr.3",
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -126,12 +126,12 @@
       ],
       "prose_claims": [
         "diet.en.1",
-        "diet.fr.1",
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
-        "diet.fr.3",
         "diet.en.5",
+        "diet.fr.1",
+        "diet.fr.2",
+        "diet.fr.3",
         "diet.fr.5"
       ],
       "budget": {
@@ -157,12 +157,12 @@
         "Hokkaido tracking links resting cover, movement, and foraging routes to forest structure and prey."
       ],
       "prose_claims": [
-        "habitat.en.2",
-        "habitat.fr.2",
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
-        "ecology.fr.2"
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -190,13 +190,13 @@
       "prose_claims": [
         "identification.en.4",
         "identification.fr.4",
-        "reproduction.en.4",
-        "reproduction.fr.4",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
-        "reproduction.fr.2",
+        "reproduction.en.4",
         "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.4",
         "reproduction.fr.5"
       ],
       "budget": {
@@ -223,8 +223,8 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
+        "conservation.fr.1",
         "conservation.fr.2",
         "diet.en.4",
         "diet.fr.4"
@@ -253,15 +253,15 @@
       ],
       "prose_claims": [
         "identification.en.1",
-        "identification.fr.1",
         "identification.en.2",
-        "identification.fr.2",
         "identification.en.3",
-        "identification.fr.3",
-        "overview.en.2",
-        "overview.fr.2",
         "identification.en.5",
-        "identification.fr.5"
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "identification.fr.5",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,

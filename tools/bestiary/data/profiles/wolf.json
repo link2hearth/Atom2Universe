@@ -12,8 +12,8 @@
       "fr": "Le loup gris est un canidé sauvage adaptable, autrefois présent dans une grande partie de l’hémisphère Nord. Il subsiste en Amérique du Nord, en Europe et en Asie. Taille, pelage et proies varient selon climat, ressources alimentaires et pressions humaines locales."
     },
     "identification": {
-      "en": "This large, long-legged canid has a broad muzzle, upright ears, powerful jaws and a bushy tail. Dense underfur insulates it in cold conditions. Coat shades range from white through grey, brown and cinnamon to nearly black; northern populations tend to be larger.",
-      "fr": "Ce grand canidé aux longues pattes a un museau large, des oreilles dressées, des mâchoires puissantes et une queue touffue. Son sous-poil dense l’isole du froid. La robe varie du blanc au noir ; les populations nordiques sont souvent plus grandes."
+      "en": "In Yellowstone, adult males average about 50 kg and 81 cm at the shoulder; females average 41 kg and 77 cm. Average total length is 181 cm in that regional reference. These figures vary across the species’ large range; dependable species-wide width data were not found. This large, long-legged canid has a broad muzzle, upright ears, powerful jaws and a bushy tail. Dense underfur insulates it in cold conditions. Coat shades range from white through grey, brown and cinnamon to nearly black; northern populations tend to be larger.",
+      "fr": "À Yellowstone, les mâles adultes pèsent en moyenne environ 50 kg et mesurent 81 cm au garrot ; les femelles, 41 kg et 77 cm. La longueur totale moyenne indiquée pour cette région est de 181 cm. Ces valeurs varient dans l’aire très vaste de l’espèce ; aucune largeur fiable à l’échelle de l’espèce n’a été trouvée. Ce grand canidé aux longues pattes a un museau large, des oreilles dressées, des mâchoires puissantes et une queue touffue. Son sous-poil dense l’isole du froid. La robe varie du blanc au noir ; les populations nordiques sont souvent plus grandes."
     },
     "habitat": {
       "en": "Wolves occupy Arctic tundra, forests, grasslands, mountains and some arid landscapes. They need prey and room to move, but not only untouched wilderness; some populations live near settlements. Abundance tends to track prey availability, while roads and development can fragment habitat.",
@@ -70,12 +70,14 @@
       "supports": [
         "diet",
         "behavior",
-        "ecology"
+        "ecology",
+        "identification"
       ],
       "facts": [
         "Yellowstone packs are social family groups; howling and scent marking help defend territories.",
         "Elk are about 90% of winter prey there; summer prey include more deer and smaller mammals.",
-        "Wolf kills feed scavengers; prey patterns also vary with weather, other predators and human hunting."
+        "Wolf kills feed scavengers; prey patterns also vary with weather, other predators and human hunting.",
+        "Yellowstone regional averages: males 50 kg, 81 cm shoulder height; females 41 kg, 77 cm; average length 181 cm."
       ]
     },
     {

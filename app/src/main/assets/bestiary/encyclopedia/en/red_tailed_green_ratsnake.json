@@ -1,0 +1,42 @@
+{
+  "id": "red_tailed_green_ratsnake",
+  "name": "Red-tailed green ratsnake",
+  "scientific": "Gonyosoma oxycephalum",
+  "group": "reptiles",
+  "sections": {
+    "overview": "This large colubrid snake ranges across Southeast Asia, from the Andaman Islands to the Philippines and Indonesian archipelagos. Records include Myanmar, Thailand, Vietnam, Malaysia, Singapore, Indonesia and the Philippines. Its common name reflects the frequent green body and rusty-red tail, though brown and other colour forms occur.",
+    "identification": "The species typically measures about 1.6–2.3 m; Singapore’s National Parks Board lists a 2.4 m maximum. The sources consulted do not provide a reliable adult mass or sex-specific measurement series, so no weight is inferred. The body is laterally compressed, with broad smooth belly scales for gripping branches, a dark eye stripe and often green colouring with a rusty tail.",
+    "habitat": "It inhabits tropical forests, including mangroves, lowland woods and forest edges, and may also occur in plantations or gardens. Fully arboreal, it moves through the branches above the ground.",
+    "diet": "Its prey includes birds and eggs, lizards, bats and small mammals. It hunts in trees, sometimes hanging from a branch to seize prey moving through the canopy, including bats in flight.",
+    "behavior": "Diurnal and arboreal, it moves through branches above the ground. When threatened, it can inflate its body and strike defensively.",
+    "reproduction": "Mating occurs in trees, and the female lays eggs in a sheltered place. In one captive case, a fertile clutch of four eggs was incubated at 30°C; hatchlings emerged over days 87–89. The three young first shed 10–14 days after hatching, then accepted pinkie mice; all fed regularly within a month. The same report noted a second fertile clutch after the female had been kept apart from a male, suggesting stored sperm.",
+    "ecology": "As a tree-dwelling predator, it feeds on animals that use the canopy, including birds, bats and lizards, as well as small mammals.",
+    "conservation": "The IUCN assessment published in 2012 classified the species as Least Concern. Singapore’s National Parks Board records it in Bukit Timah and Central Catchment forest reserves, a local occurrence within its much wider range."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Gonyosoma_oxycephalum",
+      "title": "Gonyosoma oxycephalum — Wikipedia"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Gonyosoma_oxycephalum",
+      "title": "Gonyosoma oxycephalum — Wikipédia"
+    },
+    {
+      "url": "https://www.nparks.gov.sg/florafaunaweb/fauna/8/1/816",
+      "title": "Gonyosoma oxycephalum — Flora & Fauna Web, National Parks Board Singapore"
+    },
+    {
+      "url": "https://www.thebhs.org/publications/the-herpetological-bulletin/issue-number-116-summer-2011/58-06-captive-breeding-egg-incubation-and-rearing-of-the-red-tailed-ratsnake-i-gonyosoma-oxycephala-i/file",
+      "title": "Captive breeding, egg incubation and rearing of the red-tailed ratsnake Gonyosoma oxycephala — The Herpetological Bulletin"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2012-1.RLTS.T183196A1732988.en",
+      "title": "Gonyosoma oxycephalum — IUCN Red List of Threatened Species"
+    },
+    {
+      "url": "https://reptile-database.reptarium.cz/front.front/species?genus=gonyosoma&species=oxycephalum",
+      "title": "Gonyosoma oxycephalum — The Reptile Database"
+    }
+  ]
+}

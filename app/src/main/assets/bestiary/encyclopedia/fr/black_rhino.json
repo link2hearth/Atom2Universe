@@ -1,0 +1,42 @@
+{
+  "id": "black_rhino",
+  "name": "Rhinocéros noir",
+  "scientific": "Diceros bicornis",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le rhinocéros noir est un grand mammifère africain qui broute arbustes et végétaux ligneux. Sa lèvre crochue et préhensile le distingue du rhinocéros blanc, au museau carré, qui mange de l’herbe. Les deux espèces sont généralement grises; leur couleur n’explique pas leur nom.",
+    "identification": "Les adultes mesurent 1,4 à 1,8 mètre au garrot. Leur peau épaisse est presque sans poils; ils portent deux cornes de kératine, celle de devant généralement plus longue. La lèvre mobile saisit feuilles et brindilles. Sol et boue modifient l’aspect de la peau; aucune espèce n’a un pelage noir ou blanc. Les adultes mesurent environ 3,0 à 3,75 m de long et 1,4 à 1,8 m au garrot. La masse adulte est souvent donnée autour de 800 à 1 400 kg ; les femelles sont généralement plus petites que les mâles, mais aucune plage de masse distincte par sexe et robuste à l’échelle de l’espèce n’a été trouvée.",
+    "habitat": "Son aire morcelée se trouve en Afrique orientale et australe. Elle fréquente fourrés semi-arides, savanes, boisements et lisières riches en feuillage; l’accès à l’eau compte aussi, même si les plantes succulentes apportent de l’humidité. En Namibie, elle vit dans le nord-ouest aride. Les conditions locales influencent son domaine.",
+    "diet": "Il broute feuilles, pousses, brindilles, arbustes épineux et parfois fruits; l’herbe reste secondaire. Sa lèvre saisit les branches et les dirige vers les molaires. Ses choix varient selon la végétation et la saison; la liste des plantes d’une réserve ne vaut pas partout.",
+    "behavior": "Ils sont souvent solitaires; les femelles restent avec leurs petits et des groupes temporaires se forment. Ils se nourrissent surtout aux heures fraîches, puis se reposent à l’ombre ou dans la boue à midi. Urine et crottins signalent leur présence et marquent parfois un domaine; la boue rafraîchit aussi le corps.",
+    "reproduction": "Après la parade et 15 à 17 mois de gestation, la femelle met au monde un petit à l’abri. Le nouveau-né se tient généralement debout en quelques heures. Il reste avec sa mère deux à quatre ans, tète et apprend à brouter. Les naissances espacées ralentissent le rétablissement après des pertes.",
+    "ecology": "Le broutage retire feuilles et brindilles et peut façonner la végétation ligneuse. L’effet dépend de la densité locale des rhinocéros et des plantes; il varie selon les milieux. Les amas de crottins transmettent aussi des odeurs aux autres rhinocéros.",
+    "conservation": "L’évaluation UICN de 2020 classait l’espèce « En danger critique »; ce statut daté n’est pas un nouveau dénombrement. Braconnage pour la corne, perte et fragmentation de l’habitat, et insécurité menacent les populations. Aires protégées, lutte antibraconnage et transferts vers des sites adaptés soutiennent le rétablissement; la reproduction lente rend les pertes difficiles à compenser."
+  },
+  "sources": [
+    {
+      "url": "https://www.sanparks.org/conservation/parks/marakele-national-park/primary-consumers-herbivores/black-rhino",
+      "title": "Rhinocéros noir — South African National Parks"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Diceros_bicornis/",
+      "title": "Diceros bicornis (rhinocéros noir) — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.savetherhino.org/rhino-info/rhino-species/black-rhinos/",
+      "title": "Rhinocéros noir — Save the Rhino International"
+    },
+    {
+      "url": "https://www.worldwildlife.org/species/rhino/black-rhino/",
+      "title": "Rhinocéros noir — World Wide Fund for Nature"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6842456/",
+      "title": "Déplacements à moyenne échelle et comportements de retour des rhinocéros noirs de Namibie — Movement Ecology"
+    },
+    {
+      "url": "https://strapi.eaza.net/uploads/2020_EAZA_Black_rhinoceros_Best_Practice_Guidelines_NV_a2e09f245a.pdf",
+      "title": "Directives EAZA de bonnes pratiques pour le rhinocéros noir"
+    }
+  ]
+}

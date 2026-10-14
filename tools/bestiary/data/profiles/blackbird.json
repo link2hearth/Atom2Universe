@@ -84,16 +84,16 @@
         "Cornell life history summarizes habitat use, seasonal foods and parental care."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
-        "habitat.en.1",
-        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.en.4",
+        "behavior.fr.1",
+        "behavior.fr.4",
         "diet.en.4",
         "diet.fr.4",
-        "behavior.en.4",
-        "behavior.fr.4",
-        "behavior.en.1",
-        "behavior.fr.1"
+        "habitat.en.1",
+        "habitat.fr.1",
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -119,12 +119,12 @@
         "UK nest records give typical clutch size, first-laying dates and population-trend estimates."
       ],
       "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
         "identification.en.2",
         "identification.fr.2",
         "reproduction.en.3",
-        "reproduction.fr.3",
-        "conservation.en.2",
-        "conservation.fr.2"
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -174,12 +174,12 @@
         "Field research examines ground feeding, prey and sparrowhawk predation risk."
       ],
       "prose_claims": [
+        "diet.en.1",
         "diet.en.2",
+        "diet.fr.1",
         "diet.fr.2",
         "ecology.en.2",
-        "ecology.fr.2",
-        "diet.en.1",
-        "diet.fr.1"
+        "ecology.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -255,8 +255,8 @@
       ],
       "prose_claims": [
         "behavior.en.5",
-        "behavior.fr.5",
         "behavior.en.6",
+        "behavior.fr.5",
         "behavior.fr.6"
       ],
       "budget": {
@@ -412,8 +412,8 @@
         "identification.en.3",
         "identification.fr.3",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
+        "reproduction.fr.1",
         "reproduction.fr.2"
       ],
       "budget": {
@@ -464,8 +464,8 @@
       ],
       "prose_claims": [
         "reproduction.en.4",
-        "reproduction.fr.4",
         "reproduction.en.5",
+        "reproduction.fr.4",
         "reproduction.fr.5"
       ],
       "budget": {

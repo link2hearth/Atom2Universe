@@ -12,8 +12,8 @@
       "fr": "L’Oie cendrée est un grand oiseau d’eau grégaire, présent à l’état sauvage dans une vaste partie de l’Europe et de l’Asie tempérée ; elle niche dans les zones humides et s’alimente aussi dans les prairies et les terres agricoles. L’adulte mesure environ 76 à 89 cm, pour une envergure de 147 à 180 cm et une masse habituelle d’environ 2,9 à 3,7 kg. Ces mesures concernent l’espèce sauvage : les oies domestiques relâchées ou férales peuvent être plus grandes, plus pâles ou autrement différentes."
     },
     "identification": {
-      "en": "Its bulky body, thick neck and large head carry a mottled grey-brown plumage, paler breast and belly, and a white tail with a dark band; dark bars or spots on the belly vary between individuals. Pink legs and a broad bill distinguish its silhouette, while the bill colour follows geography: western European birds are usually orange-billed, eastern birds pink-billed, with intermediate birds in central Europe. In flight, large pale patches on the upperwing and a contrasting grey-and-dark underwing help identify it; the bill pattern also separates it from Taiga Bean-Goose, whose bill has dark areas and an orange band.",
-      "fr": "Son corps massif, son cou épais et sa grosse tête portent un plumage gris brun moucheté, une poitrine et un ventre plus clairs, ainsi qu’une queue blanche barrée d’une bande sombre ; les barres ou taches sombres du ventre varient selon les individus. Ses pattes roses et son large bec contribuent à son identification, mais la couleur du bec dépend de la région : il est généralement orange en Europe occidentale, rose à l’est, avec des individus intermédiaires en Europe centrale. En vol, les grandes plages pâles du dessus de l’aile et le contraste gris sombre du dessous sont caractéristiques ; le bec la distingue aussi de l’Oie des moissons de la taïga, qui porte des zones sombres et une bande orange."
+      "en": "Its bulky body, thick neck and large head carry a mottled grey-brown plumage, paler breast and belly, and a white tail with a dark band; dark bars or spots on the belly vary between individuals. Pink legs and a broad bill distinguish its silhouette, while the bill colour follows geography: western European birds are usually orange-billed, eastern birds pink-billed, with intermediate birds in central Europe. In flight, large pale patches on the upperwing and a contrasting grey-and-dark underwing help identify it; the bill pattern also separates it from Taiga Bean-Goose, whose bill has dark areas and an orange band. BTO adult British means: wing length 458.8 mm and mass 3.49 kg (males), versus 436.3 mm and 3.18 kg (females). Body length is about 76–89 cm and wingspan 147–180 cm; males average larger.",
+      "fr": "Son corps massif, son cou épais et sa grosse tête portent un plumage gris brun moucheté, une poitrine et un ventre plus clairs, ainsi qu’une queue blanche barrée d’une bande sombre ; les barres ou taches sombres du ventre varient selon les individus. Ses pattes roses et son large bec contribuent à son identification, mais la couleur du bec dépend de la région : il est généralement orange en Europe occidentale, rose à l’est, avec des individus intermédiaires en Europe centrale. En vol, les grandes plages pâles du dessus de l’aile et le contraste gris sombre du dessous sont caractéristiques ; le bec la distingue aussi de l’Oie des moissons de la taïga, qui porte des zones sombres et une bande orange. Moyennes du BTO pour les adultes britanniques : longueur d’aile de 458,8 mm et masse de 3,49 kg chez les mâles, contre 436,3 mm et 3,18 kg chez les femelles. La longueur totale est d’environ 76 à 89 cm et l’envergure de 147 à 180 cm ; les mâles sont en moyenne plus grands."
     },
     "habitat": {
       "en": "Breeding pairs select lakes, marshes and other wetlands with quiet nesting cover, often reedbeds or small islands that make nests less accessible to terrestrial predators. They feed in nearby meadows and wet grassland, then use larger wetlands as resting and roosting places. Outside breeding, they also graze on stubble or crops before returning to safe water; wetlands and open feeding areas therefore complement each other.",
@@ -53,15 +53,18 @@
         "habitat"
       ],
       "facts": [
-        "Adult plumage, bill colour, wing marks, measurements and nesting cover."
+        "Adult plumage, bill colour, wing marks, measurements and nesting cover.",
+        "Reports adult body length 76–89 cm and wingspan 147–180 cm."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.4",
-        "diet.fr.4"
+        "diet.fr.2",
+        "diet.fr.4",
+        "identification.en.1",
+        "identification.en.5",
+        "identification.fr.1",
+        "identification.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -86,8 +89,8 @@
       ],
       "prose_claims": [
         "identification.en.2",
-        "identification.fr.2",
         "identification.en.3",
+        "identification.fr.2",
         "identification.fr.3"
       ],
       "budget": {
@@ -113,12 +116,14 @@
         "Species range, wild and domestic birds, flocks and conspicuous calls."
       ],
       "prose_claims": [
-        "overview.en.3",
-        "overview.fr.3",
+        "behavior.en.1",
+        "behavior.en.3",
+        "behavior.fr.1",
+        "behavior.fr.3",
         "habitat.en.2",
         "habitat.fr.2",
-        "behavior.en.1",
-        "behavior.fr.1"
+        "overview.en.3",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -144,12 +149,14 @@
         "Seasonal foods, winter crop use and wetlands close to feeding areas."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
         "diet.en.5",
         "diet.fr.5",
+        "habitat.en.3",
+        "habitat.fr.3",
         "reproduction.en.1",
-        "reproduction.fr.1"
+        "reproduction.en.4",
+        "reproduction.fr.1",
+        "reproduction.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -175,14 +182,14 @@
         "Nest sites, plant and animal foods, female incubation, goslings and development."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
+        "diet.en.1",
+        "diet.en.7",
+        "diet.fr.1",
+        "diet.fr.7",
         "habitat.en.1",
         "habitat.fr.1",
-        "diet.en.1",
-        "diet.fr.1",
-        "diet.en.7",
-        "diet.fr.7",
+        "overview.en.1",
+        "overview.fr.1",
         "reproduction.en.3",
         "reproduction.fr.3"
       ],
@@ -202,20 +209,19 @@
       "url": "https://www.bto.org/learn/about-birds/birdfacts/greylag-goose",
       "consulted": "2026-10-11",
       "supports": [
+        "identification",
         "overview",
         "reproduction"
       ],
       "facts": [
-        "British biometric and nesting records."
+        "BTO measured adult British wing length and body mass by sex."
       ],
       "prose_claims": [
-        "behavior.en.3",
-        "behavior.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
         "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.4",
-        "reproduction.fr.4",
         "reproduction.en.5",
+        "reproduction.fr.2",
         "reproduction.fr.5"
       ],
       "budget": {
@@ -243,12 +249,12 @@
         "UK population history, identification, diet and seasonal population context."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
+        "conservation.en.4",
+        "conservation.fr.4",
         "diet.en.3",
         "diet.fr.3",
-        "conservation.en.4",
-        "conservation.fr.4"
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -299,10 +305,10 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
-        "conservation.fr.2",
         "conservation.en.3",
+        "conservation.fr.1",
+        "conservation.fr.2",
         "conservation.fr.3",
         "ecology.en.3",
         "ecology.fr.3"

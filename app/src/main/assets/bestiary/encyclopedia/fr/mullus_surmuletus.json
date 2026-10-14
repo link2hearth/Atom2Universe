@@ -1,0 +1,30 @@
+{
+  "id": "mullus_surmuletus",
+  "name": "Rouget-barbet de roche",
+  "scientific": "Mullus surmuletus",
+  "group": "fish",
+  "sections": {
+    "overview": "Le rouget-barbet de roche est un mullidé de l’Atlantique nord-est et de la Méditerranée. Comme tous les rougets, il porte deux barbillons sous le menton, qu’il utilise pour trouver sa nourriture dans le sédiment. C’est une espèce tempérée chaude qui atteint sa limite nord en mer du Nord.",
+    "identification": "Le corps est marqué de rayures longitudinales rouges et brunes, et la première nageoire dorsale porte des marques sombres. Les barbillons sont plus longs que la nageoire pectorale et se replient dans un sillon de la gorge. En mer du Nord, il peut atteindre 40 cm et 1 kg; en Méditerranée, les mâles atteignent environ 23 cm et les femelles environ 34 cm.",
+    "habitat": "Il va de l’ouest de la Norvège et de la Manche jusqu’au Sénégal et aux îles Canaries, et occupe la Méditerranée et la mer Noire. En Manche et en mer du Nord, il vit entre 3 et 90 m sur des fonds sableux ou vaseux, parfois rocheux; en Méditerranée occidentale, on le trouve surtout entre 10 et 50 m sur des fonds accidentés.",
+    "diet": "Il utilise ses barbillons pour repérer la nourriture dans les fonds meubles et peut creuser une fosse avec la bouche pour saisir sa proie. Son alimentation est presque entièrement composée d’animaux du fond : crevettes, amphipodes, vers polychètes, mollusques et petits poissons benthiques.",
+    "behavior": "Dans le nord, c’est un visiteur saisonnier : il entre au printemps dans le sud de la mer du Nord par la Manche, longe la côte continentale jusqu’au Skagerrak et au Kattegat, puis regagne la Manche à l’automne. Les jeunes vivent en surface, puis rejoignent la côte et adoptent une vie sur le fond.",
+    "reproduction": "Les œufs et les larves sont pélagiques. La ponte a lieu en mai-juin au sud de la Bretagne et de mai à juillet au large de Plymouth, mais surtout d’avril à septembre, avec un pic en juillet, dans le nord de la mer Égée. En Manche et en mer du Nord, les poissons mûriraient après un an. Vers 5 cm, les jeunes quittent la surface, gagnent la côte et prennent la livrée adulte.",
+    "ecology": "Les jeunes ont le dos bleu et les flancs argentés et se nourrissent en surface de larves de crustacés et de copépodes. Les adultes se nourrissent sur le fond. Les captures hivernales en mer du Nord ont augmenté rapidement depuis la fin des années 1980, et des jeunes y ont été trouvés, ce qui suggère que la ponte pourrait désormais avoir lieu dans le sud de la mer du Nord.",
+    "conservation": "L’UICN classait l’espèce en préoccupation mineure en 2014 (d’après FishBase). C’est un poisson commercial de valeur dans le sud du golfe de Gascogne et dans les eaux ibériques, où il est capturé en grand nombre."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Mullus-surmuletus.html",
+      "title": "Mullus surmuletus, rouget-barbet de roche — FishBase"
+    },
+    {
+      "url": "https://www.ices.dk/about-ICES/projects/EU-RFP/EU%20Repository/ICES%20FIshMap/ICES%20FishMap%20species%20factsheet-redmullet.pdf",
+      "title": "Fiche espèce ICES FishMap : rouget-barbet de roche"
+    },
+    {
+      "url": "https://hrcak.srce.hr/en/152250",
+      "title": "Quelques paramètres biologiques du rouget-barbet de roche de la baie d’Edremit (nord de la mer Égée, Turquie) — Acta Adriatica, 2015"
+    }
+  ]
+}

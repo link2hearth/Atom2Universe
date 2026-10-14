@@ -1,0 +1,34 @@
+{
+  "id": "hooded_crow",
+  "name": "Hooded Crow",
+  "scientific": "Corvus cornix",
+  "group": "birds",
+  "sections": {
+    "overview": "The hooded crow is a grey-and-black crow of northern and eastern Europe. In the British Isles it is found mainly in Scotland and Ireland, and it is a close relative of the all-black carrion crow, with which it hybridises where their ranges meet.",
+    "identification": "A hooded crow weighs about 505 g and is around 48–52 cm long. Unlike the all-black carrion crow, it is a two-tone corvid: the body is grey, while the head, throat, wings and tail are black, as are the bill and legs. Hybrids show a mixture of grey and black.",
+    "habitat": "In Britain it is most frequent in bog during the breeding season. It nests in trees, on crags and even on pylons, and elsewhere in Europe it also lives in towns and cities.",
+    "diet": "The hooded crow is a scavenger that feeds on dead animals, and like its relative the carrion crow it is omnivorous, taking grain, invertebrates, eggs, chicks and carrion. It feeds more sociably than other crows, and groups can often be seen together in fields.",
+    "behavior": "It is a resident species that breeds relatively early in the year. The related carrion crow is described as large, noisy, intelligent and inquisitive, building large stick nests and defending a big territory; the hooded crow, by contrast, is noted for feeding in loose groups outside the breeding season.",
+    "reproduction": "Laying starts from March, with one brood a year. A typical clutch is three to six eggs (two to seven are recorded). The female alone incubates them for 18–19 days, and the young fledge after about 28–30 days. Breeding typically starts at two years of age.",
+    "ecology": "As a scavenger the hooded crow recycles carrion and scraps. Where it meets the carrion crow, as in northern Britain, the two interbreed, and hybrids are found in the contact zone. The two forms are so close that they were long treated as a single species.",
+    "conservation": "The IUCN Red List classes the species as Least Concern, and it is Green-listed in the UK. About 285,000 territories were estimated there in 2016 and the population is stable. The breeding range changed little (−0.4%) between 1968–72 and 2008–11, while the winter range shrank by 10.5% (1981–84 to 2007–11). The oldest ringed bird in Britain reached about 10 years."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/hooded-crow",
+      "title": "Hooded Crow — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/hooded-crow",
+      "title": "Hooded Crow — RSPB"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Hooded_crow",
+      "title": "Hooded crow — Wikipedia"
+    },
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/carrion-crow",
+      "title": "Carrion Crow — BTO BirdFacts, British Trust for Ornithology"
+    }
+  ]
+}

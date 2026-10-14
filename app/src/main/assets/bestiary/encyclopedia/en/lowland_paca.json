@@ -1,0 +1,62 @@
+{
+  "id": "lowland_paca",
+  "name": "Lowland paca",
+  "scientific": "Cuniculus paca",
+  "group": "mammals",
+  "sections": {
+    "overview": "The lowland paca is a large, mostly nocturnal rodent of tropical America, from eastern Mexico through Central America and much of South America. It belongs to Cuniculidae, the paca family; the agoutis are separate rodents in genus Dasyprocta, despite the similar common name. Its close relative, the mountain paca, is a distinct species associated with higher Andean forests.",
+    "identification": "Adults commonly weigh about 6–12 kilograms and measure roughly 60–82 centimetres from head to body; males tend to be a little larger. A compact, nearly tailless body, short sturdy legs, blunt head and long whiskers suit this ground-dwelling animal. Its coarse reddish- to dark-brown back bears several lengthwise rows of pale spots, above a lighter belly. The mountain paca is generally smaller and more thickly furred. The agouti is a separate rodent, not another paca.",
+    "habitat": "In the Lacandon rainforest, pacas also use secondary woodland and riparian cover. It favors stream and river banks, which provide den sites and quick access to water as an escape route. A daytime refuge may be a self-dug burrow or a cavity among roots, rocks or an old burrow; several exits can connect to forest paths. In the Lacandon Forest, used cavities lay under roots or inside fallen logs in riparian or secondary vegetation, generally within 100 metres of water.",
+    "diet": "Fallen fruit is the main food, supplemented by seeds, tender leaves, stems and roots; the exact menu follows local fruiting seasons. A French Guianan stomach-content comparison found that fruit dominated the paca diet, with more seasonal variation than in smaller terrestrial rodents. In the Lacandon Forest of southern Mexico, cameras confirmed fruit at 31 of 57 monitored feeding sites, with fruits from 20 tree species recorded. Only 40 percent of the tree species eaten were shared between preserved and transformed sites, evidence that local pacas use a flexible menu.",
+    "behavior": "By day the paca rests; around dusk it follows familiar trails to feed. Adults are often encountered alone, though some accounts describe territorial pairs using separate burrows. Alarmed pacas may flee into water, stamp, grind their teeth or give a low rumble. Expanded cheek arches and hollows in the upper jaw form a bony chamber proposed to amplify that call, but this acoustic function remains uncertain.",
+    "reproduction": "In tropical populations, breeding may occur throughout the year, while some subtropical populations have a seasonal cycle. After roughly 97–118 days of gestation in the wild, a female usually gives birth to one well-developed young; twins are reported but less typical. The young are well developed at birth: their eyes are open and their movements already coordinated, rather than remaining helpless in a nest. They start sampling solid food at about three weeks and are usually weaned within six to twelve weeks; this early development helps a young paca move to shelter and escape danger.",
+    "ecology": "By feeding on fallen fruit, pacas can disperse seeds and support fruit-tree regeneration. Their abandoned burrows provide shelters that other animals may use. Jaguars, ocelots and other predators hunt pacas, which may compete with agoutis and other forest mammals for fruit.",
+    "conservation": "Globally, IUCN lists the paca as Least Concern. The same system reports a Near Threatened Argentine assessment by SAREM in 2025 and a Vulnerable national assessment published in 2021. The paca is among the most heavily hunted Neotropical mammals for food and sport; researchers warn that modest reproductive output may not offset intense hunting. A slow life history, with first parturition only after several months, makes recovery vulnerable to sustained hunting pressure, even where the species remains widespread overall."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Cuniculus_paca/",
+      "title": "Cuniculus paca (lowland paca)"
+    },
+    {
+      "url": "https://sib.gob.ar/especies/cuniculus-paca",
+      "title": "Cuniculus paca (paca, lapa)"
+    },
+    {
+      "url": "https://lazoo.org/explore-your-zoo/our-animals/mammals/lowland-paca/",
+      "title": "Lowland Paca"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Cuniculidae/",
+      "title": "Cuniculidae (pacas)"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1001213/",
+      "title": "Cuniculus paca: Lowland Paca"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31060921/",
+      "title": "Age at sexual maturity, first parturition and reproductive senescence in wild lowland pacas"
+    },
+    {
+      "url": "https://www.scielo.org.mx/scielo.php?lng=en&pid=S1870-34532018000200507&script=sci_abstract",
+      "title": "Foraging ecology of lowland paca in preserved and transformed areas of the Lacandon rainforest"
+    },
+    {
+      "url": "https://www.revista.ib.unam.mx/index.php/bio/article/view/1450",
+      "title": "Availability and characterization of cavities used by pacas in the Lacandon Rainforest"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/journal-of-tropical-ecology/article/abs/comparison-of-diets-of-the-acouchy-agouti-and-paca-the-three-largest-terrestrial-rodents-of-french-guianan-forests/1A776EF5F98B63809E86E0AEF221265F",
+      "title": "Comparison of diets of the acouchy, agouti and paca in French Guianan forests"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7309292/",
+      "title": "Fetal bone development in the lowland paca determined using ultrasonography"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Cuniculus_taczanowskii/",
+      "title": "Cuniculus taczanowskii (mountain paca)"
+    }
+  ]
+}

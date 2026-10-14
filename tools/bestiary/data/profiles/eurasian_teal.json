@@ -48,7 +48,13 @@
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/teal",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Males 336.2 g, wing 190.5 mm; females 302.8 g, wing 182.2 mm; 8–11 eggs, incubation 21–23 days, fledging 25–30 days.",
         "UK breeding about 2,700 pairs (2016), winter about 435,000 (2012–17), winter +14% 1998–2023, breeding range -16.5%; peak October–February; record age 18 years."
@@ -61,7 +67,14 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/teal",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "behavior", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Small dabbling duck; males chestnut head with green eye patch, spotted chest, black-edged yellow tail; females mottled brown; both with green speculum.",
         "Winter flocks largely continental birds from the Baltic and Siberia; Amber-listed because the UK holds a significant share of the north-west European wintering population."
@@ -74,10 +87,29 @@
       },
       "url": "https://animaldiversity.org/accounts/Anas_crecca/",
       "consulted": "2026-10-12",
-      "supports": ["diet", "behavior", "reproduction", "ecology"],
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "Opportunistic feeder on insects, larvae, seeds and aquatic plants; filters food with bill lamellae; ducklings eat mostly insect larvae; rarely dives except to escape predators.",
         "Sexual maturity at about one year; seed dispersal by droppings; raptors prey on loafing birds, foxes on incubating females, crows on eggs."
+      ]
+    },
+    {
+      "title": {
+        "en": "Teal — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Sarcelle d’hiver — BTO BirdFacts, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/teal",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "British adults average about 336 g and 190 mm wing length for males, versus 303 g and 182 mm for females."
       ]
     }
   ],

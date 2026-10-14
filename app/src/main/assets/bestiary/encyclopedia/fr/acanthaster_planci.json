@@ -1,0 +1,34 @@
+{
+  "id": "acanthaster_planci",
+  "name": "Couronne d’épines",
+  "scientific": "Acanthaster planci",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Acanthaster planci est une grande étoile de mer à nombreux bras des récifs coralliens tropicaux de l’Indo-Pacifique. Sa couronne de piquants acérés et venimeux la protège de nombreux prédateurs ; en se nourrissant de coraux vivants, elle joue aussi un rôle naturel dans le récif. Lorsque ses effectifs augmentent fortement localement, elle peut contribuer à d’importantes pertes de corail. Le nom a longtemps été appliqué largement au complexe des couronnes d’épines ; les études récentes distinguent plusieurs espèces, si bien que les anciennes observations hors du nord de l’océan Indien ne correspondent pas forcément à A. planci au sens moderne restreint.",
+    "identification": "Le corps présente un large disque central entouré généralement de 8 à 21 bras, et sa face supérieure porte de longs piquants rigides et venimeux. La couleur varie du rouge ou de l’orange au violet et au bleu ; la forme du nord de l’océan Indien appelée A. planci au sens restreint présente souvent du bleu électrique vers l’extrémité supérieure des bras, où les piquants sont clairsemés ou absents. Un adulte mesure couramment environ 25 à 35 cm de diamètre ; une synthèse récente du complexe rapporte un diamètre maximal observé de 50 cm. Une fiche française de reconnaissance subaquatique indique une fourchette générale de 200 g à 3 kg pour la forme identifiée comme A. planci. Ce sont des valeurs globales et non des mesures selon le sexe : aucune différence mâle-femelle fiable, hauteur du corps ou largeur distincte n’a été trouvée. La silhouette à nombreux bras et les piquants denses la distinguent des étoiles de mer ordinaires à cinq bras ; les espèces proches du genre Acanthaster demandent de tenir compte de la géographie, de la couleur et de la disposition des épines.",
+    "habitat": "Elle fréquente les récifs coralliens tropicaux et se déplace sur les colonies de coraux ou entre elles, sur les pentes récifales et dans des secteurs abrités. Les adultes restent souvent cachés sous les surplombs coralliens le jour et sortent pour se nourrir, surtout la nuit. L’espèce au sens moderne restreint est principalement associée au nord de l’océan Indien ; les anciennes observations couvrant tout l’Indo-Pacifique doivent être réexaminées à la lumière des limites taxonomiques récentes.",
+    "diet": "Les adultes sont des prédateurs de coraux. Ils grimpent sur une colonie, dévaginent leur estomac par la bouche et l’étalent sur la surface du corail ; des enzymes digestives dégradent les tissus vivants, ensuite absorbés. Les Acropora sont souvent consommés lorsqu’ils sont abondants, mais le régime peut inclure d’autres coraux durs et des coraux mous. Le National Park Service résume des estimations d’environ 6 à 10 m² de récif vivant consommés par étoile et par an, avec de fortes variations selon la taille, le type de corail et les conditions.",
+    "behavior": "Dans les études de terrain aux Maldives, l’alimentation est surtout nocturne, même si l’animal peut être observé à découvert le jour. Ses podia lui permettent de s’agripper au récif et de s’y déplacer. Ses épines contiennent un venin pouvant provoquer des blessures douloureuses ; il ne faut donc pas la manipuler. Les piquants découragent de nombreux prédateurs sans rendre l’étoile invulnérable : plusieurs poissons récifaux et le triton géant figurent parmi les prédateurs documentés.",
+    "reproduction": "Les sexes sont séparés. Lors de la ponte, femelles et mâles libèrent leurs ovules et leurs spermatozoïdes dans l’eau, où a lieu la fécondation. La reproduction est saisonnière et souvent synchronisée dans une population, mais la période varie selon l’hémisphère et les conditions locales. Les larves planctoniques s’alimentent dans la colonne d’eau avant de se fixer ; les jeunes consomment d’abord des algues, puis passent aux coraux en grandissant. Une femelle peut libérer plusieurs millions d’œufs par saison, mais la fécondité exacte dépend de sa taille et de la population.",
+    "ecology": "À faible densité, ce prédateur indigène participe au renouvellement naturel des communautés coralliennes et peut libérer de l’espace pour d’autres organismes récifaux. Lors de proliférations, une alimentation concentrée peut réduire fortement la couverture de corail vivant et modifier la structure du récif. Les causes des proliférations ne sont ni uniformes ni entièrement élucidées ; leurs effets peuvent se combiner au blanchissement et à d’autres perturbations. Les piquants venimeux servent aussi de refuge à de petits animaux récifaux qui vivent entre eux.",
+    "conservation": "L’espèce n’est pas menacée à l’échelle mondiale au sens habituel d’une espèce rare ; la principale préoccupation concerne ses abondances ponctuellement élevées et leurs dégâts sur les récifs coralliens, plutôt qu’un déclin mondial démontré de l’étoile. Certaines proliférations ont fait l’objet de retraits ciblés. L’évaluation des tendances est compliquée par l’emploi historique du nom A. planci pour plusieurs espèces distinctes ; les anciennes observations couvrant tout l’Indo-Pacifique ne constituent pas une série de population homogène pour une seule espèce."
+  },
+  "sources": [
+    {
+      "url": "https://link.springer.com/article/10.1007/s00227-023-04355-5",
+      "title": "Le complexe des couronnes d’épines : biologie et écologie de cinq espèces corallivores du genre Acanthaster"
+    },
+    {
+      "url": "https://www.nps.gov/articles/pacn-crown-of-thorns.htm",
+      "title": "Étoile couronne d’épines — National Park Service des États-Unis"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Acanthaster-planci-Couronne-d-epines-827",
+      "title": "Acanthaster planci — DORIS, FFESSM"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Acanthaster_planci/",
+      "title": "Acanthaster planci — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

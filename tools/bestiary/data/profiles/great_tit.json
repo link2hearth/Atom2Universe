@@ -12,8 +12,8 @@
       "fr": "La mésange charbonnière, Parus major, appartient à la famille des mésanges, les Paridés, et vit du nord-ouest de l’Afrique et de l’Europe jusqu’à la Sibérie orientale, à travers l’Eurasie tempérée. Son bec court, ses pattes fortes et la nidification en cavité favorisent une alimentation variée et la reproduction."
     },
     "identification": {
-      "en": "At 12.5–15 cm long, its compact body bears a short pointed bill, black cap and throat, white cheeks, greenish back, and yellow underside with a dark central stripe. The wings and tail are blue-grey, with a white bar on the wings. Males usually have a broader, darker belly stripe; juveniles are duller with yellowish cheeks.",
-      "fr": "Longue de 12,5 à 15 cm, elle a un corps compact, un bec court et pointu, la calotte et la gorge noires, les joues blanches, le dos verdâtre et le dessous jaune à bande sombre. Les ailes et la queue sont bleu-gris, avec une barre blanche sur les ailes. Les mâles ont généralement une bande ventrale plus large et plus sombre ; les jeunes sont plus ternes et ont les joues jaunâtres."
+      "en": "At 12.5–15 cm long, its compact body bears a short pointed bill, black cap and throat, white cheeks, greenish back, and yellow underside with a dark central stripe. The wings and tail are blue-grey, with a white bar on the wings. Males usually have a broader, darker belly stripe; juveniles are duller with yellowish cheeks. British adults average about 18.6 g; mean mass is approximately 18.1 g for females and 19.1 g for males.",
+      "fr": "Longue de 12,5 à 15 cm, elle a un corps compact, un bec court et pointu, la calotte et la gorge noires, les joues blanches, le dos verdâtre et le dessous jaune à bande sombre. Les ailes et la queue sont bleu-gris, avec une barre blanche sur les ailes. Les mâles ont généralement une bande ventrale plus large et plus sombre ; les jeunes sont plus ternes et ont les joues jaunâtres. Les adultes britanniques pèsent en moyenne environ 18,6 g ; la masse moyenne est d’environ 18,1 g chez les femelles et 19,1 g chez les mâles."
     },
     "habitat": {
       "en": "The species is most characteristic of deciduous and mixed woodland, especially where mature trees, scrub and edges make food and nesting holes available. It also occupies parks, gardens, orchards and hedgerows, and readily uses nest boxes where natural cavities are scarce. This flexibility lets it persist near people, although local abundance still depends on vegetation, food and safe nesting sites.",
@@ -56,14 +56,14 @@
         "Range, length, plumage, sexual dimorphism and juvenile appearance"
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
         "identification.en.1",
-        "identification.fr.1",
         "identification.en.2",
-        "identification.fr.2",
         "identification.en.3",
-        "identification.fr.3"
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -88,14 +88,14 @@
         "2024 assessment: global Least Concern"
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.2",
-        "habitat.fr.2",
-        "habitat.en.3",
-        "habitat.fr.3",
         "conservation.en.1",
-        "conservation.fr.1"
+        "conservation.fr.1",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.en.3",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "habitat.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -107,26 +107,29 @@
     },
     {
       "title": {
-        "en": "Great Tit | BTO BirdFacts",
-        "fr": "Mésange charbonnière | BTO BirdFacts"
+        "en": "Great Tit — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Mésange charbonnière — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/learn/about-birds/birdfacts/great-tit",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "habitat",
         "reproduction",
-        "conservation"
+        "conservation",
+        "identification"
       ],
       "facts": [
-        "British clutch and incubation timing; population trend"
+        "British clutch and incubation timing; population trend",
+        "British adults average 18.6 g and 75 mm wing length; mean mass is about 18.1 g in females and 19.1 g in males."
       ],
       "prose_claims": [
-        "reproduction.en.2",
-        "reproduction.fr.2",
         "conservation.en.2",
-        "conservation.fr.2",
         "conservation.en.3",
-        "conservation.fr.3"
+        "conservation.fr.2",
+        "conservation.fr.3",
+        "identification.en.4",
+        "reproduction.en.2",
+        "reproduction.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -152,13 +155,13 @@
         "Nest cavities, parental care and fledging timing"
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "diet.en.2",
         "diet.fr.2",
+        "overview.en.2",
+        "overview.fr.2",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.4",
+        "reproduction.fr.1",
         "reproduction.fr.4"
       ],
       "budget": {
@@ -360,6 +363,7 @@
         "Wild nest observations recorded feeding by both parents"
       ],
       "prose_claims": [
+        "identification.fr.4",
         "reproduction.en.3",
         "reproduction.fr.3"
       ],
@@ -386,10 +390,10 @@
         "Białowieża 2008–2011; cavity features mediate predator access"
       ],
       "prose_claims": [
-        "reproduction.en.5",
-        "reproduction.fr.5",
         "ecology.en.3",
-        "ecology.fr.3"
+        "ecology.fr.3",
+        "reproduction.en.5",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,

@@ -12,8 +12,8 @@
       "fr": "Le gorille de l’Ouest (Gorilla gorilla) est l’une des deux espèces de gorilles ; le gorille de l’Est (G. beringei) vit plus à l’est. Le gorille de l’Ouest habite l’Afrique équatoriale occidentale et centrale et comprend deux sous-espèces : le gorille des plaines de l’Ouest et le gorille de la rivière Cross."
     },
     "identification": {
-      "en": "Adults have dark hair, long arms and broad chests; males are much larger. Mature males develop a silver saddle, sometimes extending to rump and thighs in western lowland gorillas. Infants have a pale rump tuft. Gorillas knuckle-walk; skull crests anchor jaw muscles.",
-      "fr": "L’adulte a le pelage sombre, de longs bras et une poitrine large ; le mâle est bien plus grand. Sa selle argentée peut couvrir le croupion et les cuisses chez le gorille des plaines de l’Ouest. Le petit a une touffe claire au croupion. Le gorille marche sur ses phalanges ; ses crêtes crâniennes ancrent les muscles de la mâchoire."
+      "en": "The Smithsonian reports adult male western lowland gorillas averaging 136 kg and reaching 1.8 m standing height, with an arm span around 2.4 m; females are about 68–91 kg, up to 1.4 m tall, with a 2 m arm span. These are zoo reference figures, not field-population limits. Adults have dark hair, long arms and broad chests; males are much larger. Mature males develop a silver saddle, sometimes extending to rump and thighs in western lowland gorillas. Infants have a pale rump tuft. Gorillas knuckle-walk; skull crests anchor jaw muscles.",
+      "fr": "Le Smithsonian indique que les mâles adultes du gorille des plaines de l’Ouest pèsent en moyenne 136 kg, peuvent atteindre 1,8 m debout et ont une envergure de bras d’environ 2,4 m ; les femelles pèsent environ 68 à 91 kg, atteignent 1,4 m et ont une envergure de bras de 2 m. Ce sont des valeurs de référence zoologiques, pas des limites observées sur toute la population sauvage. L’adulte a le pelage sombre, de longs bras et une poitrine large ; le mâle est bien plus grand. Sa selle argentée peut couvrir le croupion et les cuisses chez le gorille des plaines de l’Ouest. Le petit a une touffe claire au croupion. Le gorille marche sur ses phalanges ; ses crêtes crâniennes ancrent les muscles de la mâchoire."
     },
     "habitat": {
       "en": "Western lowland gorillas inhabit swamp and terra firma forests across the Congo Basin; Cross River gorillas occupy fragmented forests on the Nigeria–Cameroon border. Gorillas spend much time on the ground, but also climb and nest in trees or on the forest floor.",
@@ -56,7 +56,8 @@
       ],
       "facts": [
         "Describes coat, silver saddle, infant rump tuft, knuckle-walking and skull crests.",
-        "Reports Congo Basin distribution, group structure, nesting, female dispersal and western lowland reproduction, including gestation and prolonged infant carrying."
+        "Reports Congo Basin distribution, group structure, nesting, female dispersal and western lowland reproduction, including gestation and prolonged infant carrying.",
+        "Adult males average 136.1 kg, up to 1.8 m tall and 2.4 m arm span; females 68–91 kg, up to 1.4 m, 2 m arm span."
       ]
     },
     {

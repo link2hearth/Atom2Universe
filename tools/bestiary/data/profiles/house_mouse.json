@@ -44,10 +44,10 @@
     {
       "title": {
         "en": "Mus musculus — Animal Diversity Web, University of Michigan Museum of Zoology",
-        "fr": "Mus musculus — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+        "fr": "Mus musculus — Animal Diversity Web, musée de zoologie de l’université du Michigan"
       },
       "url": "https://animaldiversity.org/accounts/Mus_musculus/",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "identification",
         "habitat",
@@ -55,7 +55,8 @@
         "reproduction"
       ],
       "facts": [
-        "Species account consulted for body and tail measurements, whisker sensing, shelter use, commensal male-led territories, and pup development; reproductive figures are approximate."
+        "Species account consulted for body and tail measurements, whisker sensing, shelter use, commensal male-led territories, and pup development; reproductive figures are approximate.",
+        "Head-and-body length is 65–95 mm, tail 60–105 mm, mass 12–30 g; sexes are alike."
       ]
     },
     {

@@ -44,14 +44,22 @@
     {
       "title": {
         "en": "Hobby — BTO BirdFacts, British Trust for Ornithology",
-        "fr": "Faucon hobereau — BirdFacts du BTO, British Trust for Ornithology"
+        "fr": "Faucon hobereau — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/hobby",
-      "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Mean weight 211 g; clutch typically 2–3 eggs; incubation about 28 days; fledging 29.5–34 days; summer visitor from late April to October; breeding typically from age 2.",
-        "UK 2,050 pairs (2016); UK Green; IUCN Least Concern; maximum age 14 years 10 months."
+        "UK 2,050 pairs (2016); UK Green; IUCN Least Concern; maximum age 14 years 10 months.",
+        "British adults average 211 g."
       ]
     },
     {
@@ -61,7 +69,14 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/hobby",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
       "facts": [
         "Slate-grey upperparts, streaked buff underparts, white cheeks with black moustache, russet thighs and undertail; scythe-shaped like a large swift in flight.",
         "Hunts swallows, martins and dragonflies in fast aerial chases, transferring prey from talons to beak in flight; spreading northwards; Schedule 1, UK Green."
@@ -74,9 +89,13 @@
       },
       "url": "https://en.wikipedia.org/wiki/Eurasian_hobby",
       "consulted": "2026-10-12",
-      "supports": ["identification", "reproduction", "ecology"],
+      "supports": [
+        "identification",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
-        "29–36 cm, wingspan 74–84 cm; typically nests in old nests of crows or rooks; 2–3 eggs laid June–August, one brood.",
+        "Length 29–36 cm and wingspan 74–84 cm; nests in old crow or rook nests.",
         "Migrates to Africa; IUCN Least Concern (BirdLife International 2021)."
       ]
     }

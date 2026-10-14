@@ -1,0 +1,26 @@
+{
+  "id": "yellowhammer",
+  "name": "Yellowhammer",
+  "scientific": "Emberiza citrinella",
+  "group": "birds",
+  "sections": {
+    "overview": "The yellowhammer is a bright, seed-eating bunting of hedgerows and farmland. Once widespread across Britain, it has declined sharply and is now Red-listed in the UK.",
+    "identification": "In Britain an adult weighs about 26 g and has a wing near 86 mm. The male has a bright yellow head and underparts, a brown back streaked with black and a chestnut rump; the female is a paler, more subtle version. In flight, white outer tail feathers show, and the bill is short and greyish.",
+    "habitat": "It stays on farms all year, especially mixed and arable farmland, and nests in thick hedges, often alongside ditches. In Britain it is found mainly in the Midlands, southern, eastern and western England, west Wales and eastern Scotland.",
+    "diet": "Adults eat mainly seeds picked up on the ground, and winter seed supplies are especially important in late winter. The chicks are fed mostly insects and spiders, so invertebrates are essential in the breeding season.",
+    "behavior": "The yellowhammer is largely sedentary: its winter and breeding distributions in Britain are almost identical. Males sing from exposed perches, often on top of a hedge or bush.",
+    "reproduction": "In Britain a clutch is typically three or four eggs, incubated by the female for about 13 days. The chicks fledge after roughly 14 days. Birds typically first breed at one year old.",
+    "ecology": "The species depends on hedgerows for nesting and on farmland seeds and insects for food, so changes in farming affect it directly. Its decline in Britain is attributed mainly to a lack of food and nesting habitat.",
+    "conservation": "The IUCN lists the species as Least Concern worldwide, but in the UK it is Red-listed. The British breeding population was about 700,000 territories in 2016 and fell by 68% between 1967 and 2024, with the breeding range shrinking by 23%. A typical breeding-age bird lives about three years, and the oldest ringed one nearly 12."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/yellowhammer",
+      "title": "Yellowhammer — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/yellowhammer",
+      "title": "Yellowhammer — RSPB Bird Guide"
+    }
+  ]
+}

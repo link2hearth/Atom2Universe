@@ -1,0 +1,42 @@
+{
+  "id": "cheetah",
+  "name": "Cheetah",
+  "scientific": "Acinonyx jubatus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The cheetah is a large African and Asian cat, the only living species in genus Acinonyx. Its slim body, long legs and blunt, partly non-retractile claws suit acceleration over open ground. It is mostly solitary, except for mothers with cubs and male coalitions.",
+    "identification": "An adult has a slender frame, small rounded head and yellowish, tawny or grey coat with separate black spots. Dark tear-lines run from the inner eye corners toward the mouth. Its spotted tail ends in dark rings and a pale tip. Adults are about 1.0–1.4 m in body length, 63–94 cm at the shoulder, with a 66–84 cm tail; reported mass is 38–65 kg, and males are larger than females. The cited species account does not provide a body-width measurement.",
+    "habitat": "Cheetahs use open habitats where they can see prey and run: African grasslands, savannas and dry country, including deserts. They also occur in open woodland and scrub. Their former range spanned Africa to the Middle East and India; populations now occupy scattered remnants.",
+    "diet": "It hunts mainly small and medium-sized hoofed mammals, including gazelles and impalas; hares and ground birds supplement its diet. It approaches or watches from cover, then charges and trips prey with its forelegs before suffocating it with a throat bite. Many chases fail.",
+    "behavior": "Females generally roam alone; males may form lasting coalitions, often with brothers, and defend territories. Females do not defend territories. Scent marks and calls maintain contact: mothers call to hidden cubs, while coalition partners vocalize when separated. Cheetahs sometimes climb trees.",
+    "reproduction": "Breeding occurs year-round. After about three months of gestation, a female gives birth. Wild litters average fewer cubs than the three to six often reported by zoos. Cubs are helpless and hidden at birth; the mother moves their den and teaches hunting before independence.",
+    "ecology": "The cheetah competes with larger carnivores for food and space. Lions, spotted hyenas and leopards can kill cubs, and competitors sometimes steal its kills. Successful hunting therefore does not always secure a meal; reproduction and cub survival also depend on these interactions.",
+    "conservation": "In its profile consulted in October2026, the IUCN Cat Specialist Group reports the species as Vulnerable. Habitat loss, conflict with livestock owners and illegal trade threaten fragmented populations. Most survivors occur in eastern and southern Africa; the remaining Asiatic population is in Iran."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Acinonyx_jubatus/",
+      "title": "Acinonyx jubatus (cheetah)"
+    },
+    {
+      "url": "https://nationalzoo.si.edu/animals/cheetah",
+      "title": "Cheetah"
+    },
+    {
+      "url": "https://nationalzoo.si.edu/conservation/cheetah-breeding-program",
+      "title": "Cheetah Breeding at the Smithsonian's National Zoo and Conservation Biology Institute"
+    },
+    {
+      "url": "https://cheetah.org/media-resources/",
+      "title": "Media Resources: Cheetahs"
+    },
+    {
+      "url": "https://www.catsg.org/living-species-cheetah",
+      "title": "Cheetah — IUCN SSC Cat Specialist Group"
+    },
+    {
+      "url": "https://animals.sandiegozoo.org/animals/cheetah",
+      "title": "Cheetah — San Diego Zoo Wildlife Alliance"
+    }
+  ]
+}

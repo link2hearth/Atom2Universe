@@ -1,0 +1,30 @@
+{
+  "id": "ruddy_turnstone",
+  "name": "Tournepierre à collier",
+  "scientific": "Arenaria interpres",
+  "group": "birds",
+  "sections": {
+    "overview": "Le tournepierre à collier est un limicole trapu et coloré, dont le nom vient de son habitude de retourner pierres et algues pour trouver sa nourriture. Il niche dans l’Arctique et hiverne sur les côtes d’une grande partie du monde.",
+    "identification": "Petit limicole robuste, plus petit qu’un chevalier gambette, pesant environ 95 à 125 g avec une aile d’environ 157 mm. Il a le dessus roux et noir, la tête noir et blanc, le dessous blanc, les pattes orange et un bec noir court, légèrement relevé. Les sexes se ressemblent.",
+    "habitat": "Il niche dans la toundra arctique et ne se reproduit pas en Grande-Bretagne. En hiver, il fréquente presque tous les milieux côtiers, avec une préférence pour les rivages rocheux, mais aussi les plages de sable et les estuaires.",
+    "diet": "Il retourne de petites pierres sur la laisse de mer pour trouver de petits crustacés et des insectes, et il est réputé pour manger de tout. Il prend aussi des mollusques, des vers et des charognes, et peut ouvrir balanes et bivalves avec son bec robuste.",
+    "behavior": "Les tournepierres passent beaucoup de temps à se faufiler et à voleter sur les rochers, en retournant ce qu’ils trouvent. Hors saison de reproduction, ils forment des groupes, souvent mêlés à d’autres limicoles. Les oiseaux qui passent l’été en Grande-Bretagne sont en général de jeunes individus n’ayant pas atteint l’état reproducteur.",
+    "reproduction": "Un couple élève en général une nichée par an et pond quatre œufs (parfois trois à cinq). La femelle les couve surtout pendant 22 à 24 jours. Les poussins, nidifuges, s’envolent après environ 19 à 21 jours. La reproduction débute en général à deux ans.",
+    "ecology": "Sur les sites de reproduction, labbes, goélands, grands corbeaux et renards prennent surtout les œufs et les jeunes ; les adultes sont rarement capturés, surtout par les faucons et les hiboux. Le tournepierre, de son côté, consomme beaucoup d’insectes dans la toundra et de crustacés et de mollusques sur le rivage.",
+    "conservation": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure, mais elle figure sur la liste orange du Royaume-Uni. Environ 43 000 tournepierres hivernent au Royaume-Uni (2012-2017) ; leurs effectifs ont baissé de 17 % entre 1998 et 2023, mais le long déclin depuis le milieu des années 1980 s’est stabilisé. Les menaces comprennent la modification des habitats côtiers et le dérangement. Le plus vieil oiseau bagué a atteint 20 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/turnstone",
+      "title": "Tournepierre à collier — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/turnstone",
+      "title": "Tournepierre à collier — RSPB"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Arenaria_interpres/",
+      "title": "Arenaria interpres — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

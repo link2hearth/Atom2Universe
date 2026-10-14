@@ -1,0 +1,26 @@
+{
+  "id": "muscicapa_striata",
+  "name": "Gobemouche gris",
+  "scientific": "Muscicapa striata",
+  "group": "birds",
+  "sections": {
+    "overview": "Le gobemouche gris est un petit passereau brun-gris aux longues ailes qui chasse les insectes volants depuis un perchoir. C’est l’un des derniers visiteurs d’été en Grande-Bretagne, il hiverne en Afrique, et ses effectifs s’y sont effondrés en quelques décennies.",
+    "identification": "De la taille d’un rouge-gorge, l’adulte pèse environ 14,5 g, avec une aile d’environ 86 mm. Le dos, la tête, les ailes et la queue sont brun-gris, le dessous beige pâle avec des stries brunes sur la poitrine; le nom est trompeur, car il est plus strié que tacheté. Les sexes se ressemblent; les jeunes sont tachetés et plus gris.",
+    "habitat": "Il vit dans les bois, les jardins âgés et les parcs bien arborés, et dans les vieilles haies avec arbres en zone agricole. En Grande-Bretagne et en Irlande, il niche partout sauf dans l’extrême nord et l’ouest.",
+    "diet": "Il mange des insectes volants comme des mouches, des papillons, des guêpes et des tipules. Il guette depuis un perchoir élevé, s’élance pour en attraper un en vol et revient souvent au même endroit.",
+    "behavior": "Il arrive en général fin avril ou en mai et repart en septembre. Des oiseaux suivis par les chercheurs du BTO ont hiverné jusqu’en Namibie, à quelque 7 000 km de leur site de nidification. Le cri est un tzii aigu et répété, et le chant une suite de gazouillis rauques.",
+    "reproduction": "Le nid en coupe ouvert est placé sur des rebords dans et autour des bâtiments ou sur des plantes grimpantes contre les murs et les arbres. En Grande-Bretagne, la première ponte a lieu en moyenne le 6 juin, avec en général deux couvées de quatre ou cinq œufs. La femelle seule couve 13 à 14 jours et les poussins s’envolent après environ 13 à 16 jours. La reproduction débute en général à un an.",
+    "ecology": "Les oiseaux, surtout les geais, causent l’essentiel de la prédation des nids : dans une étude par caméras, ils représentaient 17 des 20 cas. Les nids des jardins ont mené environ deux fois plus de poussins à l’envol que ceux des bois ou des terres agricoles. Un adulte vit en général environ deux ans; le plus âgé bagué a atteint huit ans.",
+    "conservation": "La Liste rouge de l’UICN le classe en préoccupation mineure, mais il figure sur la liste rouge du Royaume-Uni. La population nicheuse était d’environ 42 000 territoires en 2016 et a chuté de 92 % entre 1967 et 2024; elle décline aussi en Europe depuis 1980. La baisse de la survie des jeunes la première année semble le principal moteur, mais la cause écologique reste incertaine."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/spotted-flycatcher",
+      "title": "Gobemouche gris — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/spotted-flycatcher",
+      "title": "Gobemouche gris — RSPB, oiseaux et faune"
+    }
+  ]
+}

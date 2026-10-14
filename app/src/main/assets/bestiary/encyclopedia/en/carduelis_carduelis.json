@@ -1,0 +1,46 @@
+{
+  "id": "carduelis_carduelis",
+  "name": "European goldfinch",
+  "scientific": "Carduelis carduelis",
+  "group": "birds",
+  "sections": {
+    "overview": "The European goldfinch is a small finch native to Europe, North Africa and western and central Asia. It uses open country where seed-bearing plants grow near trees or shrubs, including field margins, orchards, villages and gardens. Thistles and teasels are characteristic foods, but it takes seeds from many plants. Some populations remain year-round; others move seasonally. British and Irish records include residents and movements to and from continental Europe.",
+    "identification": "Adults have a red face, black-and-white head, brown upperparts, pale underparts and broad yellow wing bands. The short pointed bill is pale. The sexes look similar, with subtle differences in facial plumage. Juveniles lack the red, patterned head and instead appear brown and streaked, though they already show the yellow wing band. BTO ringing measurements give adult wing lengths averaging 79.3 mm in males and 76.7 mm in females; mean body mass is 16.1 g in males and 15.3 g in females. These are UK live-bird averages, not total body length or wingspan; the cited BTO biometric table does not provide those dimensions.",
+    "habitat": "Goldfinches feed where herbs can flower and set seed, and nest in trees or shrubs nearby. British and Irish surveys find them in varied breeding habitats, including villages and reedbeds. A study near Sagunto in eastern Spain sampled chicks in intensively cultivated orange-growing country; their food reflected local plants. This single study cannot define habitat use across the species’ range. The recurring requirements are seed heads and woody nesting cover.",
+    "diet": "Seeds dominate the diet, especially those of thistles, teasels, sow-thistles and dandelions. A slender pointed bill and agile feet help the bird cling to stems and reach seeds in flower heads. A breeding-season study in German orchards found that seed choice reflected availability and energetic profitability; extracting seeds from attached heads required more effort than eating loose seeds.",
+    "behavior": "Goldfinches commonly feed in flocks outside the breeding season, sometimes alongside other finches. Contact calls accompany their movements between feeding areas. The species is a partial migrant: some British birds stay all year, while others move south and northern European birds arrive. Danish ringing recoveries document southwestward autumn movement, including records from the Netherlands, Belgium and France. These individual recoveries do not establish one route for every population.",
+    "reproduction": "The female builds a moss, grass and fibre cup in a tree or shrub. BTO records from Britain and Ireland give a usual clutch of five eggs, female incubation for 12–14 days and fledging at roughly two weeks. Two broods are typical in that dataset; three are exceptional. Near Sagunto, a study of 31 nests found that chicks received mainly seeds, plus aphids and beetle larvae; the animal-food contribution declined during the breeding season.",
+    "ecology": "Diet samples establish the goldfinch as a consumer of seeds from many herbs. Near Sagunto, sow-thistle seeds were prominent in chick food; in German orchards adults selected seeds partly according to energetic return. These studies document seed consumption, not a major dispersal role or a measured effect on plant abundance. Seasonal availability of flowering plants influences the food accessible to adults and chicks.",
+    "conservation": "The IUCN’s 2019 global assessment classified the species as Least Concern despite an overall decreasing trend. BirdLife International’s 2021 European Red List classified the species as Least Concern and estimated 56.1–88.7 million mature individuals, with an increasing regional trend. This dated continental assessment does not mean every national population is increasing. BTO monitoring reports long-term increases and range expansion in Britain and Ireland, and considers garden feeding one contributor to recent British growth. Local conservation still depends on regional trends and the availability of seed-bearing plants."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/goldfinch",
+      "title": "Goldfinch: BirdFacts"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/goldfinch",
+      "title": "Goldfinch Bird Facts"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1474-919X.1985.tb04838.x",
+      "title": "Seed preference and energy intake of Goldfinches in the breeding season"
+    },
+    {
+      "url": "https://www.ardeola.org/uploads/articles/docs/1364.pdf",
+      "title": "An evaluation of the use of a spooned spatula to assess the diet of cardueline nestlings"
+    },
+    {
+      "url": "https://www.birdlife.org/wp-content/uploads/2022/05/BirdLife-European-Red-List-of-Birds-2021.pdf.pdf",
+      "title": "European Red List of Birds 2021"
+    },
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/european-goldfinch-carduelis-carduelis",
+      "title": "European Goldfinch species factsheet"
+    },
+    {
+      "url": "https://dk.birdmigrationatlas.dk/uk/species/european-goldfinch",
+      "title": "European Goldfinch: Danish Bird Migration Atlas"
+    }
+  ]
+}

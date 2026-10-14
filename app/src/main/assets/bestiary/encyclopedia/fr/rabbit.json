@@ -1,0 +1,54 @@
+{
+  "id": "rabbit",
+  "name": "Lapin de garenne",
+  "scientific": "Oryctolagus cuniculus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le lapin de garenne est un lagomorphe fouisseur originaire de la péninsule Ibérique et de régions du sud-ouest de l’Europe. Les transports humains et les échappées d’élevage l’ont propagé bien au-delà de cette aire : une même espèce peut donc être menacée dans un paysage d’origine et devenir un herbivore envahissant ailleurs. Il est aussi l’ancêtre sauvage des lapins domestiques.",
+    "identification": "Un adulte sauvage mesure généralement 38 à 50 cm et pèse 1,5 à 2,5 kg. Son corps compact, ses oreilles courtes et ses pattes arrière puissantes favorisent les bonds rapides entre nourriture et abri. Le pelage gris-brun est plus clair dessous ; le dessous blanc de sa courte queue apparaît lorsqu’il détale. Par rapport au lièvre, il a des oreilles et des pattes plus courtes et dépend davantage d’abris souterrains. Ses petits sont dépendants à la naissance, contrairement aux levrauts couverts de fourrure et mobiles.",
+    "habitat": "Dans son aire d’origine, le lapin préfère les espaces ouverts à herbe courte proches d’un couvert dense, surtout si le sol meuble permet de creuser. Maquis, prairies, lisières boisées et certains espaces agricoles ou urbains fournissent nourriture et abri, même si le labour peut détruire les terriers. Les entrées et chambres reliées d’une garenne offrent des issues et des lieux protégés pour se reposer ou nicher. Si le sol ne s’y prête pas, les lapins utilisent un couvert de surface, comme une végétation épaisse.",
+    "diet": "Le lapin choisit graminées, jeunes pousses, feuilles et bourgeons, parfois racines ou écorce. Les fibres végétales étant difficiles à digérer, les microbes fermentent les particules fines dans son cæcum volumineux, tandis que les particules grossières traversent rapidement l’intestin. Le lapin réingère périodiquement les cæcotrophes mous et nutritifs, dont le contenu repasse ainsi par l’intestin grêle. Ils diffèrent des crottes ordinaires, fermes et sèches, qui contiennent beaucoup de fibres indigestibles et ne sont pas recyclées.",
+    "behavior": "Le lapin de garenne est particulièrement social pour un léporidé. Quand nourriture et sol le permettent, les groupes partagent des terriers et défendent un territoire. Plusieurs femelles et mâles cohabitent ; la dominance influence l’accès à l’espace et aux partenaires, avec des conflits plus nets entre mâles. Les lapins se nourrissent surtout au crépuscule et la nuit, puis se retirent sous terre le jour. Les marques odorantes signalent l’occupation et un coup de patte arrière avertit du danger. Limites du groupe et garenne familière apportent une sécurité.",
+    "reproduction": "La reproduction sauvage est saisonnière et dépend de la nourriture et des conditions locales. Après une ovulation déclenchée par l’accouplement, la gestation dure environ 30 jours et les portées comptent souvent cinq ou six petits. La lapine creuse un terrier de naissance et tapisse le nid de végétaux secs et de poils. Les lapereaux naissent nus et aveugles, contrairement aux levrauts couverts de fourrure et aux yeux ouverts. La mère revient brièvement allaiter puis s’éloigne en laissant le nid dissimulé. Les petits quittent le nid et sont sevrés vers quatre semaines ; la mortalité de première année peut être élevée à cause des prédateurs, du climat et des maladies.",
+    "ecology": "Dans les milieux méditerranéens ibériques, le lapin est une proie clé pour de nombreux prédateurs, dont le lynx ibérique et l’aigle impérial ibérique. Son pâturage modifie le couvert végétal ; les terriers abritent d’autres animaux et les latrines communes concentrent des nutriments qui influencent la croissance des plantes. Le lapin agit donc comme ingénieur de l’écosystème, avec des effets dépendant de sa densité et du milieu. Son rôle dans les réseaux trophiques d’origine peut devenir nuisible quand des populations introduites denses surpâturent et concurrencent la faune locale.",
+    "conservation": "La dernière évaluation mondiale de l’UICN repérée a été publiée en 2019 à partir d’une évaluation datée du 15 août 2018. Elle classe le lapin en danger dans son aire native, en Espagne, au Portugal et dans le sud de la France. La myxomatose, la maladie hémorragique du lapin et la dégradation de l’habitat ont entraîné des déclins ; GI.2/RHDV2 a accru la pression après son arrivée en Ibérie en 2011–2012. Une étude publiée en ligne en décembre 2024 et parue dans le volume 2025 de la revue, fondée sur les tableaux de chasse d’environ 6 000 domaines du centre de l’Espagne, relève une baisse dans la plupart des secteurs sans contrôle d’urgence des dégâts agricoles entre 2009 et 2022, mais des tendances différentes là où les lapins endommagent les cultures. En Australie, les lapins féraux sont répandus et nuisent à la végétation indigène et aux espèces menacées. Les priorités diffèrent donc entre aire d’origine et populations introduites."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Oryctolagus_cuniculus/",
+      "title": "Oryctolagus cuniculus (lapin de garenne) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+    },
+    {
+      "url": "https://www.msdvetmanual.com/en/exotic-and-laboratory-animals/rabbits/nutrition-of-rabbits",
+      "title": "Nutrition des lapins — MSD Veterinary Manual, rédigé par un membre du corps professoral vétérinaire de l’Université de Géorgie"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5113872/",
+      "title": "La vie sociale du lapin de garenne (Oryctolagus cuniculus) — Journal of the American Association for Laboratory Animal Science"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8388719/",
+      "title": "Quelles sont les clés du succès adaptatif du lapin sauvage européen dans la péninsule Ibérique ? — Animals (MDPI), revue scientifique évaluée par les pairs"
+    },
+    {
+      "url": "https://academic.oup.com/mspecies/article/52/997/125/6046128",
+      "title": "Lepus europaeus (Lagomorpha : Leporidae) — Mammalian Species, Oxford University Press"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T41291A170619657.en",
+      "title": "Oryctolagus cuniculus (lapin de garenne) — Liste rouge de l’UICN des espèces menacées, évaluation de 2019"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10344-024-01888-y",
+      "title": "Tendances négatives des populations de lapins dans les zones agricoles et non agricoles du centre de l’Espagne après le virus de la maladie hémorragique du lapin 2 — European Journal of Wildlife Research"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18680504/",
+      "title": "Rôle clé des lapins européens dans la conservation du hotspot du bassin méditerranéen occidental — Conservation Biology"
+    },
+    {
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/pest-animals-and-weeds/pest-animals/rabbits",
+      "title": "Lapins — ministère de l’Environnement de Nouvelle-Galles du Sud"
+    }
+  ]
+}

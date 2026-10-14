@@ -1,0 +1,38 @@
+{
+  "id": "red_fox",
+  "name": "Red fox",
+  "scientific": "Vulpes vulpes",
+  "group": "mammals",
+  "sections": {
+    "overview": "The red fox is an adaptable canid native across much of the Northern Hemisphere, from Arctic regions to North Africa, Central America and Asia. It occupies wild, farmed and urban landscapes, while local abundance and habits depend on food, cover and human pressures.",
+    "identification": "Adults have a head-and-body length of about 45.5–90 cm, a tail of 30–55.5 cm and a mass of roughly 3–14 kg; males are generally slightly larger than females. Reliable species-wide shoulder height and body width were not found in the consulted references. Its familiar coat is rusty red above, pale underneath, with dark lower legs and a bushy tail often tipped white. Colour is variable: individuals may be pale, dark or cross-patterned. The pointed muzzle, upright ears and slender build remain useful features across these forms.",
+    "habitat": "Red foxes use forests, scrub, grasslands, deserts, mountains, farmland and city edges; they often benefit from a patchwork of cover and open feeding ground. In Australia they were introduced for hunting in the nineteenth century and spread widely, though distribution remains uneven.",
+    "diet": "It is an opportunistic feeder, taking small mammals such as rodents and rabbits when available, as well as birds, invertebrates, reptiles, fruit and carrion. Proportions shift with season and place. Urban foxes may use discarded food, while Australian foxes consume introduced and native prey.",
+    "behavior": "Foxes often forage alone around dusk or at night, but schedules vary with disturbance and food. They cache surplus food in small buried stores. A pair may share a territory; some populations form family groups where related nonbreeders help provision or guard young.",
+    "reproduction": "Breeding is seasonal, with timing shifting across the species’ range. After about seven to eight weeks of pregnancy, a vixen gives birth in a den. Cubs are born blind, leave after several weeks and are gradually weaned; litter size and helper care vary among populations.",
+    "ecology": "As predator and scavenger, the fox consumes many kinds of animal matter and sometimes fruit, but its effects depend on local food webs. In Australia, government reviews link introduced fox predation to declines in several native ground-dwelling mammals and birds; other pressures can also contribute.",
+    "conservation": "The global IUCN assessment published in 2021 retained Least Concern, based on the assessment dated 2016 and the species’ broad range. This category does not describe every local population. In Australia, introduced foxes are managed as invasive predators because of risks to native wildlife."
+  },
+  "sources": [
+    {
+      "url": "https://canids.org/canids/red-fox/",
+      "title": "Red fox – Canid Specialist Group"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Vulpes_vulpes/",
+      "title": "Vulpes vulpes – Animal Diversity Web"
+    },
+    {
+      "url": "https://www.nhm.ac.uk/discover/the-secret-life-of-urban-foxes.html",
+      "title": "The secret life of urban foxes"
+    },
+    {
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/pest-animals-and-weeds/pest-animals/foxes",
+      "title": "Foxes – NSW Environment and Heritage"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-1.RLTS.T23062A193903628.en",
+      "title": "Vulpes vulpes (Red Fox) – IUCN Red List, amended assessment"
+    }
+  ]
+}

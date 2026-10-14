@@ -1,0 +1,30 @@
+{
+  "id": "leopardus_braccatus",
+  "name": "Pantanal Cat",
+  "scientific": "Leopardus braccatus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The Pantanal cat, also called the Brazilian pampas cat or savanna pampas cat, is a small South American wild cat of open country. It was long treated as part of the widespread pampas cat, but a 2020 revision split that group into five species, and this is one of them. Much of what is known comes from the group as a whole.",
+    "identification": "A study cited by a wild cat conservation group gives averages of about 68 cm head and body, a tail of about 26 cm and a weight near 3.9 kg. Pampas cats in general look like a stocky house cat with a broad face and long hair, sometimes with a crest along the back; their coats range from yellow-white to grey-brown, plain or patterned, and melanistic forms occur.",
+    "habitat": "It lives mainly in Brazil, with records in Paraguay, eastern Bolivia and Argentina, in open areas such as the Cerrado, the Pantanal, the savannas of Beni and the Chiquitano dry forest. The exact limits of its range are still uncertain, because older records were attributed to the broader pampas cat.",
+    "diet": "No study specific to this species was found. Pampas cats as a group eat mainly small mammals such as rodents and hares, along with birds and occasionally lizards, and hunt mostly on the ground.",
+    "behavior": "Pampas cats are solitary and terrestrial, active at any hour but tending to be more nocturnal. For the Pantanal cat itself, home ranges of about 19.5 to 27.7 square kilometres have been reported in Brazil.",
+    "reproduction": "Almost nothing is known about breeding in the wild. Records from captive pampas cats suggest a gestation of 80–85 days and litters of one to three kittens, and these figures may not apply to this species in particular.",
+    "ecology": "As a small ground predator of rodents and birds, it takes a place among the smaller carnivores of open Neotropical habitats. In central Brazil, pampas cats are reported to hybridise with the northern tiger cat, though this record concerns the group as a whole.",
+    "conservation": "The Mammal Diversity Database notes that the species has not been evaluated on the IUCN Red List. A wild cat conservation group describes it as decreasing and Vulnerable, without giving the assessment behind this. Threats named for the group include habitat loss to cropland, livestock and oil extraction, retaliation for poultry losses, road deaths and dog attacks."
+  },
+  "sources": [
+    {
+      "url": "https://wildcatconservation.org/wild-cats/south-america/pampas-cat-species-complex/",
+      "title": "Pampas cat species complex — Wild Cat Conservation"
+    },
+    {
+      "url": "https://www.catsg.org/living-species-pampascat",
+      "title": "Pampas cat — IUCN/SSC Cat Specialist Group"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1005992",
+      "title": "Leopardus braccatus — Mammal Diversity Database"
+    }
+  ]
+}

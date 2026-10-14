@@ -1,0 +1,34 @@
+{
+  "id": "little_auk",
+  "name": "Little Auk",
+  "scientific": "Alle alle",
+  "group": "birds",
+  "sections": {
+    "overview": "The little auk, also called the dovekie, is one of the smallest seabirds in the world. It nests in huge Arctic colonies and spends the rest of the year at sea in the North Atlantic.",
+    "identification": "A little auk is about the size of a Starling: roughly 19–23 cm long, with a wingspan near 40 cm and a weight around 165 g. It is black above and white below, with a stubby black bill, a short neck and tail, and dark underwings. In flight it shows very fast, whirring wingbeats.",
+    "habitat": "It breeds north of the Arctic Circle among rocky scree slopes, eroded cliffs and boulder piles; Svalbard holds about 90% of the world’s breeding birds. Outside the breeding season it lives at sea, often near oceanic fronts, and in Britain it is a winter visitor in the northern North Sea.",
+    "diet": "It feeds mainly on small planktonic crustaceans such as copepods, amphipods and krill-like euphausiids, with a few small fish, molluscs and worms. It dives down to about 40 m, propelling itself with its wings.",
+    "behavior": "The little auk is social and colonial, flying low over the sea and resting in groups on the water. After breeding it heads south, and strong northerly gales can drive large numbers past the coast or, occasionally, far inland.",
+    "reproduction": "Pairs are monogamous and often return to the same nest site, hidden among rocks. A single egg is laid each year and incubated by both parents for 28–31 days. The downy chick fledges after about 23–30 days and leaves the colony at dusk or night, flying out to sea.",
+    "ecology": "By eating huge numbers of zooplankton the little auk links ocean plankton to the Arctic land. Its eggs and chicks are taken by Arctic foxes and glaucous gulls, and the nitrogen-rich droppings of large colonies favour lichens and other nitrogen-tolerant plants beneath the cliffs.",
+    "conservation": "The IUCN Red List classes the species as Least Concern, and the European population is estimated at about 80 million individuals. It is on the UK Green list. Past local declines were linked to oil spills and to Arctic foxes introduced for fur farming; polluted northern waters remain a risk."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/little-auk",
+      "title": "Little Auk — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/little-auk",
+      "title": "Little Auk — RSPB"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Alle_alle/",
+      "title": "Alle alle — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.audubon.org/field-guide/bird/dovekie",
+      "title": "Dovekie — Audubon Field Guide"
+    }
+  ]
+}

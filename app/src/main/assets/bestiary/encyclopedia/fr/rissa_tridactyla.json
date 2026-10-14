@@ -1,0 +1,30 @@
+{
+  "id": "rissa_tridactyla",
+  "name": "Mouette tridactyle",
+  "scientific": "Rissa tridactyla",
+  "group": "birds",
+  "sections": {
+    "overview": "La mouette tridactyle est un goéland de taille moyenne, strictement marin, qui passe l’essentiel de sa vie en mer et ne vient à terre que pour nicher dans des colonies bruyantes sur les falaises. Elle est la mouette la plus nombreuse de Grande-Bretagne, mais ses effectifs ont fortement chuté.",
+    "identification": "L’adulte mesure 38 à 40 cm, avec la tête et le corps blancs, le dos et les ailes gris moyen, l’œil sombre, un petit bec jaune et de longues pattes noires. Le bout des ailes est entièrement noir, comme trempé dans l’encre, sans taches blanches. Les adultes pèsent environ 310 à 434 g, et les jeunes mettent trois ans à acquérir le plumage adulte complet.",
+    "habitat": "Elle se reproduit surtout sur les falaises rocheuses côtières, mais aussi sur des bâtiments et des ponts : plus de 1 000 couples nichent sur les rebords de fenêtres et les ponts le long de la Tyne. En Grande-Bretagne, ses bastions se situent en Écosse, notamment aux Orcades et aux Shetland, et les densités sont les plus fortes sur la côte est, de Flamborough Head aux Orcades.",
+    "diet": "Elle se nourrit surtout de lançons et d’autres poissons grégaires capturés en mer. Contrairement aux goélands apparentés, elle ne fouille pas les déchets des friteries. C’est un oiseau qui pêche en surface de petits poissons et des invertébrés.",
+    "behavior": "Après la reproduction, elle gagne le grand large de l’Atlantique pour l’hiver et se voit rarement depuis la terre. Elle vole à coups d’ailes rappelant ceux d’une sterne et sait se poser sur d’étroites corniches par grand vent. Au nid, elle fait face à la falaise, de sorte que sa queue dépasse dans le vide.",
+    "reproduction": "Un couple élève une seule couvée par an. La ponte compte en général deux œufs (un à trois), couvés par les deux sexes pendant environ 25 à 32 jours. Les poussins, duveteux et semi-nidifuges, s’envolent après 33 à 54 jours environ. La reproduction commence en général à quatre ans. Les mâles réutilisent souvent le même site de nid chaque année.",
+    "ecology": "Le succès de reproduction en Grande-Bretagne est probablement lié aux effectifs de lançons, eux-mêmes touchés par la pêche et par la température de surface de la mer. Les mouettes tridactyles dépendent souvent d’une seule source principale de nourriture, si bien qu’une pénurie de cette proie peut les frapper durement. Leurs colonies sont souvent partagées avec des guillemots et des pingouins.",
+    "conservation": "Le BTO indique que l’espèce est classée « vulnérable » à l’échelle mondiale sur la Liste rouge de l’UICN et figure sur la liste rouge britannique. La population nicheuse du Royaume-Uni était de 205 000 couples en 2015, et la population nicheuse britannique a presque diminué de moitié depuis les années 1970. Un oiseau qui atteint l’âge adulte vit environ 12 ans; le plus âgé bagué a dépassé 28 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/kittiwake",
+      "title": "Mouette tridactyle — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/kittiwake",
+      "title": "Mouette tridactyle — RSPB Birds & Wildlife"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Rissa_tridactyla/",
+      "title": "Rissa tridactyla (mouette tridactyle) — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

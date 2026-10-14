@@ -1,0 +1,34 @@
+{
+  "id": "aerodramus_francicus",
+  "name": "Mascarene swiftlet",
+  "scientific": "Aerodramus francicus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Mascarene swiftlet is a small, fast-flying swift endemic to Réunion and Mauritius. It spends most of its life on the wing, catching flying insects, and gathers in colonies to nest in caves, lava tunnels and rock fissures. Its grey-white rump and sickle-shaped wings are useful field marks. The species is assessed globally as Near Threatened, though a recent population analysis has argued that its conservation risk may be greater than the official assessment indicates.",
+    "identification": "This is a very small swift, about 10–10.5 cm long and roughly 7–13 g in the Réunion reference; another compiled account reports 8.9–9.2 g. These figures come from different regional samples and should not be read as a universal sex-specific range. No reliable sex-based size difference, body height, body width or species-specific wingspan was found in the sources reviewed. The sexes look alike: the upperparts are sooty brown to black, except for a pale grey-white rump; the underparts are paler brown, becoming whitish toward the belly and undertail. It has a short black bill and feet, a shallowly notched tail and long, curved wings. In flight, the pale rump and narrow sickle-shaped wings help separate it from the darker-rumped Mascarene swift and other local swifts.",
+    "habitat": "It occurs on Réunion and Mauritius, from low elevations to high volcanic slopes. It feeds over forests, open country, ravines and other landscapes where airborne insects are available, but depends on protected caves, lava tunnels and cliff fissures for roosting and nesting. Colonies can occupy dark river caves and tunnels; on Réunion, some known nesting sites lie at high elevation. The species is resident rather than a long-distance migrant, although birds move up and down the islands with weather and local conditions.",
+    "diet": "It is an aerial insectivore, taking small flying insects while in continuous flight. It may forage late in the evening and can make agile, looping turns to intercept prey. Birds also visit ravine pools to catch insects resting on the water or to drink. The prey are part of the island's aerial plankton; the available sources do not support a more specific universal prey list.",
+    "behavior": "It is exceptionally agile and spends most of the day flying; it often returns to its nest to roost even outside the breeding season. Birds may gather in flocks of hundreds where food is abundant and form dense nesting colonies. Like other Aerodramus swiftlets, it uses audible echolocation clicks to orient inside dark caves and find its own nest among the colony. Movement between low and high elevations appears responsive to local weather and conditions rather than a regular migration.",
+    "reproduction": "Nesting is colonial, in dark caves, lava tubes and fissures in cliffs or ravine walls. The small cup nest is attached to rock with a saliva-based adhesive and made from mosses and lichens. Clutches usually contain two white eggs. On Réunion, breeding is concentrated mainly from September to December, but active nests may be found through much of the year, with a local lull around April and May; timing is not fully synchronous within colonies. The nest sites are sensitive to disturbance, vandalism and physical alteration.",
+    "ecology": "By consuming aerial insects, the swiftlet links the island's flying invertebrate community to cave and cliff ecosystems. Its colonies use natural caves and tunnels as roosting and breeding habitat, and nesting sites can be shared with other cave fauna. Because individuals forage widely but depend on a limited set of suitable cavities, disturbance at a cave entrance can affect many birds at once. Its nightly return to the nest also makes protected roost sites important throughout the year.",
+    "conservation": "BirdLife International's 2019 global assessment lists the species as Near Threatened, with a small range and uncertain overall trend: the Réunion population was reported as increasing, while Mauritius had experienced substantial declines. A 2024 phylogenetic and population analysis estimated roughly 56,900 mature birds across both islands and argued for an Endangered assessment under the area-of-occupancy criterion; this is a research recommendation, not the published BirdLife category. Cave closure or destruction, vandalism, disturbance by visitors and nest harvesting are documented concerns. Protecting and monitoring colonies on both islands is important, and current abundance estimates remain uncertain."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/mascarene-swiftlet-aerodramus-francicus",
+      "title": "Mascarene Swiftlet — BirdLife International DataZone species factsheet"
+    },
+    {
+      "url": "https://www.ecologie.gouv.fr/sites/default/files/publications/document_travail_58_mise_en_valeur_d%E2%80%99un_espace_naturel_sensible_a_la_reunion_mai2022.pdf",
+      "title": "Mascarene swiftlet — official French environmental assessment for Réunion"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/mascarene.swiftlet.html",
+      "title": "Mascarene Swiftlet — Oiseaux.net multilingual species account"
+    },
+    {
+      "url": "https://doi.org/10.5253/arde.2023.a9",
+      "title": "Phylogeny and conservation status of Mascarene Aerodramus swiftlets"
+    }
+  ]
+}

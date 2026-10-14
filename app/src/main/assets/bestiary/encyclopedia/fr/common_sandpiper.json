@@ -1,0 +1,26 @@
+{
+  "id": "common_sandpiper",
+  "name": "Chevalier guignette",
+  "scientific": "Actitis hypoleucos",
+  "group": "birds",
+  "sections": {
+    "overview": "Le chevalier guignette est un petit limicole qui niche au bord des eaux vives et migre vers l’Afrique et au-delà pour l’hiver. On le reconnaît à son balancement constant et à son vol bas au ras de l’eau.",
+    "identification": "En Grande-Bretagne, les adultes pèsent environ 58 g, avec une aile d’environ 112 mm; les femelles sont un peu plus grandes que les mâles. Le dessus est brun, avec une poitrine blanche nettement délimitée, et la queue est relativement longue. Il balance la tête et la queue en marchant, et vole bas, les ailes raides et arquées, en les faisant vibrer.",
+    "habitat": "En Grande-Bretagne, il niche surtout le long des rivières et des lochs de montagne, dans la végétation au bord de l’eau. Sur l’ensemble de son aire, il fréquente aussi les côtes sableuses et les berges, et en hiver les étangs, les rivières, les estuaires et les mangroves.",
+    "diet": "Il mange surtout de petits invertébrés comme des insectes, des vers, des araignées et des crustacés, saisis en courant le long du rivage. Il prend parfois de petits amphibiens ou poissons.",
+    "behavior": "Les couples occupent de longs territoires étroits le long de l’eau et les défendent par des vols de parade bruyants. Les mâles défendent territoire et partenaire par des postures de menace. C’est un migrateur au long cours : des oiseaux écossais suivis par balise ont hiverné surtout sur la côte de la Guinée-Bissau.",
+    "reproduction": "En Grande-Bretagne, une couvée compte typiquement quatre œufs, couvés pendant 21 à 22 jours par les deux parents. Les poussins couverts de duvet quittent le nid peu après l’éclosion et se nourrissent seuls, puis volent vers 19 jours. Les oiseaux se reproduisent pour la première fois vers deux ans.",
+    "ecology": "Le chevalier guignette chasse de petits invertébrés le long des cours d’eau et est lui-même la proie d’animaux comme les renards, les belettes et les goélands. Son dos brun moucheté le camoufle sur les rives pierreuses et boueuses, et il porte souvent des parasites sanguins.",
+    "conservation": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale. Au Royaume-Uni, elle figure sur la liste ambre, avec environ 13 000 couples nicheurs en 2016. Le plus vieil oiseau bagué a atteint 15 ans, mais un adulte en âge de se reproduire vit en général environ 8 ans."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/common-sandpiper",
+      "title": "Chevalier guignette — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Actitis_hypoleucos/",
+      "title": "Actitis hypoleucos — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

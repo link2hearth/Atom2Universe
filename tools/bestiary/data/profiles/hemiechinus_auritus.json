@@ -47,11 +47,20 @@
         "fr": "Hemiechinus auritus — Animal Diversity Web, université du Michigan"
       },
       "url": "https://animaldiversity.org/accounts/Hemiechinus_auritus/",
-      "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Head and body 120–270 mm, tail 10–50 mm; banded spines; nocturnal and solitary, burrow about 45 cm, wanders up to 9 km a night; torpor in summer, some hibernate in winter.",
-        "Breeds once a year July–September, gestation 35–42 days, 1–4 young; eats pests such as termites and scorpions; Least Concern."
+        "Breeds once a year July–September, gestation 35–42 days, 1–4 young; eats pests such as termites and scorpions; Least Concern.",
+        "Head-and-body length is about 120–270 mm, tail 10–50 mm, mass roughly 250–400 g; ears are more than half the head length."
       ]
     },
     {
@@ -61,7 +70,11 @@
       },
       "url": "https://www.mammaldiversity.org/taxon/1003812",
       "consulted": "2026-10-12",
-      "supports": ["overview", "habitat", "conservation"],
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
       "facts": [
         "Range: steppe zone from eastern Ukraine to Mongolia in the north and from Libya to western Pakistan in the south; Palearctic.",
         "IUCN Red List status: Least Concern."
@@ -74,7 +87,11 @@
       },
       "url": "https://en.wikipedia.org/wiki/Long-eared_hedgehog",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "ecology"],
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
       "facts": [
         "Weight 250–400 g; prefers intermediate climates with about 100–400 mm rainfall; rarely curls into a ball; Eurasian eagle-owl takes about 14% of its prey as hedgehogs; Least Concern, assessment cited as 2021.",
         "Gives 2–3 young per litter, which differs from Animal Diversity Web’s 1–4."

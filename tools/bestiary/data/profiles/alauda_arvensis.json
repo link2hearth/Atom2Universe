@@ -12,8 +12,8 @@
       "fr": "L’Alouette des champs est un passereau qui cherche sa nourriture au sol dans les paysages ouverts d’Europe et d’Asie tempérée, jusqu’en Afrique du Nord. Elle fréquente prairies, landes et steppes naturelles ainsi que les champs cultivés. Son plumage brun strié la camoufle au sol, tandis que le vol chanté prolongé du mâle le rend visible au-dessus du territoire. Les déplacements varient selon les régions : certaines populations restent près de leurs sites de reproduction toute l’année, tandis que celles des régions froides ou septentrionales gagnent le sud ou l’ouest en hiver."
     },
     "identification": {
-      "en": "This compact bird has streaked brown upperparts, a pale underside, marked breast and short raisable crest. The sexes look alike, though British ringing samples show males average larger. Long broad wings and white outer tail feathers show in flight. Compared with the smaller woodlark, the skylark has a longer tail and lacks its pale eyebrow. Mottled plumage conceals it as it walks and feeds among low plants; undulating flight and pale wing edges help identify it in the air.",
-      "fr": "Cet oiseau trapu a le dessus brun strié, le dessous clair, la poitrine marquée et une courte huppe relevable. Les sexes se ressemblent, bien que les mâles soient en moyenne plus grands dans les échantillons britanniques. Les longues ailes larges et les rectrices externes blanches se remarquent en vol. Plus grande et à queue plus longue que l’Alouette lulu, elle n’a pas son sourcil pâle marqué. Son plumage moucheté la camoufle dans les herbes basses et sur le sol nu, où elle marche et se nourrit. Son vol ondulé et les bords pâles de ses ailes aident à l’identifier."
+      "en": "This compact bird has streaked brown upperparts, a pale underside, marked breast and short raisable crest. The sexes look alike, though British ringing samples show males average larger. Long broad wings and white outer tail feathers show in flight. Compared with the smaller woodlark, the skylark has a longer tail and lacks its pale eyebrow. Mottled plumage conceals it as it walks and feeds among low plants; undulating flight and pale wing edges help identify it in the air. BTO live-bird measurements give mean adult mass of 39.7 g in males and 35.5 g in females; mean wing length is 114.2 mm and 104 mm respectively. These UK sample means complement the reported larger average size of males.",
+      "fr": "Cet oiseau trapu a le dessus brun strié, le dessous clair, la poitrine marquée et une courte huppe relevable. Les sexes se ressemblent, bien que les mâles soient en moyenne plus grands dans les échantillons britanniques. Les longues ailes larges et les rectrices externes blanches se remarquent en vol. Plus grande et à queue plus longue que l’Alouette lulu, elle n’a pas son sourcil pâle marqué. Son plumage moucheté la camoufle dans les herbes basses et sur le sol nu, où elle marche et se nourrit. Son vol ondulé et les bords pâles de ses ailes aident à l’identifier. Les mesures du BTO sur des oiseaux vivants donnent une masse adulte moyenne de 39,7 g chez les mâles et 35,5 g chez les femelles ; la longueur d’aile moyenne est respectivement de 114,2 mm et 104 mm. Ces moyennes britanniques précisent la taille plus élevée des mâles déjà signalée."
     },
     "habitat": {
       "en": "Skylarks use open ground with low or patchy vegetation: natural steppe, heath, saltmarsh and mountain grassland as well as crops and pasture. A breeding site allows movement and display but also offers cover for a shallow ground nest. Tall crops obstruct access; bare ground conceals little. Birds may leave a field as vegetation grows too high. In winter, stubbles provide spilled grain and weed seeds. The species depends on a mosaic of open ground, low cover and food rather than on one crop.",
@@ -47,16 +47,17 @@
         "fr": "Alouette des champs — BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/learn/about-birds/birdfacts/skylark",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
-        "identification",
-        "habitat",
         "behavior",
-        "reproduction",
-        "conservation"
+        "conservation",
+        "habitat",
+        "identification",
+        "reproduction"
       ],
       "facts": [
-        "BTO ringing and nest-record datasets give British adult biometrics, typical clutch (3–4 eggs), incubation (12–14 days), movement seasonality, UK Red status and 1995–2024 breeding trend. Its synthesis identifies crop sowing shifts and loss of stubble as key pressures."
+        "BTO ringing and nest-record datasets give British adult biometrics, typical clutch (3–4 eggs), incubation (12–14 days), movement seasonality, UK Red status and 1995–2024 breeding trend. Its synthesis identifies crop sowing shifts and loss of stubble as key pressures.",
+        "Live adult UK means: males 39.7 g and 114.2 mm wing length; females 35.5 g and 104 mm."
       ]
     },
     {

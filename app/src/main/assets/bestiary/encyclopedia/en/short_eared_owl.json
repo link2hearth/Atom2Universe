@@ -1,0 +1,26 @@
+{
+  "id": "short_eared_owl",
+  "name": "Short-eared Owl",
+  "scientific": "Asio flammeus",
+  "group": "birds",
+  "sections": {
+    "overview": "The short-eared owl is a ground-nesting owl of open country that often hunts in daylight. It is nomadic, following local booms in small-mammal numbers, and breeds in very different places from one year to the next.",
+    "identification": "It is a medium-sized owl, about 34–42 cm long with a wingspan near one metre, and it weighs around 330 g in Britain. The plumage is a mix of yellowish-white and dark brown, and it varies a good deal between individuals. Its ears sit at different heights on the sides of the head.",
+    "habitat": "In Britain it breeds on upland grassland and young forestry plantations, including heather moorland, rough grassland and bogs, mainly in northern England and Scotland. In winter it uses a wider range of grasslands. Elsewhere it favours open, treeless country such as marshes.",
+    "diet": "It feeds mainly on small mammals, with the field vole especially important in Britain, and takes some birds. It hunts by flying slowly low over the ground or by pouncing from a perch, relying largely on hearing to find prey hidden in grass.",
+    "behavior": "The species is nomadic rather than strictly migratory: an individual may breed in one place one year and somewhere completely different the next. Winter numbers in Britain are boosted by birds arriving from Fennoscandia. Males perform sky-dancing displays with wing-clapping, and the owls may roost communally in winter.",
+    "reproduction": "The nest is a scrape on the ground in tall vegetation. In Britain a clutch is typically four to seven eggs, incubated by the female for about 26 days. The chicks fledge at roughly 25–31 days, and birds typically first breed at one year old.",
+    "ecology": "As a major predator of voles and mice, the owl helps control rodent populations. Its ground nests expose eggs and young to mammalian predators, and adults can fall prey to large raptors such as the northern goshawk and peregrine. It defends its nest with distraction displays such as feigning a broken wing.",
+    "conservation": "The IUCN lists the species as Least Concern worldwide, but in the UK it is Amber-listed and breeding is scarce, with an estimated 620 pairs in 2007–11. Its British breeding range shrank by almost half between 1968–72 and 2008–11. The oldest ringed bird lived nearly seven years."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/short-eared-owl",
+      "title": "Short-eared Owl — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Asio_flammeus/",
+      "title": "Asio flammeus — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

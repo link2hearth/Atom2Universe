@@ -1,0 +1,38 @@
+{
+  "id": "emu",
+  "name": "Émeu d’Australie",
+  "scientific": "Dromaius novaehollandiae",
+  "group": "birds",
+  "sections": {
+    "overview": "L’émeu est le plus grand oiseau indigène d’Australie. Incapable de voler, il parcourt une grande partie du continent et adapte ses déplacements aux pluies. Son cycle de vie se distingue par le mâle, seul responsable de la couvaison et des poussins rayés.",
+    "identification": "L’adulte mesure 1,6 à 1,9 m. Son plumage gris-brun hirsute, sa tête et son cou bleuâtres peu emplumés, ses petites ailes et ses longues pattes le caractérisent. Chaque pied a trois doigts vers l’avant ; l’autruche, plus grande, en a deux. Les poussins sont rayés. La masse adulte est d’environ 30 à 45 kg ; les sources consultées ne donnent pas de fourchette fiable selon le sexe.",
+    "habitat": "L’émeu vit dans les régions continentales australiennes, des côtes et boisements aux plaines ouvertes. Il évite les forêts tropicales humides et les zones très arides. Quand eau et nourriture fluctuent, il se déplace selon les conditions climatiques et les pluies, parfois sur des centaines de kilomètres.",
+    "diet": "Il consomme fruits, graines, fleurs et jeunes pousses nutritives, ainsi que des insectes et petits animaux disponibles. Son alimentation suit les saisons, la végétation et les pluies. Des cailloux avalés aident le gésier à broyer les aliments ; il évite généralement herbes sèches et feuilles mûres.",
+    "behavior": "Souvent seul, en couple ou en groupes lâches, l’émeu produit grondements, roulements et grognements grâce à une poche trachéale. Ses pattes puissantes servent à courir vite, fuir en zigzag les attaques aériennes et donner des coups défensifs à courte distance.",
+    "reproduction": "La reproduction a souvent lieu à la fin de l’automne et en hiver, avec des variations régionales. Le couple aménage un nid au sol ; après la ponte d’œufs vert foncé, la femelle part généralement. Le mâle jeûne en couvant près de huit semaines, puis protège les poussins rayés durant des mois. Ceux-ci marchent et se nourrissent vite après l’éclosion.",
+    "ecology": "Sur la côte nord de Nouvelle-Galles du Sud, les émeus dispersent les graines de plantes indigènes sur de longues distances ; les poussins mangent aussi chenilles et criquets. Les déplacements entre alimentation et nidification exigent des habitats connectés. Routes, clôtures et aménagements bloquent les passages ou tuent des oiseaux.",
+    "conservation": "L’espèce reste largement répartie sur le continent, mais certaines populations locales déclinent. Une fiche régionale de Nouvelle-Galles du Sud publiée en 2020 classe en danger la population de la côte nord et de Port Stephens ; elle cite perte et fragmentation des habitats, feux modifiés, prédateurs, trafic et barrières. Ce statut régional ne définit pas le statut mondial."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/birds/emu/",
+      "title": "Émeu — Australian Museum"
+    },
+    {
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/native-animals/birds/native-animal-facts/emus",
+      "title": "Émeus — Environnement et patrimoine de Nouvelle-Galles du Sud"
+    },
+    {
+      "url": "https://www.nationalzoo.si.edu/animals/emu",
+      "title": "Émeu — Smithsonian’s National Zoo and Conservation Biology Institute"
+    },
+    {
+      "url": "https://threatenedspecies.bionet.nsw.gov.au/profile?id=10250",
+      "title": "Population d’émeus de la biorégion de la côte nord de Nouvelle-Galles du Sud et de la région de Port Stephens — Environnement, énergie et sciences de Nouvelle-Galles du Sud"
+    },
+    {
+      "url": "https://australiazoo.com.au/wildlife/our-animals/emu/",
+      "title": "Émeu — Australia Zoo"
+    }
+  ]
+}

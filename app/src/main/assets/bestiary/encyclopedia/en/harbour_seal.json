@@ -1,0 +1,58 @@
+{
+  "id": "harbour_seal",
+  "name": "Harbour seal",
+  "scientific": "Phoca vitulina",
+  "group": "mammals",
+  "sections": {
+    "overview": "The harbour seal, also called the common seal, is a phocid pinniped distributed around northern temperate and Arctic coasts of the Atlantic and Pacific. It uses both marine and estuarine waters, and some populations enter rivers or freshwater lakes. Its rounded head, short muzzle and spotted coat vary in colour and pattern across individuals and regions.",
+    "identification": "Adults have a compact, spindle-shaped body, short fur, a rounded head and no external ear flaps. The coat ranges from pale grey to brown or nearly black, usually with contrasting spots; the underside is often lighter. Long hind flippers provide underwater propulsion. In this true seal, the pelvic structure prevents the hind flippers from rotating beneath the body, so it cannot walk on land like a sea lion: it moves by flexing and undulating its body. Sensitive whiskers, or vibrissae, detect water movements and help locate prey when vision is limited. Adults are about 1.5–1.8 m long and can weigh up to 82–129 kg; males are slightly larger, and Pacific populations tend to be larger than Atlantic ones.",
+    "habitat": "The species occupies coastal waters across the northern hemisphere, from temperate shores to Arctic regions. Estuaries, bays, tidal channels and river mouths provide access to feeding grounds as well as sheltered haul-out sites. Seals rest on beaches, rocks, reefs and, in glacial fjords, floating ice. A haul-out is a resting place rather than a feeding habitat: seals return to water to forage and may range far beyond the nearby shore. Site use and travel distances differ among animals and populations.",
+    "diet": "Harbour seals eat fish as well as squid, crustaceans and other available aquatic prey. Fish commonly include schooling and bottom-associated species, but the menu changes by season and place with prey availability; no single fish dominates throughout the range. Seals pursue prey underwater, using dives of different depths and durations. Before submerging, they take in oxygen at the surface; oxygen carried in blood supports aerobic activity underwater, and these stores develop rapidly in pups. Their vibrissae can sense the trails left by moving fish, an additional way to follow prey in dim or turbid water. This flexible feeding helps them exploit estuarine and coastal food webs.",
+    "behavior": "Much of the seal’s day alternates between foraging at sea and resting ashore or on ice. Individuals often gather at haul-outs, especially during the annual moult, when they shed and regrow their coat over several weeks and spend more time out of the water. These groups are not tightly coordinated colonies: seals may rest close together while maintaining individual space. Mothers and pups can form temporary nursery groups. At sea, tracking studies show substantial variation in how far seals travel and where they forage.",
+    "reproduction": "Birth timing varies geographically, generally falling in spring or summer. After mating, development pauses before the embryo implants in the uterus; this delayed implantation shifts active gestation so that birth matches a favourable season. Females give birth to a single pup, usually on shore or ice. The pup can swim soon after birth and nurses for roughly four to six weeks while its mother also makes feeding trips. In the Wadden Sea, long-term observations documented an earlier pupping season, illustrating that timing can shift within a population.",
+    "ecology": "Harbour seals are predators in coastal food webs, and their effects depend on which prey and other predators occur locally. In the Strait of Georgia, an ecosystem model linked seal predation on hake with an indirect benefit to herring, because hake also prey on herring. The model illustrates why a seal’s consumption of fish does not by itself establish competition with fisheries. Diet records and tracking also show that foraging areas and prey differ among regions, connecting nearby coasts, estuaries and offshore waters.",
+    "conservation": "The IUCN global assessment published in 2016, based on an assessment dated 4 January 2016, classified the species as Least Concern, while noting that trends were unknown for several subspecies and that local declines occurred. This global category does not describe every population. The freshwater Lacs des Loups Marins population in Québec’s Ungava region is the distinct subspecies P. v. mellonae, assessed separately as Endangered by IUCN in 2016 and considered susceptible to designation as threatened or vulnerable by Québec. Regional pressures include entanglement, disturbance at haul-outs, habitat change and contaminants; their importance varies by location."
+  },
+  "sources": [
+    {
+      "url": "https://www.fisheries.noaa.gov/species/harbor-seal",
+      "title": "Harbor Seal — NOAA Fisheries"
+    },
+    {
+      "url": "https://oceantoday.noaa.gov/sealanatomy/",
+      "title": "Seal Anatomy — NOAA Ocean Today"
+    },
+    {
+      "url": "https://doi.org/10.1016/S0163-6995(06)80030-2",
+      "title": "Seasonal and regional variations in the diet of harbour seal in Norwegian waters — Olsen & Bjørge"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3001384/",
+      "title": "Earlier pupping in harbour seals, Phoca vitulina — Proceedings of the Royal Society B"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T17013A45229114.en",
+      "title": "Phoca vitulina, Harbor Seal — IUCN Red List of Threatened Species"
+    },
+    {
+      "url": "https://www.quebec.ca/agriculture-environnement-et-ressources-naturelles/faune/animaux-sauvages-quebec/fiches-especes-fauniques/phoque-commun-lacs-loups-marins",
+      "title": "Harbour seal — Lac des Loups Marins subspecies — Gouvernement du Québec"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4465541/",
+      "title": "Diving Related Changes in the Blood Oxygen Stores of Rehabilitating Harbor Seal Pups — PLOS ONE"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/20543117/",
+      "title": "Hydrodynamic determination of the moving direction of an artificial fin by a harbour seal — Journal of Experimental Biology"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3357409/",
+      "title": "Spatial Variation in Foraging Behaviour of a Marine Top Predator (Phoca vitulina) — PLOS ONE"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.pocean.2010.09.006",
+      "title": "Presence of harbour seals may increase exploitable fish biomass in the Strait of Georgia — Progress in Oceanography"
+    }
+  ]
+}

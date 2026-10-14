@@ -1,0 +1,66 @@
+{
+  "id": "south_american_coati",
+  "name": "South American coati",
+  "scientific": "Nasua nasua",
+  "group": "mammals",
+  "sections": {
+    "overview": "The South American coati is a procyonid mammal of tropical and subtropical South America. Its daily life combines solitary feeding, group travel by females and young, and seasonal reproduction.",
+    "identification": "An adult measures about 41–67 cm from head to rump, with a separate 32–69 cm tail; reported mass is 3–6 kg. In a wild adult sample from three parks in Minas Gerais, Brazil, males averaged 4.36 kg and females 3.53 kg; this difference was not statistically significant. Fur ranges from grey-brown to rusty red, and the brown, flexible muzzle turns slightly upward. The ringed tail balances the animal but cannot grasp; five clawed digits and strong forelegs dig through soil and rotting wood. Mobile ankle joints let it turn its hind feet outward to climb down a trunk headfirst.",
+    "habitat": "The range stretches from Colombia and Venezuela south through Ecuador and Brazil to Uruguay and northern Argentina, reaching about 2,500 m on Andean slopes. Coatis use evergreen and deciduous forests, cloud forests, riverine woods, dry scrub, Chaco, and Cerrado, with forest cover remaining central. In an urban Cerrado park in Brazil, seasonal food availability shifted coatis’ movements and daily activity.",
+    "diet": "Fruits and invertebrates are major foods, but their importance shifts with season and local availability. In Paraná, 426 scats contained frequent fruit, especially figs and Prunus brasiliensis, as well as leaves and beetles; winter samples held more invertebrates, plant matter, and vertebrate prey. It noses beneath leaf litter and claws into rotting wood for insects, larvae, ants, and termites, while also searching trees for fruit. Eggs, small vertebrates, and carrion broaden the menu when available. At Brazilian visitor sites, processed food and refuse have also appeared in coati diets.",
+    "behavior": "Coatis are chiefly diurnal, foraging mostly on the ground but climbing to sleep, nest, and move through trees. Females and immature animals travel in bands, while adult males often live alone; a field study at Iguazú, Argentina, also recorded males staying with bands year-round. In a Cerrado population, seasonal food supply shifted movements and daily activity, showing that group life and space use are flexible. Members keep contact with calls and touch, groom one another, and retreat into trees or flee over ground when disturbed.",
+    "reproduction": "Breeding is seasonal; solitary males may temporarily join female bands to mate. Females may become receptive within a synchronized one- to two-week period; males compete, while genetic work has found some young fathered by males from outside the group. After mating, pregnant females build tree nests and raise the litter apart from the band. Gestation lasts about 74–77 days, with three to seven young; mothers reunite with the band after five or six weeks and nurse until weaning near four months. Young open their eyes at around ten days, walk at three to four weeks, and climb soon afterward; females mature near two years and males around three.",
+    "ecology": "The coati consumes litter-dwelling invertebrates and is itself prey for large cats, raptors, and boas. Fruit-eating also moves seeds away from parent plants: a 33-month study in southeastern Brazil recorded fruits from 53 plant species and seeds from at least 49 in coati diets and scats. Gut passage left germination unchanged for most tested plants, but improved it for one species after pulp removal. Seed dispersal by coatis may help connect forest patches and support plant recruitment, alongside the partly overlapping services of other fruit-eating animals.",
+    "conservation": "The IUCN’s global Red List assessment, published in 2016 and conducted in 2015, classified Nasua nasua as Least Concern. Its wide range and presence in protected areas support that status, though habitat loss and hunting threaten coatis locally. Near settlements, coatis may raid crops or take poultry. Studies at Brazilian visitor sites have also found human food and refuse in their diets, evidence that contact can alter foraging. Nasua nasua solitaria is listed in CITES Appendix III at Uruguay’s request."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2307/3504444",
+      "title": "Nasua nasua species monograph"
+    },
+    {
+      "url": "https://new.scielo.br/j/cr/a/YZkmrvJLTrNBFpkFYdqk4pw/abstract/?ilang=en&lang=en",
+      "title": "Body weight of wild coatis eating discarded food"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Nasua_nasua/",
+      "title": "South American coati account"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Nasua/",
+      "title": "Nasua coati account"
+    },
+    {
+      "url": "https://www.mnhn.fr/en/ring-tailed-coati",
+      "title": "Ring-tailed coati"
+    },
+    {
+      "url": "https://hdl.handle.net/1884/10178",
+      "title": "Diet of coatis in Paraná, Brazil"
+    },
+    {
+      "url": "https://locus.ufv.br/items/ed26e4d1-4d05-462e-8b4a-b44b731a878a",
+      "title": "Coati diets at public recreation sites in Brazil"
+    },
+    {
+      "url": "https://www.scielo.br/j/bjb/a/WmmDkL4tcJKMHYQ5nw8ThwQ/?lang=en",
+      "title": "Group composition and activity patterns in Cerrado fragments"
+    },
+    {
+      "url": "https://repository.si.edu/server/api/core/bitstreams/a6848384-0a4a-4654-8186-033630b28844/content",
+      "title": "Sociality and reproductive success in ring-tailed coatis"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.actao.2007.03.001",
+      "title": "Seed dispersal by coatis in southeastern Brazil"
+    },
+    {
+      "url": "https://www.iucnredlist.org/species/41684/45216227",
+      "title": "Global Red List assessment of Nasua nasua"
+    },
+    {
+      "url": "https://cites.application.developpement-durable.gouv.fr/viewtaxon.do?id=4265",
+      "title": "I-CITES official taxon record — French government"
+    }
+  ]
+}

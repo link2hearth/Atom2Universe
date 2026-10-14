@@ -1,0 +1,58 @@
+{
+  "id": "bison_bonasus",
+  "name": "European bison",
+  "scientific": "Bison bonasus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The European bison, or wisent, is Europe’s largest land mammal. Hunting and habitat loss erased its free-living populations; descendants of a small managed breeding group later founded reintroduced herds.",
+    "identification": "Adult bulls are larger than cows and have more muscular forequarters, a shoulder hump, and thicker, wider-set horns. Both sexes have short horns, a long-haired head and forebody with a beard, and shorter rear hair; the coat ranges from tawny to dark brown. At Białowieża, adult bulls weigh 440–920 kg and can reach 188 cm at the withers; cows weigh 320–640 kg. Their forequarters are less developed and their horns curve more inward.",
+    "habitat": "Wisent use woodland mosaics with meadows and clearings, as well as forest-steppe and mountain forest–meadow landscapes. In Białowieża, records include mixed woods, alder stands and river meadows. Closed forest alone may limit winter forage, prompting movements into farmland. Historical records also place them in forest-steppe, so they are not strict forest specialists. Reintroduced free-ranging herds were established from 1952.",
+    "diet": "They ruminate and eat grasses, sedges, herbs and woody plants. DNA metabarcoding in Białowieża found 105 plant taxa during the growing season; woody plants made up 59.4% of detected dietary sequences. Forbs contributed 33.6%. Sample richness rose with food availability, and selection shifted with seasonal resources. These local sequence proportions are not a universal diet ratio or a measure by food mass.",
+    "behavior": "Groups are fluid rather than fixed family units: mixed herds include cows, calves and young, while bulls may gather in small groups or stay alone. Individuals join and leave; bison alternate feeding, resting and rumination. In a 1976–1990 Białowieża study, bulls were solitary in 62% of observations, and bull groups were smaller during the rut than before it.",
+    "reproduction": "The rut occurs in late summer and autumn; gestation lasts about 254–277 days, with births usually occurring from May to July. A cow leaves the herd to give birth and returns with her calf after several days. Calves may suckle beyond their first year. Cows usually bear one calf about every second year in free-ranging herds; first birth is generally around age four. Bulls join female-and-young groups during the August–September breeding period and move between them while seeking cows.",
+    "ecology": "Grazing removes plant biomass and can open space for other plants; bison also create small disturbed patches and disperse seeds. An eight-year Danish study found higher vascular-plant richness under grazing in old oak and Norway spruce forest, with no response in closed-canopy beech. Effects were strongest where ground vegetation was dense; bryophytes also increased. The result shows context-dependent habitat engineering, not a universal biodiversity gain.",
+    "conservation": "The species became extinct in the wild in 1927; reintroductions began in the 1950s. IUCN’s global assessment published on 10 December 2020 classified it as Near Threatened. A 2022 conservation plan reported c. 6,800 free-ranging animals, c. 500 semi-free and c. 1,700 in ex-situ facilities by 2020—separate categories. Descendants of only 12 founders retain low genetic diversity, and herds remain fragmented. The estimate covered 47 free-ranging subpopulations in 10 countries. The official pedigree book recorded 12,209 animals on 31 December 2024: 9,762 free-living, 722 semi-free and 1,725 captive. These dated records are not a new assessment of extinction risk."
+  },
+  "sources": [
+    {
+      "url": "https://bpn.com.pl/index.php?Itemid=105&id=53&lang=en&option=com_content&task=view",
+      "title": "Białowieża National Park: Białowieża bison"
+    },
+    {
+      "url": "https://bpn.com.pl/index.php?Itemid=109&id=58&lang=en&option=com_content&task=view",
+      "title": "Białowieża National Park: Reproduction"
+    },
+    {
+      "url": "https://iucn.org/news/species/202012/european-bison-recovering-31-species-declared-extinct-iucn-red-list",
+      "title": "European bison recovering – IUCN Red List update"
+    },
+    {
+      "url": "https://sav21bc.cz/wp-content/uploads/2022/04/iucn_bison_ver220217a_reduced.pdf",
+      "title": "European Bison Strategic Species Status Review 2020"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.foreco.2019.117474",
+      "title": "Foraging plasticity allows a large herbivore to persist in a sheltering forest habitat: European bison diet metabarcoding"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.foreco.2024.121891",
+      "title": "European bison increase plant species richness in forest habitats"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Bison_bonasus/",
+      "title": "Animal Diversity Web: Bison bonasus"
+    },
+    {
+      "url": "https://doi.org/10.1017/S003060532100185X",
+      "title": "A range-wide conservation action plan for the European bison"
+    },
+    {
+      "url": "https://rcin.org.pl/Content/12334/BI002_2613_Cz-40-2_Acta-T40-nr1-1-21_o.pdf",
+      "title": "Composition, group size, and spatial distribution of European bison bulls in Białowieża Forest"
+    },
+    {
+      "url": "https://bpn.gov.pl/pliki-do-pobrania/pobierz/1f4662f1-37b5-4d5b-b5d2-178222bb229c.pdf",
+      "title": "European Bison Pedigree Book 2024 — Białowieża National Park"
+    }
+  ]
+}

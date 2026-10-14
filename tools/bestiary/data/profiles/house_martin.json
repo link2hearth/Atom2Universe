@@ -12,8 +12,8 @@
       "fr": "Cette hirondelle niche en Europe, en Afrique du Nord et en Asie tempérée, puis migre vers l’Afrique subsaharienne en suivant les ressources saisonnières en insectes volants."
     },
     "identification": {
-      "en": "Adults average about 13 cm long, with a 26–29 cm wingspan; the sexes look alike. Blue-black upperparts, white rump and belly, and a shallowly forked tail mark the species. Unlike the barn swallow, it has no red throat or long tail streamers; juveniles are duller.",
-      "fr": "L’adulte mesure environ 13 cm, pour une envergure de 26 à 29 cm; les sexes se ressemblent. Dessus bleu-noir, croupion et ventre blancs, queue peu fourchue : tels sont ses traits. L’Hirondelle rustique, à gorge rousse et longs filets, diffère; le jeune est plus terne."
+      "en": "Adults average about 13 cm long, with a 26–29 cm wingspan; the sexes look alike. Blue-black upperparts, white rump and belly, and a shallowly forked tail mark the species. Unlike the barn swallow, it has no red throat or long tail streamers; juveniles are duller. British adults average about 17.8 g; the species is about 13 cm long with a 26–29 cm wingspan.",
+      "fr": "L’adulte mesure environ 13 cm, pour une envergure de 26 à 29 cm; les sexes se ressemblent. Dessus bleu-noir, croupion et ventre blancs, queue peu fourchue : tels sont ses traits. L’Hirondelle rustique, à gorge rousse et longs filets, diffère; le jeune est plus terne. Les adultes britanniques pèsent en moyenne environ 17,8 g ; l’espèce mesure environ 13 cm pour une envergure de 26–29 cm."
     },
     "habitat": {
       "en": "It hunts over open country, meadows, farmland and water, where flying insects are accessible. It nests on cliffs or, commonly, outside buildings and bridges beneath sheltered overhangs. British surveys in 2016–17 found lower breeding success on PVC than on brick, concrete or wood, with more nest collapses: the supporting surface matters as well as available mud.",
@@ -58,20 +58,20 @@
         "ecology"
       ],
       "facts": [
-        "Adults average 13 cm; rump white."
+        "Adults are about 13 cm long, with a wingspan of 26–29 cm; rump white."
       ],
       "prose_claims": [
-        "overview.en.1",
+        "behavior.en.2",
+        "diet.en.2",
+        "ecology.en.1",
+        "habitat.en.1",
+        "habitat.en.2",
         "identification.en.1",
         "identification.en.2",
         "identification.en.3",
-        "habitat.en.1",
-        "habitat.en.2",
-        "diet.en.2",
-        "behavior.en.2",
+        "overview.en.1",
         "reproduction.en.1",
-        "reproduction.en.3",
-        "ecology.en.1"
+        "reproduction.en.3"
       ],
       "budget": {
         "limit": 200,
@@ -100,16 +100,16 @@
         "Fledging takes about three weeks."
       ],
       "prose_claims": [
-        "overview.fr.1",
+        "diet.fr.2",
+        "ecology.fr.1",
+        "habitat.fr.1",
+        "habitat.fr.2",
         "identification.fr.1",
         "identification.fr.2",
         "identification.fr.3",
-        "habitat.fr.1",
-        "habitat.fr.2",
-        "diet.fr.2",
+        "overview.fr.1",
         "reproduction.fr.1",
-        "reproduction.fr.3",
-        "ecology.fr.1"
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -138,16 +138,16 @@
         "European breeding decline: 26% from 1980 to 2019."
       ],
       "prose_claims": [
-        "diet.en.1",
-        "diet.fr.1",
         "behavior.en.1",
         "behavior.fr.1",
         "behavior.fr.2",
-        "reproduction.en.2",
-        "reproduction.fr.2",
         "conservation.en.1",
         "conservation.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.2",
         "reproduction.en.4",
+        "reproduction.fr.2",
         "reproduction.fr.4"
       ],
       "budget": {
@@ -185,21 +185,25 @@
     },
     {
       "title": {
-        "en": "House Martin — BirdFacts",
-        "fr": "Hirondelle de fenêtre — BirdFacts"
+        "en": "House Martin — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Hirondelle de fenêtre — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/learn/about-birds/birdfacts/house-martin",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "habitat",
-        "reproduction"
+        "reproduction",
+        "identification"
       ],
       "facts": [
-        "British nest survey: substrate affects nesting success."
+        "British nest survey: substrate affects nesting success.",
+        "British adults average about 17.8 g and have a mean wing length of about 110.5 mm."
       ],
       "prose_claims": [
         "habitat.en.3",
         "habitat.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
         "reproduction.en.5",
         "reproduction.fr.5"
       ],

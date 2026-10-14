@@ -1,0 +1,30 @@
+{
+  "id": "ochotona_koslowi",
+  "name": "Pika de Kozlov",
+  "scientific": "Ochotona koslowi",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le pika de Kozlov est un pika rare qui vit seulement dans les hautes montagnes de l’ouest de la Chine. Il a été collecté en 1884 et décrit en 1894, puis il est resté sans observation scientifique pendant près d’un siècle jusqu’à sa redécouverte en 1984. Il est classé en danger, en grande partie parce qu’on en sait très peu.",
+    "identification": "Pika de taille moyenne, avec un corps de 170 à 240 mm et un poids de 100 à 300 g. Des lèvres blanches et un crâne presque cubique le distinguent du pika du Ladakh et du pika des plateaux, avec lesquels on peut le confondre : certains spécimens de musée étiquetés pika de Kozlov appartiennent en réalité à ces espèces.",
+    "habitat": "Il vit dans les prairies alpines et la steppe de montagne, vers 4 100 à 4 800 m, sur des montagnes hautes et isolées près du point de rencontre du Qinghai, du Xinjiang et du Tibet. Les signalements viennent des monts Kunlun, des monts Kongka et de la réserve naturelle du mont Aerjin. Les premiers animaux, en 1884, ont été trouvés dans des terriers creusés dans des buttes de loess salé. Son aire est très morcelée, avec environ 800 km entre certaines sous-populations.",
+    "diet": "Il mange des plantes vertes, et 15 espèces de plantes ont été relevées dans son régime. Aucune constitution de réserves de foin n’a été documentée chez lui.",
+    "behavior": "Il est actif le jour et vit en groupes familiaux communautaires, dans des terriers à plusieurs entrées. Des densités d’environ 300 à 400 animaux par km² ont été rapportées, mais les sources avertissent que certaines études anciennes ont pu porter sur d’autres espèces de pikas : ces chiffres demandent donc de la prudence.",
+    "reproduction": "On en sait peu. Des portées de 4 à 8 embryons ont été relevées et une seconde reproduction a été signalée. La gestation, le sevrage et la longévité ne sont pas documentés dans les sources lues.",
+    "ecology": "Son rôle dans l’écosystème n’a pas été étudié. Il est probablement une espèce sœur du pika du Ladakh et pourrait être une lignée ancestrale en déclin, selon une synthèse sur le genre.",
+    "conservation": "Il est classé en danger parce qu’on connaît mal sa répartition et son abondance. Peu d’informations nouvelles sont parues depuis 1998, et son état actuel est inconnu dans deux de ses trois localités connues. Un modèle climatique a prédit un recul de l’espèce, sans date. Davantage de travail de terrain est nécessaire pour planifier sa protection."
+  },
+  "sources": [
+    {
+      "url": "https://zenodo.org/records/6617953",
+      "title": "Ochotona koslowi — notice du Handbook of the Mammals of the World (dépôt Zenodo)"
+    },
+    {
+      "url": "https://www.redalyc.org/journal/4023/402336276002/html/",
+      "title": "État des connaissances et conservation des lagomorphes en danger et en danger critique dans le monde — Therya (2015)"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1001164",
+      "title": "Ochotona koslowi — Mammal Diversity Database"
+    }
+  ]
+}

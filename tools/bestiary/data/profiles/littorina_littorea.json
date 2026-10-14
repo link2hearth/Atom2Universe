@@ -12,8 +12,8 @@
       "fr": "Le bigorneau commun est un escargot de mer des côtes rocheuses d’Europe et le plus grand bigorneau de Grande-Bretagne. Il broute les algues, est ramassé à la main pour la consommation, et a été introduit dans l’Atlantique nord-ouest, où il est devenu le plus abondant des grands invertébrés brouteurs du littoral."
     },
     "identification": {
-      "en": "The shell is sharply conical with a pointed tip, usually black or dark grey-brown with darker spiral lines and a white central column. It is typically about 3 cm high and reaches 5 cm at most. Young shells with spiral ridges can be confused with Littorina saxatilis.",
-      "fr": "La coquille est nettement conique, à sommet pointu, en général noire ou brun gris foncé avec des lignes spirales plus sombres et une columelle blanche. Elle mesure typiquement 3 cm de haut et atteint 5 cm au maximum. Les jeunes coquilles à côtes spirales peuvent être confondues avec Littorina saxatilis."
+      "en": "The shell is sharply conical with a pointed tip, usually black or dark grey-brown with darker spiral lines and a white central column. It is typically about 3 cm high and reaches 5 cm at most. Young shells with spiral ridges can be confused with Littorina saxatilis. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "La coquille est nettement conique, à sommet pointu, en général noire ou brun gris foncé avec des lignes spirales plus sombres et une columelle blanche. Elle mesure typiquement 3 cm de haut et atteint 5 cm au maximum. Les jeunes coquilles à côtes spirales peuvent être confondues avec Littorina saxatilis. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
     },
     "habitat": {
       "en": "It occurs on rocky shores from the upper shore into shallow subtidal water, except in the most exposed places, and also on sand or mud in sheltered estuaries. It tolerates brackish water. Its native range runs from northern Spain to the White Sea.",
@@ -48,10 +48,19 @@
       },
       "url": "https://www.marlin.ac.uk/species/detail/1328",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Shell up to 52 mm, sharply conical, black or dark grey-brown with darker spiral lines and white columella; rocky shores, estuaries, brackish water; grazer on fine algae; moves down shore in autumn and up in spring in northern Britain.",
-        "Separate sexes, internal fertilisation, capsules about 1 mm with usually 2–3 eggs, up to about 100,000 eggs per year, larvae up to six weeks, maturity at 2–3 years, lifespan 5–10 years; trematode parasites; bioindicator; hand-gathered without regulation, commercial in Scotland and Ireland."
+        "Separate sexes, internal fertilisation, capsules about 1 mm with usually 2–3 eggs, up to about 100,000 eggs per year, larvae up to six weeks, maturity at 2–3 years, lifespan 5–10 years; trematode parasites; bioindicator; hand-gathered without regulation, commercial in Scotland and Ireland.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
       ]
     },
     {
@@ -61,7 +70,15 @@
       },
       "url": "https://invasions.si.edu/nemesis/calnemo/species_summary/70419",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Native from the White Sea to Gibraltar; first recorded at Pictou, Nova Scotia, in 1840; established from Newfoundland to Virginia; typically about 31 mm, maximum 53 mm.",
         "Eats green algae and occasionally animals; larvae drift 2–4 weeks; most abundant large invertebrate herbivore of the north-west Atlantic coast; prey for crabs, fish and birds."
@@ -74,7 +91,12 @@
       },
       "url": "https://www.iucngisd.org/gisd/species.php?sc=400",
       "consulted": "2026-10-12",
-      "supports": ["habitat", "diet", "reproduction", "ecology"],
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "Native to Europe; alien in eastern Canada and New England; grazes diatoms and green algae; larval phase up to six weeks; matures at 2–3 years, lifespan 5–10 years.",
         "In New England an important grazer that changed intertidal community structure; densities of 200–500 per square metre reported."

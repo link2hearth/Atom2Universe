@@ -47,11 +47,20 @@
         "fr": "Eidolon helvum — Animal Diversity Web, université du Michigan"
       },
       "url": "https://animaldiversity.org/accounts/Eidolon_helvum/",
-      "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Head-body 143–215 mm, 230–350 g, wingspan up to 762 mm; sea level to 2,000 m; forages about 30 km; mating April–June, delayed implantation, births February–March, one young of about 50 g.",
-        "Pollinates Moraceae and Bombacaceae; predators owls, eagles, snakes, civets. Gestation (9 months or 275 days) and colony sizes are inconsistent within the page."
+        "Pollinates Moraceae and Bombacaceae; predators owls, eagles, snakes, civets. Gestation (9 months or 275 days) and colony sizes are inconsistent within the page.",
+        "Head and body length is 143–215 mm, mass 230–350 g, and wingspan up to 762 mm; males are slightly larger."
       ]
     },
     {
@@ -61,7 +70,13 @@
       },
       "url": "https://www.worldlandtrust.org/species/straw-coloured-fruit-bat/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "diet", "behavior", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
       "facts": [
         "Wingspan up to one metre, up to 350 g; Kasanka National Park gathering; furthest recorded migration of any African mammal; feeds in the open upper canopy.",
         "Near Threatened; bushmeat harvesting in West and Central Africa; deforestation the greatest threat; roosts destroyed where bats are seen as pests."

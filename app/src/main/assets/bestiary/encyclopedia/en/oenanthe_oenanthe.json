@@ -1,0 +1,30 @@
+{
+  "id": "oenanthe_oenanthe",
+  "name": "Northern Wheatear",
+  "scientific": "Oenanthe oenanthe",
+  "group": "birds",
+  "sections": {
+    "overview": "The northern wheatear is a small, mainly ground-dwelling chat of open country, and one of the great long-distance migrants among small birds. It arrives in Britain in spring from Africa and leaves again at the end of summer.",
+    "identification": "About the size of a robin, an adult weighs roughly 28 g with a wing length near 10 cm. The male has a blue-grey back, black wings, a black cheek patch with a white eyestripe, and a white underside flushed orange on the breast. The female is sandy brown. Both sexes show a white rump and a black T-shaped mark on the tail in flight.",
+    "habitat": "In the breeding season in Britain it is most frequent on moorland, and it is found more widely in open uplands, pasture, heathland and coasts, including Scotland’s outlying islands. Its main strongholds are in Scotland, northern and south-west England and Wales.",
+    "diet": "The wheatear eats insects, their larvae and other invertebrates, and it also takes berries. It feeds on the ground, where it hops or runs across short vegetation to pick up its prey.",
+    "behavior": "It is a summer visitor to Britain that winters in Africa, arriving around March and leaving in September and October. Birds breeding in Greenland and Alaska also pass through; some fly non-stop across the Atlantic to northern Spain before continuing to West Africa. On the ground it hops or runs.",
+    "reproduction": "In Britain the first clutch is laid on average around 11 May, typically five or six eggs, incubated for about 14 days mainly by the female. The chicks fledge after roughly 15.5–16.5 days. There are usually two broods and occasionally three. The nest is placed in a sheltered cavity such as a rock crevice, rabbit burrow or hole in a wall.",
+    "ecology": "As an insect eater of open uplands, the wheatear feeds on ground invertebrates, and in turn it can be taken by birds of prey such as the sparrowhawk.",
+    "conservation": "The IUCN lists the species as Least Concern worldwide. In the UK it is Amber-listed: the breeding population was about 170,000 pairs in 2016 and fell by 37% between 1995 and 2024. Numbers have also declined across Europe since 1980. A wheatear typically lives about two years, and the oldest ringed bird reached over eight."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/wheatear",
+      "title": "Wheatear — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/wheatear",
+      "title": "Wheatear — RSPB"
+    },
+    {
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/birds/wheatear/",
+      "title": "Wheatear — Woodland Trust"
+    }
+  ]
+}

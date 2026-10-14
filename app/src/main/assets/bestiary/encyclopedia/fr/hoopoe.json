@@ -1,0 +1,42 @@
+{
+  "id": "hoopoe",
+  "name": "Huppe fasciée",
+  "scientific": "Upupa epops",
+  "group": "birds",
+  "sections": {
+    "overview": "La Huppe fasciée vit dans les milieux ouverts d’Europe, d’Asie et d’Afrique. Le plumage cannelle, les ailes rayées et la huppe la distinguent. Son bec et sa quête au sol l’aident à trouver des invertébrés dans l’herbe rase et les sols meubles.",
+    "identification": "L’adulte a le corps et la tête cannelle orangé, un bec long, fin et légèrement arqué vers le bas, et une huppe en éventail aux pointes noires et blanches. Ailes et queue portent des bandes noires et blanches, nettes en vol. Les sexes se ressemblent. Les adultes mesurent 26–28 cm, ont une envergure de 42–46 cm et pèsent 47–87 g ; les sexes se ressemblent.",
+    "habitat": "Dans sa vaste aire, la Huppe fréquente pâtures, vergers, champs, landes et bois clairs. Elle marche et sonde le sol pour se nourrir, et niche dans des cavités d’arbres, de murs ou de berges. Les sols nus et l’herbe courte facilitent l’accès aux proies.",
+    "diet": "Elle mange des insectes et invertébrés, dont coléoptères, larves et grillons, trouvés au sol ou dessous. Elle sonde la terre meuble avec son bec pour saisir ses proies. En Suisse, la disponibilité des courtilières était liée à l’occupation des territoires et à la reproduction.",
+    "behavior": "On voit souvent les Huppes seules ou en couple, marchant en terrain découvert et sondant le sol. Le chant est composé de courtes séries de notes sourdes répétées. Certaines populations migrent; d’autres restent toute l’année ou rejoignent des quartiers d’hiver plus chauds.",
+    "reproduction": "Elle niche en cavité; la femelle couve, nourrie par le mâle. Les relevés britanniques donnent sept à huit œufs, 15 à 16 jours d’incubation et un envol à 26–29 jours. Ces valeurs régionales varient. Les poussins naissent duvetés et les deux parents les nourrissent.",
+    "ecology": "Les Huppes hébergent des bactéries dans leur glande uropygienne. Pendant la nidification, les sécrétions des femelles et des poussins deviennent foncées et odorantes; des expériences ont relié ces bactéries à des composés antimicrobiens. Ceux-ci pourraient protéger œufs et poussins, mais le mécanisme reste étudié.",
+    "conservation": "L’évaluation mondiale de BirdLife International pour l’UICN, datée du 14 août 2020, indique une préoccupation mineure malgré une tendance démographique à la baisse. Cette catégorie masque parfois des pressions locales : l’université de Berne décrit un déclin passé au Valais et des mesures pour préserver l’habitat."
+  },
+  "sources": [
+    {
+      "url": "https://ebird.org/species/hoopoe/UZ",
+      "title": "Huppe fasciée — fiche eBird, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/hoopoe",
+      "title": "Huppe fasciée — BTO BirdFacts"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T22682655A181836360.en",
+      "title": "Upupa epops — Liste rouge de l’UICN, évaluation 2020"
+    },
+    {
+      "url": "https://www.cb.iee.unibe.ch/research/hoopoe/index_eng.html",
+      "title": "Recherche sur la Huppe — Conservation Biology, Institut d’écologie et d’évolution, université de Berne"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2842625/",
+      "title": "Les composés antimicrobiens des sécrétions de Huppe sont produits par des bactéries symbiotiques — Proceedings of the Royal Society B"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/hoopoe/",
+      "title": "Huppe fasciée — RSPB Birds & Wildlife"
+    }
+  ]
+}

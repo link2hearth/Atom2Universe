@@ -12,8 +12,8 @@
       "fr": "Le faisan de Colchide est un grand galliforme terrestre originaire d’Asie tempérée et introduit ailleurs par l’être humain."
     },
     "identification": {
-      "en": "Adults have a compact body, strong legs and a long tapering tail; males are usually larger, often 75–90 cm long including the tail. The male is vividly coloured with a red face, green head and copper body; females are smaller and mottled brown, and the white neck ring is not universal.",
-      "fr": "L’adulte a un corps trapu, des pattes robustes et une longue queue effilée ; le mâle est généralement plus grand, souvent long de 75 à 90 cm, queue comprise. Le mâle est vivement coloré, avec face rouge, tête verte et corps cuivré ; la femelle, plus petite, est brun moucheté, et le collier blanc n’est pas universel."
+      "en": "Adults have a compact body, strong legs and a long tapering tail; males are usually larger, often 75–90 cm long including the tail. The male is vividly coloured with a red face, green head and copper body; females are smaller and mottled brown, and the white neck ring is not universal. Cornell reports a combined-sex range of 50–70 cm in length, 500–3,000 g in mass and 56–86 cm in wingspan; males are usually larger and have much longer tails, but the guide does not separate its measurement ranges by sex.",
+      "fr": "L’adulte a un corps trapu, des pattes robustes et une longue queue effilée ; le mâle est généralement plus grand, souvent long de 75 à 90 cm, queue comprise. Le mâle est vivement coloré, avec face rouge, tête verte et corps cuivré ; la femelle, plus petite, est brun moucheté, et le collier blanc n’est pas universel. Cornell indique, tous sexes confondus, une longueur de 50 à 70 cm, une masse de 500 à 3 000 g et une envergure de 56 à 86 cm ; les mâles sont généralement plus grands et ont une queue beaucoup plus longue, mais le guide ne distingue pas les plages de mensurations selon le sexe."
     },
     "habitat": {
       "en": "Its native range reaches from the Caucasus and western Asia through China, across open woodland, scrub and grassland with nearby dense cover. Introductions spread it through Europe and North America, where self-sustaining wild populations coexist with farmed birds and seasonal releases. It also uses field margins, hedges and grassy ditches for shelter beside feeding areas.",
@@ -58,14 +58,14 @@
         "Introduced populations; plumage variation and native gamebird competition."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "identification.en.1",
-        "identification.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
         "habitat.en.1",
         "habitat.fr.1",
-        "ecology.en.2",
-        "ecology.fr.2"
+        "identification.en.1",
+        "identification.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -92,14 +92,14 @@
         "Sex plumage, introductions, chick diet, predators."
       ],
       "prose_claims": [
-        "habitat.en.2",
-        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
         "diet.en.2",
         "diet.fr.2",
         "ecology.en.1",
         "ecology.fr.1",
-        "behavior.en.1",
-        "behavior.fr.1"
+        "habitat.en.2",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -153,14 +153,14 @@
         "Measurements, sex-specific plumage, cover and escape flight."
       ],
       "prose_claims": [
-        "identification.en.2",
-        "identification.fr.2",
+        "behavior.en.2",
+        "behavior.en.3",
+        "behavior.fr.2",
+        "behavior.fr.3",
         "habitat.en.3",
         "habitat.fr.3",
-        "behavior.en.2",
-        "behavior.fr.2",
-        "behavior.en.3",
-        "behavior.fr.3"
+        "identification.en.2",
+        "identification.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -185,8 +185,8 @@
       ],
       "prose_claims": [
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.2",
+        "conservation.fr.1",
         "conservation.fr.2"
       ],
       "budget": {
@@ -196,6 +196,24 @@
         "total": 81,
         "method": "Complete referenced bilingual sentences and factual notes."
       }
+    },
+    {
+      "title": {
+        "en": "Ring-necked Pheasant Identification — Cornell Lab of Ornithology",
+        "fr": "Identification du faisan de Colchide — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Ring-necked_Pheasant/id/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Combined-sex size ranges: length 50–70 cm, mass 500–3,000 g, wingspan 56–86 cm; no sex-specific measurement ranges given."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ]
     }
   ],
   "illustration_notes": "Adult male common pheasant; show long barred tail, iridescent green head, red facial skin and a typical white neck ring, while noting ring variation.",

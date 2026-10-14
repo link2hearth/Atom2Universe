@@ -44,14 +44,23 @@
     {
       "title": {
         "en": "Herring Gull — BTO BirdFacts, British Trust for Ornithology",
-        "fr": "Goéland argenté — BirdFacts du BTO, British Trust for Ornithology"
+        "fr": "Goéland argenté — BTO BirdFacts, British Trust for Ornithology"
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/herring-gull",
-      "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Adults average 970.6 g, wing 414.5 mm; clutch 3 (2–4), incubation 28–30 days mostly by the female, fledging 35–40 days, breeding from age 4.",
-        "UK about 130,000 pairs (1998–02), 740,000 in winter (2003–06); coastal breeders -50% 1969–70 to 1998–2002; UK Red, IUCN Least Concern; ringing record about 12 years; GPS tracking at one colony showed feeding on mussel beds."
+        "UK about 130,000 pairs (1998–02), 740,000 in winter (2003–06); coastal breeders -50% 1969–70 to 1998–2002; UK Red, IUCN Least Concern; ringing record about 12 years; GPS tracking at one colony showed feeding on mussel beds.",
+        "British adults average about 970 g and have a mean wing length of about 415 mm."
       ]
     },
     {
@@ -61,7 +70,16 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/herring-gull",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "54–60 cm; light grey back, white underparts, black wingtips with white spots, pink legs, yellow bill with red spot; first-year birds mottled brown.",
         "Eats fish, insects, carrion and refuse; stamps feet to bring worms up; chicks peck the red spot; pairs often lifelong, same nest site yearly; rooftop nesting since the 1920s; Red-listed after population declines."

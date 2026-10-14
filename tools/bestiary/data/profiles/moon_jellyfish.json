@@ -12,8 +12,8 @@
       "fr": "Aurelia aurita est un scyphozoaire translucide, ou méduse vraie, dont la méduse en forme de soucoupe n’est qu’une étape du cycle. Autrefois considérée comme cosmopolite, l’espèce a ensuite été distinguée de nombreuses aurélies semblables; A. aurita est aujourd’hui surtout signalée dans l’Atlantique Nord-Est, avec des populations introduites dans le nord-est des États-Unis et en Argentine, bien qu’une arrivée naturelle aux États-Unis reste possible."
     },
     "identification": {
-      "en": "A typical adult bell is about 25–40 cm across. Four horseshoe-shaped gonads show through it, above four oral arms and fine marginal tentacles; the clear body may have a faint blue or pink tint.",
-      "fr": "L’ombrelle adulte mesure généralement environ 25 à 40 cm de diamètre. Quatre gonades en fer à cheval sont visibles par transparence, au-dessus de quatre bras buccaux et de fins tentacules marginaux; le corps clair peut être légèrement bleuté ou rosé."
+      "en": "A typical adult bell is about 25–40 cm across. Four horseshoe-shaped gonads show through it, above four oral arms and fine marginal tentacles; the clear body may have a faint blue or pink tint. The consulted species references do not provide a reliable adult body mass for identification; no weight is estimated here.",
+      "fr": "L’ombrelle adulte mesure généralement environ 25 à 40 cm de diamètre. Quatre gonades en fer à cheval sont visibles par transparence, au-dessus de quatre bras buccaux et de fins tentacules marginaux; le corps clair peut être légèrement bleuté ou rosé. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici."
     },
     "habitat": {
       "en": "The medusa lives in pelagic water; its polyp is benthic and attaches to a hard surface, often under shelter in shallow brackish sites.",
@@ -55,18 +55,17 @@
         "diet"
       ],
       "facts": [
-        "Restricted species range."
+        "Restricted species range.",
+        "The cited identification material provides body-form or length information but no reliable adult mass; the profile does not estimate one."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "overview.en.2",
-        "overview.fr.2",
+        "habitat.fr.1",
         "identification.en.1",
         "identification.fr.1",
-        "habitat.fr.1",
-        "diet.en.1",
-        "diet.fr.1"
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -93,16 +92,16 @@
         "Morphology and swimming."
       ],
       "prose_claims": [
-        "identification.en.2",
-        "identification.fr.2",
+        "behavior.en.1",
         "behavior.en.2",
+        "behavior.fr.1",
         "behavior.fr.2",
-        "diet.en.4",
-        "diet.fr.4",
         "conservation.en.1",
         "conservation.fr.1",
-        "behavior.en.1",
-        "behavior.fr.1"
+        "diet.en.4",
+        "diet.fr.4",
+        "identification.en.2",
+        "identification.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -128,19 +127,19 @@
         "Polyp and medusa development."
       ],
       "prose_claims": [
-        "habitat.en.1",
         "ecology.en.1",
         "ecology.fr.1",
-        "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.3",
-        "reproduction.fr.3",
-        "reproduction.en.4",
-        "reproduction.fr.4",
-        "reproduction.en.5",
-        "reproduction.fr.5",
+        "habitat.en.1",
         "reproduction.en.1",
-        "reproduction.fr.1"
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -164,10 +163,14 @@
         "Defensive nematocyst discharge."
       ],
       "prose_claims": [
+        "diet.en.1",
         "diet.en.2",
-        "diet.fr.2",
         "diet.en.3",
-        "diet.fr.3"
+        "diet.fr.1",
+        "diet.fr.2",
+        "diet.fr.3",
+        "identification.en.3",
+        "identification.fr.3"
       ],
       "budget": {
         "limit": 200,

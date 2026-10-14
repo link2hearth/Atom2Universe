@@ -12,8 +12,8 @@
       "fr": "Le corbeau freux est un corvidé grégaire des campagnes ouvertes d’Eurasie, présent de l’Europe occidentale jusqu’à la Sibérie orientale. La plupart des populations occidentales restent près de leurs lieux de nidification, tandis que celles du nord et de l’est gagnent le sud en hiver."
     },
     "identification": {
-      "en": "Adults measure about 44–46 cm long, with a wingspan of 81–99 cm; their black plumage often shines blue or violet in sunlight. Bare pale skin around the slim bill distinguishes adults from carrion crows; juveniles retain facial feathers until roughly six months old.",
-      "fr": "L’adulte mesure environ 44 à 46 cm, pour une envergure de 81 à 99 cm ; son plumage noir prend souvent des reflets bleus ou violets au soleil. La peau pâle et nue autour du bec fin distingue l’adulte de la corneille noire ; le jeune garde des plumes sur le visage jusqu’à environ six mois."
+      "en": "Adults average about 47 cm long, with an 81–94 cm wingspan and a mass of 337–531 g. Males are slightly larger than females; the BTO’s British ringing sample averages 485 g for males and 425 g for females. Their black plumage often shines blue or violet in sunlight. Bare pale skin around the slim bill distinguishes adults from carrion crows; juveniles retain facial feathers until roughly six months old.",
+      "fr": "L’adulte mesure environ 47 cm, pour une envergure de 81 à 94 cm et une masse de 337 à 531 g. Le mâle est légèrement plus grand que la femelle ; dans l’échantillon britannique de baguage du BTO, les moyennes sont de 485 g et 425 g respectivement. La peau pâle et nue autour du bec fin distingue l’adulte de la corneille noire ; le jeune garde des plumes sur le visage jusqu’à environ six mois."
     },
     "habitat": {
       "en": "Rooks are most common in rural fields and villages, nesting in mature trees between farmland; they also enter towns when suitable habitat is available. They use parks and churchyards where large trees provide nesting sites.",
@@ -57,14 +57,15 @@
         "Adult facial skin is bare; juveniles retain feathers."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
         "conservation.en.3",
-        "conservation.fr.3"
+        "conservation.fr.3",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "overview.en.1",
+        "overview.fr.1"
       ],
       "budget": {
         "limit": 200,
@@ -92,12 +93,12 @@
       "prose_claims": [
         "behavior.en.2",
         "behavior.fr.2",
-        "ecology.en.1",
-        "ecology.fr.1",
-        "ecology.en.2",
-        "ecology.fr.2",
         "diet.en.2",
-        "diet.fr.2"
+        "diet.fr.2",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -122,14 +123,14 @@
         "Typical clutch: 3–4; fledging: 32–34 days."
       ],
       "prose_claims": [
-        "reproduction.en.2",
-        "reproduction.fr.2",
-        "reproduction.en.3",
-        "reproduction.fr.3",
-        "conservation.en.2",
-        "conservation.fr.2",
         "conservation.en.1",
-        "conservation.fr.1"
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -149,18 +150,22 @@
       "supports": [
         "diet",
         "habitat",
-        "overview"
+        "overview",
+        "identification"
       ],
       "facts": [
-        "Seasonal movement, habitat and omnivorous diet."
+        "Seasonal movement, habitat and omnivorous diet.",
+        "Average length 47 cm, mass 337–531 g, wingspan 81–94 cm; weak male-larger dimorphism."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
         "habitat.en.2",
         "habitat.fr.2",
-        "diet.en.1",
-        "diet.fr.1"
+        "identification.en.3",
+        "identification.en.4",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -186,10 +191,10 @@
         "Rookeries may persist for decades."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
         "behavior.en.1",
         "behavior.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
         "reproduction.en.1",
         "reproduction.fr.1"
       ],

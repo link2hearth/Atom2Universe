@@ -1,0 +1,42 @@
+{
+  "id": "hoopoe",
+  "name": "Eurasian hoopoe",
+  "scientific": "Upupa epops",
+  "group": "birds",
+  "sections": {
+    "overview": "The Eurasian hoopoe is a distinctive bird of open country across Europe, Asia and Africa. Its cinnamon body, striped wings and long crest stand out; its long bill and ground-foraging habits help it find invertebrates in short vegetation and loose soil.",
+    "identification": "An adult has a cinnamon-orange head and body, a long, slender, slightly down-curved bill, and a fan-shaped crest tipped black and white. Broad black-and-white bars cross the wings and tail, conspicuous in flight. The sexes look alike. Adults measure 26–28 cm, have a 42–46 cm wingspan and weigh 47–87 g; sexes look alike.",
+    "habitat": "Across its broad range, the hoopoe uses semi-open pasture, orchards, farmland, heath and open woodland. It walks and probes for food, nesting in cavities in trees, walls or banks. Bare ground or short grass helps it reach prey; dense cover limits access to feeding sites.",
+    "diet": "It eats insects and other invertebrates, including beetles, larvae and crickets, found at or beneath the soil surface. It probes loose earth with its bill, then opens it to seize prey. In one Swiss population, mole-cricket availability was linked with territory use and breeding output.",
+    "behavior": "Hoopoes are often seen alone or in pairs, walking over open ground and probing methodically. The song consists of a short series of hollow, repeated notes. Many populations migrate; some birds stay year-round, while others travel between breeding areas and warmer winter quarters.",
+    "reproduction": "The species nests in enclosed cavities; the female incubates as the male brings food. British records report seven to eight eggs, 15–16 days of incubation and fledging at 26–29 days. These regional figures vary. Chicks hatch downy and helpless; both parents feed them.",
+    "ecology": "Hoopoes host bacteria in the preen gland. During nesting, secretions from females and chicks become dark and odorous; experiments linked symbiotic bacteria to antimicrobial compounds. These may protect eggs and nestlings, although researchers continue to examine how the relationship works.",
+    "conservation": "BirdLife International’s global IUCN assessment of 14 August 2020 lists Least Concern but reports a decreasing population trend. This category can conceal local pressures: the University of Bern records a past decline in Valais and conservation work to maintain suitable feeding and nesting habitat."
+  },
+  "sources": [
+    {
+      "url": "https://ebird.org/species/hoopoe/UZ",
+      "title": "Eurasian Hoopoe — eBird species account, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/hoopoe",
+      "title": "Hoopoe — BTO BirdFacts"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T22682655A181836360.en",
+      "title": "Upupa epops — The IUCN Red List of Threatened Species, 2020 assessment"
+    },
+    {
+      "url": "https://www.cb.iee.unibe.ch/research/hoopoe/index_eng.html",
+      "title": "Hoopoe research — Conservation Biology, Institute of Ecology and Evolution, University of Bern"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2842625/",
+      "title": "Antimicrobial chemicals in hoopoe preen secretions are produced by symbiotic bacteria — Proceedings of the Royal Society B"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/hoopoe/",
+      "title": "Hoopoe — RSPB Birds & Wildlife"
+    }
+  ]
+}

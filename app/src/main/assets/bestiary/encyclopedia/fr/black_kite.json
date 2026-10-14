@@ -1,0 +1,26 @@
+{
+  "id": "black_kite",
+  "name": "Milan noir",
+  "scientific": "Milvus migrans",
+  "group": "birds",
+  "sections": {
+    "overview": "Le milan noir est un rapace de taille moyenne à queue fourchue, surtout charognard, à l’aire de répartition très vaste. La plupart des populations nordiques migrent vers l’Afrique pour l’hiver, alors que les oiseaux tropicaux restent souvent sur place. En Grande-Bretagne, ce n’est qu’un visiteur rare, vu surtout en avril et en mai.",
+    "identification": "Il mesure environ 47 à 60 cm pour une envergure de 140 à 150 cm; les femelles sont un peu plus grandes. Le plumage est surtout brun, avec une tête plus pâle, une cire jaune, un bec crochu sombre et des pattes jaunes aux serres noires. La queue est fourchue, mais moins profondément que celle du milan royal, et l’oiseau paraît plus uniformément sombre. Les jeunes sont plus clairs, avec une fourche plus courte. Les poids publiés varient, d’environ 0,5 kg à plus de 0,8 kg.",
+    "habitat": "Il préfère les milieux ouverts près de l’eau, comme les rivières, les lacs, les étangs et les zones humides, mais fréquente aussi les bois, la savane ouverte et même les grandes villes où la nourriture abonde. On le trouve rarement dans les déserts, la haute montagne ou la forêt dense.",
+    "diet": "Principalement charognard, il mange des cadavres, y compris des animaux écrasés et des déchets, mais prend aussi des poissons, des insectes, des reptiles, des amphibiens, des petits mammifères et des oiseaux. Il repère sa nourriture en planant sur les courants ascendants et a été vu en vol stationnaire au-dessus d’incendies pour attraper des insectes en fuite.",
+    "behavior": "Le milan noir est souvent grégaire, mais les couples sont plus solitaires en période de nidification. Il est territorial autour de son dortoir et pousse des cris aigus et sonores. Les couples font une parade aérienne en mars, dont une figure où ils agrippent leurs serres et tournoient vers le sol.",
+    "reproduction": "Les œufs sont pondus en avril et en mai, le plus souvent deux ou trois, et la femelle les couve environ 32 jours pendant que le mâle apporte la nourriture. Le nid est une plate-forme volumineuse de branches garnie de matériaux doux, construite par les deux parents dans un arbre, au bord d’une falaise ou sur un pylône. Les poussins restent au nid 42 à 56 jours, et les oiseaux atteignent la maturité à deux ou trois ans.",
+    "ecology": "Charognard efficace, il contribue à la décomposition des animaux morts. Les humains sont sa principale cause de mortalité, le plus souvent involontairement, par collisions avec des véhicules et ingestion d’appâts empoisonnés; d’autres milans noirs volent parfois les œufs de ses nids.",
+    "conservation": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure en raison de sa vaste aire et de ses effectifs importants. Certaines populations locales déclinent à cause de la pollution de l’eau, des pesticides agricoles, de la chasse et de l’empoisonnement des carcasses. Au Royaume-Uni, c’est un visiteur occasionnel rare, sans donnée de population actuelle ni suivi régulier."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/black-kite",
+      "title": "Milan noir — BirdFacts du BTO, British Trust for Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Milvus_migrans/",
+      "title": "Milvus migrans — Animal Diversity Web, université du Michigan"
+    }
+  ]
+}

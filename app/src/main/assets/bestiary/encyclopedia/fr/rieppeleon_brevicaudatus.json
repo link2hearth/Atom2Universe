@@ -1,0 +1,26 @@
+{
+  "id": "rieppeleon_brevicaudatus",
+  "name": "Rieppeleon brevicaudatus",
+  "scientific": "Rieppeleon brevicaudatus",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Le caméléon nain barbu est un minuscule caméléon à queue courte des forêts de l’est de la Tanzanie et du sud-est du Kenya. Il vit près du sol, parmi la litière de feuilles et les buissons bas. Son nom scientifique signifie à queue courte.",
+    "identification": "L’adulte mesure environ 8 cm. Les sources consultées ne publient pas de masse corporelle adulte fiable ni de fourchette de longueur selon le sexe ; ces données ne sont donc pas estimées ici. Un très petit caméléon, long d’environ 8 cm, qui doit son nom à sa gorge écailleuse portant deux lobes sous le menton. Il peut passer du brun au jaune, au vert, à l’orange et au noir pour montrer son stress ou attirer un partenaire. Quand il dort à découvert, il peut aplatir son corps et laisser voir une raie latérale qui ressemble à une feuille morte.",
+    "habitat": "Il vit dans la forêt de basse altitude de l’est de la Tanzanie et du sud-est du Kenya, y compris la forêt submontagnarde et côtière, sur le sol couvert de feuilles et dans les buissons bas. Le plateau de Rondo, en Tanzanie, est une localité confirmée, et la localité type est Derema, dans les monts Usambara.",
+    "diet": "Il mange de petits insectes, qu’il chasse dans la litière de feuilles et les arbustes bas.",
+    "behavior": "Il est en général actif le jour et s’accroche aux brindilles et aux feuilles des buissons bas, chassant près du sol. Au-delà, peu d’éléments sur sa vie quotidienne sont documentés dans les sources consultées.",
+    "reproduction": "La Reptile Database indique que l’espèce est ovipare. La taille des pontes, la durée d’incubation et l’âge de maturité ne figurent pas dans les sources consultées et sont donc omis ici.",
+    "ecology": "Son aspect de feuille morte l’aide à échapper aux prédateurs, et il dépend du sous-bois riche en feuilles d’une forêt sempervirente en bonne santé, où il chasse de petits insectes.",
+    "conservation": "Il est classé en préoccupation mineure sur la Liste rouge de l’UICN d’après une association de conservation et la Reptile Database. La perte d’habitat et la déforestation sont les principales menaces : son aire estimée couvre environ 163 800 kilomètres carrés, mais la forêt en occupe moins d’un dixième."
+  },
+  "sources": [
+    {
+      "url": "https://www.worldlandtrust.org/species/bearded-pygmy-chameleon/",
+      "title": "Caméléon nain barbu — World Land Trust"
+    },
+    {
+      "url": "https://reptile-database.reptarium.cz/Rieppeleon/brevicaudatus",
+      "title": "Rieppeleon brevicaudatus — The Reptile Database"
+    }
+  ]
+}

@@ -44,21 +44,22 @@
     {
       "title": {
         "en": "Giant panda — Smithsonian's National Zoo and Conservation Biology Institute",
-        "fr": "Panda géant — Smithsonian's National Zoo and Conservation Biology Institute"
+        "fr": "Panda géant — Smithsonian’s National Zoo and Conservation Biology Institute"
       },
       "url": "https://nationalzoo.si.edu/animals/giant-panda",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "identification",
         "reproduction"
       ],
       "facts": [
-        "Smithsonian account documents wild dimensions, coat, jaws and paw anatomy."
+        "Smithsonian account documents wild dimensions, coat, jaws and paw anatomy.",
+        "Adult body length is about 1.2–1.8 m; upper-end wild masses are about 113 kg for males and 104 kg for females."
       ],
       "prose_claims": [
         "identification.en.2",
-        "identification.fr.2",
         "identification.en.3",
+        "identification.fr.2",
         "identification.fr.3",
         "reproduction.en.10",
         "reproduction.fr.10"
@@ -86,10 +87,10 @@
       ],
       "prose_claims": [
         "identification.en.4",
-        "identification.fr.4",
         "identification.en.5",
-        "identification.fr.5",
         "identification.en.6",
+        "identification.fr.4",
+        "identification.fr.5",
         "identification.fr.6"
       ],
       "budget": {
@@ -115,10 +116,10 @@
         "Controlled trials measured low energy digestibility on bamboo-only diets."
       ],
       "prose_claims": [
-        "overview.en.2",
-        "overview.fr.2",
         "diet.en.4",
-        "diet.fr.4"
+        "diet.fr.4",
+        "overview.en.2",
+        "overview.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -143,12 +144,12 @@
         "Long-term GPS study in Foping recorded seasonal routes and bamboo foraging."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
-        "habitat.en.4",
-        "habitat.fr.4",
         "ecology.en.4",
-        "ecology.fr.4"
+        "ecology.fr.4",
+        "habitat.en.3",
+        "habitat.en.4",
+        "habitat.fr.3",
+        "habitat.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -173,12 +174,12 @@
       ],
       "prose_claims": [
         "ecology.en.1",
-        "ecology.fr.1",
         "ecology.en.2",
-        "ecology.fr.2",
         "ecology.en.3",
-        "ecology.fr.3",
         "ecology.en.6",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3",
         "ecology.fr.6"
       ],
       "budget": {
@@ -254,8 +255,8 @@
       ],
       "prose_claims": [
         "reproduction.en.5",
-        "reproduction.fr.5",
         "reproduction.en.7",
+        "reproduction.fr.5",
         "reproduction.fr.7"
       ],
       "budget": {
@@ -281,8 +282,8 @@
       ],
       "prose_claims": [
         "behavior.en.2",
-        "behavior.fr.2",
         "behavior.en.5",
+        "behavior.fr.2",
         "behavior.fr.5"
       ],
       "budget": {
@@ -308,8 +309,8 @@
       ],
       "prose_claims": [
         "behavior.en.3",
-        "behavior.fr.3",
         "behavior.en.4",
+        "behavior.fr.3",
         "behavior.fr.4"
       ],
       "budget": {
@@ -335,10 +336,10 @@
         "Survey reported 1,864 wild pandas at end-2013 and persistent fragmentation."
       ],
       "prose_claims": [
-        "habitat.en.5",
-        "habitat.fr.5",
         "conservation.en.2",
-        "conservation.fr.2"
+        "conservation.fr.2",
+        "habitat.en.5",
+        "habitat.fr.5"
       ],
       "budget": {
         "limit": 200,
@@ -388,14 +389,14 @@
         "Review discusses historical hunting, reserve policy, habitat degradation and fragmentation."
       ],
       "prose_claims": [
-        "habitat.en.1",
-        "habitat.fr.1",
-        "habitat.en.2",
-        "habitat.fr.2",
         "conservation.en.1",
-        "conservation.fr.1",
         "conservation.en.5",
-        "conservation.fr.5"
+        "conservation.fr.1",
+        "conservation.fr.5",
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -421,14 +422,14 @@
         "University of Michigan species account describes range, bear identity and solitary behavior."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "overview.en.3",
-        "overview.fr.3",
         "behavior.en.1",
         "behavior.fr.1",
         "identification.en.1",
-        "identification.fr.1"
+        "identification.fr.1",
+        "overview.en.1",
+        "overview.en.3",
+        "overview.fr.1",
+        "overview.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -478,8 +479,8 @@
       ],
       "prose_claims": [
         "diet.en.5",
-        "diet.fr.5",
         "diet.en.6",
+        "diet.fr.5",
         "diet.fr.6"
       ],
       "budget": {
@@ -508,12 +509,12 @@
       "prose_claims": [
         "behavior.en.6",
         "behavior.fr.6",
-        "reproduction.en.9",
-        "reproduction.fr.9",
         "diet.en.1",
         "diet.fr.1",
         "reproduction.en.1",
-        "reproduction.fr.1"
+        "reproduction.en.9",
+        "reproduction.fr.1",
+        "reproduction.fr.9"
       ],
       "budget": {
         "limit": 200,
@@ -563,8 +564,8 @@
       ],
       "prose_claims": [
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.4",
+        "reproduction.fr.3",
         "reproduction.fr.4"
       ],
       "budget": {
@@ -590,8 +591,8 @@
       ],
       "prose_claims": [
         "reproduction.en.6",
-        "reproduction.fr.6",
         "reproduction.en.8",
+        "reproduction.fr.6",
         "reproduction.fr.8"
       ],
       "budget": {

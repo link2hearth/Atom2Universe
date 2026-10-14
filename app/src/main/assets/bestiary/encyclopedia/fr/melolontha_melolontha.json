@@ -1,0 +1,30 @@
+{
+  "id": "melolontha_melolontha",
+  "name": "Hanneton commun",
+  "scientific": "Melolontha melolontha",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le hanneton commun est un grand scarabée européen dont les adultes volent les soirs de printemps et dont les vers blancs vivent sous terre pendant environ trois ans. Ses grands vols, autrefois classiques dans certaines régions de Suisse, se sont en grande partie estompés ces dernières décennies.",
+    "identification": "L’adulte mesure 25 à 30 mm, le plus grand hanneton indigène de Suisse, avec une tête sombre, un pronotum noir luisant couvert de poils courts et un pygidium long et plat au bout de l’abdomen. Les mâles ont des antennes plus longues, terminées par une grande massue en éventail. Le ver blanc est d’un blanc mat, long d’environ 40 à 46 mm, avec le bout de l’abdomen noir et de fortes mandibules, et se tient recourbé en arc. Les références consultées ne donnent pas de masse adulte fiable pour l’identification; aucun poids n’est estimé ici.",
+    "habitat": "Il vit en Europe tempérée, dans les prairies, les terres cultivées, les lisières et les banlieues, et préfère pour pondre un sol meuble à couvert végétal moyen. Les adultes volent vers les lisières, les bosquets et les arbres des sommets arrondis ou des crêtes, guidés par la silhouette des arbres.",
+    "diet": "Les adultes mangent les feuilles d’arbres feuillus, surtout des chênes, mais aussi du hêtre et du mélèze, principalement en mai. Les vers blancs rongent les racines, notamment de graminées, de céréales et de nombreuses autres plantes, dans les prairies et les sols cultivés.",
+    "behavior": "Les adultes sont nocturnes et actifs au crépuscule, volant dès la mi-avril pendant deux semaines environ dans certaines vallées suisses et les soirs doux de mai, et ils sont attirés par la lumière. Les vers blancs restent enterrés jusqu’à la nymphose; sur une surface plane, ils tentent d’avancer de côté, recourbés.",
+    "reproduction": "Les femelles pondent environ 20 œufs à la fois dans un sol meuble. Les vers blancs naissent quelques semaines plus tard et se développent sous terre. Le cycle dure normalement trois ans et s’achève par les grands vols, mais il peut durer quatre ans en montagne et s’est parfois raccourci à deux ans avec le réchauffement. Depuis 2003, il ne suit plus toujours le rythme de trois ans en Valais.",
+    "ecology": "Les adultes qui dévorent le feuillage en mai laissent chênes et mélèzes dégarnis, mais les arbres défoliés refont des pousses de remplacement dès juin et reverdissent en été, avec parfois une perte de croissance. Les vers blancs peuvent abîmer prairies, pelouses et cultures. Des champignons du genre Beauveria servent à les combattre dans les cultures, alors qu’en forêt la lutte est inutile et interdite.",
+    "conservation": "L’Animal Diversity Web classe l’espèce sans statut particulier, mais aucune évaluation mondiale récente n’a été lue. En Suisse, les grands vols jadis classiques de Bâle, de Berne et de Suisse centrale ont largement disparu ou ne se distinguent plus, si bien que l’abondance locale a beaucoup changé."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Melolontha_melolontha/",
+      "title": "Melolontha melolontha — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://www.vs.ch/web/sca/hannetons",
+      "title": "Les hannetons — Canton du Valais, service de l’agriculture"
+    },
+    {
+      "url": "https://waldschutz.wsl.ch/fileadmin/user_upload/WSL/Microsite/Waldschutz-Schweiz/Diagnose_online/fr/Hannetons_hanneton_commun_et_hanneton_195.pdf",
+      "title": "Hannetons, hanneton commun et hanneton des bois ou du marronnier — fiche de diagnostic Protection de la forêt Suisse, WSL"
+    }
+  ]
+}

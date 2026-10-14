@@ -1,0 +1,34 @@
+{
+  "id": "aerodramus_francicus",
+  "name": "Salangane des Mascareignes",
+  "scientific": "Aerodramus francicus",
+  "group": "birds",
+  "sections": {
+    "overview": "La Salangane des Mascareignes est un petit martinet au vol rapide, endémique de La Réunion et de Maurice. Elle passe l’essentiel de son temps en vol, où elle capture des insectes, et niche en colonies dans des cavernes, des tunnels de lave et des fissures rocheuses. Son croupion gris blanchâtre et ses ailes en faucille sont de bons repères d’identification. L’espèce est classée quasi menacée à l’échelle mondiale, mais une analyse récente de sa population estime que le risque pourrait être plus élevé que ne le suggère l’évaluation officielle.",
+    "identification": "Ce martinet très petit mesure environ 10 à 10,5 cm de long et pèse autour de 7 à 13 g dans la référence réunionnaise ; une autre compilation indique 8,9 à 9,2 g. Ces chiffres proviennent d’échantillons régionaux différents et ne constituent pas une plage universelle ventilée par sexe. Les sources consultées ne donnent pas de différence fiable entre mâles et femelles, ni de hauteur, de largeur corporelle ou d’envergure propre à l’espèce. Les sexes se ressemblent : le dessus est brun fuligineux à noir, sauf le croupion gris blanchâtre ; le dessous est brun plus clair et devient blanchâtre vers le ventre et les sous-caudales. Le bec et les pattes sont noirs, la queue faiblement échancrée et les ailes longues et incurvées. En vol, le croupion clair et les ailes étroites en faucille aident à la distinguer du Martinet de Bourbon et des autres martinets locaux.",
+    "habitat": "Elle est présente à La Réunion et à Maurice, des basses altitudes jusqu’aux versants volcaniques élevés. Elle chasse au-dessus des forêts, des espaces ouverts, des ravines et d’autres milieux où les insectes volants sont disponibles, mais dépend de cavernes abritées, de tunnels de lave et de fissures de falaises pour se reposer et nicher. Les colonies peuvent occuper des cavités fluviales obscures ; à La Réunion, certains sites connus se trouvent en altitude. L’espèce est sédentaire à l’échelle régionale, même si les oiseaux se déplacent en altitude selon la météo et les conditions locales.",
+    "diet": "C’est un insectivore aérien qui capture de petits insectes en vol. Elle peut encore chasser tard le soir et effectue des virages agiles pour intercepter ses proies. Les oiseaux fréquentent aussi les bassins des ravines pour saisir les insectes posés sur l’eau ou pour boire. Ces proies font partie du plancton aérien des îles ; les sources consultées ne permettent pas d’établir une liste plus précise qui vaudrait partout.",
+    "behavior": "Elle est particulièrement agile et passe la majeure partie de la journée en vol ; elle revient souvent dormir au nid, même hors période de reproduction. Des groupes de plusieurs centaines d’oiseaux peuvent se former lorsque la nourriture est abondante, et les colonies de nidification sont parfois denses. Comme d’autres salanganes du genre Aerodramus, elle utilise des clics d’écholocation audibles pour s’orienter dans les cavernes obscures et retrouver son propre nid au milieu de la colonie. Ses déplacements entre basses et hautes altitudes semblent répondre aux conditions locales plutôt qu’à une migration régulière.",
+    "reproduction": "La nidification est coloniale et se déroule dans des cavernes obscures, des tunnels de lave ou des fissures de falaises et de parois de ravines. Le petit nid en coupe, composé de mousses et de lichens, adhère à la roche grâce à une substance collante produite par la salive. La ponte compte généralement deux œufs blancs. À La Réunion, la reproduction se concentre surtout de septembre à décembre, mais des nids actifs peuvent être trouvés durant une grande partie de l’année, avec un creux local en avril et mai ; les couples d’une même colonie ne nichent pas tous au même moment. Les sites de nidification sont sensibles au dérangement, au vandalisme et aux dégradations physiques.",
+    "ecology": "En consommant des insectes aériens, la salangane relie la communauté d’invertébrés volants des îles aux écosystèmes des cavernes et des falaises. Ses colonies utilisent des cavités naturelles comme dortoirs et sites de reproduction, parfois partagés avec d’autres animaux cavernicoles. Comme les individus chassent sur de vastes secteurs mais dépendent d’un nombre limité de cavités convenables, le dérangement à l’entrée d’une grotte peut toucher beaucoup d’oiseaux à la fois. Le retour quotidien au nid rend également la protection des dortoirs importante toute l’année.",
+    "conservation": "L’évaluation mondiale de BirdLife International publiée en 2019 classe l’espèce quasi menacée, du fait de sa petite aire et d’une tendance générale incertaine : la population réunionnaise était alors décrite comme en hausse, tandis que celle de Maurice avait fortement diminué. Une analyse phylogénétique et démographique de 2024 estime environ 56 900 adultes sur les deux îles et recommande une classification en danger selon le critère de l’aire d’occupation ; il s’agit d’une recommandation scientifique, pas de la catégorie BirdLife publiée. La fermeture ou la destruction de cavernes, le vandalisme, le dérangement par les visiteurs et le prélèvement des nids sont des problèmes documentés. Il importe de protéger et de suivre les colonies des deux îles, car les estimations d’effectifs restent incertaines."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/mascarene-swiftlet-aerodramus-francicus",
+      "title": "Salangane des Mascareignes — fiche espèce BirdLife International DataZone"
+    },
+    {
+      "url": "https://www.ecologie.gouv.fr/sites/default/files/publications/document_travail_58_mise_en_valeur_d%E2%80%99un_espace_naturel_sensible_a_la_reunion_mai2022.pdf",
+      "title": "Salangane des Mascareignes — étude environnementale officielle de La Réunion"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/mascarene.swiftlet.html",
+      "title": "Salangane des Mascareignes — fiche multilingue Oiseaux.net"
+    },
+    {
+      "url": "https://doi.org/10.5253/arde.2023.a9",
+      "title": "Phylogénie et état de conservation des salanganes Aerodramus des Mascareignes"
+    }
+  ]
+}

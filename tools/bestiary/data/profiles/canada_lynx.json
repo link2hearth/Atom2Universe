@@ -12,8 +12,8 @@
       "fr": "Le lynx du Canada est un félin du nord de l’Amérique du Nord. Il vit dans les forêts boréales, de l’Alaska au Canada et dans le nord des États-Unis. Sa vie dépend du lièvre d’Amérique, dont l’abondance influe sur ses effectifs."
     },
     "identification": {
-      "en": "This medium-sized cat has long legs, broad furred paws, cheek ruffs and narrow black ear tufts. Its short tail ends in black. The coat is usually grayish or buff, sometimes faintly spotted; seasonal fur changes make it look less sleek in summer.",
-      "fr": "Ce félin de taille moyenne a de longues pattes, de larges pieds poilus, des favoris marqués et de fines touffes noires aux oreilles. Sa queue courte a l’extrémité noire. Son pelage gris ou fauve, parfois tacheté, paraît moins fourni en été."
+      "en": "This medium-sized cat has long legs, broad furred paws, cheek ruffs and narrow black ear tufts. Its short tail ends in black. The coat is usually grayish or buff, sometimes faintly spotted; seasonal fur changes make it look less sleek in summer. Adults average about 80–85 cm in body length. Reported masses are about 4.5–10.0 kg for females and 7.3–17.2 kg for males; males are generally heavier, with ranges that overlap.",
+      "fr": "Ce félin de taille moyenne a de longues pattes, de larges pieds poilus, des favoris marqués et de fines touffes noires aux oreilles. Sa queue courte a l’extrémité noire. Son pelage gris ou fauve, parfois tacheté, paraît moins fourni en été. Les adultes mesurent en moyenne environ 80 à 85 cm de long. Les masses publiées sont d’environ 4,5 à 10,0 kg chez les femelles et 7,3 à 17,2 kg chez les mâles ; les mâles sont généralement plus lourds, avec un chevauchement des plages."
     },
     "habitat": {
       "en": "Lynx use a mosaic of forest stands. Dense young growth shelters hares, while older trees, fallen trunks and root mounds provide cover and denning places. In mountain regions, deep winter snow helps define suitable habitat and gives lynx an advantage over some competing predators.",
@@ -52,10 +52,12 @@
         "overview",
         "habitat",
         "reproduction",
-        "conservation"
+        "conservation",
+        "identification"
       ],
       "facts": [
-        "Northern North American distribution; forest structure, breeding timing, hare-linked reproduction; New Brunswick assessment dated 2022."
+        "Northern North American distribution; forest structure, breeding timing, hare-linked reproduction; New Brunswick assessment dated 2022.",
+        "Average length 0.8–0.85 m; reported masses 7.26–17.24 kg males and 4.54–9.98 kg females."
       ]
     },
     {

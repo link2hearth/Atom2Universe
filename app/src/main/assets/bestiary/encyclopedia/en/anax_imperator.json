@@ -1,0 +1,38 @@
+{
+  "id": "anax_imperator",
+  "name": "Emperor Dragonfly",
+  "scientific": "Anax imperator",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The emperor dragonfly is a large hawker dragonfly and Britain’s bulkiest dragonfly. It is a powerful flier that rarely settles, patrols ponds and lakes, and has spread in Britain since the 1990s.",
+    "identification": "The body is about 7.3 to 8.2 cm long and the wingspan about 10.5 cm. The male has a sky-blue abdomen and the female a green one, both with a continuous dark line along the back; the thorax is apple-green, the eyes green or blue, and the leading wing vein bright yellow. The wings are clear and unpatterned. In a French pond study, mature males averaged 77.2 mm and 0.97 g, while females averaged 72.9 mm and 1.26 g; these are study-sample means, not universal limits.",
+    "habitat": "It lives mostly at large, well-vegetated ponds and lakes, including flooded gravel pits, and may also be found over canals, big ditches and slow-moving rivers. On the mainland it occurs across most of Europe and eastern Asia and is common in much of Africa.",
+    "diet": "The adult hunts small insects over water and often eats its prey in flight, without settling. The sources consulted give no details on the diet of the larva.",
+    "behavior": "Males are strongly territorial: they patrol the water margins and chase off intruders. The adult can fly for long periods without resting, often with the tip of the abdomen slightly bent downward. In Britain adults fly from early June to August or early September.",
+    "reproduction": "The female lays her eggs alone in floating pondweed. They hatch after about three weeks, and the larvae then spend one or two years in the water before emerging as adults, usually at night. In a study of the species, the size and mass of newly emerged adults were closely tied to the length of the larval skin they leave behind.",
+    "ecology": "The larva is stout, with large eyes that nearly meet on top of the head, and reaches 45 to 56 mm when mature, the largest of the British hawker larvae. The larva spends its first one or two years in the water. The species has been recorded in Scotland since 2003.",
+    "conservation": "No global conservation assessment was found. In Britain it is found across Wales and most of England, and its distribution has increased greatly since the 1990s."
+  },
+  "sources": [
+    {
+      "url": "https://british-dragonflies.org.uk/species/emperor-dragonfly/",
+      "title": "Emperor dragonfly — British Dragonfly Society"
+    },
+    {
+      "url": "https://www.first-nature.com/insects/o-anax-imperator.php",
+      "title": "Anax imperator, Emperor dragonfly — First Nature"
+    },
+    {
+      "url": "https://www.delta-intkey.com/britin/odo/www/imperato.htm",
+      "title": "Anax imperator — British Odonata (DELTA key)"
+    },
+    {
+      "url": "https://eje.cz/doi/10.14411/eje.2019.031.html",
+      "title": "Body size variation from larva to adult in Anax imperator — Minot et al., European Journal of Entomology, 2019 (abstract)"
+    },
+    {
+      "url": "https://doi.org/10.1111/fwb.13632",
+      "title": "Habitat use and movements of a large dragonfly (Odonata: Anax imperator) in a pond network — Freshwater Biology"
+    }
+  ]
+}

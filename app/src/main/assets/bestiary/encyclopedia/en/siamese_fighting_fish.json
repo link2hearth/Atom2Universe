@@ -1,0 +1,42 @@
+{
+  "id": "siamese_fighting_fish",
+  "name": "Siamese Fighting Fish",
+  "scientific": "Betta splendens",
+  "group": "fish",
+  "sections": {
+    "overview": "Native to Thailand and nearby Indochina, wild B. splendens is short-finned and subdued; ornamental colours and flowing fins reflect selective breeding.",
+    "identification": "Wild adults reach a documented maximum total length of 6.5 cm; FishBase does not report a body mass. Adult males generally have longer fins than females, but no reliable sex-specific body-size or weight measurements were found in the consulted sources. Wild adults reach a documented maximum total length of 6.5 cm; males are often slimmer, longer-finned, and brighter, while females have shorter fins, especially in domestic strains.",
+    "habitat": "It inhabits Thailand’s central plain and nearby Indochina, in shallow marshes, floodplains and rice fields with warm, slow water and vegetation.",
+    "diet": "It snaps up small animal prey among plants or at the surface, especially zooplankton and mosquito or other insect larvae. Small crustaceans and insects that fall onto the water also provide food, so access to animal prey is a central part of its natural feeding ecology.",
+    "behavior": "Territorial males spread fins and flare gill covers to warn rivals; clashes can cause bites and injury. Aggression varies, and females can also be territorial. Domesticated fighting strains were selected for persistent aggression, whereas ornamental breeding later favoured elaborate fins and colours; the intensity of fighting therefore differs among strains.",
+    "reproduction": "The male courts beside a floating bubble nest. During an embrace, female eggs meet male sperm in water: fertilization is external. He gathers sinking eggs and guards them; after hatching, he tends larvae until they swim freely. Keeping eggs in a surface bubble nest improves their access to oxygen in warm, poorly oxygenated water, while the male repairs damaged bubbles. Incubation typically lasts about 24–36 hours, followed by two to three days in the nest while larvae absorb their yolk reserves. Young fish initially rely on their gills, because air breathing develops later; growth rate influences this transition and the age of maturity.",
+    "ecology": "It eats insect larvae and feeds larger aquatic predators. A blood-rich labyrinth above the gills absorbs surface air in oxygen-poor water; gills still exchange gases underwater. The labyrinth contains folded bony surfaces lined with respiratory tissue, giving inhaled air a large exchange surface above the gills.",
+    "conservation": "The IUCN’s 2011 assessment classifies wild populations as Vulnerable, citing wetland loss and pollution. Captive abundance does not secure native fish."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Siamese_fighting_fish",
+      "title": "Siamese fighting fish"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Combattant",
+      "title": "Combattant"
+    },
+    {
+      "url": "https://edis.ifas.ufl.edu/publication/FA212/pdf",
+      "title": "Evolution, Culture, and Care for Betta splendens"
+    },
+    {
+      "url": "https://repository.seafdec.org/bitstream/handle/20.500.12066/5516/Siamese-fighting-fish.pdf?sequence=1",
+      "title": "Capacitating the Local Farmers to Enhance Global Marketing of Thailand’s National Aquatic Animal, the Siamese Fighting Fish"
+    },
+    {
+      "url": "https://dx.doi.org/10.2305/IUCN.UK.2011-1.RLTS.T180889A7653828.en",
+      "title": "Betta splendens"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/betta-splendens.html",
+      "title": "Betta splendens summary — FishBase"
+    }
+  ]
+}

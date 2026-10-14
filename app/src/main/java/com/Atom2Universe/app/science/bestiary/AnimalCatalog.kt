@@ -12,7 +12,8 @@ data class AnimalSpecies(
     @param:StringRes val reproduction: Int? = null,
     @param:StringRes val ecology: Int? = null,
     @param:StringRes val conservation: Int? = null,
-    val references: List<AnimalReference> = if (sourceUrl != null && sourceTitle != null) listOf(AnimalReference(sourceUrl, sourceTitle)) else emptyList()
+    val references: List<AnimalReference> = if (sourceUrl != null && sourceTitle != null) listOf(AnimalReference(sourceUrl, sourceTitle)) else emptyList(),
+    val encyclopediaId: String? = null
 )
 
 /** Stable species identities; content deliberately avoids dated population and status estimates. */

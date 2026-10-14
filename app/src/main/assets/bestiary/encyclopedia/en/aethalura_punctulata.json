@@ -1,0 +1,34 @@
+{
+  "id": "aethalura_punctulata",
+  "name": "Grey birch moth",
+  "scientific": "Aethalura punctulata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The grey birch moth is a small geometrid moth associated with birch and alder woodland across much of Europe and parts of northern Asia. Adults are grey and finely speckled, with narrow, scalloped cross-lines that break up the outline against bark and foliage. The caterpillars feed on birches and alders, and the species overwinters as a pupa. Its modest size and fine pattern are more reliable clues than the common name, which varies between countries.",
+    "identification": "The adult has a wingspan of about 30–35 mm. No reliable body length, mass, body height or width, or sex-specific size difference was found in the sources reviewed. The wings are grey to grey-brown, densely dusted with dark points and crossed by fine, irregular, darker lines; the hindwing is also patterned, and the overall outline is more delicate than in many larger bark-like geometrids. At rest, the moth often holds its wings roof-like over the body. It may be confused with other small grey geometrids, but its size, fine speckling and association with birch or alder habitats help narrow the identification; close comparison with local species is still advisable.",
+    "habitat": "It is found in birch woodland, alder-rich woods, heathland and mixed woodland where its larval host trees occur. Its wider distribution extends across much of Europe and eastward through northern Eurasia, though local frequency varies. British records describe it as widespread in suitable birch habitats, but those regional abundance observations should not be generalized to its entire range. Adults are nocturnal and are regularly recorded at light in the spring flight period.",
+    "diet": "The caterpillars feed on the leaves of birches (Betula), including downy and silver birch, and on alder (Alnus). They are phytophagous foliage feeders. Adults do not feed in a way documented by the species sources reviewed, so no adult diet is specified here.",
+    "behavior": "Adults fly at night and are attracted to artificial lights. Their grey, finely mottled wings provide camouflage when they rest on bark or among branches. Larvae feed openly on the foliage of host trees during the summer; the species then passes the winter as a pupa. Records in Britain show adults chiefly in spring, with occasional later-season observations, but flight timing varies with latitude and local climate.",
+    "reproduction": "The species has one main adult flight period in spring in Britain, where records commonly fall from April to June. Females lay eggs on or near host trees, and larvae develop on birch and alder foliage. The pupa overwinters, with adults emerging the following spring. Detailed information on courtship, clutch size and egg placement was not consistently available in the sources reviewed, so these particulars are not quantified here.",
+    "ecology": "The caterpillars are part of the foliage-feeding insect community of birch and alder woods and provide prey for insectivorous predators. Their host plants are common trees, so the moth can occur in both natural woodland and managed landscapes where these trees remain. Its wintering pupae and seasonal adult emergence connect the moth's life cycle to the annual growth cycle of temperate trees.",
+    "conservation": "No species-specific global conservation assessment or population trend was established in the sources reviewed. The moth is reported as common in suitable birch woodland in parts of Britain, but local records from those regions do not demonstrate stability everywhere. Maintaining a mix of birch and alder stands, woodland edges and structurally varied habitats supports its known larval food plants; broad claims about threat status would require range-wide data."
+  },
+  "sources": [
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=70.274",
+      "title": "Grey Birch — Hantsmoths, Hampshire and Isle of Wight Lepidoptera"
+    },
+    {
+      "url": "https://lepinet.fr/especes/nation/lep/?id=37270",
+      "title": "Boarmie ponctuée — Lepinet French moth database"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Aethalura_Punctulata",
+      "title": "Aethalura punctulata — Lepiforum specialist Lepidoptera resource"
+    },
+    {
+      "url": "https://dbif.brc.ac.uk/interactions.aspx?hostid=753&insectid=226",
+      "title": "Aethalura punctulata — UK Database of Insects and their Food Plants"
+    }
+  ]
+}

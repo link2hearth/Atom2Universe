@@ -12,8 +12,8 @@
       "fr": "Le phoque commun, aussi appelé phoque veau-marin, est un pinnipède phocidé présent le long des côtes tempérées et arctiques de l’Atlantique et du Pacifique Nord. Il fréquente les eaux marines et estuariennes ; certaines populations remontent les rivières ou gagnent des lacs d’eau douce. Sa tête arrondie, son museau court et son pelage tacheté varient selon les individus et les régions."
     },
     "identification": {
-      "en": "Adults have a compact, spindle-shaped body, short fur, a rounded head and no external ear flaps. The coat ranges from pale grey to brown or nearly black, usually with contrasting spots; the underside is often lighter. Long hind flippers provide underwater propulsion. In this true seal, the pelvic structure prevents the hind flippers from rotating beneath the body, so it cannot walk on land like a sea lion: it moves by flexing and undulating its body. Sensitive whiskers, or vibrissae, detect water movements and help locate prey when vision is limited.",
-      "fr": "L’adulte a un corps fuselé et trapu, un pelage court, une tête arrondie et aucune oreille externe visible. La robe va du gris pâle au brun ou presque noir, généralement marquée de taches contrastées ; le ventre est souvent plus clair. Les longues nageoires postérieures assurent la propulsion sous l’eau. Chez ce phoque véritable, la structure du bassin empêche de ramener ces nageoires sous le corps pour marcher comme une otarie : il se déplace en fléchissant et en ondulant. Ses vibrisses sensibles perçoivent les mouvements de l’eau et aident à repérer les proies lorsque la vue est limitée."
+      "en": "Adults have a compact, spindle-shaped body, short fur, a rounded head and no external ear flaps. The coat ranges from pale grey to brown or nearly black, usually with contrasting spots; the underside is often lighter. Long hind flippers provide underwater propulsion. In this true seal, the pelvic structure prevents the hind flippers from rotating beneath the body, so it cannot walk on land like a sea lion: it moves by flexing and undulating its body. Sensitive whiskers, or vibrissae, detect water movements and help locate prey when vision is limited. Adults are about 1.5–1.8 m long and can weigh up to 82–129 kg; males are slightly larger, and Pacific populations tend to be larger than Atlantic ones.",
+      "fr": "L’adulte a un corps fuselé et trapu, un pelage court, une tête arrondie et aucune oreille externe visible. La robe va du gris pâle au brun ou presque noir, généralement marquée de taches contrastées ; le ventre est souvent plus clair. Les longues nageoires postérieures assurent la propulsion sous l’eau. Chez ce phoque véritable, la structure du bassin empêche de ramener ces nageoires sous le corps pour marcher comme une otarie : il se déplace en fléchissant et en ondulant. Ses vibrisses sensibles perçoivent les mouvements de l’eau et aident à repérer les proies lorsque la vue est limitée. Les adultes mesurent environ 1,5–1,8 m et peuvent peser jusqu’à 82–129 kg ; les mâles sont légèrement plus grands et les populations du Pacifique tendent à dépasser celles de l’Atlantique."
     },
     "habitat": {
       "en": "The species occupies coastal waters across the northern hemisphere, from temperate shores to Arctic regions. Estuaries, bays, tidal channels and river mouths provide access to feeding grounds as well as sheltered haul-out sites. Seals rest on beaches, rocks, reefs and, in glacial fjords, floating ice. A haul-out is a resting place rather than a feeding habitat: seals return to water to forage and may range far beyond the nearby shore. Site use and travel distances differ among animals and populations.",
@@ -47,7 +47,7 @@
         "fr": "Phoque commun — NOAA Fisheries"
       },
       "url": "https://www.fisheries.noaa.gov/species/harbor-seal",
-      "consulted": "2026-10-11",
+      "consulted": "2026-10-14",
       "supports": [
         "overview",
         "identification",
@@ -57,7 +57,8 @@
         "conservation"
       ],
       "facts": [
-        "NOAA account: northern range, haul-outs, moult, pupping and listed human pressures."
+        "NOAA account: northern range, haul-outs, moult, pupping and listed human pressures.",
+        "Adults are about 1.5–1.8 m long and weigh up to about 82–129 kg; males are slightly larger than females, with Pacific animals generally larger than Atlantic animals."
       ],
       "budget": {
         "limit_words": 200,

@@ -1,0 +1,86 @@
+{
+  "id": "american_alligator",
+  "name": "American alligator",
+  "scientific": "Alligator mississippiensis",
+  "group": "reptiles",
+  "sections": {
+    "overview": "The American alligator is a large crocodilian native to the southeastern United States, from North Carolina to Texas. It inhabits wetlands where shallow water, cover and prey meet. Its armored body and short legs suit its life between water and bank. Though formidable as an adult, it begins as a small hatchling vulnerable to predators.",
+    "identification": "Its body is dark and armored by bony plates beneath the skin, with short legs and a flattened, muscular tail. The broad, rounded snout forms a U-shaped outline when viewed from above. When the jaws close, the large fourth tooth of the lower jaw fits into a socket and disappears from view, unlike the projecting lower tooth of a crocodile. Adults show strong size differences between sexes: typical females average about 2.6 metres long and males about 3.4 metres. Exceptional males can approach 4.5 metres, a rare maximum rather than an ordinary adult size. The forefeet have five toes and the hind feet four. Florida’s recorded weight maximum is a 473 kg male; this exceptional record is not a typical adult mass, and the cited record gives no female mass range.",
+    "habitat": "It mainly inhabits freshwater marshes, swamps, lakes and slow-moving rivers. It tolerates salt poorly because it lacks salt-excreting glands. In temperate parts of its range, it uses bank dens as a winter refuge.",
+    "diet": "This opportunistic carnivore takes prey suited to its size and locally available. Hatchlings and small juveniles eat mainly insects, crustaceans and small fish; larger individuals can tackle turtles, snakes, birds and mammals. Adults still eat fish and invertebrates, so large vertebrates are only part of the menu. They seize prey with conical teeth and swallow small items whole; a large carcass may be held underwater until softened, then torn apart. On Georgia’s barrier islands, juvenile diets differed between sites with different prey communities.",
+    "behavior": "Eyes, ears and nostrils sit high on the head, so an alligator can watch and breathe while mostly submerged. Valves close its nostrils and ear openings underwater; a transparent inner eyelid protects its eyes without blocking vision. As an ectotherm, it relies on outside heat, basking in cool weather and shifting activity with temperature. In temperate regions it enters winter dormancy, or brumation; during extreme cold, adults may rest in shallow water with nostrils exposed as ice forms. The tail propels the body through water, with partly webbed feet helping. Spring brings more movement and courtship. Bellows, head slaps, postures and scent cues communicate; acoustic studies find bellow formants carry information about caller size, though how receivers interpret these cues remains under study.",
+    "reproduction": "Courtship and mating take place in spring, with timing varying across the range. Males bellow and slap the water with the head; pairs also touch snouts and blow bubbles. In early summer the female piles vegetation and mud into a mound nest, lays roughly 20–60 eggs, and guards it during incubation. Rotting plants warm the nest; incubation lasts about 65 days, though local conditions shift the schedule. Egg temperature during a sensitive phase of embryonic development influences sex, with a female–male–female pattern rather than a steady shift toward males. In incubation experiments, low temperatures produced females, about 32.5–33°C males, and viable temperatures near 34.5°C again produced mostly females; transition bands can yield mixed clutches. Near hatching, young call from their eggs; the mother opens the nest and may carry hatchlings to water in her mouth. She stays with the brood for months, sometimes its first year. Hatchlings are about 20–23 centimetres long; reaching breeding size takes years and depends on growth, food and climate.",
+    "ecology": "In the Everglades, an alligator may excavate and maintain a water-filled depression called an alligator hole. During drought, these pools can shelter fish and other aquatic life, while birds and mammals forage around them. Excavation disturbs vegetation and enriches soil, creating habitat differences around the basin. This regional example shows how the alligator links prey, seasonal water and marsh structure as both predator and habitat shaper.",
+    "conservation": "Heavy hunting and wetland loss once caused severe declines, but legal protection, habitat safeguards and regulated management enabled a major recovery. The IUCN assessment published in 2019, based on an assessment dated 7 October 2018, classifies the species as Least Concern and describes a large, stable or growing population. Regional concerns remain: habitat destruction, altered water management, contamination and conflict with people. In 1987, after recovery, the United States reclassified the alligator as threatened due to similarity of appearance. Its current federal listing classifies it as threatened because of similarity to another threatened taxon. This is an appearance-based legal status, not evidence that the alligator is biologically threatened throughout its range."
+  },
+  "sources": [
+    {
+      "url": "https://nationalzoo.si.edu/animals/american-alligator",
+      "title": "American alligator — Smithsonian’s National Zoo and Conservation Biology Institute"
+    },
+    {
+      "url": "https://www.iucncsg.org/365_docs/attachments/protarea/04b97b58e34f55644dcec2fa07ef11d2.pdf",
+      "title": "American Alligator — IUCN-SSC Crocodile Specialist Group species account"
+    },
+    {
+      "url": "https://ask.ifas.ufl.edu/publication/UW230",
+      "title": "WEC203/UW230: Living with Alligators: A Florida Reality — UF/IFAS Extension"
+    },
+    {
+      "url": "https://srelherp.uga.edu/alligators/",
+      "title": "Alligators of South Carolina and Georgia — University of Georgia Savannah River Ecology Laboratory"
+    },
+    {
+      "url": "https://edis.ifas.ufl.edu/publication/UW393/pdf",
+      "title": "Managing Conflicts with Wildlife: Living with Alligators — UF/IFAS Extension, WEC348"
+    },
+    {
+      "url": "https://www.wildlifedepartment.com/wildlife/field-guide/reptiles/american-alligator",
+      "title": "American Alligator — Oklahoma Department of Wildlife Conservation field guide"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Alligator_mississippiensis/",
+      "title": "Alligator mississippiensis — Animal Diversity Web, University of Michigan Museum of Zoology"
+    },
+    {
+      "url": "https://digitalcommons.unf.edu/unf_faculty_publications/3300/",
+      "title": "Golf course living leads to a diet shift for American alligators — Ecology and Evolution, University of North Florida repository"
+    },
+    {
+      "url": "https://crocdoc.ifas.ufl.edu/publications/posters/ecologyofalligatorholes/",
+      "title": "Ecology of Everglades Alligator Holes — University of Florida Croc Docs"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5431764/",
+      "title": "Formants provide honest acoustic cues to body size in American alligators — Scientific Reports"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-2.RLTS.T46583A3009637.en",
+      "title": "Alligator mississippiensis — The IUCN Red List of Threatened Species, 2019"
+    },
+    {
+      "url": "https://www.fws.gov/species-publication-action/reclassification-american-alligator-thr-due-similarity-appearance",
+      "title": "Reclassification of American Alligator to Threatened Due to Similarity of Appearance — U.S. Fish and Wildlife Service, 52 FR 21059"
+    },
+    {
+      "url": "https://ecos.fws.gov/ecp0/reports/ad-hoc-species-report?fcrithab=on&fgroup=on&finvpop=on&fspecrule=on&fstatus=on&header=Listed+Animals&kingdom=I&kingdom=V&mapstatus=3&os=.&status=SAT",
+      "title": "Listed Animals — U.S. Fish and Wildlife Service ECOSphere"
+    },
+    {
+      "url": "https://www.fws.gov/species/american-alligator-alligator-mississippiensis",
+      "title": "American Alligator — U.S. Fish & Wildlife Service species profile"
+    },
+    {
+      "url": "https://srelherp.uga.edu/wp-content/uploads/sites/70/2025/02/American-Alligator-FINAL-2.pdf",
+      "title": "American Alligator — Savannah River Ecology Laboratory, University of Georgia, 2025 profile sheet"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4727388/",
+      "title": "RNA-seq analysis of the gonadal transcriptome during Alligator mississippiensis temperature-dependent sex determination and differentiation"
+    },
+    {
+      "url": "https://myfwc.com/wildlifehabitats/profiles/reptiles/alligator/",
+      "title": "American Alligator Facts — Florida Fish and Wildlife Conservation Commission"
+    }
+  ]
+}

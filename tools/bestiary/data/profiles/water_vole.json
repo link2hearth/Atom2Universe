@@ -57,16 +57,16 @@
         "Local declines include Britain; broader trends mostly stable."
       ],
       "prose_claims": [
-        "overview.en.1",
-        "overview.fr.1",
-        "overview.en.2",
-        "overview.fr.2",
-        "overview.en.3",
-        "overview.fr.3",
-        "overview.en.4",
-        "overview.fr.4",
         "conservation.en.1",
-        "conservation.fr.1"
+        "conservation.fr.1",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.en.3",
+        "overview.en.4",
+        "overview.fr.1",
+        "overview.fr.2",
+        "overview.fr.3",
+        "overview.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -92,14 +92,14 @@
         "Wetland charity account gives adult measurements."
       ],
       "prose_claims": [
-        "identification.en.1",
-        "identification.fr.1",
-        "identification.en.2",
-        "identification.fr.2",
         "diet.en.4",
         "diet.fr.4",
         "ecology.en.1",
-        "ecology.fr.1"
+        "ecology.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2"
       ],
       "budget": {
         "limit": 200,
@@ -130,12 +130,12 @@
       "prose_claims": [
         "behavior.en.1",
         "behavior.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2",
         "diet.en.1",
         "diet.fr.1",
         "ecology.en.3",
-        "ecology.fr.3",
-        "conservation.en.2",
-        "conservation.fr.2"
+        "ecology.fr.3"
       ],
       "budget": {
         "limit": 200,
@@ -163,18 +163,18 @@
         "Documents burrows, plant diet, breeding and social spacing."
       ],
       "prose_claims": [
-        "identification.en.3",
-        "identification.fr.3",
-        "identification.en.4",
-        "identification.fr.4",
-        "habitat.en.2",
-        "habitat.fr.2",
+        "behavior.en.2",
+        "behavior.en.5",
+        "behavior.fr.2",
+        "behavior.fr.5",
         "diet.en.2",
         "diet.fr.2",
-        "behavior.en.2",
-        "behavior.fr.2",
-        "behavior.en.5",
-        "behavior.fr.5"
+        "habitat.en.2",
+        "habitat.fr.2",
+        "identification.en.3",
+        "identification.en.4",
+        "identification.fr.3",
+        "identification.fr.4"
       ],
       "budget": {
         "limit": 200,
@@ -227,15 +227,15 @@
         "Michigan account on pup development."
       ],
       "prose_claims": [
-        "habitat.en.3",
-        "habitat.fr.3",
-        "diet.en.3",
-        "diet.fr.3",
         "behavior.en.3",
         "behavior.fr.3",
+        "diet.en.3",
+        "diet.fr.3",
+        "habitat.en.3",
+        "habitat.fr.3",
         "reproduction.en.3",
-        "reproduction.fr.3",
         "reproduction.en.4",
+        "reproduction.fr.3",
         "reproduction.fr.4"
       ],
       "budget": {
@@ -262,8 +262,8 @@
       ],
       "prose_claims": [
         "ecology.en.2",
-        "ecology.fr.2",
         "ecology.en.4",
+        "ecology.fr.2",
         "ecology.fr.4"
       ],
       "budget": {
@@ -317,12 +317,12 @@
       ],
       "prose_claims": [
         "habitat.en.1",
-        "habitat.fr.1",
         "habitat.en.4",
+        "habitat.fr.1",
         "habitat.fr.4",
         "reproduction.en.1",
-        "reproduction.fr.1",
         "reproduction.en.2",
+        "reproduction.fr.1",
         "reproduction.fr.2"
       ],
       "budget": {
@@ -348,8 +348,8 @@
       ],
       "prose_claims": [
         "conservation.en.3",
-        "conservation.fr.3",
         "conservation.en.4",
+        "conservation.fr.3",
         "conservation.fr.4"
       ],
       "budget": {

@@ -12,8 +12,8 @@
       "fr": "Le chat domestique est un petit mammifère carnivore issu de chats sauvages du Proche-Orient. Sa relation avec les humains s’est développée près des premiers villages agricoles, où les rongeurs fréquentaient les réserves. Il s’est ensuite dispersé avec les voyageurs, en gardant ses aptitudes de chasse."
     },
     "identification": {
-      "en": "A compact, four-legged feline, it has a flexible spine, padded feet, sensitive whiskers and retractile claws. Coat length, colour, pattern, body size and tail shape vary widely among individuals and breeds; most cats nevertheless share a broadly similar, agile build.",
-      "fr": "Ce félin au corps compact possède une colonne souple, des coussinets, des vibrisses sensibles et des griffes rétractiles. Longueur, couleur et motifs du pelage, taille et forme de la queue varient selon individus et races ; sa silhouette reste généralement agile."
+      "en": "A compact, four-legged feline, it has a flexible spine, padded feet, sensitive whiskers and retractile claws. Coat length, colour, pattern, body size and tail shape vary widely among individuals and breeds; most cats nevertheless share a broadly similar, agile build. The consulted species account gives a typical adult length of about 76 cm and a mass of 4.1–5.4 kg; males are generally larger, while breed and body condition create substantial variation.",
+      "fr": "Ce félin au corps compact possède une colonne souple, des coussinets, des vibrisses sensibles et des griffes rétractiles. Longueur, couleur et motifs du pelage, taille et forme de la queue varient selon individus et races ; sa silhouette reste généralement agile. Le compte rendu consulté indique une longueur adulte typique d’environ 76 cm et une masse de 4,1 à 5,4 kg ; les mâles sont généralement plus grands, mais la race et l’état corporel entraînent d’importantes variations."
     },
     "habitat": {
       "en": "Cats now occur worldwide, especially around settlements. They live in homes, farms, towns and suburbs, while unowned or free-roaming populations often remain near present or former human habitation. Shelter, food supplied by people and access to small prey influence where they settle.",
@@ -57,7 +57,8 @@
         "ecology"
       ],
       "facts": [
-        "Animal Diversity Web, University of Michigan Museum of Zoology: settlement-associated habitat; body variation; induced ovulation and approximate gestation; solitary and territorial behaviours; carnivorous diet and prey."
+        "Animal Diversity Web, University of Michigan Museum of Zoology: settlement-associated habitat; body variation; induced ovulation and approximate gestation; solitary and territorial behaviours; carnivorous diet and prey.",
+        "Typical adult mass 4.1–5.4 kg, average length 76.2 cm; males generally larger; breed variation exists."
       ]
     },
     {

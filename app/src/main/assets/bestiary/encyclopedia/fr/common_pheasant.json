@@ -1,0 +1,42 @@
+{
+  "id": "common_pheasant",
+  "name": "Faisan de Colchide",
+  "scientific": "Phasianus colchicus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le faisan de Colchide est un grand galliforme terrestre originaire d’Asie tempérée et introduit ailleurs par l’être humain.",
+    "identification": "L’adulte a un corps trapu, des pattes robustes et une longue queue effilée ; le mâle est généralement plus grand, souvent long de 75 à 90 cm, queue comprise. Le mâle est vivement coloré, avec face rouge, tête verte et corps cuivré ; la femelle, plus petite, est brun moucheté, et le collier blanc n’est pas universel. Cornell indique, tous sexes confondus, une longueur de 50 à 70 cm, une masse de 500 à 3 000 g et une envergure de 56 à 86 cm ; les mâles sont généralement plus grands et ont une queue beaucoup plus longue, mais le guide ne distingue pas les plages de mensurations selon le sexe.",
+    "habitat": "Son aire naturelle va du Caucase à la Chine ; il fréquente bois clairs, fourrés et prairies proches d’un couvert dense. Des populations sauvages autonomes vivent en Europe et en Amérique du Nord, aux côtés d’oiseaux d’élevage et de lâchers saisonniers. Il utilise aussi les haies, fossés enherbés et bordures de champs comme abris près des zones d’alimentation.",
+    "diet": "Il gratte le sol pour trouver graines, céréales, racines et fruits tombés, et mange aussi feuilles et bourgeons ; au printemps et en été, il prend davantage d’insectes et d’autres invertébrés. À l’éclosion, les poussins dépendent surtout des proies animales, puis se tournent vers les végétaux en grandissant.",
+    "behavior": "Au printemps, les mâles signalent et défendent leur territoire par des cris, des battements d’ailes et des parades ; un mâle peut s’accoupler avec plusieurs femelles discrètes. Le faisan marche ou court généralement, mais surpris, il décolle presque à la verticale avec des battements sonores puis vole brièvement vers un couvert. Hors reproduction, les femelles se rassemblent parfois en groupes, surtout en hiver.",
+    "reproduction": "La femelle pond environ 7 à 15 œufs dans un nid peu profond au sol et les couve seule durant 23 à 28 jours ; les poussins duvetés quittent vite le nid, se nourrissent eux-mêmes, la suivent et volent brièvement vers deux semaines.",
+    "ecology": "Le faisan cherche sa nourriture en bordure des champs, tandis que renards, blaireaux et corvidés s’attaquent aux œufs et aux poussins. Les oiseaux introduits peuvent concurrencer les galliformes locaux pour la nourriture et les sites de nidification ; les effets varient selon l’habitat et l’intensité des lâchers.",
+    "conservation": "L’évaluation mondiale de l’UICN publiée en 2016 le classait en préoccupation mineure, tout en signalant une tendance décroissante. Elle estimait à 160–220 millions le nombre d’individus adultes dans le monde, malgré des déclins dans certaines parties de son aire."
+  },
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Common_pheasant",
+      "title": "Common pheasant"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Faisan_de_Colchide",
+      "title": "Faisan de Colchide"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Ring-necked_Pheasant/lifehistory",
+      "title": "Ring-necked Pheasant Life History"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Ring-necked_Pheasant/id",
+      "title": "Ring-necked Pheasant Identification"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T45100023A85926819.en",
+      "title": "Phasianus colchicus (Common Pheasant)"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Ring-necked_Pheasant/id/",
+      "title": "Identification du faisan de Colchide — Cornell Lab of Ornithology"
+    }
+  ]
+}

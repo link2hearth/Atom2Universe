@@ -1,0 +1,26 @@
+{
+  "id": "northern_lapwing",
+  "name": "Northern Lapwing",
+  "scientific": "Vanellus vanellus",
+  "group": "birds",
+  "sections": {
+    "overview": "The northern lapwing is a large plover of farmland and wet grassland, famous for its long crest and its tumbling display flights in spring. Its numbers have fallen steeply across much of Europe.",
+    "identification": "A lapwing is about 28–31 cm long, and in Britain adults weigh about 250 g with a wing near 231 mm. It has a black crown and breast, white belly, a long wispy crest, and glossy green and purple upperparts that often look black from afar. The under-tail is cinnamon; females have a shorter crest.",
+    "habitat": "It breeds mainly in farmland and agricultural landscapes, favouring wet grasslands, meadows and short grass, often swards kept under 10 cm by grazing cattle. It needs moist soil rich in earthworms and other invertebrates. In winter it feeds more on mudflats at low tide.",
+    "diet": "It eats earthworms and other invertebrates, with smaller amounts of small fish, seeds and other plant matter. Earthworms and crane-fly larvae are especially important for the chicks, and pastures offer the most earthworms.",
+    "behavior": "Lapwings are territorial and ground-dwelling, and males perform noisy, tumbling song-flights in spring. They nest in loose groups and defend their nests together, using distraction displays and diving at predators. Many birds migrate several thousand kilometres between breeding and wintering areas.",
+    "reproduction": "In Britain a clutch is typically four eggs, incubated for about four weeks, mainly by the female. The downy chicks leave the nest soon after hatching and fledge at 35–40 days, and birds typically first breed at two years old. Lost clutches are often replaced.",
+    "ecology": "Eggs are taken by carrion crows, gulls and stoats, while foxes and domestic cats prey on nests and adults. By feeding on soil invertebrates the lapwing may influence their local numbers, and loss of wet, short grassland has been a major pressure on the species.",
+    "conservation": "The species is classed as Near Threatened on the IUCN Red List and Vulnerable in Europe, and it is Red-listed in the UK. Britain’s breeding population was about 98,000 pairs in 2016, down 65% since 1967. The oldest ringed bird lived over 21 years."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/understanding-birds/birdfacts/lapwing",
+      "title": "Lapwing — BTO BirdFacts, British Trust for Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Vanellus_vanellus/",
+      "title": "Vanellus vanellus — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

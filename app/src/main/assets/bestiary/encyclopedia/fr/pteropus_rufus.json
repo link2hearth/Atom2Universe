@@ -1,0 +1,30 @@
+{
+  "id": "pteropus_rufus",
+  "name": "Renard volant de Madagascar",
+  "scientific": "Pteropus rufus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le renard volant de Madagascar est la plus grande chauve-souris de Madagascar et n’existe nulle part ailleurs. C’est une roussette qui dort en groupes dans les arbres et elle est classée vulnérable, surtout à cause de la chasse et de la perte de sa forêt.",
+    "identification": "Grande chauve-souris au corps long d’environ 24 à 25 cm, d’une envergure d’environ 1,2 m et pesant de 500 à 750 g, les mâles étant plus lourds que les femelles. Elle a un long museau pointu, des oreilles pointues, de grands yeux et pas de queue apparente. Le dessus du corps est brun jaunâtre, le dessous brun foncé, la face et la gorge brun phoque et la nuque brun jaunâtre à roussâtre.",
+    "habitat": "Il vit uniquement à Madagascar. Il dort surtout dans la forêt humide littorale sur sol sableux, du niveau de la mer à environ 800 m. Dans la vallée du Mangoro, au centre-est, les dortoirs se trouvaient dans de petits fragments isolés de forêt humide dégradée de 2,2 à 28,7 ha et dans deux plantations d’eucalyptus, tous hors des aires protégées.",
+    "diet": "Il mâche surtout les fruits pour en boire le jus et recrache la pulpe sèche et les graines. Il mange aussi du pollen et des feuilles, et parfois des insectes. Dans la vallée du Mangoro, ses fientes contenaient des restes d’arbres forestiers indigènes, de fruits cultivés et de fleurs d’eucalyptus : il peut donc se nourrir dans des paysages transformés par l’humain.",
+    "behavior": "Il dort en groupes de plusieurs centaines à plusieurs milliers d’individus, souvent au même endroit toute l’année, mais il est très sensible au dérangement et peut partir ailleurs. Les effectifs d’un dortoir varient beaucoup d’un mois à l’autre : dans la vallée du Mangoro, seuls deux sites sur six abritaient des chauves-souris à chaque visite. À la saison des amours, les mâles dominants défendent des territoires sur les arbres du dortoir. Il se repère surtout par l’odorat et le son plutôt que par écholocation.",
+    "reproduction": "L’accouplement a lieu en avril-mai, le mâle saisissant la femelle par la nuque. La gestation est donnée pour 100 à 150 jours, et une implantation retardée est possible. Un seul petit naît en général, vers octobre, et il est allaité quatre à cinq mois. Les deux sexes sont matures à 1,5 à 2 ans. Trois dortoirs du Mangoro n’étaient occupés que de septembre à mars, peut-être comme dortoirs de maternité.",
+    "ecology": "C’est un disséminateur de graines important pour de nombreuses plantes des forêts littorales, et le seul frugivore de ces forêts capable de transporter des graines sur de longues distances, ce qui peut aider à relier les fragments de forêt. Le pollen trouvé sur son corps laisse penser qu’il pollinise aussi certaines plantes. Les jeunes tombés du dortoir sont capturés par le gymnogène de Madagascar.",
+    "conservation": "Il est classé vulnérable sur la Liste rouge de l’UICN. La chasse pour la viande a été constatée à trois des dortoirs du Mangoro, et le feu et les défrichements y sont répandus; les auteurs de cette étude notaient qu’aucun plan de conservation n’existait pour l’espèce. La chasse vise aussi des dortoirs et des arbres fruitiers ailleurs, et seuls certains dortoirs sont protégés officiellement."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Pteropus_rufus/",
+      "title": "Pteropus rufus — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://zenodo.org/records/13407794",
+      "title": "Pas rare mais menacé : le renard volant endémique de Madagascar Pteropus rufus dans un paysage fragmenté (Jenkins et al., Oryx 2007, résumé)"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1004496",
+      "title": "Pteropus rufus — Mammal Diversity Database"
+    }
+  ]
+}

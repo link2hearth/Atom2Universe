@@ -1,0 +1,30 @@
+{
+  "id": "taphozous_mauritianus",
+  "name": "Taphien de Maurice",
+  "scientific": "Taphozous mauritianus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le taphien de Maurice est une chauve-souris insectivore d’Afrique au sud du Sahara et de plusieurs îles de l’océan Indien. Il doit son nom à l’île Maurice, où le premier spécimen a été collecté, et il est classé en préoccupation mineure.",
+    "identification": "Petite chauve-souris à l’avant-bras de 60 à 66 mm et pesant environ 20 à 36 g. Le pelage du dos est court, lisse et d’un gris mélangé, et le dessous est entièrement blanc. Les ailes sont longues, étroites et pâles, avec des extrémités raccourcies qui aident la chauve-souris à ramper quand les ailes sont repliées. Les mâles ont une tache sombre sur le menton.",
+    "habitat": "Il préfère les terrains humides et dégagés et les savanes recevant au moins environ 500 mm de pluie par an; dans les régions plus sèches, on le note près des marais et des rivières. Il vit aussi en forêt et le long des cours d’eau. La Mammal Diversity Database donne comme aire l’Afrique du Sud jusqu’au Soudan, à la Somalie et au Sénégal, ainsi que Madagascar et des îles comme Maurice, la Réunion et Aldabra.",
+    "diet": "Il se nourrit d’insectes volants, avec les papillons de nuit comme base et des termites et papillons de jour en complément. Il chasse dès que la nuit est tout à fait tombée, repère ses proies au-dessus de terrain dégagé et ne vole jamais plus haut que la cime des arbres. Il pique jusqu’à 10 m en accélérant ses cris, et s’élance parfois de son perchoir de jour pour attraper une proie qui passe.",
+    "behavior": "Il dort à découvert mais à l’abri du soleil direct, sur l’extérieur des murs sous les avant-toits ou sur de gros troncs d’arbres et de palmiers, en choisissant des endroits qui dégagent l’envol; il n’utilise pas les creux sombres ni les toits comme beaucoup de chauves-souris. Les colonies sont petites, le plus souvent d’environ cinq individus et au plus d’une trentaine. Les gîtes sont réutilisés d’année en année. Des déplacements saisonniers sont soupçonnés mais non prouvés.",
+    "reproduction": "Un seul petit naît à la fois, et la femelle l’élève seule, le petit restant accroché à son ventre jusqu’à ce qu’il sache voler. La gestation dure environ deux mois. Le calendrier n’est pas établi : une source donne deux périodes de naissance par an, novembre-décembre et février-avril, une autre des mois différents.",
+    "ecology": "En mangeant beaucoup d’insectes, il contribue à limiter les ravageurs. Serpents et rapaces nocturnes le chassent. Il peut héberger des parasites du genre Anchitrema, qui peuvent passer d’une chauve-souris à l’autre dans un même gîte.",
+    "conservation": "Il est classé en préoccupation mineure, car il est répandu dans toute l’Afrique et sur les îles voisines. Les sources lues ne citent aucune menace précise. Comme il dépend de gîtes exposés, la perte de murs et d’arbres adaptés pourrait compter localement, mais cela n’a pas été mesuré."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Taphozous_mauritianus/",
+      "title": "Taphozous mauritianus — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://admin.ecosolutions.co.za/bats-and-bat-boxes/bat-species/mauritian-tomb-bat-taphozous-mauritianus",
+      "title": "Taphien de Maurice (Taphozous mauritianus) — EcoSolutions"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1004825/",
+      "title": "Taphozous mauritianus — Mammal Diversity Database"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "id": "wolverine",
+  "name": "Glouton",
+  "scientific": "Gulo gulo",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le glouton est un mustélidé à vaste répartition, présent dans le nord de l’Eurasie et de l’Amérique du Nord. Il fréquente forêts boréales, toundras et montagnes, généralement à faible densité et sur de grands domaines individuels. ",
+    "identification": "Le glouton a une tête large, de petites oreilles arrondies, un cou épais, des pattes courtes et puissantes, de grands pieds et une queue touffue. L’adulte mesure environ 65 à 105 cm du museau à la croupe, avec une queue de 13 à 26 cm. En Alaska, les mâles adultes sont rapportés à 11–18 kg et les femelles à 6–12 kg. Le pelage dense et rêche est brun foncé, souvent avec des marques pâles au visage ou à la gorge et des bandes claires sur les flancs. Son crâne large et ses dents solides peuvent broyer les os.",
+    "habitat": "L’aire circumpolaire s’étend des forêts nordiques et de la taïga aux toundras arctique et alpine. Au Canada, il vit dans les forêts du nord et de l’ouest, les montagnes occidentales et la toundra arctique. Au sud de l’aire nord-américaine, ses populations sont clairsemées et fragmentées en montagne. L’animal circule entre forêts, versants ouverts, rochers et toundra selon les saisons et les proies. Ses faibles densités et grands domaines rendent importants les habitats reliés.",
+    "diet": "Le glouton est surtout charognard et consomme souvent des carcasses d’ongulés laissées par les loups et d’autres prédateurs. Il chasse aussi de petits mammifères et des oiseaux et tue parfois de plus grandes proies, dont des élans ou des jeunes caribous. Dans les études synthétisées par le Forest Service, les chasses aux grands ongulés réussissaient le mieux au début du printemps, lorsque la neige profonde et meuble entravait leurs déplacements. Le régime varie selon la saison et les proies locales. En Alaska arctique, les écureuils terrestres cachés et les restes de caribous comptaient parmi les aliments hivernaux. Le surplus est caché sous la neige, en terre ou dans les arbres.",
+    "behavior": "Le glouton est surtout solitaire et actif toute l’année, de jour comme de nuit. Les domaines sont vastes ; ceux des mâles peuvent recouvrir ceux de plusieurs femelles, tandis que les chevauchements entre individus du même sexe sont plus limités dans certaines populations. Une étude génétique sur douze ans dans le centre de la Norvège a relevé de plus grands domaines chez les mâles et l’évitement entre individus du même sexe ; celui-ci diminuait après la mort d’un titulaire. Une synthèse du Forest Service décrit les marques odorantes comme des signaux de position.",
+    "reproduction": "L’accouplement a lieu pendant la saison chaude, généralement de la fin du printemps à l’été. Après fécondation, l’embryon peut retarder son implantation ; la naissance a lieu plusieurs mois après l’accouplement. La gestation active dure 30 à 40 jours. Les femelles mettent bas à la fin de l’hiver ou au début du printemps, souvent deux ou trois petits, dans un abri. Les tunnels de neige sont fréquents dans les milieux nordiques et montagnards, mais racines, troncs et rochers servent aussi de tanières. Les nouveau-nés dépendent du lait et de la protection maternels ; la femelle peut les déplacer entre tanières. Les jeunes sortent au printemps et apprennent à chercher leur nourriture avant de se disperser. Dans la population scandinave étudiée, les femelles se reproduisaient d’abord vers trois ans.",
+    "ecology": "Les charognes relient son alimentation à celle des grands prédateurs et à la chasse humaine aux ongulés. Dans l’est de la Finlande, les élans tués par des humains ou des loups représentaient 55 % des occurrences chez quatre femelles reproductrices ; le lièvre dominait chez les mâles et les femelles non reproductrices. Ce petit échantillon est régional. Un suivi suédois a recensé 1 589 événements reproducteurs entre 2000 et 2018 et observé leur progression vers des secteurs où la neige printanière persistait moins. Les associations variaient selon régions et périodes : dans la région alpine à rennes, la neige d’avril plus profonde restait liée aux événements reproducteurs, tandis que le lien avec la couverture neigeuse changeait ailleurs.",
+    "conservation": "L’évaluation mondiale de l’UICN, achevée le 15 mai 2015 et publiée en 2016, classait le glouton en préoccupation mineure, malgré des déclins liés aux persécutions et à l’usage des terres. Cette catégorie mondiale datée ne décrit pas chaque population. Le piégeage a éliminé le glouton de certaines régions ; prélèvements, conflits, routes, aménagements et fragmentation restent préoccupants ailleurs. L’évaluation COSEWIC de 2014 considérait une seule population nationale au Canada et désignait l’espèce « préoccupante ». Les populations montagnardes méridionales sont vulnérables à l’isolement du noyau nordique. Le suivi, les habitats reliés et la gestion de la mortalité complètent les projections climatiques. "
+  },
+  "sources": [
+    {
+      "url": "https://www.adfg.alaska.gov/index.cfm?adfg=wolverine.main",
+      "title": "Profil du glouton — Alaska Department of Fish and Game"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Gulo_gulo/",
+      "title": "Gulo gulo (glouton) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+    },
+    {
+      "url": "https://mnmammals.d.umn.edu/wolverine",
+      "title": "Glouton — Minnesota Mammals, Université du Minnesota à Duluth"
+    },
+    {
+      "url": "https://doi.org/10.5735/086.050.0109",
+      "title": "Effet du statut reproducteur sur le régime du glouton dans l’est de la Finlande — Annales Zoologici Fennici"
+    },
+    {
+      "url": "https://www.adfg.alaska.gov/static/home/library/pdfs/wildlife/propubs/87_magoun_summer_winter_diets_wolverine_arctic_ak.pdf",
+      "title": "Régimes estival et hivernal du glouton en Alaska arctique — Alaska Department of Fish and Game"
+    },
+    {
+      "url": "https://uu.diva-portal.org/smash/get/diva2%3A917173/FULLTEXT01.pdf",
+      "title": "L’échantillonnage génétique non invasif révèle une territorialité intrasexuelle chez le glouton — Ecology and Evolution"
+    },
+    {
+      "url": "https://research.fs.usda.gov/feis/species-reviews/gugu",
+      "title": "Gulo gulo, glouton — système d’information sur les effets du feu du service forestier américain"
+    },
+    {
+      "url": "https://research.slu.se/en/publications/population-ecology-of-scandinavian-wolverines/",
+      "title": "Écologie des populations de gloutons scandinaves — Université suédoise des sciences agricoles"
+    },
+    {
+      "url": "https://digitalcommons.unl.edu/parasitologyfacpubs/526/",
+      "title": "Reproduction du glouton, Gulo gulo — Journal of Mammalogy"
+    },
+    {
+      "url": "https://doi.org/10.1111/gcb.16908",
+      "title": "La recolonisation après les persécutions passées interroge le rôle de la neige persistante comme limite d’aire du glouton — Global Change Biology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T9561A45198537.en",
+      "title": "Gulo gulo — Liste rouge de l’UICN des espèces menacées (évaluation achevée en 2015)"
+    },
+    {
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/wolverine-status-2014.html",
+      "title": "Glouton : évaluation et rapport de situation du COSEPAC — Gouvernement du Canada (2014)"
+    },
+    {
+      "url": "https://www.science.smith.edu/departments/biology/VHAYSSEN/msi/pdf/i0076-3519-499-01-0001.pdf",
+      "title": "Glouton — notice Mammalian Species 499, American Society of Mammalogists"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.gecco.2022.e02019",
+      "title": "Le glouton dans un paysage changeant et un climat plus chaud — Global Ecology and Conservation"
+    },
+    {
+      "url": "https://doi.org/10.1139/er-2024-0125",
+      "title": "Gloutons et milieux sauvages : réponse au dérangement humain — Environmental Reviews"
+    },
+    {
+      "url": "https://research.fs.usda.gov/treesearch/29680",
+      "title": "Conservation et gestion du glouton — Journal of Wildlife Management"
+    }
+  ]
+}
