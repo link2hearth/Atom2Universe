@@ -1,0 +1,30 @@
+{
+  "id": "orectolobus_floridus",
+  "name": "Orectolobus floridus",
+  "scientific": "Orectolobus floridus",
+  "group": "fish",
+  "sections": {
+    "overview": "Orectolobus floridus est un petit requin-tapis connu du plateau continental du sud-ouest de l’Australie.",
+    "identification": "Sa livrée brun jaunâtre associe bandes, taches et réticulations ; cette combinaison aide à le distinguer des autres requins-tapis.",
+    "habitat": "Il est signalé entre Geraldton et Augusta, en Australie-Occidentale, à des profondeurs de 42 à 85 m.",
+    "diet": "Son régime n’a pas été étudié en détail ; les proies décrites chez d’autres requins-tapis ne doivent pas être présentées comme des observations directes sur cette espèce.",
+    "behavior": "Les observations directes sont rares ; son rythme d’activité et son comportement de chasse restent donc peu documentés.",
+    "reproduction": "La reproduction est présumée vivipare, mais les détails propres à l’espèce ne sont pas établis.",
+    "ecology": "Décrit avec O. parvimaculatus en 2008, il se distingue de ce cousin sympatrique par une combinaison de couleurs, de caractères morphologiques et de mesures ; voir cette fiche pour la comparaison réciproque.",
+    "conservation": "L’évaluation mondiale de l’UICN publiée en 2025 le classe en Préoccupation mineure, tout en tenant compte de son aire naturellement restreinte."
+  },
+  "sources": [
+    {
+      "url": "https://mapress.com/zt/article/view/zootaxa.1673.1.2",
+      "title": "Deux nouveaux requins-tapis, Orectolobus floridus et O. parvimaculatus — Zootaxa"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T161664A124524288.en",
+      "title": "Orectolobus floridus — Liste rouge de l’UICN (2025)"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Orectolobus_floridus/",
+      "title": "Requin-tapis floral — Animal Diversity Web"
+    }
+  ]
+}

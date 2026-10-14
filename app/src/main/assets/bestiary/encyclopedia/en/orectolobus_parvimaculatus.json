@@ -1,0 +1,26 @@
+{
+  "id": "orectolobus_parvimaculatus",
+  "name": "Dwarf spotted wobbegong",
+  "scientific": "Orectolobus parvimaculatus",
+  "group": "fish",
+  "sections": {
+    "overview": "The dwarf spotted wobbegong is a small carpet shark endemic to southwestern Western Australia.",
+    "identification": "It reaches up to 94 cm total length; its colourful, spotted appearance once led to confusion with the larger spotted wobbegong, O. maculatus.",
+    "habitat": "It is a bottom-dweller of inshore waters and the continental shelf, recorded at depths of 9–135 m.",
+    "diet": "Its species-specific diet remains poorly documented in the sources consulted.",
+    "behavior": "It lives on the seabed; no distinct activity schedule is established in the sources used here.",
+    "reproduction": "The consulted assessment provides no species-specific reproductive measurements.",
+    "ecology": "Described with O. floridus in 2008, it is sympatric with that smaller-range cousin; the two are separated by a combination of colour and anatomical traits.",
+    "conservation": "The 2025 global IUCN assessment lists it as Least Concern and reports a stable population trend."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T161651A124521951.en",
+      "title": "Orectolobus parvimaculatus — IUCN Red List (2025)"
+    },
+    {
+      "url": "https://mapress.com/zt/article/view/zootaxa.1673.1.2",
+      "title": "Two new wobbegong sharks, Orectolobus floridus and O. parvimaculatus — Zootaxa"
+    }
+  ]
+}

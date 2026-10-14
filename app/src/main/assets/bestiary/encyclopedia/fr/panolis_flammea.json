@@ -1,0 +1,30 @@
+{
+  "id": "panolis_flammea",
+  "name": "Noctuelle du pin",
+  "scientific": "Panolis flammea",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Panolis flammea est une noctuelle dont les chenilles mangent des aiguilles de pin ; indigène en Europe, elle peut devenir un ravageur forestier lors de pullulations.",
+    "identification": "Le compte rendu régional dit l’adulte facile à reconnaître sans préciser ses critères ; utiliser un guide spécialisé pour l’identifier à vue.",
+    "habitat": "Elle vit dans les pinèdes et plantations ; des pullulations ont été documentées sur le pin sylvestre et le pin tordu introduit en Écosse.",
+    "diet": "Les chenilles mangent des aiguilles de pin, surtout du pin sylvestre et du pin tordu ; un compte rendu écossais cite aussi parfois le mélèze.",
+    "behavior": "Les pullulations peuvent défolier fortement les plantations sensibles ; l’essence hôte et les conditions du site influencent le risque.",
+    "reproduction": "À Dumfries et Galloway, elle a une génération annuelle, hiverne comme chrysalide et ses chenilles apparaissent de mai à juillet ; le calendrier peut différer ailleurs.",
+    "ecology": "Son écologie recoupe celle de la Phalène du pin, Bupalus piniaria, déjà décrite ici : toutes deux mangent des aiguilles, mais ce sont des papillons distincts aux cycles différents.",
+    "conservation": "Son importance forestière est épisodique et ne renseigne pas sur son statut mondial ; les pullulations historiques se concentrent dans certaines régions et certains peuplements hôtes."
+  },
+  "sources": [
+    {
+      "url": "https://cdn.forestresearch.gov.uk/1987/03/fcbu067.pdf",
+      "title": "Biologie des populations de la noctuelle du pin — Forestry Commission"
+    },
+    {
+      "url": "https://dgmoths.info/moths/pine-beauty/",
+      "title": "Pine Beauty — Dumfries and Galloway Moths"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/?e=p&id=41440",
+      "title": "Noctuelle du Pin — Lepinet"
+    }
+  ]
+}

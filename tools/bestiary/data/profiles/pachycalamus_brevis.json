@@ -1,0 +1,166 @@
+{
+  "id": "pachycalamus_brevis",
+  "scientific": "Pachycalamus brevis",
+  "group": "reptiles",
+  "name": {
+    "en": "Short worm lizard",
+    "fr": "Pachycalamus brevis"
+  },
+  "sections": {
+    "overview": {
+      "en": "The short worm lizard is an amphisbaenian reptile in the family Trogonophidae. It is the only recognized species of Pachycalamus and is known from Socotra, Yemen.",
+      "fr": "L’Amphisbène court est un reptile amphisbaenien de la famille des Trogonophiidés. C’est la seule espèce reconnue du genre Pachycalamus; elle est connue de Socotra, au Yémen."
+    },
+    "identification": {
+      "en": "It is the type species of the genus Pachycalamus. The accessible species account does not provide enough diagnostic detail for a reliable field description, so identification should rely on specialist keys or specimens.",
+      "fr": "C’est l’espèce type du genre Pachycalamus. La fiche spécifique accessible ne donne pas assez de détails diagnostiques pour permettre une description fiable sur le terrain; l’identification demande donc une clé spécialisée ou l’examen d’un spécimen."
+    },
+    "habitat": {
+      "en": "The type locality and verified distribution are on Socotra Island in the Socotra Archipelago. Available species accounts provide little information on its microhabitat, so a more precise habitat preference cannot be stated confidently.",
+      "fr": "La localité type et la répartition attestée se trouvent sur l’île de Socotra, dans l’archipel du même nom. Les fiches disponibles donnent peu d’informations sur le microhabitat; une préférence plus précise ne peut être affirmée avec confiance."
+    },
+    "diet": {
+      "en": "No dependable account of prey or feeding ecology was located. Its diet should not be inferred from the better-studied worm lizards alone.",
+      "fr": "Aucune source fiable décrivant ses proies ou son écologie alimentaire n’a été trouvée. Son régime ne doit pas être déduit de celui des amphisbènes mieux étudiés."
+    },
+    "behavior": {
+      "en": "The sources consulted do not provide a detailed activity pattern or direct behavioral observations for this species.",
+      "fr": "Les sources consultées ne donnent ni rythme d’activité détaillé ni observation comportementale directe pour cette espèce."
+    },
+    "reproduction": {
+      "en": "The Reptile Database records it as oviparous. Clutch size, nest site and development are not established in the sources consulted.",
+      "fr": "La Reptile Database indique que l’espèce est ovipare. Les sources consultées ne précisent ni le nombre d’œufs, ni le site de ponte, ni le développement."
+    },
+    "ecology": {
+      "en": "Pachycalamus brevis is part of Socotra's endemic terrestrial reptile fauna. Archipelago surveys include it among the recorded land reptiles, but its abundance, diet and interactions remain poorly documented.",
+      "fr": "Pachycalamus brevis fait partie de la faune reptilienne terrestre endémique de Socotra. Les inventaires de l’archipel la comptent parmi les reptiles recensés, mais son abondance, son régime et ses interactions restent peu documentés."
+    },
+    "conservation": {
+      "en": "The last located IUCN assessment (2011) classified it as Data Deficient. This means information was insufficient to assess risk, not that the species is safe; reassessment would be useful.",
+      "fr": "La dernière évaluation de l’UICN retrouvée (2011) la classe dans la catégorie Données insuffisantes. Cela indique un manque d’informations pour évaluer le risque, non une absence de menace; une actualisation serait utile."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pachycalamus brevis — The Reptile Database",
+        "fr": "Pachycalamus brevis — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/Pachycalamus/brevis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The database places the species in Trogonophidae and Amphisbaenia, gives Socotra as its distribution, and records it as oviparous and type species of its genus."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2",
+        "diet.en.1",
+        "diet.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 25,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Annotated checklist and distribution of the Socotran Archipelago Herpetofauna — Zootaxa",
+        "fr": "Liste commentée et répartition de l’herpétofaune de l’archipel de Socotra — Zootaxa"
+      },
+      "url": "https://www.biotaxa.org/Zootaxa/article/view/zootaxa.2826.1.1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The 2011 survey includes P. brevis among terrestrial reptiles recorded in the Socotra archipelago."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "diet.fr.1",
+        "behavior.fr.1",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 14,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pachycalamus brevis — IUCN Red List assessment, 2011",
+        "fr": "Pachycalamus brevis — évaluation de la Liste rouge de l’UICN, 2011"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2011-2.RLTS.T199743A9124699.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The 2011 global assessment categorized the species as Data Deficient."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "diet.en.2",
+        "behavior.en.1",
+        "ecology.en.1",
+        "ecology.en.2",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 10,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific morphology, diet, habitat preferences and behavior are poorly covered by online sources.",
+    "The IUCN assessment found is old (2011); current conservation status is uncertain."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Intentionally concise because natural-history data are sparse; old assessment date is explicit."
+}

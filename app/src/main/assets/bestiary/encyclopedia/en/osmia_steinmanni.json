@@ -1,0 +1,38 @@
+{
+  "id": "osmia_steinmanni",
+  "name": "Steinmann's mason bee",
+  "scientific": "Osmia steinmanni",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Steinmann's mason bee is a solitary bee in the genus Osmia, subgenus Melanosmia. Described from the Swiss Alps, it is a rare, localized alpine species; a 2023 report added the first known Slovenian record.",
+    "identification": "It is a small dark mason bee, about 8–10 mm long in the German species account. The original description compares it with European Melanosmia and reports its closest morphological relationship with O. svenssoni; specialist characters are needed for identification.",
+    "habitat": "The original specimens came from stony, south-east-facing slopes in the subalpine and alpine zones of eastern Switzerland. A later Slovenian record suggests that its distribution may extend along more of the Alpine arc, but the known records remain few.",
+    "diet": "The original description records pollen collection from horseshoe vetch (Hippocrepis comosa) and bird’s-foot trefoil (Lotus corniculatus), both legumes. These are documented pollen sources, not proof that it uses only these plants.",
+    "behavior": "It is solitary; field behavior is poorly documented, and its specialist account leaves nesting biology unknown.",
+    "reproduction": "The specialist account gives no nesting or development details, so nest site, brood cells and number of generations remain unknown.",
+    "ecology": "As a pollen-collecting bee, it links alpine flowers with insect pollination, but its ecological role and breadth of pollen sources have not been quantified. It is grouped with close Melanosmia relatives such as O. svenssoni, whose known northern distribution contrasts with this bee’s Alpine records.",
+    "conservation": "No global Red List assessment was located; the species is described as rare, but its few records cannot establish a population trend."
+  },
+  "sources": [
+    {
+      "url": "https://biostor.org/reference/115406",
+      "title": "Osmia (Melanosmia) steinmanni sp. n., a new bee species from the Swiss Alps — Revue Suisse de Zoologie"
+    },
+    {
+      "url": "https://blogs.ethz.ch/osmiini/2023/09/22/osmia-steinmanni/",
+      "title": "Osmia steinmanni — Palaearctic Osmiine Bees, ETH Zürich"
+    },
+    {
+      "url": "https://de.wikipedia.org/wiki/Osmia_steinmanni",
+      "title": "Osmia steinmanni — German wild-bee account"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3088345/",
+      "title": "Review of non-metallic Osmia (Melanosmia) in North America, with notes on Palaearctic Melanosmia — ZooKeys / PMC"
+    },
+    {
+      "url": "https://www.zobodat.at/pdf/BEF_24_0055-0062.pdf",
+      "title": "Distribution of Osmia steinmanni in Slovenia — Beiträge zur Entomofaunistik"
+    }
+  ]
+}

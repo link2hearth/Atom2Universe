@@ -1,0 +1,38 @@
+{
+  "id": "osmia_steinmanni",
+  "name": "Osmie de Steinmann",
+  "scientific": "Osmia steinmanni",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "L’Osmie de Steinmann est une abeille solitaire du genre Osmia, sous-genre Melanosmia. Décrite des Alpes suisses, elle est rare et localisée; une publication de 2023 a ajouté la première observation connue en Slovénie.",
+    "identification": "C’est une petite abeille maçonne sombre, longue d’environ 8–10 mm selon la source allemande. La description originale la compare aux Melanosmia d’Europe et la rapproche morphologiquement d’O. svenssoni; l’identification requiert des caractères spécialisés.",
+    "habitat": "Les spécimens d’origine proviennent de pentes pierreuses exposées au sud-est, dans les étages subalpin et alpin de l’est de la Suisse. Une observation ultérieure en Slovénie suggère que sa répartition pourrait s’étendre le long de l’arc alpin, mais les mentions restent peu nombreuses.",
+    "diet": "La description originale signale la collecte de pollen sur l’Hippocrépide à toupet (Hippocrepis comosa) et le Lotier corniculé (Lotus corniculatus), deux légumineuses. Ce sont des sources de pollen documentées, sans prouver que l’abeille se limite à ces plantes.",
+    "behavior": "Elle est solitaire; comportement peu documenté et la source spécialisée indique que sa nidification est inconnue.",
+    "reproduction": "La source spécialisée ne décrit ni nidification ni développement; le site du nid, les cellules et le nombre de générations restent inconnus.",
+    "ecology": "En récoltant du pollen, elle contribue à la pollinisation des plantes alpines, mais son rôle écologique et l’étendue de ses ressources polliniques n’ont pas été quantifiés. Elle est rapprochée de Melanosmia comme O. svenssoni, dont l’aire nordique connue contraste avec les observations alpines de cette abeille.",
+    "conservation": "Aucune évaluation mondiale de Liste rouge n’a été trouvée; l’espèce est dite rare, mais ses quelques observations ne permettent pas d’établir une tendance des effectifs."
+  },
+  "sources": [
+    {
+      "url": "https://biostor.org/reference/115406",
+      "title": "Osmia (Melanosmia) steinmanni sp. n., une nouvelle abeille des Alpes suisses — Revue Suisse de Zoologie"
+    },
+    {
+      "url": "https://blogs.ethz.ch/osmiini/2023/09/22/osmia-steinmanni/",
+      "title": "Osmia steinmanni — Palaearctic Osmiine Bees, ETH Zurich"
+    },
+    {
+      "url": "https://de.wikipedia.org/wiki/Osmia_steinmanni",
+      "title": "Osmia steinmanni — fiche allemande d’abeille sauvage"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3088345/",
+      "title": "Révision des Osmia (Melanosmia) non métalliques d’Amérique du Nord, avec des notes sur les Melanosmia paléarctiques — ZooKeys / PMC"
+    },
+    {
+      "url": "https://www.zobodat.at/pdf/BEF_24_0055-0062.pdf",
+      "title": "Répartition d’Osmia steinmanni en Slovénie — Beiträge zur Entomofaunistik"
+    }
+  ]
+}

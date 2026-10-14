@@ -1,0 +1,26 @@
+{
+  "id": "oplurus_fierinensis",
+  "name": "Oplurus fierinensis",
+  "scientific": "Oplurus fierinensis",
+  "group": "reptiles",
+  "sections": {
+    "overview": "This rock-dwelling iguana is endemic to southwestern Madagascar.",
+    "identification": "It has a flattened body, fine keeled scales and a blue-grey back.",
+    "habitat": "It uses rocky or limestone outcrops and nearby thorn scrub.",
+    "diet": "The regional species account reports an insect diet.",
+    "behavior": "It is diurnal and saxicolous.",
+    "reproduction": "It lays eggs; a regional account reports clutches of four to six.",
+    "ecology": "The Reptile Database places it in arid southwestern Madagascar, including the Fiherenana and Onilahy valleys.",
+    "conservation": "A regional guide lists habitat loss and degradation as threats and reports Least Concern; this is not a new assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.environnement.mg/wp-content/uploads/2025/01/2-FICHE-TECHNIQUE-COMPLETE-richesse-biologique-NAP-TSinjoriake_A4_2.pdf",
+      "title": "Malagasy environmental guide: Oplurus fierinensis"
+    },
+    {
+      "url": "https://reptile-database.reptarium.cz/Oplurus/fierinensis",
+      "title": "The Reptile Database: Oplurus fierinensis"
+    }
+  ]
+}

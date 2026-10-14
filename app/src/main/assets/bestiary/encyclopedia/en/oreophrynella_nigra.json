@@ -1,0 +1,38 @@
+{
+  "id": "oreophrynella_nigra",
+  "name": "Pebble toad",
+  "scientific": "Oreophrynella nigra",
+  "group": "amphibians",
+  "sections": {
+    "overview": "The pebble toad is a small, dark toad endemic to two high tepuis in Venezuela. Like MacConnell's bush toad, O. macconnelli, it belongs to Oreophrynella, but it lives on rocky summits rather than mainly on forested slopes.",
+    "identification": "Its body is dark and its back bears rounded tubercles and smaller granules. The Venezuelan Red Book describes it at about 2.5 cm long. It was historically confused with O. quelchii; current taxonomic references retain O. nigra as a species, though its distinction has been debated.",
+    "habitat": "It is known from Kukenán and Yuruaní tepuis in Bolívar State, at 2300–2700 m. It lives on rocks in the high-mountain tepui environment; communal breeding is reported in peat-bog galleries. O. macconnelli, in contrast, is known mainly from humid forest on lower tepui slopes.",
+    "diet": "The sources consulted do not establish species-specific diet data.",
+    "behavior": "When disturbed, it can tuck its limbs beneath its body and curl into a ball. On a slope, it may roll into a crack or crevice; this defensive behavior has been reported for several Oreophrynella, including O. nigra.",
+    "reproduction": "It is reported to breed communally in peat-bog galleries by direct development: young emerge without a free-living tadpole stage. Detailed observations of breeding remain limited.",
+    "ecology": "Its rough, dark appearance blends with rocky tepui surfaces. Rolling may carry it into a crevice and out of view, but the original behavioral study also notes that tumbling can be hazardous. Its summit ecology differs from that of the forest-associated O. macconnelli.",
+    "conservation": "The IUCN assessment lists it as Vulnerable under criterion D2, reflecting its very restricted distribution and potential sensitivity to sudden threats such as wildfire. That assessment describes it as common locally but recommends close monitoring because its known range is small."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Bufonidae/Oreophrynella/Oreophrynella-nigra",
+      "title": "Oreophrynella nigra — Amphibian Species of the World, American Museum of Natural History"
+    },
+    {
+      "url": "https://www.amphibians.org/wp-content/uploads/sites/3/2018/12/TAW-Threatened-Species-Profiles_Part1.pdf",
+      "title": "Pebble toad (Oreophrynella nigra) — Threatened Amphibians of the World"
+    },
+    {
+      "url": "https://pubs.usgs.gov/publication/5223701",
+      "title": "Aspects of the reproductive ecology and behavior of the tepui toads, genus Oreophrynella — USGS / Copeia"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T54852A109530338.en",
+      "title": "Oreophrynella nigra — IUCN Red List of Threatened Species"
+    },
+    {
+      "url": "https://www.provita.org.ve/wp-content/uploads/2022/09/Provita_Libro_Rojo_Fauna_Venezolana_4ed_Rodriguez-et-al-2015.pdf",
+      "title": "Sapito rugoso del Kukenán — Libro Rojo de la Fauna Venezolana"
+    }
+  ]
+}

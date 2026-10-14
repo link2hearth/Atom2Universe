@@ -1,0 +1,144 @@
+{
+  "id": "orectolobus_japonicus",
+  "scientific": "Orectolobus japonicus",
+  "group": "fish",
+  "name": {
+    "en": "Japanese wobbegong",
+    "fr": "Requin-tapis japonais"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Japanese wobbegong is a small, nocturnal carpet shark of the northwestern and west-central Pacific.",
+      "fr": "Le Requin-tapis japonais est un petit requin-tapis nocturne du nord-ouest et du centre-ouest du Pacifique."
+    },
+    "identification": {
+      "en": "It reaches about 118 cm total length and has a flattened body, mottled camouflage and fleshy lobes around the mouth.",
+      "fr": "Il atteint environ 118 cm de longueur totale et possède un corps aplati, un camouflage marbré et des lobes charnus autour de la bouche."
+    },
+    "habitat": {
+      "en": "It lives on the continental shelf, from the intertidal zone to about 200 m, especially on rocky and coral reefs.",
+      "fr": "Il vit sur le plateau continental, de la zone intertidale jusqu’à environ 200 m, surtout sur les récifs rocheux et coralliens."
+    },
+    "diet": {
+      "en": "It feeds on fishes and bottom-dwelling invertebrates, including crustaceans and cephalopods.",
+      "fr": "Il se nourrit de poissons et d’invertébrés benthiques, notamment des crustacés et des céphalopodes."
+    },
+    "behavior": {
+      "en": "By day it can remain concealed on the seabed; its nocturnal habits and reef shelter may reduce encounters with fisheries.",
+      "fr": "Le jour, il peut rester caché sur le fond ; ses habitudes nocturnes et les abris récifaux peuvent réduire les rencontres avec les pêcheries."
+    },
+    "reproduction": {
+      "en": "It is viviparous; the IUCN account reports litters of 20–27 and a gestation of about 12 months.",
+      "fr": "Il est vivipare ; la fiche de l’UICN indique des portées de 20 à 27 petits et une gestation d’environ 12 mois."
+    },
+    "ecology": {
+      "en": "Unlike the Australian Orectolobus profiles here, this species ranges from Japan to Vietnam; local records in Taiwan can be confused with O. leptolineatus.",
+      "fr": "Contrairement aux Orectolobus australiens présentés ici, cette espèce s’étend du Japon au Vietnam ; à Taïwan, certaines observations peuvent être confondues avec O. leptolineatus."
+    },
+    "conservation": {
+      "en": "The 2020 global IUCN assessment lists it as Least Concern, while noting possible local fishing-related declines and limited population data.",
+      "fr": "L’évaluation mondiale de l’UICN de 2020 le classe en Préoccupation mineure, tout en signalant de possibles déclins locaux liés à la pêche et le manque de données démographiques."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Orectolobus japonicus — IUCN Red List (2020)",
+        "fr": "Orectolobus japonicus — Liste rouge de l’UICN (2020)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T161563A124507360.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The 2020 assessment gives Japan-to-Vietnam range, reef habitat to 200 m, viviparity and litter data; it notes possible local fishing concerns."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 21,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Japanese wobbegong — Toba Aquarium species guide",
+        "fr": "オオセ — 鳥羽水族館 生きもの図鑑"
+      },
+      "url": "https://aquarium.co.jp/picturebook/orectolobus-japonicus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "The Japanese aquarium account confirms the species name and describes its flattened body and habit of hiding on the bottom."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 20,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Orectolobus japonicus — FishBase species summary",
+        "fr": "Orectolobus japonicus — résumé d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Orectolobus-japonicus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "FishBase summarizes reported fish prey and benthic invertebrates including shrimp and cephalopods."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 12,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet records are summarized from reported prey rather than a single comprehensive species study. The range and conservation statements follow the 2020 global IUCN assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the global IUCN assessment and FishBase against a Japanese aquarium account; kept its Taiwan identification caveat explicit."
+}

@@ -1,0 +1,219 @@
+{
+  "id": "oreophrynella_nigra",
+  "scientific": "Oreophrynella nigra",
+  "group": "amphibians",
+  "name": {
+    "en": "Pebble toad",
+    "fr": "Crapaud caillou"
+  },
+  "sections": {
+    "overview": {
+      "en": "The pebble toad is a small, dark toad endemic to two high tepuis in Venezuela. Like MacConnell's bush toad, O. macconnelli, it belongs to Oreophrynella, but it lives on rocky summits rather than mainly on forested slopes.",
+      "fr": "Le crapaud-caillou est un petit anoure sombre endémique de deux hauts tepuis du Venezuela. Comme le crapaud de MacConnell, O. macconnelli, il appartient au genre Oreophrynella, mais vit sur des sommets rocheux plutôt que surtout sur des pentes forestières."
+    },
+    "identification": {
+      "en": "Its body is dark and its back bears rounded tubercles and smaller granules. The Venezuelan Red Book describes it at about 2.5 cm long. It was historically confused with O. quelchii; current taxonomic references retain O. nigra as a species, though its distinction has been debated.",
+      "fr": "Son corps est sombre et son dos porte des tubercules arrondis et de petits granules. Le Livre rouge vénézuélien indique environ 2,5 cm de longueur. Elle a autrefois été confondue avec O. quelchii; les références taxonomiques actuelles maintiennent O. nigra comme espèce, même si cette distinction a été discutée."
+    },
+    "habitat": {
+      "en": "It is known from Kukenán and Yuruaní tepuis in Bolívar State, at 2300–2700 m. It lives on rocks in the high-mountain tepui environment; communal breeding is reported in peat-bog galleries. O. macconnelli, in contrast, is known mainly from humid forest on lower tepui slopes.",
+      "fr": "Elle est connue des tepuis Kukenán et Yuruaní, dans l’État de Bolívar, entre 2300 et 2700 m. Elle vit sur les rochers du milieu montagnard des tepuis; une reproduction communautaire est signalée dans des galeries de tourbières. O. macconnelli, au contraire, est surtout connue des forêts humides des pentes plus basses."
+    },
+    "diet": {
+      "en": "The sources consulted do not establish species-specific diet data.",
+      "fr": "Les sources consultées ne permettent pas d’établir de données spécifiques sur son régime alimentaire."
+    },
+    "behavior": {
+      "en": "When disturbed, it can tuck its limbs beneath its body and curl into a ball. On a slope, it may roll into a crack or crevice; this defensive behavior has been reported for several Oreophrynella, including O. nigra.",
+      "fr": "Dérangé, l’animal peut replier ses membres sous le corps et se mettre en boule. Sur une pente, il peut rouler jusque dans une fissure; ce comportement défensif est signalé chez plusieurs Oreophrynella, dont O. nigra."
+    },
+    "reproduction": {
+      "en": "It is reported to breed communally in peat-bog galleries by direct development: young emerge without a free-living tadpole stage. Detailed observations of breeding remain limited.",
+      "fr": "Sa reproduction est signalée comme communautaire dans des galeries de tourbières, avec développement direct : les jeunes éclosent sans stade de têtard libre. Les observations détaillées restent limitées."
+    },
+    "ecology": {
+      "en": "Its rough, dark appearance blends with rocky tepui surfaces. Rolling may carry it into a crevice and out of view, but the original behavioral study also notes that tumbling can be hazardous. Its summit ecology differs from that of the forest-associated O. macconnelli.",
+      "fr": "Son aspect sombre et rugueux se confond avec les surfaces rocheuses des tepuis. La roulade peut la conduire dans une fissure et la soustraire à la vue, mais l’étude comportementale d’origine signale aussi les risques de la chute. Son écologie de sommet diffère de celle d’O. macconnelli, liée aux forêts."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists it as Vulnerable under criterion D2, reflecting its very restricted distribution and potential sensitivity to sudden threats such as wildfire. That assessment describes it as common locally but recommends close monitoring because its known range is small.",
+      "fr": "L’évaluation de l’UICN classe l’espèce Vulnérable selon le critère D2, compte tenu de sa répartition très restreinte et de sa sensibilité possible aux menaces soudaines comme les incendies. Cette évaluation la décrit comme commune localement, mais recommande un suivi attentif en raison de sa petite aire connue."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Oreophrynella nigra — Amphibian Species of the World, American Museum of Natural History",
+        "fr": "Oreophrynella nigra — Amphibian Species of the World, American Museum of Natural History"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Bufonidae/Oreophrynella/Oreophrynella-nigra",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology",
+        "reproduction",
+        "conservation",
+        "diet"
+      ],
+      "facts": [
+        "AMNH lists the species from Kukenán and Yuruaní tepuis at 2,300–2,700 m and notes past confusion with O. quelchii."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "identification.fr.2",
+        "habitat.fr.1",
+        "diet.en.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.fr.2",
+        "ecology.en.3",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 19,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pebble toad (Oreophrynella nigra) — Threatened Amphibians of the World",
+        "fr": "Crapaud-caillou (Oreophrynella nigra) — Threatened Amphibians of the World"
+      },
+      "url": "https://www.amphibians.org/wp-content/uploads/sites/3/2018/12/TAW-Threatened-Species-Profiles_Part1.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "conservation",
+        "diet"
+      ],
+      "facts": [
+        "Species profile reports rocky tepui habitat, direct development in communal peat-bog galleries and Vulnerable D2 status."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 16,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aspects of the reproductive ecology and behavior of the tepui toads, genus Oreophrynella — USGS / Copeia",
+        "fr": "Écologie reproductive et comportement des crapauds des tepuis du genre Oreophrynella — USGS / Copeia"
+      },
+      "url": "https://pubs.usgs.gov/publication/5223701",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Field observations describe curling up and rolling downhill into cracks, while noting that tumbling can sometimes be dangerous."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.3",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 18,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oreophrynella nigra — IUCN Red List of Threatened Species",
+        "fr": "Oreophrynella nigra — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T54852A109530338.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "IUCN category verified as Vulnerable under criterion D2."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.fr.2",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 8,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sapito rugoso del Kukenán — Libro Rojo de la Fauna Venezolana",
+        "fr": "Crapaud rugueux du Kukenán — Livre rouge de la faune vénézuélienne"
+      },
+      "url": "https://www.provita.org.ve/wp-content/uploads/2022/09/Provita_Libro_Rojo_Fauna_Venezolana_4ed_Rodriguez-et-al-2015.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The Venezuelan Red Book describes a uniformly dark toad about 2.5 cm long with dorsal tubercles."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 16,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet and detailed population data are lacking.",
+    "A published phylogenetic interpretation has questioned the distinction from O. quelchii; the AMNH reference currently lists O. nigra as valid.",
+    "Rolling is documented for the genus but can entail fall or drowning risks."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Cross-references O. macconnelli reciprocally by elevation and habitat; source limitations stated."
+}

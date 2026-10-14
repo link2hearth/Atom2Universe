@@ -1,0 +1,34 @@
+{
+  "id": "pandalus_borealis",
+  "name": "Crevette nordique",
+  "scientific": "Pandalus borealis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Pandalus borealis est une crevette d’eaux froides de l’Atlantique Nord et du Pacifique Nord, exploitée par plusieurs pêcheries septentrionales.",
+    "identification": "Son corps est translucide à rosé et sa carapace assez fine ; Pandalus eous du Pacifique est une espèce distincte et très proche, non une forme locale de P. borealis.",
+    "habitat": "Elle vit sur des fonds meubles en eaux marines froides et possède une vaste répartition circumboréale, de l’Atlantique Nord au Pacifique Nord.",
+    "diet": "C’est une omnivore opportuniste qui se nourrit sur le fond comme prédateur et charognard.",
+    "behavior": "Son cycle comprend un changement de sexe : les jeunes crevettes arrivent d’abord à maturité comme mâles, puis deviennent femelles ; le calendrier varie selon les régions.",
+    "reproduction": "La femelle porte les œufs et la ponte est saisonnière ; le calendrier et l’investissement reproducteur varient selon les régions.",
+    "ecology": "Sa proche parente P. eous est distincte ; dans le golfe du Saint-Laurent, Pandalus montagui se reconnaît à ses bandes rouges plus marquées et n’est pas un synonyme.",
+    "conservation": "La NOAA indique que le stock américain de crevette nordique est surexploité et sa pêche fermée ; ce constat régional ne s’étend pas automatiquement au monde entier."
+  },
+  "sources": [
+    {
+      "url": "https://www.pac.dfo-mpo.gc.ca/fm-gp/shellfish-mollusques/prawn-shrimp-crevette/biol-fra.html",
+      "title": "Biologie de la crevette nordique — Pêches et Océans Canada"
+    },
+    {
+      "url": "https://www.sealifebase.ca/summary/Pandalus-borealis.html",
+      "title": "Crevette nordique — SeaLifeBase"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Pandalus-borealis-Crevette-nordique-4587",
+      "title": "Pandalus borealis — DORIS, Fédération française d’études et de sports sous-marins"
+    },
+    {
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-northern-shrimp",
+      "title": "Crevette nordique de l’Atlantique — NOAA Fisheries"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "palpares_libelluloides",
+  "name": "Giant antlion",
+  "scientific": "Palpares libelluloides",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Palpares libelluloides is a large antlion of the Mediterranean region, in the lacewing order Neuroptera.",
+    "identification": "Its broad wings are conspicuously mottled; adults fly heavily and are active by day.",
+    "habitat": "In France it is chiefly limited to Mediterranean-climate areas, with records inland to parts of Ardèche and Drôme; it also occurs across southern Europe and adjoining regions.",
+    "diet": "The atlas gives no species-specific prey details.",
+    "behavior": "Day-active adults and their conspicuous, heavy flight make the species relatively easy to record where it occurs.",
+    "reproduction": "No species-specific breeding account was found.",
+    "ecology": "It occurs in dry open grassland.",
+    "conservation": "No global status is established here."
+  },
+  "sources": [
+    {
+      "url": "https://r-a-r-e.fr/wp-content/uploads/2020/06/Fourmilions-France.pdf",
+      "title": "French antlion distribution atlas"
+    },
+    {
+      "url": "https://www.paca.developpement-durable.gouv.fr/IMG/pdf/f09321p0303_diagnosticecologique.pdf",
+      "title": "Ecological diagnosis for a project in Noves, France"
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "id": "oreophrynella_macconnelli",
+  "scientific": "Oreophrynella macconnelli",
+  "group": "amphibians",
+  "name": {
+    "en": "MacConnell's bush toad",
+    "fr": "Crapaud de MacConnell"
+  },
+  "sections": {
+    "overview": {
+      "en": "MacConnell's bush toad is a little-known toad of the Guiana Highlands. It shares its genus with the pebble toad, O. nigra, but is chiefly associated with moist forest on tepui slopes rather than high rocky summits.",
+      "fr": "Le crapaud de MacConnell est un anoure peu connu des hautes terres de Guyane. Il partage son genre avec le crapaud-caillou O. nigra, mais fréquente surtout les forêts humides des pentes de tepuis plutôt que les hauts sommets rocheux."
+    },
+    "identification": {
+      "en": "It is a small bufonid, but accessible accounts provide few reliable field marks. It is difficult to detect and partly arboreal; individuals have been found on epiphytic ferns and on the ground.",
+      "fr": "C’est un petit bufonidé, mais les sources accessibles donnent peu de caractères fiables pour l’identifier sur le terrain. Difficile à détecter et en partie arboricole, l’espèce a été observée sur des fougères épiphytes et au sol."
+    },
+    "habitat": {
+      "en": "It inhabits moist submontane forest with a medium canopy, abundant epiphytes, mosses and dense undergrowth. Records span 800–1800 m in Guyana and Venezuela; presence in neighbouring Brazilian Roraima is possible but unconfirmed. Unlike O. nigra, it is known mainly from forested slopes and foothills.",
+      "fr": "Elle fréquente les forêts humides submontagnardes à canopée moyenne, riches en épiphytes, mousses et sous-bois. Les observations couvrent 800–1800 m au Guyana et au Venezuela; sa présence dans le Roraima brésilien voisin est possible mais non confirmée. Contrairement à O. nigra, elle est surtout connue des pentes et piémonts forestiers."
+    },
+    "diet": {
+      "en": "The sources consulted do not establish its diet.",
+      "fr": "Les sources consultées ne permettent pas d’établir son régime alimentaire."
+    },
+    "behavior": {
+      "en": "It has been observed active at night, usually low on epiphytic ferns, but also on the ground. Its secretive, arboreal habits make it easy to overlook.",
+      "fr": "Elle a été observée active la nuit, généralement sur des fougères épiphytes à faible hauteur, mais aussi au sol. Ses habitudes discrètes et arboricoles la rendent difficile à repérer."
+    },
+    "reproduction": {
+      "en": "The breeding site is unknown. Direct development, without a free-living tadpole stage, is presumed for this species but has not been confirmed directly.",
+      "fr": "Le site de reproduction est inconnu. Un développement direct, sans stade de têtard libre, est présumé chez cette espèce, mais n’a pas été confirmé directement."
+    },
+    "ecology": {
+      "en": "Species-specific prey and ecological interactions remain poorly studied. Although it shares a genus with O. nigra, the two toads are associated with different elevations and habitats.",
+      "fr": "Les proies et interactions écologiques propres à l’espèce sont peu étudiées. Bien qu’elle partage son genre avec O. nigra, les deux crapauds fréquentent des altitudes et des habitats différents."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2021, based on a 2020 review, classifies it as Vulnerable because its range is restricted to five or fewer threat-defined locations and habitat quality is declining. Mining and fire are potential pressures; distribution and population monitoring are still needed.",
+      "fr": "L’évaluation de l’UICN publiée en 2021, fondée sur un examen de 2020, classe l’espèce Vulnérable : son aire se limite à cinq sites ou moins définis par les menaces et la qualité de l’habitat décline. L’exploitation minière et les incendies sont des pressions possibles; un suivi de la répartition et des effectifs reste nécessaire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Oreophrynella macconnelli — IUCN Red List, 2021 assessment",
+        "fr": "Oreophrynella macconnelli — Liste rouge de l’UICN, évaluation publiée en 2021"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-1.RLTS.T54851A109530249.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment: Vulnerable, restricted range, declining habitat."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 7,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A new species of Oreophrynella from Guyana, with notes on O. macconnelli — Zootaxa",
+        "fr": "Une nouvelle espèce d’Oreophrynella du Guyana, avec des notes sur O. macconnelli — Zootaxa"
+      },
+      "url": "https://mapress.com/zootaxa/2009/f/z02071p049f.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology",
+        "diet",
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "Primary Zootaxa study documents Maringma records and arboreal habits."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 9,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oreophrynella macconnelli — Amphibian Species of the World, American Museum of Natural History",
+        "fr": "Oreophrynella macconnelli — Amphibian Species of the World, American Museum of Natural History"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Bufonidae/Oreophrynella/Oreophrynella-macconnelli",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "The AMNH reference recognizes O. macconnelli as a valid bufonid species."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.fr.2",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.en.3",
+        "habitat.fr.1",
+        "habitat.fr.3",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 11,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet, adult morphology and detailed behavior are poorly documented in species-specific sources.",
+    "Direct development is presumed by IUCN; the breeding site is unknown.",
+    "Brazilian occurrence is unconfirmed; the IUCN assessment notes possible synonymy of O. dendronastes based on unpublished genetic data."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Compared reciprocally with O. nigra by elevation and habitat; gaps stated explicitly."
+}

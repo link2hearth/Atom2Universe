@@ -1,0 +1,38 @@
+{
+  "id": "pangasius_sanitwongsei",
+  "name": "Pangasius géant du Chao Phraya",
+  "scientific": "Pangasius sanitwongsei",
+  "group": "fish",
+  "sections": {
+    "overview": "Pangasius sanitwongsei est un très grand poisson-chat d’eau douce du Mékong et du Chao Phraya, en Asie du Sud-Est.",
+    "identification": "FishBase rapporte une longueur maximale proche de 3 mètres ; malgré son surnom anglais « paroon shark », c’est un poisson-chat, pas un requin.",
+    "habitat": "Les adultes fréquentent les grands cours d’eau et les juvéniles de grands affluents ; l’espèce migre dans les réseaux fluviaux.",
+    "diet": "Les sources indiquent que jeunes et adultes mangent poissons et crustacés, bien que les observations détaillées soient limitées.",
+    "behavior": "Les barrages et la modification des débits peuvent entraver ses migrations et altérer les signaux de déplacement et de ponte.",
+    "reproduction": "Des rapports de la Commission du Mékong situent la ponte dans les tronçons supérieurs avant ou au début de la mousson ; le calendrier varie selon les secteurs.",
+    "ecology": "Il appartient aux Pangasiidae mais diffère du célèbre silure géant du Mékong, Pangasianodon gigas, espèce d’un autre genre de la même famille.",
+    "conservation": "L’évaluation de l’UICN le classe en danger critique, citant la surpêche et la perturbation des migrations et sites de ponte ; le Viet Nam en fait aussi une espèce prioritaire pour la protection."
+  },
+  "sources": [
+    {
+      "url": "https://fishbase.se/summary/Pangasius-sanitwongsei",
+      "title": "Pangasius sanitwongsei — FishBase"
+    },
+    {
+      "url": "https://nc.iucnredlist.org/redlist/amazing-species/pangasius-sanitwongsei/pdfs/original/pangasius-sanitwongsei.pdf",
+      "title": "Pangasius sanitwongsei — fiche de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://archive.iwlearn.net/mrcmekong.org/programmes/fisheries/mig_pangasius_s.htm",
+      "title": "Migration des poissons du Mékong — Commission du Mékong"
+    },
+    {
+      "url": "https://nbca.gov.vn/doi-tuong-bao-ton/loai-nguy-cap-quy-hiem/loai-nguy-cap-quy-hiem/loai-thuy-san-nguy-cap-quy-hiem-duoc-uu-tien-bao-ve/",
+      "title": "Espèces aquatiques rares et menacées — Agence vietnamienne de conservation de la biodiversité"
+    },
+    {
+      "url": "https://fishbase.se/summary/Pangasianodon-gigas.html",
+      "title": "Pangasianodon gigas — FishBase"
+    }
+  ]
+}

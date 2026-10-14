@@ -1,0 +1,30 @@
+{
+  "id": "orectolobus_japonicus",
+  "name": "Requin-tapis japonais",
+  "scientific": "Orectolobus japonicus",
+  "group": "fish",
+  "sections": {
+    "overview": "Le Requin-tapis japonais est un petit requin-tapis nocturne du nord-ouest et du centre-ouest du Pacifique.",
+    "identification": "Il atteint environ 118 cm de longueur totale et possède un corps aplati, un camouflage marbré et des lobes charnus autour de la bouche.",
+    "habitat": "Il vit sur le plateau continental, de la zone intertidale jusqu’à environ 200 m, surtout sur les récifs rocheux et coralliens.",
+    "diet": "Il se nourrit de poissons et d’invertébrés benthiques, notamment des crustacés et des céphalopodes.",
+    "behavior": "Le jour, il peut rester caché sur le fond ; ses habitudes nocturnes et les abris récifaux peuvent réduire les rencontres avec les pêcheries.",
+    "reproduction": "Il est vivipare ; la fiche de l’UICN indique des portées de 20 à 27 petits et une gestation d’environ 12 mois.",
+    "ecology": "Contrairement aux Orectolobus australiens présentés ici, cette espèce s’étend du Japon au Vietnam ; à Taïwan, certaines observations peuvent être confondues avec O. leptolineatus.",
+    "conservation": "L’évaluation mondiale de l’UICN de 2020 le classe en Préoccupation mineure, tout en signalant de possibles déclins locaux liés à la pêche et le manque de données démographiques."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T161563A124507360.en",
+      "title": "Orectolobus japonicus — Liste rouge de l’UICN (2020)"
+    },
+    {
+      "url": "https://aquarium.co.jp/picturebook/orectolobus-japonicus.html",
+      "title": "オオセ — 鳥羽水族館 生きもの図鑑"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Orectolobus-japonicus.html",
+      "title": "Orectolobus japonicus — résumé d’espèce FishBase"
+    }
+  ]
+}

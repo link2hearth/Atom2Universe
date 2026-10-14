@@ -1,0 +1,195 @@
+{
+  "id": "orgyia_antiqua",
+  "scientific": "Orgyia antiqua",
+  "group": "invertebrates",
+  "name": {
+    "en": "Vapourer",
+    "fr": "Étoilée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The vapourer is a moth in the tussock-moth subfamily (Lymantriinae) of Erebidae. Its caterpillars feed on many trees and shrubs, while the adult sexes look strikingly different.",
+      "fr": "L’Étoilée est un papillon de nuit de la sous-famille des Lymantriinae, dans les Erebidae. Ses chenilles consomment de nombreux arbres et arbustes, tandis que les adultes des deux sexes sont très différents."
+    },
+    "identification": {
+      "en": "The male is orange-brown, with a white spot on the forewing; the female is pale, heavy-bodied and has greatly reduced wings, so she cannot fly. The hairy caterpillar is grey-black, with red side spots and four conspicuous yellow tufts near the head.",
+      "fr": "Le mâle est brun orangé, avec une tache blanche sur l’aile antérieure; la femelle, pâle et au corps volumineux, a des ailes très réduites et ne vole pas. La chenille velue est gris-noir, ponctuée de rouge sur les côtés et porte quatre touffes jaunes près de la tête."
+    },
+    "habitat": {
+      "en": "The species occurs widely across much of the temperate Northern Hemisphere and uses gardens, woodland edges, scrub and other places with suitable host plants. Caterpillars feed on many deciduous trees and shrubs, including birch, hazel, lime, oak, willow, hawthorn and blackthorn.",
+      "fr": "L’espèce est largement répartie dans une grande partie de l’hémisphère Nord tempéré et fréquente jardins, lisières, fourrés et autres milieux où poussent ses plantes hôtes. Les chenilles consomment de nombreux feuillus et arbustes, dont bouleaux, noisetiers, tilleuls, chênes, saules, aubépines et prunelliers."
+    },
+    "diet": {
+      "en": "The larva is polyphagous and feeds on foliage from many woody plants; birch, hazel, lime, oak and willow are recorded hosts. Local food plants therefore vary with region.",
+      "fr": "La larve est polyphage et mange le feuillage de nombreux ligneux; bouleau, noisetier, tilleul, chêne et saule figurent parmi les plantes hôtes. Les ressources locales varient donc selon les régions."
+    },
+    "behavior": {
+      "en": "Males fly in daylight and locate sedentary females by scent. After emerging, the female remains near her cocoon and releases a sex pheromone; the marked difference between the sexes is linked to this mating strategy.",
+      "fr": "Les mâles volent le jour et repèrent les femelles immobiles grâce à leur odeur. Après l’émergence, la femelle reste près de son cocon et émet une phéromone sexuelle; le fort dimorphisme est lié à cette stratégie d’accouplement."
+    },
+    "reproduction": {
+      "en": "After mating, the female lays eggs on the outside of her pupal cocoon. They overwinter and hatch the following spring; mature caterpillars pupate in a silken cocoon on or near a host plant.",
+      "fr": "Après l’accouplement, la femelle dépose ses œufs sur l’extérieur de son cocon nymphal. Ils passent l’hiver et éclosent au printemps suivant; les chenilles mûres se nymphosent dans un cocon soyeux, sur une plante hôte ou à proximité."
+    },
+    "ecology": {
+      "en": "The caterpillars can cause light leaf loss but are rarely numerous enough to seriously damage garden plants. Larvae and adults also provide food for wildlife, including birds and predatory insects.",
+      "fr": "Les chenilles peuvent provoquer une légère défoliation, mais elles sont rarement assez nombreuses pour endommager sérieusement les plantes des jardins. Larves et adultes nourrissent aussi d’autres animaux, notamment des oiseaux et des insectes prédateurs."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was located for this broadly distributed moth. Its caterpillars are generally not considered a significant garden pest, and the Royal Horticultural Society recommends tolerating them where possible.",
+      "fr": "Aucune évaluation mondiale de conservation n’a été trouvée pour ce papillon largement réparti. Ses chenilles ne sont généralement pas considérées comme des ravageurs importants des jardins; la Royal Horticultural Society recommande de les tolérer si possible."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Vapourer moth — Royal Horticultural Society",
+        "fr": "Étoilée — Royal Horticultural Society"
+      },
+      "url": "https://www.rhs.org.uk/biodiversity/vapourer-moth",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation",
+        "overview"
+      ],
+      "facts": [
+        "RHS describes adult dimorphism, host plants, cocoon-laid eggs and their overwintering."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.2",
+        "identification.fr.2",
+        "habitat.fr.2",
+        "diet.en.2",
+        "diet.fr.1",
+        "reproduction.fr.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "conservation.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 11,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Orgyia antiqua — French moths of Franche-Comté, OPIE / CBNFC-ORI",
+        "fr": "Orgyia antiqua — Papillons de nuit de Franche-Comté, OPIE / CBNFC-ORI"
+      },
+      "url": "https://cbnfc-ori.org/sites/default/files/2024-03/Liste-especes-papillons-nuit-FrancheComte_V4_OPIE-FC-GPNFC_WEB.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "French regional checklist gives the names L’Étoilée and le Bombyx antique, and describes the male as diurnal and the female as brachypterous."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 22,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rusty tussock moth — Swiss Federal Institute for Forest, Snow and Landscape Research (WSL)",
+        "fr": "Chenille à houppes rousses — Institut fédéral de recherches sur la forêt, la neige et le paysage (WSL)"
+      },
+      "url": "https://waldschutz.wsl.ch/fileadmin/user_upload/WSL/Microsite/Waldschutz-Schweiz/Diagnose_online/fr/Chenille_a_houppes_rousses_179.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French-language forestry profile describes the wing-reduced female and male attraction to her species-specific pheromone."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.en.2",
+        "reproduction.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 14,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Vapourer (Orgyia antiqua) — UKmoths",
+        "fr": "L’Étoilée (Orgyia antiqua) — UKmoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/orgyia-antiqua/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation",
+        "overview"
+      ],
+      "facts": [
+        "UK account cross-checks female wing reduction, broad larval hosts and overwintering eggs on the cocoon."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "identification.en.2",
+        "habitat.en.2",
+        "diet.en.1",
+        "diet.fr.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 15,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host-plant use can differ among regions; this summary draws mainly on European horticultural and forestry sources.",
+    "No current global conservation assessment was located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Facts cross-checked with English RHS guidance and French regional entomology and forestry sources."
+}

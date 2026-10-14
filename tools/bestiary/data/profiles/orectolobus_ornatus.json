@@ -1,0 +1,167 @@
+{
+  "id": "orectolobus_ornatus",
+  "scientific": "Orectolobus ornatus",
+  "group": "fish",
+  "name": {
+    "en": "Ornate wobbegong",
+    "fr": "Orectolobus ornatus"
+  },
+  "sections": {
+    "overview": {
+      "en": "The ornate wobbegong is a benthic carpet shark of eastern Australia and Papua New Guinea.",
+      "fr": "Orectolobus ornatus est un requin-tapis benthique de l’est de l’Australie et de Papouasie-Nouvelle-Guinée."
+    },
+    "identification": {
+      "en": "Its flattened, patterned body bears branched skin lobes beside the head; it is generally smaller than the similar Gulf wobbegong, O. halei.",
+      "fr": "Son corps aplati et marqué de motifs porte des lobes cutanés ramifiés près de la tête ; il est généralement plus petit que le Requin-tapis du golfe, O. halei, qui lui ressemble."
+    },
+    "habitat": {
+      "en": "It occupies bays, reefs and offshore islands in inshore and continental-shelf waters, often sheltering among complex rocky structures.",
+      "fr": "Il fréquente les baies, les récifs et les îles au large, dans les eaux côtières et du plateau continental, souvent à l’abri de structures rocheuses complexes."
+    },
+    "diet": {
+      "en": "A New South Wales study found a diet mainly of bony fishes, with cephalopods and other cartilaginous fishes also present.",
+      "fr": "Une étude menée en Nouvelle-Galles du Sud a trouvé surtout des poissons osseux, ainsi que des céphalopodes et d’autres poissons cartilagineux."
+    },
+    "behavior": {
+      "en": "It shows strong attachment to particular reef sites, a trait that also makes it susceptible to fishing pressure.",
+      "fr": "Il reste fortement lié à certains sites récifaux, ce qui le rend aussi sensible à la pression de pêche."
+    },
+    "reproduction": {
+      "en": "It is viviparous and has low reproductive output; Australian assessments report litters of roughly 4–18 pups and a multi-year cycle.",
+      "fr": "Il est vivipare et sa productivité reproductive est faible ; les évaluations australiennes indiquent des portées d’environ 4 à 18 petits et un cycle de plusieurs années."
+    },
+    "ecology": {
+      "en": "The Gulf wobbegong was once grouped with this species but is now separate; see O. halei for the reciprocal comparison and distinguishing traits.",
+      "fr": "Le Requin-tapis du golfe était autrefois regroupé avec cette espèce, mais en est maintenant séparé ; voir O. halei pour la comparaison réciproque et les caractères distinctifs."
+    },
+    "conservation": {
+      "en": "The global IUCN category is Least Concern, although New South Wales lists the species as Vulnerable after historical fishing declines.",
+      "fr": "La catégorie mondiale de l’UICN est Préoccupation mineure, bien que la Nouvelle-Galles du Sud classe l’espèce comme Vulnérable après des déclins historiques liés à la pêche."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ornate Wobbegong — Australian Government shark report",
+        "fr": "Ornate Wobbegong — rapport australien sur les requins"
+      },
+      "url": "https://fish.gov.au/docs/SharkReport/2023_FRDC_Orectolobus_ornatus_final.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The Australian report describes its eastern Australian and Papua New Guinean range, shelf and reef habitat, site attachment, and global and state conservation categories."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 24,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Quantitative diet assessment of wobbegong sharks — ICES Journal of Marine Science",
+        "fr": "Évaluation quantitative du régime alimentaire des requins-tapis — ICES Journal of Marine Science"
+      },
+      "url": "https://doi.org/10.1093/icesjms/fsm111",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The peer-reviewed stomach-content study includes O. ornatus from New South Wales and reports a diet primarily of bony fishes, with cephalopods and cartilaginous fishes."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 24,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Orectolobus halei — IUCN Red List",
+        "fr": "Orectolobus halei — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2015-4.RLTS.T161709A68638176.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "The IUCN account for O. halei records that it was formerly synonymized with O. ornatus and distinguishes the larger species by coloration and adult size."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 25,
+        "total": 129,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Orectolobidae — Australian Shark Action Plan",
+        "fr": "Orectolobidae — plan d’action australien pour les requins"
+      },
+      "url": "https://ris.cdu.edu.au/ws/portalfiles/portal/45696628/Kyne_etal_Shark_Action_Plan_2021.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The family account lists a three-year reproductive cycle and litters of four to eighteen pups for O. ornatus."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 18,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Reproductive estimates vary among sources and regions; the profile gives the reported range without implying every litter has that size. Global and state conservation assessments are distinct."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the Australian government report with the peer-reviewed diet study; its O. halei comparison is reciprocated in that profile."
+}

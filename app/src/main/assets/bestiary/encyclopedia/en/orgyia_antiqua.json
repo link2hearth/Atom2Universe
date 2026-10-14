@@ -1,0 +1,34 @@
+{
+  "id": "orgyia_antiqua",
+  "name": "Vapourer",
+  "scientific": "Orgyia antiqua",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The vapourer is a moth in the tussock-moth subfamily (Lymantriinae) of Erebidae. Its caterpillars feed on many trees and shrubs, while the adult sexes look strikingly different.",
+    "identification": "The male is orange-brown, with a white spot on the forewing; the female is pale, heavy-bodied and has greatly reduced wings, so she cannot fly. The hairy caterpillar is grey-black, with red side spots and four conspicuous yellow tufts near the head.",
+    "habitat": "The species occurs widely across much of the temperate Northern Hemisphere and uses gardens, woodland edges, scrub and other places with suitable host plants. Caterpillars feed on many deciduous trees and shrubs, including birch, hazel, lime, oak, willow, hawthorn and blackthorn.",
+    "diet": "The larva is polyphagous and feeds on foliage from many woody plants; birch, hazel, lime, oak and willow are recorded hosts. Local food plants therefore vary with region.",
+    "behavior": "Males fly in daylight and locate sedentary females by scent. After emerging, the female remains near her cocoon and releases a sex pheromone; the marked difference between the sexes is linked to this mating strategy.",
+    "reproduction": "After mating, the female lays eggs on the outside of her pupal cocoon. They overwinter and hatch the following spring; mature caterpillars pupate in a silken cocoon on or near a host plant.",
+    "ecology": "The caterpillars can cause light leaf loss but are rarely numerous enough to seriously damage garden plants. Larvae and adults also provide food for wildlife, including birds and predatory insects.",
+    "conservation": "No global conservation assessment was located for this broadly distributed moth. Its caterpillars are generally not considered a significant garden pest, and the Royal Horticultural Society recommends tolerating them where possible."
+  },
+  "sources": [
+    {
+      "url": "https://www.rhs.org.uk/biodiversity/vapourer-moth",
+      "title": "Vapourer moth — Royal Horticultural Society"
+    },
+    {
+      "url": "https://cbnfc-ori.org/sites/default/files/2024-03/Liste-especes-papillons-nuit-FrancheComte_V4_OPIE-FC-GPNFC_WEB.pdf",
+      "title": "Orgyia antiqua — French moths of Franche-Comté, OPIE / CBNFC-ORI"
+    },
+    {
+      "url": "https://waldschutz.wsl.ch/fileadmin/user_upload/WSL/Microsite/Waldschutz-Schweiz/Diagnose_online/fr/Chenille_a_houppes_rousses_179.pdf",
+      "title": "Rusty tussock moth — Swiss Federal Institute for Forest, Snow and Landscape Research (WSL)"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/orgyia-antiqua/",
+      "title": "The Vapourer (Orgyia antiqua) — UKmoths"
+    }
+  ]
+}

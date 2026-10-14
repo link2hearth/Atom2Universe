@@ -1,0 +1,141 @@
+{
+  "id": "orectolobus_floridus",
+  "scientific": "Orectolobus floridus",
+  "group": "fish",
+  "name": {
+    "en": "Floral banded wobbegong",
+    "fr": "Orectolobus floridus"
+  },
+  "sections": {
+    "overview": {
+      "en": "The floral banded wobbegong is a small carpet shark known from the continental shelf off southwestern Australia.",
+      "fr": "Orectolobus floridus est un petit requin-tapis connu du plateau continental du sud-ouest de l’Australie."
+    },
+    "identification": {
+      "en": "Its yellowish-brown pattern combines bands, blotches, spots and reticulated markings; this combination helps distinguish it from other wobbegongs.",
+      "fr": "Sa livrée brun jaunâtre associe bandes, taches et réticulations ; cette combinaison aide à le distinguer des autres requins-tapis."
+    },
+    "habitat": {
+      "en": "It occurs between Geraldton and Augusta in Western Australia, at recorded depths of 42–85 m.",
+      "fr": "Il est signalé entre Geraldton et Augusta, en Australie-Occidentale, à des profondeurs de 42 à 85 m."
+    },
+    "diet": {
+      "en": "Its diet has not been studied in detail; prey patterns reported for other wobbegongs should not be treated as direct observations of this species.",
+      "fr": "Son régime n’a pas été étudié en détail ; les proies décrites chez d’autres requins-tapis ne doivent pas être présentées comme des observations directes sur cette espèce."
+    },
+    "behavior": {
+      "en": "Few direct observations are available, so its activity pattern and hunting behavior remain poorly documented.",
+      "fr": "Les observations directes sont rares ; son rythme d’activité et son comportement de chasse restent donc peu documentés."
+    },
+    "reproduction": {
+      "en": "Reproduction is presumed viviparous, but species-specific details have not been established.",
+      "fr": "La reproduction est présumée vivipare, mais les détails propres à l’espèce ne sont pas établis."
+    },
+    "ecology": {
+      "en": "Described alongside O. parvimaculatus in 2008, it is distinguished from that sympatric cousin by a combination of colour, morphology and measurements; see that profile for the reciprocal comparison.",
+      "fr": "Décrit avec O. parvimaculatus en 2008, il se distingue de ce cousin sympatrique par une combinaison de couleurs, de caractères morphologiques et de mesures ; voir cette fiche pour la comparaison réciproque."
+    },
+    "conservation": {
+      "en": "The 2025 global IUCN assessment lists it as Least Concern, while noting its naturally restricted range.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2025 le classe en Préoccupation mineure, tout en tenant compte de son aire naturellement restreinte."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Two new wobbegong sharks, Orectolobus floridus and O. parvimaculatus — Zootaxa",
+        "fr": "Deux nouveaux requins-tapis, Orectolobus floridus et O. parvimaculatus — Zootaxa"
+      },
+      "url": "https://mapress.com/zt/article/view/zootaxa.1673.1.2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The 2008 taxonomic description gives the distinctive pattern, Geraldton–Augusta range and 42–85 m depth for O. floridus, and states that the two new species differ through colour, morphology and measurements."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 30,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Orectolobus floridus — IUCN Red List (2025)",
+        "fr": "Orectolobus floridus — Liste rouge de l’UICN (2025)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T161664A124524288.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The 2025 global assessment describes a small species endemic to southwestern Western Australia, lists it as Least Concern and says viviparity is presumed but little else is known of its biology."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 31,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Floral banded wobbegong — Animal Diversity Web",
+        "fr": "Requin-tapis floral — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Orectolobus_floridus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The account emphasizes that few specimens and little direct research are available; it says diet is not extensively studied and species-specific behavior is poorly documented."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 25,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific diet and behavior data are sparse; diet of related species is not transferred to this profile. Reproduction is only presumed viviparous."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the original 2008 description, the 2025 IUCN assessment and Animal Diversity Web; the reciprocal comparison with O. parvimaculatus reflects the shared original taxonomic treatment."
+}

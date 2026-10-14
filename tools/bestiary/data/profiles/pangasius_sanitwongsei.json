@@ -1,0 +1,186 @@
+{
+  "id": "pangasius_sanitwongsei",
+  "scientific": "Pangasius sanitwongsei",
+  "group": "fish",
+  "name": {
+    "en": "Giant pangasius",
+    "fr": "Pangasius géant du Chao Phraya"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pangasius sanitwongsei is a very large freshwater catfish native to the Mekong and Chao Phraya basins in Southeast Asia.",
+      "fr": "Pangasius sanitwongsei est un très grand poisson-chat d’eau douce du Mékong et du Chao Phraya, en Asie du Sud-Est."
+    },
+    "identification": {
+      "en": "FishBase reports a maximum length near 3 metres; despite the nickname “paroon shark,” it is a catfish, not a shark.",
+      "fr": "FishBase rapporte une longueur maximale proche de 3 mètres ; malgré son surnom anglais « paroon shark », c’est un poisson-chat, pas un requin."
+    },
+    "habitat": {
+      "en": "Adults use large rivers and juveniles larger tributaries; the species migrates within river systems.",
+      "fr": "Les adultes fréquentent les grands cours d’eau et les juvéniles de grands affluents ; l’espèce migre dans les réseaux fluviaux."
+    },
+    "diet": {
+      "en": "Accounts report that young and adults eat fish and crustaceans, although detailed field observations are limited.",
+      "fr": "Les sources indiquent que jeunes et adultes mangent poissons et crustacés, bien que les observations détaillées soient limitées."
+    },
+    "behavior": {
+      "en": "Dams and modified river flows can obstruct its migrations and alter cues used for movement and spawning.",
+      "fr": "Les barrages et la modification des débits peuvent entraver ses migrations et altérer les signaux de déplacement et de ponte."
+    },
+    "reproduction": {
+      "en": "Mekong River Commission reports place spawning in upper river reaches before or during the early monsoon; timing varies among stretches.",
+      "fr": "Des rapports de la Commission du Mékong situent la ponte dans les tronçons supérieurs avant ou au début de la mousson ; le calendrier varie selon les secteurs."
+    },
+    "ecology": {
+      "en": "It belongs to Pangasiidae but is distinct from the better-known Mekong giant catfish Pangasianodon gigas, a different genus in the same family.",
+      "fr": "Il appartient aux Pangasiidae mais diffère du célèbre silure géant du Mékong, Pangasianodon gigas, espèce d’un autre genre de la même famille."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists it as Critically Endangered, citing overfishing and disruption of river migration and spawning habitat; Viet Nam also prioritizes it for protection.",
+      "fr": "L’évaluation de l’UICN le classe en danger critique, citant la surpêche et la perturbation des migrations et sites de ponte ; le Viet Nam en fait aussi une espèce prioritaire pour la protection."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pangasius sanitwongsei — FishBase",
+        "fr": "Pangasius sanitwongsei — FishBase"
+      },
+      "url": "https://fishbase.se/summary/Pangasius-sanitwongsei",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "FishBase reports the river-basin range, size, habitat and fish-and-crustacean diet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 10,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pangasius sanitwongsei — IUCN Red List factsheet",
+        "fr": "Pangasius sanitwongsei — fiche de la Liste rouge de l’UICN"
+      },
+      "url": "https://nc.iucnredlist.org/redlist/amazing-species/pangasius-sanitwongsei/pdfs/original/pangasius-sanitwongsei.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN factsheet states Critically Endangered and discusses disruption of migration and spawning habitat by dams."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 15,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mekong River fish migration — Mekong River Commission",
+        "fr": "Migration des poissons du Mékong — Commission du Mékong"
+      },
+      "url": "https://archive.iwlearn.net/mrcmekong.org/programmes/fisheries/mig_pangasius_s.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Commission account reports migrations and May–July spawning in upper reaches of the studied river sections."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 15,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rare and endangered aquatic species — Viet Nam National Biodiversity Conservation Agency",
+        "fr": "Espèces aquatiques rares et menacées — Agence vietnamienne de conservation de la biodiversité"
+      },
+      "url": "https://nbca.gov.vn/doi-tuong-bao-ton/loai-nguy-cap-quy-hiem/loai-nguy-cap-quy-hiem/loai-thuy-san-nguy-cap-quy-hiem-duoc-uu-tien-bao-ve/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Vietnamese official list includes P. sanitwongsei among aquatic species prioritized for protection."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pangasianodon gigas — FishBase",
+        "fr": "Pangasianodon gigas — FishBase"
+      },
+      "url": "https://fishbase.se/summary/Pangasianodon-gigas.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase places Pangasianodon gigas in Pangasiidae, but in the distinct genus Pangasianodon."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 12,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The IUCN factsheet located is an older assessment; its category is attributed to that assessment, not presented as a new population estimate.",
+    "Maximum size and spawning dates derive from compiled observations and vary among sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase and IUCN with Mekong River Commission and Viet Nam official species list; distinguished it from Pangasianodon gigas."
+}

@@ -1,0 +1,190 @@
+{
+  "id": "orthonama_vittata",
+  "scientific": "Orthonama vittata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Oblique carpet",
+    "fr": "Orthonama vittata"
+  },
+  "sections": {
+    "overview": {
+      "en": "The oblique carpet is a geometrid moth of the Palearctic. Its larvae feed mainly on bedstraws (Galium), and in Britain it is associated with damp and wetland habitats.",
+      "fr": "La Phalène du Gaillet palustre est un géomètre du Paléarctique. Ses chenilles se nourrissent surtout de gaillets (Galium), et en Grande-Bretagne l’espèce est liée aux milieux humides."
+    },
+    "identification": {
+      "en": "Adults have pale brownish wings crossed by fine dark lines and a more prominent oblique band, giving the species its English name. The Belgian Lepidoptera catalogue gives a wingspan of 18–22 mm; worn specimens may be harder to identify.",
+      "fr": "L’adulte a des ailes brun clair traversées de fines lignes sombres et d’une bande oblique plus marquée, à l’origine de son nom anglais. Le catalogue belge des Lépidoptères indique une envergure de 18–22 mm; les spécimens usés sont plus difficiles à identifier."
+    },
+    "habitat": {
+      "en": "British records include fens, marshes, wet grassland, bogs and damp woodland, with occasional upland or coastal sites. The species also occurs across continental Europe and eastward in the Palearctic, but local status varies greatly.",
+      "fr": "Les observations britanniques proviennent de marais, prairies humides, tourbières et bois frais, ainsi que parfois de sites d’altitude ou du littoral. L’espèce est aussi présente en Europe continentale et vers l’est dans le Paléarctique, mais son statut varie fortement selon les régions."
+    },
+    "diet": {
+      "en": "Larvae feed on bedstraws, including marsh bedstraw (Galium palustre) and heath bedstraw (G. saxatile); the Belgian catalogue also lists bogbean (Menyanthes trifoliata). These are larval food plants, not the adult moth’s diet.",
+      "fr": "Les chenilles consomment des gaillets, notamment le Gaillet des marais (Galium palustre) et le Gaillet saxatile (G. saxatile); le catalogue belge cite aussi le Trèfle d’eau (Menyanthes trifoliata). Il s’agit de plantes nourricières des larves, non du régime de l’adulte."
+    },
+    "behavior": {
+      "en": "Adults are active from dusk and are attracted to light. The Belgian catalogue reports that the larva overwinters; adults fly from spring into early autumn, sometimes in more than one generation.",
+      "fr": "Les adultes sont actifs dès le crépuscule et viennent à la lumière. Le catalogue belge indique que l’espèce hiverne au stade larvaire; les adultes volent du printemps au début de l’automne, parfois au cours de plusieurs générations."
+    },
+    "reproduction": {
+      "en": "Regional accounts describe larval hosts and the overwintering stage but give little species-specific detail on courtship, egg laying or brood number across the range.",
+      "fr": "Les sources régionales décrivent les plantes hôtes des chenilles et le stade d’hivernage, mais donnent peu de détails propres à l’espèce sur la parade, la ponte ou le nombre de générations dans l’ensemble de son aire."
+    },
+    "ecology": {
+      "en": "Its use of Galium and wet habitats links it to damp meadows, fens and other wetlands. These habitat and host-plant records come mainly from Britain and Belgium and are not a complete ecological survey of the whole range.",
+      "fr": "Son utilisation des gaillets et des milieux humides la relie aux prairies mouillées, marais et autres zones humides. Ces données sur les habitats et plantes hôtes proviennent surtout de Grande-Bretagne et de Belgique et ne couvrent pas toute son aire."
+    },
+    "conservation": {
+      "en": "The Belgian Lepidoptera catalogue lists it as Endangered on the 2023 Flemish Red List. This is a regional assessment, not a global category; no global assessment was established in the sources consulted.",
+      "fr": "Le catalogue belge des Lépidoptères indique que l’espèce est En danger sur la Liste rouge flamande de 2023. C’est une évaluation régionale, non une catégorie mondiale; les sources consultées n’établissent pas d’évaluation globale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Orthonama vittata — Catalogue of the Lepidoptera of Belgium",
+        "fr": "Orthonama vittata — Catalogue des Lépidoptères de Belgique"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/4322/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Belgian catalogue: foodplants, flight and status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.2",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.2",
+        "diet.fr.1",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "reproduction.fr.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 192,
+        "notes_words": 6,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oblique Carpet — Durham Moths",
+        "fr": "Phalène du Gaillet palustre — Durham Moths"
+      },
+      "url": "https://www.durhammoths.org/taxonomy/geometridae/orthonama-vittata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Durham Moths: Galium hosts and wetland habitats."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.en.2",
+        "reproduction.en.1",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 191,
+        "notes_words": 7,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oblique Carpet — Hantsmoths, Lepidoptera of Hampshire and Isle of Wight",
+        "fr": "Phalène du Gaillet palustre — Hantsmoths, Lépidoptères du Hampshire et de l’île de Wight"
+      },
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=70.046",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "The regional account reports the moth in fens, wet meadows, damp woodland, marshes and riverbanks."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 15,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Orthonama vittata — LepiWiki / Lepiforum",
+        "fr": "Orthonama vittata — LepiWiki / Lepiforum"
+      },
+      "url": "https://lepiforum.org/wiki/page/Orthonama_vittata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "German specialist site documents the species across Europe and provides expert-collected adult, larval and identification records."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 16,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Distribution, phenology and conservation status vary regionally; Flemish status is not global.",
+    "Range and habitat details outside Europe were not established here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Cross-checked Belgian catalogue and British moth records; larval hosts are not confused with adult diet."
+}

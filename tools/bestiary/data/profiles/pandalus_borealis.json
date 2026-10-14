@@ -1,0 +1,166 @@
+{
+  "id": "pandalus_borealis",
+  "scientific": "Pandalus borealis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Northern shrimp",
+    "fr": "Crevette nordique"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pandalus borealis is a cold-water shrimp of northern Atlantic and Pacific seas, important in several northern fisheries.",
+      "fr": "Pandalus borealis est une crevette d’eaux froides de l’Atlantique Nord et du Pacifique Nord, exploitée par plusieurs pêcheries septentrionales."
+    },
+    "identification": {
+      "en": "Its body is translucent to pinkish and its shell is relatively thin; Pacific Pandalus eous is a distinct, very close relative, not a local form of P. borealis.",
+      "fr": "Son corps est translucide à rosé et sa carapace assez fine ; Pandalus eous du Pacifique est une espèce distincte et très proche, non une forme locale de P. borealis."
+    },
+    "habitat": {
+      "en": "It lives over soft seabeds in cold marine waters, with a broad circumboreal range from the North Atlantic to the North Pacific.",
+      "fr": "Elle vit sur des fonds meubles en eaux marines froides et possède une vaste répartition circumboréale, de l’Atlantique Nord au Pacifique Nord."
+    },
+    "diet": {
+      "en": "It is an opportunistic omnivore that acts as both predator and scavenger on the seabed.",
+      "fr": "C’est une omnivore opportuniste qui se nourrit sur le fond comme prédateur et charognard."
+    },
+    "behavior": {
+      "en": "Its life history includes sex change: young shrimp mature first as males, with females appearing later; timing varies by region.",
+      "fr": "Son cycle comprend un changement de sexe : les jeunes crevettes arrivent d’abord à maturité comme mâles, puis deviennent femelles ; le calendrier varie selon les régions."
+    },
+    "reproduction": {
+      "en": "Eggs are carried by the female, and spawning is seasonal; local timing and reproductive investment vary across its range.",
+      "fr": "La femelle porte les œufs et la ponte est saisonnière ; le calendrier et l’investissement reproducteur varient selon les régions."
+    },
+    "ecology": {
+      "en": "The close relative P. eous differs taxonomically; in the Gulf of St Lawrence, Pandalus montagui is distinguished by stronger red bands, not treated as a synonym.",
+      "fr": "Sa proche parente P. eous est distincte ; dans le golfe du Saint-Laurent, Pandalus montagui se reconnaît à ses bandes rouges plus marquées et n’est pas un synonyme."
+    },
+    "conservation": {
+      "en": "NOAA reports the U.S. northern-shrimp stock as overfished and its fishery closed; that regional finding should not be generalized worldwide.",
+      "fr": "La NOAA indique que le stock américain de crevette nordique est surexploité et sa pêche fermée ; ce constat régional ne s’étend pas automatiquement au monde entier."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Northern shrimp biology — Fisheries and Oceans Canada",
+        "fr": "Biologie de la crevette nordique — Pêches et Océans Canada"
+      },
+      "url": "https://www.pac.dfo-mpo.gc.ca/fm-gp/shellfish-mollusques/prawn-shrimp-crevette/biol-fra.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Canadian government source describes the species’ extensive northern range and life history."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 12,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Northern shrimp — SeaLifeBase",
+        "fr": "Crevette nordique — SeaLifeBase"
+      },
+      "url": "https://www.sealifebase.ca/summary/Pandalus-borealis.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "SeaLifeBase describes soft-bottom omnivory and protandric sex change, with regional variation."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 11,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pandalus borealis — DORIS, French Federation for Underwater Studies",
+        "fr": "Pandalus borealis — DORIS, Fédération française d’études et de sports sous-marins"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Pandalus-borealis-Crevette-nordique-4587",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "French account distinguishes P. borealis from P. eous and striped P. montagui."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 12,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Northern Shrimp — NOAA Fisheries",
+        "fr": "Crevette nordique de l’Atlantique — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-northern-shrimp",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "NOAA reports the U.S. stock as overfished and commercial fishing prohibited; this is regional."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 14,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Fishery status differs by stock and jurisdiction; the U.S. assessment is not a global species status.",
+    "The timing of sex change varies with locality."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English and French Canadian, marine-naturalist, NOAA and SeaLifeBase sources; named close congeners with distinct-species caveats."
+}

@@ -1,0 +1,38 @@
+{
+  "id": "papilio_aegeus",
+  "name": "Orchard swallowtail",
+  "scientific": "Papilio aegeus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Papilio aegeus is a large swallowtail native to eastern Australia and nearby islands; cultivated citrus provides additional larval food in settled areas.",
+    "identification": "Males are mainly black and white with a red hindwing spot; browner females bear broader pale markings and red crescents, so the sexes look quite different.",
+    "habitat": "It inhabits gardens, woodland and forests where host plants grow, and is common in some eastern Australian suburbs.",
+    "diet": "Caterpillars feed on citrus and other Rutaceae, including Australian native plants; recorded hosts vary by region.",
+    "behavior": "Young caterpillars resemble bird droppings; older larvae can expose a red, foul-smelling osmeterium when threatened, and males defend territories.",
+    "reproduction": "Females lay eggs on host plants and larvae pass through several growth stages before pupating; a single development time is not assumed for all conditions.",
+    "ecology": "It shares the genus Papilio with the Dainty Swallowtail, P. anactus; both use citrus, though their recorded host lists are not identical.",
+    "conservation": "It remains widespread in eastern Australia and can benefit from cultivated citrus; no global assessment or population trend was found in the consulted sources."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/insects/orchard-butterfly/",
+      "title": "Orchard Butterfly — Australian Museum"
+    },
+    {
+      "url": "https://www.lepidoptera.butterflyhouse.com.au/papi/aegeus.html",
+      "title": "Specialist Australian butterfly account"
+    },
+    {
+      "url": "https://collections.museumsvictoria.com.au/species/11381",
+      "title": "Papilio aegeus — Museum Victoria"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Papilio_aegeus",
+      "title": "Papilio aegeus — French-language overview"
+    },
+    {
+      "url": "https://www.lepidoptera.butterflyhouse.com.au/papi/anactus.html",
+      "title": "Papilio anactus — specialist Australian butterfly account"
+    }
+  ]
+}

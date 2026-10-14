@@ -1,0 +1,30 @@
+{
+  "id": "oreophrynella_macconnelli",
+  "name": "Crapaud de MacConnell",
+  "scientific": "Oreophrynella macconnelli",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Le crapaud de MacConnell est un anoure peu connu des hautes terres de Guyane. Il partage son genre avec le crapaud-caillou O. nigra, mais fréquente surtout les forêts humides des pentes de tepuis plutôt que les hauts sommets rocheux.",
+    "identification": "C’est un petit bufonidé, mais les sources accessibles donnent peu de caractères fiables pour l’identifier sur le terrain. Difficile à détecter et en partie arboricole, l’espèce a été observée sur des fougères épiphytes et au sol.",
+    "habitat": "Elle fréquente les forêts humides submontagnardes à canopée moyenne, riches en épiphytes, mousses et sous-bois. Les observations couvrent 800–1800 m au Guyana et au Venezuela; sa présence dans le Roraima brésilien voisin est possible mais non confirmée. Contrairement à O. nigra, elle est surtout connue des pentes et piémonts forestiers.",
+    "diet": "Les sources consultées ne permettent pas d’établir son régime alimentaire.",
+    "behavior": "Elle a été observée active la nuit, généralement sur des fougères épiphytes à faible hauteur, mais aussi au sol. Ses habitudes discrètes et arboricoles la rendent difficile à repérer.",
+    "reproduction": "Le site de reproduction est inconnu. Un développement direct, sans stade de têtard libre, est présumé chez cette espèce, mais n’a pas été confirmé directement.",
+    "ecology": "Les proies et interactions écologiques propres à l’espèce sont peu étudiées. Bien qu’elle partage son genre avec O. nigra, les deux crapauds fréquentent des altitudes et des habitats différents.",
+    "conservation": "L’évaluation de l’UICN publiée en 2021, fondée sur un examen de 2020, classe l’espèce Vulnérable : son aire se limite à cinq sites ou moins définis par les menaces et la qualité de l’habitat décline. L’exploitation minière et les incendies sont des pressions possibles; un suivi de la répartition et des effectifs reste nécessaire."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-1.RLTS.T54851A109530249.en",
+      "title": "Oreophrynella macconnelli — Liste rouge de l’UICN, évaluation publiée en 2021"
+    },
+    {
+      "url": "https://mapress.com/zootaxa/2009/f/z02071p049f.pdf",
+      "title": "Une nouvelle espèce d’Oreophrynella du Guyana, avec des notes sur O. macconnelli — Zootaxa"
+    },
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Bufonidae/Oreophrynella/Oreophrynella-macconnelli",
+      "title": "Oreophrynella macconnelli — Amphibian Species of the World, American Museum of Natural History"
+    }
+  ]
+}

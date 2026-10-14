@@ -1,0 +1,34 @@
+{
+  "id": "pachycoccyx_audeberti",
+  "name": "Coucou d’Audebert",
+  "scientific": "Pachycoccyx audeberti",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Coucou d’Audebert est un coucou africain caractérisé par son bec particulièrement épais. Il parasite les nids des prionops, un choix d’hôte inhabituel parmi les coucous.",
+    "identification": "Long d’environ 36 cm, c’est un grand coucou robuste au bec remarquablement épais. Celui-ci lui donne une allure un peu rapace, mais il ne s’agit pas d’un oiseau de proie.",
+    "habitat": "En Afrique subsaharienne, il fréquente les forêts humides, le miombo, les forêts riveraines et les savanes boisées. En Afrique de l’Ouest, les observations de reproduction sont liées aux forêts fermées occupées par les prionops hôtes; l’association à l’habitat varie donc selon la région.",
+    "diet": "Il mange surtout de gros insectes, notamment chenilles, criquets et mantes. Il cherche une grande partie de ses proies dans la canopée.",
+    "behavior": "Ce coucou discret des milieux boisés est décrit comme effectuant parfois des déplacements saisonniers locaux en Afrique australe. Son bec épais et sa silhouette robuste évoquent un rapace, mais son écologie est celle d’un coucou.",
+    "reproduction": "Il pond dans les nids de prionops, le plus souvent dans ceux du Prionops à bec rouge en Afrique australe. L’hôte couve l’œuf et élève le jeune coucou; le choix des hôtes et les détails de reproduction varient selon la région.",
+    "ecology": "Parasite de couvée spécialisé, il dépend des prionops et des milieux boisés où ceux-ci nichent. Son régime insectivore le relie aussi aux invertébrés de la canopée; des études locales signalent un effet important du parasitisme sur le succès de reproduction des hôtes.",
+    "conservation": "Oiseaux.net affiche la catégorie Préoccupation mineure sur son graphique de statut UICN, sans préciser l’année de l’évaluation sur la page accessible. Des sources d’Afrique australe signalent le défrichement et la fragmentation du miombo; ces pressions régionales ne suffisent pas à établir une tendance mondiale actuelle."
+  },
+  "sources": [
+    {
+      "url": "https://www.biodiversityexplorer.info/birds/cuculidae/pachycoccyx_audeberti.htm",
+      "title": "Coucou d’Audebert — Biodiversity Explorer, université du Cap / ADU"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/coucou.d.audeberti.html",
+      "title": "Coucou d’Audebert (Pachycoccyx audeberti) — Oiseaux.net"
+    },
+    {
+      "url": "https://snl.no/hvitbrystgj%C3%B8k",
+      "title": "Coucou à poitrine blanche — Store norske leksikon"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/302960010_Is_the_Thick-billed_Cuckoo_Pachycoccyx_audeberti_a_forest_dependent_species_in_West_Africa",
+      "title": "Le Coucou d’Audebert est-il dépendant des forêts en Afrique de l’Ouest ? — Malimbus"
+    }
+  ]
+}

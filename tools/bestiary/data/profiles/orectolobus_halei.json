@@ -1,0 +1,146 @@
+{
+  "id": "orectolobus_halei",
+  "scientific": "Orectolobus halei",
+  "group": "fish",
+  "name": {
+    "en": "Gulf wobbegong",
+    "fr": "Requin-tapis du golfe"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Gulf wobbegong is a large, bottom-dwelling carpet shark of southern Australian coastal and shelf waters.",
+      "fr": "Le Requin-tapis du golfe est un grand requin-tapis benthique des eaux côtières et du plateau continental du sud de l’Australie."
+    },
+    "identification": {
+      "en": "It has dark-edged brown saddles and fewer pale rings than the spotted wobbegong; it is larger than the similar ornate wobbegong.",
+      "fr": "Ses selles brunes sont bordées de sombre et présentent moins d’anneaux pâles que chez le Requin-tapis tacheté ; il est plus grand que le Requin-tapis orné, qui lui ressemble."
+    },
+    "habitat": {
+      "en": "It rests among reef caves and ledges, in bays and on rocky or coral reefs, and ranges from inshore waters onto the continental shelf.",
+      "fr": "Il se repose dans les anfractuosités et sous les surplombs des récifs, dans les baies et sur les récifs rocheux ou coralliens ; il fréquente les eaux côtières et le plateau continental."
+    },
+    "diet": {
+      "en": "A stomach-content study in New South Wales found a diet mainly of bony fishes, with cephalopods and other sharks also recorded.",
+      "fr": "Une étude des contenus stomacaux menée en Nouvelle-Galles du Sud a trouvé surtout des poissons osseux, ainsi que des céphalopodes et d’autres requins."
+    },
+    "behavior": {
+      "en": "It rests on the seabed by day and makes nocturnal excursions from its resting places.",
+      "fr": "Il se repose sur le fond le jour et effectue des déplacements nocturnes depuis ses abris."
+    },
+    "reproduction": {
+      "en": "It is live-bearing, but litter-size and timing data are better established for its close relative O. ornatus than for this species.",
+      "fr": "Il est vivipare, mais les données sur la taille des portées et le calendrier reproducteur sont mieux établies chez son proche parent O. ornatus."
+    },
+    "ecology": {
+      "en": "Once treated as O. ornatus, it is now recognized as a distinct species; the two profiles compare the larger Gulf wobbegong with the smaller ornate wobbegong.",
+      "fr": "Autrefois inclus dans O. ornatus, il est désormais reconnu comme une espèce distincte ; les deux fiches comparent le Requin-tapis du golfe, plus grand, au Requin-tapis orné."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists it as Least Concern; Australian fisheries reporting nevertheless tracks catches and management.",
+      "fr": "L’évaluation mondiale de l’UICN le classe en Préoccupation mineure ; les rapports australiens sur la pêche suivent néanmoins les captures et leur gestion."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Orectolobus halei — IUCN Red List (2015 assessment)",
+        "fr": "Orectolobus halei — Liste rouge de l’UICN (évaluation de 2015)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2015-4.RLTS.T161709A68638176.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The assessment details distinctive coloration and reef habitat."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 8,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Quantitative diet assessment of wobbegong sharks — ICES Journal of Marine Science",
+        "fr": "Évaluation quantitative du régime alimentaire des requins-tapis — ICES Journal of Marine Science"
+      },
+      "url": "https://doi.org/10.1093/icesjms/fsm111",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The peer-reviewed study sampled O. halei in New South Wales and found a diet mainly of bony fishes, with cephalopods and cartilaginous fishes also represented."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 25,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gulf Wobbegong — Australian Government shark report",
+        "fr": "Requin-tapis du golfe — rapport australien sur les requins"
+      },
+      "url": "https://fish.gov.au/docs/SharkReport/2023_FRDC_Orectolobus%20halei_final.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "Australian reporting describes a common southern Australian species and records global Least Concern; detailed reproductive data remain limited."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 121,
+        "notes_words": 18,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Some older literature treated O. halei as a form of O. ornatus; the profile follows current species-level taxonomy. Reproductive figures are not inferred from the ornate wobbegong."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the IUCN species account with a peer-reviewed diet study; cross-reference to O. ornatus is reciprocal and notes the historic taxonomic confusion."
+}

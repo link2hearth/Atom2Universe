@@ -1,0 +1,34 @@
+{
+  "id": "orectolobus_ornatus",
+  "name": "Orectolobus ornatus",
+  "scientific": "Orectolobus ornatus",
+  "group": "fish",
+  "sections": {
+    "overview": "Orectolobus ornatus est un requin-tapis benthique de l’est de l’Australie et de Papouasie-Nouvelle-Guinée.",
+    "identification": "Son corps aplati et marqué de motifs porte des lobes cutanés ramifiés près de la tête ; il est généralement plus petit que le Requin-tapis du golfe, O. halei, qui lui ressemble.",
+    "habitat": "Il fréquente les baies, les récifs et les îles au large, dans les eaux côtières et du plateau continental, souvent à l’abri de structures rocheuses complexes.",
+    "diet": "Une étude menée en Nouvelle-Galles du Sud a trouvé surtout des poissons osseux, ainsi que des céphalopodes et d’autres poissons cartilagineux.",
+    "behavior": "Il reste fortement lié à certains sites récifaux, ce qui le rend aussi sensible à la pression de pêche.",
+    "reproduction": "Il est vivipare et sa productivité reproductive est faible ; les évaluations australiennes indiquent des portées d’environ 4 à 18 petits et un cycle de plusieurs années.",
+    "ecology": "Le Requin-tapis du golfe était autrefois regroupé avec cette espèce, mais en est maintenant séparé ; voir O. halei pour la comparaison réciproque et les caractères distinctifs.",
+    "conservation": "La catégorie mondiale de l’UICN est Préoccupation mineure, bien que la Nouvelle-Galles du Sud classe l’espèce comme Vulnérable après des déclins historiques liés à la pêche."
+  },
+  "sources": [
+    {
+      "url": "https://fish.gov.au/docs/SharkReport/2023_FRDC_Orectolobus_ornatus_final.pdf",
+      "title": "Ornate Wobbegong — rapport australien sur les requins"
+    },
+    {
+      "url": "https://doi.org/10.1093/icesjms/fsm111",
+      "title": "Évaluation quantitative du régime alimentaire des requins-tapis — ICES Journal of Marine Science"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2015-4.RLTS.T161709A68638176.en",
+      "title": "Orectolobus halei — Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://ris.cdu.edu.au/ws/portalfiles/portal/45696628/Kyne_etal_Shark_Action_Plan_2021.pdf",
+      "title": "Orectolobidae — plan d’action australien pour les requins"
+    }
+  ]
+}

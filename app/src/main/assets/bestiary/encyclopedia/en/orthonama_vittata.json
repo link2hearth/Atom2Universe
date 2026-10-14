@@ -1,0 +1,34 @@
+{
+  "id": "orthonama_vittata",
+  "name": "Oblique carpet",
+  "scientific": "Orthonama vittata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The oblique carpet is a geometrid moth of the Palearctic. Its larvae feed mainly on bedstraws (Galium), and in Britain it is associated with damp and wetland habitats.",
+    "identification": "Adults have pale brownish wings crossed by fine dark lines and a more prominent oblique band, giving the species its English name. The Belgian Lepidoptera catalogue gives a wingspan of 18–22 mm; worn specimens may be harder to identify.",
+    "habitat": "British records include fens, marshes, wet grassland, bogs and damp woodland, with occasional upland or coastal sites. The species also occurs across continental Europe and eastward in the Palearctic, but local status varies greatly.",
+    "diet": "Larvae feed on bedstraws, including marsh bedstraw (Galium palustre) and heath bedstraw (G. saxatile); the Belgian catalogue also lists bogbean (Menyanthes trifoliata). These are larval food plants, not the adult moth’s diet.",
+    "behavior": "Adults are active from dusk and are attracted to light. The Belgian catalogue reports that the larva overwinters; adults fly from spring into early autumn, sometimes in more than one generation.",
+    "reproduction": "Regional accounts describe larval hosts and the overwintering stage but give little species-specific detail on courtship, egg laying or brood number across the range.",
+    "ecology": "Its use of Galium and wet habitats links it to damp meadows, fens and other wetlands. These habitat and host-plant records come mainly from Britain and Belgium and are not a complete ecological survey of the whole range.",
+    "conservation": "The Belgian Lepidoptera catalogue lists it as Endangered on the 2023 Flemish Red List. This is a regional assessment, not a global category; no global assessment was established in the sources consulted."
+  },
+  "sources": [
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/4322/",
+      "title": "Orthonama vittata — Catalogue of the Lepidoptera of Belgium"
+    },
+    {
+      "url": "https://www.durhammoths.org/taxonomy/geometridae/orthonama-vittata",
+      "title": "Oblique Carpet — Durham Moths"
+    },
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=70.046",
+      "title": "Oblique Carpet — Hantsmoths, Lepidoptera of Hampshire and Isle of Wight"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Orthonama_vittata",
+      "title": "Orthonama vittata — LepiWiki / Lepiforum"
+    }
+  ]
+}

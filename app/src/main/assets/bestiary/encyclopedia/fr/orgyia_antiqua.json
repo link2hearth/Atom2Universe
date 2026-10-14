@@ -1,0 +1,34 @@
+{
+  "id": "orgyia_antiqua",
+  "name": "Étoilée",
+  "scientific": "Orgyia antiqua",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "L’Étoilée est un papillon de nuit de la sous-famille des Lymantriinae, dans les Erebidae. Ses chenilles consomment de nombreux arbres et arbustes, tandis que les adultes des deux sexes sont très différents.",
+    "identification": "Le mâle est brun orangé, avec une tache blanche sur l’aile antérieure; la femelle, pâle et au corps volumineux, a des ailes très réduites et ne vole pas. La chenille velue est gris-noir, ponctuée de rouge sur les côtés et porte quatre touffes jaunes près de la tête.",
+    "habitat": "L’espèce est largement répartie dans une grande partie de l’hémisphère Nord tempéré et fréquente jardins, lisières, fourrés et autres milieux où poussent ses plantes hôtes. Les chenilles consomment de nombreux feuillus et arbustes, dont bouleaux, noisetiers, tilleuls, chênes, saules, aubépines et prunelliers.",
+    "diet": "La larve est polyphage et mange le feuillage de nombreux ligneux; bouleau, noisetier, tilleul, chêne et saule figurent parmi les plantes hôtes. Les ressources locales varient donc selon les régions.",
+    "behavior": "Les mâles volent le jour et repèrent les femelles immobiles grâce à leur odeur. Après l’émergence, la femelle reste près de son cocon et émet une phéromone sexuelle; le fort dimorphisme est lié à cette stratégie d’accouplement.",
+    "reproduction": "Après l’accouplement, la femelle dépose ses œufs sur l’extérieur de son cocon nymphal. Ils passent l’hiver et éclosent au printemps suivant; les chenilles mûres se nymphosent dans un cocon soyeux, sur une plante hôte ou à proximité.",
+    "ecology": "Les chenilles peuvent provoquer une légère défoliation, mais elles sont rarement assez nombreuses pour endommager sérieusement les plantes des jardins. Larves et adultes nourrissent aussi d’autres animaux, notamment des oiseaux et des insectes prédateurs.",
+    "conservation": "Aucune évaluation mondiale de conservation n’a été trouvée pour ce papillon largement réparti. Ses chenilles ne sont généralement pas considérées comme des ravageurs importants des jardins; la Royal Horticultural Society recommande de les tolérer si possible."
+  },
+  "sources": [
+    {
+      "url": "https://www.rhs.org.uk/biodiversity/vapourer-moth",
+      "title": "Étoilée — Royal Horticultural Society"
+    },
+    {
+      "url": "https://cbnfc-ori.org/sites/default/files/2024-03/Liste-especes-papillons-nuit-FrancheComte_V4_OPIE-FC-GPNFC_WEB.pdf",
+      "title": "Orgyia antiqua — Papillons de nuit de Franche-Comté, OPIE / CBNFC-ORI"
+    },
+    {
+      "url": "https://waldschutz.wsl.ch/fileadmin/user_upload/WSL/Microsite/Waldschutz-Schweiz/Diagnose_online/fr/Chenille_a_houppes_rousses_179.pdf",
+      "title": "Chenille à houppes rousses — Institut fédéral de recherches sur la forêt, la neige et le paysage (WSL)"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/orgyia-antiqua/",
+      "title": "L’Étoilée (Orgyia antiqua) — UKmoths"
+    }
+  ]
+}

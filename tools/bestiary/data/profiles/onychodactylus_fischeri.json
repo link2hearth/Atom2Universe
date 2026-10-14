@@ -1,0 +1,146 @@
+{
+  "id": "onychodactylus_fischeri",
+  "scientific": "Onychodactylus fischeri",
+  "group": "amphibians",
+  "name": {
+    "en": "Fischer's clawed salamander",
+    "fr": "Salamandre à griffes de Fischer"
+  },
+  "sections": {
+    "overview": {
+      "en": "Fischer's clawed salamander is a lungless hynobiid of the Russian Far East, where it inhabits cool, forested mountain streams.",
+      "fr": "La Salamandre à griffes de Fischer est un hynobiidé sans poumons de l’Extrême-Orient russe, où elle fréquente les cours d’eau frais des montagnes boisées."
+    },
+    "identification": {
+      "en": "Its elongated body and tail are brown to grey-brown, often with an irregular golden-brown stripe, and its toes bear dark claws.",
+      "fr": "Son corps allongé et sa queue sont bruns à gris-brun, souvent marqués d’une ligne brun doré irrégulière ; ses doigts portent des griffes sombres."
+    },
+    "habitat": {
+      "en": "It specializes in small, cold, shaded mountain streams with stony beds and moist forest banks, including spring-fed reaches.",
+      "fr": "Elle est spécialisée dans les petits cours d’eau montagnards froids et ombragés, au lit pierreux et aux berges forestières humides, y compris les secteurs alimentés par des sources."
+    },
+    "diet": {
+      "en": "The sources consulted do not establish a species-specific diet, so no prey list is assigned here.",
+      "fr": "Les sources consultées ne précisent pas son régime alimentaire propre ; aucune liste de proies n’est donc avancée ici."
+    },
+    "behavior": {
+      "en": "Adults migrate over land to reach breeding streams, and may return to the same watercourses.",
+      "fr": "Les adultes gagnent les cours d’eau de reproduction en traversant la terre ferme et peuvent retrouver les mêmes ruisseaux."
+    },
+    "reproduction": {
+      "en": "Breeding takes place in streams; a 2023 field study documented a repeatedly used spawning site beneath a small streambed.",
+      "fr": "La reproduction a lieu dans les cours d’eau ; une étude de terrain publiée en 2023 a décrit un site de ponte réutilisé sous le lit d’un petit ruisseau."
+    },
+    "ecology": {
+      "en": "Recent taxonomic work restricts O. fischeri to the Russian Far East; populations once assigned to it in China and Korea are now treated as other Onychodactylus species.",
+      "fr": "Les travaux taxonomiques récents limitent O. fischeri à l’Extrême-Orient russe ; des populations autrefois rattachées à cette espèce en Chine et en Corée sont désormais attribuées à d’autres Onychodactylus."
+    },
+    "conservation": {
+      "en": "Russia's Red Data Book lists the species as declining. The 2004 global IUCN assessment predates taxonomic splits and cannot establish a current status for the narrower species concept.",
+      "fr": "Le Livre rouge de la Russie signale une diminution de l’espèce. L’évaluation mondiale de l’UICN de 2004 précède les séparations taxonomiques et ne permet pas d’établir le statut actuel de cette définition plus restreinte."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Fischer's clawed salamander — Red Data Book of Russia",
+        "fr": "Уссурийский когтистый тритон — Красная книга России"
+      },
+      "url": "https://redbookrf.ru/ussuriyskiy-kogtistyy-triton-onychodactylus-fischeri/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation",
+        "diet"
+      ],
+      "facts": [
+        "Russian species account describes its lungless, elongated form, clawed toes and brown back with an irregular golden stripe; it lists the species as declining nationally.",
+        "The species account provides no species-specific prey list."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 25,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Onychodactylus fischeri — IUCN Red List (2004 assessment)",
+        "fr": "Onychodactylus fischeri — Liste rouge de l’UICN (évaluation de 2004)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2004.RLTS.T39419A10234504.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The old assessment describes shaded, pebble-bed forest streams and spring habitats; its broad range and global status predate later taxonomic splits."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 21,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New data on spawning site and group egg laying of Onychodactylus fischeri — Russian Journal of Herpetology",
+        "fr": "Nouvelles données sur le site de ponte et la ponte collective d’Onychodactylus fischeri — Russian Journal of Herpetology"
+      },
+      "url": "https://doi.org/10.30906/1026-2296-2023-30-6-477-492",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "A 2023 field study describes its breeding site and Russian Far East range."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 13,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The 2004 IUCN account used a broader pre-split species concept. Recent taxonomy restricts this species to Primorye; diet-specific field evidence was not located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Russian species information and a 2023 field study against the IUCN habitat account; the IUCN range/status is explicitly treated as outdated after taxonomic splitting."
+}

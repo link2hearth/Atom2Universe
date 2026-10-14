@@ -1,0 +1,120 @@
+{
+  "id": "palpares_libelluloides",
+  "scientific": "Palpares libelluloides",
+  "group": "invertebrates",
+  "name": {
+    "en": "Giant antlion",
+    "fr": "Grand fourmilion"
+  },
+  "sections": {
+    "overview": {
+      "en": "Palpares libelluloides is a large antlion of the Mediterranean region, in the lacewing order Neuroptera.",
+      "fr": "Palpares libelluloides est un grand fourmilion de la région méditerranéenne, dans l’ordre des névroptères."
+    },
+    "identification": {
+      "en": "Its broad wings are conspicuously mottled; adults fly heavily and are active by day.",
+      "fr": "Ses larges ailes sont fortement tachetées ; l’adulte a un vol lourd et est actif le jour."
+    },
+    "habitat": {
+      "en": "In France it is chiefly limited to Mediterranean-climate areas, with records inland to parts of Ardèche and Drôme; it also occurs across southern Europe and adjoining regions.",
+      "fr": "En France, il est surtout limité aux zones de climat méditerranéen, avec des observations dans certaines parties de l’Ardèche et de la Drôme ; il vit aussi dans le sud de l’Europe et les régions voisines."
+    },
+    "diet": {
+      "en": "The atlas gives no species-specific prey details.",
+      "fr": "L’atlas ne précise pas les proies de cette espèce."
+    },
+    "behavior": {
+      "en": "Day-active adults and their conspicuous, heavy flight make the species relatively easy to record where it occurs.",
+      "fr": "Les adultes diurnes et leur vol lourd et visible rendent l’espèce relativement facile à observer là où elle est présente."
+    },
+    "reproduction": {
+      "en": "No species-specific breeding account was found.",
+      "fr": "Aucune donnée propre à sa reproduction n’a été trouvée."
+    },
+    "ecology": {
+      "en": "It occurs in dry open grassland.",
+      "fr": "Elle fréquente les prairies sèches ouvertes."
+    },
+    "conservation": {
+      "en": "No global status is established here.",
+      "fr": "Son statut mondial n’est pas établi ici."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "French antlion distribution atlas",
+        "fr": "Atlas français des fourmilions"
+      },
+      "url": "https://r-a-r-e.fr/wp-content/uploads/2020/06/Fourmilions-France.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "The atlas describes the species as large, spotted-winged, heavy-flying and diurnal in Mediterranean France."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 14,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecological diagnosis for a project in Noves, France",
+        "fr": "Diagnostic écologique d’un projet à Noves, France"
+      },
+      "url": "https://www.paca.developpement-durable.gouv.fr/IMG/pdf/f09321p0303_diagnosticecologique.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "A local survey records dry open habitat; it provides no species-specific diet or breeding account and its assessment is not global."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 21,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Prey, larval ecology, reproductive timing and global population trend were not established by the consulted sources.",
+    "The French environmental report has local scope and is not a global conservation assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a French distribution atlas with a regional government ecological report; left poorly documented larval biology and status cautious."
+}
