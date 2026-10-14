@@ -5,18 +5,14 @@
     <string name="hamlet_neighbors_milestone_1">Passer des commandes</string>
     <string name="hamlet_neighbors_milestone_2">Récupérer les colis</string>
     <string name="hamlet_neighbors_milestone_complete">%1$s · terminé</string>
-    <string name="hamlet_neighbors_milestone_progress">%1$s · %2$d/%3$d · récupérer</string>
     <string name="hamlet_neighbors_title">Voisins</string>
-    <string name="hamlet_neighbors_home">Mon village</string>
     <string name="hamlet_neighbors_villages">Visiter les villages</string>
-    <string name="hamlet_neighbors_book">Carnet de commandes</string>
     <string name="hamlet_neighbors_book_count">Commandes · %1$d prêtes</string>
     <string name="hamlet_neighbors_intro">Douze villages à explorer à ton rythme. Visite leurs ateliers, commande des colis gratuits et donne un coup de main aux préparatifs. Ton village conserve son décor et sa progression.</string>
     <string name="hamlet_neighbors_level">Niveau %1$d · %2$d commandes en cours</string>
     <string name="hamlet_neighbors_separator"> · </string>
     <string name="hamlet_neighbors_visit">Visiter ce village</string>
     <string name="hamlet_neighbors_visit_hint">Explore avec un doigt ; pince pour zoomer. Touche un atelier ou choisis-en un ci-dessous. C’est le village d’un voisin : construction et récolte sont désactivées.</string>
-    <string name="hamlet_neighbors_welcome">Bienvenue à %1$s !</string>
     <string name="hamlet_neighbors_reward">%1$s · %2$d pièces · %3$d XP · %4$d s de travail</string>
     <string name="hamlet_neighbors_free_duration">Commande gratuite · prête dans %1$s. Aucune limite quotidienne.</string>
     <string name="hamlet_neighbors_place">Passer une commande gratuite</string>
@@ -29,7 +25,6 @@
     <string name="hamlet_neighbors_tool_1">Emballer</string>
     <string name="hamlet_neighbors_tool_2">Charger</string>
     <string name="hamlet_neighbors_help_free">Six bons gestes font gagner 30 secondes. Aide autant que tu veux, gratuitement.</string>
-    <string name="hamlet_neighbors_help_wrong">Choisis le geste indiqué au-dessus ; aucun progrès perdu.</string>
     <string name="hamlet_neighbors_book_empty">Aucune commande pour le moment. Visite un village et touche l’un de ses ateliers. Tes colis restent disponibles jusqu’à leur récupération.</string>
     <string name="hamlet_neighbors_order_title">%1$s · %2$s</string>
     <string name="hamlet_neighbors_visit_order">Visiter et aider</string>

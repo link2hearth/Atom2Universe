@@ -1,7 +1,5 @@
 package com.Atom2Universe.app.games.hamlet
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Canvas
@@ -13,34 +11,50 @@ import android.graphics.drawable.RippleDrawable
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import android.widget.*
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.hamlet.HamletUi.Weight
 
-/** Écran de campagne à plein écran. Le village et sa sauvegarde restent ceux du joueur.
- * Gros boutons dorés pour ce qu'on fait sans cesse, boutons discrets pour le reste ;
- * les règles se lisent derrière un « ? », pas sur l'écran. */
-internal class HamletAdventureDialog(private val context: Context, private val game: HamletGame,
-    private val haptics: Boolean = false,
-    private val onBuild: (Def) -> Unit = {}, private val onClose: () -> Unit = {},
-    private val onExit: (() -> Boolean)? = null, private val effectsEnabled: Boolean = true) {
+/**
+ * Les modules Aventure (carte, défis, royaume) et Héros (héros, équipes, forge) : une seule page à
+ * onglets, ouverte par la bannière commune. Gros boutons dorés pour ce qu'on fait sans cesse, boutons
+ * discrets pour le reste ; les règles se lisent derrière un « ? », pas sur l'écran.
+ */
+internal class HamletAdventurePage(private val context: Context, private val game: HamletGame, private val nav: HamletNav) : HamletPage {
+    companion object {
+        const val EXPLORE = 0
+        const val HEROES = 1
+        const val TEAMS = 2
+        const val FORGE = 3
+        const val KINGDOM = 4
+        const val CHALLENGES = 5
+        private val ADVENTURE_TABS = intArrayOf(EXPLORE, CHALLENGES, KINGDOM)
+        private val HERO_TABS = intArrayOf(HEROES, TEAMS, FORGE)
+        private val NAMES = arrayOf("explore", "heroes", "teams", "craft", "kingdom", "challenges")
+        private val GLYPHS = arrayOf("map", "hat", "shield", "anvil", "castle", "trophy")
+        fun module(tab: Int) = if (tab in HERO_TABS) HamletModule.HEROES else HamletModule.ADVENTURE
+    }
     private val a get() = game.adventure
-    private lateinit var dialog: Dialog
-    private lateinit var root: LinearLayout
-    private lateinit var stock: LinearLayout
-    private val resourceChips = ArrayList<TextView>()
+    private val root = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL }
+    override val view: View get() = root
+    private val strip = LinearLayout(context).apply { gravity = Gravity.CENTER_VERTICAL }
     private val buildingArt = HamletArt()
-    private lateinit var rows: LinearLayout
-    private lateinit var scroll: ScrollView
-    private var tab = 0
+    private val rows = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL }
+    private val scroll = ScrollView(context)
+    private var tab = EXPLORE
+    private var lastAdventure = EXPLORE
+    private var lastHeroes = HEROES
+    private var group = -1
+    /** A fight, a gathering or a result is on screen instead of the tab. */
+    private var away = false
+    private var fighting = false
     private var heroFilter = -1
     private var ownedOnly = false
     private var showLegacyGear = false
     private var page = a.frontier / 12
     private var selected = a.frontier
-    private val tabButtons = ArrayList<Button>()
+    private val haptics get() = nav.haptics
+    private val effectsEnabled get() = nav.effects
     private fun dp(v: Int) = (v * context.resources.displayMetrics.density).toInt()
     private fun raw(key: String, vararg args: Any): String {
         val id = context.resources.getIdentifier(key, "string", context.packageName)
@@ -56,7 +70,6 @@ internal class HamletAdventureDialog(private val context: Context, private val g
     private fun factionName(f: HeroFaction) = s("faction_${f.ordinal}")
     private fun region(stage: Int) = raw("hamlet_region_${a.region(stage)}")
     private fun item(id: String) = raw("hamlet_n_$id")
-    private fun bg(color: Int, radius: Int = 14) = HamletUi.panel(context, color, radius, 0xFFD4C5A9.toInt())
     private fun column() = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL }
     private fun line() = LinearLayout(context).apply { gravity = Gravity.CENTER_VERTICAL }
     private fun text(parent: LinearLayout, value: CharSequence, title: Boolean = false, dark: Boolean = true,
@@ -68,8 +81,8 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         parent.addView(it)
     }
     private fun button(value: CharSequence, enabled: Boolean = true, weight: Weight = Weight.NORMAL, onDark: Boolean = false,
-                       click: () -> Unit = {}) = HamletUi.button(context, value, weight, onDark) {
-        if (haptics && ::root.isInitialized) root.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+                       glyph: String? = null, click: () -> Unit = {}) = HamletUi.button(context, value, weight, onDark, glyph) {
+        if (haptics) root.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
         click()
     }.apply {
         isEnabled = enabled
@@ -95,88 +108,87 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         rows.addView(head)
     }
     /** An action that redraws the screen when it worked; an impossible one does nothing. */
-    private fun action(parent: LinearLayout, label: CharSequence, enabled: Boolean = true, weight: Weight = Weight.NORMAL, operation: () -> Boolean) {
-        parent.addView(button(label, enabled, weight) { if (operation()) render() })
+    private fun action(parent: LinearLayout, label: CharSequence, enabled: Boolean = true, weight: Weight = Weight.NORMAL, glyph: String? = null, operation: () -> Boolean) {
+        parent.addView(button(label, enabled, weight, glyph = glyph) { if (operation()) render() })
     }
     private fun info(title: CharSequence, message: CharSequence, onDark: Boolean = false) = HamletUi.info(context, title, message, onDark)
     private fun toast(value: String) { Toast.makeText(context, value, Toast.LENGTH_SHORT).show() }
     /** A parchment card; [help] adds a "?" beside its title. */
-    private fun card(title: CharSequence, help: CharSequence? = null, parent: LinearLayout = rows): LinearLayout = column().also {
-        it.background = bg(HamletUi.PAPER); it.setPadding(dp(13), dp(8), dp(13), dp(12)); it.elevation = dp(2).toFloat()
+    private fun card(title: CharSequence, help: CharSequence? = null, parent: LinearLayout = rows, glyph: String? = null): LinearLayout = column().also {
+        it.background = HamletUi.card(context); it.setPadding(dp(13), dp(8), dp(13), dp(12)); it.elevation = dp(2).toFloat()
         parent.addView(it, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(10) })
         val head = line()
         head.addView(TextView(context).apply {
             text = title; textSize = HamletUi.TITLE; setTextColor(HamletUi.INK); setTypeface(null, Typeface.BOLD)
             setPadding(dp(3), dp(4), dp(3), dp(4))
+            if (glyph != null) { setCompoundDrawablesRelativeWithIntrinsicBounds(HamletUi.icon(context, glyph, 22), null, null, null); compoundDrawablePadding = dp(7) }
         }, LinearLayout.LayoutParams(0, -2, 1f))
         if (help != null) head.addView(info(title, help), LinearLayout.LayoutParams(dp(44), -2))
         it.addView(head)
     }
-    fun show(initialTab: Int = 0) {
-        tab = initialTab
-        dialog = Dialog(context)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        root = column().apply {
-            background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(HamletUi.FOREST, 0xFF102D2A.toInt()))
-            setPadding(dp(10), dp(8), dp(10), dp(8))
-        }
-        val title = line()
-        title.addView(TextView(context).apply { text = s("title"); textSize = HamletUi.HEAD; setTextColor(HamletUi.GOLD); setTypeface(null, Typeface.BOLD) }, LinearLayout.LayoutParams(0, -2, 1f))
-        title.addView(info(s("title"), s("help_text"), onDark = true), LinearLayout.LayoutParams(dp(44), -2).apply { marginStart = dp(4) })
-        if (onExit != null) title.addView(button(context.getString(R.string.hamlet_ui_exit), weight = Weight.QUIET, onDark = true) { if (onExit.invoke()) dialog.dismiss() }.apply {
-            contentDescription = context.getString(R.string.hamlet_ui_exit_description)
-        }, LinearLayout.LayoutParams(-2, -2).apply { marginStart = dp(4) })
-        title.addView(button(s("village")) { dialog.dismiss() }, LinearLayout.LayoutParams(-2, -2).apply { marginStart = dp(6) })
-        root.addView(title)
-        stock = LinearLayout(context).apply { setPadding(0, dp(5), 0, dp(5)) }
-        val glyphs = arrayOf("apple", "wood", "ore", "gear", "book", "gem", "star", "ticket")
-        for (i in glyphs.indices) {
-            val chip = TextView(context).apply {
-                textSize = 13f; gravity = Gravity.CENTER_VERTICAL; setTextColor(HamletUi.PAPER)
-                setPadding(dp(8), dp(6), dp(10), dp(6)); background = HamletUi.panel(context, 0xFF305347.toInt(), 9)
-                setCompoundDrawablesWithIntrinsicBounds(HamletUi.icon(context, glyphs[i], 18), null, null, null); compoundDrawablePadding = dp(5)
-                isSingleLine = true
-            }
-            resourceChips.add(chip)
-            stock.addView(chip, LinearLayout.LayoutParams(-2, -2).apply { marginEnd = dp(5) })
-        }
-        root.addView(HorizontalScrollView(context).apply {
-            isHorizontalScrollBarEnabled = false; addView(stock); contentDescription = context.getString(R.string.hamlet_ui_resources)
-        }, LinearLayout.LayoutParams(-1, -2))
-        rows = column(); scroll = ScrollView(context).apply { addView(rows); isFillViewport = true }
+
+    init {
+        strip.setPadding(dp(8), dp(6), dp(8), dp(6))
+        strip.background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(HamletUi.FOREST, 0xFF1A3631.toInt()))
+        root.addView(strip, LinearLayout.LayoutParams(-1, -2))
+        rows.setPadding(dp(10), 0, dp(10), dp(16))
+        scroll.addView(rows); scroll.isFillViewport = true
+        scroll.background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(0xFF1A3631.toInt(), HamletUi.DEEP))
         root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
-        val tabs = LinearLayout(context).apply { setPadding(0, dp(6), 0, 0) }
-        val names = arrayOf("explore", "heroes", "teams", "craft", "kingdom", "challenges")
-        val icons = arrayOf("map", "hat", "shield", "gear", "crate", "sword")
-        for (i in names.indices) tabs.addView(HamletUi.navigation(context, s(names[i]), icons[i]) {
-            if (haptics) root.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
-            a.abandonBattle(); tab = i; scroll.scrollTo(0, 0); render()
-        }.also { it.minHeight = dp(66); it.minimumHeight = dp(66); tabButtons.add(it) }, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(2); marginEnd = dp(2) })
-        root.addView(tabs)
-        dialog.setContentView(root, android.view.ViewGroup.LayoutParams(-1, -1))
-        dialog.setOnDismissListener { a.abandonBattle(); buildingArt.clear(); onClose() }
-        dialog.show(); dialog.window?.apply { setLayout(-1, -1); setBackgroundDrawableResource(android.R.color.transparent); addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND) }
-        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
-            val bars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars() or androidx.core.view.WindowInsetsCompat.Type.displayCutout())
-            v.setPadding(dp(10) + bars.left, dp(10) + bars.top, dp(10) + bars.right, dp(8) + bars.bottom); insets
+    }
+
+    /** The tab to open from the banner: the group's first on a second tap, else the last one used there. */
+    fun first(heroes: Boolean, again: Boolean) = when {
+        again -> if (heroes) HEROES else EXPLORE
+        heroes -> lastHeroes
+        else -> lastAdventure
+    }
+    override fun show(page: Int) {
+        if (page < 0) { if (!away) render(); supplies(); return }
+        if (page == tab && fighting) { supplies(); return }
+        if (fighting || away) a.abandonBattle()
+        tab = page; scroll.scrollTo(0, 0); render()
+    }
+    override fun hide() = Unit
+    override fun tick() { supplies() }
+    override fun back(): Boolean {
+        if (!away) return false
+        a.abandonBattle(); render(); return true
+    }
+    override fun close() { a.abandonBattle(); buildingArt.clear() }
+    /** Another tab, followed by the banner. */
+    private fun go(target: Int) = nav.open(module(target), target)
+
+    private fun strip() {
+        val heroes = tab in HERO_TABS
+        val wanted = if (heroes) 1 else 0
+        if (group == wanted && strip.childCount > 0) {
+            for (i in 0 until strip.childCount - 1) (strip.getChildAt(i) as Button).let { b -> HamletUi.choice(b, b.tag == tab) }
+            return
         }
-        androidx.core.view.ViewCompat.requestApplyInsets(root); render()
+        group = wanted; strip.removeAllViews()
+        for (t in if (heroes) HERO_TABS else ADVENTURE_TABS) {
+            strip.addView(HamletUi.button(context, s(NAMES[t]), glyph = GLYPHS[t]) {
+                if (haptics) root.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+                if (t != tab || away) go(t)
+            }.apply { tag = t; maxLines = 1; HamletUi.choice(this, t == tab) }, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(5) })
+        }
+        strip.addView(info(s(if (heroes) "heroes" else "title"), s(if (heroes) "recruitment_help" else "help_text"), onDark = true), LinearLayout.LayoutParams(dp(44), -2))
+    }
+    private fun supplies() {
+        a.advanceProduction()
+        val glyphs = arrayOf("apple", "wood", "ore", "gear", "book", "gem", "star", "ticket")
+        nav.supplies(AdventureResource.entries.mapIndexed { i, resource ->
+            val value = a[resource]
+            HamletChip(glyphs[i], value, context.getString(R.string.hamlet_ui_number, value),
+                context.getString(R.string.hamlet_ui_resource_amount, s("resource_${resource.name.lowercase()}"), value))
+        })
     }
     private fun render() {
-        a.advanceProduction(); rows.removeAllViews()
-        refreshStock()
-        tabButtons.forEachIndexed { i, b ->
-            b.background = HamletUi.control(context, selected = i == tab, quiet = i != tab)
-            b.setTextColor(if (i == tab) HamletUi.INK else HamletUi.PAPER); b.isSelected = i == tab
-        }
-        when (tab) { 0 -> explore(); 1 -> heroes(); 2 -> teams(); 3 -> craft(); 4 -> kingdom(); 5 -> challenges() }
-    }
-    private fun refreshStock() {
-        AdventureResource.entries.forEachIndexed { i, resource ->
-            resourceChips[i].text = context.getString(R.string.hamlet_ui_number, a[resource])
-            val description = context.getString(R.string.hamlet_ui_resource_amount, s("resource_${resource.name.lowercase()}"), a[resource])
-            resourceChips[i].contentDescription = description; resourceChips[i].tooltipText = description
-        }
+        a.advanceProduction(); rows.removeAllViews(); away = false; fighting = false
+        if (tab in HERO_TABS) lastHeroes = tab else lastAdventure = tab
+        strip(); supplies()
+        when (tab) { EXPLORE -> explore(); HEROES -> heroes(); TEAMS -> teams(); FORGE -> craft(); KINGDOM -> kingdom(); else -> challenges() }
     }
     /** Rarity colour on the card's edge, so a hero's rank reads before its name. */
     private fun rarityCard(owned: Boolean, rarity: HeroRarity): android.graphics.drawable.Drawable {
@@ -208,20 +220,20 @@ internal class HamletAdventureDialog(private val context: Context, private val g
                     HamletCharacterArt.draw(c, true, id, width / 2f, height - inner * .07f, inner, time = time)
                 } else HamletCharacterArt.draw(c, kind == "hero", id, width / 2f, height.toFloat(), size, time = time)
                 val delay = if ((rarity?.ordinal ?: 0) >= HeroRarity.EPIC.ordinal) 90L else 140L
-                if (effectsEnabled && isAttachedToWindow && windowVisibility == View.VISIBLE && hasWindowFocus()) postInvalidateDelayed(delay)
+                if (effectsEnabled && isAttachedToWindow && isShown && hasWindowFocus()) postInvalidateDelayed(delay)
             }
         }
         override fun onWindowFocusChanged(hasWindowFocus: Boolean) { super.onWindowFocusChanged(hasWindowFocus); if (hasWindowFocus) invalidate() }
+        override fun onVisibilityAggregated(isVisible: Boolean) { super.onVisibilityAggregated(isVisible); if (isVisible) invalidate() }
     }.apply { layoutParams = LinearLayout.LayoutParams(-1, dp(heightDp)) }
 
     private fun explore() {
-        val headline = card(s("campaign", selected + 1, region(selected)))
+        val headline = card(s("campaign", selected + 1, region(selected)), glyph = "map")
         text(headline, s("explore_help", a.power(), a.slotCount()), small = true)
         val gather = a.node(selected) in listOf(AdventureNode.GATHER, AdventureNode.SHRINE)
-        side(headline, button(s(if (gather) "gather" else "battle"), selected <= a.frontier, Weight.MAIN) {
+        side(headline, button(s(if (gather) "gather" else "battle"), selected <= a.frontier, Weight.MAIN, glyph = if (gather) "flower" else "sword") {
             if (gather) gather(selected) else battle(BattleMode.CAMPAIGN, selected)
-        } to 1.5f, button(s("prepare")) { tab = 2; scroll.scrollTo(0, 0); render() } to 1f,
-            button(context.getString(R.string.hamlet_s_today)) { stewardship() }.apply { maxLines = 1 } to 1.35f)
+        } to 1.6f, button(s("prepare"), glyph = "shield") { go(TEAMS) } to 1f)
         val map = HamletAdventureMapView(context, page, a, { s("number", it) }) { stage -> selected = stage; render() }
         map.selected = selected; map.effectsEnabled = effectsEnabled; map.contentDescription = s("map_accessibility")
         headline.addView(map, LinearLayout.LayoutParams(-1, dp((context.resources.configuration.screenWidthDp * 3 / 10).coerceIn(190, 300))).apply { topMargin = dp(4) })
@@ -229,16 +241,6 @@ internal class HamletAdventureDialog(private val context: Context, private val g
             button(s("next"), page < a.frontier / 12 + 1, Weight.QUIET) { page++; selected = page * 12; render() } to 1f)
         if (selected != a.frontier) nav.add(button(s("frontier_go"), weight = Weight.QUIET) { selected = a.frontier; page = selected / 12; render() } to 1f)
         side(headline, *nav.toTypedArray())
-        val picker = Spinner(context)
-        val stages = (page * 12 until page * 12 + 12).toList()
-        picker.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, stages.map { s("stage_choice", it + 1, s("node_${a.node(it).name.lowercase()}")) })
-        picker.setSelection(stages.indexOf(selected).coerceAtLeast(0), false)
-        picker.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
-            var first = true
-            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) = Unit
-            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) { if (first) { first = false; return }; selected = stages[position]; render() }
-        }
-        headline.addView(picker)
         val box = card(s("stage_choice", selected + 1, s("node_${a.node(selected).name.lowercase()}")))
         text(box, s("loot_preview", 1 + selected / 10), small = true)
         if (selected == a.frontier) text(box, s("loot_first", 2), color = HamletUi.GOOD)
@@ -263,18 +265,18 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         }
         if (a.canSweep(selected)) {
             val sweep = line()
-            sweep.addView(button(s("sweep_cost", a.sweepCost(selected)), game.sandbox || a[AdventureResource.FOOD] >= a.sweepCost(selected)) {
+            sweep.addView(button(s("sweep_cost", a.sweepCost(selected)), game.sandbox || a[AdventureResource.FOOD] >= a.sweepCost(selected), glyph = "hourglass") {
                 if (a.sweep(selected)) render()
             }, LinearLayout.LayoutParams(0, -2, 1f))
             sweep.addView(info(s("sweep_cost", a.sweepCost(selected)), s("sweep_help")), LinearLayout.LayoutParams(dp(44), -2).apply { marginStart = dp(4) })
             box.addView(sweep)
         }
         rows.addView(button(s("next_unlocks"), weight = Weight.QUIET, onDark = true) {
-            AlertDialog.Builder(context).setTitle(s("next_unlocks")).setMessage(s("unlock_roadmap")).setPositiveButton(android.R.string.ok, null).show()
+            HamletSheet.message(context, s("next_unlocks"), s("unlock_roadmap"))
         }.apply { (layoutParams as LinearLayout.LayoutParams).topMargin = dp(10) })
     }
     private fun gather(stage: Int) {
-        rows.removeAllViews()
+        rows.removeAllViews(); away = true
         text(rows, s("gather_help"), true, false)
         val view = HamletGatherView(context, a.region(stage), haptics) {
             if (a.gather(stage)) { toast(s("gather_done")); selected = a.frontier; page = selected / 12; render() }
@@ -282,7 +284,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         view.effectsEnabled = effectsEnabled
         view.contentDescription = s("gather_accessibility")
         rows.addView(view, LinearLayout.LayoutParams(-1, dp(340)))
-        side(rows, button(s("gather_alternative")) {
+        side(rows, button(s("gather_alternative"), glyph = "flower") {
             // Alternative accessible : chaque appui simule une cueillette, pas une victoire immédiate.
             val index = view.gathered
             if (index >= 8) return@button
@@ -293,23 +295,16 @@ internal class HamletAdventureDialog(private val context: Context, private val g
     }
 
     private fun heroes() {
-        val recruit = card(s("recruitment_title"), s("recruitment_help") + "\n\n" + s("inn_recruitment", a.recruitmentWork))
+        val recruit = card(s("recruitment_title"), s("recruitment_help") + "\n\n" + s("inn_recruitment", a.recruitmentWork), glyph = "ticket")
         val pity = listOf(HeroRarity.EPIC to HamletAdventure.PITY_EPIC - a.pityEpic,
             HeroRarity.LEGENDARY to HamletAdventure.PITY_LEGENDARY - a.pityLegendary, HeroRarity.MYTHIC to HamletAdventure.PITY_MYTHIC - a.pityMythic)
         val parts = pity.map { (r, n) -> s("pity_in", s("rarity_${r.ordinal}"), n) }
         val list = parts.joinToString(context.getString(R.string.hamlet_ui_dot))
         text(recruit, HamletUi.tint(s("pity_line", list), *pity.map { (r, _) -> s("rarity_${r.ordinal}") to HamletUi.rarity(r) }.toTypedArray()), small = true)
-        side(recruit, button(s("summon_one"), game.sandbox || a[AdventureResource.TICKETS] >= 1, Weight.MAIN) { summon(1) } to 1f,
-            button(s("summon_ten"), game.sandbox || a[AdventureResource.TICKETS] >= 10, Weight.MAIN) { summon(10) } to 1f)
-        val tools = line()
-        tools.addView(CheckBox(context).apply {
-            text = s("owned_filter", a.heroes.count { it.owned }, a.heroes.size); isChecked = ownedOnly; setTextColor(HamletUi.INK)
-            textSize = HamletUi.SMALL; buttonTintList = ColorStateList.valueOf(0xFF376250.toInt())
-            setOnCheckedChangeListener { _, checked -> ownedOnly = checked; render() }
-        }, LinearLayout.LayoutParams(0, -2, 1f))
-        tools.addView(button(raw("hamlet_shop_ui_entry"), weight = Weight.QUIET) { HamletShardShopDialog(context, game, ::render).show() },
-            LinearLayout.LayoutParams(-2, -2))
-        recruit.addView(tools)
+        side(recruit, button(s("summon_one"), game.sandbox || a[AdventureResource.TICKETS] >= 1, Weight.MAIN, glyph = "ticket") { summon(1) } to 1f,
+            button(s("summon_ten"), game.sandbox || a[AdventureResource.TICKETS] >= 10, Weight.MAIN, glyph = "ticket") { summon(10) } to 1f)
+        side(recruit, HamletUi.choice(button(s("owned_filter", a.heroes.count { it.owned }, a.heroes.size)) { ownedOnly = !ownedOnly; render() }, ownedOnly) to 1f,
+            button(raw("hamlet_shop_ui_entry"), weight = Weight.QUIET, glyph = "gem") { HamletShardShopDialog(context, game, ::render).show() } to 1f)
         val filters = (-1..2).map { faction ->
             HamletUi.choice(button(if (faction < 0) s("all") else factionName(HeroFaction.entries[faction])) { heroFilter = faction; render() }, faction == heroFilter) to 1f
         }
@@ -325,6 +320,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
                     setPadding(dp(8), dp(8), dp(8), dp(8)); background = rarityCard(h.owned, r)
                     isClickable = true; isFocusable = true; contentDescription = heroName(h.id)
                     setOnClickListener { showHero(h.id) }
+                    HamletMotion.press(this)
                 }
                 box.addView(portrait("hero", h.id, 120, framed = true))
                 text(box, named(h.id), true)
@@ -351,8 +347,8 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         val results = a.summon(count)
         if (results.isEmpty()) return
         render()
-        val content = column().apply { setPadding(dp(12), dp(8), dp(12), dp(10)); setBackgroundColor(HamletUi.PAPER) }
-        for (result in results) {
+        val sheet = HamletSheet(context, s("summon_results"), tall = results.size > 3)
+        results.forEachIndexed { index, result ->
             val h = a.heroes[result.hero]
             val row = line()
             row.addView(portrait("hero", h.id, 80, framed = true), LinearLayout.LayoutParams(dp(80), dp(80)))
@@ -362,49 +358,49 @@ internal class HamletAdventureDialog(private val context: Context, private val g
             val color = HamletUi.rarity(h.def.rarity)
             text(detail, HamletUi.tint(value, heroName(h.id) to color, rarityName to color), title = result.newHero)
             if (result.guaranteed) text(detail, s("recruit_pity"), small = true, color = color)
-            row.addView(detail, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(8) }); content.addView(row)
+            row.addView(detail, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(8) })
+            sheet.body.addView(row)
+            HamletMotion.enter(row, 80L * index)
         }
-        AlertDialog.Builder(context).setTitle(s("summon_results")).setView(ScrollView(context).apply { addView(content) })
-            .setPositiveButton(android.R.string.ok, null).show()
+        sheet.show()
     }
     private fun showHero(hero: Int) {
         val h = a.heroes[hero]
         val r = rarity(hero)
-        val content = column().apply { setPadding(dp(14), dp(10), dp(14), dp(10)); setBackgroundColor(0xFFF3E8D1.toInt()) }
+        val sheet = HamletSheet(context, named(hero, onDark = true), tall = h.owned)
+        val content = sheet.body
         content.addView(portrait("hero", hero, 150, framed = true))
         val rarityName = s("rarity_${r.ordinal}")
         val faction = factionName(h.def.faction)
         text(content, HamletUi.tint(rarityName + context.getString(R.string.hamlet_ui_dot) + s("hero_kind", faction, s("role_${h.def.role.name.lowercase()}")),
             rarityName to HamletUi.rarity(r), faction to HamletUi.faction(h.def.faction)))
         text(content, s("hero_story_$hero"), small = true)
-        val sub = AlertDialog.Builder(context).setTitle(named(hero)).setView(ScrollView(context).apply { addView(content) })
-            .setNegativeButton(android.R.string.cancel, null).create()
-        fun refresh(operation: () -> Boolean) { if (operation()) { sub.dismiss(); render(); showHero(hero) } }
+        fun refresh(operation: () -> Boolean) { if (operation()) { sheet.dismiss(); render(); showHero(hero) } }
         if (!h.owned) {
             text(content, recruitmentRequirement(h), true)
             text(content, s("shards_progress", h.shards, a.shardUnlockCost(hero)), small = true)
-            content.addView(button(raw("hamlet_hero_target_cost", a.recruitCost(hero)), a.canFocusRecruit(hero), Weight.MAIN) { refresh { a.focusRecruit(hero) } })
-            content.addView(button(s("recruit_shards_cost", a.shardUnlockCost(hero)), a.canRecruitShards(hero)) { refresh { a.recruitShards(hero) } })
-            sub.show(); return
+            content.addView(button(raw("hamlet_hero_target_cost", a.recruitCost(hero)), a.canFocusRecruit(hero), Weight.MAIN, glyph = "ticket") { refresh { a.focusRecruit(hero) } })
+            content.addView(button(s("recruit_shards_cost", a.shardUnlockCost(hero)), a.canRecruitShards(hero), glyph = "gem") { refresh { a.recruitShards(hero) } })
+            sheet.show(); return
         }
         text(content, s("hero_growth", a.effectiveLevel(hero), h.stars, h.shards), true)
         val n = a.numbers(hero)
         text(content, s("hero_numbers", n.hp.toLong(), n.attack.toLong(), n.armor.toInt(), (n.crit * 100).toInt()), small = true)
-        content.addView(button(s("level_cost", a.levelCost(hero)), game.sandbox || a[AdventureResource.FOOD] >= a.levelCost(hero), Weight.MAIN) { refresh { a.levelUp(hero) } })
+        content.addView(button(s("level_cost", a.levelCost(hero)), game.sandbox || a[AdventureResource.FOOD] >= a.levelCost(hero), Weight.MAIN, glyph = "apple") { refresh { a.levelUp(hero) } })
         if (h.stars < HamletHeroes.STAR_CAP) {
-            content.addView(button(s("stars_cost", a.starCost(hero)), a.canPromote(hero)) { refresh { a.promote(hero) } })
+            content.addView(button(s("stars_cost", a.starCost(hero)), a.canPromote(hero), glyph = "star") { refresh { a.promote(hero) } })
             text(content, raw("hamlet_hero_star_preview", h.stars + 1, a.starGainPercent(hero)), small = true)
         } else text(content, raw("hamlet_hero_stars_max", HamletHeroes.STAR_CAP), small = true, color = HamletUi.GOOD)
         val skills = line()
         skills.addView(TextView(context).apply { text = s("hero_skills"); textSize = HamletUi.TITLE; setTextColor(HamletUi.INK); setTypeface(null, Typeface.BOLD) }, LinearLayout.LayoutParams(0, -2, 1f))
         skills.addView(info(s("hero_skills"), s("skills_help")), LinearLayout.LayoutParams(dp(44), -2)); content.addView(skills)
         for (skill in 0..3) content.addView(button(s("skill_cost", s("skill_${h.def.role.name.lowercase()}_$skill"), h.skills[skill], a.skillCost(hero, skill)),
-            game.sandbox || a[AdventureResource.BOOKS] >= a.skillCost(hero, skill)) { refresh { a.studySkill(hero, skill) } })
+            game.sandbox || a[AdventureResource.BOOKS] >= a.skillCost(hero, skill), glyph = "book") { refresh { a.studySkill(hero, skill) } })
         text(content, s("traits_title"), true)
         for (trait in 0..3) content.addView(button(s("trait_cost", s("trait_$trait"), h.traits[trait], 12L * (h.traits[trait] + 1)),
-            h.stars >= 5 && (game.sandbox || h.shards >= 12L * (h.traits[trait] + 1))) { refresh { a.promoteTrait(hero, trait) } })
-        side(content, button(raw("hamlet_armory_title")) { sub.dismiss(); HamletArmoryDialog(context, game, ::render).show(1, hero) } to 1f,
-            button(raw("hamlet_shop_ui_entry"), weight = Weight.QUIET) { sub.dismiss(); HamletShardShopDialog(context, game, ::render).show(hero) } to 1f)
+            h.stars >= 5 && (game.sandbox || h.shards >= 12L * (h.traits[trait] + 1)), glyph = "gem") { refresh { a.promoteTrait(hero, trait) } })
+        side(content, button(raw("hamlet_armory_title"), glyph = "anvil") { sheet.dismiss(); HamletArmoryDialog(context, game, ::render).show(1, hero) } to 1f,
+            button(raw("hamlet_shop_ui_entry"), weight = Weight.QUIET, glyph = "gem") { sheet.dismiss(); HamletShardShopDialog(context, game, ::render).show(hero) } to 1f)
         content.addView(button(raw("hamlet_hero_duplicate_cost", a.recruitCost(hero), HamletAdventure.DUPLICATE_SHARDS, heroName(hero)), a.canFocusRecruit(hero), Weight.QUIET) { refresh { a.focusRecruit(hero) } })
         val focus = line()
         focus.addView(button(raw(if (a.shardFocusHero == hero) "hamlet_hero_focus_clear" else "hamlet_hero_focus", heroName(hero)), weight = Weight.QUIET) {
@@ -412,12 +408,12 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         }, LinearLayout.LayoutParams(0, -2, 1f))
         focus.addView(info(raw("hamlet_hero_focus", heroName(hero)), raw("hamlet_hero_focus_help")), LinearLayout.LayoutParams(dp(44), -2).apply { marginStart = dp(4) })
         content.addView(focus)
-        sub.show()
+        sheet.show()
     }
 
     private fun teams() {
         side(rows, *(0..2).map { i -> HamletUi.choice(button(s("team_preset", i + 1)) { a.selectTeam(i); render() }, i == a.selectedTeam) to 1f }.toTypedArray())
-        val box = card(s("team_title", a.selectedTeam + 1, a.power()), s("formation_help"))
+        val box = card(s("team_title", a.selectedTeam + 1, a.power()), s("formation_help"), glyph = "shield")
         text(box, s("training_level", a.trainingLevel()), small = true)
         val slots = column()
         for (range in listOf(0..1, 2..5)) {
@@ -428,7 +424,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
                 val cell = column().apply {
                     setPadding(dp(4), dp(4), dp(4), dp(6)); gravity = Gravity.CENTER_HORIZONTAL
                     background = if (hero >= 0) rarityCard(true, rarity(hero)) else HamletUi.panel(context, if (unlocked) 0x22376250 else 0x14000000, 12, 0xFFCBBB97.toInt())
-                    if (unlocked) { isClickable = true; isFocusable = true; setOnClickListener { chooseHero(slot) } }
+                    if (unlocked) { isClickable = true; isFocusable = true; setOnClickListener { chooseHero(slot) }; HamletMotion.press(this) }
                 }
                 if (hero >= 0) cell.addView(portrait("hero", hero, if (slot < 2) 110 else 84, framed = true))
                 text(cell, if (!unlocked) s("slot_locked", if (slot == 4) 10 else 24) else if (hero < 0) s("empty_slot") else named(hero),
@@ -438,7 +434,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
             slots.addView(row)
         }
         box.addView(slots)
-        action(box, s("auto_formation")) { a.autoFormation() }
+        action(box, s("auto_formation"), glyph = "star") { a.autoFormation() }
         val tactic = a.tactics[a.selectedTeam]
         val tacticName = raw("hamlet_combat_tactic_${tactic.name.lowercase()}")
         val tacticHead = line()
@@ -453,14 +449,14 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         val chain = listOf(HeroFaction.GROVE, HeroFaction.FORGE, HeroFaction.DAWN, HeroFaction.GROVE)
         text(box, HamletUi.tint(chain.joinToString(context.getString(R.string.hamlet_ui_arrow)) { factionName(it) },
             *chain.map { factionName(it) to HamletUi.faction(it) }.toTypedArray()), small = true)
-        val bonds = card(s("bonds"))
+        val bonds = card(s("bonds"), glyph = "people")
         val active = a.activeBonds()
         for ((index, members) in HamletHeroes.bonds.withIndex()) {
             val on = index in active
             text(bonds, s("bond_$index"), color = if (on) HamletUi.GOOD else HamletUi.MUTED).setTypeface(null, if (on) Typeface.BOLD else Typeface.NORMAL)
             text(bonds, members.joinToString(raw("hamlet_list_separator")) { heroName(it) }, small = true).setPadding(dp(14), 0, dp(3), dp(6))
         }
-        val support = card(s("support"))
+        val support = card(s("support"), glyph = "paw")
         for (pet in listOf(true, false)) {
             val values = if (pet) a.pets else a.relics
             for (i in values.indices) {
@@ -483,20 +479,20 @@ internal class HamletAdventureDialog(private val context: Context, private val g
     }
     private fun chooseHero(slot: Int) {
         val owned = a.heroes.filter { it.owned }.sortedWith(compareByDescending<HeroState> { it.def.rarity.ordinal }.thenByDescending { a.effectiveLevel(it.id) })
-        val labels = owned.map { named(it.id, s("hero_choice", heroName(it.id), s("role_${it.def.role.name.lowercase()}"), a.effectiveLevel(it.id))) } + s("remove")
-        AlertDialog.Builder(context).setTitle(s("choose_hero", slot + 1))
-            .setItems(labels.toTypedArray()) { _, which ->
-                if (which == owned.size) a.remove(slot) else a.assign(owned[which].id, slot); render()
-            }.show()
+        val labels: List<CharSequence> = owned.map { named(it.id, s("hero_choice", heroName(it.id), s("role_${it.def.role.name.lowercase()}"), a.effectiveLevel(it.id))) } + s("remove")
+        val current = owned.indexOfFirst { it.id == a.teams[a.selectedTeam][slot] }
+        HamletSheet.pick(context, s("choose_hero", slot + 1), labels, current, owned.map { "hat" } + "cross") { which ->
+            if (which == owned.size) a.remove(slot) else a.assign(owned[which].id, slot); render()
+        }
     }
 
     private fun craft() {
-        val box = card(s("forge_title"), raw("hamlet_armory_help"))
+        val box = card(s("forge_title"), raw("hamlet_armory_help"), glyph = "anvil")
         text(box, raw("hamlet_armory_inventory", game.armory.inventory.size, game.armory.inventory.count { game.armory.owner(it.id) != null }), small = true)
         text(box, raw("hamlet_armory_forge_rank", game.armory.forgeRank()), small = true)
-        if (a.facility("adventureForge") == 0) box.addView(button(s("build_named", item("adventureForge")), weight = Weight.MAIN) { build("adventureForge") })
-        side(box, button(raw("hamlet_armory_tab_0")) { HamletArmoryDialog(context, game, ::render).show() } to 1f,
-            button(raw("hamlet_armory_tab_2")) { HamletArmoryDialog(context, game, ::render).show(2) } to 1f)
+        if (a.facility("adventureForge") == 0) box.addView(button(s("build_named", item("adventureForge")), weight = Weight.MAIN, glyph = "hammer") { build("adventureForge") })
+        side(box, button(raw("hamlet_armory_tab_0"), glyph = "anvil") { HamletArmoryDialog(context, game, ::render).show() } to 1f,
+            button(raw("hamlet_armory_tab_2"), glyph = "crate") { HamletArmoryDialog(context, game, ::render).show(2) } to 1f)
         for (hero in a.teams[a.selectedTeam].take(a.slotCount()).filter { it >= 0 }) {
             val worn = card(named(hero))
             if ((0..3).all { game.armory.equipped(hero, it) == null }) text(worn, raw("hamlet_armory_slot_empty"), small = true)
@@ -509,7 +505,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
                 text(worn, HamletUi.tint(value, slotName to HamletUi.INK, rarityName to HamletUi.gear(piece.rarity.ordinal)))
             }
             game.armory.setCounts(hero).forEach { (set, count) -> text(worn, raw("hamlet_armory_set_count", raw("hamlet_armory_set_${set.name.lowercase()}"), count), small = true, color = HamletUi.GOOD) }
-            worn.addView(button(raw("hamlet_armory_tab_1")) { HamletArmoryDialog(context, game, ::render).show(1, hero) })
+            worn.addView(button(raw("hamlet_armory_tab_1"), glyph = "shield") { HamletArmoryDialog(context, game, ::render).show(1, hero) })
         }
         rows.addView(button(raw("hamlet_progression_legacy_gear"), weight = Weight.QUIET, onDark = true) { showLegacyGear = !showLegacyGear; render() }
             .apply { (layoutParams as LinearLayout.LayoutParams).topMargin = dp(10) })
@@ -530,8 +526,8 @@ internal class HamletAdventureDialog(private val context: Context, private val g
     }
 
     private fun kingdom() {
-        val duties = card(context.getString(R.string.hamlet_s_posts), context.getString(R.string.hamlet_s_posts_help))
-        duties.addView(button(context.getString(R.string.hamlet_s_assign)) { stewardship(1) })
+        val duties = card(context.getString(R.string.hamlet_s_posts), context.getString(R.string.hamlet_s_posts_help), glyph = "people")
+        duties.addView(button(context.getString(R.string.hamlet_s_assign), glyph = "hat") { nav.open(HamletModule.JOURNAL, HamletJournalPage.POSTS) })
         section(s("facilities"), s("facilities_help"))
         for ((i, id) in HamletAdventure.FACILITIES.withIndex()) {
             val facility = card(item(id), s("facility_$i"))
@@ -541,12 +537,13 @@ internal class HamletAdventureDialog(private val context: Context, private val g
             text(detail, s("facility_level", a.facility(id)), small = true)
             val best = game.objs.values.filter { it.t == id && game.buildLeft(it) == 0L }.maxByOrNull { it.tier }
             if (best != null && game.canUpgrade(best)) action(detail, raw("hamlet_progression_upgrade_building", best.tier + 1, game.upgradeCost(best)),
-                game.canUpgrade(best) && (game.sandbox || game.coins >= game.upgradeCost(best))) { game.upgrade(best) }
-            detail.addView(button(s("build_cost", Hamlet.byId.getValue(id).cost, Hamlet.byId.getValue(id).lvl), weight = if (a.facility(id) == 0) Weight.NORMAL else Weight.QUIET) { build(id) })
+                game.canUpgrade(best) && (game.sandbox || game.coins >= game.upgradeCost(best)), glyph = "star") { game.upgrade(best) }
+            detail.addView(button(s("build_cost", Hamlet.byId.getValue(id).cost, Hamlet.byId.getValue(id).lvl),
+                weight = if (a.facility(id) == 0) Weight.NORMAL else Weight.QUIET, glyph = "hammer") { build(id) })
             showcase.addView(detail, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(8) })
             facility.addView(showcase)
         }
-        val workers = card(s("workers"), s("workers_help", a.workers.sum(), a.workerCapacity()))
+        val workers = card(s("workers"), s("workers_help", a.workers.sum(), a.workerCapacity()), glyph = "people")
         text(workers, s("workers_count", a.workers.sum(), a.workerCapacity()))
         a.productionPerMinute().forEachIndexed { i, rate -> text(workers, raw("hamlet_progression_rate", s("resource_${AdventureResource.entries[i].name.lowercase()}"), rate * 60), small = true) }
         for (i in a.workers.indices) {
@@ -556,56 +553,55 @@ internal class HamletAdventureDialog(private val context: Context, private val g
             row.addView(button(s("worker_plus"), a.workers.sum() < a.workerCapacity()) { if (a.assignWorker(i, 1)) render() }, LinearLayout.LayoutParams(dp(54), -2).apply { marginStart = dp(6) })
             workers.addView(row)
         }
-        val tech = card(s("academy"), s("academy_help"))
+        val tech = card(s("academy"), s("academy_help"), glyph = "book")
         for (i in a.tech.indices) action(tech, s("tech_cost", s("tech_$i"), a.tech[i], a.researchCost(i)), a.facility("adventureAcademy") > 0 || game.sandbox) { a.research(i) }
-        val troops = card(s("troops"), s("troops_help", a.marchCapacity()) + "\n\n" + raw("hamlet_progression_militia_cap", a.maxTroopTier()))
+        val troops = card(s("troops"), s("troops_help", a.marchCapacity()) + "\n\n" + raw("hamlet_progression_militia_cap", a.maxTroopTier()), glyph = "lance")
         text(troops, s("militia_rank", a.maxTroopTier()), small = true)
         for (i in 0..2) {
             action(troops, s("troop_row", factionName(HeroFaction.entries[i]), a.troops[i]), a.facility("adventureYard") > 0 || game.sandbox) { a.trainTroops(i) }
             action(troops, s("troop_upgrade", a.troopTier[i], 20L * a.troopTier[i], 15L * a.troopTier[i]),
                 (a.facility("adventureYard") > 0 || game.sandbox) && a.troopTier[i] < a.maxTroopTier(), Weight.QUIET) { a.improveTroops(i) }
         }
-        val builders = card(s("builders"), s("builders_help", game.workSeconds))
+        val builders = card(s("builders"), s("builders_help", game.workSeconds), glyph = "hammer")
         text(builders, s("builders_reserve", game.workSeconds), small = true)
         action(builders, s("builders_cost")) { a.supplyBuilders() }
-        val workshop = card(raw("hamlet_progression_supply_workshop"), raw("hamlet_progression_supply_help"))
-        action(workshop, raw("hamlet_progression_supply_ore"), game.sandbox || a.facility("adventureStore") > 0) { a.workshopSupplies(false) }
-        action(workshop, raw("hamlet_progression_supply_books"), game.sandbox || a.facility("adventureAcademy") > 0) { a.workshopSupplies(true) }
-    }
-    private fun stewardship(initialTab: Int = 0) {
-        HamletStewardshipDialog(context, game, onAdventure = { destination -> tab = destination; render() },
-            onJournal = { destination -> HamletJourneyDialog(context, game, haptics).show(destination) }).show(initialTab)
+        val workshop = card(raw("hamlet_progression_supply_workshop"), raw("hamlet_progression_supply_help"), glyph = "crate")
+        action(workshop, raw("hamlet_progression_supply_ore"), game.sandbox || a.facility("adventureStore") > 0, glyph = "ore") { a.workshopSupplies(false) }
+        action(workshop, raw("hamlet_progression_supply_books"), game.sandbox || a.facility("adventureAcademy") > 0, glyph = "book") { a.workshopSupplies(true) }
     }
     private fun build(id: String) {
         val d = Hamlet.byId.getValue(id)
         if (!game.journey.unlocked(d)) return
-        dialog.dismiss(); onBuild(d)
+        nav.build(d)
     }
     private fun challenges() {
         val unlocks = mapOf(BattleMode.TRIAL to 10, BattleMode.BOUNTY to 5, BattleMode.RAID to 20, BattleMode.ARENA to 12)
+        val glyphs = mapOf(BattleMode.TRIAL to "hourglass", BattleMode.BOUNTY to "coins", BattleMode.RAID to "castle", BattleMode.ARENA to "trophy")
         for ((mode, gate) in unlocks) {
             val stage = when (mode) { BattleMode.TRIAL -> a.trial; BattleMode.BOUNTY -> a.bounty; BattleMode.RAID -> a.raid; else -> a.arena }
-            val box = card(s("mode_${mode.name.lowercase()}"), s("mode_story_${mode.name.lowercase()}"))
+            val box = card(s("mode_${mode.name.lowercase()}"), s("mode_story_${mode.name.lowercase()}"), glyph = glyphs[mode])
             val open = a.frontier >= gate
             text(box, s("challenge_stage", stage + 1, gate), small = true, color = if (open) 0 else HamletUi.BAD)
-            box.addView(button(s("battle"), open, Weight.MAIN) { battle(mode, stage) })
+            box.addView(button(s("battle"), open, Weight.MAIN, glyph = "sword") { battle(mode, stage) })
             if (stage > 0) box.addView(button(s("farm_previous"), open, Weight.QUIET) { battle(mode, stage - 1) })
         }
     }
     private fun battle(mode: BattleMode, stage: Int) {
         val before = a.bag.clone(); val coinsBefore = game.coins; val workBefore = game.workSeconds
         val battle = a.beginBattle(mode, stage) ?: return
-        rows.removeAllViews(); scroll.scrollTo(0, 0)
+        rows.removeAllViews(); scroll.scrollTo(0, 0); away = true; fighting = true
         text(rows, s("combat_header", s("mode_${mode.name.lowercase()}"), stage + 1), true, false)
         val view = HamletBattleView(context, battle, { key, args -> s(key, *args) }, haptics) { result ->
+            fighting = false
             if (a.settle(result)) {
                 if (haptics) root.performHapticFeedback(if (result.outcome == BattleOutcome.VICTORY) HapticFeedbackConstants.CONFIRM else HapticFeedbackConstants.CLOCK_TICK)
                 rows.removeAllViews()
                 val won = result.outcome == BattleOutcome.VICTORY
-                val box = card(s(if (won) "victory" else "defeat"))
+                val box = card(s(if (won) "victory" else "defeat"), glyph = if (won) "trophy" else "shield")
                 (((box.getChildAt(0) as LinearLayout).getChildAt(0)) as TextView).apply {
                     setTextColor(if (won) 0xFFB27A12.toInt() else HamletUi.BAD); textSize = HamletUi.HEAD
                 }
+                HamletMotion.enter(box)
                 text(box, s("battle_result", result.time.toInt(), result.damage.toLong(), result.healing.toLong(), result.survivors()), small = true)
                 if (won) {
                     val gains = ArrayList<Pair<String, Int>>()
@@ -617,40 +613,41 @@ internal class HamletAdventureDialog(private val context: Context, private val g
                     val work = (game.workSeconds - workBefore).coerceAtLeast(0)
                     if (work > 0) gains.add(s("gain", work, s("work")) to HamletUi.GOOD)
                     if (gains.isNotEmpty()) text(box, HamletUi.joined(context, gains))
-                    box.addView(button(s("next_stage"), weight = Weight.MAIN) {
+                    box.addView(button(s("next_stage"), weight = Weight.MAIN, glyph = "sword") {
                         val next = when (mode) { BattleMode.CAMPAIGN -> a.frontier; BattleMode.TRIAL -> a.trial; BattleMode.BOUNTY -> a.bounty; BattleMode.RAID -> a.raid; BattleMode.ARENA -> a.arena }
                         selected = a.frontier; page = selected / 12
                         if (mode == BattleMode.CAMPAIGN && a.node(next) in listOf(AdventureNode.GATHER, AdventureNode.SHRINE)) gather(next) else this.battle(mode, next)
                     })
-                    side(box, button(s("continue")) { selected = a.frontier; page = selected / 12; render() } to 1f,
-                        button(s("prepare"), weight = Weight.QUIET) { tab = 2; render() } to 1f)
+                    side(box, button(s("continue"), glyph = "map") { selected = a.frontier; page = selected / 12; render() } to 1f,
+                        button(s("prepare"), weight = Weight.QUIET) { go(TEAMS) } to 1f)
                 } else {
                     val timeout = result.survivors() > 0
                     val reason = line()
                     reason.addView(TextView(context).apply { text = s(if (timeout) "defeat_time" else "defeat_fallen"); textSize = HamletUi.TEXT; setTextColor(HamletUi.BAD); setPadding(dp(3), 0, dp(3), 0) }, LinearLayout.LayoutParams(0, -2, 1f))
                     reason.addView(info(s("defeat"), raw(if (timeout) "hamlet_progression_defeat_timeout" else "hamlet_progression_defeat_survival")), LinearLayout.LayoutParams(dp(44), -2))
                     box.addView(reason)
-                    box.addView(button(s("retry_free"), weight = Weight.MAIN) { this.battle(mode, stage) })
-                    side(box, button(s("continue")) { selected = a.frontier; page = selected / 12; render() } to 1f)
-                    side(box, button(s("prepare"), weight = Weight.QUIET) { tab = 2; render() } to 1f,
-                        button(raw("hamlet_armory_title"), weight = Weight.QUIET) { tab = 3; render() } to 1f,
-                        button(s("heroes"), weight = Weight.QUIET) { tab = 1; render() } to 1f)
+                    box.addView(button(s("retry_free"), weight = Weight.MAIN, glyph = "sword") { this.battle(mode, stage) })
+                    side(box, button(s("continue"), glyph = "map") { selected = a.frontier; page = selected / 12; render() } to 1f)
+                    side(box, button(s("prepare"), weight = Weight.QUIET) { go(TEAMS) } to 1f,
+                        button(raw("hamlet_armory_title"), weight = Weight.QUIET) { go(FORGE) } to 1f,
+                        button(s("heroes"), weight = Weight.QUIET) { go(HEROES) } to 1f)
                 }
                 text(box, raw("hamlet_combat_report_title"), true)
                 for (report in result.report()) {
                     text(box, named(report.sprite)).setTypeface(null, Typeface.BOLD)
                     text(box, raw("hamlet_combat_report_row", report.damage.toLong(), report.healing.toLong(), report.protection.toLong(), report.kills), small = true)
                 }
-                refreshStock()
+                supplies(); nav.changed()
             }
         }
         view.effectsEnabled = effectsEnabled
         view.contentDescription = s("combat_accessibility")
-        rows.addView(view, LinearLayout.LayoutParams(-1, maxOf(dp(300), context.resources.displayMetrics.heightPixels * 52 / 100)))
-        val auto = button(s(if (battle.auto) "auto_on" else "auto_off"))
-        auto.setOnClickListener { battle.auto = !battle.auto; a.auto = battle.auto; auto.text = s(if (battle.auto) "auto_on" else "auto_off"); game.listener?.onChanged() }
-        val speed = button(s("speed", 1)).apply { setOnClickListener { view.speed = if (view.speed == 4) 1 else view.speed * 2; text = s("speed", view.speed) } }
-        val pause = button(s("pause")).apply { setOnClickListener { view.paused = !view.paused; text = s(if (view.paused) "resume" else "pause") } }
+        rows.addView(view, LinearLayout.LayoutParams(-1, maxOf(dp(300), context.resources.displayMetrics.heightPixels * 48 / 100)))
+        val auto = button(s(if (battle.auto) "auto_on" else "auto_off"), glyph = "gear")
+        auto.setOnClickListener { battle.auto = !battle.auto; a.auto = battle.auto; auto.text = s(if (battle.auto) "auto_on" else "auto_off"); HamletUi.choice(auto, battle.auto); nav.changed() }
+        HamletUi.choice(auto, battle.auto)
+        val speed = button(s("speed", 1), glyph = "hourglass").apply { setOnClickListener { view.speed = if (view.speed == 4) 1 else view.speed * 2; text = s("speed", view.speed); HamletMotion.pop(this, 1.08f) } }
+        val pause = button(s("pause"), glyph = "clock").apply { setOnClickListener { view.paused = !view.paused; text = s(if (view.paused) "resume" else "pause"); HamletUi.choice(this, view.paused) } }
         for (b in listOf(auto, speed, pause)) { b.minHeight = dp(54); b.minimumHeight = dp(54); b.textSize = 15f }
         val controls = line()
         for (b in listOf(auto, speed, pause)) controls.addView(b, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(2); marginEnd = dp(2) })

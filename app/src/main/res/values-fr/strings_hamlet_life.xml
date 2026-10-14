@@ -13,7 +13,6 @@
     <string name="hamlet_status_producing">Production en cours</string>
     <string name="hamlet_status_product">Produits disponibles</string>
     <string name="hamlet_round">Tournée</string>
-    <string name="hamlet_round_result">%1$d récoltes et recettes récupérées.</string>
     <string name="hamlet_village">Village</string>
     <string name="hamlet_feed">Nourrir</string>
     <string name="hamlet_feed_confirm">Nourrir cet élevage pour %1$d pièces ? Un nouveau cycle de production démarrera.</string>
@@ -27,7 +26,6 @@
     <string name="hamlet_upgrade_confirm">Passer au rang %1$d pour %2$d pièces ? Les recettes gagnent 25 points de pourcentage, jusqu’à +50%%.</string>
     <string name="hamlet_plant_all">Planter dans tous les champs vides compatibles</string>
     <string name="hamlet_crop_choice">%1$s · Coût %2$d · Vente %3$d pièces · %4$s</string>
-    <string name="hamlet_planted_count">%1$d champs plantés.</string>
     <string name="hamlet_footprint">Taille : %1$d × %2$d cases\nDéblocage : niveau %3$d · Habitants : %4$d\n</string>
     <string name="hamlet_producer_info">Recette : %1$d pièces toutes les %2$s\nRepas par cycle : %3$d pièces\n</string>
     <string name="hamlet_ranch_help">\nNourris, attends, puis vends les produits. Tes animaux se reposent tranquillement entre les repas.</string>
@@ -45,17 +43,13 @@
     <string name="hamlet_daily_harvest">Cultures mûres</string>
     <string name="hamlet_daily_products">Produits fermiers</string>
     <string name="hamlet_daily_orders">Livraisons des ateliers</string>
-    <string name="hamlet_daily_row">%1$s · %2$d/%3$d\nRécupérer %4$d pièces + 25 XP</string>
-    <string name="hamlet_daily_claimed"> · Récupéré</string>
     <string name="hamlet_settings">Préférences</string>
     <string name="hamlet_help">Comment jouer</string>
     <string name="hamlet_help_text">Bâtis ton village toi-même, case après case. Glisse pour explorer et pince pour zoomer. Bâtir ouvre le catalogue : déplace le fantôme, tourne-le et confirme. Les chemins, clôtures et fleurs se peignent en glissant. Avec un outil actif, deux doigts déplacent la caméra.\n\nMon objectif te guide vers la prochaine action. Plante, récolte, perçois les impôts, nourris les animaux et livre les commandes. Touche une récompense dorée pour la ramasser en un geste. Tout récolter se débloque après le chapitre 10. Les décors apportent du charme et les services améliorent le bonheur.\n\nUne attente ? Carnet → Travail propose des gestes gratuits : douze bonnes réponses gagnent cinq minutes de travail à utiliser sur un chantier, une culture ou une commande. Le farm en rapporte aussi. Aventure ouvre les combats, les héros, les équipes et les recherches ; tout se gagne en jouant, sans achat. Les combats restent disponibles librement ; les invitations ont leur propre rythme de récompense.\n\nVillage → Voisins permet de découvrir douze villages, commander gratuitement et aider à préparer les colis. Mes royaumes permet de voyager, renommer les villages et fonder de nouvelles terres. Le mode créatif propose toutes les constructions gratuitement dans un monde séparé.\n\nLes outils permettent de copier, réaménager, remplir et annuler. Une construction déjà utilisée ou ayant servi à une récompense ne peut plus être annulée : tu peux la déplacer ou la vendre. Village contient aussi la gazette, le mode photo et l’import/export.\n\nLa sauvegarde est automatique. Quitter, en haut à droite, enregistre et revient à l’application. Le village continue de pousser en ton absence.</string>
     <string name="hamlet_haptics">Vibrations tactiles</string>
     <string name="hamlet_night">Jour et nuit selon l’heure locale</string>
     <string name="hamlet_effects">Particules et animations décoratives</string>
-    <string name="hamlet_action_failed">Action indisponible. Vérifie tes pièces, tes gemmes et l’état actuel de l’objet.</string>
     <string name="hamlet_save_failed">Impossible de sauvegarder le village. La sauvegarde précédente est conservée.</string>
-    <string name="hamlet_unlock_level">Se débloque au niveau %1$d.</string>
     <string name="hamlet_category_field">Champs</string>
     <string name="hamlet_category_home">Maisons</string>
     <string name="hamlet_category_shop">Ateliers</string>

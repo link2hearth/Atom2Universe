@@ -2,14 +2,12 @@
 <resources>
     <string name="hamlet_title">Hamlet</string>
     <string name="hamlet_description">Build your village, recruit heroes and explore new lands</string>
-    <string name="hamlet_home">Center</string>
     <string name="hamlet_stats">Level %1$d · %2$d coins · %3$d gems · %4$d residents</string>
     <string name="hamlet_build">Build</string>
     <string name="hamlet_gift">Daily gift</string>
     <string name="hamlet_quest">Quest</string>
     <string name="hamlet_land">Expand land</string>
     <string name="hamlet_hall">Upgrade hall</string>
-    <string name="hamlet_hint">Tap a golden reward to collect it · Build to grow your village</string>
     <string name="hamlet_selected">%1$s · %2$s</string>
     <string name="hamlet_placing">Move the ghost, then confirm its location</string>
     <string name="hamlet_brushing">Drag across the village to paint the ground</string>
@@ -26,21 +24,9 @@
     <string name="hamlet_sell">Sell</string>
     <string name="hamlet_sell_confirm">Sell %1$s for %2$d coins?</string>
     <string name="hamlet_catalog_item">%1$s · %2$s · Level %3$d</string>
-    <string name="hamlet_price_coins">%1$d coins</string>
-    <string name="hamlet_price_gems">%1$d gems</string>
     <string name="hamlet_crop_item">%1$s · %2$d coins · %3$s</string>
-    <string name="hamlet_gift_wait">Your next gift is ready in %1$s</string>
-    <string name="hamlet_quests_done">All quests completed</string>
-    <string name="hamlet_quest_detail">%1$s
-
-%2$s
-
-Progress: %3$d/%4$d
-Reward: %5$d coins · %6$d gems</string>
     <string name="hamlet_claim">Claim</string>
-    <string name="hamlet_land_max">Your village has reached its largest size.</string>
     <string name="hamlet_land_confirm">Expand the village for %1$d coins?</string>
-    <string name="hamlet_hall_max">The hall cannot be upgraded further.</string>
     <string name="hamlet_hall_confirm">Upgrade to hall level %1$d for %2$d coins? The village will grow to %3$d tiles.</string>
     <string name="hamlet_duration_hours">%1$dh %2$02dm</string>
     <string name="hamlet_duration_minutes">%1$d min</string>
@@ -64,4 +50,30 @@ Reward: %5$d coins · %6$d gems</string>
     <string name="hamlet_ui_info_mark">?</string>
     <string name="hamlet_ui_dot">\u0020·\u0020</string>
     <string name="hamlet_ui_arrow">\u0020→\u0020</string>
+    <string name="hamlet_module_village">Village</string>
+    <string name="hamlet_module_adventure">Adventure</string>
+    <string name="hamlet_module_heroes">Heroes</string>
+    <string name="hamlet_module_journal">Journal</string>
+    <string name="hamlet_module_neighbors">Neighbors</string>
+    <string name="hamlet_ui_waiting">%1$s · something waits</string>
+    <string name="hamlet_ui_many">%1$d+</string>
+    <string name="hamlet_ui_menu">Menu</string>
+    <string name="hamlet_ui_close">Close</string>
+    <string name="hamlet_ui_picker">\u0020▾</string>
+    <string name="hamlet_ui_goal_line">%1$s · %2$d / %3$d</string>
+    <string name="hamlet_ui_claimed">Claimed</string>
+    <string name="hamlet_ui_progress">%1$d / %2$d</string>
+    <string name="hamlet_ui_reward_pair">%1$d coins · %2$d gems</string>
+    <string name="hamlet_ui_reward_line">Reward: %1$s</string>
+    <string name="hamlet_ui_reward_chapter">%1$d coins · %2$d supplies · 2 gems</string>
+    <string name="hamlet_ui_supplies">%1$d supplies</string>
+    <string name="hamlet_ui_work_bank">Work in reserve: %1$s</string>
+    <string name="hamlet_ui_help_targets">Lend a hand</string>
+    <string name="hamlet_ui_chapter_short">Ch. %1$d</string>
+    <string name="hamlet_ui_level_short">Lv. %1$d</string>
+    <string name="hamlet_daily_tasks">Daily tasks</string>
+    <plurals name="hamlet_ui_tickets">
+        <item quantity="one">%1$d invitation</item>
+        <item quantity="other">%1$d invitations</item>
+    </plurals>
 </resources>

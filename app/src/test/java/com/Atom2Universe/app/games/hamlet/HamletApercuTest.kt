@@ -11,7 +11,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Robolectric
-import org.robolectric.shadows.ShadowAlertDialog
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import java.io.File
@@ -116,60 +115,43 @@ class HamletApercuTest {
         ecrire("halle", hall)
     }
 
+    /** Le vrai écran du jeu, en français, comme le joueur le voit (bannière comprise). */
+    private fun ecranDuJeu(creatif: Boolean = false): org.robolectric.android.controller.ActivityController<HamletActivity> {
+        val app = org.robolectric.RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("atom2univers_prefs", 0).edit().putString("app_language", "fr").commit()
+        app.getSharedPreferences("hamlet_ui", 0).edit().putBoolean("introduced", true).putBoolean("effects", false).putBoolean("creative", creatif).commit()
+        return Robolectric.buildActivity(HamletActivity::class.java).setup()
+    }
+    private fun boutons(v: android.view.View): List<android.widget.Button> = if (v is android.widget.Button) listOf(v)
+        else if (v is android.view.ViewGroup) (0 until v.childCount).flatMap { boutons(v.getChildAt(it)) } else emptyList()
+    private fun capture(nom: String, vue: android.view.View, w: Int = 1080, h: Int = 2100) {
+        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle()
+        fun dirty(v: android.view.View) { v.forceLayout(); v.invalidate(); if (v is android.view.ViewGroup) for (i in 0 until v.childCount) dirty(v.getChildAt(i)) }
+        dirty(vue)
+        vue.measure(android.view.View.MeasureSpec.makeMeasureSpec(w, android.view.View.MeasureSpec.EXACTLY), android.view.View.MeasureSpec.makeMeasureSpec(h, android.view.View.MeasureSpec.EXACTLY))
+        vue.layout(0, 0, w, h)
+        Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also { vue.draw(Canvas(it)); ecrire(nom, it); it.recycle() }
+    }
+
     @Test fun carnetEtAtelier() {
-        val controller = Robolectric.buildActivity(android.app.Activity::class.java).setup()
-        val activity = controller.get()
-        activity.setTheme(android.R.style.Theme_Material_Light_NoActionBar)
-        // Comme les autres bancs du projet : vrais XML lus sur disque, sans charger tout l'APK.
-        val strings = HashMap<Int, String>()
-        val names = HashMap<String, Int>()
-        File("src/main/res/values-fr").listFiles { f -> f.name.startsWith("strings_hamlet") }!!.forEach { f ->
-            val doc = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(f)
-            val nodes = doc.getElementsByTagName("string")
-            for (i in 0 until nodes.length) {
-                val node = nodes.item(i)
-                val key = node.attributes.getNamedItem("name").nodeValue
-                val id = com.Atom2Universe.app.R.string::class.java.getField(key).getInt(null)
-                names[key] = id; strings[id] = node.textContent.replace("\\n", "\n").replace("\\'", "'")
-            }
-        }
-        val base = activity.resources
-        val loaded = object : android.content.res.Resources(base.assets, base.displayMetrics, base.configuration) {
-            override fun getString(id: Int): String = strings[id] ?: super.getString(id)
-            override fun getString(id: Int, vararg args: Any?): String = String.format(java.util.Locale.FRANCE, getString(id), *args)
-            override fun getText(id: Int): CharSequence = strings[id] ?: super.getText(id)
-            override fun getIdentifier(name: String?, defType: String?, defPackage: String?): Int = names[name] ?: super.getIdentifier(name, defType, defPackage)
-        }
-        val context = object : android.content.ContextWrapper(activity) { override fun getResources() = loaded }
-        val game = HamletGame().apply { startNew(false); journey.chapter = 4; workStep = 9 }
+        val controller = ecranDuJeu()
+        val activity = controller.get(); val decor = activity.window.decorView
+        val game = activity.game.apply { journey.chapter = 4; workStep = 9 }
         game.journey.companions[0] = 1; game.journey.companions[1] = 1
         game.journey.assign(0, 0); game.journey.assign(1, 1)
-        for ((tab, name) in listOf(0 to "carnet", 1 to "voyages", 2 to "compagnons", 3 to "recherches", 4 to "atelier_gratuit")) {
-            HamletJourneyDialog(context, game).show(tab)
-            val dialog = ShadowAlertDialog.getLatestAlertDialog()
-            val view = dialog.window!!.decorView
-            val width = 1080; val height = 1600
-            view.measure(android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.EXACTLY),
-                android.view.View.MeasureSpec.makeMeasureSpec(height, android.view.View.MeasureSpec.AT_MOST))
-            view.layout(0, 0, width, view.measuredHeight)
-            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle()
-            val bitmap = Bitmap.createBitmap(width, view.measuredHeight, Bitmap.Config.ARGB_8888)
-            view.draw(Canvas(bitmap)); ecrire(name, bitmap)
-            assertTrue(view.measuredHeight > 400)
-            if (tab == 4) {
-                fun button(view: android.view.View, title: String): android.widget.Button? {
-                    if (view is android.widget.Button && view.text.toString() == title) return view
-                    if (view is android.view.ViewGroup) for (i in 0 until view.childCount) button(view.getChildAt(i), title)?.let { return it }
-                    return null
-                }
+        val onglets = listOf(HamletJournalPage.TODAY to "journal", HamletJournalPage.CHAPTERS to "carnet", HamletJournalPage.EXPEDITIONS to "voyages",
+            HamletJournalPage.COMPANIONS to "compagnons", HamletJournalPage.RESEARCH to "recherches", HamletJournalPage.POSTS to "metiers",
+            HamletJournalPage.WORK to "atelier_gratuit")
+        for ((tab, name) in onglets) {
+            activity.open(HamletModule.JOURNAL, tab)
+            capture(name, decor)
+            if (tab == HamletJournalPage.WORK) {
                 repeat(3) {
-                    val title = strings.getValue(names.getValue("hamlet_work_tool_${game.workTool}"))
-                    val target = button(view, title) ?: error("outil manquant")
-                    assertTrue(target.performClick())
+                    val title = activity.stringByName("hamlet_work_tool_${game.workTool}")
+                    assertTrue(boutons(decor).first { it.text == title }.performClick())
                 }
                 assertTrue(game.workSeconds == 300 && game.workStep == 0)
             }
-            dialog.dismiss()
         }
         controller.pause().stop().destroy()
     }
@@ -264,80 +246,37 @@ class HamletApercuTest {
     }
 
     @Test fun aventureMenus() {
-        val controller = Robolectric.buildActivity(android.app.Activity::class.java).setup()
-        val activity = controller.get().apply { setTheme(android.R.style.Theme_Material_Light_NoActionBar) }
-        val strings = HashMap<Int, String>(); val names = HashMap<String, Int>()
-        File("src/main/res/values-fr").listFiles { f -> f.name.startsWith("strings_hamlet") }!!.forEach { file ->
-            val nodes = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file).getElementsByTagName("string")
-            for (i in 0 until nodes.length) {
-                val node = nodes.item(i); val key = node.attributes.getNamedItem("name").nodeValue
-                val id = com.Atom2Universe.app.R.string::class.java.getField(key).getInt(null)
-                names[key] = id; strings[id] = node.textContent.replace("\\n", "\n").replace("\\'", "'")
+        val controller = ecranDuJeu()
+        val activity = controller.get(); val decor = activity.window.decorView
+        val game = activity.game
+        fun dock(v: android.view.View): HamletDock? = v as? HamletDock
+            ?: if (v is android.view.ViewGroup) (0 until v.childCount).firstNotNullOfOrNull { dock(v.getChildAt(it)) } else null
+        val tabs = listOf(HamletAdventurePage.EXPLORE, HamletAdventurePage.HEROES, HamletAdventurePage.TEAMS, HamletAdventurePage.FORGE,
+            HamletAdventurePage.KINGDOM, HamletAdventurePage.CHALLENGES)
+        for (tab in tabs) {
+            activity.open(HamletAdventurePage.module(tab), tab)
+            capture("aventure_menu_$tab", decor)
+            assertTrue(boutons(decor).size >= 8)
+            // La bannière commune reste entière à l'écran.
+            val banner = dock(decor)!!
+            val position = IntArray(2); banner.getLocationInWindow(position)
+            assertTrue("bannière $tab", position[1] >= 0 && position[1] + banner.height <= 2100)
+            if (tab == HamletAdventurePage.EXPLORE) {
+                assertTrue(boutons(decor).first { it.text == activity.getString(com.Atom2Universe.app.R.string.hamlet_a_battle) }.performClick())
+                capture("aventure_combat_debut", decor)
+                game.adventure.activeBattle!!.advance(5f); capture("aventure_combat_effets", decor)
+                assertTrue(boutons(decor).first { it.text == activity.getString(com.Atom2Universe.app.R.string.hamlet_a_cancel_free) }.performClick())
+                assertTrue(game.adventure.activeBattle == null)
             }
-        }
-        val base = activity.resources
-        val loaded = object : android.content.res.Resources(base.assets, base.displayMetrics, base.configuration) {
-            override fun getString(id: Int) = strings[id] ?: super.getString(id)
-            override fun getString(id: Int, vararg args: Any?) = String.format(java.util.Locale.FRANCE, getString(id), *args)
-            override fun getText(id: Int): CharSequence = strings[id] ?: super.getText(id)
-            override fun getIdentifier(name: String?, defType: String?, defPackage: String?) = names[name] ?: super.getIdentifier(name, defType, defPackage)
-        }
-        val context = object : android.content.ContextWrapper(activity) { override fun getResources() = loaded }
-        val game = HamletGame().apply { startNew(false) }
-        fun buttons(view: android.view.View): List<android.widget.Button> = if (view is android.widget.Button) listOf(view)
-            else if (view is android.view.ViewGroup) (0 until view.childCount).flatMap { buttons(view.getChildAt(it)) } else emptyList()
-        fun snapshot(name: String, view: android.view.View, h: Int = 2000) {
-            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle()
-            fun refresh(v: android.view.View) {
-                v.forceLayout(); v.invalidate()
-                if (v is android.view.ViewGroup) for (i in 0 until v.childCount) refresh(v.getChildAt(i))
-            }
-            refresh(view)
-            view.measure(android.view.View.MeasureSpec.makeMeasureSpec(1080, android.view.View.MeasureSpec.EXACTLY), android.view.View.MeasureSpec.makeMeasureSpec(h, android.view.View.MeasureSpec.EXACTLY))
-            view.layout(0, 0, 1080, h)
-            val bitmap = Bitmap.createBitmap(1080, h, Bitmap.Config.ARGB_8888); view.draw(Canvas(bitmap)); ecrire(name, bitmap)
-            fun bounds(v: android.view.View, depth: Int = 0): String {
-                val pos = IntArray(2); v.getLocationInWindow(pos)
-                val label = if (v is android.widget.TextView) v.text.toString().take(40) else ""
-                val line = "${" ".repeat(depth)}${v.javaClass.simpleName} ${pos[0]},${pos[1]} ${v.width}x${v.height} scroll=${v.scrollY} $label\n"
-                return line + if (v is android.view.ViewGroup) (0 until v.childCount).joinToString("") { bounds(v.getChildAt(it), depth + 1) } else ""
-            }
-            File(dossier, "$name.layout.txt").writeText(bounds(view))
-            val footer = buttons(view).firstOrNull { it.text == loaded.getString(names.getValue("hamlet_a_challenges")) }
-            if (footer != null) {
-                val position = IntArray(2); footer.getLocationInWindow(position)
-                assertTrue("footer $name ${position[1]} / $h", position[1] >= 0 && position[1] + footer.height <= h)
-            }
-        }
-        for (tab in 0..5) {
-            HamletAdventureDialog(context, game, onExit = { true }, effectsEnabled = false).show(tab)
-            val dialog = org.robolectric.shadows.ShadowDialog.getLatestDialog()
-            val decor = dialog.window!!.decorView
-            snapshot("aventure_menu_$tab", decor)
-            assertTrue(buttons(decor).size >= 8)
-            if (tab == 0) {
-                val combat = buttons(decor).first { it.text == loaded.getString(names.getValue("hamlet_a_battle")) }
-                assertTrue(combat.performClick()); snapshot("aventure_combat_debut", decor)
-                val battle = game.adventure.activeBattle!!
-                battle.advance(5f); snapshot("aventure_combat_effets", decor)
-                val cancel = buttons(decor).first { it.text == loaded.getString(names.getValue("hamlet_a_cancel_free")) }
-                assertTrue(cancel.performClick()); assertTrue(game.adventure.activeBattle == null)
-            }
-            dialog.dismiss()
         }
         game.adventure.frontier = 25; game.adventure.heroes[2].owned = true; game.adventure.heroes[4].owned = true; game.adventure.heroes[5].owned = true
         game.adventure.assign(2, 1); game.adventure.assign(4, 4); game.adventure.assign(5, 5)
-        HamletAdventureDialog(context, game).show(2)
-        val teamDialog = org.robolectric.shadows.ShadowDialog.getLatestDialog(); snapshot("aventure_equipe_six", teamDialog.window!!.decorView); teamDialog.dismiss()
-        // Failed saves keep Exit and the current screen available; success closes the dialog.
-        var saved = false
-        var attempts = 0
-        HamletAdventureDialog(context, game, onExit = { attempts++; saved }, effectsEnabled = false).show()
-        val exitDialog = org.robolectric.shadows.ShadowDialog.getLatestDialog()
-        val exit = buttons(exitDialog.window!!.decorView).first { it.text == loaded.getString(names.getValue("hamlet_ui_exit")) }
-        assertTrue(exit.performClick()); assertTrue(exitDialog.isShowing && attempts == 1)
-        saved = true
-        assertTrue(exit.performClick()); assertTrue(!exitDialog.isShowing && attempts == 2)
+        activity.open(HamletModule.HEROES, HamletAdventurePage.TEAMS)
+        capture("aventure_equipe_six", decor)
+        // La porte du haut enregistre puis ferme le jeu.
+        val exit = ArrayList<android.view.View>()
+        decor.findViewsWithText(exit, activity.getString(com.Atom2Universe.app.R.string.hamlet_ui_exit_description), android.view.View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION)
+        assertTrue(exit.first().performClick()); assertTrue(activity.isFinishing)
         val g = HamletGame().apply { startNew(true) }
         val hall = g.objs.values.first { it.t == "hall" }; val art = HamletArt()
         g.objs.values.filter { it.def.cat != Cat.HALL }.toList().forEach { g.sell(it) }; g.paths.fill(0); g.bump()
@@ -402,58 +341,31 @@ class HamletApercuTest {
     }
 
     @Test fun neighborsRealmsAndPhoto() {
-        val activity = Robolectric.buildActivity(android.app.Activity::class.java).setup().get()
-        val strings = HashMap<Int, String>(); val names = HashMap<String, Int>()
-        File("src/main/res/values-fr").listFiles { f -> f.name.startsWith("strings_hamlet") }!!.forEach { file ->
-            val nodes = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file).getElementsByTagName("string")
-            for (i in 0 until nodes.length) {
-                val node = nodes.item(i); val key = node.attributes.getNamedItem("name").nodeValue
-                val id = com.Atom2Universe.app.R.string::class.java.getField(key).getInt(null)
-                names[key] = id; strings[id] = node.textContent.replace("\\n", "\n").replace("\\'", "'")
-            }
-        }
-        val base = activity.resources
-        val loaded = object : android.content.res.Resources(base.assets, base.displayMetrics, base.configuration) {
-            override fun getString(id: Int) = strings[id] ?: super.getString(id)
-            override fun getString(id: Int, vararg args: Any?) = String.format(java.util.Locale.FRANCE, getString(id), *args)
-            override fun getText(id: Int): CharSequence = strings[id] ?: super.getText(id)
-            override fun getIdentifier(name: String?, defType: String?, defPackage: String?) = names[name] ?: super.getIdentifier(name, defType, defPackage)
-        }
-        val context = object : android.content.ContextWrapper(activity) { override fun getResources() = loaded }
-        fun buttons(v: android.view.View): List<android.widget.Button> = if (v is android.widget.Button) listOf(v)
-            else if (v is android.view.ViewGroup) (0 until v.childCount).flatMap { buttons(v.getChildAt(it)) } else emptyList()
-        fun snapshot(name: String, view: android.view.View) {
-            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle()
-            fun dirty(v: android.view.View) { v.forceLayout(); v.invalidate(); if (v is android.view.ViewGroup) for (i in 0 until v.childCount) dirty(v.getChildAt(i)) }
-            dirty(view)
-            view.measure(android.view.View.MeasureSpec.makeMeasureSpec(1080, android.view.View.MeasureSpec.EXACTLY), android.view.View.MeasureSpec.makeMeasureSpec(2100, android.view.View.MeasureSpec.EXACTLY))
-            view.layout(0, 0, 1080, 2100)
-            Bitmap.createBitmap(1080, 2100, Bitmap.Config.ARGB_8888).also { view.draw(Canvas(it)); ecrire(name, it); it.recycle() }
-        }
-        val game = HamletGame().apply { startNew(true) }
-        var closed = false
-        HamletNeighborsDialog(context, game, haptics = false, effectsEnabled = false, onClose = { closed = true }).show()
-        val dialog = org.robolectric.shadows.ShadowDialog.getLatestDialog()
-        val view = dialog.window!!.decorView
-        snapshot("voisins_liste", view)
-        buttons(view).first { it.text == loaded.getString(names.getValue("hamlet_neighbors_visit")) }.performClick()
-        snapshot("voisin_village", view)
-        buttons(view).first { it.text == loaded.getString(names.getValue("hamlet_neighbors_place")) }.performClick()
+        val controller = ecranDuJeu(creatif = true)
+        val activity = controller.get(); val decor = activity.window.decorView
+        val game = activity.game
+        fun text(key: String) = activity.stringByName(key)
+        activity.open(HamletModule.NEIGHBORS)
+        capture("voisins_liste", decor)
+        boutons(decor).first { it.text == text("hamlet_neighbors_visit") }.performClick()
+        capture("voisin_village", decor)
+        boutons(decor).first { it.text == text("hamlet_neighbors_place") }.performClick()
         assertTrue(game.neighbors.orders.size == 1)
         val order = game.neighbors.orders.single()
         repeat(6) {
             val tool = game.neighbors.helpTool(order.neighbor, order.shop)
-            buttons(view).first { it.text == loaded.getString(names.getValue("hamlet_neighbors_tool_$tool")) }.performClick()
+            boutons(decor).first { it.text == text("hamlet_neighbors_tool_$tool") }.performClick()
         }
         assertTrue(game.stats["neighbor_helped"] == 1L)
-        snapshot("voisin_commande", view)
-        buttons(view).first { it.text == loaded.getString(names.getValue("hamlet_neighbors_home")) }.performClick()
-        org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle()
-        assertTrue(closed && !dialog.isShowing)
+        capture("voisin_commande", decor)
+        // Retour au village par la bannière commune.
+        val village = ArrayList<android.view.View>()
+        decor.findViewsWithText(village, activity.getString(com.Atom2Universe.app.R.string.hamlet_module_village), android.view.View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION)
+        assertTrue(village.first().performClick()); assertTrue(activity.village.isShown)
         assertTrue(game.realms.found())
-        HamletWorldsDialog(context, game).show()
-        val worlds = ShadowAlertDialog.getLatestAlertDialog()
-        snapshot("royaumes", worlds.window!!.decorView); worlds.dismiss()
+        HamletWorldsDialog(activity, game).show()
+        val worlds = org.robolectric.shadows.ShadowDialog.getLatestDialog()
+        capture("royaumes", worlds.window!!.decorView); worlds.dismiss()
         val renderer = HamletRenderer(game, HamletArt()).apply {
             width = 1080; height = 900; zoom = 1.4f; centerOn(32f, 32f)
             selected = game.objs.values.first(); photoMode = true; daylightOverride = .4f
@@ -466,7 +378,7 @@ class HamletApercuTest {
         val second = Bitmap.createBitmap(1080, 900, Bitmap.Config.ARGB_8888)
         renderer.draw(Canvas(second))
         assertTrue("photo hides selection", first.sameAs(second))
-        first.recycle(); second.recycle(); activity.finish()
+        first.recycle(); second.recycle(); controller.pause().stop().destroy()
     }
 
     private val herosParRarete = HamletHeroes.defs.sortedWith(compareBy<HeroDef> { it.rarity.ordinal }.thenBy { it.id }).map { it.id }

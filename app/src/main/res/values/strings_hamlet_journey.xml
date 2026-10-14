@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hamlet_work_intro">Choose the right tool for the task.\n12 correct gestures = 5 minutes of free work.</string>
-    <string name="hamlet_work_rules">How to earn and use work</string>
-    <string name="hamlet_journey">Village journal</string>
     <string name="hamlet_journey_ready">Journal •</string>
     <string name="hamlet_chapters">Chapters</string>
     <string name="hamlet_expeditions">Expeditions</string>
     <string name="hamlet_companions">Companions</string>
     <string name="hamlet_research">Research</string>
     <string name="hamlet_work">Workshop</string>
-    <string name="hamlet_journey_stock">Chapters %1$d/%2$d · %3$d provisions\nAvailable work: %4$s</string>
-    <string name="hamlet_chapter_gate">Complete chapter %1$d to unlock</string>
     <string name="hamlet_chapter_help">Build your village at your own pace. Chapter rewards unlock buildings, companions and new regions. Previous actions count; completed chapters remain yours.</string>
     <string name="hamlet_chapter_title">%1$d · %2$s</string>
     <string name="hamlet_chapter_unlocks">Discoveries: %1$s</string>
     <string name="hamlet_chapter_requirements">Village level %1$d · Hall %2$d</string>
-    <string name="hamlet_goal_progress">%1$s: %2$d / %3$d</string>
     <string name="hamlet_goal_build">Build %1$s</string>
     <string name="hamlet_goal_explore">Expeditions to %1$s</string>
     <string name="hamlet_goal_harvested">Harvests</string>
@@ -24,7 +19,6 @@
     <string name="hamlet_goal_products">Animal and orchard products</string>
     <string name="hamlet_goal_upgrades">Building upgrades</string>
     <string name="hamlet_goal_research">Research ranks</string>
-    <string name="hamlet_chapter_reward">Reward: %1$d coins · %2$d provisions · 2 gems</string>
     <string name="hamlet_list_separator">, </string>
     <string name="hamlet_expedition_help">Team strength: %1$d. Choose a route and collect its provisions on return. Short routes stay available. Free workshop work can shorten every trip.</string>
     <string name="hamlet_expedition_running">%1$s · Return in %2$s</string>
@@ -45,10 +39,6 @@
     <string name="hamlet_mark_future">○</string>
     <string name="hamlet_work_help">Free, repeatable and without a timer. Read the task and choose the right tool. Twelve correct gestures give five minutes of work. Mistakes do not remove progress. Harvests add 10 seconds, products 15 and deliveries 30. Spend the bank on construction, growing, orders, production or expeditions; up to five minutes per press. Buildings take at most two hours to build.</string>
     <string name="hamlet_work_progress">%1$d / 12 gestures · Reward: 5 minutes</string>
-    <string name="hamlet_work_bank">Work bank: %1$s / 2 h</string>
-    <string name="hamlet_work_full">Your bank is full. Help a building or an expedition first.</string>
-    <string name="hamlet_work_retry">Choose the tool for this task. Your progress is kept.</string>
-    <string name="hamlet_work_reward">+5 minutes of free work!</string>
     <string name="hamlet_work_apply">Help · up to 5 min</string>
     <string name="hamlet_work_target">Help %1$s · %2$s left</string>
     <string name="hamlet_work_task_0">Fasten the frame</string>

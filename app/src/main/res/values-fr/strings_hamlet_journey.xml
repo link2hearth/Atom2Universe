@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hamlet_work_intro">Choisis le bon outil pour la consigne.\n12 bons gestes = 5 minutes de travail gratuit.</string>
-    <string name="hamlet_work_rules">Gagner et utiliser du travail</string>
-    <string name="hamlet_journey">Carnet du village</string>
     <string name="hamlet_journey_ready">Carnet •</string>
     <string name="hamlet_chapters">Chapitres</string>
     <string name="hamlet_expeditions">Expéditions</string>
     <string name="hamlet_companions">Compagnons</string>
     <string name="hamlet_research">Recherches</string>
     <string name="hamlet_work">Coups de main</string>
-    <string name="hamlet_journey_stock">Chapitres %1$d/%2$d · %3$d provisions\nTravail disponible : %4$s</string>
-    <string name="hamlet_chapter_gate">Terminer le chapitre %1$d pour débloquer</string>
     <string name="hamlet_chapter_help">Bâtis ton village à ton rythme. Les chapitres ouvrent des bâtiments, des compagnons et des régions. Tes actions précédentes comptent ; les chapitres accomplis restent acquis.</string>
     <string name="hamlet_chapter_title">%1$d · %2$s</string>
     <string name="hamlet_chapter_unlocks">Déblocages : %1$s</string>
     <string name="hamlet_chapter_requirements">Village niveau %1$d · Halle %2$d</string>
-    <string name="hamlet_goal_progress">%1$s : %2$d / %3$d</string>
     <string name="hamlet_goal_build">Construire : %1$s</string>
     <string name="hamlet_goal_explore">Expéditions : %1$s</string>
     <string name="hamlet_goal_harvested">Récoltes</string>
@@ -24,7 +19,6 @@
     <string name="hamlet_goal_products">Produits des élevages et vergers</string>
     <string name="hamlet_goal_upgrades">Améliorations de bâtiments</string>
     <string name="hamlet_goal_research">Rangs de recherche</string>
-    <string name="hamlet_chapter_reward">Récompense : %1$d pièces · %2$d provisions · 2 gemmes</string>
     <string name="hamlet_list_separator">, </string>
     <string name="hamlet_expedition_help">Force de l’équipe : %1$d. Choisis un trajet puis récupère ses provisions au retour. Les trajets courts restent disponibles. Les coups de main gratuits peuvent raccourcir chaque voyage.</string>
     <string name="hamlet_expedition_running">%1$s · Retour dans %2$s</string>
@@ -45,10 +39,6 @@
     <string name="hamlet_mark_future">○</string>
     <string name="hamlet_work_help">Gratuit, répétable et sans chronomètre. Lis la consigne et choisis le bon outil. Douze bons gestes donnent cinq minutes de travail. Une erreur ne retire aucun progrès. Une récolte ajoute 10 secondes, un produit 15 et une livraison 30. Utilise la réserve pour les chantiers, cultures, commandes, productions ou voyages ; jusqu’à cinq minutes par appui. Les constructions durent au maximum deux heures.</string>
     <string name="hamlet_work_progress">%1$d / 12 gestes · Récompense : 5 minutes</string>
-    <string name="hamlet_work_bank">Réserve : %1$s / 2 h</string>
-    <string name="hamlet_work_full">Ta réserve est pleine. Aide d’abord un bâtiment ou une expédition.</string>
-    <string name="hamlet_work_retry">Choisis l’outil adapté à la consigne. Ton progrès est conservé.</string>
-    <string name="hamlet_work_reward">+5 minutes de travail gratuit !</string>
     <string name="hamlet_work_apply">Aider · jusqu’à 5 min</string>
     <string name="hamlet_work_target">Aider : %1$s · reste %2$s</string>
     <string name="hamlet_work_task_0">Fixer la charpente</string>

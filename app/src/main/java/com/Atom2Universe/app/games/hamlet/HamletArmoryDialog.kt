@@ -1,6 +1,5 @@
 package com.Atom2Universe.app.games.hamlet
 
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -16,9 +15,9 @@ import com.Atom2Universe.app.games.hamlet.HamletUi.Weight
 internal class HamletArmoryDialog(private val context: Context, private val g: HamletGame,
     private val onChanged: () -> Unit = {}) {
     private val armory get() = g.armory
-    private lateinit var dialog: AlertDialog
-    private lateinit var rows: LinearLayout
-    private lateinit var scroll: ScrollView
+    private lateinit var sheet: HamletSheet
+    private val rows get() = sheet.body
+    private val scroll get() = sheet.scroll
     private var tab = 0
     private var hero = g.adventure.teams[g.adventure.selectedTeam].firstOrNull { it >= 0 } ?: 0
     private var slot = 0
@@ -54,12 +53,12 @@ internal class HamletArmoryDialog(private val context: Context, private val g: H
         it.setPadding(0, dp(4), 0, dp(4)); it.setLineSpacing(dp(2).toFloat(), 1f)
         if (title) it.setTypeface(null, Typeface.BOLD); parent.addView(it)
     }
-    private fun button(parent: LinearLayout, value: CharSequence, enabled: Boolean = true, weight: Weight = Weight.NORMAL, click: () -> Unit) =
-        HamletUi.button(context, value, weight, click = click).also {
+    private fun button(parent: LinearLayout, value: CharSequence, enabled: Boolean = true, weight: Weight = Weight.NORMAL, glyph: String? = null, click: () -> Unit) =
+        HamletUi.button(context, value, weight, glyph = glyph, click = click).also {
             it.isEnabled = enabled; parent.addView(it, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(3) })
         }
     private fun card(title: CharSequence, help: String? = null) = column().also {
-        it.background = HamletUi.panel(context, 0xFFE9E0CC.toInt(), 12); it.setPadding(dp(10), dp(6), dp(10), dp(10))
+        it.background = HamletUi.panel(context, 0xFFFFF8E9.toInt(), 12, 0xFFD9C9A5.toInt()); it.setPadding(dp(10), dp(6), dp(10), dp(10))
         rows.addView(it, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
         val head = LinearLayout(context).apply { gravity = Gravity.CENTER_VERTICAL }
         head.addView(TextView(context).apply { text = title; textSize = HamletUi.TITLE; setTextColor(HamletUi.INK); setTypeface(null, Typeface.BOLD) },
@@ -69,16 +68,15 @@ internal class HamletArmoryDialog(private val context: Context, private val g: H
     }
     fun show(initialTab: Int = 0, initialHero: Int = hero) {
         tab = initialTab.coerceIn(0, 2); hero = initialHero.takeIf { g.adventure.heroes.getOrNull(it)?.owned == true } ?: hero
-        val body = column().apply { setPadding(dp(12), dp(5), dp(12), dp(8)); setBackgroundColor(HamletUi.PAPER) }
-        val tabs = LinearLayout(context)
-        for (i in 0..2) tabButtons.add(HamletUi.button(context, s("tab_$i")) {
+        sheet = HamletSheet(context, context.getString(R.string.hamlet_armory_title), tall = true)
+        val tabs = LinearLayout(context).apply { setPadding(0, dp(8), 0, dp(2)) }
+        val glyphs = arrayOf("anvil", "shield", "crate")
+        for (i in 0..2) tabButtons.add(HamletUi.button(context, s("tab_$i"), glyph = glyphs[i]) {
             tab = i; render(false)
-        }.also { tabs.addView(it, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(3) }) })
-        body.addView(tabs); rows = column(); scroll = ScrollView(context).apply { addView(rows) }
-        body.addView(scroll, LinearLayout.LayoutParams(-1, minOf(dp(560), context.resources.displayMetrics.heightPixels * 72 / 100)))
-        dialog = AlertDialog.Builder(context).setTitle(R.string.hamlet_armory_title).setView(body).setNegativeButton(android.R.string.cancel, null).create()
-        dialog.setOnDismissListener { onChanged() }; dialog.show()
-        render(false)
+        }.also { it.maxLines = 1; tabs.addView(it, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(3) }) })
+        sheet.top.addView(tabs)
+        sheet.onDismiss = { onChanged() }
+        render(false); sheet.show()
     }
     private fun render(preserve: Boolean = true) {
         val y = if (preserve) scroll.scrollY else 0
@@ -88,31 +86,29 @@ internal class HamletArmoryDialog(private val context: Context, private val g: H
         when (tab) { 0 -> recipes(); 1 -> equipment(); else -> inventory() }
         scroll.post { scroll.scrollTo(0, y) }
     }
-    private fun <T> picker(parent: LinearLayout, options: List<T>, selection: T, label: (T) -> String, choose: (T) -> Unit) {
-        val spinner = Spinner(context)
-        spinner.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, options.map(label))
-        spinner.setSelection(options.indexOf(selection).coerceAtLeast(0), false)
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            var first = true
-            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (first) { first = false; return }; choose(options[position]); render()
-            }
-        }
-        parent.addView(spinner)
+    /** The current value on a button; the list opens in a sheet. */
+    private fun <T> picker(parent: LinearLayout, title: CharSequence, options: List<T>, selection: T, glyph: String?, label: (T) -> CharSequence, choose: (T) -> Unit) {
+        parent.addView(HamletUi.picker(context, label(selection), glyph) {
+            HamletSheet.pick(context, title, options.map(label), options.indexOf(selection), options.map { glyph }) { i -> choose(options[i]); render() }
+        }, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(4) })
     }
+    private fun rarityLabel(r: EquipmentRarity): CharSequence = HamletUi.tint(rarityName(r), rarityName(r) to HamletUi.gear(r.ordinal))
     private fun recipes() {
         val box = card(s("tab_0"), s("help"))
-        picker(box, (0..3).toList(), slot, { raw("hamlet_a_gear_$it") }) { slot = it }
-        picker(box, GearSet.entries.toList(), set, { s("set_${it.name.lowercase()}") }) { set = it }
-        picker(box, EquipmentRarity.entries.toList(), rarity, ::rarityName) { rarity = it }
+        val slots = LinearLayout(context)
+        val glyphs = arrayOf("sword", "shield", "hat", "map")
+        for (i in 0..3) slots.addView(HamletUi.choice(HamletUi.button(context, raw("hamlet_a_gear_$i"), glyph = glyphs[i]) { slot = i; render() }, i == slot)
+            .apply { maxLines = 1 }, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(3) })
+        box.addView(slots)
+        picker(box, s("tab_0"), GearSet.entries.toList(), set, "shield", { s("set_${it.name.lowercase()}") }) { set = it }
+        picker(box, s("tab_0"), EquipmentRarity.entries.toList(), rarity, "gem", ::rarityLabel) { rarity = it }
         val preview = GearPiece(0, slot, set, rarity)
         art(box, preview)
         text(box, pieceName(preview), true)
         text(box, s("set_help_${set.name.lowercase()}"), small = true)
         text(box, cost(armory.craftCost(slot, set, rarity)))
         if (!armory.unlocked(rarity)) text(box, s("requirement", rarityName(rarity), armory.requiredForge(rarity), armory.requiredFrontier(rarity)), small = true, color = HamletUi.BAD)
-        button(box, s("craft"), armory.canCraft(slot, set, rarity), Weight.MAIN) {
+        button(box, s("craft"), armory.canCraft(slot, set, rarity), Weight.MAIN, "anvil") {
             val piece = armory.craft(slot, set, rarity)
             if (piece != null) { tab = 2; page = 0; render(false) }
         }
@@ -130,18 +126,19 @@ internal class HamletArmoryDialog(private val context: Context, private val g: H
     }
     private fun equipment() {
         val heroes = g.adventure.heroes.filter { it.owned }.map { it.id }
-        picker(rows, heroes, hero, ::name) { hero = it }
+        picker(rows, s("tab_1"), heroes, hero, "hat", { HamletUi.tint(name(it), name(it) to HamletUi.rarity(HamletHeroes.defs[it].rarity)) }) { hero = it }
         armory.recommendedSet(hero)?.let { text(rows, s("recommendation", s("set_${it.name.lowercase()}")), small = true) }
         for (slot in 0..3) {
             val piece = armory.equipped(hero, slot); val box = card(raw("hamlet_a_gear_$slot"))
             if (piece != null) { art(box, piece); text(box, pieceName(piece)) } else text(box, s("slot_empty"), small = true)
             val choices = armory.inventory.filter { it.slot == slot }.sortedWith(compareByDescending<GearPiece> { it.rarity.ordinal }.thenByDescending { it.level })
             val actions = LinearLayout(context)
-            actions.addView(HamletUi.button(context, s("equip")) {
+            actions.addView(HamletUi.button(context, s("equip"), glyph = "shield") {
                 val labels = choices.map { p -> HamletUi.tint(android.text.TextUtils.concat(pieceName(p), raw("hamlet_list_separator"),
                     armory.owner(p.id)?.let { s("owner", name(it)) } ?: s("reserve")), rarityName(p.rarity) to HamletUi.gear(p.rarity.ordinal)) }
-                AlertDialog.Builder(context).setTitle(s("transfer", name(hero))).setItems(labels.toTypedArray()) { _, i -> armory.equip(hero, choices[i].id); render() }
-                    .setNegativeButton(android.R.string.cancel, null).show()
+                HamletSheet.pick(context, s("transfer", name(hero)), labels, glyphs = choices.map { arrayOf("sword", "shield", "hat", "map")[it.slot] }) { i ->
+                    armory.equip(hero, choices[i].id); render()
+                }
             }.apply { isEnabled = choices.isNotEmpty() }, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(3) })
             if (piece != null) actions.addView(HamletUi.button(context, s("unequip"), Weight.QUIET) { armory.unequip(hero, slot); render() },
                 LinearLayout.LayoutParams(0, -2, 1f))
@@ -168,7 +165,7 @@ internal class HamletArmoryDialog(private val context: Context, private val g: H
             stats(box, armory.pieceBonus(piece))
             val price = armory.enhanceCost(piece.id)
             if (piece.level < HamletArmory.MAX_LEVEL && price != null) {
-                button(box, s("enhance"), armory.canEnhance(piece.id)) { armory.enhance(piece.id); render() }
+                button(box, s("enhance"), armory.canEnhance(piece.id), glyph = "hammer") { armory.enhance(piece.id); render() }
                 text(box, cost(price), small = true)
             } else text(box, s("max_level"), small = true, color = HamletUi.GOOD)
             val nextQuality = armory.nextQuality(piece.id)
@@ -187,8 +184,7 @@ internal class HamletArmoryDialog(private val context: Context, private val g: H
             if (owner != null) actions.addView(HamletUi.button(context, s("unequip"), Weight.QUIET) { armory.unequip(owner, piece.slot); render() }, LinearLayout.LayoutParams(0, -2, 1f))
             else actions.addView(HamletUi.button(context, s("salvage"), Weight.QUIET) {
                 val refund = armory.salvageReturn(piece.id) ?: return@button
-                AlertDialog.Builder(context).setTitle(s("salvage")).setMessage(s("salvage_return", cost(refund)))
-                    .setPositiveButton(android.R.string.ok) { _, _ -> armory.salvage(piece.id); render() }.setNegativeButton(android.R.string.cancel, null).show()
+                HamletSheet.confirm(context, s("salvage"), s("salvage_return", cost(refund)), s("salvage"), "hammer") { armory.salvage(piece.id); render() }
             }, LinearLayout.LayoutParams(0, -2, 1f))
             box.addView(actions)
         }

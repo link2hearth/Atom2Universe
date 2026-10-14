@@ -81,7 +81,7 @@ class HamletBattleView(context: Context, val battle: HamletBattle,
     }
     private val loop = object : Runnable {
         override fun run() {
-            if (!attached || !hasWindowFocus()) { last = 0; return }
+            if (!attached || !hasWindowFocus() || !isShown) { last = 0; return }
             val now = System.nanoTime()
             if (last > 0 && !paused) battle.advance(((now - last) / 1e9).coerceIn(0.0, 0.1).toFloat() * speed)
             last = now; invalidate()
@@ -92,6 +92,12 @@ class HamletBattleView(context: Context, val battle: HamletBattle,
     override fun onAttachedToWindow() { super.onAttachedToWindow(); attached = true; last = 0; postOnAnimation(loop) }
     override fun onDetachedFromWindow() { attached = false; removeCallbacks(loop); super.onDetachedFromWindow() }
     override fun onWindowFocusChanged(focus: Boolean) { super.onWindowFocusChanged(focus); removeCallbacks(loop); last = 0; if (focus && attached && !finished) postOnAnimation(loop) }
+    /** The fight waits while its page is hidden behind another module. */
+    override fun onVisibilityAggregated(isVisible: Boolean) {
+        super.onVisibilityAggregated(isVisible)
+        removeCallbacks(loop); last = 0
+        if (isVisible && attached && !finished) postOnAnimation(loop)
+    }
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         backdropShade = LinearGradient(0f, 0f, 0f, h.toFloat(),

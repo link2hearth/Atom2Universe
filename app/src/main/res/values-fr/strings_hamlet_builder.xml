@@ -2,7 +2,6 @@
 <resources>
     <string name="hamlet_builder_tools">Outils de construction</string>
     <string name="hamlet_builder_recent">Récents</string>
-    <string name="hamlet_builder_recent_empty">Les neuf dernières pièces choisies apparaîtront ici.</string>
     <string name="hamlet_builder_undo">Annuler</string>
     <string name="hamlet_builder_copy">Copier une pièce</string>
     <string name="hamlet_builder_redesign">Réaménager</string>

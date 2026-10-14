@@ -1,6 +1,5 @@
 package com.Atom2Universe.app.games.hamlet
 
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Canvas
 import android.os.Handler
@@ -13,16 +12,16 @@ import com.Atom2Universe.app.R
 internal class HamletShardShopDialog(private val context: Context, private val g: HamletGame,
     private val onChanged: () -> Unit = {}) {
     private val shop get() = g.shardShop
-    private lateinit var rows: LinearLayout
-    private lateinit var scroll: ScrollView
-    private lateinit var dialog: AlertDialog
+    private lateinit var sheet: HamletSheet
+    private val rows get() = sheet.body
+    private val scroll get() = sheet.scroll
     private var selectedHero = -1
     private val timer = Handler(Looper.getMainLooper())
     private var displayedState: List<Any>? = null
     private val pulse = object : Runnable {
         override fun run() {
-            if (!dialog.isShowing) return
-            if (dialog.window?.decorView?.windowVisibility == View.VISIBLE) {
+            if (!sheet.isShowing) return
+            if (sheet.dialog.window?.decorView?.windowVisibility == View.VISIBLE) {
                 g.adventure.advanceProduction()
                 if (snapshot() != displayedState) render()
             }
@@ -53,15 +52,10 @@ internal class HamletShardShopDialog(private val context: Context, private val g
     private fun tinted(value: String, r: HeroRarity) = HamletUi.tint(value, rarity(r) to HamletUi.rarity(r))
     fun show(hero: Int = -1) {
         selectedHero = hero.takeIf { g.adventure.heroes.getOrNull(it)?.owned == true } ?: -1
-        rows = column(); scroll = ScrollView(context).apply { addView(rows) }
-        val body = column().apply {
-            setPadding(dp(14), dp(8), dp(14), dp(8)); setBackgroundColor(HamletUi.PAPER)
-            addView(scroll, LinearLayout.LayoutParams(-1, minOf(dp(500), context.resources.displayMetrics.heightPixels * 68 / 100)))
-        }
-        dialog = AlertDialog.Builder(context).setTitle(s("title")).setView(body)
-            .setNegativeButton(android.R.string.cancel, null).create()
-        dialog.setOnDismissListener { timer.removeCallbacksAndMessages(null); onChanged() }
-        dialog.show(); render(); timer.post(pulse)
+        sheet = HamletSheet(context, s("title"), s("help") + raw("hamlet_shop_ui_paragraph") + raw("hamlet_shard_shop_price_help") +
+            raw("hamlet_shop_ui_paragraph") + raw("hamlet_shard_shop_unlock_help"), tall = true)
+        sheet.onDismiss = { timer.removeCallbacksAndMessages(null); onChanged() }
+        render(); sheet.show(); timer.post(pulse)
     }
     private fun requirements(r: HeroRarity): String {
         val req = shop.requirements(r)
@@ -76,35 +70,25 @@ internal class HamletShardShopDialog(private val context: Context, private val g
     private fun render() {
         val y = scroll.scrollY
         g.adventure.advanceProduction(); rows.removeAllViews()
-        val head = LinearLayout(context).apply { gravity = android.view.Gravity.CENTER_VERTICAL }
-        head.addView(TextView(context).apply {
-            text = s("wallet", g.adventure[AdventureResource.RUNES], g.adventure[AdventureResource.CRYSTAL]); textSize = HamletUi.TITLE
-            setTextColor(HamletUi.INK); setTypeface(null, android.graphics.Typeface.BOLD)
-        }, LinearLayout.LayoutParams(0, -2, 1f))
-        head.addView(HamletUi.info(context, s("title"), s("help") + raw("hamlet_shop_ui_paragraph") + raw("hamlet_shard_shop_price_help") +
-            raw("hamlet_shop_ui_paragraph") + raw("hamlet_shard_shop_unlock_help")), LinearLayout.LayoutParams(dp(44), -2))
-        rows.addView(head)
+        text(rows, s("wallet", g.adventure[AdventureResource.RUNES], g.adventure[AdventureResource.CRYSTAL]), true).apply {
+            setCompoundDrawablesRelativeWithIntrinsicBounds(HamletUi.icon(context, "gem", 22), null, null, null); compoundDrawablePadding = dp(7)
+        }
         if (g.sandbox) text(rows, s("creative"), small = true) else for (r in HeroRarity.entries) {
             if (!shop.unlocked(r)) { text(rows, tinted(requirements(r), r), small = true); break }
             else text(rows, tinted(s(if (r == HeroRarity.MYTHIC) "weekly_stock" else "daily_stock", rarity(r), shop.remaining(r)), r), small = true)
         }
         val owned = g.adventure.heroes.filter { it.owned }
         val choices = intArrayOf(-1) + owned.map { it.id }.toIntArray()
-        val picker = Spinner(context).apply {
-            adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, listOf(s("all")) + owned.map { name(it.id) })
-            setSelection(choices.indexOf(selectedHero).coerceAtLeast(0))
-        }
-        rows.addView(picker)
-        picker.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+        val labels: List<CharSequence> = listOf(s("all")) + owned.map { HamletUi.tint(name(it.id), name(it.id) to HamletUi.rarity(it.def.rarity)) }
+        rows.addView(HamletUi.picker(context, labels[choices.indexOf(selectedHero).coerceAtLeast(0)], "hat") {
+            HamletSheet.pick(context, s("title"), labels, choices.indexOf(selectedHero), listOf(null) + owned.map { "hat" }) { position ->
                 if (selectedHero != choices[position]) { selectedHero = choices[position]; scroll.scrollTo(0, 0); render() }
             }
-        }
+        }, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(4) })
         for (offer in shop.offers().filter { (selectedHero < 0 && it.unlocked) || it.hero == selectedHero }) {
             val h = g.adventure.heroes[offer.hero]
             val box = column().apply {
-                setPadding(dp(12), dp(8), dp(12), dp(10)); background = HamletUi.panel(context, 0xFFE9E0CC.toInt(), 12)
+                setPadding(dp(12), dp(8), dp(12), dp(10)); background = HamletUi.panel(context, 0xFFFFF8E9.toInt(), 12, HamletHeroFx.main(h.def.rarity))
             }
             rows.addView(box, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(9) })
             val identity = LinearLayout(context)
@@ -122,7 +106,7 @@ internal class HamletShardShopDialog(private val context: Context, private val g
             text(details, raw("hamlet_a_hero_growth", g.adventure.effectiveLevel(h.id), h.stars, h.shards))
             identity.addView(details, LinearLayout.LayoutParams(0, -2, 1f)); box.addView(identity)
             if (h.stars < HamletHeroes.STAR_CAP) {
-                box.addView(HamletUi.button(context, raw("hamlet_a_stars_cost", g.adventure.starCost(h.id))) {
+                box.addView(HamletUi.button(context, raw("hamlet_a_stars_cost", g.adventure.starCost(h.id)), glyph = "star") {
                     if (g.adventure.promote(h.id)) { onChanged(); render() }
                 }.apply { isEnabled = g.adventure.canPromote(h.id) })
             } else text(box, raw("hamlet_hero_stars_max", HamletHeroes.STAR_CAP), small = true, color = HamletUi.GOOD)
@@ -135,7 +119,7 @@ internal class HamletShardShopDialog(private val context: Context, private val g
                 if (cost.runes > 0) parts.add(s("cost_runes", cost.runes))
                 if (cost.crystal > 0) parts.add(s("cost_crystal", cost.crystal))
                 val label = if (g.sandbox) p("buy_free", quantity, quantity) else p("buy", quantity, quantity, parts.joinToString(raw("hamlet_list_separator")))
-                actions.addView(HamletUi.button(context, label) {
+                actions.addView(HamletUi.button(context, label, HamletUi.Weight.MAIN, glyph = "gem") {
                     if (shop.buy(h.id, quantity, expectedCost = cost)) onChanged()
                     render()
                 }.apply { isEnabled = shop.canBuy(h.id, quantity) }, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(4) })

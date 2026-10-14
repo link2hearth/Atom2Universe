@@ -1,6 +1,5 @@
 package com.Atom2Universe.app.games.hamlet
 
-import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
@@ -37,16 +36,14 @@ class HamletWorldFiles(private val host: HamletActivity) {
                         val label = host.stringByName("hamlet_realms_import_${it.code}")
                         if (it.detail.isEmpty()) label else host.getString(R.string.hamlet_realms_import_detail, label, it.detail)
                     }
-                    val dialog = AlertDialog.Builder(host).setTitle(R.string.hamlet_realms_import)
-                    if (!prepared.valid) dialog.setMessage(detail).setPositiveButton(android.R.string.ok, null).show()
-                    else dialog.setMessage(listOfNotNull(
+                    val title = host.getString(R.string.hamlet_realms_import)
+                    if (!prepared.valid) HamletSheet.message(host, title, detail)
+                    else HamletSheet.confirm(host, title, listOfNotNull(
                         host.getString(R.string.hamlet_realms_import_confirm),
                         host.getString(R.string.hamlet_import_target_mode, host.getString(if (host.game.sandbox) R.string.hamlet_creative_world else R.string.hamlet_progression_world)),
                         if (prepared.legacy) host.getString(R.string.hamlet_realms_import_legacy_confirm) else null,
                         detail.takeIf { it.isNotBlank() },
-                    ).joinToString("\n\n"))
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .setPositiveButton(R.string.hamlet_realms_import) { _, _ -> host.applyImportedWorld(prepared) }.show()
+                    ).joinToString("\n\n"), title, "sack") { host.applyImportedWorld(prepared) }
                 } finally { busy = false }
             }
         }

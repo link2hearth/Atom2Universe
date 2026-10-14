@@ -12,11 +12,6 @@
     <string name="hamlet_ui_number">%1$d</string>
     <string name="hamlet_ui_percent">%1$d%%</string>
     <string name="hamlet_ui_collect">Récolter</string>
-    <string name="hamlet_ui_build">Bâtir</string>
-    <string name="hamlet_ui_adventure">Aventure</string>
-    <string name="hamlet_ui_journal">Carnet</string>
-    <string name="hamlet_ui_manage">Village</string>
-    <string name="hamlet_ui_ready">Carnet · Prêt</string>
     <string name="hamlet_ui_resources">Réserves · fais défiler pour tout voir</string>
     <string name="hamlet_ui_resource_amount">%1$s : %2$d</string>
     <string name="hamlet_ui_gather_progress">Récolte %1$d / %2$d</string>

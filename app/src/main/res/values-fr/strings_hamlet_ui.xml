@@ -2,14 +2,12 @@
 <resources>
     <string name="hamlet_title">Mon hameau</string>
     <string name="hamlet_description">Bâtis ton village, recrute tes héros et explore de nouvelles terres</string>
-    <string name="hamlet_home">Centrer</string>
     <string name="hamlet_stats">Niveau %1$d · %2$d pièces · %3$d gemmes · %4$d habitants</string>
     <string name="hamlet_build">Construire</string>
     <string name="hamlet_gift">Cadeau du jour</string>
     <string name="hamlet_quest">Quête</string>
     <string name="hamlet_land">Agrandir le terrain</string>
     <string name="hamlet_hall">Améliorer la halle</string>
-    <string name="hamlet_hint">Touche une récompense dorée pour la ramasser · Construis pour agrandir le village</string>
     <string name="hamlet_selected">%1$s · %2$s</string>
     <string name="hamlet_placing">Déplace le bâtiment fantôme, puis valide son emplacement</string>
     <string name="hamlet_brushing">Glisse sur le village pour peindre le sol</string>
@@ -26,21 +24,9 @@
     <string name="hamlet_sell">Vendre</string>
     <string name="hamlet_sell_confirm">Vendre %1$s pour %2$d pièces ?</string>
     <string name="hamlet_catalog_item">%1$s · %2$s · Niveau %3$d</string>
-    <string name="hamlet_price_coins">%1$d pièces</string>
-    <string name="hamlet_price_gems">%1$d gemmes</string>
     <string name="hamlet_crop_item">%1$s · %2$d pièces · %3$s</string>
-    <string name="hamlet_gift_wait">Ton prochain cadeau sera prêt dans %1$s</string>
-    <string name="hamlet_quests_done">Toutes les quêtes sont terminées</string>
-    <string name="hamlet_quest_detail">%1$s
-
-%2$s
-
-Progression : %3$d/%4$d
-Récompense : %5$d pièces · %6$d gemmes</string>
     <string name="hamlet_claim">Récupérer</string>
-    <string name="hamlet_land_max">Ton village a atteint sa taille maximale.</string>
     <string name="hamlet_land_confirm">Agrandir le village pour %1$d pièces ?</string>
-    <string name="hamlet_hall_max">La halle ne peut plus être améliorée.</string>
     <string name="hamlet_hall_confirm">Améliorer la halle au niveau %1$d pour %2$d pièces ? Le village passera à %3$d cases.</string>
     <string name="hamlet_duration_hours">%1$dh %2$02dmin</string>
     <string name="hamlet_duration_minutes">%1$d min</string>
@@ -64,4 +50,30 @@ Récompense : %5$d pièces · %6$d gemmes</string>
     <string name="hamlet_ui_info_mark">?</string>
     <string name="hamlet_ui_dot">\u0020·\u0020</string>
     <string name="hamlet_ui_arrow">\u0020→\u0020</string>
+    <string name="hamlet_module_village">Village</string>
+    <string name="hamlet_module_adventure">Aventure</string>
+    <string name="hamlet_module_heroes">Héros</string>
+    <string name="hamlet_module_journal">Journal</string>
+    <string name="hamlet_module_neighbors">Voisins</string>
+    <string name="hamlet_ui_waiting">%1$s · à récupérer</string>
+    <string name="hamlet_ui_many">%1$d+</string>
+    <string name="hamlet_ui_menu">Menu</string>
+    <string name="hamlet_ui_close">Fermer</string>
+    <string name="hamlet_ui_picker">\u0020▾</string>
+    <string name="hamlet_ui_goal_line">%1$s · %2$d / %3$d</string>
+    <string name="hamlet_ui_claimed">Récupéré</string>
+    <string name="hamlet_ui_progress">%1$d / %2$d</string>
+    <string name="hamlet_ui_reward_pair">%1$d pièces · %2$d gemmes</string>
+    <string name="hamlet_ui_reward_line">Récompense : %1$s</string>
+    <string name="hamlet_ui_reward_chapter">%1$d pièces · %2$d provisions · 2 gemmes</string>
+    <string name="hamlet_ui_supplies">%1$d provisions</string>
+    <string name="hamlet_ui_work_bank">Travail en réserve : %1$s</string>
+    <string name="hamlet_ui_help_targets">À aider</string>
+    <string name="hamlet_ui_chapter_short">Chap. %1$d</string>
+    <string name="hamlet_ui_level_short">Niv. %1$d</string>
+    <string name="hamlet_daily_tasks">Tâches du jour</string>
+    <plurals name="hamlet_ui_tickets">
+        <item quantity="one">%1$d invitation</item>
+        <item quantity="other">%1$d invitations</item>
+    </plurals>
 </resources>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hamlet_a_title">Aventure</string>
-    <string name="hamlet_a_village">Village</string>
     <string name="hamlet_a_explore">Explorer</string>
     <string name="hamlet_a_heroes">Héros</string>
     <string name="hamlet_a_teams">Équipe</string>

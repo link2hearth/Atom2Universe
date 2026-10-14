@@ -7,12 +7,10 @@
     <string name="hamlet_realms_current">You are here</string>
     <string name="hamlet_realms_travel">Travel here</string>
     <string name="hamlet_realms_rename">Rename realm</string>
-    <string name="hamlet_realms_close">Back to village</string>
     <string name="hamlet_realms_save">Save name</string>
     <string name="hamlet_realms_found_title">Found Realm %1$d</string>
     <string name="hamlet_realms_found_explain">Start a fresh village with its own hall, cottage and fields. Your previous realms stay exactly where you left them.</string>
     <string name="hamlet_realms_requirement">Level %1$d · %2$s coins</string>
-    <string name="hamlet_realms_creative_free">Free in creative mode · Keep founding new realms as you wish.</string>
     <string name="hamlet_realms_found">Found this realm</string>
     <string name="hamlet_realms_template">Starting terrain</string>
     <string name="hamlet_realms_template_starter">Starter village · hall, cottage and fields</string>

@@ -5,18 +5,14 @@
     <string name="hamlet_neighbors_milestone_1">Place orders</string>
     <string name="hamlet_neighbors_milestone_2">Collect parcels</string>
     <string name="hamlet_neighbors_milestone_complete">%1$s · completed</string>
-    <string name="hamlet_neighbors_milestone_progress">%1$s · %2$d/%3$d · claim</string>
     <string name="hamlet_neighbors_title">Neighbours</string>
-    <string name="hamlet_neighbors_home">My village</string>
     <string name="hamlet_neighbors_villages">Visit villages</string>
-    <string name="hamlet_neighbors_book">Order book</string>
     <string name="hamlet_neighbors_book_count">Orders · %1$d ready</string>
     <string name="hamlet_neighbors_intro">Twelve villages to explore at your own pace. Visit their workshops, order free parcels and help with the preparations. Your village keeps its layout and progress.</string>
     <string name="hamlet_neighbors_level">Level %1$d · %2$d active orders</string>
     <string name="hamlet_neighbors_separator"> · </string>
     <string name="hamlet_neighbors_visit">Visit this village</string>
     <string name="hamlet_neighbors_visit_hint">Explore with one finger; pinch to zoom. Tap a workshop or choose one below. This is a neighbour’s village: construction and harvesting are disabled.</string>
-    <string name="hamlet_neighbors_welcome">Welcome to %1$s!</string>
     <string name="hamlet_neighbors_reward">%1$s · %2$d coins · %3$d XP · %4$d s of work</string>
     <string name="hamlet_neighbors_free_duration">Free order · ready in %1$s. No daily limit.</string>
     <string name="hamlet_neighbors_place">Place a free order</string>
@@ -29,7 +25,6 @@
     <string name="hamlet_neighbors_tool_1">Pack</string>
     <string name="hamlet_neighbors_tool_2">Load</string>
     <string name="hamlet_neighbors_help_free">Six correct gestures save 30 seconds. Help as often as you want, entirely free.</string>
-    <string name="hamlet_neighbors_help_wrong">Use the task shown above; no progress was lost.</string>
     <string name="hamlet_neighbors_book_empty">No orders yet. Visit a village and tap one of its workshops. Your parcels remain available until you collect them.</string>
     <string name="hamlet_neighbors_order_title">%1$s · %2$s</string>
     <string name="hamlet_neighbors_visit_order">Visit and help</string>

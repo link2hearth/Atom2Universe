@@ -7,12 +7,10 @@
     <string name="hamlet_realms_current">Tu es ici</string>
     <string name="hamlet_realms_travel">Voyager ici</string>
     <string name="hamlet_realms_rename">Renommer le royaume</string>
-    <string name="hamlet_realms_close">Retour au village</string>
     <string name="hamlet_realms_save">Enregistrer le nom</string>
     <string name="hamlet_realms_found_title">Fonder le Royaume %1$d</string>
     <string name="hamlet_realms_found_explain">Commence un nouveau village avec sa halle, sa chaumière et ses champs. Tes royaumes précédents restent tels que tu les as laissés.</string>
     <string name="hamlet_realms_requirement">Niveau %1$d · %2$s pièces</string>
-    <string name="hamlet_realms_creative_free">Gratuit en mode créatif · Fonde autant de royaumes que tu le souhaites.</string>
     <string name="hamlet_realms_found">Fonder ce royaume</string>
     <string name="hamlet_realms_template">Terrain de départ</string>
     <string name="hamlet_realms_template_starter">Village classique · halle, chaumière et champs</string>

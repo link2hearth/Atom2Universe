@@ -13,7 +13,6 @@
     <string name="hamlet_status_producing">Producing</string>
     <string name="hamlet_status_product">Products ready</string>
     <string name="hamlet_round">Collect all</string>
-    <string name="hamlet_round_result">Collected from %1$d places.</string>
     <string name="hamlet_village">Village</string>
     <string name="hamlet_feed">Feed animals</string>
     <string name="hamlet_feed_confirm">Feed this pen for %1$d coins? A new production cycle will begin.</string>
@@ -27,7 +26,6 @@
     <string name="hamlet_upgrade_confirm">Upgrade to tier %1$d for %2$d coins? Revenue increases by 25 percentage points, up to +50%%.</string>
     <string name="hamlet_plant_all">Plant in every empty compatible field</string>
     <string name="hamlet_crop_choice">%1$s · Cost %2$d · Sale %3$d coins · %4$s</string>
-    <string name="hamlet_planted_count">Planted %1$d fields.</string>
     <string name="hamlet_footprint">Size: %1$d × %2$d tiles\nUnlock: level %3$d · Residents: %4$d\n</string>
     <string name="hamlet_producer_info">Revenue: %1$d coins every %2$s\nFeed per cycle: %3$d coins\n</string>
     <string name="hamlet_ranch_help">\nFeed, wait, then sell the products. Your animals rest safely between meals.</string>
@@ -45,17 +43,13 @@
     <string name="hamlet_daily_harvest">Ripe crops</string>
     <string name="hamlet_daily_products">Farm products</string>
     <string name="hamlet_daily_orders">Workshop deliveries</string>
-    <string name="hamlet_daily_row">%1$s · %2$d/%3$d\nClaim %4$d coins + 25 XP</string>
-    <string name="hamlet_daily_claimed"> · Claimed</string>
     <string name="hamlet_settings">Preferences</string>
     <string name="hamlet_help">How to play</string>
     <string name="hamlet_help_text">Build your village one tile at a time. Drag to explore and pinch to zoom. Build opens the catalogue: move the preview, rotate and confirm. Paint paths, fences and flowers by dragging. With a tool selected, use two fingers to move the camera.\n\nMy goal guides you to the next action. Plant, harvest, collect taxes, feed animals and deliver orders. Tap a golden reward to collect it in one gesture. Collect all unlocks after chapter 10. Decorations add charm and services improve happiness.\n\nWaiting? Journal → Work offers free activities: twelve correct actions earn five minutes of work to spend on construction, crops or orders. Farming earns work too. Adventure opens battles, heroes, teams and research; everything is earned through play, with no purchases. Battles remain available freely; invitation rewards follow their own pace.\n\nVillage → Neighbors lets you explore twelve villages, place free orders and help prepare parcels. My realms lets you travel, rename villages and found new lands. Creative mode provides free construction in a separate world.\n\nTools let you copy, rearrange, fill and undo. A construction already used or involved in a claimed reward cannot be undone; move or sell it instead. Village also contains the chronicle, photo mode and import/export.\n\nYour world saves automatically. Exit, at the top right, saves and returns to the app. Your village keeps growing while you are away.</string>
     <string name="hamlet_haptics">Touch vibrations</string>
     <string name="hamlet_night">Day and night from local time</string>
     <string name="hamlet_effects">Particles and decorative animations</string>
-    <string name="hamlet_action_failed">Action unavailable. Check your coins, gems and the object’s current state.</string>
     <string name="hamlet_save_failed">Could not save the village. The previous save is preserved.</string>
-    <string name="hamlet_unlock_level">Unlocks at level %1$d.</string>
     <string name="hamlet_category_field">Fields</string>
     <string name="hamlet_category_home">Homes</string>
     <string name="hamlet_category_shop">Workshops</string>

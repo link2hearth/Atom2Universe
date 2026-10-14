@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hamlet_s_title">Village journal</string>
     <string name="hamlet_s_today">Today</string>
     <string name="hamlet_s_posts">Village duties</string>
     <string name="hamlet_s_return">A moment in the village</string>
@@ -15,11 +14,9 @@
     <string name="hamlet_s_task_village_help">Harvest crops, collect produce or taxes, or deliver workshop orders.</string>
     <string name="hamlet_s_task_adventure_help">Win battles, gather on the campaign map, complete quick raids, or bring expeditions home.</string>
     <string name="hamlet_s_task_growth_help">Recruit or improve heroes, upgrade village buildings, or study village research.</string>
-    <string name="hamlet_s_task_progress">%1$d / %2$d · Reward: %3$d recruitment invitations</string>
     <string name="hamlet_s_go">Go there</string>
     <string name="hamlet_s_chest">Village celebration</string>
     <string name="hamlet_s_chest_help">Claim all three tasks: 2 invitations, 8 crystals, 3 minutes of construction work and 200 coins.</string>
-    <string name="hamlet_s_chapters">Chapters, expeditions and village research</string>
     <string name="hamlet_s_posts_help" formatted="false">Give your heroes a village duty. They remain available for combat. One hero per duty; change duties freely. Matching roles grant an extra 5%. Levels and stars improve the bonus up to 25%.</string>
     <string name="hamlet_s_post_0">Gardens and farms</string>
     <string name="hamlet_s_post_1">Crafts and supplies</string>
