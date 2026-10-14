@@ -1,0 +1,13 @@
+{
+  "id": "pinus_palustris",
+  "sections": [
+    {"title": "Form and habitat", "text": "Pinus palustris, the longleaf pine, is a conifer native to the southeastern United States. Mature trees commonly reach 30–37 m."},
+    {"title": "Needles and cones", "text": "Its exceptionally long needles, about 20–46 cm, grow in bundles of three. The heavy cones are about 15–20 cm long."},
+    {"title": "Uses", "text": "The species is important in forestry and its needles are used as mulch. The references consulted do not establish a reliable human food use for its seeds."}
+  ],
+  "sources": [
+    {"title": "US Forest Service — Pinus palustris", "url": "https://research.fs.usda.gov/feis/species-reviews/pinpal"},
+    {"title": "Flora of North America — Pinus palustris", "url": "https://floranorthamerica.org/Pinus_palustris"}
+  ],
+  "related": ["pinus_edulis", "pinus_pinea", "pinus_strobus"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "pinus_strobus",
+  "sections": [
+    {"title": "Port et habitat", "text": "Pinus strobus, le pin blanc d’Amérique, est un grand arbre indigène de l’est de l’Amérique du Nord. Il peut atteindre environ 46 m."},
+    {"title": "Aiguilles et cônes", "text": "Ses aiguilles souples bleu-vert, longues de 6 à 13 cm, sont réunies par cinq. Ses cônes pendants mesurent environ 10 à 20 cm et contiennent des graines ailées."},
+    {"title": "Usages", "text": "Son bois a été largement utilisé. Les sources consultées décrivent des graines ailées sans établir leur consommation humaine ; aucun usage alimentaire n’est donc mentionné ici."}
+  ],
+  "sources": [
+    {"title": "US Forest Service — Pinus strobus", "url": "https://research.fs.usda.gov/feis/species-reviews/pinstr"},
+    {"title": "USDA NRCS — fiche du pin blanc d’Amérique", "url": "https://plants.sc.egov.usda.gov/DocumentLibrary/factsheet/pdf/fs_pist.pdf"}
+  ],
+  "related": ["pinus_edulis", "pinus_palustris", "pinus_pinea"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "pinus_edulis",
+  "sections": [
+    {"title": "Port et habitat", "text": "Pinus edulis, le pin pignon à deux aiguilles, est un arbre à croissance lente des boisements secs du sud-ouest des États-Unis et du nord du Mexique. Il atteint couramment 8 à 17 m et forme une couronne arrondie et étalée."},
+    {"title": "Aiguilles et cônes", "text": "Ses aiguilles courtes, longues de 1,5 à 5 cm, sont réunies par deux. Les cônes mesurent environ 3,5 à 5 cm et contiennent généralement 10 à 20 graines sans aile, à coque tendre."},
+    {"title": "Alimentation", "text": "Les graines sont des pignons comestibles, récoltés depuis longtemps pour l’alimentation. Elles se distinguent des graines plus grosses du pin parasol, P. pinea."}
+  ],
+  "sources": [
+    {"title": "US Forest Service — Pinus edulis", "url": "https://research.fs.usda.gov/feis/species-reviews/pinedu"},
+    {"title": "Flora of North America — Pinus edulis", "url": "https://floranorthamerica.org/Pinus_edulis"}
+  ],
+  "related": ["pinus_palustris", "pinus_pinea", "pinus_strobus"]
+}

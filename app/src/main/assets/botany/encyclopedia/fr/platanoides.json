@@ -1,0 +1,12 @@
+{
+  "id": "platanoides",
+  "sections": [
+    {"title": "Arbre et feuilles", "text": "Cette fiche du catalogue représente Acer platanoides, l’érable plane. C’est un arbre caduc qui peut atteindre 20 à 30 m. Ses feuilles opposées ont cinq lobes pointus et mesurent couramment 8 à 18 cm."},
+    {"title": "Fleurs et fruits", "text": "Ses fleurs jaune verdâtre apparaissent en bouquets dressés avant les feuilles. Les samares jumelles s’écartent presque à l’horizontale et mesurent environ 3 à 5,5 cm."}
+  ],
+  "sources": [
+    {"title": "Burke Herbarium — Acer platanoides (description de Flora of North America)", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Acer+platanoides"},
+    {"title": "USDA Forest Service — Norway maple", "url": "https://www.fs.usda.gov/Internet/FSE_DOCUMENTS/fsm91_054482.pdf"}
+  ],
+  "related": []
+}

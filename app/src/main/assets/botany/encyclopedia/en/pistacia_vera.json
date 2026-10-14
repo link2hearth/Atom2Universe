@@ -1,0 +1,13 @@
+{
+  "id": "pistacia_vera",
+  "sections": [
+    {"title": "Form", "text": "Pistacia vera, the pistachio tree, is a deciduous tree that can grow to about 10 m. Its leaves are pinnate and its flowers are small and borne in clusters."},
+    {"title": "Fruit and food", "text": "Each fruit is a drupe containing one oval seed. The edible kernel is the pistachio sold as a food; the fruit is harvested as it ripens."}
+  ],
+  "sources": [
+    {"title": "Virginia Cooperative Extension — Pistachio", "url": "https://www.pubs.ext.vt.edu/content/pubs_ext_vt_edu/en/HNFE/hnfe-1124.html"},
+    {"title": "UC Davis Postharvest Research — Pistachio", "url": "https://postharvest.ucdavis.edu/produce-facts-sheets/pistachio"},
+    {"title": "Plants of the World Online — Pistacia vera", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:70280-1/general-information"}
+  ],
+  "related": []
+}

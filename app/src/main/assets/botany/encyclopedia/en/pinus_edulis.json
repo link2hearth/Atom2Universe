@@ -1,0 +1,13 @@
+{
+  "id": "pinus_edulis",
+  "sections": [
+    {"title": "Form and habitat", "text": "Pinus edulis, the two-needle pinyon, is a slow-growing tree of dry woodlands in the southwestern United States and northern Mexico. It commonly reaches 8–17 m and develops a rounded, spreading crown."},
+    {"title": "Needles and cones", "text": "Its short needles, 1.5–5 cm long, grow in pairs. Cones are about 3.5–5 cm long and usually contain 10–20 soft-shelled, wingless seeds."},
+    {"title": "Food", "text": "The seeds are edible pine nuts and have long been gathered as food. They are distinct from the larger seeds of stone pine, P. pinea."}
+  ],
+  "sources": [
+    {"title": "US Forest Service — Pinus edulis", "url": "https://research.fs.usda.gov/feis/species-reviews/pinedu"},
+    {"title": "Flora of North America — Pinus edulis", "url": "https://floranorthamerica.org/Pinus_edulis"}
+  ],
+  "related": ["pinus_palustris", "pinus_pinea", "pinus_strobus"]
+}

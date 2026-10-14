@@ -1,0 +1,14 @@
+{
+  "id": "plantago_maritima",
+  "sections": [
+    {"title": "Form and coastal habitat", "text": "Plantago maritima, sea plantain, is a low perennial of salt marshes and coastal bluffs. Its fleshy, narrow leaves, mostly 5–25 cm long, form a basal rosette; flowering stalks are about 5–25 cm tall."},
+    {"title": "Flowers and food", "text": "Dense flower spikes are about 2–10 cm long. NatureScot reports that the leaves are eaten raw or cooked and the seeds can also be eaten or ground into flour."},
+    {"title": "Identification", "text": "Its narrow, fleshy leaves suit coastal habitats and distinguish it from the broader-leaved P. major. Correct identification matters: sea arrowgrass, Triglochin maritima, is a similar-looking plant that should not be confused with it."}
+  ],
+  "sources": [
+    {"title": "Burke Herbarium — Plantago maritima", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Plantago+maritima"},
+    {"title": "NatureScot — Foraging for Wild Plants", "url": "https://www.nature.scot/doc/foraging-wild-plants"},
+    {"title": "University of Maine Extension — Sea arrowgrass", "url": "https://extension.umaine.edu/publications/4060e/"}
+  ],
+  "related": ["plantago_lanceolata", "plantago_major", "plantago_media"]
+}

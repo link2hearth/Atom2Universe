@@ -1,0 +1,14 @@
+{
+  "id": "plantago_lanceolata",
+  "sections": [
+    {"title": "Form and leaves", "text": "Plantago lanceolata, ribwort plantain, is a perennial rosette herb. Its narrow, strongly veined leaves are usually 2–45 cm long; the erect flower stalks range from about 10 to 80 cm and may reach 120 cm."},
+    {"title": "Flowers and seeds", "text": "Dense cylindrical flower spikes are about 0.5–5 cm long, occasionally longer. Each capsule usually contains two seeds."},
+    {"title": "Food", "text": "Young leaves are used as a leafy vegetable. NatureScot describes them as usable in the same way as greater plantain, P. major."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Plantago lanceolata", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:321285-2/general-information"},
+    {"title": "NatureScot — Foraging for Wild Plants", "url": "https://www.nature.scot/doc/foraging-wild-plants"},
+    {"title": "NC State Extension — English plantain", "url": "https://plants.ces.ncsu.edu/plants/plantago-lanceolata/common-name/english-plantain/"}
+  ],
+  "related": ["plantago_major", "plantago_maritima", "plantago_media"]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "pinus_pinea",
+  "sections": [
+    {"title": "Form and habitat", "text": "Pinus pinea, the stone pine, is a Mediterranean tree with a broad, umbrella-shaped crown. It can reach about 25 m."},
+    {"title": "Needles and cones", "text": "The paired needles are about 10–15 cm long. Rounded cones are 8–15 cm long and up to 10 cm wide; they take about three years to mature."},
+    {"title": "Food", "text": "The large edible seeds are sold as pine nuts. They are substantially larger than the seeds of the two-needle pinyon, P. edulis."}
+  ],
+  "sources": [
+    {"title": "Royal Botanic Gardens, Kew — Stone pine", "url": "https://www.kew.org/plants/stone-pine"},
+    {"title": "Oregon State University — Pinus pinea", "url": "https://landscapeplants.oregonstate.edu/plants/pinus-pinea"},
+    {"title": "Plants of the World Online — Pinus pinea", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:263221-1/general-information"}
+  ],
+  "related": ["pinus_edulis", "pinus_palustris", "pinus_strobus"]
+}

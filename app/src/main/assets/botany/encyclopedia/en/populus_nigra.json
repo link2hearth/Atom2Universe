@@ -1,0 +1,13 @@
+{
+  "id": "populus_nigra",
+  "sections": [
+    {"title": "Tree and leaves", "text": "Populus nigra, black poplar, is a large deciduous tree that may reach about 30 m. Its alternate, broadly diamond-shaped to triangular leaves are usually 5–11 cm long and finely toothed."},
+    {"title": "Flowers and seeds", "text": "Male and female flowers grow on separate trees. The reddish male catkins are about 3–5 cm long; the female catkins are longer, about 10–15 cm. Capsules release seeds carried in cottony hairs."},
+    {"title": "Comparison", "text": "It differs from the European aspen, P. tremula, in its more angular leaves and longer female catkins."}
+  ],
+  "sources": [
+    {"title": "Oregon State University — Populus nigra", "url": "https://landscapeplants.oregonstate.edu/plants/populus-nigra"},
+    {"title": "FloraWeb — Populus nigra", "url": "https://www.floraweb.de/php/artenhome.php?suchnr=26016"}
+  ],
+  "related": ["populus"]
+}

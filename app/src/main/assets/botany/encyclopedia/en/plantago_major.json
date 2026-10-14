@@ -1,0 +1,14 @@
+{
+  "id": "plantago_major",
+  "sections": [
+    {"title": "Form and leaves", "text": "Plantago major, greater plantain, is a perennial rosette herb with broad oval to heart-shaped leaves and several prominent parallel veins. The broad blades contrast with the narrow leaves of ribwort plantain, P. lanceolata."},
+    {"title": "Flowers and fruits", "text": "Small flowers are crowded on long, slender spikes. The dry capsules contain seeds; the number varies among plants."},
+    {"title": "Food", "text": "The youngest leaves can be eaten raw in salads. Older leaves are tougher and are better cooked with the main veins removed."}
+  ],
+  "sources": [
+    {"title": "NC State Extension — Greater plantain", "url": "https://plants.ces.ncsu.edu/plants/plantago-major/common-name/great-plantain/"},
+    {"title": "NatureScot — Foraging for Wild Plants", "url": "https://www.nature.scot/doc/foraging-wild-plants"},
+    {"title": "Iowa State University Extension — Blackseed and broadleaf plantain", "url": "https://crops.extension.iastate.edu/encyclopedia/blackseed-and-broadleaf-plantain"}
+  ],
+  "related": ["plantago_lanceolata", "plantago_maritima", "plantago_media"]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "pinus_pinea",
+  "sections": [
+    {"title": "Port et habitat", "text": "Pinus pinea, le pin parasol, est un arbre méditerranéen à large couronne en forme de parasol. Il peut atteindre environ 25 m."},
+    {"title": "Aiguilles et cônes", "text": "Ses aiguilles réunies par deux mesurent environ 10 à 15 cm. Les cônes arrondis mesurent 8 à 15 cm de long et jusqu’à 10 cm de large ; ils mûrissent en quelque trois ans."},
+    {"title": "Alimentation", "text": "Ses grosses graines comestibles sont commercialisées comme pignons. Elles sont nettement plus grosses que celles du pin pignon à deux aiguilles, P. edulis."}
+  ],
+  "sources": [
+    {"title": "Royal Botanic Gardens, Kew — Stone pine", "url": "https://www.kew.org/plants/stone-pine"},
+    {"title": "Oregon State University — Pinus pinea", "url": "https://landscapeplants.oregonstate.edu/plants/pinus-pinea"},
+    {"title": "Plants of the World Online — Pinus pinea", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:263221-1/general-information"}
+  ],
+  "related": ["pinus_edulis", "pinus_palustris", "pinus_strobus"]
+}

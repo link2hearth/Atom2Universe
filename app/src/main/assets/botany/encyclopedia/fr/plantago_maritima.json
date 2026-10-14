@@ -1,0 +1,14 @@
+{
+  "id": "plantago_maritima",
+  "sections": [
+    {"title": "Port et habitat littoral", "text": "Plantago maritima, le plantain maritime, est une plante vivace basse des marais salés et falaises côtières. Ses feuilles étroites et charnues, longues le plus souvent de 5 à 25 cm, forment une rosette basale ; les hampes florales mesurent environ 5 à 25 cm."},
+    {"title": "Fleurs et alimentation", "text": "Ses épis denses mesurent environ 2 à 10 cm. NatureScot indique que les feuilles sont consommées crues ou cuites et que les graines peuvent aussi être mangées ou moulues en farine."},
+    {"title": "Identification", "text": "Ses feuilles étroites et charnues sont adaptées aux milieux côtiers et le distinguent du P. major à feuilles plus larges. L’identification est importante : la triglochine maritime, Triglochin maritima, lui ressemble et ne doit pas être confondue avec lui."}
+  ],
+  "sources": [
+    {"title": "Burke Herbarium — Plantago maritima", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Plantago+maritima"},
+    {"title": "NatureScot — Foraging for Wild Plants", "url": "https://www.nature.scot/doc/foraging-wild-plants"},
+    {"title": "University of Maine Extension — Sea arrowgrass", "url": "https://extension.umaine.edu/publications/4060e/"}
+  ],
+  "related": ["plantago_lanceolata", "plantago_major", "plantago_media"]
+}
