@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hamlet_shop_ui_title">Boutique de fragments des voyageurs</string>
-    <string name="hamlet_shop_ui_entry">Boutique de fragments personnels</string>
+    <string name="hamlet_shop_ui_entry">Boutique de fragments</string>
     <string name="hamlet_shop_ui_help">Choisis un héros déjà recruté. Achète ses fragments personnels avec les runes et cristaux gagnés en aventure. Le stock de chaque rareté est partagé entre tous les héros ; renouvellement quotidien à minuit UTC, mythique le lundi UTC. Les prix suivent la progression de la campagne.</string>
     <string name="hamlet_shop_ui_wallet">Disponible : %1$d runes · %2$d cristaux</string>
     <string name="hamlet_shop_ui_chapter">Chapitre %1$d du village</string>
@@ -13,17 +13,11 @@
     <string name="hamlet_shop_ui_daily_stock">%1$s : %2$d fragments restants aujourd’hui</string>
     <string name="hamlet_shop_ui_weekly_stock">%1$s : %2$d fragments restants cette semaine</string>
     <string name="hamlet_shop_ui_all">Tous les héros recrutés</string>
-    <string name="hamlet_shop_ui_personal">Ces fragments appartiennent uniquement à %1$s.</string>
     <string name="hamlet_shop_ui_sold_out">Stock partagé épuisé. Reviens après son prochain renouvellement.</string>
     <plurals name="hamlet_shop_ui_buy">
         <item quantity="one">Acheter %1$d fragment · %2$s</item>
         <item quantity="other">Acheter %1$d fragments · %2$s</item>
     </plurals>
-    <plurals name="hamlet_shop_ui_bought">
-        <item quantity="one">+%1$d fragment de %2$s</item>
-        <item quantity="other">+%1$d fragments de %2$s</item>
-    </plurals>
-    <string name="hamlet_shop_ui_changed">L’offre n’est plus disponible. Vérifie le stock et le prix actualisés.</string>
     <string name="hamlet_shop_ui_creative">Mode créatif : fragments gratuits et stock illimité.</string>
     <string name="hamlet_shop_ui_cost_runes">%1$d runes</string>
     <string name="hamlet_shop_ui_cost_crystal">%1$d cristaux</string>
@@ -31,6 +25,5 @@
         <item quantity="one">Recevoir %1$d fragment</item>
         <item quantity="other">Recevoir %1$d fragments</item>
     </plurals>
-    <string name="hamlet_shop_ui_rules">Prix et paliers de la boutique</string>
     <string name="hamlet_shop_ui_paragraph">\n\n</string>
 </resources>

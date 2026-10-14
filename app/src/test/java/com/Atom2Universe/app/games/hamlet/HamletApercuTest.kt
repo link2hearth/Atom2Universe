@@ -600,4 +600,42 @@ class HamletApercuTest {
         for ((nom, r) in listOf("combat_tours" to 3, "combat_marais" to 4))
             ecrire(nom, combat(r, 1080, 520, .4f, intArrayOf(32, 8, 30, 13), intArrayOf(6, 0, 2, 4)))
     }
+
+    /** Le combat image par image (tous les dixièmes de seconde) : compétences, impacts, soins,
+     * puis un ultime lancé à la main avec son bandeau. Textes en français, police du téléphone. */
+    @Test fun effetsDeCombat() {
+        org.robolectric.RuntimeEnvironment.setFontScale(1.1f)
+        val activity = Robolectric.buildActivity(android.app.Activity::class.java).setup().get()
+        val strings = HashMap<String, String>()
+        File("src/main/res/values-fr").listFiles { f -> f.name.startsWith("strings_hamlet") }!!.forEach { file ->
+            val nodes = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file).getElementsByTagName("string")
+            for (i in 0 until nodes.length) strings[nodes.item(i).attributes.getNamedItem("name").nodeValue] =
+                nodes.item(i).textContent.replace("\\'", "'").replace("\\u0020", " ")
+        }
+        val label = { key: String, args: Array<out Any> -> String.format(java.util.Locale.FRANCE, strings.getValue("hamlet_a_$key"), *args) }
+        for (region in listOf(1, 3)) {
+            val game = HamletGame().apply { startNew(true) }
+            val a = game.adventure
+            a.frontier = 100
+            for ((slot, hero) in intArrayOf(32, 8, 30, 13, 3, 20).withIndex()) a.assign(hero, slot)
+            a.pets[2] = 2; a.teamPets[a.selectedTeam] = 2
+            val battle = a.beginBattle(BattleMode.CAMPAIGN, region * 20 + 3)!!
+            val view = HamletBattleView(activity, battle, label, false) {}
+            val w = 1233; val h = 1300
+            view.measure(android.view.View.MeasureSpec.makeMeasureSpec(w, android.view.View.MeasureSpec.EXACTLY), android.view.View.MeasureSpec.makeMeasureSpec(h, android.view.View.MeasureSpec.EXACTLY))
+            view.layout(0, 0, w, h)
+            fun frame() = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also { view.draw(Canvas(it)) }
+            val cols = 4; val rows = 6; val sw = w / 3; val sh = h / 3
+            val sheet = Bitmap.createBitmap(cols * sw, rows * sh, Bitmap.Config.ARGB_8888)
+            val sc = Canvas(sheet)
+            battle.advance(3f)
+            for (k in 0 until cols * rows) {
+                battle.advance(.1f)
+                sc.drawBitmap(Bitmap.createScaledBitmap(frame(), sw, sh, true), (k % cols) * sw.toFloat(), (k / cols) * sh.toFloat(), null)
+            }
+            ecrire("combat_effets_$region", sheet)
+            battle.units.firstOrNull { !it.enemy && !it.summoned && it.alive }?.let { it.ultimateLeft = 0f; battle.ultimate(it.index) }
+            battle.advance(.25f); ecrire("combat_ultime_$region", frame())
+        }
+    }
 }

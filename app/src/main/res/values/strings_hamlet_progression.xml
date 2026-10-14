@@ -4,9 +4,6 @@
     <string name="hamlet_armory_tab_1">Equip</string>
     <string name="hamlet_armory_tab_2">Inventory</string>
     <string name="hamlet_armory_slot_empty">No crafted piece equipped</string>
-    <string name="hamlet_armory_no_matching_piece">Craft a piece for this slot first.</string>
-    <string name="hamlet_progression_training">Academy training level: %1$d. Once an academy is built, newly recruited heroes match the lowest level of your strongest trained heroes (as many as your available team slots). Their own training and equipment remain yours.</string>
-    <string name="hamlet_progression_training_hero">Personal level %1$d · Academy level %2$d. The next level upgrade starts from the academy level and uses its normal food cost.</string>
     <string name="hamlet_progression_worn">%1$s: %2$s</string>
     <string name="hamlet_progression_legacy_gear">Permanent training and equipment mastery</string>
     <string name="hamlet_progression_upgrade_building">Upgrade to rank %1$d · %2$d coins</string>

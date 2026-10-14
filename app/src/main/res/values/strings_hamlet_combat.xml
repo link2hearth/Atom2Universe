@@ -31,4 +31,5 @@
     <string name="hamlet_combat_field_ember_desc" formatted="false">After 20 seconds, attacks on both sides gain 1% damage per second, up to +15%. Burst damage and timely shields shorten dangerous fights.</string>
     <string name="hamlet_combat_field_marsh_desc" formatted="false">Every 10 seconds, all combatants take venom for 4 seconds: 0.6% of their maximum health per second, bypassing shields. Purify clears this venom. Healing and defensive tactics help.</string>
     <string name="hamlet_combat_field_frost_desc" formatted="false">Ordinary attacks recharge 12% slower for both sides. Skills and ultimates recharge normally. Casters and the Control tactic keep their rhythm.</string>
+    <string name="hamlet_combat_tactic_title">Tactic</string>
 </resources>

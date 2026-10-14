@@ -20,7 +20,9 @@ data class BattleHeroReport(val index: Int, val sprite: Int, val damage: Double,
     val protection: Double, val kills: Int)
 data class BattleWarning(val source: Int, val pattern: BossPattern, val left: Float, val targets: List<Int>)
 
-data class BattleEvent(val source: Int, val target: Int, val value: Int, val kind: BattleEventKind, val time: Float)
+/** [critical] only changes how the hit is shown. */
+data class BattleEvent(val source: Int, val target: Int, val value: Int, val kind: BattleEventKind, val time: Float,
+    val critical: Boolean = false)
 
 class BattleUnit(val index: Int, val sprite: Int, val enemy: Boolean, val faction: HeroFaction,
     val role: HeroRole, val slot: Int, val maxHp: Double, val attack: Double, val armor: Double,
@@ -221,7 +223,7 @@ class HamletBattle(val mode: BattleMode, val stage: Int, val region: Int, val un
             }
         }
         value = max(0.0, value)
-        val dealt = damageHealth(u.index, victim, value)
+        val dealt = damageHealth(u.index, victim, value, critical = critical > 1)
         if (!area) u.lunge = 0.22f
         if (dealt > 0 && u.lifesteal > 0 && u.alive) restore(u, u, dealt * u.lifesteal.coerceIn(0.0, 0.5))
     }
@@ -234,7 +236,7 @@ class HamletBattle(val mode: BattleMode, val stage: Int, val region: Int, val un
         }
         return dealt * taken
     }
-    private fun damageHealth(source: Int, victim: BattleUnit, value: Double, animate: Boolean = true): Double {
+    private fun damageHealth(source: Int, victim: BattleUnit, value: Double, animate: Boolean = true, critical: Boolean = false): Double {
         val dealt = min(victim.hp.coerceAtLeast(0.0), value.coerceAtLeast(0.0))
         val wasAlive = victim.alive
         victim.hp = max(0.0, victim.hp - dealt)
@@ -246,7 +248,7 @@ class HamletBattle(val mode: BattleMode, val stage: Int, val region: Int, val un
         if (sourceUnit?.enemy == false) damage += dealt
         if (animate) {
             victim.flash = 0.16f
-            events.add(BattleEvent(source, victim.index, dealt.toInt(), BattleEventKind.HIT, time))
+            events.add(BattleEvent(source, victim.index, dealt.toInt(), BattleEventKind.HIT, time, critical))
         }
         return dealt
     }

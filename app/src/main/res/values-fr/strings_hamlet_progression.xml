@@ -4,9 +4,6 @@
     <string name="hamlet_armory_tab_1">Équiper</string>
     <string name="hamlet_armory_tab_2">Inventaire</string>
     <string name="hamlet_armory_slot_empty">Aucune pièce fabriquée équipée</string>
-    <string name="hamlet_armory_no_matching_piece">Fabrique d’abord une pièce pour cet emplacement.</string>
-    <string name="hamlet_progression_training">Niveau d’entraînement de l’académie : %1$d. Une fois l’académie construite, les recrues rejoignent le niveau du moins entraîné de tes meilleurs héros (autant que de places disponibles dans l’équipe). Leur entraînement personnel et leur équipement restent acquis.</string>
-    <string name="hamlet_progression_training_hero">Niveau personnel %1$d · Niveau de l’académie %2$d. Le prochain entraînement part du niveau de l’académie et coûte les vivres de ce niveau.</string>
     <string name="hamlet_progression_worn">%1$s : %2$s</string>
     <string name="hamlet_progression_legacy_gear">Entraînement permanent et maîtrise d’équipement</string>
     <string name="hamlet_progression_upgrade_building">Améliorer au rang %1$d · %2$d pièces</string>

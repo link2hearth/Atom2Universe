@@ -61,4 +61,7 @@ Récompense : %5$d pièces · %6$d gemmes</string>
     <string name="hamlet_msg_order_new">Un visiteur a passé commande à %1$s.</string>
     <string name="hamlet_msg_picked_up">%1$s a récupéré la commande.</string>
     <string name="hamlet_msg_quest_done">Quête terminée. Récupère ta récompense.</string>
+    <string name="hamlet_ui_info_mark">?</string>
+    <string name="hamlet_ui_dot">\u0020·\u0020</string>
+    <string name="hamlet_ui_arrow">\u0020→\u0020</string>
 </resources>

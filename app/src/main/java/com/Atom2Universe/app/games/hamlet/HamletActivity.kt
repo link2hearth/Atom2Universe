@@ -14,6 +14,8 @@ import com.Atom2Universe.app.ThemedActivity
 
 /** Le village garde tout l'écran ; les catalogues et la gestion s'ouvrent à la demande. */
 class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener {
+    /** The whole game reads a little larger, clearly larger on tablets. */
+    override fun attachBaseContext(newBase: android.content.Context) = super.attachBaseContext(HamletUi.larger(newBase))
     internal lateinit var game: HamletGame
     internal lateinit var village: HamletView
     private lateinit var stats: TextView

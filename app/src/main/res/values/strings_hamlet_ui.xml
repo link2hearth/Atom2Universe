@@ -61,4 +61,7 @@ Reward: %5$d coins · %6$d gems</string>
     <string name="hamlet_msg_order_new">A visitor placed an order at %1$s.</string>
     <string name="hamlet_msg_picked_up">%1$s collected the order.</string>
     <string name="hamlet_msg_quest_done">Quest complete. Claim your reward.</string>
+    <string name="hamlet_ui_info_mark">?</string>
+    <string name="hamlet_ui_dot">\u0020·\u0020</string>
+    <string name="hamlet_ui_arrow">\u0020→\u0020</string>
 </resources>

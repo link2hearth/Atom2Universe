@@ -85,7 +85,7 @@ internal class HamletCatalogDialog(private val a: HamletActivity) {
         }
     }
     private fun action(label: Int, glyph: String, enabled: Boolean = true, click: () -> Unit) {
-        rows.addView(HamletUi.button(a, a.getString(label), click).apply {
+        rows.addView(HamletUi.button(a, a.getString(label), click = click).apply {
             isEnabled = enabled
             setCompoundDrawablesWithIntrinsicBounds(HamletUi.icon(a, glyph, 20), null, null, null)
             compoundDrawablePadding = a.dp(8)

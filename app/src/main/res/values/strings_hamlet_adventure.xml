@@ -2,18 +2,15 @@
 <resources>
     <string name="hamlet_a_title">Adventure</string>
     <string name="hamlet_a_village">Village</string>
-    <string name="hamlet_a_help">Help</string>
     <string name="hamlet_a_explore">Explore</string>
     <string name="hamlet_a_heroes">Heroes</string>
     <string name="hamlet_a_teams">Team</string>
     <string name="hamlet_a_craft">Forge</string>
     <string name="hamlet_a_kingdom">Kingdom</string>
     <string name="hamlet_a_challenges">Trials</string>
-    <string name="hamlet_a_stock">Food %1$d · Wood %2$d · Stone %3$d · Ore %4$d\nBooks %5$d · Crystals %6$d · Runes %7$d · Invitations %8$d</string>
     <string name="hamlet_a_help_text">Build your village and explore with a team of heroes. Two protect the front line; keep healers and mages behind them. Grove counters Forge, Forge counters Dawn, Dawn counters Grove. Matching factions and hero bonds strengthen your formation.\nWelcome 36 heroes using invitations earned from village work, the inn and adventures. Draws have rarity guarantees; duplicates become fragments. Targeted recruitment and fragments let you choose a hero. Campaign rescues remain available. Improve levels, skills and complete equipment sets to progress.\nThe journal connects village duties, optional daily tasks and expeditions. Heroes on village duty still fight. On short visits, collect produce and expedition rewards, then use quick raids on mastered three-star routes. During longer sessions, keep fighting or gathering freely. Defeats cost nothing. No energy or daily attempt limits. Production continues while you are away.</string>
-    <string name="hamlet_a_not_ready">Missing resources or prerequisite. Check the displayed requirement.</string>
-    <string name="hamlet_a_campaign">Route %1$d · %2$s\nNext discovery: %3$d</string>
-    <string name="hamlet_a_explore_help">Team strength %1$d · %2$d places. Fight, rescue heroes and gather materials. Replaying is always free.</string>
+    <string name="hamlet_a_campaign">Route %1$d · %2$s</string>
+    <string name="hamlet_a_explore_help">Power %1$d · %2$d slots</string>
     <string name="hamlet_a_previous">Previous area</string>
     <string name="hamlet_a_next">Next area</string>
     <string name="hamlet_a_number">%1$d</string>
@@ -23,20 +20,20 @@
     <string name="hamlet_a_node_shrine">Ancient shrine</string>
     <string name="hamlet_a_node_rescue">Hero rescue</string>
     <string name="hamlet_a_node_boss">Guardian boss</string>
-    <string name="hamlet_a_loot_preview">Loot grows with region rank %1$d. First-clear multiplier: %2$d.</string>
-    <string name="hamlet_a_enemy_hint">Enemy faction: %1$s. Prepare your counters.</string>
+    <string name="hamlet_a_loot_preview">Rank %1$d loot</string>
+    <string name="hamlet_a_enemy_hint">Enemies: %1$s</string>
     <string name="hamlet_a_route_locked">Clear route %1$d first.</string>
-    <string name="hamlet_a_gather">Gather here</string>
-    <string name="hamlet_a_battle">Enter battle</string>
-    <string name="hamlet_a_prepare">Prepare the team</string>
+    <string name="hamlet_a_gather">Gather</string>
+    <string name="hamlet_a_battle">Fight</string>
+    <string name="hamlet_a_prepare">Team</string>
     <string name="hamlet_a_map_accessibility">Adventure map. Use the route selector below as an alternative to tapping nodes.</string>
-    <string name="hamlet_a_next_unlocks">Discoveries ahead</string>
+    <string name="hamlet_a_next_unlocks">Coming up</string>
     <string name="hamlet_a_unlock_roadmap">Route 5: bounties · 10: fifth hero, trials and first relic · 12: solo rivals · 20: raid boss and first pet · 24: sixth hero. More heroes are rescued along the way; further relics at 30 and 60, pets at 50 and 80. The route continues beyond 120.</string>
-    <string name="hamlet_a_gather_help">Tap the glowing resource: eight collections bring supplies and free work.</string>
+    <string name="hamlet_a_gather_help">Tap the glowing resources.</string>
     <string name="hamlet_a_gather_accessibility">Gather eight resources. The Collect button below is an accessible alternative.</string>
-    <string name="hamlet_a_gather_done">Supplies collected! Free work added to your village bank.</string>
-    <string name="hamlet_a_gather_alternative">Collect the resource</string>
-    <string name="hamlet_a_cancel_free">Leave without losing resources</string>
+    <string name="hamlet_a_gather_done">Materials gathered</string>
+    <string name="hamlet_a_gather_alternative">Gather the next one</string>
+    <string name="hamlet_a_cancel_free">Leave</string>
     <string name="hamlet_a_all">All</string>
     <string name="hamlet_a_faction_0">Grove</string>
     <string name="hamlet_a_faction_1">Dawn</string>
@@ -46,19 +43,15 @@
     <string name="hamlet_a_rarity_2">Epic</string>
     <string name="hamlet_a_rarity_3">Legendary</string>
     <string name="hamlet_a_rarity_4">Mythic</string>
-    <string name="hamlet_a_hero_card">%1$s · %2$s\n%3$s</string>
-    <string name="hamlet_a_hero_growth">Level %1$d · Stars %2$d · Fragments %3$d</string>
-    <string name="hamlet_a_rescue_at">Campaign meeting on route %1$d. Early rescues welcome common and rare heroes; other meetings give a fragment of that hero.</string>
-    <string name="hamlet_a_details">Details</string>
+    <string name="hamlet_a_hero_growth">Level %1$d · %2$d★ · %3$d shards</string>
     <string name="hamlet_a_hero_numbers">HP %1$d · Attack %2$d · Armour %3$d · Critical %4$d%%</string>
-    <string name="hamlet_a_recruit_cost">Recruit this hero · 3 invitations</string>
-    <string name="hamlet_a_level_cost">Gain a level · %1$d food</string>
-    <string name="hamlet_a_stars_cost">Promote a star · %1$d fragments</string>
+    <string name="hamlet_a_level_cost">Level up · %1$d food</string>
+    <string name="hamlet_a_stars_cost">Star up · %1$d shards</string>
     <string name="hamlet_a_hero_skills">Skills</string>
-    <string name="hamlet_a_skill_cost">%1$s · Rank %2$d\nUpgrade: %3$d books</string>
+    <string name="hamlet_a_skill_cost">%1$s · rank %2$d · %3$d books</string>
     <string name="hamlet_a_skills_help">Active skills fire automatically. Skill ranks improve their strength; focus improves critical hits, endurance increases HP, ultimate mastery boosts spells. In manual mode, tap a ready portrait at the bottom of the battlefield to cast its ultimate.</string>
-    <string name="hamlet_a_traits_title">Awakening · available at five stars</string>
-    <string name="hamlet_a_trait_cost">%1$s · Rank %2$d\nUpgrade: %3$d fragments</string>
+    <string name="hamlet_a_traits_title">Awakening · 5★</string>
+    <string name="hamlet_a_trait_cost">%1$s · rank %2$d · %3$d shards</string>
     <string name="hamlet_a_trait_0">Attack training</string>
     <string name="hamlet_a_trait_1">Vitality</string>
     <string name="hamlet_a_trait_2">Resilience</string>
@@ -68,18 +61,14 @@
     <string name="hamlet_a_formation_help">Two front places absorb normal attacks. Protect healers and mages in the four rear places. Rogues can reach the back line. Switch heroes and presets freely.</string>
     <string name="hamlet_a_slot_locked">Route %1$d</string>
     <string name="hamlet_a_empty_slot">Choose</string>
-    <string name="hamlet_a_faction_bonus">%1$s formation bonus: +%2$d%% HP and attack</string>
-    <string name="hamlet_a_counter_help" formatted="false">Grove → Forge → Dawn → Grove. Advantage: +20% damage; disadvantage: −15%.</string>
     <string name="hamlet_a_bonds">Hero bonds</string>
-    <string name="hamlet_a_bond_row">%1$s\n%2$s · %3$s</string>
     <string name="hamlet_a_active">Active</string>
-    <string name="hamlet_a_inactive">Inactive</string>
     <string name="hamlet_a_bond_0" formatted="false">Woodland care · skill strength +8%</string>
     <string name="hamlet_a_bond_1" formatted="false">Hearth guard · damage received −8%</string>
     <string name="hamlet_a_bond_2" formatted="false">Star chorus · cooldowns −8%</string>
     <string name="hamlet_a_bond_3" formatted="false">Pathfinders · attack +8%</string>
     <string name="hamlet_a_support">Pets and relics</string>
-    <string name="hamlet_a_support_row">%1$s · Rank %2$d</string>
+    <string name="hamlet_a_support_row">%1$s · rank %2$d</string>
     <string name="hamlet_a_equip">Equip</string>
     <string name="hamlet_a_support_upgrade">Upgrade · %1$d %2$s</string>
     <string name="hamlet_a_pet_0">Mosslet</string>
@@ -126,18 +115,18 @@
     <string name="hamlet_a_worker_3">Library</string>
     <string name="hamlet_a_worker_4">Mine</string>
     <string name="hamlet_a_worker_row">%1$s · %2$d workers</string>
-    <string name="hamlet_a_worker_minus">Remove one</string>
-    <string name="hamlet_a_worker_plus">Assign one</string>
+    <string name="hamlet_a_worker_minus">−</string>
+    <string name="hamlet_a_worker_plus">+</string>
     <string name="hamlet_a_academy">Research academy</string>
     <string name="hamlet_a_academy_help">Every rank improves the team or village immediately. Research continues beyond the initial chapter tree, using books found in adventures and made by villagers.</string>
     <string name="hamlet_a_tech_0" formatted="false">Tactics · +1.8% attack per rank</string>
     <string name="hamlet_a_tech_1" formatted="false">Protection · +1.8% HP per rank</string>
     <string name="hamlet_a_tech_2" formatted="false">Production · +4% yield per rank</string>
     <string name="hamlet_a_tech_3">Teamwork · +5 s of work per adventure reward</string>
-    <string name="hamlet_a_tech_cost">%1$s · Rank %2$d\nResearch: %3$d books</string>
+    <string name="hamlet_a_tech_cost">%1$s · rank %2$d · %3$d books</string>
     <string name="hamlet_a_troops">Village militia</string>
     <string name="hamlet_a_troops_help">Escort capacity: %1$d per faction. Militia adds HP and attack to heroes of its faction. It recovers after every battle; there are no deaths or healing bills.</string>
-    <string name="hamlet_a_troop_row">%1$s · %2$d militia\nTrain 10: 20 food + 10 ore</string>
+    <string name="hamlet_a_troop_row">%1$s · %2$d militia · train 10: 20 food + 10 ore</string>
     <string name="hamlet_a_mode_campaign">Campaign</string>
     <string name="hamlet_a_mode_trial">Endless trials</string>
     <string name="hamlet_a_mode_bounty">Bounty contracts</string>
@@ -147,7 +136,7 @@
     <string name="hamlet_a_mode_story_bounty">Contracts give fragments for an owned hero. Every five new contracts earn one invitation. Replaying keeps materials and fragments, with no daily attempt limit.</string>
     <string name="hamlet_a_mode_story_raid">Face powerful bosses on your own, with heroes, militia, pets and relics. Earn crystals without needing a guild.</string>
     <string name="hamlet_a_mode_story_arena">Test formations against generated rival teams. All opponents are local and rewards come from playing.</string>
-    <string name="hamlet_a_challenge_stage">Next stage: %1$d · Unlock after route %2$d</string>
+    <string name="hamlet_a_challenge_stage">Stage %1$d · from route %2$d</string>
     <string name="hamlet_a_farm_previous">Replay the previous stage</string>
     <string name="hamlet_a_combat_header">%1$s · Stage %2$d</string>
     <string name="hamlet_a_combat_clock">%1$d s / 90 s</string>
@@ -162,13 +151,10 @@
     <string name="hamlet_a_resume">Resume</string>
     <string name="hamlet_a_manual_help">Switch off Auto to choose when to cast ultimates. Ready portraits glow gold. Pause and speed controls affect the simulation.</string>
     <string name="hamlet_a_victory">Victory!</string>
-    <string name="hamlet_a_defeat">Regroup and try again</string>
+    <string name="hamlet_a_defeat">Defeat</string>
     <string name="hamlet_a_battle_result">%1$d s · Damage %2$d · Healing %3$d · Survivors %4$d</string>
-    <string name="hamlet_a_victory_help">Loot is added to your resources and free work bank. Heroes are fully recovered. You can replay for more supplies.</string>
-    <string name="hamlet_a_defeat_help">No resources or heroes lost. Improve levels, gear, formation or faction counters, then retry freely.</string>
     <string name="hamlet_a_continue">Continue</string>
-    <string name="hamlet_a_retry_free">Retry for free</string>
-    <string name="hamlet_a_loot_received">Resources: food %1$d · ore %2$d · books %3$d · crystals %4$d</string>
+    <string name="hamlet_a_retry_free">Retry</string>
     <string name="hamlet_a_resource_food">food</string>
     <string name="hamlet_a_resource_timber">timber</string>
     <string name="hamlet_a_resource_stone">stone</string>
@@ -258,8 +244,26 @@
     <string name="hamlet_n_p_adventureYard">Training kits</string>
     <string name="hamlet_n_adventureGate">Explorers’ gatehouse</string>
     <string name="hamlet_n_p_adventureGate">Route plans</string>
-    <string name="hamlet_a_troop_upgrade">Rank %1$d · Improve: %2$d timber + %2$d stone + %3$d books</string>
+    <string name="hamlet_a_troop_upgrade">Rank %1$d · %2$d timber + %2$d stone + %3$d books</string>
     <string name="hamlet_a_builders">Supply the builders</string>
     <string name="hamlet_a_builders_help">Your free work reserve: %1$d seconds. Gather wood and stone to shorten village construction, crops, orders and expeditions.</string>
     <string name="hamlet_a_builders_cost">10 timber + 10 stone → 60 seconds of work</string>
+    <string name="hamlet_a_crit_float">%1$d!</string>
+    <string name="hamlet_a_loot_first">First win: loot ×%1$d</string>
+    <string name="hamlet_a_pity_line">Guaranteed: %1$s</string>
+    <string name="hamlet_a_pity_in">%1$s in %2$d</string>
+    <string name="hamlet_a_hero_kind">%1$s · %2$s</string>
+    <string name="hamlet_a_hero_level">Lv. %1$d · %2$d★</string>
+    <string name="hamlet_a_rescue_short">Rescue on route %1$d</string>
+    <string name="hamlet_a_training_level">Academy training: level %1$d</string>
+    <string name="hamlet_a_faction_bonus_short">%1$s +%2$d%%</string>
+    <string name="hamlet_a_workers_count">Assigned: %1$d / %2$d</string>
+    <string name="hamlet_a_militia_rank">Training rank %1$d / 10</string>
+    <string name="hamlet_a_builders_reserve">Free work: %1$d s</string>
+    <string name="hamlet_a_defeat_time">Time ran out</string>
+    <string name="hamlet_a_defeat_fallen">Your team fell</string>
+    <string name="hamlet_a_gain">+%1$d %2$s</string>
+    <string name="hamlet_a_coins">coins</string>
+    <string name="hamlet_a_work">s of work</string>
+    <string name="hamlet_a_amount">%1$d %2$s</string>
 </resources>

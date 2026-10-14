@@ -41,7 +41,7 @@ internal class HamletStewardshipDialog(private val context: Context, private val
         it.setPadding(dp(12), dp(9), dp(12), dp(10))
         rows.addView(it, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) }); text(it, title, true)
     }
-    private fun button(parent: LinearLayout, value: String, enabled: Boolean = true, click: () -> Unit): Button = HamletUi.button(context, value, click).also {
+    private fun button(parent: LinearLayout, value: String, enabled: Boolean = true, click: () -> Unit): Button = HamletUi.button(context, value, click = click).also {
         it.isEnabled = enabled; parent.addView(it, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(3) })
     }
     fun show(initialTab: Int = 0) {

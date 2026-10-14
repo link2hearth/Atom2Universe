@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hamlet_a_recruitment_title">La guilde des voyageurs</string>
+    <string name="hamlet_a_recruitment_title">Recrutement</string>
     <string name="hamlet_a_recruitment_help" formatted="false">36 héros : 12 communs, 12 rares, 8 épiques, 3 légendaires et 1 mythique. Une invitation tire un héros : commun 70 %, rare 25 %, épique 4,75 %, légendaire 0,2 %, mythique 0,05 %. La première copie accueille le héros ; chaque copie suivante donne un fragment de ce personnage précis. Garanties : épique ou mieux en 40 tirages, légendaire ou mieux en 600, mythique en 2 000. Le recrutement ciblé coûte 3 / 3 / 12 / 240 / 600 invitations et demande la route et le chapitre du village affichés. Assez de fragments personnels offrent une autre voie. Les étoiles coûtent 10, puis 25, puis 50 fragments et davantage ; elles renforcent tes héros d’origine durant toute la partie.</string>
-    <string name="hamlet_a_recruitment_progress">Tirages : %1$d · Prochaines garanties dans %2$d / %3$d / %4$d tirages (épique / légendaire / mythique)</string>
-    <string name="hamlet_a_summon_one">Accueillir un voyageur · 1 invitation</string>
-    <string name="hamlet_a_summon_ten">Accueillir dix voyageurs · 10 invitations</string>
+    <string name="hamlet_a_summon_one">Recruter ×1 · 1 invitation</string>
+    <string name="hamlet_a_summon_ten">Recruter ×10 · 10 invitations</string>
     <string name="hamlet_a_summon_results">Voyageurs accueillis</string>
     <string name="hamlet_a_recruit_new">%1$s · %2$s · Nouveau héros !</string>
     <string name="hamlet_a_recruit_duplicate">%1$s · %2$s · +%3$d fragment</string>
     <string name="hamlet_a_recruit_pity">Rareté garantie</string>
-    <string name="hamlet_a_recruit_shards_cost">Recruter avec %1$d fragments</string>
-    <string name="hamlet_a_shards_progress">Fragments réunis : %1$d / %2$d</string>
+    <string name="hamlet_a_recruit_shards_cost">Recruter · %1$d fragments</string>
+    <string name="hamlet_a_shards_progress">Fragments %1$d / %2$d</string>
     <string name="hamlet_a_new_recruit_at">Peut arriver avec une invitation dès maintenant. Recrutement ciblé garanti à partir de la route %1$d.</string>
     <string name="hamlet_a_sweep_cost">Expédition rapide · %1$d vivres</string>
     <string name="hamlet_a_sweep_help">Une route réussie avec trois étoiles peut être récoltée instantanément. Les vivres préparent l’expédition ; tu reçois le butin normal et aides les chantiers du village. Les nouvelles routes restent à explorer.</string>
-    <string name="hamlet_a_auto_formation">Préparer une formation équilibrée</string>
+    <string name="hamlet_a_auto_formation">Formation automatique</string>
     <string name="hamlet_a_inn_recruitment">Le meilleur rang d’auberge terminé produit une invitation toutes les 12 h (rang 1), 9 h 36 (rang 2) ou 8 h (rang 3). Le travail au village en ajoute aussi : progression %1$d / 120. Les invitations restent stockées jusqu’à leur utilisation.</string>
     <string name="hamlet_a_hero_12">Robin</string>
     <string name="hamlet_a_hero_13">Aster</string>

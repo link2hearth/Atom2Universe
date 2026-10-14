@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hamlet_a_recruitment_title">The travellers’ guild</string>
+    <string name="hamlet_a_recruitment_title">Recruitment</string>
     <string name="hamlet_a_recruitment_help" formatted="false">36 heroes: 12 common, 12 rare, 8 epic, 3 legendary and 1 mythic. Each invitation draws one hero: Common 70%, Rare 25%, Epic 4.75%, Legendary 0.2%, Mythic 0.05%. The first copy welcomes the hero; every further copy gives one fragment of that exact character. Guarantees: Epic or better within 40 draws, Legendary or better within 600, Mythic within 2,000. Targeted recruitment costs 3 / 3 / 12 / 240 / 600 invitations and requires the route and village chapter shown. Enough personal fragments offer another path. Stars cost 10, then 25, then 50 fragments and more; they strengthen your original heroes throughout the game.</string>
-    <string name="hamlet_a_recruitment_progress">Draws: %1$d · Next guarantees in %2$d / %3$d / %4$d draws (Epic / Legendary / Mythic)</string>
-    <string name="hamlet_a_summon_one">Welcome a traveller · 1 invitation</string>
-    <string name="hamlet_a_summon_ten">Welcome ten travellers · 10 invitations</string>
+    <string name="hamlet_a_summon_one">Recruit ×1 · 1 invitation</string>
+    <string name="hamlet_a_summon_ten">Recruit ×10 · 10 invitations</string>
     <string name="hamlet_a_summon_results">Travellers welcomed</string>
     <string name="hamlet_a_recruit_new">%1$s · %2$s · New hero!</string>
     <string name="hamlet_a_recruit_duplicate">%1$s · %2$s · +%3$d fragment</string>
     <string name="hamlet_a_recruit_pity">Guaranteed rarity</string>
-    <string name="hamlet_a_recruit_shards_cost">Recruit with %1$d fragments</string>
-    <string name="hamlet_a_shards_progress">Fragments collected: %1$d / %2$d</string>
+    <string name="hamlet_a_recruit_shards_cost">Recruit · %1$d shards</string>
+    <string name="hamlet_a_shards_progress">Shards %1$d / %2$d</string>
     <string name="hamlet_a_new_recruit_at">May arrive with an invitation now. Guaranteed targeted recruitment from route %1$d.</string>
     <string name="hamlet_a_sweep_cost">Quick expedition · %1$d food</string>
     <string name="hamlet_a_sweep_help">A route completed with three stars can be gathered instantly. Spend food to prepare the expedition, receive normal repeat loot and help village construction. New routes still require exploration.</string>
-    <string name="hamlet_a_auto_formation">Prepare a balanced formation</string>
+    <string name="hamlet_a_auto_formation">Auto formation</string>
     <string name="hamlet_a_inn_recruitment">Your highest completed inn rank produces one invitation every 12 hours (rank 1), 9 hours 36 minutes (rank 2), or 8 hours (rank 3). Village work adds invitations: progress %1$d / 120. Invitations remain stored until used.</string>
     <string name="hamlet_a_hero_12">Rowan</string>
     <string name="hamlet_a_hero_13">Aster</string>

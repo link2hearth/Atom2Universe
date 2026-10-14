@@ -43,12 +43,14 @@ internal class HamletShardShopDialog(private val context: Context, private val g
     private fun name(hero: Int) = raw("hamlet_a_hero_$hero")
     private fun rarity(rarity: HeroRarity) = raw("hamlet_a_rarity_${rarity.ordinal}")
     private fun column() = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL }
-    private fun text(parent: LinearLayout, label: String, title: Boolean = false) = TextView(context).also {
-        it.text = label; it.textSize = if (title) 16f else 13f; it.setTextColor(HamletUi.INK)
+    private fun text(parent: LinearLayout, label: CharSequence, title: Boolean = false, small: Boolean = false, color: Int = 0) = TextView(context).also {
+        it.text = label; it.textSize = if (title) HamletUi.TITLE else if (small) HamletUi.SMALL else HamletUi.TEXT
+        it.setTextColor(if (color != 0) color else if (small) HamletUi.MUTED else HamletUi.INK)
         it.setPadding(0, dp(4), 0, dp(4)); it.setLineSpacing(dp(2).toFloat(), 1f)
         if (title) it.setTypeface(null, android.graphics.Typeface.BOLD)
         parent.addView(it)
     }
+    private fun tinted(value: String, r: HeroRarity) = HamletUi.tint(value, rarity(r) to HamletUi.rarity(r))
     fun show(hero: Int = -1) {
         selectedHero = hero.takeIf { g.adventure.heroes.getOrNull(it)?.owned == true } ?: -1
         rows = column(); scroll = ScrollView(context).apply { addView(rows) }
@@ -74,16 +76,17 @@ internal class HamletShardShopDialog(private val context: Context, private val g
     private fun render() {
         val y = scroll.scrollY
         g.adventure.advanceProduction(); rows.removeAllViews()
-        text(rows, s("help"))
-        text(rows, s("wallet", g.adventure[AdventureResource.RUNES], g.adventure[AdventureResource.CRYSTAL]), true)
-        rows.addView(HamletUi.button(context, s("rules")) {
-            AlertDialog.Builder(context).setTitle(s("title"))
-                .setMessage(raw("hamlet_shard_shop_price_help") + raw("hamlet_shop_ui_paragraph") + raw("hamlet_shard_shop_unlock_help"))
-                .setPositiveButton(android.R.string.ok, null).show()
-        })
-        if (g.sandbox) text(rows, s("creative")) else for (r in HeroRarity.entries) {
-            if (!shop.unlocked(r)) { text(rows, requirements(r)); break }
-            else text(rows, s(if (r == HeroRarity.MYTHIC) "weekly_stock" else "daily_stock", rarity(r), shop.remaining(r)))
+        val head = LinearLayout(context).apply { gravity = android.view.Gravity.CENTER_VERTICAL }
+        head.addView(TextView(context).apply {
+            text = s("wallet", g.adventure[AdventureResource.RUNES], g.adventure[AdventureResource.CRYSTAL]); textSize = HamletUi.TITLE
+            setTextColor(HamletUi.INK); setTypeface(null, android.graphics.Typeface.BOLD)
+        }, LinearLayout.LayoutParams(0, -2, 1f))
+        head.addView(HamletUi.info(context, s("title"), s("help") + raw("hamlet_shop_ui_paragraph") + raw("hamlet_shard_shop_price_help") +
+            raw("hamlet_shop_ui_paragraph") + raw("hamlet_shard_shop_unlock_help")), LinearLayout.LayoutParams(dp(44), -2))
+        rows.addView(head)
+        if (g.sandbox) text(rows, s("creative"), small = true) else for (r in HeroRarity.entries) {
+            if (!shop.unlocked(r)) { text(rows, tinted(requirements(r), r), small = true); break }
+            else text(rows, tinted(s(if (r == HeroRarity.MYTHIC) "weekly_stock" else "daily_stock", rarity(r), shop.remaining(r)), r), small = true)
         }
         val owned = g.adventure.heroes.filter { it.owned }
         val choices = intArrayOf(-1) + owned.map { it.id }.toIntArray()
@@ -114,18 +117,17 @@ internal class HamletShardShopDialog(private val context: Context, private val g
                 }
             }.apply { contentDescription = name(h.id) }, LinearLayout.LayoutParams(dp(68), dp(76)))
             val details = column()
-            text(details, name(h.id), true)
-            text(details, rarity(h.def.rarity)).setTextColor(HamletHeroFx.deep(h.def.rarity))
+            text(details, name(h.id), true, color = HamletUi.rarity(h.def.rarity))
+            text(details, rarity(h.def.rarity), small = true, color = HamletUi.rarity(h.def.rarity))
             text(details, raw("hamlet_a_hero_growth", g.adventure.effectiveLevel(h.id), h.stars, h.shards))
             identity.addView(details, LinearLayout.LayoutParams(0, -2, 1f)); box.addView(identity)
             if (h.stars < HamletHeroes.STAR_CAP) {
                 box.addView(HamletUi.button(context, raw("hamlet_a_stars_cost", g.adventure.starCost(h.id))) {
                     if (g.adventure.promote(h.id)) { onChanged(); render() }
                 }.apply { isEnabled = g.adventure.canPromote(h.id) })
-            } else text(box, raw("hamlet_hero_stars_max", HamletHeroes.STAR_CAP))
-            if (!offer.unlocked) { text(box, requirements(offer.rarity)); continue }
-            if (offer.remaining <= 0) { text(box, s("sold_out")); continue }
-            text(box, s("personal", name(h.id)))
+            } else text(box, raw("hamlet_hero_stars_max", HamletHeroes.STAR_CAP), small = true, color = HamletUi.GOOD)
+            if (!offer.unlocked) { text(box, requirements(offer.rarity), small = true, color = HamletUi.BAD); continue }
+            if (offer.remaining <= 0) { text(box, s("sold_out"), small = true); continue }
             val actions = LinearLayout(context)
             for (quantity in listOf(1, minOf(5, offer.remaining)).distinct()) {
                 val cost = shop.cost(h.id, quantity) ?: continue
@@ -134,9 +136,8 @@ internal class HamletShardShopDialog(private val context: Context, private val g
                 if (cost.crystal > 0) parts.add(s("cost_crystal", cost.crystal))
                 val label = if (g.sandbox) p("buy_free", quantity, quantity) else p("buy", quantity, quantity, parts.joinToString(raw("hamlet_list_separator")))
                 actions.addView(HamletUi.button(context, label) {
-                    val ok = shop.buy(h.id, quantity, expectedCost = cost)
-                    Toast.makeText(context, if (ok) p("bought", quantity, quantity, name(h.id)) else s("changed"), Toast.LENGTH_SHORT).show()
-                    onChanged(); render()
+                    if (shop.buy(h.id, quantity, expectedCost = cost)) onChanged()
+                    render()
                 }.apply { isEnabled = shop.canBuy(h.id, quantity) }, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(4) })
             }
             box.addView(actions)
