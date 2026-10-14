@@ -1,0 +1,13 @@
+{
+  "id": "betula_papyrifera",
+  "sections": [
+    {"title": "Port et répartition", "text": "Le bouleau à papier est un arbre caduc d’Amérique du Nord, généralement haut d’environ 21 à 24 m, avec un tronc de 25 à 30 cm de diamètre. L’écorce adulte blanche se détache en fines couches papyracées ; les feuilles mesurent environ 5 à 12 cm. Il est répandu au Canada et dans le nord des États-Unis, et atteint le sud des Appalaches."},
+    {"title": "Usages et image", "text": "L’écorce a des usages matériels et culturels documentés, et la sève a parfois servi d’aliment ou de boisson ; ces mentions traditionnelles ne sont pas une recommandation générale de récolte. L’écorce blanche qui se détache, les chatons et les petits fruits ailés de la planche correspondent à l’espèce."},
+    {"title": "Bouleaux proches", "text": "Betula pubescens est un autre bouleau à écorce claire, mais ses jeunes rameaux et feuilles sont pubescents et il occupe souvent des milieux plus humides. L’entrée Betula du catalogue représente le genre sans désigner une espèce."}
+  ],
+  "sources": [
+    {"title": "Bouleau à papier — USDA Forest Service FEIS", "url": "https://research.fs.usda.gov/feis/species-reviews/betpap"},
+    {"title": "Betula papyrifera — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A32197-2"},
+    {"title": "Paper birch — USDA NRCS Plant Guide", "url": "https://plants.usda.gov/DocumentLibrary/plantguide/pdf/pg_bepa.pdf"}
+  ], "related": ["betula", "betula_pubescens"]
+}

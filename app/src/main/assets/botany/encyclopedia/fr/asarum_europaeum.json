@@ -1,0 +1,12 @@
+{
+  "id": "asarum_europaeum",
+  "sections": [
+    {"title": "Port et habitat", "text": "L’asaret d’Europe est une vivace rampante basse, sempervirente, généralement haute d’environ 5 à 10 cm, aux feuilles réniformes luisantes. Ses petites fleurs pourpre foncé sont près du sol, sous le feuillage. L’espèce est indigène d’Europe jusqu’en Sibérie centrale et préfère les sous-bois ombragés."},
+    {"title": "Précautions et image", "text": "La plante est signalée comme toxique en cas d’ingestion ; aucun usage alimentaire sûr n’a été vérifié. Des travaux signalent des composés apparentés aux acides aristolochiques dans le genre Asarum et un cas d’intoxication impliquant A. europaeum, sans établir une dose pour chaque partie. Les feuilles arrondies et les fleurs cachées de la planche correspondent à son port."}
+  ],
+  "sources": [
+    {"title": "Asarum europaeum — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A302682-2"},
+    {"title": "Asarum europaeum — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/1680/asarum-europaeum/details"},
+    {"title": "Composés apparentés aux acides aristolochiques et cas d’intoxication signalé chez Asarum europaeum", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5439001/"}
+  ], "related": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "arum_italicum",
+  "sections": [
+    {"title": "Port et répartition", "text": "L’arum d’Italie est une vivace tubéreuse indigène de la Macaronésie et de l’Europe occidentale jusqu’en Irak. Ses feuilles sagittées peuvent atteindre environ 40 × 29 cm et sont veinées de clair ; le pétiole mesure jusqu’à environ 40 cm. Une spathe pâle entoure le spadice et l’épi de baies rouges mûres peut atteindre environ 12 cm."},
+    {"title": "Toxicité", "text": "Toutes les parties des Arum contiennent des cristaux irritants d’oxalate de calcium et peuvent provoquer une intoxication. Aucune partie comestible n’est signalée. Les feuilles veinées, la spathe pâle et les baies rouges de la planche concordent avec l’espèce."}
+  ],
+  "sources": [
+    {"title": "Arum italicum — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A86047-1/general-information"},
+    {"title": "Arums et toxicité des oxalates de calcium — ANSES Vigil’Anses", "url": "https://vigilanses.anses.fr/sites/default/files/VigilAnses_N26%20GB.pdf"}
+  ], "related": []
+}

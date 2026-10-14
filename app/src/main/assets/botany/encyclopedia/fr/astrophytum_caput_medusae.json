@@ -1,0 +1,12 @@
+{
+  "id": "astrophytum_caput_medusae",
+  "sections": [
+    {"title": "Port et répartition", "text": "Ce cactus rare est originaire du Nuevo León et du Tamaulipas, au Mexique. Son petit corps basal est souvent en partie enfoui ; ses tubercules étroits gris-vert peuvent atteindre environ 19 cm de long pour seulement quelques millimètres de large. La fleur jaune possède un centre orangé."},
+    {"title": "Image et usages", "text": "La planche montre les tubercules allongés et la fleur jaune orangé, mais ne représente pas clairement le corps basal enfoui. Aucun usage comestible n’a été vérifié. Kew classe l’espèce en danger critique ; l’image ne doit donc pas laisser penser que la plante est normalement entièrement exposée."},
+    {"title": "Cactus apparenté", "text": "Astrophytum ornatum est une autre espèce mexicaine du genre, mais son corps large, côtelé et étoilé diffère des longs tubercules tentaculaires d’A. caput-medusae."}
+  ],
+  "sources": [
+    {"title": "CITES and Cacti — Royal Botanic Gardens, Kew", "url": "https://www.kew.org/sites/default/files/2019-09/CITESandCacti_full.pdf"},
+    {"title": "Astrophytum caput-medusae — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A70029496-1/general-information"}
+  ], "related": ["astrophytum_ornatum"]
+}

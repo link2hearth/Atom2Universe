@@ -1,0 +1,12 @@
+{
+  "id": "bertholletia_excelsa",
+  "sections": [
+    {"title": "Form and habitat", "text": "The Brazil-nut tree is a very large Amazonian canopy tree of non-flooded forest, commonly reported at about 25–56 m tall, with a massive trunk. Its hard woody capsule is roughly 11–16 cm across and contains about 10–25 large seeds, the Brazil nuts."},
+    {"title": "Seeds and nutrition", "text": "The seeds are eaten raw or processed. Their selenium content varies substantially by origin; a few nuts can provide a high amount, and excessive selenium intake is harmful. The plate's tall tree, hard capsule and large seeds match the species."}
+  ],
+  "sources": [
+    {"title": "Brazil nut — FAO Ecocrop", "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/cropView?id=3699"},
+    {"title": "Bertholletia excelsa reproductive biology — Embrapa / FAO", "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/1093487/1/I9201EN1.pdf"},
+    {"title": "Brazil nuts and selenium exposure — Nutrients (PMC)", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6724122/"}
+  ], "related": []
+}

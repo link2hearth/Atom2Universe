@@ -1,0 +1,12 @@
+{
+  "id": "betula",
+  "sections": [
+    {"title": "The birch genus", "text": "Betula is a genus of deciduous trees and shrubs in the birch family. Many species have pale bark, simple toothed leaves and hanging catkins, but dimensions, bark texture and habitat vary widely; this catalogue entry does not identify one species or provide a single height range."},
+    {"title": "Image and food", "text": "The plate depicts a generic pale-barked birch with leaves, catkins and winged nutlets, a reasonable genus-level illustration but not enough to identify a species. Birch sap and leaves have documented traditional uses in some taxa; edibility and safety should not be generalized to every Betula."},
+    {"title": "Species profiles", "text": "Betula papyrifera is notable for peeling papery bark. B. pubescens has hairy young shoots and leaves and often grows in wetter habitats. Those traits help distinguish the species from this genus-level entry."}
+  ],
+  "sources": [
+    {"title": "Betula — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A328387-2"},
+    {"title": "Betula — Royal Botanic Gardens, Kew", "url": "https://www.kew.org/plants/birch"}
+  ], "related": ["betula_papyrifera", "betula_pubescens"]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "bellis",
+  "sections": [
+    {"title": "Port et identification", "text": "Cette entrée de catalogue correspond à Bellis perennis, la pâquerette, petite vivace en rosette qui s’étend par de courts stolons. Les hampes florales peuvent atteindre environ 25 cm ; les capitules mesurent généralement 2 à 3 cm, avec des ligules blanches souvent rosées au revers et un disque jaune."},
+    {"title": "Alimentation et image", "text": "Les jeunes feuilles sont signalées comme consommées en salade et certaines références mentionnent aussi les capitules ; la saveur est légèrement amère. La planche montre la rosette, les ligules blanches au revers rosé, le disque jaune et les petits fruits caractéristiques."}
+  ],
+  "sources": [
+    {"title": "Bellis perennis — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A184409-1/general-information"},
+    {"title": "Bellis perennis — Flora of North America, eFloras", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=200023530"},
+    {"title": "Bruisewort — NC State Extension Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/bellis-perennis/common-name/bruisewort/"}
+  ], "related": []
+}

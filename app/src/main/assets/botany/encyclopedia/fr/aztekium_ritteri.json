@@ -1,0 +1,12 @@
+{
+  "id": "aztekium_ritteri",
+  "sections": [
+    {"title": "Port et répartition", "text": "Aztekium ritteri est un cactus très petit et lent, originaire des régions sèches du nord-est du Mexique. Son corps gris-vert presque dépourvu d’épines porte des côtes étroites et des fleurs roses. La croissance annuelle peut n’être que de 1 à 2 mm ; les sources publiées ne s’accordent pas exactement sur les limites de son aire."},
+    {"title": "Alimentation et image", "text": "Aucun usage comestible n’a été vérifié. Le petit corps côtelé, les épines rares et les fleurs roses de la planche correspondent à la plante ; il ne faut pas la confondre avec un cactus adulte à croissance rapide."},
+    {"title": "Cactées apparentées", "text": "Le genre voisin Astrophytum comprend A. caput-medusae et A. ornatum, dont les silhouettes diffèrent fortement et dont la croissance visible est plus rapide."}
+  ],
+  "sources": [
+    {"title": "Aztekium ritteri — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A27781-2/general-information"},
+    {"title": "CITES and Cacti — Royal Botanic Gardens, Kew", "url": "https://www.kew.org/sites/default/files/2019-09/CITESandCacti_full.pdf"}
+  ], "related": ["astrophytum_caput_medusae", "astrophytum_ornatum"]
+}

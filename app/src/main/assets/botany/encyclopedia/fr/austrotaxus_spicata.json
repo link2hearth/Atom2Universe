@@ -1,0 +1,11 @@
+{
+  "id": "austrotaxus_spicata",
+  "sections": [
+    {"title": "Port et répartition", "text": "Austrotaxus spicata est un conifère endémique des forêts humides de moyenne et haute altitude de Nouvelle-Calédonie. Il pousse en arbuste ou en arbre pouvant atteindre environ 25 m ; ses feuilles rigides mesurent autour de 17 cm selon la fiche locale. À maturité, la graine est partiellement entourée d’un arille orangé."},
+    {"title": "Image et précautions", "text": "La planche montre un conifère à feuilles linéaires et une graine à enveloppe charnue, ce qui concorde globalement avec l’espèce ; la source décrit un arille orange alors que l’illustration paraît rouge. Des alcaloïdes taxanes sont signalés dans les feuilles des Taxaceae, mais les références citées n’établissent pas de niveau de toxicité humaine pour cette espèce. Aucun usage alimentaire n’a été vérifié."}
+  ],
+  "sources": [
+    {"title": "Austrotaxus spicata — Endemia.nc, biodiversité néo-calédonienne", "url": "https://endemia.nc/flore/fiche641"},
+    {"title": "Taxanes chez les Taxaceae — Torrey Botanical Society", "url": "https://www.torreyaguardians.org/taxaceae-key-1998-cope.pdf"}
+  ], "related": []
+}

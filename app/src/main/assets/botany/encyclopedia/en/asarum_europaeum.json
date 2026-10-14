@@ -1,0 +1,12 @@
+{
+  "id": "asarum_europaeum",
+  "sections": [
+    {"title": "Form and habitat", "text": "European wild ginger is a low, creeping evergreen perennial, usually about 5–10 cm tall, with glossy kidney-shaped leaves. Its small dark purplish flowers sit close to the ground beneath the foliage. It is native from Europe east to central Siberia and favours shaded woodland."},
+    {"title": "Safety and image", "text": "The plant is listed as toxic if ingested; no safe food use was verified. Research has reported aristolochic-acid-related compounds in Asarum and an intoxication case involving A. europaeum, but this does not establish a dose for each plant part. The plate's hidden flowers and rounded leaves match its growth form."}
+  ],
+  "sources": [
+    {"title": "Asarum europaeum — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A302682-2"},
+    {"title": "Asarum europaeum — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/1680/asarum-europaeum/details"},
+    {"title": "Aristolochic-acid-related compounds and reported poisoning case in Asarum europaeum", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5439001/"}
+  ], "related": []
+}

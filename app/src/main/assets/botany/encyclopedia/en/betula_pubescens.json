@@ -1,0 +1,13 @@
+{
+  "id": "betula_pubescens",
+  "sections": [
+    {"title": "Form and habitat", "text": "Downy birch is a deciduous tree that can reach about 30 m, though it remains smaller in exposed northern sites. Young shoots and leaves are softly hairy, helping distinguish it from some other birches. It ranges widely across northern Europe and Asia and tolerates wet ground, peatland and heath."},
+    {"title": "Uses and image", "text": "Birch leaves and sap have traditional uses; an EMA monograph covers leaf preparations of B. pendula and/or B. pubescens, but this is not evidence for unsupervised treatment. The plate shows a pale-barked birch with leaves and catkins, but lacks a close view of hairs needed to separate it reliably from related species."},
+    {"title": "Related birches", "text": "Betula papyrifera is the North American paper birch, with strongly peeling papery bark. The catalogue's Betula profile is only a genus-level comparison."}
+  ],
+  "sources": [
+    {"title": "Betula pubescens — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A295185-1/general-information"},
+    {"title": "Betula pubescens — FloraWeb, Germany", "url": "https://www.floraweb.de/php/artenhome.php?name-use-id=6471"},
+    {"title": "Birch leaves — European Medicines Agency assessment report", "url": "https://www.ema.europa.eu/en/documents/herbal-report/final-assessment-report-betula-pendula-roth-betula-pubescens-ehrh-folium_en.pdf"}
+  ], "related": ["betula", "betula_papyrifera"]
+}
