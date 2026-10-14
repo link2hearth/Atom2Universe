@@ -149,7 +149,7 @@ class HamletArmoryTest {
             .put(JSONObject().put("hero", 7).put("slot", 0).put("piece", 5))
             .put(JSONObject().put("hero", 0).put("slot", 1).put("piece", 5))
         a.decode(JSONObject().put("pieces", JSONArray().put(piece).put(piece)).put("equipped", equipped).put("nextId", -1))
-        assertEquals(1, a.inventory.size); assertEquals(10, a.inventory.single().level)
+        assertEquals(1, a.inventory.size); assertEquals(HamletArmory.HARD_LEVEL, a.inventory.single().level)
         assertEquals(5, a.equipped(0, 0)!!.id); assertNull(a.equipped(7, 0)); assertNull(a.equipped(0, 1))
         val sanitized = GearBonuses(hpPercent = Double.NaN, attackPercent = Double.POSITIVE_INFINITY,
             lifesteal = 99.0, armorPierce = -5.0, haste = 99.0).bounded()
@@ -223,5 +223,20 @@ class HamletArmoryTest {
         assertFalse(a.canUpgradeQuality(p.id)); assertFalse(a.upgradeQuality(p.id)); assertArrayEquals(combat, g.adventure.bag)
         g.adventure.abandonBattle(); assertTrue(a.upgradeQuality(p.id))
         assertEquals(EquipmentRarity.LEGENDARY, a.inventory.single().rarity)
+    }
+
+    @Test fun `le plafond de niveau de l'equipement monte avec la profondeur de la campagne`() {
+        val g = funded(); val a = g.armory
+        g.adventure.frontier = 99; assertEquals(HamletArmory.MAX_LEVEL, a.levelCap())
+        g.adventure.frontier = HamletArmory.DEEP_FROM + HamletArmory.DEEP_STEP * 5; assertEquals(HamletArmory.MAX_LEVEL + 5, a.levelCap())
+        g.adventure.frontier = 100_000; assertEquals(HamletArmory.HARD_LEVEL, a.levelCap())
+        // une pièce au niveau maximal d'avant ne bouge plus ; creuser plus loin rouvre l'amélioration
+        g.adventure.frontier = 50
+        val piece = a.craft(0, GearSet.HUNT, EquipmentRarity.RARE)!!
+        repeat(HamletArmory.MAX_LEVEL - 1) { assertTrue(a.enhance(piece.id)) }
+        assertFalse(a.canEnhance(piece.id))
+        g.adventure.frontier = HamletArmory.DEEP_FROM + HamletArmory.DEEP_STEP * 3
+        assertTrue(a.canEnhance(piece.id)); assertTrue(a.enhance(piece.id))
+        assertTrue(a.pieceBonus(a.inventory.single()).attackPercent > a.pieceBonus(piece.copy(level = HamletArmory.MAX_LEVEL)).attackPercent)
     }
 }

@@ -164,7 +164,7 @@ internal class HamletArmoryDialog(private val context: Context, private val g: H
             text(box, owner?.let { HamletUi.tint(s("owner", name(it)), name(it) to HamletUi.rarity(HamletHeroes.defs[it].rarity)) } ?: s("reserve"), small = true)
             stats(box, armory.pieceBonus(piece))
             val price = armory.enhanceCost(piece.id)
-            if (piece.level < HamletArmory.MAX_LEVEL && price != null) {
+            if (piece.level < armory.levelCap() && price != null) {
                 button(box, s("enhance"), armory.canEnhance(piece.id), glyph = "hammer") { armory.enhance(piece.id); render() }
                 text(box, cost(price), small = true)
             } else text(box, s("max_level"), small = true, color = HamletUi.GOOD)

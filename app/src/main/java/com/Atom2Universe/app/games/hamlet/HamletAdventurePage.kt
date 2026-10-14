@@ -149,7 +149,7 @@ internal class HamletAdventurePage(private val context: Context, private val gam
         tab = page; scroll.scrollTo(0, 0); render()
     }
     override fun hide() = Unit
-    override fun tick() { supplies() }
+    override fun tick() { supplies(); tabDots() }
     override fun back(): Boolean {
         if (!away) return false
         a.abandonBattle(); render(); return true
@@ -167,6 +167,7 @@ internal class HamletAdventurePage(private val context: Context, private val gam
         val wanted = (if (heroes) 1 else 0) + 2 * tabs.size
         if (group == wanted && strip.childCount > 0) {
             for (i in 0 until strip.childCount - 1) (strip.getChildAt(i) as Button).let { b -> HamletUi.choice(b, b.tag == tab) }
+            tabDots()
             return
         }
         group = wanted; strip.removeAllViews()
@@ -177,6 +178,17 @@ internal class HamletAdventurePage(private val context: Context, private val gam
             }.apply { tag = t; maxLines = 1; HamletUi.choice(this, t == tab) }, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(5) })
         }
         strip.addView(info(s(if (heroes) "heroes" else "title"), s(if (heroes) "recruitment_help" else "help_text"), onDark = true), LinearLayout.LayoutParams(dp(44), -2))
+        tabDots()
+    }
+    /** Une pastille sur l'onglet Héros quand un appel ou une étoile attend, sur Équipe quand une place reste vide. */
+    private fun tabDots() {
+        for (i in 0 until strip.childCount - 1) (strip.getChildAt(i) as Button).let { b ->
+            HamletUi.waiting(b, when (b.tag) {
+                HEROES -> a[AdventureResource.TICKETS] >= 1 || a.heroes.any { it.owned && a.canPromote(it.id) }
+                TEAMS -> a.fielded() < minOf(a.slotCount(), a.ownedCount())
+                else -> false
+            })
+        }
     }
     private fun supplies() {
         a.advanceProduction()

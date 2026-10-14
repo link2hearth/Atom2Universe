@@ -40,7 +40,7 @@ class HamletHeroCollectionBenchTest {
         repeat(10_000) { a.add(AdventureResource.TICKETS, 1); for (r in a.summon()) counts[a.heroes[r.hero].def.rarity.ordinal]++ }
         println("communs ${counts[0]}, rares ${counts[1]}, épiques ${counts[2]}, légendaires ${counts[3]}, mythiques ${counts[4]}")
         assertEquals(0, counts[HeroRarity.LEGENDARY.ordinal]); assertEquals(0, counts[HeroRarity.MYTHIC.ordinal])
-        assertTrue(counts[HeroRarity.EPIC.ordinal] in 300..700)
+        assertTrue(counts[HeroRarity.EPIC.ordinal] in 200..400)
     }
 
     @Test fun theEpicGuaranteeNeverWaitsMoreThanItsLimit() {

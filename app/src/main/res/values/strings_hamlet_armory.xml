@@ -19,7 +19,7 @@
     <string name="hamlet_armory_quality">Reforge as %1$s</string>
     <string name="hamlet_armory_quality_help">Reforging keeps this piece’s level, set, identity and owner. It pays the difference in recipe and enhancement materials, plus a reforging surcharge. Your early investment stays useful; high-quality gear still needs the matching forge rank and campaign progress.</string>
     <string name="hamlet_armory_quality_max">Mythic quality</string>
-    <string name="hamlet_armory_max_level">Maximum level</string>
+    <string name="hamlet_armory_max_level">Maximum for now</string>
     <string name="hamlet_armory_salvage">Dismantle</string>
     <string name="hamlet_armory_salvage_return">Materials recovered: %1$s</string>
     <string name="hamlet_armory_salvage_help">Only unequipped pieces can be dismantled. The piece is consumed; recovered materials are always less than the amount spent.</string>

@@ -41,4 +41,11 @@
     <string name="hamlet_granary_help">Every harvest puts crops in the barn, up to %1$d of each. Buildings use them to reach their next tier, the quests ask for them and so do the legends. A bigger Hall makes the barn bigger.</string>
     <string name="hamlet_a_find">Lucky find!</string>
     <string name="hamlet_a_first_clear">First victory!</string>
+    <string name="hamlet_welcome_title">Welcome back!</string>
+    <string name="hamlet_welcome_since">You were away for %1$s.</string>
+    <string name="hamlet_welcome_camp">The camp gathered %1$s.</string>
+    <string name="hamlet_welcome_gain">%1$d %2$s</string>
+    <string name="hamlet_welcome_ready">Ready in the village: %1$d</string>
+    <string name="hamlet_welcome_vigil">A vigil has ended.</string>
+    <string name="hamlet_welcome_trip">An expedition is back.</string>
 </resources>

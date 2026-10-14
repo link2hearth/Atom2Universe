@@ -130,6 +130,17 @@ internal object HamletUi {
         val disabled = if (weight == Weight.QUIET) (if (onDark) 0x66F6EDD9 else 0x66293D37) else 0xFF6C786C.toInt()
         setTextColor(ColorStateList(arrayOf(intArrayOf(-android.R.attr.state_enabled), intArrayOf()), intArrayOf(disabled, enabled)))
     }
+    /** A red dot after a tab's label: something waits there. */
+    fun waiting(button: Button, on: Boolean) {
+        val context = button.context
+        val current = button.compoundDrawablesRelative
+        val has = current[2] != null
+        if (has == on) return
+        val dot: Drawable? = if (on) GradientDrawable().apply {
+            shape = GradientDrawable.OVAL; setColor(ALERT); setStroke(dp(context, 2), 0xFFFFFFFF.toInt()); setSize(dp(context, 13), dp(context, 13))
+        } else null
+        button.setCompoundDrawablesRelativeWithIntrinsicBounds(current[0], current[1], dot, current[3])
+    }
     /** A small picture before a button's label. */
     fun glyph(button: Button, glyph: String, weight: Weight = Weight.NORMAL) = button.apply {
         val size = when (weight) { Weight.MAIN -> 24; Weight.NORMAL -> 20; Weight.QUIET -> 17 }

@@ -135,7 +135,7 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
     }
     override fun hide() = Unit
     override fun tick() {
-        supplies()
+        supplies(); tabDots()
         for ((legend, label) in vigils) label.text = s(R.string.hamlet_legend_burning, duration(g.legends.timeLeft(legend)))
         countdown?.text = s(R.string.hamlet_expedition_running, name("region", j.expedition), duration(j.expeditionLeft()))
         readiness?.text = s(R.string.hamlet_s_ready, g.readyCount(), g.adventure.heroes.count { it.owned }, g.adventure.heroes.size)
@@ -149,6 +149,15 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
     }
     /** What may change on its own while the page is open: claimable tasks and chapters. */
     private fun snapshot(): List<Any> = listOf(tab, state.claimed, (0..2).map { state.canClaim(it) }, state.canClaimChest(), j.chapter, j.canClaim(), j.expedition, HamletLegends.defs.indices.map { g.legends.canFinish(it) })
+    /** Les pastilles des onglets : ce qui attend, ou vient de se terminer. */
+    private fun tabDots() {
+        val waiting = booleanArrayOf(
+            state.hasRewards(),
+            g.currentQuest()?.let { g.questDone(it) } == true || j.canClaim(),
+            j.expedition >= 0 && j.expeditionLeft() == 0L,
+            g.legends.attention())
+        for (i in 0 until tabs.childCount) HamletUi.waiting(tabs.getChildAt(i) as Button, waiting.getOrElse(i) { false })
+    }
     private fun supplies() {
         nav.supplies(listOf(
             HamletChip("crate", j.supplies.toLong(), s(R.string.hamlet_ui_number, j.supplies.toLong()), s(R.string.hamlet_ui_supplies, j.supplies.toLong())),
@@ -160,7 +169,7 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
         state.ensureDay(); rows.removeAllViews(); vigils.clear(); countdown = null; readiness = null; collectAction = null; expeditionAction = null
         for (i in 0 until tabs.childCount) HamletUi.choice(tabs.getChildAt(i) as Button, i == tab)
         tabScroll.post { tabScroll.smoothScrollTo((tabs.getChildAt(tab).left - dp(40)).coerceAtLeast(0), 0) }
-        supplies()
+        supplies(); tabDots()
         when (tab) { TODAY -> today(); CHAPTERS -> chapters(); EXPEDITIONS -> expeditions(); LEGENDS -> legends(); RESEARCH -> research(); WORK -> workshop(); else -> posts() }
         shown = snapshot()
         scroll.post { scroll.scrollTo(0, y) }

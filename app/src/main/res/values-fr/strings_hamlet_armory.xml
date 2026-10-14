@@ -19,7 +19,7 @@
     <string name="hamlet_armory_quality">Reforger en %1$s</string>
     <string name="hamlet_armory_quality_help">La reforge conserve le niveau, l’ensemble, l’identité et le propriétaire de cette pièce. Elle paie la différence des recettes et des améliorations, avec un supplément de reforge. Ton investissement initial reste utile ; la qualité supérieure demande toujours le rang de forge et la progression en campagne correspondants.</string>
     <string name="hamlet_armory_quality_max">Qualité mythique</string>
-    <string name="hamlet_armory_max_level">Niveau maximal</string>
+    <string name="hamlet_armory_max_level">Maximum pour l’instant</string>
     <string name="hamlet_armory_salvage">Démonter</string>
     <string name="hamlet_armory_salvage_return">Matériaux récupérés : %1$s</string>
     <string name="hamlet_armory_salvage_help">Seules les pièces retirées peuvent être démontées. La pièce est consommée ; les matériaux récupérés restent toujours inférieurs aux dépenses.</string>

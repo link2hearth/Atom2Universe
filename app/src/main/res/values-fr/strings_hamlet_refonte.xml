@@ -41,4 +41,11 @@
     <string name="hamlet_granary_help">Chaque récolte range des cultures dans la grange, jusqu’à %1$d de chacune. Les bâtiments s’en servent pour passer au rang suivant, les quêtes en demandent, les légendes aussi. Une halle plus grande agrandit la grange.</string>
     <string name="hamlet_a_find">Belle trouvaille !</string>
     <string name="hamlet_a_first_clear">Première victoire !</string>
+    <string name="hamlet_welcome_title">Te revoilà !</string>
+    <string name="hamlet_welcome_since">Tu étais absent depuis %1$s.</string>
+    <string name="hamlet_welcome_camp">Le camp a rassemblé %1$s.</string>
+    <string name="hamlet_welcome_gain">%1$d %2$s</string>
+    <string name="hamlet_welcome_ready">Prêt au village : %1$d</string>
+    <string name="hamlet_welcome_vigil">Une veillée est terminée.</string>
+    <string name="hamlet_welcome_trip">Une expédition est de retour.</string>
 </resources>

@@ -77,6 +77,13 @@ android {
         jvmTarget = "11"
     }
 
+    // Robolectric charge les ressources de l'appli : sans ça, un écran entier (Hamlet) ne peut pas s'ouvrir dans un test.
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+
     // Résout les conflits de librairies natives entre mididriver, ffmpeg-kit et fluidsynth
     packaging {
         jniLibs {

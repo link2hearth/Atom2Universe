@@ -14,6 +14,9 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.games.hamlet.HamletUi.Weight
 import com.Atom2Universe.app.util.SystemBarsManager
 
+/** En deçà de cette absence, le retour ne mérite pas de rapport. */
+private const val WELCOME_AFTER_MS = 15 * 60_000L
+
 /**
  * Le village garde tout l'écran. Une bannière commune, en bas, mène aux autres modules (aventure,
  * héros, journal, voisins) qui prennent sa place ; les fenêtres secondaires sont des fiches parchemin.
@@ -190,6 +193,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
 
     override fun onPause() {
         resumed = false; village.stop(); page()?.hide(); handler.removeCallbacks(loop); handler.removeCallbacks(delayedSave)
+        if (::game.isInitialized) prefs.edit().putLong("leftAt", game.now()).apply()
         save(); super.onPause()
     }
     override fun onSaveInstanceState(outState: Bundle) {
@@ -198,8 +202,43 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
     }
     override fun onResume() {
         super.onResume(); resumed = true
+        val welcome = if (::game.isInitialized && ::top.isInitialized) prepareWelcome() else null
         if (::village.isInitialized) { if (module == HamletModule.VILLAGE) village.start() else page()?.show(-1) }
         handler.removeCallbacks(loop); handler.post(loop)
+        if (welcome != null) handler.post(welcome)
+    }
+    /** Au retour après une vraie absence : ce que le camp a rassemblé et ce qui attend au village, en un coup d'œil. */
+    private fun prepareWelcome(): Runnable? {
+        val left = prefs.getLong("leftAt", 0L)
+        if (left <= 0L) return null
+        prefs.edit().remove("leftAt").apply()
+        val away = game.now() - left
+        if (away < WELCOME_AFTER_MS || unreadableSave || !prefs.getBoolean("introduced", false)) return null
+        val before = game.adventure.bag.clone()
+        game.tick()
+        return Runnable { showWelcome(away, before) }
+    }
+    private fun showWelcome(away: Long, before: LongArray) {
+        val a = game.adventure
+        val gains = AdventureResource.entries.mapNotNull { r ->
+            val gained = a[r] - before[r.ordinal]
+            if (gained > 0) getString(R.string.hamlet_welcome_gain, gained, stringByName("hamlet_a_resource_${r.name.lowercase()}")) else null
+        }
+        val ready = game.collectableCount()
+        val vigil = HamletLegends.defs.indices.any { game.legends.canFinish(it) }
+        val trip = game.journey.expedition >= 0 && game.journey.expeditionLeft() == 0L
+        if (gains.isEmpty() && ready == 0 && !vigil && !trip) return
+        val sheet = HamletSheet(this, getString(R.string.hamlet_welcome_title))
+        sheet.body.addView(text(getString(R.string.hamlet_welcome_since, duration(away))).apply { setTextColor(HamletUi.MUTED) })
+        if (gains.isNotEmpty()) sheet.body.addView(text(getString(R.string.hamlet_welcome_camp, gains.joinToString(getString(R.string.hamlet_list_separator)))))
+        if (ready > 0) sheet.body.addView(text(getString(R.string.hamlet_welcome_ready, ready)))
+        if (vigil) sheet.body.addView(text(getString(R.string.hamlet_welcome_vigil)))
+        if (trip) sheet.body.addView(text(getString(R.string.hamlet_welcome_trip)))
+        val collect = game.canCollectAll() && ready > 0
+        sheet.footer(*listOfNotNull(
+            if (collect) button(R.string.hamlet_ui_collect, "sack", Weight.MAIN) { sheet.dismiss(); val n = game.collectAll(); if (n > 0 && village.haptics) village.performHapticFeedback(HapticFeedbackConstants.CONFIRM) } to 1.4f else null,
+            button(R.string.hamlet_reveal_continue, null, if (collect) Weight.QUIET else Weight.MAIN) { sheet.dismiss() } to 1f).toTypedArray())
+        sheet.show()
     }
     override fun onDestroy() {
         handler.removeCallbacksAndMessages(null); worldFiles.close(); village.stop(); village.art.clear()

@@ -23,7 +23,7 @@
     <string name="hamlet_hurry_confirm">Terminer cette attente pour %1$d gemmes ?</string>
     <string name="hamlet_info">Détails</string>
     <string name="hamlet_upgrade">Améliorer</string>
-    <string name="hamlet_upgrade_confirm">Passer au rang %1$d ? Les revenus et l’expérience de ce bâtiment montent de 25 points, jusqu’à +100 %.</string>
+    <string name="hamlet_upgrade_confirm">Passer au rang %1$d ? Les revenus et l’expérience de ce bâtiment montent de 25 points, jusqu’à +100 %%.</string>
     <string name="hamlet_plant_all">Planter dans tous les champs vides compatibles</string>
     <string name="hamlet_crop_choice">%1$s · Coût %2$d · Vente %3$d pièces · %4$s</string>
     <string name="hamlet_footprint">Taille : %1$d × %2$d cases\nDéblocage : niveau %3$d · Habitants : %4$d\n</string>

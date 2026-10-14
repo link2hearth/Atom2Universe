@@ -23,7 +23,7 @@
     <string name="hamlet_hurry_confirm">Finish this timer for %1$d gems?</string>
     <string name="hamlet_info">Details</string>
     <string name="hamlet_upgrade">Improve</string>
-    <string name="hamlet_upgrade_confirm">Upgrade to tier %1$d? Income and experience from this building rise by 25 points, up to +100%.</string>
+    <string name="hamlet_upgrade_confirm">Upgrade to tier %1$d? Income and experience from this building rise by 25 points, up to +100%%.</string>
     <string name="hamlet_plant_all">Plant in every empty compatible field</string>
     <string name="hamlet_crop_choice">%1$s · Cost %2$d · Sale %3$d coins · %4$s</string>
     <string name="hamlet_footprint">Size: %1$d × %2$d tiles\nUnlock: level %3$d · Residents: %4$d\n</string>

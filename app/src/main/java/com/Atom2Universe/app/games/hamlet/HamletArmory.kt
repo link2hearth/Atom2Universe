@@ -101,6 +101,8 @@ class HamletArmory(private val g: HamletGame) {
         if (assignments.remove(hero * 4 + slot) == null) return false
         changed(); return true
     }
+    /** Le niveau que l'équipement peut atteindre : 10 au départ, puis un de plus tous les huit rangs de campagne au-delà du 100e. */
+    fun levelCap(): Int = if (g.sandbox) HARD_LEVEL else (MAX_LEVEL + (g.adventure.frontier - DEEP_FROM).coerceAtLeast(0) / DEEP_STEP).coerceAtMost(HARD_LEVEL)
     fun enhanceCost(pieceId: Int): GearCost? = pieces[pieceId]?.let { enhancementCost(it.rarity, it.level) }
     private fun enhancementCost(rarity: EquipmentRarity, level: Int) = GearCost(
         ore = (10L + (rarity.ordinal + 1) * 6L * level) * COST_MULT,
@@ -108,11 +110,11 @@ class HamletArmory(private val g: HamletGame) {
         crystal = if (rarity.ordinal >= 2 && level % 3 == 0) rarity.ordinal.toLong() else 0)
     fun canEnhance(pieceId: Int): Boolean {
         val piece = pieces[pieceId] ?: return false
-        return g.adventure.activeBattle == null && piece.level < MAX_LEVEL && unlocked(piece.rarity) && canPay(enhancementCost(piece.rarity, piece.level))
+        return g.adventure.activeBattle == null && piece.level < levelCap() && unlocked(piece.rarity) && canPay(enhancementCost(piece.rarity, piece.level))
     }
     fun enhance(pieceId: Int): Boolean {
         val piece = pieces[pieceId] ?: return false
-        if (g.adventure.activeBattle != null || piece.level >= MAX_LEVEL || !unlocked(piece.rarity)) return false
+        if (g.adventure.activeBattle != null || piece.level >= levelCap() || !unlocked(piece.rarity)) return false
         g.adventure.advanceProduction()
         if (!pay(enhancementCost(piece.rarity, piece.level))) return false
         pieces[pieceId] = piece.copy(level = piece.level + 1)
@@ -161,7 +163,7 @@ class HamletArmory(private val g: HamletGame) {
         changed(); return true
     }
     fun pieceBonus(piece: GearPiece): GearBonuses {
-        val scale = doubleArrayOf(1.0, 1.35, 1.75, 2.2)[piece.rarity.ordinal] * (1 + (piece.level.coerceIn(1, MAX_LEVEL) - 1) * 0.06)
+        val scale = doubleArrayOf(1.0, 1.35, 1.75, 2.2)[piece.rarity.ordinal] * (1 + (piece.level.coerceIn(1, HARD_LEVEL) - 1) * 0.06)
         val base = when (piece.slot) {
             0 -> GearBonuses(attackPercent = 0.025)
             1 -> GearBonuses(hpPercent = 0.035, armor = 2.0)
@@ -232,7 +234,7 @@ class HamletArmory(private val g: HamletGame) {
                 val rarity = EquipmentRarity.entries.firstOrNull { it.name == row.optString("rarity") } ?: continue
                 if (id <= 0 || id >= Int.MAX_VALUE || slot !in 0..3 || id in pieces) continue
                 val origin = EquipmentRarity.entries.firstOrNull { it.name == row.optString("craftRarity") && it.ordinal <= rarity.ordinal } ?: rarity
-                pieces[id] = GearPiece(id, slot, set, rarity, row.optInt("level", 1).coerceIn(1, MAX_LEVEL), origin)
+                pieces[id] = GearPiece(id, slot, set, rarity, row.optInt("level", 1).coerceIn(1, HARD_LEVEL), origin)
             }
         }
         nextId = maxOf(j.optInt("nextId", 1).coerceIn(1, Int.MAX_VALUE), (pieces.keys.maxOrNull() ?: 0) + 1)
@@ -253,7 +255,11 @@ class HamletArmory(private val g: HamletGame) {
         nextId = other.nextId
     }
     companion object {
+        /** Niveau de départ du plafond ; il monte avec la profondeur de la campagne jusqu'à [HARD_LEVEL]. */
         const val MAX_LEVEL = 10
+        const val HARD_LEVEL = 40
+        const val DEEP_FROM = 100
+        const val DEEP_STEP = 8
         /** Le minerai et les runes de l'équipement coûtent ce multiple : un ensemble complet se forge en semaines, pas en jours. */
         const val COST_MULT = 6L
     }
