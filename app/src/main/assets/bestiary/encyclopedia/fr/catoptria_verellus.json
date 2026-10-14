@@ -1,0 +1,30 @@
+{
+  "id": "catoptria_verellus",
+  "name": "Crambus enfumé",
+  "scientific": "Catoptria verellus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Catoptria verellus est un petit papillon européen de la famille des Crambidae, appelé crambus enfumé en français.",
+    "identification": "Son envergure est d’environ 17 à 18 mm ; les ailes antérieures sont brunes avec des marques pâles qui donnent un aspect marbré.",
+    "habitat": "Elle vit dans divers milieux européens ; les chenilles sont associées aux mousses qui poussent sur les troncs.",
+    "diet": "Les chenilles mangent des mousses, notamment celles qui poussent sur les pommiers, pruniers et peupliers.",
+    "behavior": "Les adultes viennent à la lumière et sont observés surtout au début de l’été, avec des vols plus tardifs possibles par temps doux.",
+    "reproduction": "Les larves se développent sur les mousses ; les sources consultées ne précisent pas le calendrier des œufs et des chrysalides.",
+    "ecology": "Elle appartient à Catoptria, genre de crambus ; C. pinella est une autre espèce européenne du genre, mais ses chenilles utilisent d’autres supports végétaux.",
+    "conservation": "Aucune évaluation de conservation propre à l’espèce n’a été trouvée ; le catalogue belge la dit commune dans ce pays, sans établir son statut sur toute son aire."
+  },
+  "sources": [
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5745/",
+      "title": "Catoptria verellus — Catalogue belge des Lépidoptères"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=24000",
+      "title": "Catoptria verellus — lepinet.fr"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Catoptria_verellus",
+      "title": "Catoptria verellus — Lepiforum"
+    }
+  ]
+}

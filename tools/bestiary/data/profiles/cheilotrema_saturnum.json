@@ -1,0 +1,189 @@
+{
+  "id": "cheilotrema_saturnum",
+  "scientific": "Cheilotrema saturnum",
+  "group": "fish",
+  "name": {
+    "en": "Black Croaker",
+    "fr": "Corvinata negra"
+  },
+  "sections": {
+    "overview": {
+      "en": "This coastal eastern Pacific sciaenid is commonly called the black croaker.",
+      "fr": "La corvinata negra est un poisson marin de la famille des Sciaenidae, originaire du Pacifique oriental tempéré en Amérique du Nord."
+    },
+    "identification": {
+      "en": "It has a deep dark body, a pale side bar, a black gill-cover mark and a heavy second anal spine.",
+      "fr": "Il a le corps haut et sombre, une barre pâle sur le flanc, une tache noire sur l’opercule et une deuxième épine anale robuste."
+    },
+    "habitat": {
+      "en": "It lives near the bottom in rocky crevices and caves beside sandy areas, from 3 to 100 m deep.",
+      "fr": "Il vit près du fond, dans des crevasses et grottes rocheuses près des zones sableuses, entre 3 et 100 m."
+    },
+    "diet": {
+      "en": "Its recorded prey include mobile bottom-dwelling crustaceans, especially shrimp and crabs.",
+      "fr": "Ses proies documentées comprennent des crustacés benthiques mobiles, surtout des crevettes et des crabes."
+    },
+    "behavior": {
+      "en": "A Southern California study found rocky-reef populations and large year-to-year changes in local abundance.",
+      "fr": "Une étude en Californie du Sud a relevé des populations de récifs rocheux et de fortes variations annuelles d’abondance locale."
+    },
+    "reproduction": {
+      "en": "Gonad indices peaked in June and August, indicating late-spring and summer spawning.",
+      "fr": "Les indices gonadiques culminaient en juin et en août, indiquant une ponte concentrée de la fin du printemps à l’été."
+    },
+    "ecology": {
+      "en": "Its genus also includes C. fasciatum, but published records do not provide a reliable field comparison.",
+      "fr": "Son genre comprend aussi C. fasciatum, mais les références consultées ne permettent pas de comparaison fiable sur le terrain."
+    },
+    "conservation": {
+      "en": "The Smithsonian database reports Data Deficient status, and a 2008 study noted no species-specific fishery plan.",
+      "fr": "La base Smithsonian indique « données insuffisantes »; une étude de 2008 notait l’absence de plan halieutique propre à l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Black Croaker — Shorefishes of the Eastern Pacific",
+        "fr": "Corvinata negra — Poissons côtiers du Pacifique oriental"
+      },
+      "url": "https://biogeodb.stri.si.edu/sftep/en/thefishes/species/1470",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The Smithsonian profile gives diagnostic color and fin marks, a 3–100 m depth range, caves and crevices habitat, and benthic-crustacean diet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 21,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The life history and ecology of black croaker, Cheilotrema saturnum — CalCOFI Reports",
+        "fr": "Histoire de vie et écologie de la corvinata negra, Cheilotrema saturnum — rapports CalCOFI"
+      },
+      "url": "https://calcofi.org/downloads/publications/calcofireports/v49/Vol_49_Miller_web.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "A 1995–2004 survey analysed 5,157 fish; gonad indices peaked in June and August, and the authors noted no species-specific fishery plan."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 102,
+        "notes_words": 21,
+        "total": 123,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cheilotrema saturnum — ITIS Taxonomic Report",
+        "fr": "Cheilotrema saturnum — rapport taxonomique ITIS"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=0169358",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS verifies the accepted species and Sciaenidae family and records the Spanish name corvinata negra."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 15,
+        "total": 15,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Species record — Shorefishes of the Eastern Pacific (Spanish edition)",
+        "fr": "Fiche espèce — Poissons côtiers du Pacifique oriental (édition espagnole)"
+      },
+      "url": "https://biogeodb.stri.si.edu/sftep/es/thefishes/species/1470",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The Spanish Smithsonian page independently reports the range and coastal habitat."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cheilotrema genus record — COPEPEDIA",
+        "fr": "Fiche du genre Cheilotrema — COPEPEDIA"
+      },
+      "url": "https://www.st.nmfs.noaa.gov/nauplius/media/copepedia/taxa/T5001472/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "COPEPEDIA lists two accepted species in the genus: C. fasciatum and C. saturnum."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 13,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Although genus resources list Cheilotrema fasciatum as another member, available accounts did not support a robust field-level comparison; the IUCN category reported by the Smithsonian database is Data Deficient."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the Smithsonian English and Spanish species pages, ITIS nomenclature, and the peer-reviewed CalCOFI life-history paper; separated broad database ecology from the California study's sampling results."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "chariaspilates_formosaria",
+  "name": "Beautiful Marsh Belle",
+  "scientific": "Chariaspilates formosaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This geometrid moth occurs patchily in Eurasian wetlands.",
+    "identification": "Its golden forewings carry an oblique silver-white line edged with tawny; wingspan is about 22–40 mm.",
+    "habitat": "It inhabits fens, marshes, bogs and waterlogged or overgrown meadows.",
+    "diet": "Larvae feed on wetland plants such as yellow loosestrife and bog myrtle, and sometimes dock.",
+    "behavior": "Adults are mainly active at dusk and night; the caterpillar overwinters.",
+    "reproduction": "It has one or two generations yearly, varying with latitude.",
+    "ecology": "The genus Chariaspilates currently has a single described species, so it has no direct congener comparison.",
+    "conservation": "Its conservation status is not uniformly assessed across its range, so regional categories should not be treated as a global result."
+  },
+  "sources": [
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/248842",
+      "title": "Chariaspilates formosaria — FAUNA species record"
+    },
+    {
+      "url": "https://lepidoptera.eu/species/639",
+      "title": "Chariaspilates formosaria — Lepidoptera Mundi"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/taxonomy/Geometroidea/Geometridae/Ennominae/Gnophini/Chariaspilates?view=1",
+      "title": "Genus Chariaspilates — LepiWiki"
+    }
+  ]
+}

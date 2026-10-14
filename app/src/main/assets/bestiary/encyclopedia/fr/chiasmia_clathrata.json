@@ -1,0 +1,30 @@
+{
+  "id": "chiasmia_clathrata",
+  "name": "Le Réseau",
+  "scientific": "Chiasmia clathrata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette petite géomètre appartient au genre Chiasmia et à la tribu des Macariini.",
+    "identification": "Ses ailes pâles portent un réseau de lignes sombres; l’adulte mesure environ 20–25 mm d’envergure.",
+    "habitat": "Elle fréquente les prairies sèches ou humides, les lisières forestières et les broussailles riches en légumineuses.",
+    "diet": "Les chenilles mangent des trèfles et de la luzerne; l’espèce dépend donc des Fabaceae plutôt que des herbes humides.",
+    "behavior": "Les adultes sont actifs le jour et viennent aussi aux lumières artificielles.",
+    "reproduction": "Elle produit généralement deux générations de fin avril à octobre et passe l’hiver sous forme de chrysalide dans le sol.",
+    "ecology": "Contrairement à Chariaspilates formosaria, géomètre des milieux humides, cette espèce appartient aux Macariini et non aux Gnophini.",
+    "conservation": "Elle est en préoccupation mineure dans l’évaluation régionale flamande de 2023, sans que cela indique son statut mondial."
+  },
+  "sources": [
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5784/",
+      "title": "Chiasmia clathrata — Catalogue des lépidoptères de Belgique"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=36210",
+      "title": "Chiasmia clathrata — Lepinet"
+    },
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/248842",
+      "title": "Chariaspilates formosaria — fiche espèce FAUNA"
+    }
+  ]
+}

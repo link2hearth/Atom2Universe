@@ -1,0 +1,30 @@
+{
+  "id": "chariaspilates_formosaria",
+  "name": "Phalène du Populage",
+  "scientific": "Chariaspilates formosaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette géomètre est présente de façon discontinue dans les zones humides eurasiatiques.",
+    "identification": "Ses ailes antérieures dorées portent une ligne oblique blanc argenté bordée de fauve; son envergure est d’environ 22–40 mm.",
+    "habitat": "Elle fréquente les bas-marais, marais, tourbières et prairies détrempées ou envahies.",
+    "diet": "Les larves consomment des plantes humides comme la lysimaque commune et la myrique baumier, parfois aussi des oseilles.",
+    "behavior": "Les adultes sont surtout actifs au crépuscule et la nuit; la chenille hiverne.",
+    "reproduction": "Elle accomplit une ou deux générations annuelles selon la latitude.",
+    "ecology": "Le genre Chariaspilates ne compte actuellement qu’une espèce décrite; aucune comparaison directe avec un congénère n’est donc possible.",
+    "conservation": "Son statut n’est pas évalué de façon uniforme sur toute son aire; une catégorie régionale ne doit pas être présentée comme mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/248842",
+      "title": "Chariaspilates formosaria — fiche espèce FAUNA"
+    },
+    {
+      "url": "https://lepidoptera.eu/species/639",
+      "title": "Chariaspilates formosaria — Lepidoptera Mundi"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/taxonomy/Geometroidea/Geometridae/Ennominae/Gnophini/Chariaspilates?view=1",
+      "title": "Genre Chariaspilates — LepiWiki"
+    }
+  ]
+}

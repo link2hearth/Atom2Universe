@@ -1,0 +1,34 @@
+{
+  "id": "cheritra_freja",
+  "name": "Impérial commun",
+  "scientific": "Cheritra freja",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "L’Impérial commun est un thécla asiatique de la tribu des Cheritrini, au sein des Lycaenidae; cette tribu est aussi appelée « imperials » en anglais.",
+    "identification": "Les données indiennes distinguent les sous-espèces régionales Cheritra freja butleri et Cheritra freja evansi.",
+    "habitat": "Un inventaire autour de Matheran, dans l’ouest de l’Inde, l’a observé en lisière forestière.",
+    "diet": "En Inde, ses chenilles consomment des plantes de plusieurs familles, notamment les Fabaceae, Lauraceae, Rubiaceae et Sapindaceae.",
+    "behavior": "À Matheran, les adultes pompent l’humidité des sols, se chauffent au soleil et visitent la sève, les carcasses, les déjections, les fientes et les fruits pourris.",
+    "reproduction": "Les sources documentent les plantes hôtes larvaires, mais donnent peu de détails propres à l’espèce sur la parade, la ponte ou le calendrier des générations.",
+    "ecology": "Ses larves utilisent des plantes de plusieurs familles, tandis que les adultes exploitent aussi les sols minéralisés et diverses matières organiques.",
+    "conservation": "Les sources examinées documentent la répartition indienne et l’histoire naturelle, mais ne donnent pas d’évaluation mondiale actuelle."
+  },
+  "sources": [
+    {
+      "url": "https://www.ifoundbutterflies.org/cheritra-freja",
+      "title": "Cheritra freja — Butterflies of India"
+    },
+    {
+      "url": "https://doi.org/10.11609/jott.3104.10.4.11495-11550",
+      "title": "Nouvelles plantes hôtes larvaires des papillons des Ghâts occidentaux — Journal of Threatened Taxa"
+    },
+    {
+      "url": "https://doi.org/10.3897/zookeys.915.46586",
+      "title": "À la recherche de papillons oubliés : inventaire de Matheran après 125 ans"
+    },
+    {
+      "url": "https://databases.nbair.res.in/insectpests/Cheritra-freja.php",
+      "title": "Cheritra freja — Bureau national des ressources en insectes agricoles"
+    }
+  ]
+}

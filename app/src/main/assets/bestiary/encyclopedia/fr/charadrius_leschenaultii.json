@@ -1,0 +1,30 @@
+{
+  "id": "charadrius_leschenaultii",
+  "name": "Gravelot de Leschenault",
+  "scientific": "Charadrius leschenaultii",
+  "group": "birds",
+  "sections": {
+    "overview": "Migrateur au long cours, ce gravelot niche en Asie centrale et hiverne sur les côtes de trois continents.",
+    "identification": "C’est un limicole de la famille des Charadriidae qui s’alimente au sol.",
+    "habitat": "Il niche dans les plaines sèches et salines dégagées, puis hiverne sur les plages abritées, estuaires et vasières.",
+    "diet": "À l’intérieur des terres, il mange des insectes; sur les côtes, surtout des mollusques, vers et petits crustacés.",
+    "behavior": "Il migre en bandes, s’alimente en petits groupes et peut se reposer en grands rassemblements.",
+    "reproduction": "Il pond dans une dépression peu profonde creusée dans le sable, le gravier ou un sol nu similaire.",
+    "ecology": "Son cycle annuel relie les zones sèches de nidification intérieure aux zones humides côtières où il s’alimente.",
+    "conservation": "BirdLife le classe en préoccupation mineure, mais signale un déclin et la perte d’habitats côtiers."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T22693862A153879900.en",
+      "title": "Gravelot de Leschenault — évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/sites/default/files/env/pages/e711ae40-3418-4d68-bcda-a95ed1bef677/files/charadrius-leschenaultii-consultation.pdf",
+      "title": "Avis de conservation sur le Gravelot de Leschenault — ministère australien du Climat, de l’Énergie, de l’Environnement et de l’Eau"
+    },
+    {
+      "url": "https://www.seor.fr/oiseau-52-gravelot-de-leschenault.html",
+      "title": "Gravelot de Leschenault — Société d’Études Ornithologiques de La Réunion"
+    }
+  ]
+}

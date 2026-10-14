@@ -1,0 +1,30 @@
+{
+  "id": "catoptria_verellus",
+  "name": "Marbled Grass-veneer",
+  "scientific": "Catoptria verellus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Catoptria verellus is a small European grass-veneer moth in the family Crambidae, known in French as crambus enfumé.",
+    "identification": "Its wingspan is about 17–18 mm; the forewings are brown with pale markings, giving a marbled appearance.",
+    "habitat": "It occurs in varied European habitats; larvae are associated with mosses growing on tree trunks.",
+    "diet": "The caterpillars feed on mosses, including those growing on apple, plum and poplar trees.",
+    "behavior": "Adults come to light and are recorded mainly in early summer, with later flight possible in mild weather.",
+    "reproduction": "Larvae develop on moss substrates; detailed species-specific egg and pupal timing is not established by the accounts consulted.",
+    "ecology": "It belongs to Catoptria, a genus of grass-veneer moths; the related C. pinella is another European congener but its larvae use different plant substrates.",
+    "conservation": "No species-specific conservation assessment was located; the Belgian catalogue describes it as common there, which does not establish status across its full range."
+  },
+  "sources": [
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5745/",
+      "title": "Catoptria verellus — Belgian Lepidoptera Catalogue"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=24000",
+      "title": "Catoptria verellus — lepinet.fr"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Catoptria_verellus",
+      "title": "Catoptria verellus — Lepiforum"
+    }
+  ]
+}

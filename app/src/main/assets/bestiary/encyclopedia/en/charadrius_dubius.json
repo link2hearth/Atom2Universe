@@ -1,0 +1,38 @@
+{
+  "id": "charadrius_dubius",
+  "name": "Little Ringed Plover",
+  "scientific": "Charadrius dubius",
+  "group": "birds",
+  "sections": {
+    "overview": "The Little Ringed Plover is a small Old World plover that breeds on open inland shores and winters mainly in Africa and the Mediterranean. The American Ornithological Society now places it in Thinornis, although European references still use Charadrius.",
+    "identification": "It is smaller and more compact than the coastal Kentish Plover (C. alexandrinus); the breeding adult has a complete dark chest band and a bright yellow eye-ring, while C. alexandrinus has a broken band and no such ring.",
+    "habitat": "Its natural nesting sites are gravel bars, shingle islands and bare lake margins near fresh water; where these disappear, it also colonizes gravel pits, quarries and other sparsely vegetated disturbed ground.",
+    "diet": "It picks small invertebrates from the ground or shallow water, including insects, worms and small crustaceans.",
+    "behavior": "It often runs quickly, stops abruptly to pick prey, and may perform a distraction display by feigning injury to draw a threat away from its nest.",
+    "reproduction": "The nest is a shallow scrape among stones or bare substrate, where camouflaged eggs are laid; the female may lay a second clutch and the male can care for earlier chicks.",
+    "ecology": "Unlike C. alexandrinus, which is strongly associated with coasts and saline wetlands, this species is primarily inland and can exploit temporary gravel workings, although such substitutes remain vulnerable to disturbance and vegetation growth.",
+    "conservation": "The global IUCN assessment lists it as Least Concern, while local populations depend on maintaining open gravelly nesting patches and limiting disturbance during breeding."
+  },
+  "sources": [
+    {
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Petit-gravelot.pdf",
+      "title": "Little Ringed Plover — French National Museum of Natural History habitat account"
+    },
+    {
+      "url": "https://normandie.lpo.fr/oiseaux-de-normandie/inventaire-oiseaux-de-normandie-effectifs-et-populations/petit-gravelot/",
+      "title": "Little Ringed Plover — LPO Normandy"
+    },
+    {
+      "url": "https://www.cms.int/species/charadrius-dubius",
+      "title": "Little Ringed Plover — Convention on Migratory Species"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/little-ringed-plover",
+      "title": "Little Ringed Plover — British Trust for Ornithology"
+    },
+    {
+      "url": "https://checklist.americanornithology.org/taxa/383",
+      "title": "AOS Check-list: Thinornis dubius"
+    }
+  ]
+}

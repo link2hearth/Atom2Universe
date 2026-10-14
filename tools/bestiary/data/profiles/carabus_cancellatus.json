@@ -1,0 +1,165 @@
+{
+  "id": "carabus_cancellatus",
+  "scientific": "Carabus cancellatus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Cancellate Ground Beetle",
+    "fr": "Carabe à chaînons"
+  },
+  "sections": {
+    "overview": {
+      "en": "This widespread Eurasian ground beetle is a member of Carabus, a genus of large, mostly flightless predatory beetles.",
+      "fr": "Ce carabe largement répandu en Eurasie appartient à Carabus, un genre de grands coléoptères prédateurs généralement incapables de voler."
+    },
+    "identification": {
+      "en": "Adults are about 17–32 mm long, with a metallic coppery body and elytra marked by raised longitudinal ridges and broken chain-like rows.",
+      "fr": "Les adultes mesurent environ 17 à 32 mm ; leur corps est cuivré et métallique, avec des élytres portant des côtes longitudinales et des lignes interrompues en chaînettes."
+    },
+    "habitat": {
+      "en": "It occupies fields, meadows, gardens and open woodland, from lowlands into foothills, and often shelters beneath stones or vegetation.",
+      "fr": "Il fréquente champs, prairies, jardins et bois clairs, des basses terres aux piémonts, et s’abrite souvent sous les pierres ou la végétation."
+    },
+    "diet": {
+      "en": "Adults and larvae hunt insects, snails and earthworms, and may also feed on carrion.",
+      "fr": "Adultes et larves chassent insectes, escargots et vers de terre, et peuvent aussi consommer des charognes."
+    },
+    "behavior": {
+      "en": "It is active by day and night and runs rapidly across the ground rather than flying.",
+      "fr": "Il est actif de jour comme de nuit et court rapidement au sol au lieu de voler."
+    },
+    "reproduction": {
+      "en": "Females lay eggs in soil; larvae develop as predators, pupate underground and new-generation adults emerge later in the year.",
+      "fr": "Les femelles pondent dans le sol ; les larves sont prédatrices, se nymphosent sous terre et les adultes de la nouvelle génération émergent plus tard dans l’année."
+    },
+    "ecology": {
+      "en": "It belongs to the diverse Carabus ground-beetle genus; similar European species include C. granulatus and C. nemoralis, which differ in elytral sculpture and typical habitat.",
+      "fr": "Il appartient au riche genre de carabes Carabus ; parmi les espèces européennes ressemblantes figurent C. granulatus et C. nemoralis, distincts par la sculpture des élytres et les habitats fréquentés."
+    },
+    "conservation": {
+      "en": "Its German national Red List category is Near Threatened, with strong long-term decline reported; this regional status should not be confused with a global assessment.",
+      "fr": "En Allemagne, sa catégorie nationale est « quasi menacée » et le déclin à long terme est marqué ; ce statut régional ne doit pas être confondu avec une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Körnerwarze — Insektenbox",
+        "fr": "Körnerwarze — Insektenbox"
+      },
+      "url": "https://insektenbox.de/kaefer/carcan.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "German species account reports appearance, size, food and annual development.",
+        "The German species account describes predatory behavior and annual development."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 20,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gefeldeter Laufkäfer — Naturkompass",
+        "fr": "Carabus cancellatus — Naturkompass"
+      },
+      "url": "https://naturkompass.gartenexpedition.de/species/carabus-cancellatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "German-language account describes open habitats, ground-layer activity and predatory feeding."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 10,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carabus cancellatus — Rote-Liste-Zentrum",
+        "fr": "Carabus cancellatus — Centre allemand des listes rouges"
+      },
+      "url": "https://www.rote-liste-zentrum.de/en/detailseite/?species_uuid=c308e6e5-07e6-4738-8d1e-7d54df9ebeb9",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "German Red List record identifies national status and population trend."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 10,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carabus cancellatus — GBIF/Carabidae overview",
+        "fr": "Carabus cancellatus — Référence taxonomique Carabidae"
+      },
+      "url": "https://www.natur-in-nrw.de/HTML/Artenuebersichten/kaefer-uebersicht.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Regional beetle catalogue lists C. cancellatus alongside European Carabus relatives."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 10,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The life-cycle calendar varies by region; a single precise emergence window is not asserted.",
+    "La catégorie de menace citée concerne l’Allemagne, pas une évaluation mondiale."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked German natural-history and Red List accounts. C. granulatus and C. nemoralis are named as similar congeners; comparisons are diagnostic rather than claims of identical ecology."
+}

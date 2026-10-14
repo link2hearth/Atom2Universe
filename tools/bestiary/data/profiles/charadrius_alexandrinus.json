@@ -1,0 +1,176 @@
+{
+  "id": "charadrius_alexandrinus",
+  "scientific": "Charadrius alexandrinus",
+  "group": "birds",
+  "name": {
+    "en": "Kentish Plover",
+    "fr": "Gravelot à collier interrompu"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Kentish Plover is a small shorebird of warm coasts, salt lagoons and saline flats across much of the Old World; newer bird lists also place it in Anarhynchus.",
+      "fr": "Le Gravelot à collier interrompu est un petit limicole des côtes chaudes, lagunes salées et marais salants de l’Ancien Monde ; des listes ornithologiques récentes le placent aussi dans le genre Anarhynchus."
+    },
+    "identification": {
+      "en": "In breeding plumage the male has a black breast band interrupted at the front, dark facial marks and a rufous nape; the smaller-looking Little Ringed Plover (C. dubius) instead has a complete black chest band and conspicuous yellow eye-ring.",
+      "fr": "En plumage nuptial, le mâle porte un collier noir interrompu sur le devant, des marques faciales sombres et une nuque rousse ; le Petit Gravelot (C. dubius) a plutôt un collier noir complet et un cercle oculaire jaune bien visible."
+    },
+    "habitat": {
+      "en": "It nests on open sandy beaches, dunes and salt-lagoon margins with sparse vegetation, where bare ground lets adults conceal eggs and chicks.",
+      "fr": "Il niche sur les plages sableuses dégagées, les dunes et les bords de lagunes salées à végétation clairsemée, où le sol nu aide à dissimuler œufs et poussins."
+    },
+    "diet": {
+      "en": "It feeds on small invertebrates, especially insects, but also crustaceans, molluscs, worms and spiders gathered on exposed shores and saline wetlands.",
+      "fr": "Il mange de petits invertébrés, surtout des insectes, mais aussi des crustacés, mollusques, vers et araignées qu’il trouve sur les estrans et zones humides salées."
+    },
+    "behavior": {
+      "en": "Some populations are resident while others migrate short or long distances; in France many birds move south after gathering from midsummer into autumn.",
+      "fr": "Certaines populations sont sédentaires tandis que d’autres migrent sur de courtes ou longues distances ; en France, de nombreux oiseaux gagnent le sud après des rassemblements de la mi-été à l’automne."
+    },
+    "reproduction": {
+      "en": "The pair lays eggs in a shallow scrape on bare sand or salt-flat substrate, and one parent—often the male—may raise the precocial chicks after incubation.",
+      "fr": "Le couple pond dans une petite dépression sur le sable nu ou un substrat de marais salant ; après l’incubation, un seul parent, souvent le mâle, peut élever les poussins nidifuges."
+    },
+    "ecology": {
+      "en": "It is the coastal, saline-habitat counterpart to the mostly inland Little Ringed Plover in the neighbouring fiche; both rely on open ground but their breeding landscapes and collar patterns differ.",
+      "fr": "C’est le pendant côtier des milieux salés du Petit Gravelot décrit dans la fiche voisine, surtout continental ; les deux espèces utilisent des espaces ouverts, mais leurs habitats de reproduction et leurs colliers diffèrent."
+    },
+    "conservation": {
+      "en": "The global Red List category is Least Concern, but the French breeding population is assessed as Vulnerable and faces disturbance from beach recreation and loss of nesting habitat.",
+      "fr": "La catégorie mondiale de la Liste rouge est « préoccupation mineure », mais la population nicheuse française est classée vulnérable et subit le dérangement des plages et la perte d’habitats de nidification."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Kentish Plover — LPO France",
+        "fr": "Gravelot à collier interrompu — LPO France"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/gravelot-a-collier-interrompu",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "LPO account gives French and global status, plumage, diet, habitat, migration and breeding biology."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Coastal change and Kentish Plover nesting habitat — peer-reviewed study",
+        "fr": "Évolution du littoral et habitat de nidification du Gravelot à collier interrompu — étude évaluée par les pairs"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11458591/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "ecology",
+        "habitat"
+      ],
+      "facts": [
+        "Study describes global coastal breeding ecology, sandy-beach nesting and current global Least Concern category."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Kentish Plover — British Trust for Ornithology",
+        "fr": "Gravelot à collier interrompu — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/kentish-plover",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "overview"
+      ],
+      "facts": [
+        "BTO account uses current genus Anarhynchus and gives the English species account and distribution."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The catalogue retains Charadrius alexandrinus, while current sources differ in generic placement and some use Anarhynchus alexandrinus. Conservation status differs by scale: global LC versus France VU."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked LPO France, a peer-reviewed coastal nesting study and BTO; explicitly distinguished global and national conservation status and compared the species with C. dubius."
+}

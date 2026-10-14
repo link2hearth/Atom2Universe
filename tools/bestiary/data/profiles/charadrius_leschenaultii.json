@@ -1,0 +1,144 @@
+{
+  "id": "charadrius_leschenaultii",
+  "scientific": "Charadrius leschenaultii",
+  "group": "birds",
+  "name": {
+    "en": "Greater Sand Plover",
+    "fr": "Gravelot de Leschenault"
+  },
+  "sections": {
+    "overview": {
+      "en": "A long-distance migrant, this plover breeds in Central Asia and winters along coasts across three continents.",
+      "fr": "Migrateur au long cours, ce gravelot niche en Asie centrale et hiverne sur les côtes de trois continents."
+    },
+    "identification": {
+      "en": "It is a ground-feeding member of the plover family Charadriidae.",
+      "fr": "C’est un limicole de la famille des Charadriidae qui s’alimente au sol."
+    },
+    "habitat": {
+      "en": "It nests on dry, open plains and salt pans, then winters on sheltered beaches, estuaries and tidal flats.",
+      "fr": "Il niche dans les plaines sèches et salines dégagées, puis hiverne sur les plages abritées, estuaires et vasières."
+    },
+    "diet": {
+      "en": "Inland breeders take insects; coastal birds mainly eat molluscs, worms and small crustaceans.",
+      "fr": "À l’intérieur des terres, il mange des insectes; sur les côtes, surtout des mollusques, vers et petits crustacés."
+    },
+    "behavior": {
+      "en": "It migrates in flocks, feeds in small groups and may roost in large gatherings.",
+      "fr": "Il migre en bandes, s’alimente en petits groupes et peut se reposer en grands rassemblements."
+    },
+    "reproduction": {
+      "en": "It lays eggs in a shallow scrape on sand, gravel or similarly bare ground.",
+      "fr": "Il pond dans une dépression peu profonde creusée dans le sable, le gravier ou un sol nu similaire."
+    },
+    "ecology": {
+      "en": "Its annual route links dry inland nesting areas with productive coastal wetlands used for feeding.",
+      "fr": "Son cycle annuel relie les zones sèches de nidification intérieure aux zones humides côtières où il s’alimente."
+    },
+    "conservation": {
+      "en": "BirdLife lists it as Least Concern but reports a decreasing population and loss of coastal habitat.",
+      "fr": "BirdLife le classe en préoccupation mineure, mais signale un déclin et la perte d’habitats côtiers."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Greater Sandplover — IUCN Red List assessment",
+        "fr": "Gravelot de Leschenault — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T22693862A153879900.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The 2019 global assessment lists Least Concern and a decreasing population."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 11,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Greater Sand Plover conservation advice — Australian Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Avis de conservation sur le Gravelot de Leschenault — ministère australien du Climat, de l’Énergie, de l’Environnement et de l’Eau"
+      },
+      "url": "https://www.dcceew.gov.au/sites/default/files/env/pages/e711ae40-3418-4d68-bcda-a95ed1bef677/files/charadrius-leschenaultii-consultation.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The government review documents coastal and estuarine habitat degradation pressures across the non-breeding range."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 14,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gravelot de Leschenault — Société d’Études Ornithologiques de La Réunion",
+        "fr": "Gravelot de Leschenault — Société d’Études Ornithologiques de La Réunion"
+      },
+      "url": "https://www.seor.fr/oiseau-52-gravelot-de-leschenault.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The Réunion bird society reports records along open-water banks and river estuaries."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The common name varies among regions and references; this profile uses Greater Sand Plover in English and Gravelot de Leschenault in French."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the BirdLife global account with an Australian government habitat review and a French Réunion field account; kept claims about non-breeding habitats distinct from inland nesting habitat."
+}

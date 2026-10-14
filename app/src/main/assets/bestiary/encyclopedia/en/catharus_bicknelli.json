@@ -1,0 +1,34 @@
+{
+  "id": "catharus_bicknelli",
+  "name": "Bicknell’s Thrush",
+  "scientific": "Catharus bicknelli",
+  "group": "birds",
+  "sections": {
+    "overview": "Bicknell’s Thrush is a small migratory songbird that breeds in northeastern North America and winters in the Greater Antilles.",
+    "identification": "It closely resembles the Gray-cheeked Thrush C. minimus, but tends to have a redder tail, a shorter yellower bill and a rising song ending.",
+    "habitat": "Breeding habitat is dense, often high-elevation balsam-fir forest, while winter habitat is moist montane broadleaf forest in the Caribbean.",
+    "diet": "It eats insects and other small invertebrates during the breeding season and also takes fruit, particularly outside breeding.",
+    "behavior": "Its secretive habits and remote breeding habitat make population monitoring difficult; females defend winter territories in dense vegetation.",
+    "reproduction": "At breeding sites, females may receive provisioning help from several males, an unusual polygynandrous mating system among thrushes.",
+    "ecology": "It was long treated as a subspecies of the Gray-cheeked Thrush before being recognized as a distinct species; the two remain close relatives and look-alikes.",
+    "conservation": "It is listed as Threatened in Canada and Vulnerable globally; habitat alteration on breeding and Caribbean wintering grounds and climate change are concerns."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Bicknells_Thrush",
+      "title": "Bicknell’s Thrush — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/bicknell-thrush-2022.html",
+      "title": "COSEWIC Assessment and Status Report 2022 — Government of Canada"
+    },
+    {
+      "url": "https://bicknellsthrush.org/conservation-action-plan/conservation-action-plan-for-bicknells-thrush/",
+      "title": "Bicknell’s Thrush Conservation Action Plan — IBTCG"
+    },
+    {
+      "url": "https://bicknellsthrush.org/wp-content/uploads/2016/08/CAPspanishLR.pdf",
+      "title": "Bicknell’s Thrush — Spanish conservation action plan"
+    }
+  ]
+}

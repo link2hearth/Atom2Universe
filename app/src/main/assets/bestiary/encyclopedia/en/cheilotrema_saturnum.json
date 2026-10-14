@@ -1,0 +1,38 @@
+{
+  "id": "cheilotrema_saturnum",
+  "name": "Black Croaker",
+  "scientific": "Cheilotrema saturnum",
+  "group": "fish",
+  "sections": {
+    "overview": "This coastal eastern Pacific sciaenid is commonly called the black croaker.",
+    "identification": "It has a deep dark body, a pale side bar, a black gill-cover mark and a heavy second anal spine.",
+    "habitat": "It lives near the bottom in rocky crevices and caves beside sandy areas, from 3 to 100 m deep.",
+    "diet": "Its recorded prey include mobile bottom-dwelling crustaceans, especially shrimp and crabs.",
+    "behavior": "A Southern California study found rocky-reef populations and large year-to-year changes in local abundance.",
+    "reproduction": "Gonad indices peaked in June and August, indicating late-spring and summer spawning.",
+    "ecology": "Its genus also includes C. fasciatum, but published records do not provide a reliable field comparison.",
+    "conservation": "The Smithsonian database reports Data Deficient status, and a 2008 study noted no species-specific fishery plan."
+  },
+  "sources": [
+    {
+      "url": "https://biogeodb.stri.si.edu/sftep/en/thefishes/species/1470",
+      "title": "Black Croaker — Shorefishes of the Eastern Pacific"
+    },
+    {
+      "url": "https://calcofi.org/downloads/publications/calcofireports/v49/Vol_49_Miller_web.pdf",
+      "title": "The life history and ecology of black croaker, Cheilotrema saturnum — CalCOFI Reports"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=0169358",
+      "title": "Cheilotrema saturnum — ITIS Taxonomic Report"
+    },
+    {
+      "url": "https://biogeodb.stri.si.edu/sftep/es/thefishes/species/1470",
+      "title": "Species record — Shorefishes of the Eastern Pacific (Spanish edition)"
+    },
+    {
+      "url": "https://www.st.nmfs.noaa.gov/nauplius/media/copepedia/taxa/T5001472/",
+      "title": "Cheilotrema genus record — COPEPEDIA"
+    }
+  ]
+}

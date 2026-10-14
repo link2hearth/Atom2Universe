@@ -1,0 +1,34 @@
+{
+  "id": "cheritra_freja",
+  "name": "Common Imperial",
+  "scientific": "Cheritra freja",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This Asian hairstreak belongs to the lycaenid tribe Cheritrini, also collectively called “imperials” in English.",
+    "identification": "Indian records distinguish the regional subspecies Cheritra freja butleri and Cheritra freja evansi.",
+    "habitat": "A field survey recorded it at forest edges around Matheran in western India.",
+    "diet": "Its Indian caterpillars use host plants from Fabaceae, Lauraceae, Rubiaceae and Sapindaceae.",
+    "behavior": "At Matheran, adults were seen mud-puddling, basking, and visiting sap, carcasses, dung, bird droppings and rotting fruit.",
+    "reproduction": "The sources document larval host plants but provide little species-specific detail on courtship, egg laying or brood timing.",
+    "ecology": "Its larvae use plants from several families, while adults also exploit mineral-rich soil and diverse organic matter.",
+    "conservation": "The reviewed sources document Indian distribution and natural history but provide no current global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.ifoundbutterflies.org/cheritra-freja",
+      "title": "Cheritra freja — Butterflies of India"
+    },
+    {
+      "url": "https://doi.org/10.11609/jott.3104.10.4.11495-11550",
+      "title": "New larval host plants of butterflies in the Western Ghats — Journal of Threatened Taxa"
+    },
+    {
+      "url": "https://doi.org/10.3897/zookeys.915.46586",
+      "title": "Finding the forgotten gems: revisiting the butterflies of Matheran after 125 years"
+    },
+    {
+      "url": "https://databases.nbair.res.in/insectpests/Cheritra-freja.php",
+      "title": "Cheritra freja — National Bureau of Agricultural Insect Resources"
+    }
+  ]
+}

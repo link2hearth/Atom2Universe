@@ -1,0 +1,164 @@
+{
+  "id": "catharus_bicknelli",
+  "scientific": "Catharus bicknelli",
+  "group": "birds",
+  "name": {
+    "en": "Bicknell’s Thrush",
+    "fr": "Grive de Bicknell"
+  },
+  "sections": {
+    "overview": {
+      "en": "Bicknell’s Thrush is a small migratory songbird that breeds in northeastern North America and winters in the Greater Antilles.",
+      "fr": "La Grive de Bicknell est un petit passereau migrateur qui niche dans le nord-est de l’Amérique du Nord et hiverne dans les Grandes Antilles."
+    },
+    "identification": {
+      "en": "It closely resembles the Gray-cheeked Thrush C. minimus, but tends to have a redder tail, a shorter yellower bill and a rising song ending.",
+      "fr": "Elle ressemble beaucoup à la Grive à joues grises C. minimus, mais a généralement la queue plus rousse, le bec plus court et jaune, et le chant se termine en montant."
+    },
+    "habitat": {
+      "en": "Breeding habitat is dense, often high-elevation balsam-fir forest, while winter habitat is moist montane broadleaf forest in the Caribbean.",
+      "fr": "Son habitat de reproduction est une forêt dense de sapins baumiers, souvent en altitude ; elle hiverne dans les forêts montagnardes humides des Caraïbes."
+    },
+    "diet": {
+      "en": "It eats insects and other small invertebrates during the breeding season and also takes fruit, particularly outside breeding.",
+      "fr": "Elle mange insectes et autres petits invertébrés pendant la reproduction, ainsi que des fruits, surtout hors de cette période."
+    },
+    "behavior": {
+      "en": "Its secretive habits and remote breeding habitat make population monitoring difficult; females defend winter territories in dense vegetation.",
+      "fr": "Ses habitudes discrètes et son habitat de reproduction éloigné compliquent le suivi ; les femelles défendent des territoires d’hiver dans une végétation dense."
+    },
+    "reproduction": {
+      "en": "At breeding sites, females may receive provisioning help from several males, an unusual polygynandrous mating system among thrushes.",
+      "fr": "Sur les sites de nidification, plusieurs mâles peuvent nourrir une même femelle, système d’accouplement polygynandre inhabituel chez les grives."
+    },
+    "ecology": {
+      "en": "It was long treated as a subspecies of the Gray-cheeked Thrush before being recognized as a distinct species; the two remain close relatives and look-alikes.",
+      "fr": "Longtemps considérée comme une sous-espèce de la Grive à joues grises, elle est aujourd’hui reconnue comme espèce distincte ; les deux restent proches et se ressemblent."
+    },
+    "conservation": {
+      "en": "It is listed as Threatened in Canada and Vulnerable globally; habitat alteration on breeding and Caribbean wintering grounds and climate change are concerns.",
+      "fr": "Elle est menacée au Canada et vulnérable mondialement ; la transformation des habitats de reproduction et d’hivernage caribéens, ainsi que le changement climatique, sont préoccupants."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bicknell’s Thrush — Cornell Lab of Ornithology",
+        "fr": "Grive de Bicknell — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Bicknells_Thrush",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Cornell summarizes range, field marks and differences from Gray-cheeked Thrush."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 10,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "COSEWIC Assessment and Status Report 2022 — Government of Canada",
+        "fr": "Évaluation et rapport de situation COSEPAC 2022 — Gouvernement du Canada"
+      },
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/bicknell-thrush-2022.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Canadian assessment documents breeding/winter habitat, diet and demographic concern."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 9,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bicknell’s Thrush Conservation Action Plan — IBTCG",
+        "fr": "Plan d’action pour la conservation de la Grive de Bicknell — IBTCG"
+      },
+      "url": "https://bicknellsthrush.org/conservation-action-plan/conservation-action-plan-for-bicknells-thrush/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "International conservation group discusses monitoring limits and unusual breeding system."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 78,
+        "notes_words": 10,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bicknell’s Thrush — Spanish conservation action plan",
+        "fr": "Grive de Bicknell — Plan de conservation en espagnol"
+      },
+      "url": "https://bicknellsthrush.org/wp-content/uploads/2016/08/CAPspanishLR.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish-language plan provides range and conservation context, cross-checked with COSEWIC."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 10,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Migration habitat remains poorly documented, and Canadian trend estimates have broad uncertainty.",
+    "Le régime alimentaire varie selon la saison ; l’espèce reste difficile à détecter."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Cornell’s field account, the 2022 Canadian COSEWIC assessment and multilingual conservation-plan material. Distinguished the species from its close relative C. minimus."
+}

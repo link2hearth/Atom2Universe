@@ -1,0 +1,34 @@
+{
+  "id": "carabus_cancellatus",
+  "name": "Carabe à chaînons",
+  "scientific": "Carabus cancellatus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ce carabe largement répandu en Eurasie appartient à Carabus, un genre de grands coléoptères prédateurs généralement incapables de voler.",
+    "identification": "Les adultes mesurent environ 17 à 32 mm ; leur corps est cuivré et métallique, avec des élytres portant des côtes longitudinales et des lignes interrompues en chaînettes.",
+    "habitat": "Il fréquente champs, prairies, jardins et bois clairs, des basses terres aux piémonts, et s’abrite souvent sous les pierres ou la végétation.",
+    "diet": "Adultes et larves chassent insectes, escargots et vers de terre, et peuvent aussi consommer des charognes.",
+    "behavior": "Il est actif de jour comme de nuit et court rapidement au sol au lieu de voler.",
+    "reproduction": "Les femelles pondent dans le sol ; les larves sont prédatrices, se nymphosent sous terre et les adultes de la nouvelle génération émergent plus tard dans l’année.",
+    "ecology": "Il appartient au riche genre de carabes Carabus ; parmi les espèces européennes ressemblantes figurent C. granulatus et C. nemoralis, distincts par la sculpture des élytres et les habitats fréquentés.",
+    "conservation": "En Allemagne, sa catégorie nationale est « quasi menacée » et le déclin à long terme est marqué ; ce statut régional ne doit pas être confondu avec une évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://insektenbox.de/kaefer/carcan.htm",
+      "title": "Körnerwarze — Insektenbox"
+    },
+    {
+      "url": "https://naturkompass.gartenexpedition.de/species/carabus-cancellatus",
+      "title": "Carabus cancellatus — Naturkompass"
+    },
+    {
+      "url": "https://www.rote-liste-zentrum.de/en/detailseite/?species_uuid=c308e6e5-07e6-4738-8d1e-7d54df9ebeb9",
+      "title": "Carabus cancellatus — Centre allemand des listes rouges"
+    },
+    {
+      "url": "https://www.natur-in-nrw.de/HTML/Artenuebersichten/kaefer-uebersicht.html",
+      "title": "Carabus cancellatus — Référence taxonomique Carabidae"
+    }
+  ]
+}

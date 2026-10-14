@@ -1,0 +1,30 @@
+{
+  "id": "chiasmia_clathrata",
+  "name": "Latticed Heath",
+  "scientific": "Chiasmia clathrata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This small geometrid moth belongs to genus Chiasmia and the tribe Macariini.",
+    "identification": "Its pale wings have a dark lattice pattern, and adults span about 20–25 mm.",
+    "habitat": "It occurs in dry and wet meadows, forest edges and scrub with legumes.",
+    "diet": "The caterpillars feed on clovers and alfalfa, linking breeding to Fabaceae rather than wetland herbs.",
+    "behavior": "Adults are active by day and also come to artificial lights.",
+    "reproduction": "It usually has two generations between late April and October and overwinters as a pupa underground.",
+    "ecology": "Unlike the wetland geometrid Chariaspilates formosaria, this species belongs to tribe Macariini, not Gnophini.",
+    "conservation": "It is Least Concern in the 2023 Flemish regional assessment, not a global evaluation."
+  },
+  "sources": [
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5784/",
+      "title": "Chiasmia clathrata — Catalogue of the Lepidoptera of Belgium"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=36210",
+      "title": "Chiasmia clathrata — Lepinet"
+    },
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/248842",
+      "title": "Chariaspilates formosaria — FAUNA species record"
+    }
+  ]
+}

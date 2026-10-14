@@ -1,0 +1,164 @@
+{
+  "id": "cassida_rubiginosa",
+  "scientific": "Cassida rubiginosa",
+  "group": "invertebrates",
+  "name": {
+    "en": "Thistle Tortoise Beetle",
+    "fr": "Casside du chardon"
+  },
+  "sections": {
+    "overview": {
+      "en": "Cassida rubiginosa is a tortoise beetle in the leaf-beetle family Chrysomelidae, native across much of the Palearctic and introduced in parts of North America.",
+      "fr": "Cassida rubiginosa est une casside de la famille des Chrysomelidae, indigène dans une grande partie du Paléarctique et introduite dans certaines régions d’Amérique du Nord."
+    },
+    "identification": {
+      "en": "The adults are flattened and shield-like, with expanded margins of the pronotum and wing covers; larvae carry a shield made from shed skins and feces.",
+      "fr": "Les adultes sont aplatis et en forme de bouclier, avec les bords du pronotum et des élytres élargis ; les larves portent un bouclier fait de mues et d’excréments."
+    },
+    "habitat": {
+      "en": "It is associated with thistles and other Asteraceae in open habitats, including field edges and disturbed ground.",
+      "fr": "Elle fréquente les chardons et d’autres Astéracées dans les milieux ouverts, notamment les bordures de champs et terrains perturbés."
+    },
+    "diet": {
+      "en": "Adults and larvae feed on foliage, especially Canada thistle Cirsium arvense, and several other thistle relatives.",
+      "fr": "Adultes et larves consomment le feuillage, surtout celui du cirse des champs Cirsium arvense et de plusieurs chardons apparentés."
+    },
+    "behavior": {
+      "en": "Adults overwinter in litter, emerge in spring, feed and mate; the species normally has one generation per year.",
+      "fr": "Les adultes hivernent dans la litière, émergent au printemps, se nourrissent et s’accouplent ; l’espèce produit normalement une génération par an."
+    },
+    "reproduction": {
+      "en": "Eggs are laid on leaves and larvae pass through five instars before pupating on the host plant.",
+      "fr": "Les œufs sont pondus sur les feuilles et les larves traversent cinq stades avant de se nymphoser sur la plante hôte."
+    },
+    "ecology": {
+      "en": "It is closely related to other Cassida tortoise beetles, including C. stigmatica; host-plant breadth and larval shield traits help distinguish these congeners.",
+      "fr": "Elle est proche d’autres cassides du genre Cassida, dont C. stigmatica ; plantes hôtes et bouclier larvaire aident à distinguer ces congénères."
+    },
+    "conservation": {
+      "en": "It has been studied as a biological-control agent against invasive Canada thistle, but field effects can be modest and depend on other herbivores and site conditions.",
+      "fr": "Elle a été étudiée comme agent de lutte biologique contre le cirse des champs envahissant, mais ses effets au champ peuvent être modestes et dépendent des autres herbivores et du site."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cassida rubiginosa — Scientific Reports",
+        "fr": "Cassida rubiginosa — Scientific Reports"
+      },
+      "url": "https://www.nature.com/articles/s41598-019-46421-3",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Peer-reviewed comparison documents tortoise beetle morphology, shield and life-cycle context."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 10,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cassida rubiginosa — Province of British Columbia biological-control profile",
+        "fr": "Cassida rubiginosa — Profil de lutte biologique de la Colombie-Britannique"
+      },
+      "url": "https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/forestry/agents/cassida_rubiginosa.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Official profile covers thistle hosts and use as a foliar-feeding beetle."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 11,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Evolution of Specialization on Cirsium arvense — PMC",
+        "fr": "Évolution de la spécialisation sur Cirsium arvense — PMC"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4994537/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Peer-reviewed study reports univoltine life cycle and host-associated development."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 9,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Host selection and acceptance in Cassida rubiginosa — Pest Management Science",
+        "fr": "Choix des plantes hôtes chez Cassida rubiginosa — Pest Management Science"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/ps.7669",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Research analyses host selection and biological-control relevance."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 7,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host range differs between laboratory acceptance tests and field use; Canada thistle is treated as the principal host, not the only possible host.",
+    "L’efficacité de lutte biologique dépend du lieu et ne signifie pas que le coléoptère contrôle seul la plante."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked scientific studies with a British Columbia government biological-control account. C. stigmatica is cited as a close congener; effects are carefully qualified."
+}

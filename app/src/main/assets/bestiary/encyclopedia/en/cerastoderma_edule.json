@@ -1,0 +1,34 @@
+{
+  "id": "cerastoderma_edule",
+  "name": "Common Cockle",
+  "scientific": "Cerastoderma edule",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The common cockle is a burrowing marine bivalve native to European and north-west African coasts, especially sheltered tidal flats, estuaries and bays.",
+    "identification": "Its rounded, convex shell has strong radial ribs; it is commonly 1.5–3.5 cm long and resembles the lagoon cockle (C. glaucum), whose internal rib grooves extend farther across the shell.",
+    "habitat": "It lives just below the surface of sand or mud on the intertidal shore, using a muscular foot to burrow and resist wave-driven water movement.",
+    "diet": "It is a suspension feeder: water drawn through an inhalant siphon brings phytoplankton and suspended organic matter to its gills.",
+    "behavior": "The cockle remains buried with its short siphons near the sediment surface, where it can feed while largely protected within the sediment.",
+    "reproduction": "It has separate sexes and releases eggs and sperm into the water; spawning generally occurs from spring through summer, after which planktonic larvae settle and begin a buried life.",
+    "ecology": "The related C. glaucum is often found in lagoons and brackish water and can be confused with it; cockle beds also provide food for fish, crabs and shorebirds, including the plovers described in this bestiary.",
+    "conservation": "It is locally harvested and its abundance fluctuates with recruitment, weather and predation; studies in the Wadden Sea show why stock condition matters to both shellfish fisheries and birds that eat cockles."
+  },
+  "sources": [
+    {
+      "url": "https://doris.ffessm.fr/Especes/Cerastoderma-edule-Coque-commune-1378",
+      "title": "Cerastoderma edule — DORIS / FFESSM"
+    },
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/1384",
+      "title": "Common cockle — Marine Life Information Network"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2021.698467/full",
+      "title": "Small-scale and long-term variability in Wadden Sea cockle populations — Frontiers in Marine Science"
+    },
+    {
+      "url": "https://naturalhistory.museumwales.ac.uk/britishbivalves/browserecord.php?-recid=24",
+      "title": "Cerastoderma edule — National Museum Wales British Bivalves"
+    }
+  ]
+}

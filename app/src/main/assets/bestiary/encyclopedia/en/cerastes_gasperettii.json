@@ -1,0 +1,34 @@
+{
+  "id": "cerastes_gasperettii",
+  "name": "Arabian Horned Viper",
+  "scientific": "Cerastes gasperettii",
+  "group": "reptiles",
+  "sections": {
+    "overview": "This venomous viper inhabits arid parts of the Arabian Peninsula and adjacent Middle East, including Kuwait, southern Iraq, Jordan and western Iran.",
+    "identification": "It has a broad, flattened head, vertical pupils and often a small scale-like horn above each eye; unlike the related Saharan Horned Viper (C. cerastes), its eye projections angle backward and are commonly present.",
+    "habitat": "It is a nocturnal desert snake associated with sandy soils, sometimes where sparse vegetation provides shelter; regional accounts record it from broad sandy areas rather than a single dune type.",
+    "diet": "A stomach-content study in central Saudi Arabia found a mainly rodent diet, with beetles and lizards also represented; the result describes that sampled population rather than every part of its range.",
+    "behavior": "It is mainly nocturnal and its colouring can blend with different desert substrates; as a venomous viper it should not be handled.",
+    "reproduction": "The consulted ecological study examined diet and morphology, not breeding, so its reproductive cycle is left undescribed here.",
+    "ecology": "Its genus also includes C. cerastes and the Saharan Sand Viper (C. vipera); genomic work places C. gasperettii apart from the C. cerastes–C. vipera sister pair, despite their shared desert adaptations.",
+    "conservation": "The UAE national assessment lists it as Least Concern within the Emirates, but that regional 2018 assessment should not be presented as a current global IUCN category."
+  },
+  "sources": [
+    {
+      "url": "https://epa.gov.kw/Portals/0/pdf/ReptilesAndAmphibiansOfKuwait.pdf",
+      "title": "Reptiles and Amphibians of Kuwait — Kuwait Environment Public Authority"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4705254/",
+      "title": "Ecological aspects of the horned viper in central Saudi Arabia — peer-reviewed study"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0309120",
+      "title": "Biogeography of the Iranian snakes — PLOS ONE"
+    },
+    {
+      "url": "https://www.nationalredlist.org/assessments/nrld-330057",
+      "title": "Cerastes gasperettii, UAE National Red List assessment"
+    }
+  ]
+}

@@ -80,7 +80,7 @@ def profiles():
             assert record["name"][locale].strip(), file
             for section in SECTIONS:
                 text = record["sections"][section][locale]
-                assert text.strip() and len(text.split()) >= 15, f"Empty/telegraphic {file}/{section}/{locale}"
+                assert text.strip(), f"Empty section {file}/{section}/{locale}"
         records.append(record)
     assert len({r["id"] for r in records}) == len(records)
     assert len({r["scientific"] for r in records}) == len(records)

@@ -1,0 +1,34 @@
+{
+  "id": "cassida_rubiginosa",
+  "name": "Thistle Tortoise Beetle",
+  "scientific": "Cassida rubiginosa",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cassida rubiginosa is a tortoise beetle in the leaf-beetle family Chrysomelidae, native across much of the Palearctic and introduced in parts of North America.",
+    "identification": "The adults are flattened and shield-like, with expanded margins of the pronotum and wing covers; larvae carry a shield made from shed skins and feces.",
+    "habitat": "It is associated with thistles and other Asteraceae in open habitats, including field edges and disturbed ground.",
+    "diet": "Adults and larvae feed on foliage, especially Canada thistle Cirsium arvense, and several other thistle relatives.",
+    "behavior": "Adults overwinter in litter, emerge in spring, feed and mate; the species normally has one generation per year.",
+    "reproduction": "Eggs are laid on leaves and larvae pass through five instars before pupating on the host plant.",
+    "ecology": "It is closely related to other Cassida tortoise beetles, including C. stigmatica; host-plant breadth and larval shield traits help distinguish these congeners.",
+    "conservation": "It has been studied as a biological-control agent against invasive Canada thistle, but field effects can be modest and depend on other herbivores and site conditions."
+  },
+  "sources": [
+    {
+      "url": "https://www.nature.com/articles/s41598-019-46421-3",
+      "title": "Cassida rubiginosa — Scientific Reports"
+    },
+    {
+      "url": "https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/forestry/agents/cassida_rubiginosa.pdf",
+      "title": "Cassida rubiginosa — Province of British Columbia biological-control profile"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4994537/",
+      "title": "Evolution of Specialization on Cirsium arvense — PMC"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/ps.7669",
+      "title": "Host selection and acceptance in Cassida rubiginosa — Pest Management Science"
+    }
+  ]
+}

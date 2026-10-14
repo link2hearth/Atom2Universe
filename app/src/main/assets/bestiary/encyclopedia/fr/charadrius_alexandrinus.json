@@ -1,0 +1,30 @@
+{
+  "id": "charadrius_alexandrinus",
+  "name": "Gravelot à collier interrompu",
+  "scientific": "Charadrius alexandrinus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Gravelot à collier interrompu est un petit limicole des côtes chaudes, lagunes salées et marais salants de l’Ancien Monde ; des listes ornithologiques récentes le placent aussi dans le genre Anarhynchus.",
+    "identification": "En plumage nuptial, le mâle porte un collier noir interrompu sur le devant, des marques faciales sombres et une nuque rousse ; le Petit Gravelot (C. dubius) a plutôt un collier noir complet et un cercle oculaire jaune bien visible.",
+    "habitat": "Il niche sur les plages sableuses dégagées, les dunes et les bords de lagunes salées à végétation clairsemée, où le sol nu aide à dissimuler œufs et poussins.",
+    "diet": "Il mange de petits invertébrés, surtout des insectes, mais aussi des crustacés, mollusques, vers et araignées qu’il trouve sur les estrans et zones humides salées.",
+    "behavior": "Certaines populations sont sédentaires tandis que d’autres migrent sur de courtes ou longues distances ; en France, de nombreux oiseaux gagnent le sud après des rassemblements de la mi-été à l’automne.",
+    "reproduction": "Le couple pond dans une petite dépression sur le sable nu ou un substrat de marais salant ; après l’incubation, un seul parent, souvent le mâle, peut élever les poussins nidifuges.",
+    "ecology": "C’est le pendant côtier des milieux salés du Petit Gravelot décrit dans la fiche voisine, surtout continental ; les deux espèces utilisent des espaces ouverts, mais leurs habitats de reproduction et leurs colliers diffèrent.",
+    "conservation": "La catégorie mondiale de la Liste rouge est « préoccupation mineure », mais la population nicheuse française est classée vulnérable et subit le dérangement des plages et la perte d’habitats de nidification."
+  },
+  "sources": [
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/gravelot-a-collier-interrompu",
+      "title": "Gravelot à collier interrompu — LPO France"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11458591/",
+      "title": "Évolution du littoral et habitat de nidification du Gravelot à collier interrompu — étude évaluée par les pairs"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/kentish-plover",
+      "title": "Gravelot à collier interrompu — British Trust for Ornithology"
+    }
+  ]
+}

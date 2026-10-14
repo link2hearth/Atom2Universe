@@ -1,0 +1,34 @@
+{
+  "id": "ceyx_rufidorsa",
+  "name": "Rufous-backed Dwarf Kingfisher",
+  "scientific": "Ceyx rufidorsa",
+  "group": "birds",
+  "sections": {
+    "overview": "This tiny resident kingfisher inhabits lowland forests of maritime Southeast Asia; modern BirdLife taxonomy treats it as a species distinct from the Black-backed Dwarf Kingfisher (C. erithaca).",
+    "identification": "It has a bright orange bill and underparts with rufous upperparts; the black-backed species C. erithaca instead shows a dark blue-black back, an important distinction in the former species complex.",
+    "habitat": "It is associated with lowland forest, often near streams, and is recorded as resident rather than a long-distance migrant.",
+    "diet": "As a small kingfisher it takes small animal prey; detailed species-specific diet data remain sparse in the sources consulted.",
+    "behavior": "Field observers in Malaysia documented a courting pair and nesting activity in 2023, adding rare observations to a species whose behaviour is little known.",
+    "reproduction": "The Malaysian observations include courtship and nest records, but the brief report does not establish a range-wide breeding calendar or typical clutch size.",
+    "ecology": "C. rufidorsa and C. erithaca were repeatedly lumped and split in bird checklists; the split is supported by genetic differentiation, while their plumage differences help identify the two bestiary relatives.",
+    "conservation": "The 2023 global IUCN assessment lists it as Least Concern but records a decreasing population trend, with forest loss identified as a pressure across parts of its range."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2023-1.RLTS.T22683144A227717722.en",
+      "title": "Ceyx rufidorsa — The IUCN Red List of Threatened Species (2023)"
+    },
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/black-backed-dwarf-kingfisher-ceyx-erithaca",
+      "title": "Black-backed Dwarf-kingfisher and taxonomic notes — BirdLife DataZone"
+    },
+    {
+      "url": "https://malaysianbird.report/wp-content/uploads/Malaysian-Bird-Report-March-2024-Final-07April2024-2.pdf",
+      "title": "Courtship and nesting of the Rufous-backed Dwarf Kingfisher — Malaysian Bird Report"
+    },
+    {
+      "url": "https://singaporebirds.com/species/rufous-backed-dwarf-kingfisher",
+      "title": "Rufous-backed Dwarf Kingfisher — Birds of Singapore"
+    }
+  ]
+}

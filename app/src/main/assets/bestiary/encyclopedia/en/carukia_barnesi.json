@@ -1,0 +1,34 @@
+{
+  "id": "carukia_barnesi",
+  "name": "Irukandji Jellyfish",
+  "scientific": "Carukia barnesi",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Carukia barnesi is a small box jellyfish from northern Australian waters and the first species linked to Irukandji syndrome.",
+    "identification": "Its transparent bell is about 1–2 cm across, while its tentacles can reach roughly 1 m; small size makes it difficult to see in water.",
+    "habitat": "It is usually solitary offshore in northern Australia, from Western Australia to Queensland, and winds and currents sometimes carry it inshore.",
+    "diet": "Immature medusae feed on invertebrate prey, while mature medusae shift toward vertebrate prey, according to a species-specific study.",
+    "behavior": "Most aspects of its behavior remain little known; prey capture appears to change as the animal matures.",
+    "reproduction": "Its life cycle includes fertilized eggs, a planula stage, polyps that reproduce by budding, and medusae released by strobilation.",
+    "ecology": "The common label “Irukandji” also refers to other small box jellies, including Malo kingi; C. barnesi is one species within this broader group.",
+    "conservation": "Its sting can cause Irukandji syndrome, a potentially severe illness; species-level abundance and conservation status are not well assessed."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/jellyfish/irukandji-carukia-barnesi/",
+      "title": "Irukandji, Carukia barnesi — Australian Museum"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.toxicon.2007.01.014",
+      "title": "Venom ontogeny, diet and morphology in Carukia barnesi — Toxicon"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0151197",
+      "title": "Early Life History of Carukia barnesi — PLOS ONE"
+    },
+    {
+      "url": "https://www.poisonsinfo.health.qld.gov.au/bites-and-stings/sea-creature-bites-and-stings",
+      "title": "Irukandji syndrome — Queensland Poisons Information Centre"
+    }
+  ]
+}

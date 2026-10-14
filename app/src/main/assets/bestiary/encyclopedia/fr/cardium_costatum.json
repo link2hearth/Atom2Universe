@@ -1,0 +1,38 @@
+{
+  "id": "cardium_costatum",
+  "name": "Bucarde côtelée",
+  "scientific": "Cardium costatum",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cardium costatum est une grande bucarde marine de l’Atlantique tropical oriental, particulièrement documentée le long de l’Afrique de l’Ouest.",
+    "identification": "Les adultes sont signalés autour de 80 à 110 mm ; la coquille renflée porte de fortes côtes radiales, à l’origine de son nom courant.",
+    "habitat": "Les données la situent sur des fonds peu profonds, sableux à vaseux, de la côte atlantique ouest-africaine, notamment au large de la Côte d’Ivoire.",
+    "diet": "Une étude de deux ans portant sur 400 spécimens ivoiriens a décrit un régime planctonophage, surtout phytoplanctonique, complété par des détritus et des bactéries.",
+    "behavior": "Comme d’autres bucardes, c’est un bivalve fouisseur peu profond qui filtre les particules alimentaires de l’eau ; les observations comportementales propres à l’espèce sont limitées.",
+    "reproduction": "Sa biologie larvaire et reproductive est peu décrite dans les sources trouvées ; aucun calendrier détaillé de reproduction n’est donc avancé.",
+    "ecology": "Le nom accepté est Cardium costatum ; la littérature taxonomique de 2007 a clarifié son identité par rapport à C. maxicostatum, espèce ouest-africaine ressemblante.",
+    "conservation": "Aucune évaluation de conservation propre à l’espèce n’a été trouvée ; les données d’occurrence et de pêche disponibles ici ne permettent pas de conclure à la sécurité des populations."
+  },
+  "sources": [
+    {
+      "url": "https://www.marinespecies.org/aphia.php?id=224543&p=taxdetails",
+      "title": "Cardium costatum — Registre mondial des espèces marines"
+    },
+    {
+      "url": "https://www.jstage.jst.go.jp/article/prpsj/8/4/8_4_221/_pdf",
+      "title": "Adaptations morphologiques des bucardes — Paleontological Research"
+    },
+    {
+      "url": "https://www.ijcmas.com/abstractview.php?ID=22508&SNo=45&vol=10-9-2021",
+      "title": "Alimentation de Cardium costatum en Côte d’Ivoire — IJCMAS"
+    },
+    {
+      "url": "https://natuurtijdschriften.nl/pub/597335/BAST2007071001005.pdf",
+      "title": "Notes sur l’identité de Cardium costatum — Basteria"
+    },
+    {
+      "url": "https://www.sealifebase.se/summary/FamilySummary.php?ID=1849",
+      "title": "Données sur la famille Cardiidae — SeaLifeBase"
+    }
+  ]
+}

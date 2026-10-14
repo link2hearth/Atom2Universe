@@ -1,0 +1,34 @@
+{
+  "id": "carcharhinus_amblyrhynchoides",
+  "name": "Graceful Shark",
+  "scientific": "Carcharhinus amblyrhynchoides",
+  "group": "fish",
+  "sections": {
+    "overview": "The graceful shark is an Indo-West Pacific requiem shark of coastal and continental-shelf waters, recorded from the Gulf region to northern Australia.",
+    "identification": "It is a medium-sized streamlined shark; Australian records give a maximum of 167 cm total length, while reliable records can be confused with similar blacktip sharks.",
+    "habitat": "It uses continental-shelf waters to at least 50 m and is especially associated with mangrove habitats in northern Australia.",
+    "diet": "Its diet includes fishes; species-specific prey data are limited, and fishing records often group it with other blacktip sharks.",
+    "behavior": "It is a mobile coastal predator, but detailed movement and lifespan information remains sparse.",
+    "reproduction": "It is a live-bearing shark; available Australian syntheses report maturity near 110 cm total length in both sexes, while other reproductive details remain poorly known.",
+    "ecology": "It can be mistaken for the blacktip shark C. limbatus or spinner shark C. brevipinna; it is distinct from the grey reef shark C. amblyrhynchos despite the similar scientific name.",
+    "conservation": "FishBase reports the current global IUCN category as Vulnerable; fishing pressure and identification problems complicate estimates of population trends."
+  },
+  "sources": [
+    {
+      "url": "https://www.fish.gov.au/docs/SharkReport/2023_FRDC_Carcharhinus_amblyrhynchoides_final.pdf",
+      "title": "Graceful Shark — Australian Shark Report"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/860",
+      "title": "Carcharhinus amblyrhynchoides — FishBase"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/expert-advice-cites-ndfs-graceful-sharks.pdf",
+      "title": "Graceful Shark CITES non-detriment advice — Australian Government"
+    },
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/2017-035.pdf",
+      "title": "Graceful Shark — IUCN/SSC regional assessment"
+    }
+  ]
+}
