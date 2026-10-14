@@ -117,6 +117,21 @@ class HamletRecruitmentTest {
         val saved = a.bag.clone(); a.advanceProduction(); assertArrayEquals(saved, a.bag)
     }
 
+    @Test fun `la prochaine invitation de l'auberge se compte a rebours`() {
+        val g = game(); val a = g.adventure
+        assertNull(a.innNextIn())
+        g.coins = 1_000_000; g.xp = 1_000_000
+        val origin = g.realmOrigin()
+        val spot = (origin until origin + g.realmSize()).flatMap { y -> (origin until origin + g.realmSize()).map { x -> x to y } }
+            .first { (x, y) -> g.canPlace("adventureInn", x, y, false) }
+        val inn = g.buy("adventureInn", spot.first, spot.second, false)!!
+        time += inn.def.build * 1000L + 1; g.tick()
+        val first = a.innNextIn()!!
+        assertTrue("environ 24 h au rang 1 : $first", first in 23 * 3_600_000L..24 * 3_600_000L)
+        time += 6 * 3_600_000L; a.advanceProduction()
+        assertTrue(a.innNextIn()!! < first - 5 * 3_600_000L)
+    }
+
     @Test fun `formation automatique place defenseurs et soin sans doublons`() {
         val a = game().adventure; starters(a)
         assertTrue(a.autoFormation())

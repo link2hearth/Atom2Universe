@@ -50,6 +50,8 @@ internal class HamletAdventurePage(private val context: Context, private val gam
     private var away = false
     private var fighting = false
     private var heroFilter = -1
+    /** La minuterie qui se met à jour d'elle-même : la prochaine invitation de l'auberge. */
+    private var innLabel: TextView? = null
     private var page = a.frontier / 12
     private var selected = a.frontier
     private val haptics get() = nav.haptics
@@ -111,6 +113,12 @@ internal class HamletAdventurePage(private val context: Context, private val gam
         parent.addView(button(label, enabled, weight, glyph = glyph) { if (operation()) render() })
     }
     private fun info(title: CharSequence, message: CharSequence, onDark: Boolean = false) = HamletUi.info(context, title, message, onDark)
+    private fun clock(ms: Long): String {
+        val minutes = (ms.coerceAtLeast(0) + 59_999) / 60_000
+        return if (minutes >= 60) context.getString(R.string.hamlet_duration_hours, minutes / 60, minutes % 60) else context.getString(R.string.hamlet_duration_minutes, minutes)
+    }
+    private fun campText() = s("camp_storage", clock(a.campCapMinutes() * 60_000L))
+    private fun innText() = a.innNextIn()?.let { s("inn_next", clock(it)) }
     private fun toast(value: String) { Toast.makeText(context, value, Toast.LENGTH_SHORT).show() }
     /** A parchment card; [help] adds a "?" beside its title. */
     private fun card(title: CharSequence, help: CharSequence? = null, parent: LinearLayout = rows, glyph: String? = null): LinearLayout = column().also {
@@ -149,7 +157,10 @@ internal class HamletAdventurePage(private val context: Context, private val gam
         tab = page; scroll.scrollTo(0, 0); render()
     }
     override fun hide() = Unit
-    override fun tick() { supplies(); tabDots() }
+    override fun tick() {
+        supplies(); tabDots()
+        innText()?.let { innLabel?.text = it }
+    }
     override fun back(): Boolean {
         if (!away) return false
         a.abandonBattle(); render(); return true
@@ -195,7 +206,7 @@ internal class HamletAdventurePage(private val context: Context, private val gam
         nav.supplies(emptyList())
     }
     private fun render() {
-        a.advanceProduction(); rows.removeAllViews(); away = false; fighting = false
+        a.advanceProduction(); rows.removeAllViews(); away = false; fighting = false; innLabel = null
         if (tab in HERO_TABS) lastHeroes = tab else lastAdventure = tab
         strip(); supplies()
         when (tab) { EXPLORE -> explore(); HEROES -> heroes(); TEAMS -> teams(); FORGE -> craft(); KINGDOM -> kingdom(); else -> challenges() }
@@ -240,6 +251,7 @@ internal class HamletAdventurePage(private val context: Context, private val gam
     private fun explore() {
         val headline = card(s("campaign", selected + 1, region(selected)), glyph = "map")
         text(headline, s("explore_help", a.power(), a.slotCount()), small = true)
+        text(headline, campText(), small = true)
         val gather = a.node(selected) in listOf(AdventureNode.GATHER, AdventureNode.SHRINE)
         side(headline, button(s(if (gather) "gather" else "battle"), selected <= a.frontier, Weight.MAIN, glyph = if (gather) "flower" else "sword") {
             if (gather) gather(selected) else battle(BattleMode.CAMPAIGN, selected)
@@ -253,7 +265,7 @@ internal class HamletAdventurePage(private val context: Context, private val gam
         side(headline, *nav.toTypedArray())
         val box = card(s("stage_choice", selected + 1, s("node_${a.node(selected).name.lowercase()}")))
         text(box, s("loot_preview", 1 + selected / 10), small = true)
-        if (selected == a.frontier) text(box, s("loot_first", 2), color = HamletUi.GOOD)
+        if (selected == a.frontier) text(box, s("loot_first", HamletAdventure.FIRST_SHARE.toInt()), color = HamletUi.GOOD)
         if (selected > a.frontier) text(box, s("route_locked", a.frontier + 1), color = HamletUi.BAD)
         if (a.node(selected) !in listOf(AdventureNode.GATHER, AdventureNode.SHRINE)) {
             val foes = a.encounter(BattleMode.CAMPAIGN, selected)
@@ -308,6 +320,7 @@ internal class HamletAdventurePage(private val context: Context, private val gam
         val tickets = a[AdventureResource.TICKETS]
         val call = card(s("call_title"), s("recruitment_help") + "\n\n" + s("inn_recruitment", a.recruitmentWork), glyph = "ticket")
         text(call, s("tickets_line", tickets), true)
+        innText()?.let { innLabel = text(call, it, small = true) }
         if (a.scriptedLeft() == 0) {
             val epic = s("rarity_${HeroRarity.EPIC.ordinal}")
             text(call, HamletUi.tint(s("pity_line", s("pity_in", epic, a.epicIn())), epic to HamletUi.rarity(HeroRarity.EPIC)), small = true)

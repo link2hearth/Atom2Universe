@@ -144,4 +144,42 @@ class HamletEcranTest {
         assertEquals(0, game.quest)
         controller.pause().stop().destroy()
     }
+
+    @Test fun laRevelationAnimeeSeDessineImageParImagePuisLeBoutonApparait() {
+        val controller = ecran(); val activity = controller.get()
+        for ((hero, legende) in listOf(7 to false, 20 to false, 8 to true, 10 to true)) {
+            HamletHeroReveal(activity, hero, legende, effects = true, haptics = false) {}.show()
+            val decor = org.robolectric.shadows.ShadowDialog.getLatestDialog().window!!.decorView
+            val image = android.graphics.Bitmap.createBitmap(540, 1050, android.graphics.Bitmap.Config.ARGB_8888)
+            repeat(40) {
+                shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofMillis(250))
+                decor.measure(View.MeasureSpec.makeMeasureSpec(540, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(1050, View.MeasureSpec.EXACTLY))
+                decor.layout(0, 0, 540, 1050); decor.draw(android.graphics.Canvas(image))
+            }
+            val continuer = vues(decor).filterIsInstance<Button>().first()
+            assertEquals("le bouton apparaît à la fin de la révélation du héros $hero", View.VISIBLE, continuer.visibility)
+            assertTrue(continuer.performClick())
+        }
+        controller.pause().stop().destroy()
+    }
+
+    @Test fun uneVeilleeSAlluemeDepuisLeCarnetQuandToutEstPret() {
+        val controller = ecran(); val activity = controller.get(); val decor = activity.window.decorView
+        val game = activity.game
+        game.journey.chapter = 6; game.coins = 5_000_000; game.xp = 5_000_000
+        val origin = game.realmOrigin()
+        val spot = (origin until origin + game.realmSize()).flatMap { y -> (origin until origin + game.realmSize()).map { x -> x to y } }
+            .first { (x, y) -> game.canPlace(HamletLegends.CIRCLE, x, y, false) }
+        val cercle = game.buy(HamletLegends.CIRCLE, spot.first, spot.second, false)!!
+        cercle.b0 = 0
+        game.adventure.add(AdventureResource.CRYSTAL, 500)
+        for (n in game.legends.phase(0)!!.needs) game.pantry[n.crop] = n.units
+        activity.onChanged(); idle()
+        activity.open(HamletModule.JOURNAL, HamletJournalPage.LEGENDS); idle()
+        val allumer = bouton(decor, "Allumer la veillée")!!
+        assertTrue(allumer.isEnabled); assertTrue(allumer.performClick()); idle()
+        assertTrue(game.legends.running(0))
+        assertTrue(textes(decor).any { it.startsWith("Le feu brûle") })
+        controller.pause().stop().destroy()
+    }
 }

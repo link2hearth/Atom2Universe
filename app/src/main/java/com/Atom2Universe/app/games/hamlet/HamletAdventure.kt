@@ -304,6 +304,12 @@ class HamletAdventure(private val g: HamletGame) {
     }
     /** La réserve du camp se remplit pendant au plus ce temps ; l'entrepôt l'allonge. */
     fun campCapMinutes() = ((CAMP_HOURS + CAMP_HOURS_PER_RANK * facilityRank("adventureStore")).coerceAtMost(CAMP_HOURS_MAX)) * 60L
+    /** Millisecondes avant la prochaine invitation de l'auberge ; null tant qu'aucune auberge n'est terminée. */
+    fun innNextIn(): Long? {
+        val rank = facilityRank("adventureInn").coerceIn(0, 3)
+        if (rank <= 0) return null
+        return ((INN_INVITATION_UNITS - innTicketProgress) / (3 + rank)).coerceAtLeast(0)
+    }
     /** Minutes avant que la réserve du camp soit pleine (0 si elle l'est). */
     fun campFullIn(): Long {
         val elapsed = ((g.now() - productionAt) / 60_000).coerceAtLeast(0)

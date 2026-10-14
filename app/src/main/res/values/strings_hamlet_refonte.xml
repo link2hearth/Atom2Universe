@@ -50,4 +50,6 @@
     <string name="hamlet_welcome_trip">An expedition is back.</string>
     <string name="hamlet_restart">Start over</string>
     <string name="hamlet_restart_confirm">Erase this world and begin again from the first day? Buildings, heroes and progress of this world are lost.</string>
+    <string name="hamlet_a_inn_next">Next invitation from the inn in %1$s</string>
+    <string name="hamlet_a_camp_storage">The camp keeps up to %1$s of work</string>
 </resources>
