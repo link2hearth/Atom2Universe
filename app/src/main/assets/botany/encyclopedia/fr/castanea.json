@@ -1,0 +1,11 @@
+{
+  "id": "castanea",
+  "sections": [
+    {"title": "Port et feuilles", "text": "L’entrée Castanea désigne Castanea sativa, le châtaignier européen, grand arbre caduc pouvant atteindre environ 35 m. Ses feuilles lancéolées et dentées mesurent environ 16 à 28 cm ; les chatons floraux peuvent atteindre 10 à 20 cm."},
+    {"title": "Châtaignes et distinction", "text": "Les fruits sont enfermés dans une bogue très épineuse ; les châtaignes sont comestibles et se consomment notamment cuites ou en farine. Elles ne doivent pas être confondues avec les graines du marronnier d’Inde, non comestibles et toxiques. La planche correspond au châtaignier et montre bien les bogues."}
+  ],
+  "sources": [
+    {"title": "Castanea sativa — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A295349-1/general-information"},
+    {"title": "Castanea sativa — Cambridge University Botanic Garden", "url": "https://www.botanic.cam.ac.uk/the-garden/plant-list/castanea-sativa/"}
+  ], "related": ["aesculus"]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "cichorium",
+  "sections": [
+    {"title": "Identification et habitat", "text": "L’entrée Cichorium correspond à Cichorium intybus, la chicorée sauvage, et non à tout le genre. Cette vivace à longue racine pivotante atteint environ 1 m. Originaire d’Europe, d’Afrique du Nord et d’Asie occidentale et centrale, elle est désormais répandue le long des routes et sur les terrains perturbés. Ses capitules bleus sont formés uniquement de fleurons ligulés."},
+    {"title": "Feuilles et racines alimentaires", "text": "Les feuilles et les racines de certains groupes cultivés se mangent ; les racines de chicorée peuvent être torréfiées et moulues comme substitut de café. La planche montre la plante en fleurs et ses fruits secs, mais ni la longue racine ni les formes potagères. Ne pas confondre avec Cichorium endivia, autre espèce cultivée en salade."}
+  ],
+  "sources": [
+    {"title": "Cichorium intybus — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A194533-1/general-information"},
+    {"title": "Cichorium intybus — NC State Extension Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/cichorium-intybus/common-name/chicory/"},
+    {"title": "Cichorium intybus — PlantNET, Royal Botanic Garden Sydney", "url": "https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?lvl=sp&name=Cichorium~intybus&page=nswfl"}
+  ], "related": []
+}

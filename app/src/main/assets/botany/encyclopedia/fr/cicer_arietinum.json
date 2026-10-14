@@ -1,0 +1,12 @@
+{
+  "id": "cicer_arietinum",
+  "sections": [
+    {"title": "Port et culture", "text": "Le pois chiche est une annuelle domestiquée dans le Croissant fertile et aujourd’hui cultivée dans le monde. Il mesure couramment environ 20 à 100 cm ; sa racine pivotante peut atteindre 1 à 2 m. Ses petites fleurs papilionacées mesurent environ 8 à 10 mm et les gousses contiennent généralement une à trois graines."},
+    {"title": "Graines et image", "text": "Les graines mûres sont les pois chiches consommés ; leur taille et leur couleur varient selon les groupes cultivés, notamment kabuli et desi. La planche correspond aux feuilles composées, fleurs et gousses ; la gousse ouverte à deux graines est un exemple, pas une règle."}
+  ],
+  "sources": [
+    {"title": "The biology of chickpea — Office of the Gene Technology Regulator, Australia", "url": "https://www.ogtr.gov.au/sites/default/files/files/2021-07/the_biology_of_chickpeas_-_version_1_march_2019_0.pdf"},
+    {"title": "Cicer arietinum — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A486336-1/general-information"},
+    {"title": "Chickpea production guide — South African Department of Agriculture", "url": "https://nda.gov.za/phocadownloadpap/Brochures_and_Production_Guidelines/Brochure%20Chick%20Pea.pdf"}
+  ], "related": []
+}

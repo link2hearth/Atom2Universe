@@ -1,0 +1,11 @@
+{
+  "id": "centaurea",
+  "sections": [
+    {"title": "Identification and habitat", "text": "The catalogue entry Centaurea refers to Centaurea jacea, brown knapweed, rather than the whole genus. This Eurasian perennial grows about 30–150 cm tall and flowers from June into autumn in meadows, pastures, rough ground and roadsides. Its mauve flower heads are about 15–18 mm across."},
+    {"title": "Flower heads and comparison", "text": "The plate shows tubular florets and the brown, fringed appendages on the involucral bracts. This species differs from annual blue cornflower, Centaurea cyanus, with its bright blue heads. No food use was confirmed for this profile."}
+  ],
+  "sources": [
+    {"title": "Centaurea jacea — Flora of North America", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=250066298"},
+    {"title": "Centaurea jacea — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/42260/centaurea-jacea/details"}
+  ], "related": ["centaurea_cyanus"]
+}

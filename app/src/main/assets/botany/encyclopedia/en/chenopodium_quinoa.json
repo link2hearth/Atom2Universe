@@ -1,0 +1,12 @@
+{
+  "id": "chenopodium_quinoa",
+  "sections": [
+    {"title": "Habit and origin", "text": "Quinoa is an Andean annual in the Amaranthaceae, not a grass cereal. Its height varies greatly with cultivar and growing conditions, from about 20 cm to 3 m. Angular stems bear variable alternate leaves and dense panicles; the crop is now grown in many regions."},
+    {"title": "Seeds and food", "text": "Its seeds are eaten as a grain and the leaves can also be used as a vegetable. Seed coats of some varieties contain bitter saponins, so food preparation depends on the variety and suitable washing or processing. The plate shows a colourful cultivar, but that colour is not constant across the species."}
+  ],
+  "sources": [
+    {"title": "Chenopodium quinoa — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A165175-1/general-information"},
+    {"title": "Quinoa — Feedipedia, FAO/CIRAD", "url": "https://feedipedia.review.fao.org/node/229"},
+    {"title": "Quinoa varieties and groups — FAO", "url": "https://www.fao.org/quinoa-2013/what-is-quinoa/varieties/variety-groups-by-origin-and-use/en/"}
+  ], "related": []
+}

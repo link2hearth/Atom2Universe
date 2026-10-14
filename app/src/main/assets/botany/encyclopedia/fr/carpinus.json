@@ -1,0 +1,11 @@
+{
+  "id": "carpinus",
+  "sections": [
+    {"title": "Port et identification", "text": "L’entrée Carpinus désigne ici Carpinus betulus, le charme commun, arbre caduc d’Europe tempérée jusqu’à l’ouest de l’Asie. Il atteint généralement 20 à 25 m. Ses feuilles doublement dentées mesurent environ 8 à 10 cm et restent souvent sur les rameaux après leur dessèchement."},
+    {"title": "Chatons et fruits", "text": "Les chatons mâles mesurent jusqu’à environ 6 cm et les femelles peuvent atteindre 15 cm. Chaque petite nucule est associée à une bractée trilobée d’environ 3,5 cm ; la planche montre bien cette bractée foliacée, qui n’est pas une aile du fruit. Aucun usage alimentaire courant n’est établi."}
+  ],
+  "sources": [
+    {"title": "Carpinus betulus — Atlas européen des espèces d’arbres forestiers, Commission européenne", "url": "https://ies-ows.jrc.ec.europa.eu/efdac/download/Atlas/pdf/Carpinus_betulus.pdf"},
+    {"title": "Carpinus betulus — World Flora Online", "url": "https://www.worldfloraonline.org/taxon/wfo-0000804581"}
+  ], "related": []
+}

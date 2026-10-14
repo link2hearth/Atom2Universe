@@ -1,0 +1,12 @@
+{
+  "id": "carum_carvi",
+  "sections": [
+    {"title": "Port et milieu", "text": "Le carvi est une herbe bisannuelle aromatique d’Eurasie tempérée, cultivée et parfois naturalisée ailleurs. Il mesure généralement 30 à 60 cm, avec des feuilles finement découpées et des ombelles de petites fleurs blanches ou rosées."},
+    {"title": "Fruits et alimentation", "text": "Les fruits secs, couramment appelés graines de carvi en cuisine, sont utilisés comme épice ; les feuilles et la racine pivotante sont également consommées dans certains usages culinaires. La planche montre les feuilles, l’ombelle et les fruits nervurés."}
+  ],
+  "sources": [
+    {"title": "Carum carvi — NC State Extension Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/carum-carvi/common-name/caraway/"},
+    {"title": "Caraway — University of Illinois Extension", "url": "https://extension.illinois.edu/herbs/caraway"},
+    {"title": "Carum carvi — Native Plant Trust, Go Botany", "url": "https://gobotany.nativeplanttrust.org/species/carum/carvi/"}
+  ], "related": ["cicuta_virosa"]
+}

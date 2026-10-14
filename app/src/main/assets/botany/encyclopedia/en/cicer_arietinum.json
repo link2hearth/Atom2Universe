@@ -1,0 +1,12 @@
+{
+  "id": "cicer_arietinum",
+  "sections": [
+    {"title": "Habit and cultivation", "text": "Chickpea is an annual domesticated in the Fertile Crescent and now grown worldwide. Plants commonly reach about 20–100 cm; the taproot can extend 1–2 m. Its small papilionaceous flowers are about 8–10 mm long and pods usually contain one to three seeds."},
+    {"title": "Seeds and plate", "text": "Mature seeds are the chickpeas eaten as food; their size and colour vary among cultivated groups, including kabuli and desi. The plate matches the compound leaves, flowers and pods; the open pod with two seeds is one example, not a fixed count."}
+  ],
+  "sources": [
+    {"title": "The biology of chickpea — Office of the Gene Technology Regulator, Australia", "url": "https://www.ogtr.gov.au/sites/default/files/files/2021-07/the_biology_of_chickpeas_-_version_1_march_2019_0.pdf"},
+    {"title": "Cicer arietinum — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A486336-1/general-information"},
+    {"title": "Chickpea production guide — South African Department of Agriculture", "url": "https://nda.gov.za/phocadownloadpap/Brochures_and_Production_Guidelines/Brochure%20Chick%20Pea.pdf"}
+  ], "related": []
+}

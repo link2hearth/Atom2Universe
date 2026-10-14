@@ -1,0 +1,12 @@
+{
+  "id": "cicuta_virosa",
+  "sections": [
+    {"title": "Port et habitat", "text": "La ciguë aquatique est une vivace des marais, fossés et bordures d’eau du nord de l’Eurasie. Elle mesure environ 50 à 120 cm et porte une tige creuse, des feuilles finement divisées et des ombelles de fleurs blanches. Le rhizome et les racines présentent des cavités cloisonnées."},
+    {"title": "Toxicité majeure", "text": "Toutes les parties sont extrêmement toxiques, particulièrement le rhizome, qui contient de la cicutoxine et des composés apparentés ; une ingestion peut provoquer convulsions et intoxication grave. Ne rien consommer ni cueillir pour l’alimentation. L’image montre bien l’habitat humide, les feuilles, les ombelles et la coupe du rhizome cloisonné."}
+  ],
+  "sources": [
+    {"title": "Identification des ombellifères toxiques — Helsenorge, Norvège", "url": "https://www.helsenorge.no/en/poison-information/planter-og-bar-a-a/identifying-poisonous-umbellifers-in-norway/"},
+    {"title": "Poisonous plants: Cicuta virosa — ministère japonais de la Santé (MHLW)", "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000082096.html"},
+    {"title": "Cicuta virosa — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/840414-1/general-information"}
+  ], "related": ["carum_carvi"]
+}

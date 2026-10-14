@@ -1,0 +1,12 @@
+{
+  "id": "carum_carvi",
+  "sections": [
+    {"title": "Habit and habitat", "text": "Caraway is an aromatic biennial herb native to temperate Eurasia and cultivated or naturalised elsewhere. It usually grows 30–60 cm tall, with finely divided leaves and umbels of small white or pinkish flowers."},
+    {"title": "Fruits and food", "text": "The dried fruits, commonly called caraway seeds in cooking, are used as a spice; the leaves and taproot are also eaten in some culinary uses. The plate shows the divided leaves, umbel and ribbed fruits."}
+  ],
+  "sources": [
+    {"title": "Carum carvi — NC State Extension Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/carum-carvi/common-name/caraway/"},
+    {"title": "Caraway — University of Illinois Extension", "url": "https://extension.illinois.edu/herbs/caraway"},
+    {"title": "Carum carvi — Native Plant Trust, Go Botany", "url": "https://gobotany.nativeplanttrust.org/species/carum/carvi/"}
+  ], "related": ["cicuta_virosa"]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "cenchrus_ciliaris",
+  "sections": [
+    {"title": "Port et milieu", "text": "Cenchrus ciliaris est une graminée vivace en touffes, originaire des régions chaudes et sèches d’Afrique jusqu’à l’Asie du Sud. Les chaumes mesurent environ 10 à 150 cm et les feuilles 2 à 13 mm de large. Elle pousse dans les savanes et milieux ouverts secs, souvent sableux."},
+    {"title": "Inflorescence et usages", "text": "Son épi dense de 2 à 14 cm porte des groupes d’épillets entourés de soies ; le grain véritable est un petit caryopse. Elle est largement semée comme fourrage résistant à la sécheresse, mais peut devenir envahissante après introduction dans certaines régions. La planche correspond à la touffe et aux inflorescences cylindriques hérissées."}
+  ],
+  "sources": [
+    {"title": "Cenchrus ciliaris — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A395214-1/general-information"},
+    {"title": "Cenchrus ciliaris — PlantZAfrica, South African National Biodiversity Institute", "url": "https://pza.sanbi.org/cenchrus-ciliaris"},
+    {"title": "Cenchrus ciliaris — IUCN Red List", "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T13490705A13490709.en"}
+  ], "related": []
+}

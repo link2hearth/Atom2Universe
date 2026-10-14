@@ -1,0 +1,12 @@
+{
+  "id": "chlamydomonas_reinhardtii",
+  "sections": [
+    {"title": "Cellule et milieu", "text": "Chlamydomonas reinhardtii est une algue verte unicellulaire d’eau douce et de sols humides, surtout connue comme organisme modèle de laboratoire. Une cellule mesure environ 10 μm ; deux flagelles antérieurs lui permettent de nager. Un grand chloroplaste en coupe contient un pyrénoïde, et une tache oculaire participe à la perception de la lumière."},
+    {"title": "Image microscopique", "text": "Cette algue n’a ni feuilles, ni fleurs, ni racines, ni fruits. La planche agrandit fortement les cellules et illustre les deux flagelles, le chloroplaste et la tache oculaire ; elle est explicative, non à l’échelle d’une plante visible à l’œil nu. Aucun usage alimentaire humain fiable n’est retenu ici."}
+  ],
+  "sources": [
+    {"title": "Chlamydomonas as a model organism — Annual Review of Plant Biology", "url": "https://pubmed.ncbi.nlm.nih.gov/11337403/"},
+    {"title": "Cell size — BioNumbers, Harvard Medical School", "url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=109758&s=n&v=1"},
+    {"title": "Eyespot and phototaxis in Chlamydomonas — review, PubMed", "url": "https://pubmed.ncbi.nlm.nih.gov/27252218/"}
+  ], "related": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "carica_papaya",
+  "sections": [
+    {"title": "Port et reproduction", "text": "Le papayer est une grande plante herbacée arborescente des régions tropicales, pouvant approcher 10 m. Son tronc peu ramifié porte au sommet de très grandes feuilles palmées, souvent de 25 à 75 cm de diamètre. Selon la plante et le cultivar, les fleurs sont mâles, femelles ou bisexuées ; les baies charnues, très variables, peuvent atteindre environ 50 cm."},
+    {"title": "Fruit et latex", "text": "La chair du fruit mûr se mange ; les nombreuses graines noires remplissent une cavité centrale. Le latex contient notamment de la papaïne et peut provoquer des réactions chez certaines personnes sensibles au latex : la planche montre correctement fruits mûrs, coupe et graines, mais ne constitue pas un conseil d’usage du latex ou des fruits verts."}
+  ],
+  "sources": [
+    {"title": "Carica papaya — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A30011248-2/general-information"},
+    {"title": "Carica papaya — World Flora Online", "url": "https://www.worldfloraonline.org/taxon/wfo-0000588009"},
+    {"title": "Questions and answers about papain products and latex allergy — FDA", "url": "https://www.fda.gov/drugs/unapproved-drugs/questions-and-answers-about-fdas-enforcement-action-regarding-unapproved-topical-drug-products"}
+  ], "related": []
+}

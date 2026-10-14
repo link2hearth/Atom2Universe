@@ -1,0 +1,12 @@
+{
+  "id": "chlamydomonas_reinhardtii",
+  "sections": [
+    {"title": "Cell and habitat", "text": "Chlamydomonas reinhardtii is a unicellular green alga from freshwater and moist soils, best known as a laboratory model organism. A cell is about 10 μm across; two anterior flagella allow it to swim. A large cup-shaped chloroplast contains a pyrenoid, and an eyespot contributes to light sensing."},
+    {"title": "Microscopic plate", "text": "This alga has no leaves, flowers, roots or fruits. The plate greatly enlarges the cells and illustrates their two flagella, chloroplast and eyespot; it is explanatory and not to the scale of a plant visible to the naked eye. No reliable human food use is included."}
+  ],
+  "sources": [
+    {"title": "Chlamydomonas as a model organism — Annual Review of Plant Biology", "url": "https://pubmed.ncbi.nlm.nih.gov/11337403/"},
+    {"title": "Cell size — BioNumbers, Harvard Medical School", "url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=109758&s=n&v=1"},
+    {"title": "Eyespot and phototaxis in Chlamydomonas — review, PubMed", "url": "https://pubmed.ncbi.nlm.nih.gov/27252218/"}
+  ], "related": []
+}
