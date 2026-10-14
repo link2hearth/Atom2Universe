@@ -1,0 +1,14 @@
+{
+  "id": "viola",
+  "sections": [
+    {"title": "Un genre largement répandu", "text": "Viola comprend des centaines d’herbes annuelles ou vivaces, des plaines tempérées aux montagnes tropicales. Beaucoup portent des feuilles simples et dentées et des fleurs à cinq pétales, dont le pétale inférieur est distinctif ; port et couleurs varient fortement. La planche montre une violette basse, rhizomateuse, à feuilles en cœur et fleurs violettes, sans permettre une identification à l’espèce à partir du seul nom du genre."},
+    {"title": "Comestibilité selon l’espèce", "text": "Les feuilles et les fleurs de certaines violettes, y compris des espèces sauvages, sont consommées, mais cet usage ne peut pas être généralisé à toutes les Viola ni à tous les cultivars. Les racines ne sont pas interchangeables avec les feuilles et fleurs comestibles ; il faut vérifier l’espèce et la partie utilisée. L’illustration ne montre ni préparation alimentaire ni signe de toxicité."}
+  ],
+  "sources": [
+    {"title": "Kew Science — profil du genre Viola", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30000540-2"},
+    {"title": "Flora of North America — traitement du genre Viola", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=134607"},
+    {"title": "NC State Extension — violettes et parties comestibles", "url": "https://plants.ces.ncsu.edu/plants/viola/common-name/violets/"},
+    {"title": "University of Illinois Extension — violette bleue commune", "url": "https://extension.illinois.edu/blogs/good-growing/2017-06-07-embracing-common-blue-violet"}
+  ],
+  "related": []
+}

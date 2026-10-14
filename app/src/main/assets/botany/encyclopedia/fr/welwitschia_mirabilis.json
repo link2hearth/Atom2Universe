@@ -1,0 +1,32 @@
+{
+  "id": "welwitschia_mirabilis",
+  "sections": [
+    {
+      "title": "Deux feuilles pour toute une vie",
+      "text": "Cette gymnosperme désertique à croissance lente est originaire des zones arides du sud-ouest de l’Angola et du nord-ouest de la Namibie. Elle mesure généralement moins de 1 m de haut, bien que certains individus atteignent environ 2 m, et ses deux feuilles persistantes en lanières peuvent mesurer plusieurs mètres (jusqu’à environ 4 m dans des publications). Leur croissance continue à la base et l’usure divisent les feuilles adultes en rubans déchiquetés. La planche représente le tronc bas caractéristique, les deux longues feuilles et les cônes."
+    },
+    {
+      "title": "Cônes et longévité",
+      "text": "Welwitschia est dioïque : les cônes mâles et femelles apparaissent sur des individus distincts, près de la base des feuilles. Chaque plante peut vivre plusieurs siècles, certaines estimations dépassant 1 000 ans. Les sources botaniques citées n’établissent pas d’usage alimentaire ; les feuilles et les cônes ne sont donc pas présentés comme comestibles."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Kew Science — profil de Welwitschia mirabilis",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:383591-1/general-information"
+    },
+    {
+      "title": "Cambridge University Botanic Garden — Welwitschia mirabilis",
+      "url": "https://www.botanic.cam.ac.uk/the-garden/plant-list/welwitschia-mirabilis/"
+    },
+    {
+      "title": "University of California, Davis — Welwitschia",
+      "url": "https://conservatory.ucdavis.edu/collections/notable/welwitschia"
+    },
+    {
+      "title": "Oxford University Plants 400 — Welwitschia mirabilis",
+      "url": "https://herbaria.plants.ox.ac.uk/bol/plants400/Profiles/WX/Welwitschia"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "volvox_carteri",
+  "sections": [
+    {"title": "A motile green-algal colony", "text": "Volvox carteri is a freshwater volvocine green alga, not a land plant. Its spherical colony is a hollow extracellular-matrix structure with many small biflagellate somatic cells at the surface and larger reproductive cells inside. The plate shows whole colonies, surface cells and internal daughter colonies, consistent with the organism's organization."},
+    {"title": "Size and reproduction", "text": "A measured laboratory sample used for motility analysis had colony diameters of about 120–150 μm; size varies with strain and developmental stage. Asexual embryos develop inside the parent colony and invert during development so their flagella face outward. This microscopic alga is not a food plant."}
+  ],
+  "sources": [
+    {"title": "Koufopanou et al. — Morphology, taxonomy and mating-type loci in natural populations of Volvox carteri", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5882469/"},
+    {"title": "Goldstein — Multicellularity and the functional interdependence of motility and molecular transport", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1360517/"},
+    {"title": "Recent study — Uncertainty minimization and pattern recognition in Volvox carteri and V. aureus", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11858792/"}
+  ],
+  "related": []
+}

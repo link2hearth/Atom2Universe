@@ -1,0 +1,13 @@
+{
+  "id": "vicia",
+  "sections": [
+    {"title": "A diverse legume genus", "text": "Vicia (vetches) is a large genus of annual and perennial herbs, widespread through temperate and subtropical regions and extending into tropical mountains. Many species scramble or climb using branched tendrils at the tips of pinnate leaves; their pea-shaped flowers and pods vary in colour and size. The plate is a generic vetch illustration and does not identify one species."},
+    {"title": "Food and forage", "text": "Some vetches are grown as forage or cover crops, but genus-level identification is not enough to establish food safety. Several Vicia contain antinutritional or toxic compounds; for example, common vetch seed can contain beta-cyanoalanine-related toxins. Do not treat wild seeds as edible without species-level identification and appropriate preparation."}
+  ],
+  "sources": [
+    {"title": "Kew Science — Vicia genus profile", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:330034-2/general-information"},
+    {"title": "Cornell University — Vicia spp. and livestock toxicity", "url": "https://poisonousplants.ansci.cornell.edu/php/plants.php?action=indiv&byname=scientific&keynum=91"},
+    {"title": "Enneking — The toxicity of Vicia species and their utilisation as grain legumes", "url": "https://digital.library.adelaide.edu.au/dspace/bitstream/2440/37799/10/02whole.pdf"}
+  ],
+  "related": ["vicia_sativa", "vicia_sepium"]
+}

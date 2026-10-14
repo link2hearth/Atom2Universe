@@ -1,0 +1,32 @@
+{
+  "id": "zea",
+  "sections": [
+    {
+      "title": "Le genre du maïs",
+      "text": "Zea est un genre de graminées originaire du Mexique et d’Amérique centrale. La planche représente le maïs cultivé, Zea mays : une grande annuelle à larges feuilles, portant une panicule mâle terminale et des épis femelles le long de la tige. Selon la variété et les conditions de culture, le maïs peut dépasser 3 m ; l’image représente le maïs plutôt que les autres espèces de Zea."
+    },
+    {
+      "title": "Épis et grains",
+      "text": "Les soies émergent de chaque épi en développement et reçoivent le pollen de la panicule ; les grains sont les caryopses. Les variétés de maïs doux se mangent fraîches ou cuites, tandis que le maïs de grande culture, le maïs à éclater et les variétés ornementales ont d’autres usages. Cet usage alimentaire concerne les grains du maïs cultivé et ne s’étend pas automatiquement à toutes les parties ou espèces sauvages apparentées."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Kew Science — Zea genus profile",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:19280-1/general-information"
+    },
+    {
+      "title": "Purdue Extension — maïs doux et grains comestibles",
+      "url": "https://extension.purdue.edu/foodlink/food.php?food=sweet+corn"
+    },
+    {
+      "title": "Purdue Extension — culture du maïs doux",
+      "url": "https://ag.purdue.edu/department/hla/extension/extension-publications-library/ext-pubs/ho-98-w.html"
+    },
+    {
+      "title": "Purdue Extension — hauteur des plants de maïs doux",
+      "url": "https://www.extension.purdue.edu/extmedia/NCH/NCH-43.html"
+    }
+  ],
+  "related": []
+}

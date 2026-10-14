@@ -1,0 +1,13 @@
+{
+  "id": "vicia_sativa",
+  "sections": [
+    {"title": "Growth and identification", "text": "Common vetch is a scrambling annual that may climb or trail to about 2 m. Its pinnate leaves usually have 3–8 pairs of leaflets and a branched terminal tendril. Pea-like flowers, singly or in groups of up to three, range from white and pink to blue-purple; the cylindrical pods may reach 7 cm and hold up to 12 seeds. The image's purple flowers, tendrils and pod fit this species."},
+    {"title": "Forage and seed safety", "text": "It is widely cultivated for forage, but its seeds are not a straightforward pulse: some lines contain beta-cyanoalanine-related compounds and other antinutritional factors. Cultivation as livestock forage does not imply that raw seed is safe for people; species, cultivar and processing matter."}
+  ],
+  "sources": [
+    {"title": "Kew Science — Vicia sativa species profile", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:525117-1/general-information"},
+    {"title": "Enneking — The toxicity of Vicia species and their utilisation as grain legumes", "url": "https://digital.library.adelaide.edu.au/dspace/bitstream/2440/37799/10/02whole.pdf"},
+    {"title": "Cornell University — Vicia spp. and livestock toxicity", "url": "https://poisonousplants.ansci.cornell.edu/php/plants.php?action=indiv&byname=scientific&keynum=91"}
+  ],
+  "related": ["vicia", "vicia_sepium"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "vicia_sepium",
+  "sections": [
+    {"title": "Une grimpante vivace des haies", "text": "La vesce des haies est une vivace grimpante, généralement haute ou étalée sur environ 0,5 à 1 m ; ses vrilles s’accrochent à la végétation voisine. Ses feuilles pennées portent plusieurs paires de folioles ; de courts pédoncules soutiennent des grappes de fleurs lilas-bleu en forme de pois. Les gousses mesurent environ 2 à 4 cm. Vrilles, folioles, fleurs groupées et gousse étroite de la planche sont cohérentes avec l’espèce."},
+    {"title": "Écologie et usages", "text": "Des nodosités racinaires hébergent des bactéries qui fixent l’azote, et la plante est utilisée dans des mélanges fourragers de prairie. Son appartenance aux Fabacées ne suffit pas à garantir que ses graines soient comestibles ; cette espèce n’est pas présentée ici comme aliment humain."}
+  ],
+  "sources": [
+    {"title": "Kew Science — profil de Vicia sepium", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:525130-1/general-information"},
+    {"title": "Royal Horticultural Society — Vicia sepium", "url": "https://www.rhs.org.uk/plants/18961/vicia-sepium/details"},
+    {"title": "World Flora Online — Vicia sepium", "url": "https://www.worldfloraonline.org/taxon/wfo-0000212792"}
+  ],
+  "related": ["vicia", "vicia_sativa"]
+}

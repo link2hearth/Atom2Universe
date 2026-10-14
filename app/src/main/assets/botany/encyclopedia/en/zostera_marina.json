@@ -1,0 +1,13 @@
+{
+  "id": "zostera_marina",
+  "sections": [
+    {"title": "A flowering seagrass", "text": "Eelgrass is a true marine flowering plant rooted in soft coastal sediment, not a seaweed. Creeping rhizomes produce ribbon-like leaves, commonly around 1 m long and 2–12 mm wide, though length varies with depth and habitat. The submerged shoots and enclosed flowering spike shown in the plate fit Zostera marina."},
+    {"title": "Pollination and human use", "text": "It flowers underwater; water currents carry pollen between the small male and female flowers in each reproductive shoot, and seeds develop in the spathe. Historical sources document consumption of leaf bases and rhizomes by some Indigenous North American communities, but that account does not establish general safety or recommend harvesting."}
+  ],
+  "sources": [
+    {"title": "USDA NRCS — Eelgrass plant fact sheet", "url": "https://plants.usda.gov/DocumentLibrary/factsheet/pdf/fs_zoma.pdf"},
+    {"title": "New Jersey Department of Environmental Protection — Seagrass Conservation Program", "url": "https://dep.nj.gov/njfw/conservation/submerged-aquatic-vegetation/"},
+    {"title": "MARINe — Zostera marina target species profile", "url": "https://marine.ucsc.edu/target/zostera/"}
+  ],
+  "related": []
+}

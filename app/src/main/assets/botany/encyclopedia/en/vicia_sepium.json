@@ -1,0 +1,13 @@
+{
+  "id": "vicia_sepium",
+  "sections": [
+    {"title": "A perennial hedgerow climber", "text": "Bush vetch is a scrambling perennial, usually about 0.5–1 m high or spreading, with tendrils that catch on nearby vegetation. Its pinnate leaves have several pairs of leaflets; short stalks carry clusters of lilac-blue, pea-shaped flowers. Pods are roughly 2–4 cm long. The plate's tendrils, leaflets, clustered flowers and narrow pod are consistent with the species."},
+    {"title": "Ecology and use", "text": "Root nodules host nitrogen-fixing bacteria, and the plant is used in grassland forage mixtures. Its presence in the pea family does not by itself establish that its seeds are safe to eat; this species is not treated here as a human food."}
+  ],
+  "sources": [
+    {"title": "Kew Science — Vicia sepium species profile", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:525130-1/general-information"},
+    {"title": "Royal Horticultural Society — Vicia sepium", "url": "https://www.rhs.org.uk/plants/18961/vicia-sepium/details"},
+    {"title": "World Flora Online — Vicia sepium", "url": "https://www.worldfloraonline.org/taxon/wfo-0000212792"}
+  ],
+  "related": ["vicia", "vicia_sativa"]
+}

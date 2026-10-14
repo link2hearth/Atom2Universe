@@ -1,0 +1,13 @@
+{
+  "id": "vicia_sativa",
+  "sections": [
+    {"title": "Croissance et identification", "text": "La vesce commune est une annuelle grimpante ou rampante qui peut atteindre environ 2 m. Ses feuilles pennées portent généralement 3 à 8 paires de folioles et une vrille terminale ramifiée. Les fleurs en forme de pois, isolées ou par groupes de trois, vont du blanc et du rose au bleu-violet ; les gousses cylindriques atteignent environ 7 cm et contiennent jusqu’à 12 graines. Les fleurs violettes, les vrilles et la gousse de l’image correspondent à cette espèce."},
+    {"title": "Fourrage et prudence alimentaire", "text": "Cette vesce est largement cultivée comme fourrage, mais ses graines ne constituent pas une légumineuse alimentaire ordinaire : certaines lignées contiennent des composés apparentés à la bêta-cyanoalanine et d’autres facteurs antinutritionnels. L’usage comme fourrage ne signifie pas que les graines crues soient sans danger pour les humains ; l’espèce, la variété et la préparation comptent."}
+  ],
+  "sources": [
+    {"title": "Kew Science — profil de Vicia sativa", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:525117-1/general-information"},
+    {"title": "Enneking — toxicité et usages alimentaires des espèces de Vicia", "url": "https://digital.library.adelaide.edu.au/dspace/bitstream/2440/37799/10/02whole.pdf"},
+    {"title": "Cornell University — toxicité des Vicia spp. pour le bétail", "url": "https://poisonousplants.ansci.cornell.edu/php/plants.php?action=indiv&byname=scientific&keynum=91"}
+  ],
+  "related": ["vicia", "vicia_sepium"]
+}
