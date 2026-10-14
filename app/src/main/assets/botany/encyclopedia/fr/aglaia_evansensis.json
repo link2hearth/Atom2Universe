@@ -1,0 +1,12 @@
+{
+  "id": "aglaia_evansensis",
+  "sections": [
+    {"title": "Port et habitat", "text": "Arbuste ou arbre élancé pouvant atteindre environ 8 m, endémique du nord-ouest de Viti Levu, aux Fidji, où il est signalé en forêt montagnarde humide vers 900–1 180 m. Ses feuilles ont trois ou cinq folioles, les plus basses étant souvent très petites; un duvet étoilé couvre les jeunes parties et les axes foliaires. La description originale mentionne de petites inflorescences, mais les sources ne confirment pas les détails des fleurs et des fruits de la planche existante."},
+    {"title": "Espèce proche", "text": "Aglaia archboldiana est une autre espèce fidjienne du genre. Elle est signalée à Viti Levu sur une plus grande amplitude altitudinale et se distingue par ses très grandes feuilles composées et le duvet brun clair des jeunes parties."}
+  ],
+  "sources": [
+    {"title": "Aglaia evansensis — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/577076-1"},
+    {"title": "Studies of Pacific Island Plants, X: The Meliaceae of Fiji, Samoa, and Tonga — Smithsonian", "url": "https://repository.si.edu/items/caab83ca-ae3c-41be-bc81-2c73e64e3688"}
+  ],
+  "related": ["aglaia_archboldiana"]
+}

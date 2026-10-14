@@ -1,0 +1,13 @@
+{
+  "id": "alnus",
+  "sections": [
+    {"title": "Port et habitat", "text": "Alnus glutinosa est un arbre caduc pouvant atteindre environ 25 m. Ses feuilles arrondies sont souvent échancrées au sommet. Les longs chatons mâles pendants apparaissent avec de petits chatons femelles, qui deviennent des strobiles ligneux d’environ 2 cm. L’espèce préfère les sols humides, notamment les berges et les marais; elle est indigène d’Europe, d’Afrique du Nord et d’Asie occidentale."},
+    {"title": "Identification", "text": "Les strobiles femelles ressemblent à de petits cônes, mais l’aulne est un feuillu de la famille des Betulaceae, et non un conifère. Les sources consultées n’établissent ni usage alimentaire ni toxicité."}
+  ],
+  "sources": [
+    {"title": "Alnus glutinosa — Cambridge University Botanic Garden", "url": "https://www.botanic.cam.ac.uk/the-garden/plant-list/alnus-glutinosa/"},
+    {"title": "Alnus glutinosa — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/897/alnus-glutinosa-common-alder-aar-aller-black-alder-european-alder-gwernen/details"},
+    {"title": "Aulne glutineux — Société nationale d’horticulture de France", "url": "https://www.snhf.org/fiche-plante/aulne/"},
+    {"title": "Alder — Woodland Trust", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/british-trees/a-z-of-british-trees/alder/"}
+  ]
+}

@@ -2,11 +2,11 @@
   "id": "adansonia_perrieri",
   "sections": [
     {"title": "Form and range", "text": "A baobab endemic to northern Madagascar. A specimen record from the Muséum national d’Histoire naturelle describes a tree about 30 m tall, with pale-yellow petals and leaves with five to six leaflets on the collected material. A species-level crown width was not verified."},
-    {"title": "Conservation and uses", "text": "Kew reports the IUCN status as Critically Endangered. Food use, toxicity and specific human uses were not verified in the sources consulted."}
+    {"title": "Conservation and comparison", "text": "Kew reports the IUCN status as Critically Endangered. Unlike the widespread African A. digitata, this baobab is restricted to northern Madagascar; it also differs from A. suarezensis in its species-level morphology and conservation assessment. Food use, toxicity and specific human uses were not verified in the sources consulted."}
   ],
   "sources": [
     {"title": "Adansonia perrieri — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:112189-1/general-information"},
     {"title": "Adansonia perrieri — Muséum national d’Histoire naturelle specimen record", "url": "https://science.mnhn.fr/institution/mnhn/collection/p/item/p00413799"}
   ],
-  "related": ["adansonia_suarezensis"]
+  "related": ["adansonia", "adansonia_suarezensis"]
 }

@@ -1,0 +1,15 @@
+{
+  "id": "allium_cepa",
+  "sections": [
+    {"title": "Port et culture", "text": "L’oignon cultivé est un géophyte bulbeux issu d’une plante cultivée originaire d’Asie centrale, aujourd’hui largement répandu. Son bulbe est constitué de bases foliaires charnues; les feuilles vertes sont cylindriques et creuses, et la hampe florale peut atteindre 1 m. De nombreuses fleurs blanches forment une ombelle, suivie d’une capsule."},
+    {"title": "Alimentation et précautions", "text": "Le bulbe est consommé comme légume. L’oignon peut intoxiquer chiens, chats et animaux d’élevage lorsqu’ils en ingèrent une quantité suffisante. Comparé à Allium ampeloprasum, l’oignon a des feuilles cylindriques creuses et est sélectionné pour son bulbe, tandis que les formes de type poireau d’A. ampeloprasum ont des feuilles plates."}
+  ],
+  "sources": [
+    {"title": "Allium cepa — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A527795-1/general-information"},
+    {"title": "Allium cepa — Flora of China, eFloras", "url": "https://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200027457"},
+    {"title": "Le guide du jardin potager — FAO", "url": "https://www.fao.org/4/a0218f/a0218f13a.pdf"},
+    {"title": "Onion — NParks Flora & Fauna Web", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/5/9/5931"},
+    {"title": "Garlic and onion toxicosis in animals — Merck Veterinary Manual", "url": "https://www.merckvetmanual.com/toxicology/food-hazards/garlic-and-onion-allium-spp-toxicosis-in-animals"}
+  ],
+  "related": ["allium_ampeloprasum", "allium_fistulosum"]
+}

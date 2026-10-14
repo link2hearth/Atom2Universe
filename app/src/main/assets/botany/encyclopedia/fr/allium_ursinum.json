@@ -1,0 +1,14 @@
+{
+  "id": "allium_ursinum",
+  "sections": [
+    {"title": "Port et habitat", "text": "Vivace bulbeuse haute d’environ 50 cm. Ses larges feuilles basales apparaissent avant une hampe terminée par une ombelle de fleurs blanches. Elle pousse surtout dans les sous-bois frais et ombragés; son aire indigène s’étend de l’Europe occidentale et centrale jusqu’au Caucase."},
+    {"title": "Alimentation et confusions", "text": "L’ail des ours est consommé, notamment pour ses feuilles. Celles-ci peuvent être confondues avec celles du muguet (Convallaria majalis), du colchique d’automne (Colchicum autumnale) ou de l’arum (Arum maculatum), qui sont toxiques. Ces plantes se ressemblent pour l’identification, mais ne sont pas des substituts comestibles."}
+  ],
+  "sources": [
+    {"title": "Allium ursinum — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/529088-1"},
+    {"title": "Allium ursinum — revue botanique et pharmacologique", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4352197/"},
+    {"title": "Intoxications par l’ail des ours — ANSES Vigil’Anses", "url": "https://vigilanses.anses.fr/sites/default/files/VigilAnsesN20_Juin2023_Aildesours_0.pdf"},
+    {"title": "Ail des ours et sosies toxiques — Centre Antipoisons belge", "url": "https://www.centreantipoisons.be/tox-infos/lail-des-ours-contre-le-muguet-larum-et-le-colchique/"},
+    {"title": "Wild garlic: poisonous doppelgangers — BfR", "url": "https://www.bfr.bund.de/en/press-release/wild-garlic-poisonous-doppelgangers/"}
+  ]
+}

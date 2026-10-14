@@ -1,0 +1,13 @@
+{
+  "id": "agave_shawii",
+  "sections": [
+    {"title": "Form and range", "text": "A compact agave of coastal and dry-scrub habitats in southern California and Baja California. Its thick green leaves have hooked marginal teeth and a dark terminal spine; rosettes can reach about 1 m across. Flower stalks rise several metres and bear yellowish flowers. Each rosette dies after flowering, though offsets may persist."},
+    {"title": "Uses and safety", "text": "An ethnobotanical source reports traditional nectar collection from A. shawii. This does not establish general food use of all plant parts."}
+  ],
+  "sources": [
+    {"title": "Agave shawii — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30181478-2"},
+    {"title": "Agave shawii — NatureServe Explorer", "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.145119/Agave_shawii"},
+    {"title": "Agave shawii subsp. shawii — Haseltonia", "url": "https://agavaceae.com/botanik/pflanzen/scans/gnr110/scan1/470-2.pdf"}
+  ],
+  "related": ["agave_deserti", "agave_filifera", "agave_fourcroydes", "agave_victoriae_reginae"]
+}

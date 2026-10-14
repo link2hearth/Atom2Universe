@@ -1,0 +1,13 @@
+{
+  "id": "afzelia_africana",
+  "sections": [
+    {"title": "Port et répartition", "text": "Grand arbre caducifolié des savanes et forêts claires d’Afrique tropicale, généralement donné pour 6 à 30 m de haut. Il porte des feuilles composées, des fleurs pâles marquées de rouge et des gousses ligneuses sombres."},
+    {"title": "Alimentation, usages et sécurité", "text": "Des sources décrivent comme comestible l’arille orange entourant les graines et signalent les graines noires comme potentiellement toxiques. Le bois est aussi recherché et le feuillage sert de fourrage ; ces usages ne signifient pas que les autres parties peuvent être consommées sans risque."}
+  ],
+  "sources": [
+    {"title": "Afzelia africana — World Flora Online", "url": "https://www.worldfloraonline.org/taxon/wfo-0000213207"},
+    {"title": "Afzelia africana — Feedipedia, INRAE/CIRAD/AFZ/FAO", "url": "https://feedipedia.review.fao.org/node/24689"},
+    {"title": "Afzelia africana — base Agroforestree de World Agroforestry", "url": "https://apps.worldagroforestry.org/treedb/AFTPDFS/Afzelia_africana.PDF"}
+  ],
+  "related": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "allium_ampeloprasum",
+  "sections": [
+    {"title": "Port et répartition", "text": "Ail sauvage bulbeux indigène de Macaronésie et de la région méditerranéenne jusqu’à l’Asie centrale, également cultivé sous plusieurs formes, dont le poireau. La plante peut atteindre 1,5 m; ses feuilles plates en V peuvent mesurer 50 × 7 cm et l’ombelle sphérique 4–12 cm de diamètre. Elle pousse souvent sur des terrains rocheux proches des côtes."},
+    {"title": "Alimentation et comparaison", "text": "Les bulbes et feuilles sont utilisés comme légumes dans les formes cultivées. Les limites entre groupes horticoles varient. Comparée à l’oignon commun (Allium cepa), cette espèce a des feuilles plates et comprend les formes de type poireau; les feuilles de l’oignon sont creuses et cylindriques et la culture est sélectionnée pour son bulbe."}
+  ],
+  "sources": [
+    {"title": "Allium ampeloprasum — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A332079-2"},
+    {"title": "Allium ampeloprasum — PROTA/Pl@ntUse", "url": "https://plantuse.plantnet.org/en/Allium_ampeloprasum_%28PROTA%29"},
+    {"title": "Allium ampeloprasum — PROTA/Pl@ntUse (français)", "url": "https://plantuse.plantnet.org/fr/Allium_ampeloprasum_%28PROTA%29"},
+    {"title": "Allium ampeloprasum — NC State Extension", "url": "https://plants.ces.ncsu.edu/plants/allium-ampeloprasum/"},
+    {"title": "Complexe Allium ampeloprasum en France — Université de Liège", "url": "https://popups.uliege.be/0457-4184/index.php?id=883"}
+  ],
+  "related": ["allium_cepa", "allium_sativum"]
+}

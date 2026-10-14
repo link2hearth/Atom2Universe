@@ -1,0 +1,13 @@
+{
+  "id": "agave_shawii",
+  "sections": [
+    {"title": "Port et répartition", "text": "Agave compacte des habitats côtiers et broussailles sèches du sud de la Californie et de la Basse-Californie. Ses feuilles épaisses vertes portent des dents marginales crochues et une épine terminale sombre ; les rosettes peuvent atteindre environ 1 m de diamètre. Les hampes florales s’élèvent sur plusieurs mètres et portent des fleurs jaunâtres. Chaque rosette meurt après sa floraison, mais les rejets peuvent persister."},
+    {"title": "Usages et sécurité", "text": "Une source ethnobotanique rapporte la collecte traditionnelle du nectar d’A. shawii. Cela ne permet pas d’affirmer que toutes les parties de la plante sont comestibles."}
+  ],
+  "sources": [
+    {"title": "Agave shawii — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30181478-2"},
+    {"title": "Agave shawii — NatureServe Explorer", "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.145119/Agave_shawii"},
+    {"title": "Agave shawii subsp. shawii — Haseltonia", "url": "https://agavaceae.com/botanik/pflanzen/scans/gnr110/scan1/470-2.pdf"}
+  ],
+  "related": ["agave_deserti", "agave_filifera", "agave_fourcroydes", "agave_victoriae_reginae"]
+}

@@ -2,11 +2,11 @@
   "id": "adansonia_perrieri",
   "sections": [
     {"title": "Port et répartition", "text": "Baobab endémique du nord de Madagascar. Une fiche de spécimen du Muséum national d’Histoire naturelle décrit un arbre d’environ 30 m, avec des pétales jaune pâle et, sur le matériel récolté, des feuilles à cinq ou six folioles. Aucune largeur de couronne à l’échelle de l’espèce n’a été vérifiée."},
-    {"title": "Conservation et usages", "text": "Kew indique le statut UICN « en danger critique d’extinction ». Les sources consultées ne vérifient ni usage alimentaire, ni toxicité, ni autre usage humain précis."}
+    {"title": "Conservation et comparaison", "text": "Kew indique le statut UICN « en danger critique d’extinction ». Contrairement à A. digitata, largement réparti en Afrique, ce baobab est restreint au nord de Madagascar; il se distingue aussi d’A. suarezensis par sa morphologie propre et son évaluation de conservation. Les sources consultées ne vérifient ni usage alimentaire, ni toxicité, ni autre usage humain précis."}
   ],
   "sources": [
     {"title": "Adansonia perrieri — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:112189-1/general-information"},
     {"title": "Adansonia perrieri — fiche de spécimen du Muséum national d’Histoire naturelle", "url": "https://science.mnhn.fr/institution/mnhn/collection/p/item/p00413799"}
   ],
-  "related": ["adansonia_suarezensis"]
+  "related": ["adansonia", "adansonia_suarezensis"]
 }

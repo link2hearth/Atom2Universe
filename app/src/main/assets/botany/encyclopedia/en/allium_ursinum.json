@@ -1,0 +1,14 @@
+{
+  "id": "allium_ursinum",
+  "sections": [
+    {"title": "Form and habitat", "text": "A bulbous perennial reaching about 50 cm. Its broad basal leaves appear before a flowering stem topped by an umbel of white flowers. It grows mainly in cool, shady woodland; its native range extends from western and central Europe to the Caucasus."},
+    {"title": "Food and lookalikes", "text": "Wild garlic is eaten, particularly for its leaves. These can be confused with lily-of-the-valley (Convallaria majalis), autumn crocus (Colchicum autumnale) and arum (Arum maculatum), which are toxic. These plants are identification lookalikes, not edible substitutes."}
+  ],
+  "sources": [
+    {"title": "Allium ursinum — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/529088-1"},
+    {"title": "Allium ursinum — botanical and pharmacological review", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4352197/"},
+    {"title": "Intoxications par l’ail des ours — ANSES Vigil’Anses", "url": "https://vigilanses.anses.fr/sites/default/files/VigilAnsesN20_Juin2023_Aildesours_0.pdf"},
+    {"title": "Wild garlic and its toxic lookalikes — Belgian Poison Centre", "url": "https://www.centreantipoisons.be/tox-infos/lail-des-ours-contre-le-muguet-larum-et-le-colchique/"},
+    {"title": "Wild garlic: poisonous doppelgangers — BfR", "url": "https://www.bfr.bund.de/en/press-release/wild-garlic-poisonous-doppelgangers/"}
+  ]
+}

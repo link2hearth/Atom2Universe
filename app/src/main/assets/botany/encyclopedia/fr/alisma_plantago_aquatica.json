@@ -1,0 +1,13 @@
+{
+  "id": "alisma_plantago_aquatica",
+  "sections": [
+    {"title": "Port et habitat", "text": "Vivace aquatique ou semi-aquatique pouvant atteindre environ 1 m, enracinée dans la vase ou l’eau peu profonde des mares, fossés et cours d’eau lents. Ses feuilles partent en rosette; la longue hampe porte une panicule ramifiée et étagée de petites fleurs à trois pétales, blanches à rosées. Malgré son nom commun, elle n’appartient pas au genre Plantago."},
+    {"title": "Alimentation et toxicité", "text": "Son rhizome amylacé a été consommé dans certaines régions, mais Kew signale que l’ingestion de grandes quantités est toxique. Il ne faut donc pas la présenter simplement comme une plante alimentaire."}
+  ],
+  "sources": [
+    {"title": "Alisma plantago-aquatica — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A30019518-2/general-information"},
+    {"title": "Alisma plantago-aquatica — Conservatoire botanique national de Brest", "url": "https://www.cbnbrest.fr/files/Fiche_ZH_BZH_Alisma_plantago_aquatica_20230112.pdf"},
+    {"title": "Alisma plantago-aquatica — INRAE ePhytia", "url": "https://ephytia.inrae.fr/fr/C/16851/Hypp-encyclopedie-en-protection-des-plantes-Alisma-plantago-aquatica"},
+    {"title": "Grand plantain d’eau — DORIS", "url": "https://doris.ffessm.fr/Especes/Alisma-plantago-aquatica-Grand-plantain-d-eau-3905/%28rOffset%29/0"}
+  ]
+}

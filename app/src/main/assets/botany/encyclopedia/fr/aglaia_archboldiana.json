@@ -1,0 +1,12 @@
+{
+  "id": "aglaia_archboldiana",
+  "sections": [
+    {"title": "Port et répartition", "text": "Arbre fidjien élancé des forêts denses de Viti Levu, observé du niveau de la mer jusqu’à environ 970 m et pouvant atteindre près de 10 m. Ses très grandes feuilles composées et le duvet brun clair des jeunes parties aident à le distinguer d’A. parksii, espèce proche. La description botanique originale signale quelques poils vers la base des pétales externes; les sources consultées ne confirment ni la couleur des fleurs ni l’aspect des fruits mûrs représentés sur la planche."},
+    {"title": "Usages et espèces proches", "text": "Les sources consultées n’établissent aucun usage alimentaire. A. evansensis est une autre Aglaia fidjienne, mais elle est documentée en forêt montagnarde humide du nord-ouest de Viti Levu et porte des feuilles plus petites à trois ou cinq folioles."}
+  ],
+  "sources": [
+    {"title": "Aglaia archboldiana — World Flora Online", "url": "https://test.worldfloraonline.org/taxon/wfo-0000523936"},
+    {"title": "Studies of Pacific Island Plants, X: The Meliaceae of Fiji, Samoa, and Tonga — Smithsonian", "url": "https://repository.si.edu/items/caab83ca-ae3c-41be-bc81-2c73e64e3688"}
+  ],
+  "related": ["aglaia_evansensis"]
+}

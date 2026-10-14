@@ -1,0 +1,13 @@
+{
+  "id": "agave_filifera",
+  "sections": [
+    {"title": "Form and range", "text": "A small rosette agave native to central Mexico, typically about 0.5 m tall and 0.2–0.4 m wide. Its stiff, narrow green leaves bear white marginal filaments. Horticultural references give a flower stalk about 2–2.5 m tall; flowers vary in colour and can be yellow, though that form is rare."},
+    {"title": "Uses and safety", "text": "The sources consulted do not establish species-specific food use or food toxicity."}
+  ],
+  "sources": [
+    {"title": "Agave filifera — Jardín Botánico Iztacala, UNAM", "url": "https://sitios.iztacala.unam.mx/jabiz/agave-filifera/"},
+    {"title": "Agave filifera — Royal Botanic Gardens Victoria HortFlora", "url": "https://hortflora.rbg.vic.gov.au/taxon/adab93fa-5340-11e7-b82b-005056b0018f"},
+    {"title": "Agave filifera — RHS Plant Profile", "url": "https://www.rhs.org.uk/plants/69880/agave-filifera/details"}
+  ],
+  "related": ["agave_deserti", "agave_shawii", "agave_victoriae_reginae", "agave_fourcroydes"]
+}

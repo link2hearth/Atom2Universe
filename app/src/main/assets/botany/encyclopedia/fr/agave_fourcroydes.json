@@ -1,0 +1,14 @@
+{
+  "id": "agave_fourcroydes",
+  "sections": [
+    {"title": "Port et répartition", "text": "Grande plante succulente en rosette, originaire du sud du Mexique jusqu’au Guatemala et largement cultivée. Ses feuilles rigides mesurent environ 1 à 1,8 m de long, avec des dents marginales et une épine terminale ; la hampe florale atteint environ 5 à 7 m. La rosette meurt après la floraison, mais les rejets peuvent maintenir la touffe."},
+    {"title": "Usages et sécurité", "text": "La fibre des feuilles, appelée henequen, sert notamment à fabriquer des cordes et des ficelles. Les sources citées documentent l’usage de la fibre, pas l’alimentation."}
+  ],
+  "sources": [
+    {"title": "Agave fourcroydes — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:61980-1"},
+    {"title": "Agave fourcroydes — Useful Tropical Plants", "url": "https://tropical.theferns.info/viewtropical.php?id=Agave+fourcroydes"},
+    {"title": "Sisal and Henequen — USDA", "url": "https://ageconsearch.umn.edu/record/347193/files/BPICircular186.pdf"},
+    {"title": "Agave fourcroydes — fiche RHS", "url": "https://www.rhs.org.uk/plants/159183/agave-fourcroydes/details"}
+  ],
+  "related": ["agave_deserti", "agave_filifera", "agave_shawii", "agave_victoriae_reginae"]
+}

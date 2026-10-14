@@ -1,0 +1,13 @@
+{
+  "id": "allium_sativum",
+  "sections": [
+    {"title": "Port et répartition", "text": "Plante bulbeuse cultivée, haute d’environ 60 cm. Son bulbe arrondi comprend jusqu’à une quinzaine de caïeux sous une tunique papyracée. Les feuilles sont longues et plates; les fleurs blanc verdâtre ou rosées forment une ombelle où peuvent aussi se trouver des bulbilles. Kew situe son aire native en Asie centrale et au nord-est de l’Iran; l’ail est aujourd’hui largement cultivé."},
+    {"title": "Alimentation et comparaison", "text": "Kew documente un usage alimentaire de toutes les parties, même si le bulbe est la partie la plus couramment consommée. Contrairement à la ciboule (Allium fistulosum), l’ail forme un bulbe bien différencié et divisé en caïeux."}
+  ],
+  "sources": [
+    {"title": "Allium sativum — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A528796-1/general-information"},
+    {"title": "Garlic — Royal Botanic Gardens, Kew", "url": "https://www.kew.org/plants/garlic"},
+    {"title": "WHO monographs on selected medicinal plants : garlic bulb", "url": "https://iris.who.int/bitstream/handle/10665/42052/9241545178.pdf"}
+  ],
+  "related": ["allium_fistulosum", "allium_ampeloprasum"]
+}

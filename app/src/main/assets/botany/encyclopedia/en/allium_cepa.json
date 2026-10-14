@@ -1,0 +1,15 @@
+{
+  "id": "allium_cepa",
+  "sections": [
+    {"title": "Form and cultivation", "text": "The cultivated bulb onion is a bulbous geophyte originating as a crop from Central Asia and now grown widely. Its bulb consists of fleshy leaf bases; the green leaves are cylindrical and hollow, and the flowering stalk can reach 1 m. Numerous white flowers form an umbel, followed by a capsule."},
+    {"title": "Food and safety", "text": "The bulb is eaten as a vegetable. Onion can poison dogs, cats and livestock when enough is ingested. Compared with Allium ampeloprasum, onion has hollow cylindrical leaves and is selected for its bulb, while leek-type forms of A. ampeloprasum have flat leaves."}
+  ],
+  "sources": [
+    {"title": "Allium cepa — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A527795-1/general-information"},
+    {"title": "Allium cepa — Flora of China, eFloras", "url": "https://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200027457"},
+    {"title": "Le guide du jardin potager — FAO", "url": "https://www.fao.org/4/a0218f/a0218f13a.pdf"},
+    {"title": "Onion — NParks Flora & Fauna Web", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/5/9/5931"},
+    {"title": "Garlic and onion toxicosis in animals — Merck Veterinary Manual", "url": "https://www.merckvetmanual.com/toxicology/food-hazards/garlic-and-onion-allium-spp-toxicosis-in-animals"}
+  ],
+  "related": ["allium_ampeloprasum", "allium_fistulosum"]
+}

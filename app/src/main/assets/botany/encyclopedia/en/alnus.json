@@ -1,0 +1,13 @@
+{
+  "id": "alnus",
+  "sections": [
+    {"title": "Form and habitat", "text": "Alnus glutinosa is a deciduous tree reaching about 25 m. Its rounded leaves are often notched at the tip. Long, hanging male catkins appear alongside smaller female catkins, which mature into woody, cone-like structures about 2 cm long. It prefers wet soils, including riverbanks and marshes, and is native to Europe, North Africa and western Asia."},
+    {"title": "Identification", "text": "The woody female structures look like small cones, but alder is a broadleaf tree in the birch family, Betulaceae, not a conifer. Food use and toxicity are not established in the sources consulted."}
+  ],
+  "sources": [
+    {"title": "Alnus glutinosa — Cambridge University Botanic Garden", "url": "https://www.botanic.cam.ac.uk/the-garden/plant-list/alnus-glutinosa/"},
+    {"title": "Alnus glutinosa — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/897/alnus-glutinosa-common-alder-aar-aller-black-alder-european-alder-gwernen/details"},
+    {"title": "Aulne glutineux — Société nationale d’horticulture de France", "url": "https://www.snhf.org/fiche-plante/aulne/"},
+    {"title": "Alder — Woodland Trust", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/british-trees/a-z-of-british-trees/alder/"}
+  ]
+}
