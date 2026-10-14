@@ -1,0 +1,46 @@
+{
+  "id": "apistogramma_eremnopyge",
+  "name": "Apistogramma eremnopyge",
+  "scientific": "Apistogramma eremnopyge",
+  "group": "fish",
+  "sections": {
+    "overview": "This dwarf cichlid was described from the Río Pintuyacu in Peru’s Loreto region. Later records extend its known range to nearby Nanay and southern Tapiche drainages.",
+    "identification": "The type series’ adult male measured 34.4 mm standard length; adult females measured 26.1–28.2 mm, measured to the tail-fin base. Males have extended front dorsal lobes and tail rays; both sexes show the unique lower tail-stalk blotch and narrow side stripe.",
+    "habitat": "It inhabits slow tributaries, creeks and backwaters with soft, acidic clear or black water and fallen leaf litter on the bottom.",
+    "diet": "A species-specific prey list has not been documented; genus-level accounts describe Apistogramma as carnivorous, mainly taking small bottom-dwelling invertebrates.",
+    "behavior": "Captive observations describe territorial males that may attack rival males. Some pairs reportedly settle better when other conspecific pairs remain visible nearby.",
+    "reproduction": "Captive reports describe cave spawning at night or dawn, usually with 50–150 eggs. The male patrols while the female guards and tends eggs and fry.",
+    "ecology": "Its closest lookalike is Apistogramma bitaeniata; the bold dark blotch low on the tail stalk distinguishes A. eremnopyge.",
+    "conservation": "The IUCN assessment lists the species as Least Concern, last assessed in 2014. Later Peruvian research notes that narrow-range Apistogramma may be sensitive to forest loss and other habitat change."
+  },
+  "sources": [
+    {
+      "url": "https://mapress.com/zt/article/download/zootaxa.564.1.1/8036/8045",
+      "title": "Apistogramma eremnopyge, a new species of cichlid fish from Peru — Zootaxa"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/apistogramma-eremnopyge",
+      "title": "Apistogramma eremnopyge — Seriously Fish species account"
+    },
+    {
+      "url": "https://www.fishbase.net.br/summary/62078",
+      "title": "Apistogramma eremnopyge — FishBase summary"
+    },
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-2016-003.pdf",
+      "title": "State of Conservation and Red List of Freshwater Fishes of Peru — IUCN Library"
+    },
+    {
+      "url": "https://www.ichthyologie.de/wp-content/uploads/2021/03/Beninde-et-al-2020-Changes-of-water-temperature-by-deforestation-and-Apistogramma.pdf",
+      "title": "Changes of water temperature by deforestation and Apistogramma cichlids in Loreto, Peru — Bulletin of Fish Biology"
+    },
+    {
+      "url": "https://www.fishipedia.fr/fr/poissons/apistogramma-eremnopyge",
+      "title": "Apistogramma eremnopyge — Fishipedia French species card"
+    },
+    {
+      "url": "https://www.cichlidatlas.com/species/apistogramma-eremnopyge/",
+      "title": "Apistogramma eremnopyge — Cichlid Atlas species account"
+    }
+  ]
+}

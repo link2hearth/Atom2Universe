@@ -1,0 +1,204 @@
+{
+  "id": "apistogramma_piauiensis",
+  "scientific": "Apistogramma piauiensis",
+  "group": "fish",
+  "name": {
+    "en": "Piauí Dwarf Cichlid",
+    "fr": "Apistogramme du Piauí"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma piauiensis is a tiny freshwater cichlid described by Sven Kullander in 1980 from northeastern Brazil. Its known records center on the Parnaíba River basin in Piauí State.",
+      "fr": "Apistogramma piauiensis est un minuscule cichlidé d’eau douce décrit par Sven Kullander en 1980 dans le nord-est du Brésil. Les données connues se concentrent dans le bassin du rio Parnaíba, dans l’État du Piauí."
+    },
+    "identification": {
+      "en": "FishBase gives a maximum standard length of 2.3 cm for male or unsexed specimens, making it exceptionally small among dwarf cichlids. No reliable female-specific length, body mass, width or height is reported in the cited records.",
+      "fr": "FishBase indique une longueur standard maximale de 2,3 cm pour les individus mâles ou non sexés, ce qui en fait un cichlidé nain exceptionnellement petit. Les sources citées ne donnent ni longueur propre aux femelles, ni masse, largeur ou hauteur corporelle fiable."
+    },
+    "habitat": {
+      "en": "The type locality is Lagoa Seca near the Parnaíba River at Barra do Longá. FishBase classifies the species as freshwater and benthopelagic, with reported soft, mildly acidic water conditions.",
+      "fr": "La localité type est Lagoa Seca, près du rio Parnaíba à Barra do Longá. FishBase classe l’espèce en eau douce et benthopélagique, avec des conditions d’eau indiquées comme douce et légèrement acide."
+    },
+    "diet": {
+      "en": "No species-specific diet study exists; feeding on tiny bottom-dwelling invertebrates is inferred from related small Apistogramma, not measured for this fish.",
+      "fr": "Aucune étude alimentaire propre à l’espèce n’existe ; la consommation de minuscules invertébrés du fond est inférée de petits Apistogramma apparentés, et non mesurée chez ce poisson."
+    },
+    "behavior": {
+      "en": "Wild social behavior is poorly documented; available species accounts do not describe routine interactions or group structure in the field.",
+      "fr": "Le comportement social sauvage est mal documenté ; les fiches disponibles ne décrivent pas les interactions habituelles ni la structure des groupes sur le terrain."
+    },
+    "reproduction": {
+      "en": "FishBase reports female care of cave-laid eggs but gives no measured clutch size or detailed species-specific breeding study.",
+      "fr": "FishBase rapporte les soins de la femelle pour les œufs pondus en cavité, sans donner de taille de ponte mesurée ni d’étude détaillée propre à l’espèce."
+    },
+    "ecology": {
+      "en": "This is a narrow-range Parnaíba fish, and its few occurrence records leave its wider local distribution poorly sampled.",
+      "fr": "Ce poisson possède une aire restreinte dans le bassin du Parnaíba, et les quelques données disponibles échantillonnent mal sa répartition locale."
+    },
+    "conservation": {
+      "en": "FishBase reports the global IUCN category Data Deficient, assessed on 7 November 2018. The assessment reflects limited information and should not be read as evidence of low risk.",
+      "fr": "FishBase rapporte la catégorie mondiale UICN « données insuffisantes », évaluée le 7 novembre 2018. Cette catégorie reflète le manque d’informations et ne signifie pas que le risque est faible."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma piauiensis — FishBase species summary",
+        "fr": "Apistogramma piauiensis — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/46680",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists standard length and cave spawning."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 7,
+        "total": 129,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kullander 1980 — taxonomic study of Apistogramma",
+        "fr": "Kullander 1980 — étude taxonomique d’Apistogramma"
+      },
+      "url": "https://www.biodiversitylibrary.org/part/120258",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The original taxonomic monograph describes the species and its Piauí type locality."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 12,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "MCZbase specimen record for Apistogramma piauiensis",
+        "fr": "Notice de spécimen MCZbase pour Apistogramma piauiensis"
+      },
+      "url": "https://mczbase.mcz.harvard.edu/guid/MCZ%3AIch%3A46830",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The paratype record gives Rio Parnaíba at Barra do Longa near Buriti dos Lopes, Piauí, Brazil."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 16,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma genus — FishBase French field guide",
+        "fr": "Genre Apistogramma — guide de terrain FishBase en français"
+      },
+      "url": "https://fishbase.net.br/FieldGuide/FieldGuideSummary.php?GenusName=Apistogramma&SpeciesName=piauiensis&print=&sps=",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The field guide gives Data Deficient status and cave spawning; dietary statements in the profile remain explicitly inferential."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 18,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma piauiensis — Aquarist Atlas account",
+        "fr": "Apistogramma piauiensis — fiche Aquarist Atlas"
+      },
+      "url": "https://www.cichlidatlas.com/species/apistogramma-piauiensis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "The account notes sparse range records and limited species-specific ecological information."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 11,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show an extremely small, slender dwarf cichlid from the Parnaíba basin; use a quiet sandy or leaf-strewn tropical stream edge and avoid borrowing bright color patterns from unrelated aquarium forms.",
+  "uncertainties": [
+    "The 2.3 cm figure is maximum standard length for male or unsexed fish, not total length. No reliable mass, width, body height or female-specific maximum was found.",
+    "Diet is inferred from related Apistogramma, not from species-specific stomach contents. Wild behavior and breeding details remain poorly documented.",
+    "The narrow range and sparse collection records mean many habitat details should not be generalized beyond the documented Parnaíba basin."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase with Kullander’s original taxonomic monograph and a Harvard Museum of Comparative Zoology paratype record. Kept the limited field knowledge explicit and did not infer a measured diet or weight."
+}

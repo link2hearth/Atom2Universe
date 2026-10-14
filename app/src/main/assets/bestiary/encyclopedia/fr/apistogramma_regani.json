@@ -1,0 +1,42 @@
+{
+  "id": "apistogramma_regani",
+  "name": "Apistogramme de Regan",
+  "scientific": "Apistogramma regani",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma regani est un petit cichlidé d’eau douce décrit par Sven Kullander en 1980 et nommé en l’honneur de l’ichtyologiste britannique Charles Tate Regan.",
+    "identification": "FishBase indique 4,9 cm de longueur standard pour les mâles ou individus non sexés et 5,0 cm pour les femelles sans préciser la convention de mesure ; il donne aussi une masse publiée maximale de 2,29 g. Aucune largeur ni hauteur corporelle fiable n’a été trouvée. Le poisson porte des bandes abdominales nettes et une caudale rayée.",
+    "habitat": "L’aire documentée se situe dans le bas bassin du rio Negro, au sein du bassin amazonien. FishBase décrit un poisson tropical d’eau douce associé au fond et indique des températures d’environ 23 à 30 °C dans la fiche consultée.",
+    "diet": "Aucune étude alimentaire propre à l’espèce n’a été trouvée. Comme des cichlidés nains apparentés, elle devrait prélever de petits invertébrés sur le fond, mais cela reste une inférence fondée sur le genre et non un régime mesuré.",
+    "behavior": "Cichlid Room Companion décrit l’espèce comme polygame et reproductrice en harem. Il s’agit d’une référence aquariophile, et non d’une étude détaillée de la structure des groupes sauvages.",
+    "reproduction": "La femelle veille sur les œufs fixés au plafond d’une cavité et s’occupe des larves. FishBase ne donne pas de fourchette du nombre d’œufs pour cette espèce.",
+    "ecology": "Apistogramma regani appartient au groupe informel regani. Par rapport à A. resticulosa, proche parente, il porte des bandes abdominales nettes plutôt que de petites tirets sombres ; les deux espèces ont une caudale rayée, donc ce caractère seul ne suffit pas.",
+    "conservation": "FishBase rapporte la catégorie mondiale UICN « préoccupation mineure », évaluée le 29 octobre 2020. Le guide de terrain cité donne le même statut et la même date d’évaluation."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Apistogramma_regani.html",
+      "title": "Apistogramma regani — fiche de synthèse FishBase"
+    },
+    {
+      "url": "https://zoologicalbulletin.de/BzB_Volumes/Volume_32_1_2/183_194_BZB32_1_2_Kollander_SvenO.pdf",
+      "title": "Comparaison des groupes d’espèces d’Apistogramma par Kullander"
+    },
+    {
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=076&genusname=Apistogramma&speciesname=regani",
+      "title": "Guide de terrain FishBase — Apistogramma regani"
+    },
+    {
+      "url": "https://etyfish.org/cichlidae6/",
+      "title": "ETYFish : étymologie des Cichlidae"
+    },
+    {
+      "url": "https://cichlidae.com/species.php?id=615",
+      "title": "Apistogramma regani — fiche Cichlid Room Companion"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/apistogramma-regani/",
+      "title": "Apistogramma regani — fiche Aquarist Atlas"
+    }
+  ]
+}

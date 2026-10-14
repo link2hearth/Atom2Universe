@@ -1,0 +1,38 @@
+{
+  "id": "apamea_zeta",
+  "name": "Apamea zeta",
+  "scientific": "Apamea zeta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Apamea zeta is a noctuid moth of rocky European mountain grasslands; modern accounts distinguish it from northern forms once included under the same name.",
+    "identification": "Its variable grey-green to olive forewings bear a pale kidney mark and scalloped lines; the European wingspan is about 41–50 mm.",
+    "habitat": "It occupies rocky, grass-covered slopes, usually at 1,500–3,000 m, in the Alps and other southern European mountain ranges.",
+    "diet": "Caterpillars feed on grasses, including tufted hair-grass (Deschampsia cespitosa) in European field observations. Western North American records also name fescues, but those hosts may not represent every population.",
+    "behavior": "European adults fly from mid-June to late August; larvae shelter in silken cases at grass-tussock bases.",
+    "reproduction": "Larvae usually overwinter twice, mature before the second winter, and pupate soon after spring returns.",
+    "ecology": "Close relatives A. maillardi and A. michielii can resemble it; difficult specimens may need genital examination for reliable identification.",
+    "conservation": "The sources consulted do not establish a global conservation category for the species. A French regional biodiversity database labels it Near Threatened in Nouvelle-Aquitaine; that regional assessment should not be generalized to the entire European range."
+  },
+  "sources": [
+    {
+      "url": "https://pyrgus.de/Apamea_zeta.html",
+      "title": "Apamea zeta — European Butterflies and Moths and their Ecology"
+    },
+    {
+      "url": "https://lepinet.fr/especes/nation/lep/index.php?e=l&id=44160",
+      "title": "Abromiade lustrée — Lepinet species account"
+    },
+    {
+      "url": "https://de.wikipedia.org/wiki/Apamea_zeta",
+      "title": "Apamea zeta — German Wikipedia species account"
+    },
+    {
+      "url": "https://nouvelle-aquitaine.kollect.fr/observatoire/index.php?action=fiche&d=heteros&id=249395&module=fiche",
+      "title": "Apamea zeta — Nouvelle-Aquitaine Biodiversity Observatory"
+    },
+    {
+      "url": "https://www.pnwmoths.biol.wwu.edu/browse/family-noctuidae/subfamily-noctuinae/tribe-apameini/apamea/apamea-zeta/",
+      "title": "Apamea zeta — Pacific Northwest Moths"
+    }
+  ]
+}

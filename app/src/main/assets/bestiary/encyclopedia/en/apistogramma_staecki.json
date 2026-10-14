@@ -1,0 +1,50 @@
+{
+  "id": "apistogramma_staecki",
+  "name": "Staeck’s Dwarf Cichlid",
+  "scientific": "Apistogramma staecki",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma staecki is a small South American cichlid described by Ingo Koslowski in 1985 from shallow lagoons near Trinidad, Bolivia. The type series was collected in the Mamoré drainage, and later records place it in the neighboring Guaporé basin as well.",
+    "identification": "Wild type specimens measured about 15–21 mm in standard length. Aquarium-raised males reached 32 mm SL and females about 27 mm SL, while FishBase lists 21 mm for males and 40 mm for females; no reliable mass, width or body height is reported.",
+    "habitat": "Koslowski found the fish in shallow water among dead leaves and wood, or near floating-plant roots where lagoons were deeper. The sampled water was warm, soft and acidic, but these local readings do not establish its full tolerance range.",
+    "diet": "A species-specific stomach-content study was not located. FishBase gives a modelled trophic estimate based on close relatives, so small benthic invertebrates are a reasonable micropredator inference, not a directly measured menu for this fish.",
+    "behavior": "Males defend territories and may associate with multiple females in aquaria, but females alone tend the eggs and fry.",
+    "reproduction": "Pairs attach roughly 50–100 eggs to the underside of a leaf or the roof of a small cave; at 24°C, hatching took about three days in the reported observations. Fry became free swimming about six days later, and the female cared for them.",
+    "ecology": "Koslowski described it alongside the close regional congener A. linkei, which shares some localities but was also collected in less acidic water. Later taxonomic work separated Guaporé fish often confused with A. staecki as A. sororcula, so basin and diagnostic markings matter when comparing look-alikes.",
+    "conservation": "FishBase reports the global IUCN category Least Concern, assessed on 29 October 2020. The record spans parts of the Mamoré and Guaporé systems, but the sources consulted do not provide a recent population trend or a detailed threat assessment."
+  },
+  "sources": [
+    {
+      "url": "https://zoologicalbulletin.de/BzB_Volumes/Volume_36_1_2/145_162_BZB36_1_2_Koslowski_Ingo.pdf",
+      "title": "Descriptions of new Apistogramma from the Rio Mamoré system in Bolivia"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Apistogramma-staecki.html",
+      "title": "Apistogramma staecki — FishBase species summary"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/apistogramma-staecki/",
+      "title": "Apistogramma staecki — Aquarist Atlas species account"
+    },
+    {
+      "url": "https://www.ciklid.org/artregister/art.php?ID=287",
+      "title": "Apistogramma staecki — Nordiska Ciklidsällskapet species register"
+    },
+    {
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/2025-09/010059871.pdf",
+      "title": "Catálogo de los peces de la cuenca Iténez"
+    },
+    {
+      "url": "https://www.zobodat.at/pdf/Bonner-Zoologische-Beitraege_36_0145-0162.pdf",
+      "title": "Koslowski 1985 — archive copy of the original habitat account"
+    },
+    {
+      "url": "https://pdfs.semanticscholar.org/fe9b/dc3420cdde92a354ab7fc9f791147a8f84bc.pdf",
+      "title": "Apistogramma sororcula — description of a Guaporé dwarf cichlid"
+    },
+    {
+      "url": "https://www.iucnredlist.org/species/49830190/159047010",
+      "title": "IUCN Red List assessment of Apistogramma staecki"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "apistogramma_gibbiceps",
+  "name": "Blackstriped Dwarf Cichlid",
+  "scientific": "Apistogramma gibbiceps",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma gibbiceps is a dwarf cichlid recorded from Brazil’s middle Rio Negro and Rio Branco basins, where its populations occupy more than one water type.",
+    "identification": "The body is laterally compressed and becomes deeper with age; a dark stripe runs from the snout through the eye to the tail base, and older males may develop a rounded forehead hump. FishBase gives maximum standard lengths of 4.5 cm for male or unsexed fish and 5 cm for females; no reliable weight or body-width measurements were found. German and French aquarium accounts report about 8 cm for males and 5 cm for females without specifying the measurement convention, so these values should not be compared directly with standard length.",
+    "habitat": "Its range spans the middle Rio Negro and Rio Branco drainages; German species accounts describe shallow upper-river margins among roots and leaf litter, in soft, acidic water, and report both blackwater and clearer-water settings.",
+    "diet": "No species-specific stomach study was found; a recent aquarium synthesis infers from close Apistogramma relatives that it hunts small invertebrates in leaf litter and substrate, rather than presenting a measured diet for this fish.",
+    "behavior": "The available species account records female-led care of eggs and larvae, but detailed field observations of social behavior remain scarce.",
+    "reproduction": "It is a cave-spawning substrate brooder: the female attaches eggs to the cave ceiling and tends them and the larvae; FishBase cites one captive pair producing around 250 eggs every six weeks, not a typical wild clutch estimate.",
+    "ecology": "Apistogramma roraimae, described from the Rio Branco, is treated as a junior synonym of A. gibbiceps in current taxonomic catalogs, so older records under that name refer to this accepted species.",
+    "conservation": "The global IUCN assessment is Least Concern, dated 7 November 2018; this broad category does not establish that every local habitat is unaffected by change."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/46624",
+      "title": "Apistogramma gibbiceps — FishBase species summary"
+    },
+    {
+      "url": "https://www.fischlexikon.eu/fischlexikon/fische-suchen.php?fisch_id=0000002214",
+      "title": "Apistogramma gibbiceps — Fishlexikon German species account"
+    },
+    {
+      "url": "https://www.svenkullander.se/publications/Kullander_Cichlidae_2003.pdf",
+      "title": "Apistogramma gibbiceps — Checklist of the Freshwater Fishes of South and Central America"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/apistogramma-gibbiceps/",
+      "title": "Apistogramma gibbiceps — Aquarist Atlas species account"
+    },
+    {
+      "url": "https://www.fishfish.fr/poisson/apistogramma-gibbiceps",
+      "title": "Apistogramma gibbiceps — FishFish French aquarium species account"
+    },
+    {
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt;jsessionid=7960464ABBC08C202BF41D04AEE30285?search_topic=TSN&search_value=648279",
+      "title": "ITIS Report — Apistogramma gibbiceps"
+    }
+  ]
+}

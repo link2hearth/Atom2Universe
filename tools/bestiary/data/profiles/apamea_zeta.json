@@ -1,0 +1,196 @@
+{
+  "id": "apamea_zeta",
+  "scientific": "Apamea zeta",
+  "group": "invertebrates",
+  "name": {
+    "en": "Apamea zeta",
+    "fr": "Abromiade lustrée"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apamea zeta is a noctuid moth of rocky European mountain grasslands; modern accounts distinguish it from northern forms once included under the same name.",
+      "fr": "Apamea zeta est une noctuelle des pelouses rocheuses européennes ; les traitements récents la distinguent de formes nordiques autrefois réunies sous le même nom."
+    },
+    "identification": {
+      "en": "Its variable grey-green to olive forewings bear a pale kidney mark and scalloped lines; the European wingspan is about 41–50 mm.",
+      "fr": "Ses ailes antérieures, variables du gris-vert à l’olive, portent une tache réniforme pâle et des lignes festonnées ; l’envergure européenne atteint environ 41 à 50 mm."
+    },
+    "habitat": {
+      "en": "It occupies rocky, grass-covered slopes, usually at 1,500–3,000 m, in the Alps and other southern European mountain ranges.",
+      "fr": "Elle occupe les pentes rocheuses à pelouses, généralement entre 1 500 et 3 000 m, dans les Alpes et d’autres massifs d’Europe méridionale."
+    },
+    "diet": {
+      "en": "Caterpillars feed on grasses, including tufted hair-grass (Deschampsia cespitosa) in European field observations. Western North American records also name fescues, but those hosts may not represent every population.",
+      "fr": "Les chenilles mangent des graminées ; des observations européennes citent la canche cespiteuse (Deschampsia cespitosa). Des données nord-américaines mentionnent aussi des fétuques, qui ne représentent pas nécessairement toutes les populations."
+    },
+    "behavior": {
+      "en": "European adults fly from mid-June to late August; larvae shelter in silken cases at grass-tussock bases.",
+      "fr": "Les adultes européens volent de la mi-juin à la fin août ; les larves s’abritent dans un fourreau soyeux au pied des touffes."
+    },
+    "reproduction": {
+      "en": "Larvae usually overwinter twice, mature before the second winter, and pupate soon after spring returns.",
+      "fr": "Les larves hivernent généralement deux fois, achèvent leur croissance avant le second hiver et se nymphosent au printemps."
+    },
+    "ecology": {
+      "en": "Close relatives A. maillardi and A. michielii can resemble it; difficult specimens may need genital examination for reliable identification.",
+      "fr": "Ses proches parentes A. maillardi et A. michielii peuvent lui ressembler ; les individus difficiles exigent parfois l’examen des genitalia."
+    },
+    "conservation": {
+      "en": "The sources consulted do not establish a global conservation category for the species. A French regional biodiversity database labels it Near Threatened in Nouvelle-Aquitaine; that regional assessment should not be generalized to the entire European range.",
+      "fr": "Les sources consultées ne permettent pas d’établir une catégorie mondiale de conservation pour l’espèce. Une base régionale française la classe quasi menacée en Nouvelle-Aquitaine ; cette évaluation locale ne doit pas être généralisée à toute son aire européenne."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apamea zeta — European Butterflies and Moths and their Ecology",
+        "fr": "Apamea zeta — Papillons européens et leur écologie"
+      },
+      "url": "https://pyrgus.de/Apamea_zeta.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "German natural-history account based on field observations: alpine range, elevation, grass hosts, adult season and larval development."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 17,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Abromiade lustrée — Lepinet species account",
+        "fr": "Abromiade lustrée — fiche Lepinet"
+      },
+      "url": "https://lepinet.fr/especes/nation/lep/index.php?e=l&id=44160",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "French Lepinet account gives the vernacular name Abromiade lustrée, records the species in the Alps and Pyrenees, and lists grasses as larval food."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 23,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apamea zeta — German Wikipedia species account",
+        "fr": "Apamea zeta — fiche allemande de Wikipédia"
+      },
+      "url": "https://de.wikipedia.org/wiki/Apamea_zeta",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "German account reports a 41–50 mm wingspan, variable grey-green forewings, and potential confusion with Apamea maillardi and A. michielii."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 19,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apamea zeta — Nouvelle-Aquitaine Biodiversity Observatory",
+        "fr": "Apamea zeta — Observatoire de la biodiversité de Nouvelle-Aquitaine"
+      },
+      "url": "https://nouvelle-aquitaine.kollect.fr/observatoire/index.php?action=fiche&d=heteros&id=249395&module=fiche",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Regional database displays the category Near Threatened for Nouvelle-Aquitaine; this is not a global assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 15,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apamea zeta — Pacific Northwest Moths",
+        "fr": "Apamea zeta — guide des papillons de nuit du Nord-Ouest pacifique"
+      },
+      "url": "https://www.pnwmoths.biol.wwu.edu/browse/family-noctuidae/subfamily-noctuinae/tribe-apameini/apamea/apamea-zeta/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "identification"
+      ],
+      "facts": [
+        "Western North American account reports 16–21 mm forewing length, a powdery green-grey forewing, and grasses, especially Festuca, as larval hosts."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 20,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a compact noctuid moth resting with forewings folded roof-like: variable powdery grey-green to olive forewings, pale kidney mark, scalloped dark lines, and plain dusky hindwings. Alpine rock and grass-tussock setting; avoid making it uniformly bright green.",
+  "uncertainties": [
+    "The species limits of Apamea zeta have changed: older accounts include northern or eastern populations now treated as other species. The profile follows modern European treatments for range and ecology.",
+    "The wingspan is taken from a German species account; western North American sources describe the same named taxon but geographically separate populations, so their forewing length and host records are kept explicitly regional.",
+    "The conservation category cited is specific to Nouvelle-Aquitaine; no global assessment was verified."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English, French and German sources. Kept European mountain ecology distinct from western North American records, explained the recent taxonomic split, and restricted the conservation label to its French region."
+}

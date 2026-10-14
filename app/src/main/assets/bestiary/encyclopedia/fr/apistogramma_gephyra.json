@@ -1,0 +1,46 @@
+{
+  "id": "apistogramma_gephyra",
+  "name": "Apistogramma gephyra",
+  "scientific": "Apistogramma gephyra",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma gephyra est un petit cichlidé nain du bas bassin du rio Negro, au Brésil. Sa localité type se trouve dans l’archipel des Anavilhanas, et des données ultérieures le signalent plus en aval le long du Negro.",
+    "identification": "Le corps est allongé et comprimé latéralement, avec une bande sombre sur le flanc et un bord rouge à la nageoire dorsale ; la caudale est arrondie à légèrement pointue. FishBase donne des longueurs standard maximales de 3,3 cm pour les individus mâles ou non sexés et de 4 cm pour les femelles ; aucune masse ni largeur corporelle fiable n’a été trouvée. Une fiche française de Fishipedia indique une fourchette approximative de 3 à 4 cm, globalement cohérente avec ces valeurs, sans distinguer longueur totale et sexe.",
+    "habitat": "Il vit dans le bas rio Negro, notamment dans la région des Anavilhanas, dans l’État brésilien d’Amazonas. Une fiche d’une association suédoise de cichlidés décrit des sites lents ou presque stagnants, avec branches et feuilles en décomposition, dans une eau douce et acide ; ces éléments sont indicatifs et ne valent pas pour chaque localité.",
+    "diet": "Un lexique allemand des poissons indique de petits insectes, des crustacés et d’autres éléments du zooplancton comme proies naturelles, mais aucune étude stomacale propre à l’espèce n’a été trouvée pour vérifier cette liste ; il faut donc la lire comme une source secondaire, et non comme un régime mesuré.",
+    "behavior": "Une fiche française, explicitement signalée comme en cours de rédaction, le décrit comme un poisson territorial de fond vivant en couple ; cette synthèse préliminaire ne constitue pas une étude détaillée du comportement social sur le terrain.",
+    "reproduction": "FishBase indique que les œufs sont fixés au plafond d’une cavité et surveillés par la femelle, avec une ponte maximale d’environ 200 œufs ; sa synthèse ne détaille pas le contexte des observations sauvages.",
+    "ecology": "Apistogramma gephyra appartient au groupe d’espèces agassizii et est proche d’A. agassizii. Aquarium Glaser indique que le liseré rouge de la nageoire dorsale aide à le distinguer d’A. agassizii ; comme la coloration peut changer sous l’effet du stress, il faut aussi examiner le motif du corps et la provenance.",
+    "conservation": "FishBase rapporte une évaluation mondiale de l’UICN en préoccupation mineure, datée du 7 novembre 2018. L’espèce n’est connue que d’une partie limitée du bassin du bas Negro ; ce statut général ne prouve donc pas que chaque habitat local soit exempt de pression."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Apistogramma-gephyra",
+      "title": "Apistogramma gephyra — synthèse et guide de terrain FishBase"
+    },
+    {
+      "url": "https://www.biodiversitylibrary.org/part/120258",
+      "title": "Étude taxonomique du genre Apistogramma — Bonner Zoologische Monographien"
+    },
+    {
+      "url": "https://www.svenkullander.se/publications/Kullander_Cichlidae_2003.pdf",
+      "title": "Cichlidae — liste des poissons d’eau douce d’Amérique centrale et du Sud"
+    },
+    {
+      "url": "https://www.fischlexikon.eu/fischlexikon/fische-suchen.php?fisch_id=0000002228",
+      "title": "Apistogramma gephyra — fiche allemande Fischlexikon"
+    },
+    {
+      "url": "https://www.aquariumglaser.de/fischarchiv/apistogramma-gephyra-wild/",
+      "title": "Apistogramma gephyra sauvage — Aquarium Glaser"
+    },
+    {
+      "url": "https://www.fishipedia.fr/fr/poissons/apistogramma-gephyra",
+      "title": "Apistogramma gephyra — fiche française Fishipedia"
+    },
+    {
+      "url": "https://www.ciklid.org/artregister/art.php?ID=263",
+      "title": "Apistogramma gephyra — registre des espèces de l’association nordique des cichlidés"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "apistogramma_pulchra",
+  "name": "Handsome Dwarf Cichlid",
+  "scientific": "Apistogramma pulchra",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma pulchra is a small South American dwarf cichlid described by Sven Kullander in 1980. It is recorded from the Madeira River basin in Brazil, within the broader Amazon system.",
+    "identification": "FishBase lists a maximum standard length of 3.2 cm for male or unsexed fish; no reliable female maximum, mass, width or body-height measurement was found. The name pulchra means handsome and alludes to its blended color pattern and slender form.",
+    "habitat": "The confirmed range is the Madeira River basin, with the type locality on the Rio Preto, a tributary of the Candeias near Porto Velho. Specialist accounts associate the pulchra complex with mostly blackwater habitats, though conditions vary among tributaries.",
+    "diet": "No direct diet study for this species was located. Small Apistogramma generally pick tiny invertebrates from the bottom, but that genus-level expectation should not be mistaken for measured evidence on A. pulchra.",
+    "behavior": "FishBase reports cave spawning and female care of eggs and larvae in its species summary, but wild group behavior is little documented.",
+    "reproduction": "The eggs are laid on the ceiling of a cave and tended by the female. The consulted species summary gives no reliable clutch-size range for Apistogramma pulchra.",
+    "ecology": "Specialist classifications place pulchra in the informal pulchra complex within the broader agassizii group. It is therefore a useful comparison with A. agassizii, but color forms and uncertain lookalikes should not be assigned by appearance alone.",
+    "conservation": "FishBase reports a global IUCN category of Least Concern, assessed on 29 October 2020. That summary is the latest assessment date available in the cited species account."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Apistogramma-pulchra",
+      "title": "Apistogramma pulchra — FishBase species summary"
+    },
+    {
+      "url": "https://www.biodiversitylibrary.org/part/120258",
+      "title": "Kullander 1980 — taxonomic study of Apistogramma"
+    },
+    {
+      "url": "https://etyfish.org/cichlidae6/",
+      "title": "ETYFish: etymology of Cichlidae"
+    },
+    {
+      "url": "https://tomc.no/page.aspx?PageID=116",
+      "title": "Apistogramma agassizii group and pulchra complex"
+    },
+    {
+      "url": "https://www.fishbase.se/FieldGuide/FieldGuideSummary.php?c_code=076&genusname=Apistogramma&speciesname=pulchra",
+      "title": "Apistogramma pulchra — FishBase field guide"
+    },
+    {
+      "url": "https://www.fishipedia.fr/fr/poissons/apistogramma-pulchra",
+      "title": "Apistogramma pulchra — Fishipedia French species account"
+    }
+  ]
+}

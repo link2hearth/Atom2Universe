@@ -1,0 +1,42 @@
+{
+  "id": "apistogramma_personata",
+  "name": "Masked Dwarf Cichlid",
+  "scientific": "Apistogramma personata",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma personata is a small South American dwarf cichlid described by Sven Kullander in 1980. Its type locality is Assai on the Rio Uaupés in Amazonas, Brazil. The epithet personata means masked and refers to the band across the forehead between the eyes.",
+    "identification": "The dark band between the eyes gives the fish its mask-like name. Adult males have elongated front dorsal-fin lappets and trailing rays on the caudal fin, features that make mature specimens easier to recognize. FishBase lists a maximum standard length of 5.2 cm for male or unsexed fish; it gives no reliable mass, width or body-height measurement.",
+    "habitat": "The documented range is the upper Uaupés drainage, a tributary system of the Rio Negro in the Amazon basin. Swedish aquarium field notes describe shallow, slow blackwater reaches with soft, mildly acidic water and cover from roots, branches and leaf litter.",
+    "diet": "No gut-content study exists; a specialist synthesis infers small-invertebrate feeding from related Apistogramma, rather than from direct measurements of this species.",
+    "behavior": "Aquarium reports describe aggression between conspecifics, while field observations of wild social groups remain limited; captive behavior cannot represent the full natural pattern.",
+    "reproduction": "Like other Apistogramma, it deposits eggs on the ceiling of a cave, where the female tends the clutch and larvae. The available species summary reports no clutch-size range for this fish.",
+    "ecology": "Colombian fish from around Mitú are often labelled possible Apistogramma personata, but their identity with the Brazilian type population remains unconfirmed.",
+    "conservation": "FishBase reports the global IUCN category Data Deficient, assessed on 7 November 2018. This status means the available information was insufficient to assess extinction risk, not that the species is known to be safe."
+  },
+  "sources": [
+    {
+      "url": "https://www.biodiversitylibrary.org/part/120258",
+      "title": "A taxonomic study of the genus Apistogramma — Bonner Zoologische Monographien"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/46675",
+      "title": "Apistogramma personata — FishBase species summary"
+    },
+    {
+      "url": "https://www.ciklid.org/artregister/art.php?ID=1576",
+      "title": "Apistogramma personata — Nordiska Ciklidsällskapet species register"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/apistogramma-personata/",
+      "title": "Apistogramma personata — Aquarist Atlas species account"
+    },
+    {
+      "url": "https://etyfish.org/cichlidae6/",
+      "title": "ETYFish: Etymology of Cichlidae"
+    },
+    {
+      "url": "https://biblio.naturalsciences.be/rbins-publications/working-documents-of-the-royal-belgian-institute-of-natural-sciences/40-1987-catalogues-des-types-de-poissons-recents-de-linstitut-royal-des-sciences-naturelles-de-belgique/irscnb_p5535_025215x_40-5-69-red.pdf",
+      "title": "Catalogues of recent fish types at the Royal Belgian Institute of Natural Sciences"
+    }
+  ]
+}

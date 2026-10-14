@@ -1,0 +1,46 @@
+{
+  "id": "aphantochroa_cirrochloris",
+  "name": "Sombre Hummingbird",
+  "scientific": "Aphantochroa cirrochloris",
+  "group": "birds",
+  "sections": {
+    "overview": "The Sombre Hummingbird is a Brazilian hummingbird of the Atlantic Forest region and nearby gardens and secondary growth. Many modern checklists use Eupetomena cirrochloris, while this bestiary retains the tree’s name Aphantochroa cirrochloris.",
+    "identification": "It is about 12 cm long, with a robust, slightly down-curved black bill, broad dark wings and a large tail. The plumage is subdued grey-green, with coppery green upperparts, a small white spot behind the eye, dark grey underparts, and white rump and undertail tufts; females are a little smaller but look much like males.",
+    "habitat": "It occurs in humid lowland and foothill forests, including forest edges, secondary growth, parks and gardens in eastern and central Brazil. It can persist in altered woodland and is sometimes seen near flower beds or artificial feeders.",
+    "diet": "Nectar supplies most of its energy, while small arthropods add protein. It visits flowers and feeders but may also chase insects in flight, especially along forest edges.",
+    "behavior": "It usually lives alone or in pairs and vigorously defends a small feeding territory throughout the year. In field studies, a male’s defended area could be no larger than one medium-sized tree near flowers or a feeder.",
+    "reproduction": "In southeastern Brazil the breeding season is reported from September to March. The female alone builds an open cup nest from soft plant fibres, often fastening mosses or lichens outside with spider silk, then incubates and feeds the young; a typical clutch is two eggs.",
+    "ecology": "Its modest colouring makes it less conspicuous than many hummingbirds, but its persistent defense of flowers and feeders can reveal it. At some Brazilian sites it is confused with the Green-throated Hummingbird; compare the grey breast and belly and the all-dark bill described in the local field guide.",
+    "conservation": "The species is reported as globally Least Concern and listed in CITES Appendix II, which regulates international trade rather than extinction risk."
+  },
+  "sources": [
+    {
+      "url": "https://www.wikiaves.com.br/wiki/beija-flor-cinza",
+      "title": "Sombre Hummingbird — WikiAves Brazil bird encyclopedia"
+    },
+    {
+      "url": "https://academic.oup.com/auk/article/123/4/1129/5562821",
+      "title": "Vocalizations and Associated Behaviors of the Sombre Hummingbird — The Auk"
+    },
+    {
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/dcom-guia-de-aves-da-esec-carij-c3-b3s-web-comp-pdf",
+      "title": "Birds of Carijós Ecological Station — ICMBio field guide"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=1150056",
+      "title": "Taxonomic Report — Integrated Taxonomic Information System"
+    },
+    {
+      "url": "https://www.health.belgium.be/sites/default/files/uploads/fields/fpshealth_theme_file/cites_list_full_02_2015.pdf",
+      "title": "CITES list of species — Belgian Federal Public Service Health, Food Chain Safety and Environment"
+    },
+    {
+      "url": "https://assets.sylvamo.com/m/3234ae67ca95d586/original/Manual-de-Aves-da-RPPN.pdf",
+      "title": "Bird Guide of RPPN Parque Florestal São Marcelo"
+    },
+    {
+      "url": "https://portal.ifsuldeminas.edu.br/images/PDFs/proex/publicacoes_livros/Livro_-_Aves_do_Planalto.pdf",
+      "title": "Birds of the Planalto — field guide"
+    }
+  ]
+}

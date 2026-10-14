@@ -1,0 +1,217 @@
+{
+  "id": "apistogramma_gibbiceps",
+  "scientific": "Apistogramma gibbiceps",
+  "group": "fish",
+  "name": {
+    "en": "Blackstriped Dwarf Cichlid",
+    "fr": "Cichlidé nain à bande noire"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma gibbiceps is a dwarf cichlid recorded from Brazil’s middle Rio Negro and Rio Branco basins, where its populations occupy more than one water type.",
+      "fr": "Apistogramma gibbiceps est un cichlidé nain signalé dans les bassins du moyen rio Negro et du rio Branco, au Brésil, où ses populations fréquentent plusieurs types d’eau."
+    },
+    "identification": {
+      "en": "The body is laterally compressed and becomes deeper with age; a dark stripe runs from the snout through the eye to the tail base, and older males may develop a rounded forehead hump. FishBase gives maximum standard lengths of 4.5 cm for male or unsexed fish and 5 cm for females; no reliable weight or body-width measurements were found. German and French aquarium accounts report about 8 cm for males and 5 cm for females without specifying the measurement convention, so these values should not be compared directly with standard length.",
+      "fr": "Le corps est comprimé latéralement et devient plus haut avec l’âge ; une bande sombre va du museau à la base de la queue en passant par l’œil, et les mâles âgés peuvent développer une bosse frontale arrondie. FishBase donne des longueurs standard maximales de 4,5 cm pour les individus mâles ou non sexés et de 5 cm pour les femelles ; aucune mesure fiable de masse ou de largeur n’a été trouvée. Des fiches allemandes et françaises d’aquariophilie indiquent environ 8 cm pour les mâles et 5 cm pour les femelles sans préciser la convention de mesure ; ces valeurs ne se comparent donc pas directement à la longueur standard."
+    },
+    "habitat": {
+      "en": "Its range spans the middle Rio Negro and Rio Branco drainages; German species accounts describe shallow upper-river margins among roots and leaf litter, in soft, acidic water, and report both blackwater and clearer-water settings.",
+      "fr": "Son aire couvre les bassins du moyen rio Negro et du rio Branco ; des fiches allemandes décrivent des bordures peu profondes entre racines et litière de feuilles, dans une eau douce et acide, et signalent des milieux d’eau noire comme d’eau plus claire."
+    },
+    "diet": {
+      "en": "No species-specific stomach study was found; a recent aquarium synthesis infers from close Apistogramma relatives that it hunts small invertebrates in leaf litter and substrate, rather than presenting a measured diet for this fish.",
+      "fr": "Aucune étude stomacale propre à l’espèce n’a été trouvée ; une synthèse aquariophile récente infère, à partir d’Apistogramma apparentés, qu’elle chasse de petits invertébrés dans la litière et le substrat, sans présenter de régime mesuré chez ce poisson."
+    },
+    "behavior": {
+      "en": "The available species account records female-led care of eggs and larvae, but detailed field observations of social behavior remain scarce.",
+      "fr": "La fiche biologique disponible rapporte des soins aux œufs et aux larves assurés par la femelle, mais les observations détaillées du comportement social sur le terrain restent rares."
+    },
+    "reproduction": {
+      "en": "It is a cave-spawning substrate brooder: the female attaches eggs to the cave ceiling and tends them and the larvae; FishBase cites one captive pair producing around 250 eggs every six weeks, not a typical wild clutch estimate.",
+      "fr": "C’est un pondeur cavernicole qui fixe ses œufs au plafond d’une cavité et s’occupe des œufs et des larves ; FishBase cite un couple captif ayant produit environ 250 œufs toutes les six semaines, et non une ponte typique en milieu sauvage."
+    },
+    "ecology": {
+      "en": "Apistogramma roraimae, described from the Rio Branco, is treated as a junior synonym of A. gibbiceps in current taxonomic catalogs, so older records under that name refer to this accepted species.",
+      "fr": "Apistogramma roraimae, décrit du rio Branco, est traité comme synonyme junior d’A. gibbiceps dans les catalogues taxonomiques actuels ; les anciennes données publiées sous ce nom renvoient donc à cette espèce acceptée."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment is Least Concern, dated 7 November 2018; this broad category does not establish that every local habitat is unaffected by change.",
+      "fr": "L’évaluation mondiale de l’UICN est en préoccupation mineure, datée du 7 novembre 2018 ; cette catégorie générale ne démontre pas que chaque habitat local soit à l’abri des changements."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma gibbiceps — FishBase species summary",
+        "fr": "Apistogramma gibbiceps — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/46624",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase gives the middle Negro and Branco range, maximum lengths, cave spawning with female care, a reported 250-egg captive pair, and IUCN Least Concern assessed 2018-11-07."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 26,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma gibbiceps — Fishlexikon German species account",
+        "fr": "Apistogramma gibbiceps — fiche allemande Fischlexikon"
+      },
+      "url": "https://www.fischlexikon.eu/fischlexikon/fische-suchen.php?fisch_id=0000002214",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "German account describes the dark stripe from snout through the eye to the caudal peduncle, a high-backed profile in adults, the middle Negro and Branco range, and reported total length up to about 8 cm."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 35,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma gibbiceps — Checklist of the Freshwater Fishes of South and Central America",
+        "fr": "Apistogramma gibbiceps — liste des poissons d’eau douce d’Amérique centrale et du Sud"
+      },
+      "url": "https://www.svenkullander.se/publications/Kullander_Cichlidae_2003.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Kullander’s catalog lists the valid species and recognizes Apistogramma roraimae as its synonym, with occurrence in the Branco and middle Negro basins."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 22,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma gibbiceps — Aquarist Atlas species account",
+        "fr": "Apistogramma gibbiceps — fiche espèce Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-gibbiceps/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "The synthesis distinguishes lower-Negro blackwater and Rio Branco forms, labels its diet as an inference from close relatives, and summarizes captive territorial and breeding observations."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 25,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma gibbiceps — FishFish French aquarium species account",
+        "fr": "Apistogramma gibbiceps — fiche aquariophile française FishFish"
+      },
+      "url": "https://www.fishfish.fr/poisson/apistogramma-gibbiceps",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French participatory aquarium card reports about 8 cm for males and 5 cm for females, without specifying measurement convention; used only as a secondary cross-check."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 25,
+        "total": 95,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS Report — Apistogramma gibbiceps",
+        "fr": "Rapport ITIS — Apistogramma gibbiceps"
+      },
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt;jsessionid=7960464ABBC08C202BF41D04AEE30285?search_topic=TSN&search_value=648279",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "ITIS lists Apistogramma roraimae Kullander, 1980 as a synonym of the valid species A. gibbiceps Meinken, 1969."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 17,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a laterally compressed dwarf cichlid with a continuous dark stripe from snout through eye to tail base, deepening body and rounded forehead of an older male. Male has a more pronounced hump and fin extensions; female is smaller and plainer. Use a quiet, leaf-strewn Rio Negro margin, and note that Rio Branco populations may differ in color and water type.",
+  "uncertainties": [
+    "FishBase reports standard length up to 4.5 cm for males or unsexed fish and 5 cm for females, while German and French aquarium sources give male lengths near 8 cm without specifying how measured. No dependable mass or body-width data were found.",
+    "A. roraimae is widely catalogued as a synonym, but some aquarium sources discuss geographically distinct Branco fish separately; local variation and the exact limits of the named populations remain a source of debate.",
+    "The diet discussion is explicitly an inference from related species, and territorial behavior and clutch production are largely described in captive accounts rather than field studies."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase size and conservation records with Kullander’s taxonomic checklist, a German field guide, a French hobby account and a recent synthesis. Kept standard-length and unspecified total-length measurements separate, treated Roraimae as a catalogued synonym, and labeled dietary and behavioral inference."
+}

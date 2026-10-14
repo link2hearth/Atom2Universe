@@ -1,0 +1,266 @@
+{
+  "id": "apistogramma_geisleri",
+  "scientific": "Apistogramma geisleri",
+  "group": "fish",
+  "name": {
+    "en": "Geisler’s Dwarf Cichlid",
+    "fr": "Cichlidé nain de Geisler"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma geisleri is a small South American cichlid native to Brazil’s lower Amazon basin. Its type locality is the Rio Curuçamba near Óbidos, and later specimens came from several sites in the Rio Trombetas drainage.",
+      "fr": "Apistogramma geisleri est un petit cichlidé sud-américain originaire du bas bassin amazonien au Brésil. Sa localité type est le rio Curuçamba près d’Óbidos, et des spécimens ultérieurs proviennent de plusieurs sites du bassin du rio Trombetas."
+    },
+    "identification": {
+      "en": "The fish is laterally compressed, with a rounded tail fin and a moderately deep body; males show a dark line through the eye and a striped tail, while breeding females become yellow with a conspicuous dark side marking. The revised description found no lateral body spot or abdominal stripes, but did record a caudal-base spot and five vertical rows of spots on the middle tail rays; its measured specimens were 20.9–28.2 mm standard length, while later Trombetas material reached 30.4 mm. FishBase lists 2.8 cm standard length as the maximum, and no reliable weight or body-width figure was found. A French aquarium account also describes seven body bars in males, a supporting mark rather than a substitute for the formal diagnosis.",
+      "fr": "Ce poisson comprimé latéralement a une caudale arrondie et un corps moyennement haut ; le mâle présente une ligne sombre traversant l’œil et une caudale rayée, tandis que la femelle en reproduction devient jaune avec un marquage latéral sombre bien visible. La redescription ne relève ni tache latérale sur le corps ni rayures abdominales, mais note une tache à la base de la caudale et cinq rangées verticales de points sur ses rayons médians ; les spécimens mesurés faisaient 20,9 à 28,2 mm de longueur standard, et du matériel plus récent du Trombetas atteignait 30,4 mm. FishBase indique 2,8 cm de longueur standard comme maximum, et aucune masse ni largeur corporelle fiable n’a été trouvée. Une fiche française d’aquariophilie décrit également sept barres corporelles chez le mâle ; c’est un repère complémentaire, qui ne remplace pas le diagnostic formel."
+    },
+    "habitat": {
+      "en": "Records place it in the lower Trombetas basin, including the Curuçamba near Óbidos and sites around Oriximiná. German species accounts describe shallow, slow-flowing margins with leaf litter and submerged wood, but detailed measurements of water chemistry at collection sites were not available.",
+      "fr": "Les données de collecte le situent dans le bas bassin du Trombetas, notamment dans le Curuçamba près d’Óbidos et autour d’Oriximiná. Des fiches allemandes décrivent des bordures peu profondes et lentes, avec litière de feuilles et bois immergé, mais ne donnent pas de mesures détaillées de la chimie de l’eau aux sites de collecte."
+    },
+    "diet": {
+      "en": "The species accounts reviewed do not provide stomach-content data or a measured diet from wild fish. Aquarium feeding lists describe captive foods and cannot establish its natural prey, so the field diet remains poorly documented.",
+      "fr": "Les fiches consultées ne fournissent ni données de contenus stomacaux ni régime mesuré chez des poissons sauvages. Les listes d’aliments d’aquarium concernent des poissons captifs et ne permettent pas d’établir ses proies naturelles ; son régime dans la nature reste donc peu documenté."
+    },
+    "behavior": {
+      "en": "Field observations of social behavior are scarce. Aquarium accounts describe territorial males and females defending a brood area, behavior that is useful context but should not be treated as a detailed study of wild groups.",
+      "fr": "Les observations de terrain sur son comportement social sont rares. Des fiches d’aquariophilie décrivent des mâles territoriaux et des femelles défendant une zone de ponte ; ces indications donnent un contexte, sans constituer une étude détaillée des groupes sauvages."
+    },
+    "reproduction": {
+      "en": "FishBase records eggs attached to the ceiling of a cave, with the female caring for the eggs and larvae. German aquarium accounts also describe the female guarding the clutch while the male defends a broader territory; clutch-size figures from captive care guides are not treated here as field measurements.",
+      "fr": "FishBase indique que les œufs sont fixés au plafond d’une cavité et que la femelle s’occupe des œufs et des larves. Des fiches allemandes d’aquariophilie décrivent aussi la femelle gardant la ponte tandis que le mâle défend un territoire plus vaste ; les tailles de ponte données par des guides d’élevage ne sont pas présentées ici comme des mesures de terrain."
+    },
+    "ecology": {
+      "en": "Apistogramma geisleri belongs to the dwarf-cichlid genus Apistogramma, whose species are often separated by fine differences in bars, spots and fin shape. It has been compared with the geographically widespread A. eunotus, whose resemblance can make identifications and range limits difficult; compare the eye stripe, body bars and tail pattern rather than relying on color alone.",
+      "fr": "Apistogramma geisleri appartient au genre de cichlidés nains Apistogramma, dont les espèces se distinguent souvent par de fines différences de barres, de taches et de forme des nageoires. Il a été rapproché d’A. eunotus, espèce largement répartie dont la ressemblance complique les identifications et les limites d’aire ; il faut comparer la ligne passant par l’œil, les barres du corps et le dessin de la caudale, plutôt que la seule couleur."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern, dated 7 November 2018. The species is known from a limited part of the lower Amazon, and that category should not be read as evidence that every local population or habitat is free of pressure.",
+      "fr": "FishBase rapporte une évaluation mondiale de l’UICN en préoccupation mineure, datée du 7 novembre 2018. L’espèce n’est connue que d’une partie limitée du bas Amazone ; cette catégorie ne signifie pas que chaque population ou habitat local est exempt de pression."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma geisleri — FishBase species summary",
+        "fr": "Apistogramma geisleri — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/46615",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives lower Trombetas distribution, 2.8 cm male or unsexed SL, cave-ceiling egg deposition with female care, and IUCN Least Concern assessed 2018-11-07."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 23,
+        "total": 156,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cichlid Fishes of the Amazon River Drainage of Peru — Swedish Museum of Natural History",
+        "fr": "Poissons cichlidés du bassin péruvien de l’Amazone — Musée suédois d’histoire naturelle"
+      },
+      "url": "https://www.zobodat.at/pdf/Bonner-Zoologische-Monographien_14_0001-0152.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander’s redescription reports the type locality, diagnostic coloration and fin marks, and measurements of the compared type specimens."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 18,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Two new species of Apistogramma from the rio Trombetas — Neotropical Ichthyology",
+        "fr": "Deux nouvelles espèces d’Apistogramma du rio Trombetas — Neotropical Ichthyology"
+      },
+      "url": "https://www.scielo.br/j/ni/a/tYvvbpRfxFQ9vbJ8vC4LgLq/?lang=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Kullander and Ferreira report Trombetas-drainage material from the Alenquer–Óbidos road, Sapucuá and Curuçamba, including specimens up to 30.4 mm SL."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 20,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma geisleri (A058) — Aquaportail French species account",
+        "fr": "Apistogramma geisleri (A058) — fiche française Aquaportail"
+      },
+      "url": "https://www.aquaportail.com/fiche-poisson-3180-apistogramma-geisleri.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "French aquarium account cross-checks the lower Trombetas locality, approximately 2.8 cm average size, male body bands and eye stripe, and yellow breeding female."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 23,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma geisleri — Fischlexikon German species account",
+        "fr": "Apistogramma geisleri — fiche allemande Fischlexikon"
+      },
+      "url": "https://www.fischlexikon.eu/fischlexikon/fische-suchen.php?fisch_id=0000002227",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "German account describes a laterally compressed body, rounded caudal fin, quiet shallow lower-Amazon margins, cave spawning, female brood care and male territorial defense."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 23,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma geisleri — Aquarist Atlas species account",
+        "fr": "Apistogramma geisleri — fiche espèce Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-geisleri/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "diet"
+      ],
+      "facts": [
+        "This synthesis notes the resemblance to Apistogramma eunotus and the sparse species-specific evidence for diet and social behavior."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 18,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma geisleri — my-fish German species account",
+        "fr": "Apistogramma geisleri — fiche allemande my-fish"
+      },
+      "url": "https://my-fish.org/my-fishothek/apistogramma-geisleri/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "German aquarium account describes lower-water and leaf-litter use, female brood coloration, and captive parental care."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 15,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a small, laterally compressed dwarf cichlid with a moderately deep body, rounded caudal fin, dark eye stripe, faint body bars and five rows of spots on the middle caudal rays. Male relatively blue-gray with extended unpaired fin tips; breeding female yellow with dark lateral marking. Depict a quiet lower-Amazon margin with leaf litter and submerged wood.",
+  "uncertainties": [
+    "Maximum size sources are not fully consistent: FishBase lists 2.8 cm SL, while a 2005 paper reports collected specimens up to 30.4 mm SL. Standard length ends at the caudal-fin base; no dependable mass, body width or body height was found.",
+    "Detailed wild habitat chemistry, prey, and social behavior are poorly documented. Aquarium descriptions are identified as captive observations rather than field evidence.",
+    "Apistogramma eunotus is cited as a lookalike in a secondary synthesis; the species should not be confused with it solely on color, and diagnostic comparison in the redescription remains the stronger identification source."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the German redescription and later Trombetas records against FishBase and French and German species accounts. Kept captive observations separate from field evidence, recorded the conflicting size summaries, and linked the identification discussion to the similar A. eunotus without treating color alone as decisive."
+}

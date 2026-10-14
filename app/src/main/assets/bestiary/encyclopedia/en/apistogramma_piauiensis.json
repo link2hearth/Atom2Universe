@@ -1,0 +1,38 @@
+{
+  "id": "apistogramma_piauiensis",
+  "name": "Piauí Dwarf Cichlid",
+  "scientific": "Apistogramma piauiensis",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma piauiensis is a tiny freshwater cichlid described by Sven Kullander in 1980 from northeastern Brazil. Its known records center on the Parnaíba River basin in Piauí State.",
+    "identification": "FishBase gives a maximum standard length of 2.3 cm for male or unsexed specimens, making it exceptionally small among dwarf cichlids. No reliable female-specific length, body mass, width or height is reported in the cited records.",
+    "habitat": "The type locality is Lagoa Seca near the Parnaíba River at Barra do Longá. FishBase classifies the species as freshwater and benthopelagic, with reported soft, mildly acidic water conditions.",
+    "diet": "No species-specific diet study exists; feeding on tiny bottom-dwelling invertebrates is inferred from related small Apistogramma, not measured for this fish.",
+    "behavior": "Wild social behavior is poorly documented; available species accounts do not describe routine interactions or group structure in the field.",
+    "reproduction": "FishBase reports female care of cave-laid eggs but gives no measured clutch size or detailed species-specific breeding study.",
+    "ecology": "This is a narrow-range Parnaíba fish, and its few occurrence records leave its wider local distribution poorly sampled.",
+    "conservation": "FishBase reports the global IUCN category Data Deficient, assessed on 7 November 2018. The assessment reflects limited information and should not be read as evidence of low risk."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/46680",
+      "title": "Apistogramma piauiensis — FishBase species summary"
+    },
+    {
+      "url": "https://www.biodiversitylibrary.org/part/120258",
+      "title": "Kullander 1980 — taxonomic study of Apistogramma"
+    },
+    {
+      "url": "https://mczbase.mcz.harvard.edu/guid/MCZ%3AIch%3A46830",
+      "title": "MCZbase specimen record for Apistogramma piauiensis"
+    },
+    {
+      "url": "https://fishbase.net.br/FieldGuide/FieldGuideSummary.php?GenusName=Apistogramma&SpeciesName=piauiensis&print=&sps=",
+      "title": "Apistogramma genus — FishBase French field guide"
+    },
+    {
+      "url": "https://www.cichlidatlas.com/species/apistogramma-piauiensis/",
+      "title": "Apistogramma piauiensis — Aquarist Atlas account"
+    }
+  ]
+}

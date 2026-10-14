@@ -1,0 +1,257 @@
+{
+  "id": "apatura_iris",
+  "scientific": "Apatura iris",
+  "group": "invertebrates",
+  "name": {
+    "en": "Purple Emperor",
+    "fr": "Grand mars changeant"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Purple Emperor is a large European and Asian woodland butterfly, most often encountered high in the tree canopy. Its caterpillars depend on willows growing in sunny clearings and shaded woodland edges.",
+      "fr": "Le Grand mars changeant est un grand papillon forestier d’Europe et d’Asie, qui se rencontre surtout dans la canopée. Sa chenille dépend des saules poussant dans les clairières ensoleillées et les lisières ombragées."
+    },
+    "identification": {
+      "en": "Both sexes have dark brown wings with a broad white band and orange-ringed eyespots; the male flashes iridescent blue-purple in oblique light, while the female is larger-looking and lacks that sheen. Published wingspans vary by region and guide, roughly 55–92 mm, with no consistent sex-specific measurement in the sources reviewed.",
+      "fr": "Les deux sexes portent une large bande blanche et des ocelles cerclés d’orange sur des ailes brun sombre ; le mâle prend un éclat bleu-violet irisé sous certains angles, absent chez la femelle. Les guides donnent des envergures variables selon les régions, autour de 55 à 92 mm, sans mesure distincte et constante pour chaque sexe dans les sources consultées."
+    },
+    "habitat": {
+      "en": "It uses broadleaved, mixed and sometimes coniferous forests, especially edges, rides and clearings with semi-shaded willows. The species ranges widely across Europe and temperate Asia, but local populations can be sparse and difficult to observe.",
+      "fr": "Elle fréquente les forêts de feuillus, mixtes et parfois de conifères, surtout leurs lisières, chemins et clairières où poussent des saules mi-ombragés. L’espèce est largement répartie en Europe et dans l’Asie tempérée, mais ses populations locales peuvent être clairsemées et difficiles à observer."
+    },
+    "diet": {
+      "en": "Caterpillars feed mainly on goat willow (Salix caprea) and grey willow (S. cinerea), with other willows used in some regions. Adults rarely visit flowers: they take tree sap and aphid honeydew, and descend to damp ground, dung or carrion for salts and minerals.",
+      "fr": "Les chenilles mangent surtout le saule marsault (Salix caprea) et le saule cendré (S. cinerea), ainsi que d’autres saules selon les régions. Les adultes visitent rarement les fleurs : ils prennent la sève et le miellat, puis descendent sur les sols humides, les excréments ou les charognes pour absorber sels et minéraux."
+    },
+    "behavior": {
+      "en": "Adults spend much of the day in the canopy, and males often descend to feed at damp patches or animal droppings. Males defend high perches and may gather around especially tall trees where they wait for passing females.",
+      "fr": "Les adultes passent une grande partie de la journée dans la canopée, et les mâles descendent souvent se nourrir sur les sols humides ou les déjections. Les mâles défendent des postes élevés et peuvent se rassembler autour de grands arbres où ils attendent les femelles."
+    },
+    "reproduction": {
+      "en": "Females lay single eggs on willow leaves in summer, and the species normally produces one generation each year. The green caterpillar bears two short horn-like projections on its head and overwinters attached near a willow bud before feeding again in spring.",
+      "fr": "En été, les femelles déposent leurs œufs isolément sur les feuilles de saule, et l’espèce produit normalement une génération annuelle. La chenille verte porte deux petites cornes sur la tête et hiverne fixée près d’un bourgeon de saule avant de reprendre son alimentation au printemps."
+    },
+    "ecology": {
+      "en": "Its close relative the Lesser Purple Emperor (Apatura ilia) can also show iridescent color, so do not identify this species from sheen alone. Compare the full underside pattern and the orange markings; the two species also differ in the willow and poplar hosts used by their caterpillars.",
+      "fr": "Son proche parent, le Petit mars changeant (Apatura ilia), peut lui aussi présenter des reflets ; l’éclat seul ne suffit donc pas à identifier cette espèce. Il faut comparer l’ensemble du dessin du revers et les marques orange ; les chenilles des deux espèces diffèrent aussi par les saules et peupliers qu’elles utilisent."
+    },
+    "conservation": {
+      "en": "A French national assessment published in 2012 classed the species as Least Concern, while a 2026 regional assessment lists it as Near Threatened in Burgundy–Franche-Comté. These categories apply at different geographic scales and dates, not to every local population equally.",
+      "fr": "Une évaluation nationale française publiée en 2012 classe l’espèce en préoccupation mineure, tandis qu’une évaluation régionale de 2026 la classe quasi menacée en Bourgogne–Franche-Comté. Ces catégories concernent des échelles géographiques et des dates différentes, et ne décrivent pas uniformément chaque population locale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Purple Emperor — Woodland Trust",
+        "fr": "Grand mars changeant — Woodland Trust"
+      },
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/butterflies/purple-emperor/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Woodland Trust account describes sex differences, adult food, male territorial behavior and egg-laying on willow leaves."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 16,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Purple Emperor — Wiltshire Butterfly Conservation",
+        "fr": "Grand mars changeant — Butterfly Conservation dans le Wiltshire"
+      },
+      "url": "https://www.wiltshire-butterflies.org.uk/butterfly/view/30",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Local Butterfly Conservation account reports a 70–92 mm wingspan, willow host plants and broadleaved woodland habitat."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 16,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Purple Emperor — Baden-Württemberg Forest Conservation Information System",
+        "fr": "Grand mars changeant — Système d’information sur la conservation forestière du Bade-Wurtemberg"
+      },
+      "url": "https://wnsinfo.fva-bw.de/arten/grosser-schillerfalter/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "German state information system describes woodland structure, semi-shaded willow stands, flight season and mineral-seeking adult behavior."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 16,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Purple Emperor — SHNA Burgundy fauna atlas",
+        "fr": "Grand mars changeant — Atlas de la faune de Bourgogne (SHNA)"
+      },
+      "url": "https://atlas.shna.fr/espece/53786",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "French natural-history atlas gives the species' broad range and notes the larval resemblance to Apatura ilia, especially the paired head horns."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 21,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red List of Butterflies of Burgundy–Franche-Comté, 2026",
+        "fr": "Liste rouge des papillons de Bourgogne–Franche-Comté, 2026"
+      },
+      "url": "https://cbnbfc-ori.fr/sites/default/files/2026-04/Liste-rouge-de-papillons-2026_WEB.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Regional list assigns Apatura iris Near Threatened in Burgundy–Franche-Comté; France's national list categorizes it Least Concern (2012)."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 17,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "French national and European conservation records — ViaOuest TaxRef summary",
+        "fr": "Statuts français et européen — synthèse TaxRef ViaOuest"
+      },
+      "url": "https://www.viaouest.com/espece/grand-mars-changeant-le-53786",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "TaxRef-linked summary reports Least Concern at French national and European scales, citing the 2012 French assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 16,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Purple Emperor — LBV Starnberg species note",
+        "fr": "Grand mars changeant — fiche du LBV Starnberg"
+      },
+      "url": "https://starnberg.lbv.de/umweltbildung/einblicke-in-die-natur/gro%C3%9Fer-schillerfalter/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "German conservation group describes the green horned larva, willow hosts and larval overwintering."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 13,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Large dark brown emperor butterfly with broad white cross-band and orange-ringed eyespots; show the male's blue-violet iridescence only at an oblique angle, with a non-iridescent female comparison. Place among high woodland canopy and willow growth.",
+  "uncertainties": [
+    "Published wingspan ranges differ substantially by regional guide (about 55–65 mm in some German accounts and 70–92 mm in a Wiltshire account); a broad range is shown without claiming a sex-specific size difference.",
+    "The French national Least Concern assessment is from 2012, while the Burgundy–Franche-Comté regional assessment is from 2026; their scales and dates are stated separately."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English, French and German sources; distinguished sex-related iridescence, documented the close relative Apatura ilia, and separated national from regional conservation categories."
+}

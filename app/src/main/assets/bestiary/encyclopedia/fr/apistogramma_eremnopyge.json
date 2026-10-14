@@ -1,0 +1,46 @@
+{
+  "id": "apistogramma_eremnopyge",
+  "name": "Apistogramma eremnopyge",
+  "scientific": "Apistogramma eremnopyge",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce cichlidé nain a été décrit du Río Pintuyacu, dans la région péruvienne de Loreto. Des données ultérieures étendent son aire connue aux réseaux voisins du Nanay et du Tapiche méridional.",
+    "identification": "Le mâle adulte de la série type mesurait 34,4 mm de longueur standard ; les femelles, 26,1 à 28,2 mm, mesure prise jusqu’à la base de la caudale. Le mâle a des prolongements dorsaux et caudaux ; les deux sexes portent la tache basse unique et une étroite bande latérale.",
+    "habitat": "Il vit dans des affluents lents, des ruisseaux et des bras calmes à eau douce et acide, claire ou noire, sur fond de feuilles mortes.",
+    "diet": "Aucune liste de proies propre à l’espèce n’a été publiée ; les synthèses du genre décrivent des Apistogramma carnivores, consommant surtout de petits invertébrés benthiques.",
+    "behavior": "En captivité, les mâles territoriaux peuvent attaquer leurs rivaux. Certains couples s’installeraient mieux lorsque d’autres couples de la même espèce restent visibles à proximité.",
+    "reproduction": "En élevage, la ponte a lieu dans une cavité, la nuit ou à l’aube, avec généralement 50 à 150 œufs. Le mâle patrouille et la femelle garde les œufs et les alevins.",
+    "ecology": "Son espèce la plus ressemblante est Apistogramma bitaeniata ; la tache sombre marquée au bas du pédoncule caudal distingue A. eremnopyge.",
+    "conservation": "L’UICN classe l’espèce en préoccupation mineure, avec une dernière évaluation en 2014. Des travaux péruviens ultérieurs indiquent que les Apistogramma à aire restreinte peuvent être sensibles à la déforestation et à d’autres changements d’habitat."
+  },
+  "sources": [
+    {
+      "url": "https://mapress.com/zt/article/download/zootaxa.564.1.1/8036/8045",
+      "title": "Apistogramma eremnopyge, nouvelle espèce de cichlidé du Pérou — Zootaxa"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/apistogramma-eremnopyge",
+      "title": "Apistogramma eremnopyge — fiche espèce Seriously Fish"
+    },
+    {
+      "url": "https://www.fishbase.net.br/summary/62078",
+      "title": "Apistogramma eremnopyge — fiche FishBase"
+    },
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-2016-003.pdf",
+      "title": "État de conservation et Liste rouge des poissons d’eau douce du Pérou — bibliothèque UICN"
+    },
+    {
+      "url": "https://www.ichthyologie.de/wp-content/uploads/2021/03/Beninde-et-al-2020-Changes-of-water-temperature-by-deforestation-and-Apistogramma.pdf",
+      "title": "Changements de température de l’eau liés à la déforestation et aux Apistogramma du Loreto — Bulletin of Fish Biology"
+    },
+    {
+      "url": "https://www.fishipedia.fr/fr/poissons/apistogramma-eremnopyge",
+      "title": "Apistogramma eremnopyge — fiche espèce Fishipedia"
+    },
+    {
+      "url": "https://www.cichlidatlas.com/species/apistogramma-eremnopyge/",
+      "title": "Apistogramma eremnopyge — fiche du Cichlid Atlas"
+    }
+  ]
+}

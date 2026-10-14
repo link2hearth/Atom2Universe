@@ -1,0 +1,285 @@
+{
+  "id": "apistogramma_eunotus",
+  "scientific": "Apistogramma eunotus",
+  "group": "fish",
+  "name": {
+    "en": "Blue-cheek Dwarf Cichlid",
+    "fr": "Apistogramma eunotus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma eunotus is a small dwarf cichlid described from the upper Amazon basin. Its established range follows the Ucayali, Yavarí and upper Solimões systems of Peru and Brazil.",
+      "fr": "Apistogramma eunotus est un petit cichlidé nain décrit du haut bassin amazonien. Son aire établie suit les réseaux de l’Ucayali, du Yavarí et du haut Solimões, au Pérou et au Brésil."
+    },
+    "identification": {
+      "en": "The 1981 type series measured 14–50 mm standard length; later collections recorded a male to 53 mm and a female to 36 mm. Standard length ends at the tail-fin base, so it is shorter than total length; body mass was not reported in the sources reviewed. Adults have a moderately deep body, narrow dark side band, almost unmarked tail and a vertically split sixth body bar; large males are higher-backed, with extended dorsal and anal tips.",
+      "fr": "La série type de 1981 mesurait 14,2 à 49,9 mm de longueur standard ; des collectes ultérieures ont relevé un mâle jusqu’à 52,5 mm et une femelle jusqu’à 35,8 mm. La longueur standard s’arrête à la base de la caudale et reste donc inférieure à la longueur totale ; les sources consultées ne donnent pas de masse. L’adulte a un corps assez haut, une bande latérale sombre et étroite, une caudale presque unie et la sixième barre verticale divisée ; les grands mâles ont le dos plus élevé et les nageoires dorsale et anale prolongées."
+    },
+    "habitat": {
+      "en": "It is known from tributaries of the Ucayali and Amazon, including the Yavarí and Japurá rivers, and has been recorded in black-, clear- and white-water conditions. The original material includes sites in Peru and at Tabatinga, Brazil, on the upper Solimões.",
+      "fr": "Il est signalé dans les affluents de l’Ucayali et de l’Amazone, notamment les rivières Yavarí et Japurá, en eaux noires, claires et blanches. Le matériel original comprend des sites péruviens et Tabatinga, au Brésil, sur le haut Solimões."
+    },
+    "diet": {
+      "en": "A species-specific study of wild prey was not found in the references consulted. Genus-level accounts describe Apistogramma as small carnivores that take bottom-dwelling invertebrates, so this is a cautious comparison rather than a measured diet for A. eunotus.",
+      "fr": "Les références consultées ne donnent pas d’étude propre à l’espèce sur ses proies sauvages. Les sources consacrées au genre décrivent des Apistogramma comme de petits carnivores d’invertébrés benthiques ; cette comparaison prudente ne constitue pas un régime mesuré chez A. eunotus."
+    },
+    "behavior": {
+      "en": "Detailed wild social observations are limited. Aquarium accounts describe males patrolling territories that overlap smaller spawning areas held by females, but captive setups can alter aggression and should not be read as a complete field study.",
+      "fr": "Les observations détaillées de son comportement social sauvage sont limitées. En aquarium, les mâles patrouillent des territoires recouvrant les petites zones de ponte des femelles ; les conditions captives pouvant modifier l’agressivité, cela ne remplace pas une étude de terrain."
+    },
+    "reproduction": {
+      "en": "Field-guide accounts describe eggs attached to the roof of a cave, with the female tending the clutch. Captive reports give clutches of about 100–150 eggs and describe the female guarding the fry while the male keeps a broader territory.",
+      "fr": "Les fiches de biologie indiquent que les œufs sont fixés au plafond d’une cavité et que la femelle s’occupe de la ponte. Des élevages rapportent environ 100 à 150 œufs et décrivent la femelle gardant les alevins tandis que le mâle défend un territoire plus vaste."
+    },
+    "ecology": {
+      "en": "Kullander compared its body shape and pattern with Apistogramma cruzi and A. moae. In adult A. eunotus, the split sixth body bar and nearly plain tail help separate it from those close relatives.",
+      "fr": "Kullander rapprochait sa forme et son dessin de ceux d’Apistogramma cruzi et d’A. moae. Chez l’adulte A. eunotus, la sixième barre divisée et la caudale presque unie aident à le distinguer de ces proches parents."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists Apistogramma eunotus as Least Concern, assessed on 28 October 2020; this basin-scale category does not rule out local habitat pressures.",
+      "fr": "L’évaluation mondiale de l’UICN classe Apistogramma eunotus en préoccupation mineure, à la date du 28 octobre 2020 ; cette catégorie à l’échelle du bassin n’exclut pas des pressions locales sur l’habitat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma eunotus, a new species from the upper Amazon basin — Bonner Zoologische Beiträge",
+        "fr": "Apistogramma eunotus, nouvelle espèce du haut bassin amazonien — Bonner Zoologische Beiträge"
+      },
+      "url": "https://zoologicalbulletin.de/BzB_Volumes/Volume_32_1_2/183_194_BZB32_1_2_Kollander_SvenO.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander’s original 1981 description gives the type-series size, localities, adult bar pattern and distinguishing traits."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 15,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cichlid Fishes of the Amazon River Drainage of Peru — Swedish Museum of Natural History",
+        "fr": "Poissons cichlidés du bassin péruvien de l’Amazone — Musée suédois d’histoire naturelle"
+      },
+      "url": "https://svenkullander.se/publications/Kullander_Peru_1986.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander’s 1986 monograph reports a 52.5 mm male and 35.8 mm female, broader Ucayali–Amazon distribution, and similarity to A. cruzi and A. moae."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 23,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma eunotus field guide — FishBase",
+        "fr": "Guide de terrain d’Apistogramma eunotus — FishBase"
+      },
+      "url": "https://www.fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Apistogramma&SpeciesName=eunotus&pda=1&sps=",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "conservation",
+        "diet"
+      ],
+      "facts": [
+        "Field guide lists 5.3 cm maximum standard length, black/clear/white-water habitat, cave-ceiling egg deposition and female care; global status LC assessed 2020-10-28."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 21,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma eunotus species account — Seriously Fish",
+        "fr": "Fiche espèce Apistogramma eunotus — Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/apistogramma-eunotus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "habitat"
+      ],
+      "facts": [
+        "Species account describes genus-level invertebrate feeding and female-led parental care; captive behavior is distinguished from wild ecology."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 17,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma eunotus — Aquaportail French species account",
+        "fr": "Apistogramma eunotus — fiche française Aquaportail"
+      },
+      "url": "https://www.aquaportail.com/fiche-poisson-2514-apistogramma-eunotus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "French account cross-checks male standard length near 5.3 cm and range in the Ucayali, Amazon, Yavarí and Japurá systems."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 19,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fish species of the Ucayali River basin, Peru — Revista Peruana de Biología",
+        "fr": "Espèces de poissons du bassin de l’Ucayali, Pérou — Revista Peruana de Biología"
+      },
+      "url": "https://www.scielo.org.pe/scielo.php?pid=S1727-99332022000400002&script=sci_arttext",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish-language Peruvian river-basin inventory records Apistogramma eunotus among the freshwater fishes of the Ucayali."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma eunotus — FishBase taxonomic and IUCN summary",
+        "fr": "Apistogramma eunotus — synthèse taxonomique et UICN de FishBase"
+      },
+      "url": "https://fishbase.se/summary/Apistogramma-eunotus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the global Least Concern assessment and its 28 October 2020 assessment date."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blue Cheek Dwarf Cichlid — Aquarist Atlas",
+        "fr": "Apistogramma eunotus — Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-eunotus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Account summarizes captive territory structure and cave spawning with female-led brood care."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 12,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Small, deep-bodied dwarf cichlid with a narrow dark lateral band, nearly plain caudal fin and vertically split sixth body bar in adults. Large male: high-backed, elongated pointed dorsal and anal fin tips; female smaller and rounder. Do not add a large lateral blotch absent from the original diagnosis.",
+  "uncertainties": [
+    "Length figures refer to standard length, not total length. The original type series maxed at 49.9 mm; the 1986 monograph later reported 52.5 mm for a male and 35.8 mm for a female.",
+    "The original author noted similarity to A. cruzi and A. moae. The split sixth bar is described in adults; juvenile markings may be less diagnostic.",
+    "Wild diet and social behavior are incompletely studied; diet statements beyond general Apistogramma patterns are not presented as species-specific measurements.",
+    "The sources report standard length rather than total length; the distinction is stated because the measurements are not directly interchangeable."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Kullander’s original description and 1986 monograph against FishBase, a French account and a Peruvian species inventory. Kept standard length distinct from total length and labeled genus-level diet and captive observations cautiously."
+}

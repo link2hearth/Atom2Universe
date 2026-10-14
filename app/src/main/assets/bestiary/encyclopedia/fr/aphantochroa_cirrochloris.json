@@ -1,0 +1,46 @@
+{
+  "id": "aphantochroa_cirrochloris",
+  "name": "Colibri vert et gris",
+  "scientific": "Aphantochroa cirrochloris",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Colibri vert et gris est un colibri du Brésil, présent dans la région de la forêt Atlantique ainsi que dans les jardins et les forêts secondaires. Plusieurs listes récentes emploient Eupetomena cirrochloris, tandis que cette fiche conserve le nom de l’arbre, Aphantochroa cirrochloris.",
+    "identification": "Il mesure environ 12 cm, avec un bec noir robuste légèrement courbé vers le bas, de larges ailes sombres et une grande queue. Son plumage discret est gris-vert, avec le dessus vert cuivré, une petite tache blanche derrière l’œil, le dessous gris foncé et des touffes blanches au croupion et sous la queue ; la femelle, un peu plus petite, ressemble au mâle.",
+    "habitat": "Il vit dans les forêts humides de basse altitude et de piémont, notamment les lisières, les bois secondaires, les parcs et les jardins du centre et de l’est du Brésil. Il peut subsister dans des boisements modifiés et apparaît parfois près des massifs fleuris ou des mangeoires artificielles.",
+    "diet": "Le nectar fournit l’essentiel de son énergie, tandis que de petits arthropodes apportent des protéines. Il visite les fleurs et les mangeoires, mais peut aussi poursuivre des insectes en vol, notamment en lisière forestière.",
+    "behavior": "Il vit généralement seul ou en couple et défend avec vigueur un petit territoire alimentaire tout au long de l’année. Lors d’études de terrain, le secteur défendu par un mâle pouvait se limiter à un arbre de taille moyenne près de fleurs ou d’une mangeoire.",
+    "reproduction": "Dans le sud-est du Brésil, la période de reproduction est signalée de septembre à mars. La femelle construit seule un nid en coupe ouvert, fait de fibres végétales souples et souvent garni extérieurement de mousses ou de lichens fixés par de la soie d’araignée ; elle couve puis nourrit les jeunes, et la ponte compte généralement deux œufs.",
+    "ecology": "Sa coloration discrète le rend moins voyant que beaucoup de colibris, mais sa défense insistante des fleurs et mangeoires peut le trahir. Dans certains sites brésiliens, on peut le confondre avec le Colibri à gorge verte ; le guide local recommande de comparer le ventre et la poitrine gris ainsi que le bec entièrement sombre.",
+    "conservation": "L’espèce est classée en préoccupation mineure à l’échelle mondiale et inscrite à l’Annexe II de la CITES, qui réglemente le commerce international plutôt que le risque d’extinction."
+  },
+  "sources": [
+    {
+      "url": "https://www.wikiaves.com.br/wiki/beija-flor-cinza",
+      "title": "Colibri vert et gris — encyclopédie ornithologique WikiAves"
+    },
+    {
+      "url": "https://academic.oup.com/auk/article/123/4/1129/5562821",
+      "title": "Vocalisations et comportements associés du Colibri vert et gris — The Auk"
+    },
+    {
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/dcom-guia-de-aves-da-esec-carij-c3-b3s-web-comp-pdf",
+      "title": "Oiseaux de la station écologique de Carijós — guide de terrain ICMBio"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=1150056",
+      "title": "Rapport taxonomique — Système intégré d’information taxonomique"
+    },
+    {
+      "url": "https://www.health.belgium.be/sites/default/files/uploads/fields/fpshealth_theme_file/cites_list_full_02_2015.pdf",
+      "title": "Liste CITES des espèces — Service public fédéral belge Santé publique, Sécurité de la chaîne alimentaire et Environnement"
+    },
+    {
+      "url": "https://assets.sylvamo.com/m/3234ae67ca95d586/original/Manual-de-Aves-da-RPPN.pdf",
+      "title": "Guide des oiseaux de la réserve privée Parque Florestal São Marcelo"
+    },
+    {
+      "url": "https://portal.ifsuldeminas.edu.br/images/PDFs/proex/publicacoes_livros/Livro_-_Aves_do_Planalto.pdf",
+      "title": "Oiseaux du Planalto — guide de terrain"
+    }
+  ]
+}

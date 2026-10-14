@@ -1,0 +1,46 @@
+{
+  "id": "apistogramma_iniridae",
+  "name": "Inírida Dwarf Cichlid",
+  "scientific": "Apistogramma iniridae",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma iniridae is a small, localized dwarf cichlid from Colombia’s upper Orinoco basin. It is known chiefly from the Río Inírida drainage around Puerto Inírida and Caño Bocón.",
+    "identification": "The body is slender and laterally compressed; males develop a tall dorsal fin with its front membrane lobes extended and joined beyond the spine tips, while the front of that fin lacks black pigment. FishBase lists maximum standard lengths of 3.6 cm for male or unsexed fish and 5 cm for females; another species account gives 7 cm total length, and no reliable body mass or width was found. The dark side stripe continues onto the tail base without a separate caudal spot, helping distinguish it from close relatives such as A. pertensis, where a gap may separate the stripe from the spot.",
+    "habitat": "It occupies the Inírida River basin and nearby upper-Orinoco tributaries in Colombia. Museum records include a flooded creek with clear, stagnant, tea-brown water near Puerto Inírida; this locality note is more specific than a basin-wide description and should not be generalized to every site.",
+    "diet": "No species-specific stomach study was found; a recent synthesis infers from close Apistogramma relatives that it hunts small invertebrates in leaf litter and substrate, rather than reporting a measured diet.",
+    "behavior": "A German aquarium account describes harem behavior and territoriality; detailed observations of wild groups remain limited.",
+    "reproduction": "FishBase reports that the female attaches about 80–120 eggs to a cave ceiling and tends the clutch; this is a reported range, not a count from every population.",
+    "ecology": "Kullander placed A. iniridae among chiefly Amazonian relatives that include Apistogramma pertensis, and later work provisionally retained this pertensis group while noting that its boundaries may not reflect a true evolutionary lineage. Compared with A. pertensis, iniridae lacks a distinct tail-base spot and has dark flank blotches below the side stripe; these marks are more useful than color alone.",
+    "conservation": "The IUCN lists Apistogramma iniridae as Vulnerable under criterion B1ab(iii,v), assessed on 1 August 2020. The assessment links its restricted range and continuing habitat decline to illegal mineral mining and collection of wild fish for the ornamental trade."
+  },
+  "sources": [
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.1979.tb00620.x",
+      "title": "Species of Apistogramma from the Orinoco drainage basin — Zoologica Scripta"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Apistogramma-iniridae",
+      "title": "Apistogramma iniridae — FishBase species summary"
+    },
+    {
+      "url": "https://www.scielo.br/j/ni/a/tYvvbpRfxFQ9vbJ8vC4LgLq/?lang=en",
+      "title": "Two new Apistogramma species from the rio Trombetas — Neotropical Ichthyology"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/apistogramma-iniridae/",
+      "title": "Inirida Dwarf Cichlid — Aquarist Atlas species account"
+    },
+    {
+      "url": "https://artedi.nrm.se/nrmfish/find.php?Category=catalogNumber&Extent=All&FormData=11226&Map=Map&MaxRecs=1&Ordering=default&Precision=%3D&Verbosity=Full",
+      "title": "Apistogramma iniridae — Swedish Museum of Natural History collection record"
+    },
+    {
+      "url": "https://www.aquaportail.com/fiche-poisson-3725-apistogramma-iniridae.html",
+      "title": "Apistogramma iniridae — Aquaportail French species account"
+    },
+    {
+      "url": "https://my-fish.org/my-fishothek/apistogramma-iniridae-inirida-zwergbuntbarsch/",
+      "title": "Apistogramma iniridae — my-fish German species account"
+    }
+  ]
+}

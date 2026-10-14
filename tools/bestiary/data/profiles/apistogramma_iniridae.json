@@ -1,0 +1,248 @@
+{
+  "id": "apistogramma_iniridae",
+  "scientific": "Apistogramma iniridae",
+  "group": "fish",
+  "name": {
+    "en": "Inírida Dwarf Cichlid",
+    "fr": "Apistogramma iniridae"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma iniridae is a small, localized dwarf cichlid from Colombia’s upper Orinoco basin. It is known chiefly from the Río Inírida drainage around Puerto Inírida and Caño Bocón.",
+      "fr": "Apistogramma iniridae est un petit cichlidé nain à aire restreinte, originaire du haut bassin de l’Orénoque en Colombie. Il est surtout connu du bassin du río Inírida, autour de Puerto Inírida et du Caño Bocón."
+    },
+    "identification": {
+      "en": "The body is slender and laterally compressed; males develop a tall dorsal fin with its front membrane lobes extended and joined beyond the spine tips, while the front of that fin lacks black pigment. FishBase lists maximum standard lengths of 3.6 cm for male or unsexed fish and 5 cm for females; another species account gives 7 cm total length, and no reliable body mass or width was found. The dark side stripe continues onto the tail base without a separate caudal spot, helping distinguish it from close relatives such as A. pertensis, where a gap may separate the stripe from the spot.",
+      "fr": "Le corps est élancé et comprimé latéralement ; chez le mâle, la haute nageoire dorsale porte des membranes antérieures prolongées et réunies au-delà des épines, sans pigment noir dans sa partie antérieure. FishBase donne des longueurs standard maximales de 3,6 cm pour les individus mâles ou non sexés et de 5 cm pour les femelles ; une autre fiche indique 7 cm de longueur totale, et aucune masse ni largeur corporelle fiable n’a été trouvée. La bande sombre du flanc se prolonge jusqu’à la base de la caudale sans former de tache caudale séparée ; cela aide à le distinguer de proches parents comme A. pertensis, chez qui la bande peut être séparée de la tache."
+    },
+    "habitat": {
+      "en": "It occupies the Inírida River basin and nearby upper-Orinoco tributaries in Colombia. Museum records include a flooded creek with clear, stagnant, tea-brown water near Puerto Inírida; this locality note is more specific than a basin-wide description and should not be generalized to every site.",
+      "fr": "Il fréquente le bassin du río Inírida et des affluents voisins du haut Orénoque en Colombie. Les archives d’un musée signalent un ruisseau inondé, à eau claire, stagnante et couleur de thé près de Puerto Inírida ; cette observation localisée est plus précise qu’une description générale du bassin et ne vaut pas pour chaque site."
+    },
+    "diet": {
+      "en": "No species-specific stomach study was found; a recent synthesis infers from close Apistogramma relatives that it hunts small invertebrates in leaf litter and substrate, rather than reporting a measured diet.",
+      "fr": "Aucune étude stomacale propre à l’espèce n’a été trouvée ; une synthèse récente infère, à partir d’Apistogramma apparentés, qu’elle chasse de petits invertébrés dans la litière et le substrat, sans rapporter de régime mesuré."
+    },
+    "behavior": {
+      "en": "A German aquarium account describes harem behavior and territoriality; detailed observations of wild groups remain limited.",
+      "fr": "Une fiche allemande d’aquariophilie décrit un comportement de harem et de défense territoriale ; les observations détaillées de groupes sauvages restent limitées."
+    },
+    "reproduction": {
+      "en": "FishBase reports that the female attaches about 80–120 eggs to a cave ceiling and tends the clutch; this is a reported range, not a count from every population.",
+      "fr": "FishBase indique que la femelle fixe environ 80 à 120 œufs au plafond d’une cavité et garde la ponte ; il s’agit d’une fourchette rapportée, et non d’un comptage pour toutes les populations."
+    },
+    "ecology": {
+      "en": "Kullander placed A. iniridae among chiefly Amazonian relatives that include Apistogramma pertensis, and later work provisionally retained this pertensis group while noting that its boundaries may not reflect a true evolutionary lineage. Compared with A. pertensis, iniridae lacks a distinct tail-base spot and has dark flank blotches below the side stripe; these marks are more useful than color alone.",
+      "fr": "Kullander a rapproché A. iniridae de parents surtout amazoniens, dont Apistogramma pertensis ; des travaux ultérieurs ont conservé provisoirement ce groupe pertensis tout en précisant que ses limites ne correspondent peut-être pas à une véritable lignée évolutive. Par rapport à A. pertensis, iniridae n’a pas de tache caudale distincte et présente de larges marques sombres sous la bande latérale ; ces caractères sont plus utiles que la seule couleur."
+    },
+    "conservation": {
+      "en": "The IUCN lists Apistogramma iniridae as Vulnerable under criterion B1ab(iii,v), assessed on 1 August 2020. The assessment links its restricted range and continuing habitat decline to illegal mineral mining and collection of wild fish for the ornamental trade.",
+      "fr": "L’UICN classe Apistogramma iniridae comme vulnérable selon le critère B1ab(iii,v), à la suite d’une évaluation du 1er août 2020. L’évaluation relie son aire restreinte et la dégradation continue de son habitat à l’exploitation minière illégale et aux prélèvements de poissons sauvages pour le commerce aquariophile."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Species of Apistogramma from the Orinoco drainage basin — Zoologica Scripta",
+        "fr": "Espèces d’Apistogramma du bassin de l’Orénoque — Zoologica Scripta"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.1979.tb00620.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander’s original 1979 description is based on Puerto Inírida and Caño Bocón specimens and diagnoses the prolonged, united male dorsal-fin membranes and lack of black on the anterior dorsal fin."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 30,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma iniridae — FishBase species summary",
+        "fr": "Apistogramma iniridae — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Apistogramma-iniridae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase lists 3.6 cm male or unsexed SL, 5 cm female, 7 cm TL, harem breeding and female cave clutches of 80–120 eggs."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 23,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Two new Apistogramma species from the rio Trombetas — Neotropical Ichthyology",
+        "fr": "Deux nouvelles espèces d’Apistogramma du rio Trombetas — Neotropical Ichthyology"
+      },
+      "url": "https://www.scielo.br/j/ni/a/tYvvbpRfxFQ9vbJ8vC4LgLq/?lang=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander and Ferreira provisionally retain the pertensis group, describe the absence of a distinct caudal spot in A. iniridae, and compare its flank markings with A. pertensis."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 134,
+        "notes_words": 27,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Inirida Dwarf Cichlid — Aquarist Atlas species account",
+        "fr": "Cichlidé nain d’Inírida — fiche espèce Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-iniridae/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "The synthesis attributes Vulnerable criterion B1ab(iii,v) to the restricted Colombian range, declining habitat quality and adult population, illegal mineral mining, and ornamental collection."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 23,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma iniridae — Swedish Museum of Natural History collection record",
+        "fr": "Apistogramma iniridae — fiche de collection du Musée suédois d’histoire naturelle"
+      },
+      "url": "https://artedi.nrm.se/nrmfish/find.php?Category=catalogNumber&Extent=All&FormData=11226&Map=Map&MaxRecs=1&Ordering=default&Precision=%3D&Verbosity=Full",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The NRM record for paratype series 11226 gives a flooded creek near Puerto Inírida with clear, stagnant, tea-brown water."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 19,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma iniridae — Aquaportail French species account",
+        "fr": "Apistogramma iniridae — fiche française Aquaportail"
+      },
+      "url": "https://www.aquaportail.com/fiche-poisson-3725-apistogramma-iniridae.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The French species card cross-checks the Colombian Rio Inírida locality and Orinoco drainage."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 13,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma iniridae — my-fish German species account",
+        "fr": "Apistogramma iniridae — fiche allemande my-fish"
+      },
+      "url": "https://my-fish.org/my-fishothek/apistogramma-iniridae-inirida-zwergbuntbarsch/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "German aquarium account describes territorial defense and recommends harem grouping in captivity."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 12,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a slender, laterally compressed dwarf cichlid. Male: high sail-like dorsal fin with anterior membrane lobes extended and joined beyond the spine tips, no black pigment at the front of the dorsal fin, dark lateral stripe continuing to the tail base without a separate caudal spot. Female: smaller and plainer, with darker brood markings. Use a tea-brown flooded creek with roots and leaf litter.",
+  "uncertainties": [
+    "Size entries vary by sex and measurement convention: FishBase lists 3.6 cm SL for male or unsexed fish, 5 cm for females and a separate 7 cm TL maximum. No dependable mass, body width or height was found; the larger French Fishipedia values were excluded because its species text is marked as unfinished.",
+    "The range is localized, but collection records show several streams in the Inírida drainage and assessment sources also report the lower Atabapo. The exact number of populations is not settled by the description paper.",
+    "Diet and detailed social behavior are not well documented in field studies. The cited harem, egg counts and parental-care details come from FishBase summaries rather than a recent field study."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used Kullander’s original description for diagnosis, later comparative work for the pertensis-group comparison, FishBase for size and reproductive records, a museum locality record for habitat, and a secondary synthesis of the 2020 IUCN assessment. Excluded exaggerated unfinished French size fields and kept standard and total lengths distinct."
+}

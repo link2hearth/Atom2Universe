@@ -1,0 +1,38 @@
+{
+  "id": "apamea_zeta",
+  "name": "Abromiade lustrée",
+  "scientific": "Apamea zeta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Apamea zeta est une noctuelle des pelouses rocheuses européennes ; les traitements récents la distinguent de formes nordiques autrefois réunies sous le même nom.",
+    "identification": "Ses ailes antérieures, variables du gris-vert à l’olive, portent une tache réniforme pâle et des lignes festonnées ; l’envergure européenne atteint environ 41 à 50 mm.",
+    "habitat": "Elle occupe les pentes rocheuses à pelouses, généralement entre 1 500 et 3 000 m, dans les Alpes et d’autres massifs d’Europe méridionale.",
+    "diet": "Les chenilles mangent des graminées ; des observations européennes citent la canche cespiteuse (Deschampsia cespitosa). Des données nord-américaines mentionnent aussi des fétuques, qui ne représentent pas nécessairement toutes les populations.",
+    "behavior": "Les adultes européens volent de la mi-juin à la fin août ; les larves s’abritent dans un fourreau soyeux au pied des touffes.",
+    "reproduction": "Les larves hivernent généralement deux fois, achèvent leur croissance avant le second hiver et se nymphosent au printemps.",
+    "ecology": "Ses proches parentes A. maillardi et A. michielii peuvent lui ressembler ; les individus difficiles exigent parfois l’examen des genitalia.",
+    "conservation": "Les sources consultées ne permettent pas d’établir une catégorie mondiale de conservation pour l’espèce. Une base régionale française la classe quasi menacée en Nouvelle-Aquitaine ; cette évaluation locale ne doit pas être généralisée à toute son aire européenne."
+  },
+  "sources": [
+    {
+      "url": "https://pyrgus.de/Apamea_zeta.html",
+      "title": "Apamea zeta — Papillons européens et leur écologie"
+    },
+    {
+      "url": "https://lepinet.fr/especes/nation/lep/index.php?e=l&id=44160",
+      "title": "Abromiade lustrée — fiche Lepinet"
+    },
+    {
+      "url": "https://de.wikipedia.org/wiki/Apamea_zeta",
+      "title": "Apamea zeta — fiche allemande de Wikipédia"
+    },
+    {
+      "url": "https://nouvelle-aquitaine.kollect.fr/observatoire/index.php?action=fiche&d=heteros&id=249395&module=fiche",
+      "title": "Apamea zeta — Observatoire de la biodiversité de Nouvelle-Aquitaine"
+    },
+    {
+      "url": "https://www.pnwmoths.biol.wwu.edu/browse/family-noctuidae/subfamily-noctuinae/tribe-apameini/apamea/apamea-zeta/",
+      "title": "Apamea zeta — guide des papillons de nuit du Nord-Ouest pacifique"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "apistogramma_geisleri",
+  "name": "Geisler’s Dwarf Cichlid",
+  "scientific": "Apistogramma geisleri",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma geisleri is a small South American cichlid native to Brazil’s lower Amazon basin. Its type locality is the Rio Curuçamba near Óbidos, and later specimens came from several sites in the Rio Trombetas drainage.",
+    "identification": "The fish is laterally compressed, with a rounded tail fin and a moderately deep body; males show a dark line through the eye and a striped tail, while breeding females become yellow with a conspicuous dark side marking. The revised description found no lateral body spot or abdominal stripes, but did record a caudal-base spot and five vertical rows of spots on the middle tail rays; its measured specimens were 20.9–28.2 mm standard length, while later Trombetas material reached 30.4 mm. FishBase lists 2.8 cm standard length as the maximum, and no reliable weight or body-width figure was found. A French aquarium account also describes seven body bars in males, a supporting mark rather than a substitute for the formal diagnosis.",
+    "habitat": "Records place it in the lower Trombetas basin, including the Curuçamba near Óbidos and sites around Oriximiná. German species accounts describe shallow, slow-flowing margins with leaf litter and submerged wood, but detailed measurements of water chemistry at collection sites were not available.",
+    "diet": "The species accounts reviewed do not provide stomach-content data or a measured diet from wild fish. Aquarium feeding lists describe captive foods and cannot establish its natural prey, so the field diet remains poorly documented.",
+    "behavior": "Field observations of social behavior are scarce. Aquarium accounts describe territorial males and females defending a brood area, behavior that is useful context but should not be treated as a detailed study of wild groups.",
+    "reproduction": "FishBase records eggs attached to the ceiling of a cave, with the female caring for the eggs and larvae. German aquarium accounts also describe the female guarding the clutch while the male defends a broader territory; clutch-size figures from captive care guides are not treated here as field measurements.",
+    "ecology": "Apistogramma geisleri belongs to the dwarf-cichlid genus Apistogramma, whose species are often separated by fine differences in bars, spots and fin shape. It has been compared with the geographically widespread A. eunotus, whose resemblance can make identifications and range limits difficult; compare the eye stripe, body bars and tail pattern rather than relying on color alone.",
+    "conservation": "FishBase reports a global IUCN assessment of Least Concern, dated 7 November 2018. The species is known from a limited part of the lower Amazon, and that category should not be read as evidence that every local population or habitat is free of pressure."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/46615",
+      "title": "Apistogramma geisleri — FishBase species summary"
+    },
+    {
+      "url": "https://www.zobodat.at/pdf/Bonner-Zoologische-Monographien_14_0001-0152.pdf",
+      "title": "Cichlid Fishes of the Amazon River Drainage of Peru — Swedish Museum of Natural History"
+    },
+    {
+      "url": "https://www.scielo.br/j/ni/a/tYvvbpRfxFQ9vbJ8vC4LgLq/?lang=en",
+      "title": "Two new species of Apistogramma from the rio Trombetas — Neotropical Ichthyology"
+    },
+    {
+      "url": "https://www.aquaportail.com/fiche-poisson-3180-apistogramma-geisleri.html",
+      "title": "Apistogramma geisleri (A058) — Aquaportail French species account"
+    },
+    {
+      "url": "https://www.fischlexikon.eu/fischlexikon/fische-suchen.php?fisch_id=0000002227",
+      "title": "Apistogramma geisleri — Fischlexikon German species account"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/apistogramma-geisleri/",
+      "title": "Apistogramma geisleri — Aquarist Atlas species account"
+    },
+    {
+      "url": "https://my-fish.org/my-fishothek/apistogramma-geisleri/",
+      "title": "Apistogramma geisleri — my-fish German species account"
+    }
+  ]
+}

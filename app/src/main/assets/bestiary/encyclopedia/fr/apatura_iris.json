@@ -1,0 +1,46 @@
+{
+  "id": "apatura_iris",
+  "name": "Grand mars changeant",
+  "scientific": "Apatura iris",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le Grand mars changeant est un grand papillon forestier d’Europe et d’Asie, qui se rencontre surtout dans la canopée. Sa chenille dépend des saules poussant dans les clairières ensoleillées et les lisières ombragées.",
+    "identification": "Les deux sexes portent une large bande blanche et des ocelles cerclés d’orange sur des ailes brun sombre ; le mâle prend un éclat bleu-violet irisé sous certains angles, absent chez la femelle. Les guides donnent des envergures variables selon les régions, autour de 55 à 92 mm, sans mesure distincte et constante pour chaque sexe dans les sources consultées.",
+    "habitat": "Elle fréquente les forêts de feuillus, mixtes et parfois de conifères, surtout leurs lisières, chemins et clairières où poussent des saules mi-ombragés. L’espèce est largement répartie en Europe et dans l’Asie tempérée, mais ses populations locales peuvent être clairsemées et difficiles à observer.",
+    "diet": "Les chenilles mangent surtout le saule marsault (Salix caprea) et le saule cendré (S. cinerea), ainsi que d’autres saules selon les régions. Les adultes visitent rarement les fleurs : ils prennent la sève et le miellat, puis descendent sur les sols humides, les excréments ou les charognes pour absorber sels et minéraux.",
+    "behavior": "Les adultes passent une grande partie de la journée dans la canopée, et les mâles descendent souvent se nourrir sur les sols humides ou les déjections. Les mâles défendent des postes élevés et peuvent se rassembler autour de grands arbres où ils attendent les femelles.",
+    "reproduction": "En été, les femelles déposent leurs œufs isolément sur les feuilles de saule, et l’espèce produit normalement une génération annuelle. La chenille verte porte deux petites cornes sur la tête et hiverne fixée près d’un bourgeon de saule avant de reprendre son alimentation au printemps.",
+    "ecology": "Son proche parent, le Petit mars changeant (Apatura ilia), peut lui aussi présenter des reflets ; l’éclat seul ne suffit donc pas à identifier cette espèce. Il faut comparer l’ensemble du dessin du revers et les marques orange ; les chenilles des deux espèces diffèrent aussi par les saules et peupliers qu’elles utilisent.",
+    "conservation": "Une évaluation nationale française publiée en 2012 classe l’espèce en préoccupation mineure, tandis qu’une évaluation régionale de 2026 la classe quasi menacée en Bourgogne–Franche-Comté. Ces catégories concernent des échelles géographiques et des dates différentes, et ne décrivent pas uniformément chaque population locale."
+  },
+  "sources": [
+    {
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/butterflies/purple-emperor/",
+      "title": "Grand mars changeant — Woodland Trust"
+    },
+    {
+      "url": "https://www.wiltshire-butterflies.org.uk/butterfly/view/30",
+      "title": "Grand mars changeant — Butterfly Conservation dans le Wiltshire"
+    },
+    {
+      "url": "https://wnsinfo.fva-bw.de/arten/grosser-schillerfalter/",
+      "title": "Grand mars changeant — Système d’information sur la conservation forestière du Bade-Wurtemberg"
+    },
+    {
+      "url": "https://atlas.shna.fr/espece/53786",
+      "title": "Grand mars changeant — Atlas de la faune de Bourgogne (SHNA)"
+    },
+    {
+      "url": "https://cbnbfc-ori.fr/sites/default/files/2026-04/Liste-rouge-de-papillons-2026_WEB.pdf",
+      "title": "Liste rouge des papillons de Bourgogne–Franche-Comté, 2026"
+    },
+    {
+      "url": "https://www.viaouest.com/espece/grand-mars-changeant-le-53786",
+      "title": "Statuts français et européen — synthèse TaxRef ViaOuest"
+    },
+    {
+      "url": "https://starnberg.lbv.de/umweltbildung/einblicke-in-die-natur/gro%C3%9Fer-schillerfalter/",
+      "title": "Grand mars changeant — fiche du LBV Starnberg"
+    }
+  ]
+}

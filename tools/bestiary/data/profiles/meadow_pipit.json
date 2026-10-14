@@ -1,0 +1,270 @@
+{
+  "id": "meadow_pipit",
+  "scientific": "Anthus pratensis",
+  "group": "birds",
+  "name": {
+    "en": "Meadow Pipit",
+    "fr": "Pipit farlouse"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Meadow Pipit is a small, ground-feeding songbird of open country, breeding across northern Eurasia and wintering farther south. It is plain-looking at first glance, but its calls and streaking help separate it from several similar pipits.",
+      "fr": "Le Pipit farlouse est un petit passereau qui cherche sa nourriture au sol dans les milieux ouverts; il niche dans le nord de l’Eurasie et hiverne plus au sud. Peu voyant au premier abord, il se distingue des autres pipits par ses cris et ses motifs rayés."
+    },
+    "identification": {
+      "en": "It is about 15 cm long, with a wingspan near 25 cm; a French aerodrome guide gives a typical mass of 18 g, ranging from 11 to 25 g. Adults are brown to olive above, with dark streaks, a pale open-looking face, a fine bill, pale pinkish legs, and a long hind claw. Dark streaks continue from the breast down the flanks, while the rump is fairly plain; the sexes look alike in plumage. In BTO samples, male wing chord and mass averaged 83.2 mm and 19.2 g, versus 77.7 mm and 18.5 g in females (sample averages, not a visual sex test). The Tree Pipit (Anthus trivialis) is a close lookalike, but its flank streaks are finer than its breast streaks, and it usually has a stronger bill and more marked face; calls are often the safest clue.",
+      "fr": "Il mesure environ 15 cm, pour une envergure proche de 25 cm; un guide français des aérodromes indique une masse habituelle de 18 g, avec une fourchette de 11 à 25 g. L’adulte est brun à olive sur le dessus, avec des stries sombres, une face assez claire, un bec fin, des pattes rosâtres pâles et un long ongle postérieur. Les stries de la poitrine se prolongent sur les flancs, tandis que le croupion reste assez uni; les sexes ont le même plumage. Dans les échantillons du BTO, la longueur de l’aile et la masse moyennes étaient de 83,2 mm et 19,2 g chez les mâles, contre 77,7 mm et 18,5 g chez les femelles; ces valeurs ne permettent pas de déterminer le sexe à l’œil. Le Pipit des arbres (Anthus trivialis) lui ressemble, mais ses stries de flanc sont plus fines que celles de la poitrine et sa face est généralement plus marquée; les cris sont souvent le meilleur indice."
+    },
+    "habitat": {
+      "en": "During breeding it favors open, often damp country: moorland, bogs, heaths, rough grassland, marshes and saltmarshes. Northern populations move south in autumn to spend winter in western and southern Europe, around the Mediterranean and in North Africa; some British and western European birds remain year-round.",
+      "fr": "Pendant la reproduction, il fréquente les milieux ouverts, souvent humides : landes, tourbières, prairies naturelles, marais et prés salés. Les populations du nord descendent vers le sud en automne pour hiverner en Europe occidentale et méridionale, autour de la Méditerranée et en Afrique du Nord; certains oiseaux britanniques et d’Europe occidentale restent sur place toute l’année."
+    },
+    "diet": {
+      "en": "It searches low vegetation and bare ground for small invertebrates, especially insects and their larvae; spiders and worms are also taken. Seeds may supplement the diet, particularly outside the breeding season.",
+      "fr": "Il fouille la végétation basse et le sol nu à la recherche de petits invertébrés, surtout des insectes et de leurs larves; il consomme aussi des araignées et des vers. Des graines peuvent compléter son alimentation, notamment hors de la saison de reproduction."
+    },
+    "behavior": {
+      "en": "Most feeding takes place on the ground, and after breeding the birds often gather into flocks. A displaying male rises while singing, then descends in a fluttering or parachuting glide back toward the grass.",
+      "fr": "Il se nourrit surtout au sol et forme souvent des groupes après la reproduction. Lors de sa parade, le mâle s’élève en chantant puis redescend en vol plané, les ailes frémissantes, jusqu’à l’herbe."
+    },
+    "reproduction": {
+      "en": "The breeding season varies with latitude, broadly from March to August. The female hides a cup-shaped grass-and-moss nest beneath a tussock or low shrub and usually lays four or five eggs; she incubates them, and both parents feed the chicks.",
+      "fr": "La saison de reproduction varie avec la latitude et s’étend globalement de mars à août. La femelle dissimule un nid en coupe fait d’herbes et de mousse sous une touffe ou un petit buisson; elle pond généralement quatre ou cinq œufs, les couve, puis les deux parents nourrissent les poussins."
+    },
+    "ecology": {
+      "en": "It is often confused with other small, streaked pipits, especially the Tree Pipit in summer and the Water Pipit in winter. Compare several traits together—streaking, face pattern, bill, leg color, habitat, season and call—because no single plumage mark is always decisive.",
+      "fr": "On le confond souvent avec d’autres petits pipits rayés, notamment le Pipit des arbres en été et le Pipit spioncelle en hiver. Il faut croiser plusieurs indices — stries, dessin de la face, bec, couleur des pattes, habitat, saison et cris — car aucun détail du plumage ne suffit toujours à lui seul."
+    },
+    "conservation": {
+      "en": "The BTO reports a 19% fall in the UK breeding population from 1995 to 2024. The same source currently lists the species as globally Near Threatened. BirdLife’s assessment history records Least Concern in 2021, after Near Threatened assessments in 2015–2018.",
+      "fr": "Le BTO rapporte une baisse de 19 % de la population nicheuse du Royaume-Uni entre 1995 et 2024. La même source classe actuellement l’espèce comme quasi menacée à l’échelle mondiale. L’historique BirdLife indique préoccupation mineure en 2021, après des évaluations quasi menacées de 2015 à 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Meadow Pipit — British Trust for Ornithology BirdFacts",
+        "fr": "Pipit farlouse — BirdFacts du British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/meadow-pipit",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "BTO biometrics and population trends."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "habitat.en.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 5,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pipit des prés ou farlouse — French Civil Aviation Technical Service",
+        "fr": "Pipit des prés ou farlouse — Service technique de l’aviation civile"
+      },
+      "url": "https://www.stac.aviation-civile.gouv.fr/en/birds/pipit-pres-ou-farlouse",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French government guide reports 18 g typical mass (11–25 g) and 25 cm wingspan."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 14,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pipit farlouse — Oiseaux.net",
+        "fr": "Pipit farlouse — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/pipit.farlouse.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "French account: field marks, migration, feeding and breeding."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "ecology.fr.1",
+        "habitat.fr.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 8,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Meadow Pipit — Oiseaux.net English species account",
+        "fr": "Pipit farlouse — fiche anglaise d’Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/en/oiseaux/meadow.pipit.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "English species account based on the same ornithological reference collection."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "behavior.en.1",
+        "behavior.en.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "overview.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 10,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Meadow and Tree Pipits — BirdGuides identification feature",
+        "fr": "Pipits farlouse et des arbres — guide d’identification BirdGuides"
+      },
+      "url": "https://www.birdguides.com/articles/identification/meadow-and-tree-pipits/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Side-by-side field identification of Meadow and Tree Pipit, including calls, streaking, head shape, bill, seasonal habitat, and flight."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.3",
+        "identification.en.5",
+        "identification.fr.5",
+        "ecology.en.1",
+        "ecology.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 18,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bisbita común — Spanish Inventory of Natural Heritage and Biodiversity",
+        "fr": "Bisbita común — inventaire espagnol du patrimoine naturel et de la biodiversité"
+      },
+      "url": "https://pre.iepnb.es/areas-tematicas/especies-silvestres/eidos/12019/Anthus%20pratensis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Inventario español; plumaje, dieta y hábitats."
+      ],
+      "prose_claims": [
+        "identification.fr.2",
+        "identification.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 191,
+        "notes_words": 6,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Meadow Pipit — BirdLife DataZone species factsheet",
+        "fr": "Pipit farlouse — fiche espèce BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/meadow-pipit-anthus-pratensis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Assessment history lists Least Concern in 2021 and Near Threatened in 2015, 2016 and 2018."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 15,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a small, finely streaked brown-olive pipit on short grass, with pale pink legs, a long hind claw, a plain rump, and bold streaking continuing from the breast onto the flanks. A comparison inset may show the Tree Pipit’s finer flank streaks and stronger face pattern.",
+  "uncertainties": [
+    "Body width and height are not standard field-guide measurements for this bird. BTO sex-specific wing-chord and body-mass averages come from British live-bird samples and should not be read as visible sex differences.",
+    "The global IUCN category is inconsistent across current online pages: BTO displays Near Threatened, while BirdLife DataZone’s assessment history ends with Least Concern in 2021. The fiche reports both rather than silently treating an older status as current consensus."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked French, Spanish and English ornithological references, including government data, BTO biometrics and BirdLife assessment history. Distinguished the Tree Pipit and recorded the discrepancy in current global conservation labels rather than choosing one without qualification."
+}

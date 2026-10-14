@@ -1,0 +1,231 @@
+{
+  "id": "apistogramma_regani",
+  "scientific": "Apistogramma regani",
+  "group": "fish",
+  "name": {
+    "en": "Regan’s Dwarf Cichlid",
+    "fr": "Apistogramme de Regan"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma regani is a small freshwater cichlid described by Sven Kullander in 1980 and named for British ichthyologist Charles Tate Regan.",
+      "fr": "Apistogramma regani est un petit cichlidé d’eau douce décrit par Sven Kullander en 1980 et nommé en l’honneur de l’ichtyologiste britannique Charles Tate Regan."
+    },
+    "identification": {
+      "en": "FishBase lists 4.9 cm standard length for male or unsexed fish and 5.0 cm for females, without specifying the female convention; it also gives a maximum published mass of 2.29 g. No reliable body width or height measurement was found. The fish has clear abdominal stripes and a striped caudal fin.",
+      "fr": "FishBase indique 4,9 cm de longueur standard pour les mâles ou individus non sexés et 5,0 cm pour les femelles sans préciser la convention de mesure ; il donne aussi une masse publiée maximale de 2,29 g. Aucune largeur ni hauteur corporelle fiable n’a été trouvée. Le poisson porte des bandes abdominales nettes et une caudale rayée."
+    },
+    "habitat": {
+      "en": "The documented range is in the lower Rio Negro basin, within the Amazon drainage. FishBase describes a freshwater, bottom-associated tropical fish and reports water temperatures around 23–30 °C in the available account.",
+      "fr": "L’aire documentée se situe dans le bas bassin du rio Negro, au sein du bassin amazonien. FishBase décrit un poisson tropical d’eau douce associé au fond et indique des températures d’environ 23 à 30 °C dans la fiche consultée."
+    },
+    "diet": {
+      "en": "No species-specific diet study was found. Like related dwarf cichlids, it is expected to pick small invertebrates from the bottom, but this remains a genus-level inference rather than a measured menu.",
+      "fr": "Aucune étude alimentaire propre à l’espèce n’a été trouvée. Comme des cichlidés nains apparentés, elle devrait prélever de petits invertébrés sur le fond, mais cela reste une inférence fondée sur le genre et non un régime mesuré."
+    },
+    "behavior": {
+      "en": "Cichlid Room Companion describes the species as polygynous and a harem-brooder. This is an aquarium reference, not a detailed study of wild group structure.",
+      "fr": "Cichlid Room Companion décrit l’espèce comme polygame et reproductrice en harem. Il s’agit d’une référence aquariophile, et non d’une étude détaillée de la structure des groupes sauvages."
+    },
+    "reproduction": {
+      "en": "The female tends eggs attached to a cave ceiling and cares for the larvae. FishBase provides no clutch-size range for this species.",
+      "fr": "La femelle veille sur les œufs fixés au plafond d’une cavité et s’occupe des larves. FishBase ne donne pas de fourchette du nombre d’œufs pour cette espèce."
+    },
+    "ecology": {
+      "en": "Apistogramma regani belongs to the informal regani group. Compared with the related A. resticulosa, it has distinct abdominal stripes rather than short dark dashes; both species have a striped caudal fin, so that mark alone is not enough.",
+      "fr": "Apistogramma regani appartient au groupe informel regani. Par rapport à A. resticulosa, proche parente, il porte des bandes abdominales nettes plutôt que de petites tirets sombres ; les deux espèces ont une caudale rayée, donc ce caractère seul ne suffit pas."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN category of Least Concern, assessed on 29 October 2020. The cited field guide gives the same status and assessment date.",
+      "fr": "FishBase rapporte la catégorie mondiale UICN « préoccupation mineure », évaluée le 29 octobre 2020. Le guide de terrain cité donne le même statut et la même date d’évaluation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma regani — FishBase species summary",
+        "fr": "Apistogramma regani — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Apistogramma_regani.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase gives sex-specific lengths and a published weight record."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 9,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kullander’s comparative account of Apistogramma species groups",
+        "fr": "Comparaison des groupes d’espèces d’Apistogramma par Kullander"
+      },
+      "url": "https://zoologicalbulletin.de/BzB_Volumes/Volume_32_1_2/183_194_BZB32_1_2_Kollander_SvenO.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "Kullander distinguishes regani’s distinct abdominal stripes from the short dashes of resticulosa and notes striped tails in both."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 18,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase field guide — Apistogramma regani",
+        "fr": "Guide de terrain FishBase — Apistogramma regani"
+      },
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=076&genusname=Apistogramma&speciesname=regani",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The field guide reports Least Concern, assessed 29 October 2020."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 10,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ETYFish: Cichlidae etymology",
+        "fr": "ETYFish : étymologie des Cichlidae"
+      },
+      "url": "https://etyfish.org/cichlidae6/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The species is named for ichthyologist Charles Tate Regan."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 9,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma regani — Cichlid Room Companion species profile",
+        "fr": "Apistogramma regani — fiche Cichlid Room Companion"
+      },
+      "url": "https://cichlidae.com/species.php?id=615",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The profile gives the lower Negro locality and describes the species as polygynous, harem-brooding and a cave spawner."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 18,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma regani — Aquarist Atlas account",
+        "fr": "Apistogramma regani — fiche Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-regani/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "The account describes a lower Negro blackwater stream and inferred leaf-litter micropredation."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 12,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a small lower-Negro dwarf cichlid with distinct abdominal bands, a striped tail, and clear flank markings. Do not confuse the continuous abdominal stripes with the short dashes of A. resticulosa.",
+  "uncertainties": [
+    "FishBase reports 4.9 cm SL for male or unsexed fish and 5.0 cm for females without stating the female measure convention; 2.29 g is the maximum published weight. No width or height measurement was found.",
+    "Diet and detailed wild social behavior were not covered by species-specific studies in the consulted sources.",
+    "Group labels are informal; the abdominal and caudal markings are more useful for comparison than group membership alone."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase measurements with Kullander’s comparative description of the regani group and a Swedish cichlid register. Kept the female length convention explicit and compared abdominal markings with A. resticulosa."
+}

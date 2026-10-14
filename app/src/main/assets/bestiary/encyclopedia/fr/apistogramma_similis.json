@@ -1,0 +1,46 @@
+{
+  "id": "apistogramma_similis",
+  "name": "Apistogramme similis",
+  "scientific": "Apistogramma similis",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma similis est un petit cichlidé nain sud-américain décrit par Wolfgang Staeck en 2003 en Bolivie. Sa localité d’origine est un ruisseau forestier près de la Laguna La Brava, dans le système du río Yata, au département du Beni.",
+    "identification": "L’holotype mesurait 3,8 cm de longueur standard, mais cet individu unique ne donne pas une taille maximale adulte fiable. FishBase ne fournit ni maximum ni longueur selon le sexe, ni masse, largeur ou hauteur corporelle.",
+    "habitat": "Le spécimen type provient d’un ruisseau forestier de la Laguna La Brava, mais des données ultérieures dépassent largement ce site unique. Un inventaire près de Santa Ana del Yacuma a recensé l’espèce dans le sous-bassin du río Mamoré, en Amazonie bolivienne.",
+    "diet": "Aucune étude alimentaire propre à l’espèce n’a été trouvée dans les références consultées. Il est plus prudent de dire que son régime est insuffisamment documenté que de lui attribuer une liste précise de proies tirée d’observations d’aquarium ou d’hypothèses sur le genre.",
+    "behavior": "Les observations directes de son comportement sauvage restent rares dans les fiches d’espèce disponibles. Les registres spécialisés sur les cichlidés le classent comme reproducteur en harem et pondeur en cavité, un schéma utile qui ne constitue pas une étude détaillée sur le terrain.",
+    "reproduction": "Le Cichlid Room Companion indique une ponte dans une cavité du substrat et une reproduction polygame en harem. Les sources consultées ne donnent pas de mesures fiables sur la taille des pontes, l’incubation ou le partage des soins parentaux sur le terrain.",
+    "ecology": "Le nom similis signifie « semblable » et renvoie à sa forte ressemblance avec les Boliviens A. inconspicua et A. linkei. Le Cichlid Room le place dans le groupe regani ; A. bitaeniata ne doit donc pas être considéré d’emblée comme un proche parent.",
+    "conservation": "L’évaluation de l’UICN classe Apistogramma similis en préoccupation mineure, avec une évaluation datée du 23 avril 2014 et publiée en 2016. Cette évaluation et les données ultérieures indiquent une aire plus vaste dans les basses terres boliviennes que ne le laissait penser la seule localité type."
+  },
+  "sources": [
+    {
+      "url": "https://fishbase.se/summary/62414",
+      "title": "Apistogramma similis — fiche de synthèse FishBase"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/apistogramma-similis/",
+      "title": "Apistogramma similis — fiche spécialisée Aquarist Atlas"
+    },
+    {
+      "url": "https://www.redalyc.org/pdf/1991/199125295019.pdf",
+      "title": "Inventaire préliminaire des poissons près de Santa Ana del Yacuma, Bolivie"
+    },
+    {
+      "url": "https://cichlidae.com/species.php?id=619&lang=en",
+      "title": "Apistogramma similis — fiche du Cichlid Room Companion"
+    },
+    {
+      "url": "https://cichlidae.com/species.php?id=619&lang=it",
+      "title": "Apistogramma similis — notice italienne du Cichlid Room Companion"
+    },
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-2016-003.pdf",
+      "title": "Évaluation UICN d’Apistogramma similis"
+    },
+    {
+      "url": "https://www.calacademy.org/scientists/projects/catalog-of-fishes",
+      "title": "Catalog of Fishes : notice nomenclaturale d’Apistogramma similis"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "apistogramma_eunotus",
+  "name": "Blue-cheek Dwarf Cichlid",
+  "scientific": "Apistogramma eunotus",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma eunotus is a small dwarf cichlid described from the upper Amazon basin. Its established range follows the Ucayali, Yavarí and upper Solimões systems of Peru and Brazil.",
+    "identification": "The 1981 type series measured 14–50 mm standard length; later collections recorded a male to 53 mm and a female to 36 mm. Standard length ends at the tail-fin base, so it is shorter than total length; body mass was not reported in the sources reviewed. Adults have a moderately deep body, narrow dark side band, almost unmarked tail and a vertically split sixth body bar; large males are higher-backed, with extended dorsal and anal tips.",
+    "habitat": "It is known from tributaries of the Ucayali and Amazon, including the Yavarí and Japurá rivers, and has been recorded in black-, clear- and white-water conditions. The original material includes sites in Peru and at Tabatinga, Brazil, on the upper Solimões.",
+    "diet": "A species-specific study of wild prey was not found in the references consulted. Genus-level accounts describe Apistogramma as small carnivores that take bottom-dwelling invertebrates, so this is a cautious comparison rather than a measured diet for A. eunotus.",
+    "behavior": "Detailed wild social observations are limited. Aquarium accounts describe males patrolling territories that overlap smaller spawning areas held by females, but captive setups can alter aggression and should not be read as a complete field study.",
+    "reproduction": "Field-guide accounts describe eggs attached to the roof of a cave, with the female tending the clutch. Captive reports give clutches of about 100–150 eggs and describe the female guarding the fry while the male keeps a broader territory.",
+    "ecology": "Kullander compared its body shape and pattern with Apistogramma cruzi and A. moae. In adult A. eunotus, the split sixth body bar and nearly plain tail help separate it from those close relatives.",
+    "conservation": "The global IUCN assessment lists Apistogramma eunotus as Least Concern, assessed on 28 October 2020; this basin-scale category does not rule out local habitat pressures."
+  },
+  "sources": [
+    {
+      "url": "https://zoologicalbulletin.de/BzB_Volumes/Volume_32_1_2/183_194_BZB32_1_2_Kollander_SvenO.pdf",
+      "title": "Apistogramma eunotus, a new species from the upper Amazon basin — Bonner Zoologische Beiträge"
+    },
+    {
+      "url": "https://svenkullander.se/publications/Kullander_Peru_1986.pdf",
+      "title": "Cichlid Fishes of the Amazon River Drainage of Peru — Swedish Museum of Natural History"
+    },
+    {
+      "url": "https://www.fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Apistogramma&SpeciesName=eunotus&pda=1&sps=",
+      "title": "Apistogramma eunotus field guide — FishBase"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/apistogramma-eunotus",
+      "title": "Apistogramma eunotus species account — Seriously Fish"
+    },
+    {
+      "url": "https://www.aquaportail.com/fiche-poisson-2514-apistogramma-eunotus.html",
+      "title": "Apistogramma eunotus — Aquaportail French species account"
+    },
+    {
+      "url": "https://www.scielo.org.pe/scielo.php?pid=S1727-99332022000400002&script=sci_arttext",
+      "title": "Fish species of the Ucayali River basin, Peru — Revista Peruana de Biología"
+    },
+    {
+      "url": "https://fishbase.se/summary/Apistogramma-eunotus",
+      "title": "Apistogramma eunotus — FishBase taxonomic and IUCN summary"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/apistogramma-eunotus/",
+      "title": "Blue Cheek Dwarf Cichlid — Aquarist Atlas"
+    }
+  ]
+}

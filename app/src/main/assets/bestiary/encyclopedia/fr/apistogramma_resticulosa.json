@@ -1,0 +1,42 @@
+{
+  "id": "apistogramma_resticulosa",
+  "name": "Apistogramme à fines lignes",
+  "scientific": "Apistogramma resticulosa",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma resticulosa est un petit cichlidé d’eau douce décrit par Sven Kullander en 1980 dans le système du rio Madeira, près d’Humaitá au Brésil.",
+    "identification": "FishBase indique une longueur standard maximale de 3,9 cm pour les mâles ou individus non sexés. Le nom resticulosa évoque les marques abdominales fines comme des fils. Aucune longueur maximale fiable des femelles, masse, largeur ou hauteur corporelle n’a été trouvée.",
+    "habitat": "L’aire connue se trouve dans le bassin du Madeira, près d’Humaitá, avec une localité type à l’igapó Xicanga, à environ 5 km à l’ouest de la ville.",
+    "diet": "Aucune étude alimentaire propre à l’espèce n’a été retrouvée. Une fiche spécialisée infère qu’elle prélève de petits invertébrés dans la litière et les sédiments, mais cela n’a pas été confirmé par des analyses stomacales chez A. resticulosa.",
+    "behavior": "FishBase signale une différence sexuelle modeste : les mâles ont des nageoires pointues, tandis que celles des femelles sont arrondies.",
+    "reproduction": "Les œufs sont fixés au plafond d’une cavité et gardés par la femelle ; la fiche d’espèce ne donne aucune fourchette fiable de taille de ponte.",
+    "ecology": "Kullander a placé l’espèce dans le groupe Apistogramma regani. Par rapport à A. regani, elle porte de courts tirets abdominaux obliques plutôt que des bandes complètes ; les deux ont une caudale rayée, le ventre est donc le repère le plus clair.",
+    "conservation": "FishBase rapporte pour cette espèce la catégorie mondiale UICN « préoccupation mineure », évaluée le 29 octobre 2020."
+  },
+  "sources": [
+    {
+      "url": "https://repository.naturalis.nl/pub/505303",
+      "title": "Description d’Apistogramma resticulosa du système du rio Madeira"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/46692",
+      "title": "Apistogramma resticulosa — fiche de synthèse FishBase"
+    },
+    {
+      "url": "https://www.ciklid.org/artregister/art.php?ID=286",
+      "title": "Apistogramma resticulosa — registre nordique des cichlidés"
+    },
+    {
+      "url": "https://fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Apistogramma&SpeciesName=resticulosa&print=&sps=",
+      "title": "Guide de terrain FishBase — Apistogramma resticulosa"
+    },
+    {
+      "url": "https://tomc.no/page.aspx?PageID=116",
+      "title": "Complexe Apistogramma resticulosa — fiche de groupe"
+    },
+    {
+      "url": "https://etyfish.org/cichlidae6/",
+      "title": "ETYFish : étymologie des noms de Cichlidae"
+    }
+  ]
+}

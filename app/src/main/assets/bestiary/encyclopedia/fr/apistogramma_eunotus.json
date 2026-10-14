@@ -1,0 +1,50 @@
+{
+  "id": "apistogramma_eunotus",
+  "name": "Apistogramma eunotus",
+  "scientific": "Apistogramma eunotus",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma eunotus est un petit cichlidé nain décrit du haut bassin amazonien. Son aire établie suit les réseaux de l’Ucayali, du Yavarí et du haut Solimões, au Pérou et au Brésil.",
+    "identification": "La série type de 1981 mesurait 14,2 à 49,9 mm de longueur standard ; des collectes ultérieures ont relevé un mâle jusqu’à 52,5 mm et une femelle jusqu’à 35,8 mm. La longueur standard s’arrête à la base de la caudale et reste donc inférieure à la longueur totale ; les sources consultées ne donnent pas de masse. L’adulte a un corps assez haut, une bande latérale sombre et étroite, une caudale presque unie et la sixième barre verticale divisée ; les grands mâles ont le dos plus élevé et les nageoires dorsale et anale prolongées.",
+    "habitat": "Il est signalé dans les affluents de l’Ucayali et de l’Amazone, notamment les rivières Yavarí et Japurá, en eaux noires, claires et blanches. Le matériel original comprend des sites péruviens et Tabatinga, au Brésil, sur le haut Solimões.",
+    "diet": "Les références consultées ne donnent pas d’étude propre à l’espèce sur ses proies sauvages. Les sources consacrées au genre décrivent des Apistogramma comme de petits carnivores d’invertébrés benthiques ; cette comparaison prudente ne constitue pas un régime mesuré chez A. eunotus.",
+    "behavior": "Les observations détaillées de son comportement social sauvage sont limitées. En aquarium, les mâles patrouillent des territoires recouvrant les petites zones de ponte des femelles ; les conditions captives pouvant modifier l’agressivité, cela ne remplace pas une étude de terrain.",
+    "reproduction": "Les fiches de biologie indiquent que les œufs sont fixés au plafond d’une cavité et que la femelle s’occupe de la ponte. Des élevages rapportent environ 100 à 150 œufs et décrivent la femelle gardant les alevins tandis que le mâle défend un territoire plus vaste.",
+    "ecology": "Kullander rapprochait sa forme et son dessin de ceux d’Apistogramma cruzi et d’A. moae. Chez l’adulte A. eunotus, la sixième barre divisée et la caudale presque unie aident à le distinguer de ces proches parents.",
+    "conservation": "L’évaluation mondiale de l’UICN classe Apistogramma eunotus en préoccupation mineure, à la date du 28 octobre 2020 ; cette catégorie à l’échelle du bassin n’exclut pas des pressions locales sur l’habitat."
+  },
+  "sources": [
+    {
+      "url": "https://zoologicalbulletin.de/BzB_Volumes/Volume_32_1_2/183_194_BZB32_1_2_Kollander_SvenO.pdf",
+      "title": "Apistogramma eunotus, nouvelle espèce du haut bassin amazonien — Bonner Zoologische Beiträge"
+    },
+    {
+      "url": "https://svenkullander.se/publications/Kullander_Peru_1986.pdf",
+      "title": "Poissons cichlidés du bassin péruvien de l’Amazone — Musée suédois d’histoire naturelle"
+    },
+    {
+      "url": "https://www.fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Apistogramma&SpeciesName=eunotus&pda=1&sps=",
+      "title": "Guide de terrain d’Apistogramma eunotus — FishBase"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/apistogramma-eunotus",
+      "title": "Fiche espèce Apistogramma eunotus — Seriously Fish"
+    },
+    {
+      "url": "https://www.aquaportail.com/fiche-poisson-2514-apistogramma-eunotus.html",
+      "title": "Apistogramma eunotus — fiche française Aquaportail"
+    },
+    {
+      "url": "https://www.scielo.org.pe/scielo.php?pid=S1727-99332022000400002&script=sci_arttext",
+      "title": "Espèces de poissons du bassin de l’Ucayali, Pérou — Revista Peruana de Biología"
+    },
+    {
+      "url": "https://fishbase.se/summary/Apistogramma-eunotus",
+      "title": "Apistogramma eunotus — synthèse taxonomique et UICN de FishBase"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/apistogramma-eunotus/",
+      "title": "Apistogramma eunotus — Aquarist Atlas"
+    }
+  ]
+}
