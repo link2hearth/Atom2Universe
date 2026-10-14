@@ -1,0 +1,50 @@
+{
+  "id": "archips_podana",
+  "name": "Large Fruit-tree Tortrix",
+  "scientific": "Archips podana",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Archips podana is a leaf-rolling moth in the tortricid family, Tortricidae. The Belgian catalogue calls it native and common throughout Belgium.",
+    "identification": "Wingspan is about 19–23 mm in males and 20–28 mm in females. Males have more contrasting purplish-ochre forewings and a costal fold, while females are larger, more reticulated and show a brighter orange hindwing tip. It can be confused with Archips oporana, whose male has a distinct purple-brown forewing ground colour and whose larvae are tied to conifers; females can also resemble Archips betulana, but their orange hindwing apex helps distinguish them. Its green caterpillar is about 14–22 mm long, with a chestnut-brown head. Larvae of Archips xylosteana and Archips rosana can look very similar, so a caterpillar alone may be difficult to identify.",
+    "habitat": "It uses gardens, orchards, hedgerows and woodland, with local accounts describing it as widespread in England and Wales. German natural-history records also place it in parks, tree-lined gardens and fruit-growing landscapes.",
+    "diet": "The larvae are polyphagous, feeding on a wide range of deciduous trees and shrubs, especially in orchards. They feed on foliage, buds, flowers and young fruit, often sheltering inside a leaf spun or rolled with silk.",
+    "behavior": "Adults are most often recorded in June and July, but later individuals may fly into September. They are active in the evening and readily come to artificial lights.",
+    "reproduction": "Females lay flat batches of roughly 50–100 overlapping eggs on leaves. The egg masses carry a waxy coating and blend with the leaf surface, making them difficult to find. Most larvae spin a silken shelter, overwinter while young, resume feeding on buds in spring and pupate inside the shelter. In central Russia, a later brood may fly in August and September, with its young larvae overwintering and resuming growth the next spring.",
+    "ecology": "It can be an occasional orchard pest, especially on apple trees, although damage varies with local abundance and growing conditions. In autumn, superficial feeding marks can reduce fruit marketability, while spring larvae may destroy opening buds.",
+    "conservation": "The Belgian catalogue describes it as common throughout Belgium; this regional frequency record does not establish a global population trend or threat category."
+  },
+  "sources": [
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5514/",
+      "title": "Archips podana — Catalogue of the Lepidoptera of Belgium"
+    },
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=49.013",
+      "title": "Large Fruit-tree Tortrix — Hampshire and Isle of Wight Moths"
+    },
+    {
+      "url": "https://eurasian-tortricidae.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?epi=164&id=115566",
+      "title": "Archips podana — Eurasian Tortricidae 2.0, Naturalis Biodiversity Center"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10743578/",
+      "title": "Phenotypic Diversity of Archips podana — peer-reviewed study, PMC"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/archips-podana/",
+      "title": "Archips podana — UKMoths, species and larval account"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=47390",
+      "title": "La Tordeuse de l’Osier, l’Archips des vergers — Lepinet"
+    },
+    {
+      "url": "https://www.syngenta.fr/traitements/tordeuse-de-la-pelure-podana",
+      "title": "Tordeuse de la pelure (Podana) — Syngenta France"
+    },
+    {
+      "url": "https://www.naturspektrum.de/db/spezies_d.php?art=archips_podana",
+      "title": "Naturspektrum — Eschenzwieselwickler species account"
+    }
+  ]
+}

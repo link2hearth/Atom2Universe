@@ -1,0 +1,157 @@
+{
+  "id": "aspidodiadema_tonsum",
+  "scientific": "Aspidodiadema tonsum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Aspidodiadema Sea Urchin",
+    "fr": "Oursin Aspidodiadema"
+  },
+  "sections": {
+    "overview": {
+      "en": "Aspidodiadema tonsum is a deep-water regular sea urchin in the family Aspidodiadematidae. The accepted scientific name is retained in current marine taxonomic registers.",
+      "fr": "Aspidodiadema tonsum est un oursin régulier d’eaux profondes de la famille des Aspidodiadematidae. Les registres marins actuels retiennent ce nom scientifique."
+    },
+    "identification": {
+      "en": "Its rounded test reaches about 21 mm across, with a slightly flattened upper surface and a delicate, compact shell. Long, curved spines form whorls; descriptions report a purple test and spines with white tubercles.",
+      "fr": "Son test arrondi atteint environ 21 mm de diamètre, avec une face supérieure légèrement aplatie et une coquille compacte et délicate. De longues épines courbes forment des verticilles; test et épines sont décrits violets, avec des tubercules blancs."
+    },
+    "habitat": {
+      "en": "It lives on the seabed in the western Pacific, from Japan through the Philippines and Malay region toward eastern Australia and the Kermadec Islands. Records place it roughly 180–1,135 m deep.",
+      "fr": "Il vit sur le fond marin du Pacifique occidental, du Japon aux Philippines et à la région malaise, jusqu’à l’est australien et aux îles Kermadec. Les données le situent vers 180 à 1 135 m de profondeur."
+    },
+    "diet": {
+      "en": "The species references reviewed describe anatomy and depth but do not establish a specific diet. Its feeding habits therefore remain uncertain in this account.",
+      "fr": "Les références consultées décrivent son anatomie et sa profondeur, mais ne déterminent pas son régime alimentaire. Ses habitudes de nourrissage restent donc incertaines dans cette fiche."
+    },
+    "behavior": {
+      "en": "Species-level observations of movement, sheltering or daily activity were not provided by the distribution and taxonomic references reviewed.",
+      "fr": "Les références taxonomiques et de répartition consultées ne précisent ni déplacements, ni abris, ni rythme quotidien chez cette espèce."
+    },
+    "reproduction": {
+      "en": "The reviewed species accounts and taxonomic handbook give no confirmed breeding season, egg measurements or larval schedule for Aspidodiadema tonsum.",
+      "fr": "Les fiches d’espèce et le manuel taxonomique consultés ne donnent ni saison de reproduction confirmée, ni mesure des œufs, ni calendrier larvaire pour Aspidodiadema tonsum."
+    },
+    "ecology": {
+      "en": "It is a benthic echinoid of continental and island slopes, generally deeper than nearby shallow-reef urchins. Species-specific feeding links and ecological effects remain undocumented in the sources reviewed.",
+      "fr": "Cet échinoïde benthique fréquente des pentes continentales et insulaires, généralement plus profondes que les récifs côtiers. Ses relations alimentaires et effets écologiques propres restent absents des sources consultées."
+    },
+    "conservation": {
+      "en": "The marine taxonomic and biodiversity records consulted list its identity and distribution but provide no conservation assessment or population trend for this species.",
+      "fr": "Les registres taxonomiques et de biodiversité consultés indiquent son identité et sa répartition, sans fournir d’évaluation de conservation ni de tendance démographique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Handbook of Zoology, Volume 1: Echinoidea",
+        "fr": "Handbook of Zoology, volume 1 : Echinoidea"
+      },
+      "url": "https://dokumen.pub/handbook-of-zoology-volume-1-echinoidea-9783110368574-9783110371703.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Species description gives 21 mm maximum test diameter, curved whorled spines, purple coloration, western Pacific range and 180–1,135 m depth."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 20,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aspidodiadema tonsum — SeaLifeBase species summary",
+        "fr": "Aspidodiadema tonsum — fiche d’espèce SeaLifeBase"
+      },
+      "url": "https://sealifebase.org/summary/SpeciesSummary.php?id=139091&lang=dutch",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "SeaLifeBase independently lists benthic habitat, a 180–1,135 m depth range and western Pacific distribution; it gives no diet or conservation status."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 21,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aspidodiadema — World Register of Marine Species",
+        "fr": "Aspidodiadema — Registre mondial des espèces marines"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Aspidodiadema",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "WoRMS lists Aspidodiadema tonsum as an accepted marine species name."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 10,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific diet, behavior, reproduction and conservation information was sparse in the references located; the profile marks these gaps rather than generalizing from other sea urchins."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the species description in a specialist echinoid handbook against SeaLifeBase distribution data and the World Register of Marine Species name record; untranslated common names were avoided."
+}

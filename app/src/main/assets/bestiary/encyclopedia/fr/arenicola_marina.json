@@ -1,0 +1,46 @@
+{
+  "id": "arenicola_marina",
+  "name": "Arénicole des pêcheurs",
+  "scientific": "Arenicola marina",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Arenicola marina est un annélide marin fouisseur de la famille des Arenicolidae. On l’appelle blow lug ou lugworm en anglais, et arénicole des pêcheurs en français.",
+    "identification": "L’adulte mesure généralement 10 à 25 cm de long; les sources ne donnent pas de plage selon le sexe, ni de largeur, de hauteur ou de masse standard. Son corps ferme et cylindrique porte une tête obtuse sans yeux ni antennes, une région médiane garnie de branchies rouges ramifiées et une partie arrière étroite dépourvue de branchies et de soies. Sa couleur varie du jaune verdâtre ou vert sombre au rouge, au rose et au presque noir. Elle peut être confondue avec l’arénicole noire, Arenicola defodiens, généralement plus grande et plus sombre, dont le tortillon est plus net et serré; A. marina laisse plutôt un tortillon désordonné séparé de l’entonnoir d’alimentation.",
+    "habitat": "Elle est répandue dans une grande partie de l’Atlantique nord, des rivages arctiques à la Méditerranée, notamment en mer du Nord et sur les côtes d’Europe occidentale. Elle vit dans le sable fin ou vaseux des estrans, plages abritées et estuaires, au fond d’une galerie profonde en U ou en J.",
+    "diet": "Le ver avale le sédiment à l’entrée antérieure de sa galerie et assimile les particules organiques, bactéries, microalgues et petits animaux mêlés aux grains. Il rejette derrière lui le sable minéral épuré sous la forme d’un tortillon en surface, parfois serré, souvent désordonné.",
+    "behavior": "Elle passe presque toute sa vie cachée dans sa galerie; à marée basse, l’entonnoir et le tortillon indiquent ses zones d’alimentation et de rejet, tandis que des mouvements d’eau ventilent la région portant les branchies.",
+    "reproduction": "Les sexes sont séparés et la ponte est généralement synchronisée au début de l’automne, même si sa date varie selon les populations. Les femelles gardent les ovules dans leur galerie tandis que les mâles libèrent leur sperme à la surface; le courant de marée montante l’entraîne dans les terriers pour la fécondation.",
+    "ecology": "En remuant le sédiment et en faisant circuler de l’eau oxygénée dans leurs galeries profondes, les arénicoles modifient les vasières et augmentent les échanges d’oxygène sous la surface.",
+    "conservation": "Elle reste répandue mais est récoltée comme appât; cette pêche peut remuer les sédiments et affecter les populations locales, sans qu’une catégorie mondiale de menace soit indiquée ici."
+  },
+  "sources": [
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/1402",
+      "title": "Arénicole — Marine Life Information Network (MarLIN)"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Arenicola-marina-Arenicole-des-pecheurs-577",
+      "title": "Arenicola marina — fiche espèce DORIS"
+    },
+    {
+      "url": "https://ichtyo.cnrs.fr/pages/fr/fichefr.php?var=37",
+      "title": "Arenicola marina — Atlas de l’ichtyonymie bretonne, CNRS"
+    },
+    {
+      "url": "https://www.wwf.de/themen-projekte/artenlexikon/wattwurm",
+      "title": "Le ver de vase dans l’encyclopédie des espèces du WWF"
+    },
+    {
+      "url": "https://www.rote-liste-zentrum.de/themenwelt/artenportraits/spuren-im-sand-ein-oekosystemingenieur-am-werk/",
+      "title": "Les vers de vase, bâtisseurs d’habitats — Centre allemand des Listes rouges"
+    },
+    {
+      "url": "https://ukmpa.marinebiodiversity.org/uk_sacs/activities/bait-collection/bc9_1.htm",
+      "title": "Gestion des arénicoles et pêche d’appât — UK Marine Protected Areas"
+    },
+    {
+      "url": "https://www.bund.net/themen/tiere-pflanzen/tiere/wirbellose/wattwurm/",
+      "title": "Reproduction et écologie du ver de vase — Fédération allemande pour l’environnement et la nature"
+    }
+  ]
+}

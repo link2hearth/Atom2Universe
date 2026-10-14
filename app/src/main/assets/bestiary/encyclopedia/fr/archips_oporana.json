@@ -1,0 +1,34 @@
+{
+  "id": "archips_oporana",
+  "name": "Tordeuse du pin",
+  "scientific": "Archips oporana",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Archips oporana est un papillon de nuit de la famille des Tortricidae, appelé Tordeuse du pin. En Belgique, où il est indigène, il est assez commun au nord et bien plus rare au sud.",
+    "identification": "Le mâle mesure 19 à 21 mm d’envergure; la femelle, plus grande, atteint 22 à 28 mm. Le mâle porte des ailes antérieures brun violacé et des ailes postérieures gris-brun sombre; la femelle présente des marques châtain et un fin réseau sur les ailes. Elle ressemble aux proches Archips podana et Archips betulana; les ailes postérieures plus sombres du mâle et le motif alaire de la femelle aident à les distinguer.",
+    "habitat": "Elle fréquente les forêts et plantations de conifères; dans certaines parties du sud-est de l’Angleterre, elle est rare et récemment signalée sur seulement quelques sites.",
+    "diet": "Les chenilles se nourrissent de plusieurs conifères, notamment le pin sylvestre, le sapin blanc, l’épicéa et le genévrier.",
+    "behavior": "Les adultes sont actifs à partir de l’après-midi ou du crépuscule et peuvent venir aux lumières plus tard en soirée. Dans certaines régions, ils volent de la fin mai à juillet; une seconde génération partielle est signalée en Belgique.",
+    "reproduction": "Les chenilles apparaissent en automne, passent l’hiver parmi les aiguilles réunies par la soie et reprennent leur alimentation sur les jeunes pousses au printemps; la nymphose a lieu sur le site de nourrissage au début de l’été. Les sources divergent selon la région: un guide allemand décrit une génération annuelle, tandis que le catalogue belge en signale deux, dont la seconde est partielle.",
+    "ecology": "En consommant les aiguilles et les jeunes pousses de conifères, les chenilles peuvent endommager les nouvelles pousses; les axes attaqués peuvent mourir, se courber ou casser.",
+    "conservation": "La source du Hampshire la qualifie de rare à l’échelle nationale dans le sud-est de l’Angleterre; il s’agit d’une catégorie régionale, non d’une évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5512/",
+      "title": "Archips oporana — Catalogue des lépidoptères de Belgique"
+    },
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=49.011",
+      "title": "Archips oporana — papillons de nuit du Hampshire et de l’île de Wight"
+    },
+    {
+      "url": "https://www.insektenbox.de/schmet/kiefwi.htm",
+      "title": "Tordeuse du pin — Insektenbox, guide allemand des insectes"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/?e=p&id=47370",
+      "title": "Archips oporana — Lepinet, lépidoptères de France"
+    }
+  ]
+}

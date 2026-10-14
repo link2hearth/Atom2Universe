@@ -1,0 +1,58 @@
+{
+  "id": "apistogramma_uaupesi",
+  "name": "Sailfin Dwarf Cichlid",
+  "scientific": "Apistogramma uaupesi",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma uaupesi is a small cichlid described by Sven O. Kullander in 1980. Its type locality is a tributary of the Rio Uaupés near Trovão, in Amazonas State, Brazil. The species name refers to this river system.",
+    "identification": "The fish has a slender body, a tall sail-like dorsal fin and a dark lateral band that may fade or contract to a spot. In mature males, the dorsal fin extends beyond the spines and the outer tail rays lengthen into a lyre-shaped outline. Females are smaller, rounder-finned and turn yellow while brooding. FishBase lists a maximum of 28 mm standard length for a male or unsexed specimen, and 60 mm total length for a female; these use different length conventions and should not be compared directly. No reliable body mass, width or height measurement was found.",
+    "habitat": "Its documented range includes the Rio Uaupés and nearby Rio Negro drainage in the upper Amazon basin of Brazil; the type site is a tributary near Trovão. FishBase characterizes its habitat as freshwater with a strongly acidic pH of 4 to 5.",
+    "diet": "Species-specific diet observations are sparse, and FishBase gives only a trophic estimate inferred from close relatives. A Colombian field guide describes specimens tentatively identified as this species as carnivorous zooplankton feeders, a regional clue rather than a settled prey list for Apistogramma uaupesi.",
+    "behavior": "The species is described as polygynous, with a male’s territory overlapping the smaller areas used by several females.",
+    "reproduction": "It is a cave-spawning substrate brooder: the female attaches eggs to the roof of a cavity and tends the eggs and larvae.",
+    "ecology": "The Cichlid Room Companion lists it in the iniridae group, which includes relatives such as A. iniridae and A. pertensis. Its especially long outer tail rays in large males help distinguish it from the rounder-tailed A. iniridae and A. pertensis.",
+    "conservation": "The global IUCN assessment lists the species as Least Concern, assessed on 4 November 2020. Brazil’s national 2014 assessment lists it as Data Deficient. The population trend and effects of ornamental-fish collection remain poorly known."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=9153",
+      "title": "Apistogramma uaupesi — Eschmeyer's Catalog of Fishes"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/SpeciesSummary.php?id=46713",
+      "title": "Apistogramma uaupesi — FishBase species summary"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/SpeciesSummary.php?id=46713&lang=spanish",
+      "title": "Apistogramma uaupesi — FishBase Spanish-language summary"
+    },
+    {
+      "url": "https://svenkullander.se/publications/Kullander_Ferreira_Apistogramma_2005.pdf",
+      "title": "Two new species of Apistogramma from the rio Trombetas"
+    },
+    {
+      "url": "https://cichlidae.com/species.php?id=624",
+      "title": "Apistogramma uaupesi — Cichlid Room Companion species profile"
+    },
+    {
+      "url": "https://formacion.cieducar.edu.co/Archivos/Sanabria-Ochoa%202007%20Peces%20Amazonas%20Ornamentales%20Colombia.pdf",
+      "title": "Apistogramma uaupesi — Dwarf Cichlid field guide in Colombia (Spanish)"
+    },
+    {
+      "url": "https://www.aquariumglaser.de/fischarchiv/apistogramma_uaupesi_de/",
+      "title": "Apistogramma uaupesi — Aquarium Glaser species note (German)"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/apistogramma-uaupesi/",
+      "title": "Apistogramma uaupesi — Aquarist Atlas species account"
+    },
+    {
+      "url": "https://etyfish.org/cichlidae6/",
+      "title": "ETYFish — Cichlidae name etymologies"
+    },
+    {
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/livro_vermelho_2018_vol1.pdf",
+      "title": "Brazilian Red Book of Threatened Fauna — ICMBio (Portuguese)"
+    }
+  ]
+}

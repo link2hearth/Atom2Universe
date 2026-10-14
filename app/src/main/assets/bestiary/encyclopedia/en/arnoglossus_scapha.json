@@ -1,0 +1,50 @@
+{
+  "id": "arnoglossus_scapha",
+  "name": "Witch Flounder",
+  "scientific": "Arnoglossus scapha",
+  "group": "fish",
+  "sections": {
+    "overview": "Arnoglossus scapha is a bothid flatfish known in New Zealand as witch or witch flounder, and as mahue in Māori. It occurs in the western Pacific.",
+    "identification": "Adults typically measure 20–30 cm long. FishBase records a maximum length of 40 cm. The thin, oval fish has both eyes on its left side, a grey or pale-brown spotted upper side, a white underside, and a strongly arched lateral line. Two other New Zealand flatfishes also have left-facing eyes, Neoachiropsetta milfordi and Lophonectes gallus; distinguish this species by its oval outline, separated pelvic fin and arched lateral line.",
+    "habitat": "It is recorded in the western Pacific, including New Zealand and China, across a depth range of about 20–500 m. In New Zealand it lives on soft subtidal bottoms, from shallow water to depths beyond 400 m.",
+    "diet": "It eats worms, crustaceans and molluscs, and may occasionally take small fish. A gut-content study found that it also feeds on benthic epifauna and pelagic organisms, unlike several co-occurring flatfishes.",
+    "behavior": "This is a visual feeder: unlike several New Zealand flatfishes with bottom-feeding adaptations, its prominent eyes and toothed gill rakers suit feeding above the seabed. It remains a demersal fish associated with soft-bottom habitat.",
+    "reproduction": "In southern New Zealand waters, spawning has been recorded from August through April, with a peak in spring. Eggs and young stages spend an extended period in the plankton before settling toward the seabed.",
+    "ecology": "Witch flounders are important prey for New Zealand king shags; in some studied colonies they formed most of the fish prey recorded. This links a soft-bottom predator to a specialist seabird’s feeding grounds.",
+    "conservation": "FishBase reports an IUCN assessment of Least Concern, made in 2019; this dated global category should not be mistaken for a current local population estimate."
+  },
+  "sources": [
+    {
+      "url": "https://www.marinelife.ac.nz/species/713",
+      "title": "Witch — Marine Life Database, New Zealand"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Arnoglossus-scapha.html",
+      "title": "Arnoglossus scapha — FishBase species summary"
+    },
+    {
+      "url": "https://fish-commercial-names.ec.europa.eu/fish-names/species/arnoglossus-scapha_fr",
+      "title": "Arnoglossus scapha — EU Fish Names database, French entry"
+    },
+    {
+      "url": "https://fishingmag.co.nz/fish-new-zealand-sea-fish-species/witch-or-megrim-flatfish-arnoglossus-scapha/amp",
+      "title": "Witch prey and feeding — New Zealand Sea Fishes"
+    },
+    {
+      "url": "https://www.tandfonline.com/doi/10.1080/00288330.1987.9516224",
+      "title": "Food resource use among five flatfish species — New Zealand Journal of Marine and Freshwater Research"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1095-8649.1987.tb05279.x",
+      "title": "Morphological and sensory specializations of five New Zealand flatfish — Journal of Fish Biology"
+    },
+    {
+      "url": "https://docs.niwa.co.nz/library/public/frb21.pdf",
+      "title": "Witch spawning and planktonic life — Fisheries Research Bulletin, New Zealand"
+    },
+    {
+      "url": "https://www.doc.govt.nz/globalassets/documents/conservation/marine-and-coastal/marine-conservation-services/reports/201920-annual-plan/bcbc2019-05-king-shag-dna-final-report.pdf",
+      "title": "Determining the diet of New Zealand king shag — Department of Conservation"
+    }
+  ]
+}

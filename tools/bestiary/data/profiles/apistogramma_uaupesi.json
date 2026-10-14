@@ -1,0 +1,335 @@
+{
+  "id": "apistogramma_uaupesi",
+  "scientific": "Apistogramma uaupesi",
+  "group": "fish",
+  "name": {
+    "en": "Sailfin Dwarf Cichlid",
+    "fr": "Apistogramme du Uaupés"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma uaupesi is a small cichlid described by Sven O. Kullander in 1980. Its type locality is a tributary of the Rio Uaupés near Trovão, in Amazonas State, Brazil. The species name refers to this river system.",
+      "fr": "Apistogramma uaupesi est un petit cichlidé décrit par Sven O. Kullander en 1980. Sa localité type est un affluent du Rio Uaupés près de Trovão, dans l’État brésilien d’Amazonas. Son nom fait référence à ce réseau fluvial."
+    },
+    "identification": {
+      "en": "The fish has a slender body, a tall sail-like dorsal fin and a dark lateral band that may fade or contract to a spot. In mature males, the dorsal fin extends beyond the spines and the outer tail rays lengthen into a lyre-shaped outline. Females are smaller, rounder-finned and turn yellow while brooding. FishBase lists a maximum of 28 mm standard length for a male or unsexed specimen, and 60 mm total length for a female; these use different length conventions and should not be compared directly. No reliable body mass, width or height measurement was found.",
+      "fr": "Le poisson a un corps élancé, une haute nageoire dorsale en voile et une bande latérale sombre qui peut s’effacer ou se réduire à une tache. Chez les mâles adultes, la dorsale dépasse les épines et les rayons externes de la caudale s’allongent en forme de lyre. Les femelles sont plus petites, ont des nageoires plus arrondies et jaunissent lorsqu’elles gardent une couvée. FishBase indique un maximum de 28 mm de longueur standard pour un mâle ou un spécimen non sexé, et 60 mm de longueur totale pour une femelle ; ces conventions ne sont pas directement comparables. Aucune mesure fiable de masse, de largeur ou de hauteur corporelle n’a été trouvée."
+    },
+    "habitat": {
+      "en": "Its documented range includes the Rio Uaupés and nearby Rio Negro drainage in the upper Amazon basin of Brazil; the type site is a tributary near Trovão. FishBase characterizes its habitat as freshwater with a strongly acidic pH of 4 to 5.",
+      "fr": "Son aire documentée comprend le Rio Uaupés et le bassin voisin du Rio Negro, dans le haut bassin amazonien au Brésil ; le site type se trouve dans un affluent près de Trovão. FishBase caractérise son milieu comme de l’eau douce très acide, avec un pH de 4 à 5."
+    },
+    "diet": {
+      "en": "Species-specific diet observations are sparse, and FishBase gives only a trophic estimate inferred from close relatives. A Colombian field guide describes specimens tentatively identified as this species as carnivorous zooplankton feeders, a regional clue rather than a settled prey list for Apistogramma uaupesi.",
+      "fr": "Les observations alimentaires propres à l’espèce sont rares et FishBase ne donne qu’une estimation trophique déduite de proches parents. Un guide colombien décrit des spécimens provisoirement identifiés comme cette espèce comme des consommateurs carnivores de zooplancton, un indice régional plutôt qu’une liste de proies établie pour Apistogramma uaupesi."
+    },
+    "behavior": {
+      "en": "The species is described as polygynous, with a male’s territory overlapping the smaller areas used by several females.",
+      "fr": "L’espèce est décrite comme polygame, le territoire d’un mâle recouvrant les espaces plus restreints utilisés par plusieurs femelles."
+    },
+    "reproduction": {
+      "en": "It is a cave-spawning substrate brooder: the female attaches eggs to the roof of a cavity and tends the eggs and larvae.",
+      "fr": "Cette espèce pond dans une cavité et dépose ses œufs sur un support : la femelle les fixe au plafond d’un abri puis s’occupe des œufs et des larves."
+    },
+    "ecology": {
+      "en": "The Cichlid Room Companion lists it in the iniridae group, which includes relatives such as A. iniridae and A. pertensis. Its especially long outer tail rays in large males help distinguish it from the rounder-tailed A. iniridae and A. pertensis.",
+      "fr": "Le Cichlid Room Companion le classe dans le groupe iniridae, qui comprend des proches parents comme A. iniridae et A. pertensis. Chez les grands mâles, les rayons externes particulièrement allongés de la caudale le distinguent des caudales plus arrondies de A. iniridae et A. pertensis."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists the species as Least Concern, assessed on 4 November 2020. Brazil’s national 2014 assessment lists it as Data Deficient. The population trend and effects of ornamental-fish collection remain poorly known.",
+      "fr": "L’évaluation mondiale de l’UICN classe l’espèce en préoccupation mineure, selon l’évaluation du 4 novembre 2020. L’évaluation nationale brésilienne de 2014 la classe en données insuffisantes. La tendance de sa population et les effets des prélèvements pour l’aquariophilie restent mal connus."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma uaupesi — Eschmeyer's Catalog of Fishes",
+        "fr": "Apistogramma uaupesi — Catalog of Fishes d’Eschmeyer"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=9153",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The catalog confirms Kullander's 1980 description, the tributary near Trovão type locality, and the valid current name."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 17,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma uaupesi — FishBase species summary",
+        "fr": "Apistogramma uaupesi — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/SpeciesSummary.php?id=46713",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records the species name, range, acidic freshwater environment, sex-tagged size entries, cave spawning with maternal care, and global IUCN status."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 121,
+        "notes_words": 21,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma uaupesi — FishBase Spanish-language summary",
+        "fr": "Apistogramma uaupesi — fiche FishBase en espagnol"
+      },
+      "url": "https://www.fishbase.se/summary/SpeciesSummary.php?id=46713&lang=spanish",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The Spanish-language FishBase record cross-checks the Brazilian Uaupés and nearby Negro River distribution and repeats the global conservation category."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 19,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Two new species of Apistogramma from the rio Trombetas",
+        "fr": "Deux nouvelles espèces d’Apistogramma du rio Trombetas"
+      },
+      "url": "https://svenkullander.se/publications/Kullander_Ferreira_Apistogramma_2005.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Kullander and Ferreira discuss the provisional pertensis group, the elongated dorsal lappets and tail rays in male A. uaupesi, and comparisons with A. iniridae and A. pertensis."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 27,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma uaupesi — Cichlid Room Companion species profile",
+        "fr": "Apistogramma uaupesi — fiche du Cichlid Room Companion"
+      },
+      "url": "https://cichlidae.com/species.php?id=624",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The profile classifies the mating system as polygynous, describes harem brooding, and records cave-substrate spawning and placement in the iniridae group."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 21,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma uaupesi — Dwarf Cichlid field guide in Colombia (Spanish)",
+        "fr": "Apistogramma uaupesi — guide colombien des cichlidés nains (espagnol)"
+      },
+      "url": "https://formacion.cieducar.edu.co/Archivos/Sanabria-Ochoa%202007%20Peces%20Amazonas%20Ornamentales%20Colombia.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "The Colombian field guide describes specimens identified as Apistogramma cf. uaupesi as small carnivores feeding on zooplankton; the cf. designation signals identification uncertainty."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 23,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma uaupesi — Aquarium Glaser species note (German)",
+        "fr": "Apistogramma uaupesi — note d’espèce d’Aquarium Glaser (allemand)"
+      },
+      "url": "https://www.aquariumglaser.de/fischarchiv/apistogramma_uaupesi_de/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "The German-language specialist account describes marked variation in adult male coloration and the informal trade names Rotkeil and Blutkehl."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 19,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma uaupesi — Aquarist Atlas species account",
+        "fr": "Apistogramma uaupesi — fiche spécialisée Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/species/apistogramma-uaupesi/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The account synthesizes sex differences and identification cautions, distinguishes confirmed Brazilian range from uncertain Orinoco reports, and summarizes the global and Brazilian assessments."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 23,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ETYFish — Cichlidae name etymologies",
+        "fr": "ETYFish — étymologie des noms de Cichlidae"
+      },
+      "url": "https://etyfish.org/cichlidae6/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The name uaupesi is a place-name referring to the Rio Uaupés drainage."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 16,
+        "notes_words": 12,
+        "total": 28,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Brazilian Red Book of Threatened Fauna — ICMBio (Portuguese)",
+        "fr": "Livre rouge de la faune menacée du Brésil — ICMBio (portugais)"
+      },
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/livro_vermelho_2018_vol1.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2014 Brazilian national assessment lists Apistogramma uaupesi as Data Deficient."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 19,
+        "notes_words": 11,
+        "total": 30,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the slender dwarf cichlid with a high sail-like dorsal fin, a broad dark lateral band and, on the adult male, elongated dorsal tips and lyre-shaped tail rays; the female is smaller and turns yellow while brooding.",
+  "uncertainties": [
+    "FishBase reports different length conventions for its sex-tagged maxima: standard length for a male or unsexed specimen and total length for a female. The figures should not be treated as a controlled comparison, and hobby claims of larger males are not used as formal measurements.",
+    "Reports from the upper Orinoco may refer to similar undescribed forms rather than A. uaupesi; the profile therefore emphasizes the Brazilian Uaupés and nearby Negro records.",
+    "Kullander and Ferreira (2005) discuss a provisional pertensis group pending phylogenetic analysis, while later specialist lists use the iniridae group for this species."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the English and Spanish FishBase records, Eschmeyer's taxonomic catalog, a primary taxonomic paper, and German and Spanish-language specialist or field sources. Kept uncertain cf. uaupesi observations separate from confirmed species-level records and preserved the distinct length conventions reported for male/unsexed and female specimens."
+}

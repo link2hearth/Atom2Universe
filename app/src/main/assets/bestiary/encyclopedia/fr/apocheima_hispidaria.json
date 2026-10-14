@@ -1,0 +1,42 @@
+{
+  "id": "apocheima_hispidaria",
+  "name": "Nyssie hispide",
+  "scientific": "Apocheima hispidaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Apocheima hispidaria est un papillon de nuit géomètre du début du printemps, décrit par Denis et Schiffermüller en 1775. Son nom anglais est Small Brindled Beauty et son nom français nyssie hispide.",
+    "identification": "Le mâle possède un thorax large et velu, des antennes pectinées jaune orangé et des ailes antérieures gris-brun variables, parfois marquées d’une bande centrale sombre. Son envergure est d’environ 28 à 35 mm. La femelle, brunâtre et aptère, n’a pas d’envergure ; les sources consultées ne donnent pas de longueur corporelle, de hauteur, de largeur ni de masse standardisées pour elle. Les mâles peuvent être confondus avec la plus grande Phigalia pilosaria ou avec Lycia hirtaria, qui partagent un motif alaire ou un thorax velu comparables.",
+    "habitat": "Elle fréquente les bois de feuillus et les lieux riches en arbres, notamment les jardins, les parcs et les fourrés ; dans le sud de son aire, elle est davantage liée aux zones élevées ou montagneuses. Son aire européenne s’étend de l’Espagne à la Russie en passant par l’Europe centrale, avec des observations jusqu’au Caucase.",
+    "diet": "Les chenilles consomment les feuilles de plusieurs arbres et arbustes caducifoliés plutôt que celles d’un seul hôte. Les sources citent notamment le chêne, le saule, le bouleau, l’orme, le noisetier, le pommier et le prunellier.",
+    "behavior": "Les adultes apparaissent très tôt dans l’année, surtout en février et mars ; les mâles viennent à la lumière tandis que les femelles aptères se rencontrent sur les troncs. L’espèce n’a qu’une génération annuelle, avec quelques observations de fin janvier à avril.",
+    "reproduction": "La femelle est aptère et reste sur les troncs pendant la période de vol adulte ; le mâle ailé est celui qui vole et vient à la lumière. Les chenilles se nourrissent au printemps et au début de l’été. L’espèce hiverne ensuite au stade de chrysalide avant l’émergence des adultes l’année suivante.",
+    "ecology": "Au stade larvaire, elle se nourrit sur les feuillus des milieux boisés, tandis que les adultes apparaissent à la fin de l’hiver.",
+    "conservation": "Le catalogue belge des lépidoptères la décrit comme assez commune dans le pays et indique une évaluation en préoccupation mineure pour la Flandre en 2023. Il s’agit d’un statut régional, et non d’une évaluation mondiale de l’espèce."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/apocheima-hispidaria/",
+      "title": "Small Brindled Beauty — fiche espèce UKMoths"
+    },
+    {
+      "url": "https://oreina.org/artemisiae/observatoire/index.php?action=fiche&d=hetero&id=248860&module=fiche",
+      "title": "Apocheima hispidaria — observatoire français Artemisiae"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5484/",
+      "title": "Catalogue des lépidoptères de Belgique — Apocheima hispidaria"
+    },
+    {
+      "url": "https://www.pyrgus.de/Apocheima_hispidaria_en.html",
+      "title": "European Lepidoptera and their ecology — Apocheima hispidaria"
+    },
+    {
+      "url": "https://britishlepidoptera.weebly.com/246-apocheima-hispidaria-small-brindled-beauty.html",
+      "title": "British Lepidoptera — comparaison avec des géomètres printaniers apparentés"
+    },
+    {
+      "url": "https://www.sussexmothgroup.org.uk/site/speciesAccount.php?speciesRef=70.2460",
+      "title": "Sussex Moth Group — phénologie d’Apocheima hispidaria"
+    }
+  ]
+}

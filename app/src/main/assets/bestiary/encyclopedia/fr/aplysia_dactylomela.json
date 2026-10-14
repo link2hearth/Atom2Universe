@@ -1,0 +1,46 @@
+{
+  "id": "aplysia_dactylomela",
+  "name": "Lièvre de mer ocellé",
+  "scientific": "Aplysia dactylomela",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Aplysia dactylomela est un grand lièvre de mer, un mollusque gastéropode décrit par Rang en 1828. Ses anneaux sombres caractéristiques lui valent les noms de spotted sea hare en anglais et de lièvre de mer ocellé en français.",
+    "identification": "Son corps mou et ovale porte des anneaux noirs irréguliers, des taches et des points pâles sur le manteau et ses lobes latéraux ; sa couleur varie selon l’alimentation. De larges parapodes recouvrent en partie une fine coquille interne ; la tête porte des rhinophores allongés en forme d’oreilles et des tentacules buccaux plus courts. Les adultes mesurent souvent de 7 à 15 cm et peuvent atteindre 40 cm. Une étude alimentaire en Jamaïque a utilisé des animaux adultes pesant de 400 à 600 g ; cet échantillon de laboratoire ne définit pas la masse habituelle de l’espèce. Les fiches consultées ne donnent pas de largeur ou de hauteur corporelle standardisée. L’Aplysia argus indo-pacifique a longtemps été appelée A. dactylomela, mais la génétique distingue les deux espèces.",
+    "habitat": "Elle broute dans les eaux côtières tropicales et subtropicales peu profondes, notamment les mares de marée, les fonds rocheux ou sableux et les herbiers ou prairies d’algues. Des observations atteignent environ 40 m de profondeur, mais la plupart proviennent d’eaux bien plus superficielles.",
+    "diet": "Elle est herbivore et râpe des algues rouges et vertes avec ses mâchoires et sa radula ; des observations en Jamaïque indiquent une préférence pour les algues rouges, mais elle consomme aussi Ulva et d’autres algues vertes. Les pigments de son alimentation peuvent modifier la couleur de ses cordons d’œufs.",
+    "behavior": "Le jour, elle se cache souvent sous des rochers ou dans des fissures, puis recherche sa nourriture après la tombée de la nuit. Elle se déplace surtout en rampant, mais peut nager brièvement en ondulant ses larges parapodes ; menacée, elle peut libérer une encre défensive violette.",
+    "reproduction": "Comme les autres lièvres de mer, c’est un hermaphrodite simultané : chaque adulte possède des organes reproducteurs mâles et femelles, et plusieurs peuvent s’accoupler en chaîne. Elle pond de longs cordons d’œufs gélatineux et enchevêtrés ; les larves véligères planctoniques éclosent, puis se fixent et deviennent des juvéniles.",
+    "ecology": "L’espèce est native de l’Atlantique, notamment des Caraïbes, et a été signalée pour la première fois en Méditerranée en 2002. Les analyses génétiques confirment que les individus méditerranéens étudiés appartiennent à l’espèce atlantique, mais leur voie d’arrivée reste incertaine. Les formes ressemblantes de l’Indo-Pacifique appartiennent à Aplysia argus.",
+    "conservation": "Aucune évaluation de l’espèce n’apparaît sur la Liste rouge de l’Union internationale pour la conservation de la nature. Son expansion en Méditerranée fait l’objet d’un suivi comme présence non indigène, mais les sources consultées n’établissent ni tendance mondiale des effectifs ni impact écologique quantifié."
+  },
+  "sources": [
+    {
+      "url": "https://doris.ffessm.fr/Especes/Aplysia-dactylomela-Lievre-de-mer-ocelle-2375",
+      "title": "Aplysia dactylomela — fiche espèce DORIS"
+    },
+    {
+      "url": "https://opistobranquis.info/es/guia/aplysiida/aplysia-dactylomela/",
+      "title": "Aplysia dactylomela — guide OPK Opistobranquis (espagnol)"
+    },
+    {
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/310025.pdf",
+      "title": "The origin and dispersal pathway of Aplysia dactylomela in the Mediterranean Sea — Valdés et al. (2013)"
+    },
+    {
+      "url": "https://fire.biol.wwu.edu/donovan/papers/Aplysia_maa.pdf",
+      "title": "Distribution of mycosporine-like amino acids in Aplysia dactylomela — Carefoot et al. (1998)"
+    },
+    {
+      "url": "https://iucn-medmis.org/en/species/aplysia-dactylomela",
+      "title": "Aplysia dactylomela — fiche espèce IUCN MedMIS"
+    },
+    {
+      "url": "https://www.sealifebase.org/summary/Aplysia-dactylomela.html",
+      "title": "Aplysia dactylomela — fiche de synthèse SeaLifeBase"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?p=taxdetails&id=138753",
+      "title": "WoRMS — fiche taxonomique d’Aplysia dactylomela"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "archips_xylosteana",
+  "name": "Archips des haies",
+  "scientific": "Archips xylosteana",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Archips xylosteana est un papillon de nuit tordeuse de la famille des Tortricidae. Lepinet l’appelle Archips des haies.",
+    "identification": "Les sources britanniques indiquent 15 à 21 mm d’envergure chez le mâle et 16 à 24 mm chez la femelle; un guide général donne 15 à 23 mm tous sexes confondus. Le mâle présente souvent un motif brun ocre plus contrasté sur les ailes antérieures, tandis que celui de la femelle est plus discret. Elle ressemble à Archips crataegana, mais elle est généralement plus petite et plus bigarrée, tandis que cette cousine a des ailes plus larges et plus brunes. La chenille est gris blanchâtre à bleutée, avec des reflets verdâtres et une tête sombre; une note française sur la santé des forêts indique qu’elle se développe dès avril dans une feuille roulée perpendiculairement à la nervure principale. Une source forestière allemande donne une longueur larvaire d’environ 15 à 20 mm. Les chenilles peuvent être confondues avec celles d’Archips podana et d’Archips rosana, dont les larves utilisent des plantes hôtes similaires et sont difficiles à distinguer au seul aspect.",
+    "habitat": "Elle fréquente les bois et jardins dans une grande partie de la Grande-Bretagne. Les sources allemandes la signalent aussi en lisière, dans les haies et dans d’autres jardins riches en arbres.",
+    "diet": "Les chenilles sont polyphages sur les feuillus et arbustes, notamment le chêne, l’orme, le tilleul, le noisetier, l’érable, le frêne et les arbres fruitiers. Elles se nourrissent dans une feuille roulée ou réunie par de la soie, qui leur sert aussi d’abri.",
+    "behavior": "Les adultes volent à partir du crépuscule jusque dans la nuit et sont surtout observés en juillet et août en Grande-Bretagne. Les sources allemandes situent leur vol plus largement de juin à août, ce qui montre que les dates varient selon la région.",
+    "reproduction": "Une fiche britannique indique que les œufs passent l’hiver. Une note française sur la santé des forêts précise que les jeunes chenilles se développent dès avril dans une feuille roulée perpendiculairement à la nervure principale.",
+    "ecology": "Certaines années et dans des bois favorables, le nombre de chenilles peut augmenter fortement et provoquer une importante défoliation, notamment sur les chênes; ces pullulations restent ponctuelles et ne décrivent pas la situation partout.",
+    "conservation": "Une source régionale britannique la décrit comme commune dans les bois et jardins des îles Britanniques; cette indication locale ne permet pas d’établir une tendance mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.hantsmoths.org.uk/report_subfamily.php?family=Tortricidae&name=Tortricinae&year=2020",
+      "title": "Archips xylosteana — revue des papillons de nuit du Hampshire et de l’île de Wight"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/archips-xylosteana/",
+      "title": "Archips des haies — UKMoths"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=47410",
+      "title": "Archips xylosteana — Lepinet, lépidoptères de France"
+    },
+    {
+      "url": "https://www.digital-nature.de/tierwelt/insekten/nachtfalter/archips/detail/xylosteana.html",
+      "title": "Tordeuse brune des feuillus — fiche Digital-Nature"
+    },
+    {
+      "url": "https://agriculture.gouv.fr/sites/default/files/documents/pdf/Tordeuse_verte_du_chene.pdf",
+      "title": "Défoliateurs précoces du chêne — ministère français de l’Agriculture, Département de la santé des forêts"
+    },
+    {
+      "url": "https://www.wald-und-holz.nrw.de/fileadmin/Publikationen/Broschueren/Broschuere_WS_im_KW_auszug.pdf",
+      "title": "Protection forestière face au changement climatique — service Forêts et Bois de Rhénanie-du-Nord–Westphalie"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/archips-podana/",
+      "title": "Archips podana — identification des chenilles, UKMoths"
+    }
+  ]
+}

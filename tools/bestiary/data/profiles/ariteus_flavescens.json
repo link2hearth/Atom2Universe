@@ -1,0 +1,264 @@
+{
+  "id": "ariteus_flavescens",
+  "scientific": "Ariteus flavescens",
+  "group": "mammals",
+  "name": {
+    "en": "Jamaican Fig-eating Bat",
+    "fr": "Arite de la Jamaïque"
+  },
+  "sections": {
+    "overview": {
+      "en": "Ariteus flavescens is a fruit-eating leaf-nosed bat in the family Phyllostomidae. It is the only living species in its genus and is endemic to Jamaica.",
+      "fr": "Ariteus flavescens est une chauve-souris frugivore à nez en feuille de la famille des Phyllostomidae. C’est l’unique espèce actuelle de son genre, endémique de la Jamaïque."
+    },
+    "identification": {
+      "en": "Head-and-body length is about 50–60 mm in males and 63–67 mm in females; there is no visible tail. Males weigh about 9.2–12.9 g and females 12.4–13.1 g, and females also have a longer forearm. The fur is reddish brown above, paler below, with conspicuous white patches on the shoulders; the broad nose leaf has a distinctive V-shaped lower edge. It is related to Antillean tree bats in the tribe Stenodermatini, but its small size and unusual nose leaf distinguish it from those close relatives.",
+      "fr": "La longueur tête-corps est d’environ 50 à 60 mm chez le mâle et 63 à 67 mm chez la femelle; la queue est absente. Le mâle pèse environ 9,2 à 12,9 g et la femelle 12,4 à 13,1 g; son avant-bras est également plus long. Le pelage est brun rougeâtre dessus et plus pâle dessous, avec des taches blanches nettes sur les épaules; la grande feuille nasale se termine par un bord inférieur caractéristique en forme de fourche. Elle est apparentée aux chauves-souris arboricoles antillaises de la tribu des Stenodermatini, mais sa petite taille et sa feuille nasale singulière la distinguent de ces cousines proches."
+    },
+    "habitat": {
+      "en": "It is native only to Jamaica, from sea level to about 1,500 m elevation. Records come from primary and secondary forest, pastures, river corridors, and cultivated fruit groves and plantations.",
+      "fr": "Elle vit uniquement en Jamaïque, du niveau de la mer jusqu’à environ 1 500 m d’altitude. Elle a été observée en forêt primaire et secondaire, dans les pâturages, le long des rivières ainsi que dans des vergers et plantations fruitières."
+    },
+    "diet": {
+      "en": "It eats fruit, including figs, naseberries (Manilkara zapota), and rose apples; field records also document feeding on fustic fruit. The precise diet is poorly studied, and insects may supplement the fruit.",
+      "fr": "Elle mange des fruits, notamment des figues, des sapotilles (Manilkara zapota) et des pommes roses; des observations de terrain la montrent aussi sur les fruits du fustic. Son régime reste peu étudié et pourrait inclure quelques insectes en complément."
+    },
+    "behavior": {
+      "en": "This is a nocturnal, tree-roosting bat that begins flying and feeding around dusk. Researchers have captured it in forest, pasture-edge trees, orchards, and cultivated fruit plantations, rather than treating caves as its regular roost.",
+      "fr": "Cette chauve-souris arboricole et nocturne commence à voler et à s’alimenter vers le crépuscule. Les chercheurs l’ont capturée en forêt, dans des arbres en bordure de pâturage, des vergers et des plantations fruitières; les grottes ne sont pas considérées comme son gîte habituel."
+    },
+    "reproduction": {
+      "en": "The limited records suggest births may occur more than once in a year: pregnant females were recorded in April and June–July, and lactating females in June–July. The small sample does not establish the timing of breeding throughout the island.",
+      "fr": "Les rares données suggèrent que les naissances pourraient avoir lieu plusieurs fois par an: des femelles gestantes ont été observées en avril et en juin-juillet, et des femelles allaitantes en juin-juillet. Cet échantillon réduit ne permet pas de décrire le calendrier de reproduction sur toute l’île."
+    },
+    "ecology": {
+      "en": "At dusk it can join mixed-species feeding gatherings at fruit trees; field workers observed it sharing fruit with other Jamaican bats. This places it among the nocturnal consumers of both native forest and cultivated crops.",
+      "fr": "Au crépuscule, elle peut rejoindre des rassemblements de chauves-souris d’espèces différentes dans les arbres fruitiers; des chercheurs l’ont observée partageant les fruits avec d’autres chauves-souris jamaïcaines. Elle consomme ainsi des fruits forestiers et cultivés pendant la nuit."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2019 classified it as Least Concern, based on its broad habitat tolerance and presumed large population; the population trend remains unknown and severe hurricanes are a potential threat.",
+      "fr": "L’évaluation de l’UICN publiée en 2019 la classe en préoccupation mineure, en raison de sa tolérance à plusieurs habitats et d’une population présumée importante; sa tendance démographique reste inconnue et les grands ouragans sont une menace possible."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ariteus flavescens — Mammalian Species",
+        "fr": "Ariteus flavescens — Mammalian Species"
+      },
+      "url": "https://academic.oup.com/mspecies/article/doi/10.1644/787.1/2600197",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Species account documents measurements, coloration, feeding, activity and reproductive observations."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "identification.en.4",
+        "diet.en.1",
+        "diet.en.2",
+        "behavior.en.1",
+        "reproduction.en.1",
+        "reproduction.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 10,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ariteus flavescens — Mammalian Species treatment, Plazi TreatmentBank",
+        "fr": "Ariteus flavescens — traitement de Mammalian Species, Plazi TreatmentBank"
+      },
+      "url": "https://tb.plazi.org/GgServer/html/03A687BCFFD1FFD1138BF3E4F90AFA51",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Open treatment reproduces the species account and sex-specific measurements."
+      ],
+      "prose_claims": [
+        "identification.fr.3",
+        "identification.fr.4",
+        "diet.fr.1",
+        "diet.fr.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 9,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bats of Jamaica — Museum of Texas Tech University",
+        "fr": "Chauves-souris de Jamaïque — Museum of Texas Tech University"
+      },
+      "url": "https://www.depts.ttu.edu/nsrl/publications/downloads/SP48.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Field monograph reports captures across forest, pasture, river and orchard settings and observations at dusk."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "behavior.en.2",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 15,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ariteus flavescens — IUCN Red List assessment",
+        "fr": "Ariteus flavescens — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-1.RLTS.T2110A21992222.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "2019 assessment, based on a 2016 review, lists Least Concern, unknown population trend, hurricane exposure and Windsor protected area."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 100,
+        "notes_words": 19,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jamaika-Feigenfledermaus — German-language account",
+        "fr": "Chauve-souris mangeuse de figues de Jamaïque — fiche en allemand"
+      },
+      "url": "https://de.wikipedia.org/wiki/Jamaika-Feigenfledermaus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "German account provides the local common name, body measurements, sex difference, color and habitat summary, cross-checked against specialist references."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 83,
+        "notes_words": 19,
+        "total": 102,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ariteus flavescens — French-language overview",
+        "fr": "Ariteus flavescens — présentation en français"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Ariteus_flavescens",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "French-language page confirms the species is endemic to Jamaica and the only living member of Ariteus."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 16,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ariteus flavescens — American Museum of Natural History Bat Species of the World database",
+        "fr": "Ariteus flavescens — base Bat Species of the World de l’American Museum of Natural History"
+      },
+      "url": "https://batnames.org/genera/Ariteus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "AMNH bat database recognizes the valid species and places it in the Caribbean fruit-bat tribe Stenodermatini."
+      ],
+      "prose_claims": [
+        "overview.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 11,
+        "notes_words": 16,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The limited field data give different sample ranges for body size and weight; the profile retains sex-specific measurements from the species account, and no body width or height is reported.",
+    "Diet and reproductive timing are based on few observations; the 2019 IUCN assessment is the latest assessment located and records the population trend as unknown."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the American Society of Mammalogists species treatment, a Jamaican field monograph, IUCN assessment, AMNH bat taxonomy database, and French- and German-language summaries; distinguished this Jamaican endemic from Artibeus jamaicensis and retained only species-specific diet and breeding observations."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "aspidodiadema_tonsum",
+  "name": "Aspidodiadema Sea Urchin",
+  "scientific": "Aspidodiadema tonsum",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Aspidodiadema tonsum is a deep-water regular sea urchin in the family Aspidodiadematidae. The accepted scientific name is retained in current marine taxonomic registers.",
+    "identification": "Its rounded test reaches about 21 mm across, with a slightly flattened upper surface and a delicate, compact shell. Long, curved spines form whorls; descriptions report a purple test and spines with white tubercles.",
+    "habitat": "It lives on the seabed in the western Pacific, from Japan through the Philippines and Malay region toward eastern Australia and the Kermadec Islands. Records place it roughly 180–1,135 m deep.",
+    "diet": "The species references reviewed describe anatomy and depth but do not establish a specific diet. Its feeding habits therefore remain uncertain in this account.",
+    "behavior": "Species-level observations of movement, sheltering or daily activity were not provided by the distribution and taxonomic references reviewed.",
+    "reproduction": "The reviewed species accounts and taxonomic handbook give no confirmed breeding season, egg measurements or larval schedule for Aspidodiadema tonsum.",
+    "ecology": "It is a benthic echinoid of continental and island slopes, generally deeper than nearby shallow-reef urchins. Species-specific feeding links and ecological effects remain undocumented in the sources reviewed.",
+    "conservation": "The marine taxonomic and biodiversity records consulted list its identity and distribution but provide no conservation assessment or population trend for this species."
+  },
+  "sources": [
+    {
+      "url": "https://dokumen.pub/handbook-of-zoology-volume-1-echinoidea-9783110368574-9783110371703.html",
+      "title": "Handbook of Zoology, Volume 1: Echinoidea"
+    },
+    {
+      "url": "https://sealifebase.org/summary/SpeciesSummary.php?id=139091&lang=dutch",
+      "title": "Aspidodiadema tonsum — SeaLifeBase species summary"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Aspidodiadema",
+      "title": "Aspidodiadema — World Register of Marine Species"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "apistogramma_viejita",
+  "name": "Red-edge Dwarf Cichlid",
+  "scientific": "Apistogramma viejita",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma viejita is a small cichlid described by Sven Kullander in 1979 from Colombia's Orinoco drainage. Its type locality is a small stream near Puerto Gaitán in the Meta basin. The Spanish name viejita means “little old woman” and is a regional vernacular for cichlids.",
+    "identification": "It has a slender body, rounded tail and long dorsal-fin lappets; the male anal-fin filament can reach the tail margin. FishBase lists a male or unsexed maximum of 3 cm standard length and a female value of about four and a half centimetres, without specifying the latter convention. The Spanish revision reports one specimen at about 47 mm standard length, so these records do not establish a reliable sex-specific range. Species accounts give no body mass or directly comparable overall width and height measurements. Compared with Apistogramma macmasteri, specialists describe viejita as more slender, with longer male fin tips; many aquarium fish sold as viejita are macmasteri, so colour or shop labels alone are unreliable.",
+    "habitat": "The Spanish revision records it in lagoons of the middle Meta near Puerto López and in Cataniapo. At Meta sites it reports clear, low-conductivity water with pH around 5–6. FishBase summarizes the range as Colombia's upper Meta basin in the Orinoco.",
+    "diet": "FishBase gives no species-specific prey list; its estimated trophic level is inferred from close relatives, so a precise wild diet remains undocumented in the sources reviewed.",
+    "behavior": "FishBase reports that males may spawn with several females when females are abundant, consistent with a harem-forming social arrangement.",
+    "reproduction": "The female attaches the eggs to the ceiling of a cave and tends the clutch; FishBase records up to about 100 eggs.",
+    "ecology": "Kullander placed viejita among closely related Orinoco forms that include Apistogramma macmasteri and Apistogramma hongsloi.",
+    "conservation": "The global IUCN assessment lists Apistogramma viejita as Least Concern, assessed on 6 August 2020; that category is an assessment date, not a guarantee that every local population is secure."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Apistogramma-viejita.html",
+      "title": "Apistogramma viejita — FishBase species summary"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/SpeciesSummary.php?id=46716&lang=spanish",
+      "title": "Apistogramma viejita — FishBase Spanish-language summary"
+    },
+    {
+      "url": "https://www.mikolji.com/wp-content/uploads/2019/05/Libro-REVISION-DEL-GENERO-Apistogramma-EN-LA-CUENCA-DEL-RIO-ORINOCO.pdf",
+      "title": "III. Revision of the genus Apistogramma in the Orinoco basin — Lina Mesa Salazar (Spanish)"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.1979.tb00620.x",
+      "title": "Species of Apistogramma from the Orinoco Drainage Basin — Sven O. Kullander (1979)"
+    },
+    {
+      "url": "https://apistogramma.com/forum/threads/please-id-macmasteri-viejita-or-an-other.4592/",
+      "title": "Apistogramma viejita and Apistogramma macmasteri — specialist identification discussion"
+    },
+    {
+      "url": "https://etyfish.org/cichlidae6/",
+      "title": "ETYFish — Cichlidae name etymologies"
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "id": "arnoglossus_scapha",
+  "scientific": "Arnoglossus scapha",
+  "group": "fish",
+  "name": {
+    "en": "Witch Flounder",
+    "fr": "Fausse-limande (Arnoglossus scapha)"
+  },
+  "sections": {
+    "overview": {
+      "en": "Arnoglossus scapha is a bothid flatfish known in New Zealand as witch or witch flounder, and as mahue in Māori. It occurs in the western Pacific.",
+      "fr": "Arnoglossus scapha est un poisson plat de la famille des Bothidae, appelé witch ou witch flounder en Nouvelle-Zélande, et mahue en māori. Il vit dans le Pacifique occidental."
+    },
+    "identification": {
+      "en": "Adults typically measure 20–30 cm long. FishBase records a maximum length of 40 cm. The thin, oval fish has both eyes on its left side, a grey or pale-brown spotted upper side, a white underside, and a strongly arched lateral line. Two other New Zealand flatfishes also have left-facing eyes, Neoachiropsetta milfordi and Lophonectes gallus; distinguish this species by its oval outline, separated pelvic fin and arched lateral line.",
+      "fr": "L’adulte mesure généralement 20 à 30 cm de long. FishBase signale une longueur maximale de 40 cm. Ce poisson mince et ovale porte ses deux yeux du côté gauche; sa face supérieure grisâtre ou brun pâle est tachetée, son ventre est blanc et sa ligne latérale très arquée. Deux autres poissons plats de Nouvelle-Zélande ont aussi les yeux à gauche, Neoachiropsetta milfordi et Lophonectes gallus; reconnaissez cette espèce à sa silhouette ovale, sa nageoire pelvienne séparée et sa ligne latérale arquée."
+    },
+    "habitat": {
+      "en": "It is recorded in the western Pacific, including New Zealand and China, across a depth range of about 20–500 m. In New Zealand it lives on soft subtidal bottoms, from shallow water to depths beyond 400 m.",
+      "fr": "Elle est signalée dans le Pacifique occidental, notamment en Nouvelle-Zélande et en Chine, entre environ 20 et 500 m de profondeur. En Nouvelle-Zélande, elle fréquente les fonds meubles subtidaux, des eaux peu profondes à plus de 400 m."
+    },
+    "diet": {
+      "en": "It eats worms, crustaceans and molluscs, and may occasionally take small fish. A gut-content study found that it also feeds on benthic epifauna and pelagic organisms, unlike several co-occurring flatfishes.",
+      "fr": "Elle mange des vers, des crustacés et des mollusques, et capture parfois de petits poissons. Une étude des contenus stomacaux a aussi relevé des organismes épibenthiques et pélagiques, contrairement à plusieurs poissons plats vivant dans les mêmes eaux."
+    },
+    "behavior": {
+      "en": "This is a visual feeder: unlike several New Zealand flatfishes with bottom-feeding adaptations, its prominent eyes and toothed gill rakers suit feeding above the seabed. It remains a demersal fish associated with soft-bottom habitat.",
+      "fr": "C’est un prédateur visuel: contrairement à plusieurs poissons plats néo-zélandais adaptés à fouiller le fond, ses grands yeux et ses branchiospines dentées conviennent à la capture de proies au-dessus du substrat. Elle reste une espèce démersale liée aux fonds meubles."
+    },
+    "reproduction": {
+      "en": "In southern New Zealand waters, spawning has been recorded from August through April, with a peak in spring. Eggs and young stages spend an extended period in the plankton before settling toward the seabed.",
+      "fr": "Dans le sud de la Nouvelle-Zélande, la ponte a été observée d’août à avril, avec un pic au printemps. Les œufs et jeunes stades restent longtemps dans le plancton avant de redescendre vers le fond."
+    },
+    "ecology": {
+      "en": "Witch flounders are important prey for New Zealand king shags; in some studied colonies they formed most of the fish prey recorded. This links a soft-bottom predator to a specialist seabird’s feeding grounds.",
+      "fr": "La fausse-limande sorcière constitue une proie importante du cormoran royal de Nouvelle-Zélande; dans certaines colonies étudiées, elle formait la majeure partie des poissons consommés. Ce prédateur des fonds meubles nourrit ainsi un oiseau marin spécialisé."
+    },
+    "conservation": {
+      "en": "FishBase reports an IUCN assessment of Least Concern, made in 2019; this dated global category should not be mistaken for a current local population estimate.",
+      "fr": "FishBase rapporte une évaluation de l’UICN en préoccupation mineure, réalisée en 2019; cette catégorie mondiale ancienne ne constitue pas un suivi actuel des populations locales."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Witch — Marine Life Database, New Zealand",
+        "fr": "Witch — base Marine Life de Nouvelle-Zélande"
+      },
+      "url": "https://www.marinelife.ac.nz/species/713",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "NZ species account gives identification, length, lookalikes and local habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 10,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Arnoglossus scapha — FishBase species summary",
+        "fr": "Arnoglossus scapha — fiche FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Arnoglossus-scapha.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the western Pacific range, depth, maximum length and 2019 global IUCN category."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 14,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Arnoglossus scapha — EU Fish Names database, French entry",
+        "fr": "Arnoglossus scapha — base des dénominations commerciales de l’Union européenne"
+      },
+      "url": "https://fish-commercial-names.ec.europa.eu/fish-names/species/arnoglossus-scapha_fr",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "European Commission lists French names arnoglosse and fausse limande for this species."
+      ],
+      "prose_claims": [
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 12,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Witch prey and feeding — New Zealand Sea Fishes",
+        "fr": "Proies et alimentation de la fausse-limande — New Zealand Sea Fishes"
+      },
+      "url": "https://fishingmag.co.nz/fish-new-zealand-sea-fish-species/witch-or-megrim-flatfish-arnoglossus-scapha/amp",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "New Zealand account lists worms, crustaceans, molluscs and occasional small fish in its diet."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 14,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Food resource use among five flatfish species — New Zealand Journal of Marine and Freshwater Research",
+        "fr": "Utilisation des ressources alimentaires par cinq poissons plats — New Zealand Journal of Marine and Freshwater Research"
+      },
+      "url": "https://www.tandfonline.com/doi/10.1080/00288330.1987.9516224",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Gut-content study distinguishes A. scapha epifaunal and pelagic prey from four flatfishes feeding on benthic infauna and epifauna."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 18,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Morphological and sensory specializations of five New Zealand flatfish — Journal of Fish Biology",
+        "fr": "Spécialisations morphologiques et sensorielles de cinq poissons plats néo-zélandais — Journal of Fish Biology"
+      },
+      "url": "https://doi.org/10.1111/j.1095-8649.1987.tb05279.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Study describes prominent eyes and toothed gill rakers associated with visual and midwater feeding in A. scapha."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 17,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Witch spawning and planktonic life — Fisheries Research Bulletin, New Zealand",
+        "fr": "Ponte et vie planctonique de la fausse-limande — Fisheries Research Bulletin de Nouvelle-Zélande"
+      },
+      "url": "https://docs.niwa.co.nz/library/public/frb21.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Plankton sampling recorded witch eggs from August to April, with spawning peaking in spring."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 14,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Determining the diet of New Zealand king shag — Department of Conservation",
+        "fr": "Régime alimentaire du cormoran royal de Nouvelle-Zélande — Department of Conservation"
+      },
+      "url": "https://www.doc.govt.nz/globalassets/documents/conservation/marine-and-coastal/marine-conservation-services/reports/201920-annual-plan/bcbc2019-05-king-shag-dna-final-report.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "DNA-based diet report records witch among king-shag prey and reports differences among colonies."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 13,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Typical length is described as 20–30 cm in the New Zealand account, while FishBase and some guides report a maximum of 40 cm; no sex-specific measurements or body mass were located.",
+    "The New Zealand common name witch overlaps with unrelated flatfishes called witch elsewhere; this profile follows Arnoglossus scapha and its Bothidae identity."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked New Zealand species and fisheries sources, FishBase, a New Zealand king-shag diet study and the EU French commercial-name database; clarified that witch is a regional common name and compared the local left-eyed flatfish lookalikes."
+}

@@ -1,0 +1,261 @@
+{
+  "id": "archips_xylosteana",
+  "scientific": "Archips xylosteana",
+  "group": "invertebrates",
+  "name": {
+    "en": "Variegated Golden Tortrix",
+    "fr": "Archips des haies"
+  },
+  "sections": {
+    "overview": {
+      "en": "Archips xylosteana is a leaf-rolling moth in the tortricid family, Tortricidae. In English it is called the Variegated Golden Tortrix.",
+      "fr": "Archips xylosteana est un papillon de nuit tordeuse de la famille des Tortricidae. Lepinet l’appelle Archips des haies."
+    },
+    "identification": {
+      "en": "British accounts give a wingspan of 15–21 mm for males and 16–24 mm for females; a general field guide gives 15–23 mm overall. Males usually show stronger contrast in the brown-ochre forewing pattern, while females are often more subdued. It resembles Archips crataegana, but is usually smaller and more variegated, whereas that relative is broader-winged and browner. The caterpillar is grey-white to bluish with a greenish cast and a dark head; a French forest-health note reports that it develops from April in a leaf rolled across the midrib. A German forestry account gives larval length as about 15–20 mm. Caterpillars can be confused with Archips podana and Archips rosana, whose larvae use similar food plants and are difficult to tell apart by appearance alone.",
+      "fr": "Les sources britanniques indiquent 15 à 21 mm d’envergure chez le mâle et 16 à 24 mm chez la femelle; un guide général donne 15 à 23 mm tous sexes confondus. Le mâle présente souvent un motif brun ocre plus contrasté sur les ailes antérieures, tandis que celui de la femelle est plus discret. Elle ressemble à Archips crataegana, mais elle est généralement plus petite et plus bigarrée, tandis que cette cousine a des ailes plus larges et plus brunes. La chenille est gris blanchâtre à bleutée, avec des reflets verdâtres et une tête sombre; une note française sur la santé des forêts indique qu’elle se développe dès avril dans une feuille roulée perpendiculairement à la nervure principale. Une source forestière allemande donne une longueur larvaire d’environ 15 à 20 mm. Les chenilles peuvent être confondues avec celles d’Archips podana et d’Archips rosana, dont les larves utilisent des plantes hôtes similaires et sont difficiles à distinguer au seul aspect."
+    },
+    "habitat": {
+      "en": "It occurs in woodland and gardens across much of Britain. German accounts also record it along woodland edges and in hedgerows and other tree-rich gardens.",
+      "fr": "Elle fréquente les bois et jardins dans une grande partie de la Grande-Bretagne. Les sources allemandes la signalent aussi en lisière, dans les haies et dans d’autres jardins riches en arbres."
+    },
+    "diet": {
+      "en": "The caterpillars are polyphagous on deciduous trees and shrubs, including oak, elm, lime, hazel, maple, ash and fruit trees. They feed inside a rolled or spun leaf, which gives the larva shelter as it eats.",
+      "fr": "Les chenilles sont polyphages sur les feuillus et arbustes, notamment le chêne, l’orme, le tilleul, le noisetier, l’érable, le frêne et les arbres fruitiers. Elles se nourrissent dans une feuille roulée ou réunie par de la soie, qui leur sert aussi d’abri."
+    },
+    "behavior": {
+      "en": "Adults fly from just before dusk into the night and are mainly seen in July and August in Britain. German accounts place the adult flight more broadly from June to August, showing that dates vary across the range.",
+      "fr": "Les adultes volent à partir du crépuscule jusque dans la nuit et sont surtout observés en juillet et août en Grande-Bretagne. Les sources allemandes situent leur vol plus largement de juin à août, ce qui montre que les dates varient selon la région."
+    },
+    "reproduction": {
+      "en": "A British species account reports that the eggs overwinter. A French forest-health note says the young caterpillars develop from April inside a leaf rolled across the midrib.",
+      "fr": "Une fiche britannique indique que les œufs passent l’hiver. Une note française sur la santé des forêts précise que les jeunes chenilles se développent dès avril dans une feuille roulée perpendiculairement à la nervure principale."
+    },
+    "ecology": {
+      "en": "In some years and suitable forest settings, larval numbers can rise sharply and cause heavy leaf loss, especially on oaks; this is an episodic outbreak, not the normal condition everywhere.",
+      "fr": "Certaines années et dans des bois favorables, le nombre de chenilles peut augmenter fortement et provoquer une importante défoliation, notamment sur les chênes; ces pullulations restent ponctuelles et ne décrivent pas la situation partout."
+    },
+    "conservation": {
+      "en": "A British regional account describes the species as common in woodland and gardens across the British Isles; that frequency label is regional and does not establish a global trend.",
+      "fr": "Une source régionale britannique la décrit comme commune dans les bois et jardins des îles Britanniques; cette indication locale ne permet pas d’établir une tendance mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Archips xylosteana — Hampshire and Isle of Wight moth review",
+        "fr": "Archips xylosteana — revue des papillons de nuit du Hampshire et de l’île de Wight"
+      },
+      "url": "https://www.hantsmoths.org.uk/report_subfamily.php?family=Tortricidae&name=Tortricinae&year=2020",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Regional account: sex-specific spans, size and pattern versus A. crataegana, habitat, egg overwintering and British frequency."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 16,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Variegated Golden Tortrix — UKMoths",
+        "fr": "Archips des haies — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/archips-xylosteana/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "British account gives the English name, broad adult wingspan, broadleaf habitat and dusk-to-night flight in July and August."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 18,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Archips xylosteana — Lepinet, French Lepidoptera",
+        "fr": "Archips xylosteana — Lepinet, lépidoptères de France"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=47410",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "French species page gives the name Archips des haies and lists oak, elm, plum and birch as larval host plants."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "overview.fr.2",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 20,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Brauner Laubholzwickler — Digital-Nature species account",
+        "fr": "Tordeuse brune des feuillus — fiche Digital-Nature"
+      },
+      "url": "https://www.digital-nature.de/tierwelt/insekten/nachtfalter/archips/detail/xylosteana.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "German account describes forewing contrast, woodland-edge and garden habitats, broadleaf hosts, season and night activity."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 15,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Early oak defoliators — French Ministry of Agriculture, Forest Health Department",
+        "fr": "Défoliateurs précoces du chêne — ministère français de l’Agriculture, Département de la santé des forêts"
+      },
+      "url": "https://agriculture.gouv.fr/sites/default/files/documents/pdf/Tordeuse_verte_du_chene.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "Official forest-health leaflet describes A. xylosteana caterpillar coloration, spring development and rolled-leaf shelter."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 13,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Forest protection in climate change — North Rhine-Westphalia, Forest and Timber Service",
+        "fr": "Protection forestière face au changement climatique — service Forêts et Bois de Rhénanie-du-Nord–Westphalie"
+      },
+      "url": "https://www.wald-und-holz.nrw.de/fileadmin/Publikationen/Broschueren/Broschuere_WS_im_KW_auszug.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "German forestry account gives caterpillar length and records episodic oak defoliation."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 11,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Archips podana — UKMoths larval identification",
+        "fr": "Archips podana — identification des chenilles, UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/archips-podana/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "British account warns that larvae of A. podana, A. xylosteana and A. rosana are very similar and advises rearing for confirmation."
+      ],
+      "prose_claims": [
+        "identification.en.6",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 21,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Adult wingspans differ slightly among sources: the British sex-specific figures are 15–21 mm for males and 16–24 mm for females, while UKMoths gives 15–23 mm overall.",
+    "The body mass and standardized body height or width were not reported in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English and French lepidopterist accounts, German natural-history and forestry sources, and a French government forest-health note; kept sex-specific adult ranges separate from the larval body length and recorded the similar A. podana and A. rosana larvae."
+}

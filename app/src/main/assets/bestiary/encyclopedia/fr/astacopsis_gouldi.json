@@ -1,0 +1,50 @@
+{
+  "id": "astacopsis_gouldi",
+  "name": "Écrevisse géante de Tasmanie",
+  "scientific": "Astacopsis gouldi",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette écrevisse du nord de la Tasmanie est le plus grand crustacé d’eau douce connu, bien que les géants soient devenus rares. Elle appartient à un genre endémique avec deux proches parentes plus petites, A. tricornis et A. franklinii.",
+    "identification": "Les adultes exceptionnels dépassent 80 cm de longueur étirée. Ils peuvent atteindre 6 kg; aujourd’hui, 2 à 3 kg représentent déjà un grand individu. Aucune hauteur ou largeur standard n’est indiquée; les pinces antérieures des mâles sont plus grandes que celles des femelles. Son corps épineux varie du brun verdâtre sombre au noir ou au bleu. Chez les jeunes, une crête médiane saillante du rostre, entre les yeux, le distingue d’A. tricornis et d’A. franklinii.",
+    "habitat": "Endémique du nord de la Tasmanie, elle fréquente rivières, ruisseaux et certains lacs. Elle utilise des cours d’eau ombragés avec des fosses, des troncs, des berges creusées et une végétation riveraine indigène.",
+    "diet": "Son régime se diversifie avec l’âge et comprend des feuilles ainsi que des matières animales, notamment de petits poissons lorsqu’ils sont disponibles. Les sources décrivent un crustacé opportuniste, sans ressource alimentaire unique spécialisée.",
+    "behavior": "Sa croissance est très lente et sa longévité peut atteindre 60 ans; les grands adultes ont donc survécu de nombreuses années.",
+    "reproduction": "Le potentiel reproducteur de l’espèce est faible. Les femelles portent les œufs puis les jeunes sous l’abdomen pendant l’incubation.",
+    "ecology": "Ce grand crustacé benthique dépend de cours d’eau propres et diversifiés en abris; il souffre lorsque les berges ou la qualité de l’eau se dégradent. Sa croissance lente ralentit aussi le rétablissement des populations locales.",
+    "conservation": "Elle est classée vulnérable par les législations de Tasmanie et du gouvernement fédéral australien, et sa pêche est interdite. Le braconnage et la dégradation des cours d’eau restent des menaces documentées."
+  },
+  "sources": [
+    {
+      "url": "https://nrmnorth.org.au/biodiversity/giant-freshwater-crayfish-project",
+      "title": "Projet de conservation de l’écrevisse géante — NRM North"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/action-plan/tasmanian-giant-freshwater-crayfish",
+      "title": "Écrevisse géante de Tasmanie — ministère australien du Climat, de l’Énergie, de l’Environnement et de l’Eau"
+    },
+    {
+      "url": "https://www.threatenedspecieslink.tas.gov.au/Pages/Giant-Freshwater-Crayfish.aspx",
+      "title": "Écrevisse géante — portail des espèces menacées de Tasmanie"
+    },
+    {
+      "url": "https://nre.tas.gov.au/Documents/Accepted-Astacopsis-gouldi-RP.pdf",
+      "title": "Plan de rétablissement de l’écrevisse géante d’eau douce (Astacopsis gouldi)"
+    },
+    {
+      "url": "https://www.agriculture.gov.au/sites/default/files/documents/draft-referral-guidelines-astacopsis-gouldi.pdf",
+      "title": "Projet de lignes directrices pour l’écrevisse géante vulnérable de Tasmanie"
+    },
+    {
+      "url": "https://www.jstage.jst.go.jp/article/crustacea/Special2012/7/Special2012_KJ00008520124/_article",
+      "title": "Biologie de l’écrevisse géante d’eau douce de Tasmanie et sa conservation"
+    },
+    {
+      "url": "https://de.wikipedia.org/wiki/Astacopsis_gouldi",
+      "title": "Astacopsis gouldi — Wikipédia en allemand"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Astacopsis_gouldi",
+      "title": "Écrevisse géante de Tasmanie — Wikipédia en français"
+    }
+  ]
+}

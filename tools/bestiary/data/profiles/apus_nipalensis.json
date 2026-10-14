@@ -1,0 +1,302 @@
+{
+  "id": "apus_nipalensis",
+  "scientific": "Apus nipalensis",
+  "group": "birds",
+  "name": {
+    "en": "House Swift",
+    "fr": "Martinet malais"
+  },
+  "sections": {
+    "overview": {
+      "en": "The House Swift is a small, dark swift of South and East Asia, especially at home around towns and buildings.",
+      "fr": "Le martinet malais est un petit martinet sombre d’Asie du Sud et de l’Est, particulièrement à l’aise autour des villes et des bâtiments."
+    },
+    "identification": {
+      "en": "In Japan, measured body length is about 13 cm and wingspan about 28 cm. Vietnamese adults averaged 29.6 g, with mean wing length 134.9 mm and tail length 48.1 mm. The sexes look alike. The Vietnamese mass and wing measurements pool adults and do not report a male–female split. The bird is sooty brown-black, with a pale throat, a clear white rump, long curved wings and a short, shallowly notched tail. The Little Swift, Apus affinis, is its closest evolutionary cousin and can look very similar; compare rump width, pale under-tail area and tail shape carefully. The larger Pacific Swift, Apus pacificus, has longer wings and a more deeply forked tail, while its underparts show pale scalloping absent in the House Swift. No comparable source gives a standard body width or height.",
+      "fr": "Au Japon, la longueur du corps mesurée est d’environ 13 cm et l’envergure de 28 cm. Des adultes étudiés au Vietnam pesaient en moyenne 29,6 g, avec une aile de 134,9 mm et une queue de 48,1 mm en moyenne. Les sexes se ressemblent. Les mesures vietnamiennes de masse et d’aile regroupent les adultes sans distinguer les sexes. L’oiseau est brun-noir fuligineux, avec la gorge claire, un croupion blanc net, de longues ailes courbes et une queue courte à peine échancrée. Le martinet des maisons, Apus affinis, est son plus proche cousin évolutif et lui ressemble beaucoup; il faut comparer avec soin la largeur du croupion blanc, la zone pâle sous la queue et la forme de la queue. Le martinet de Sibérie, Apus pacificus, plus grand, a des ailes plus longues et une queue davantage fourchue; ses dessous portent des écaillures pâles absentes chez le martinet malais. Aucune source comparable ne donne de largeur ou de hauteur standard du corps."
+    },
+    "habitat": {
+      "en": "It occupies open country, towns and lowland landscapes, and can breed in cliffs as well as on human structures. A Vietnamese study found most nests on older buildings, especially beneath eaves. In Japan it also nests under bridges and may reuse old Red-rumped Swallow nests. Birds forage above nearby hills, rivers and lakes.",
+      "fr": "Il fréquente les espaces ouverts, les villes et les paysages de plaine, et peut nicher sur des falaises comme sur des constructions humaines. Au Vietnam, une étude a trouvé la plupart des nids sur de vieux bâtiments, en particulier sous les avant-toits. Au Japon, il niche aussi sous les ponts et peut reprendre d’anciens nids d’hirondelles rousselines. Il chasse au-dessus des collines, rivières et lacs voisins."
+    },
+    "diet": {
+      "en": "It feeds on flying insects caught on the wing. A Vietnamese study found Hymenoptera, termites, beetles, bugs and flies among the main prey groups; the mix delivered to chicks differed somewhat from the adults’ diet.",
+      "fr": "Il se nourrit d’insectes volants qu’il capture en vol. Une étude vietnamienne a relevé parmi ses principales proies des hyménoptères, termites, coléoptères, punaises et mouches; le mélange apporté aux poussins différait quelque peu du régime des adultes."
+    },
+    "behavior": {
+      "en": "House Swifts often forage and nest socially, circling rapidly over settlements and open ground. Most populations are described as resident, although local seasonal movements occur; the species’ broad range does not follow one uniform migration pattern.",
+      "fr": "Les martinets malais chassent et nichent souvent en groupe, tournoyant rapidement au-dessus des agglomérations et des espaces dégagés. La plupart des populations sont décrites comme sédentaires, même si des déplacements saisonniers locaux existent; la vaste aire de l’espèce ne correspond pas à un seul schéma migratoire."
+    },
+    "reproduction": {
+      "en": "The nest is a small cup of light material bound with saliva, usually under a sheltered ledge. In Vietnam, two broods were usual within a 164–168 day breeding season; incubation lasted 23–30 days and young fledged after 40–48 days. Japanese observations report two or three attempts per season, so timing and output vary by region.",
+      "fr": "Le nid est une petite coupe de matériaux légers liés par de la salive, généralement sous un rebord abrité. Au Vietnam, deux couvées étaient habituelles au cours d’une saison de 164 à 168 jours; l’incubation durait 23 à 30 jours et les jeunes s’envolaient après 40 à 48 jours. Au Japon, des observations signalent deux ou trois tentatives par saison: le calendrier et le nombre de couvées varient selon les régions."
+    },
+    "ecology": {
+      "en": "By catching insects above urban neighborhoods and open spaces, it links nesting sites to the surrounding aerial food web.",
+      "fr": "En capturant des insectes au-dessus des villes et des espaces ouverts, il relie ses sites de nidification au réseau alimentaire aérien environnant."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2016 classified the species as Least Concern globally. Kyoto reports a small local breeding colony threatened by removal of old Red-rumped Swallow nests.",
+      "fr": "L’évaluation de l’UICN publiée en 2016 classait l’espèce en préoccupation mineure à l’échelle mondiale. À Kyoto, une petite colonie nicheuse est menacée par la destruction des anciens nids d’hirondelles rousselines."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Biology of the House Swift Apus nipalensis in Vietnam — Revue d’Écologie",
+        "fr": "Biologie du martinet malais Apus nipalensis au Vietnam — Revue d’Écologie"
+      },
+      "url": "https://doi.org/10.3406/revec.2006.1332",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Vietnam study: pooled adult mass and wing data; insect prey; breeding cycle."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.4",
+        "identification.fr.4",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 12,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "House Swift — Kyoto Prefecture Red Data Book",
+        "fr": "Martinet malais — Livre rouge de la préfecture de Kyoto"
+      },
+      "url": "https://www.pref.kyoto.jp/kankyo/rdb2002/bio/db/bird0048.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Japanese measurements, nesting, colony and local conservation account."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "habitat.en.4",
+        "habitat.fr.4",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 185,
+        "notes_words": 8,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Martinet malais — Oiseaux.net",
+        "fr": "Martinet malais — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/martinet.malais.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "French name follows CINFO; page summarizes nesting, breeding and closest phylogenetic relative."
+      ],
+      "prose_claims": [
+        "identification.en.6",
+        "identification.fr.6",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "identification.en.8",
+        "identification.fr.8"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 12,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "House Swift Apus nipalensis — IUCN Red List, 2016 assessment",
+        "fr": "Martinet malais Apus nipalensis — Liste rouge de l’UICN, évaluation 2016"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22686861A93129265.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global category: Least Concern, assessed 2016."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 6,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Increasing occurrence of House Swift in Australia — Corella",
+        "fr": "Progression des observations de martinet malais en Australie — Corella"
+      },
+      "url": "https://absa.asn.au/wp-content/uploads/2022/11/FINAL_14_V46_Pg68-75_HouseSwifts_PMKyne_V3.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Field comparison of House and Pacific Swifts."
+      ],
+      "prose_claims": [
+        "identification.en.7",
+        "identification.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 7,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ヒメアマツバメ — Checklist of Japanese Birds, Ornithological Society of Japan",
+        "fr": "ヒメアマツバメ — Liste des oiseaux du Japon, Société ornithologique du Japon"
+      },
+      "url": "https://ornithology.jp/katsudo/Publications/checklist7.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Japanese checklist accepts Apus nipalensis; lists its Asian range and resident status."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 12,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "House Swift — Birds of the World, Cornell Lab of Ornithology",
+        "fr": "Martinet malais — Birds of the World, Cornell Lab of Ornithology"
+      },
+      "url": "https://birdsoftheworld.org/bow/species/houswi1/cur/introduction",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell species account gives accepted taxon and multilingual names."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 9,
+        "total": 9,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "House Swift — Birds of Singapore, Bird Society of Singapore",
+        "fr": "Martinet malais — Birds of Singapore, Bird Society of Singapore"
+      },
+      "url": "https://singaporebirds.com/species/house-swift",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Singapore regional account describes identification, habitat and aerial insect feeding."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 10,
+        "total": 156,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Japanese prefectural account uses the historical name Apus affinis for the House Swift; its local measurements and nesting observations are treated as Japanese population data, not as a current taxonomy or global status statement.",
+    "The Vietnamese mass and wing figures combine adult specimens across localities and do not establish male–female size differences. No dependable body width or height was found."
+  ],
+  "reviewed": true,
+  "review_note": "Compiled from a Vietnamese field study, Japanese checklist and prefectural account, French species reference, IUCN assessment and an Australian identification paper; consulted 2026-10-14."
+}

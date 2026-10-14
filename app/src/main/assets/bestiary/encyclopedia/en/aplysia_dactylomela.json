@@ -1,0 +1,46 @@
+{
+  "id": "aplysia_dactylomela",
+  "name": "Spotted Sea Hare",
+  "scientific": "Aplysia dactylomela",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Aplysia dactylomela is a large marine sea hare, a gastropod mollusc described by Rang in 1828.",
+    "identification": "Its soft oval body bears irregular black rings, flecks and pale spots across the mantle and side flaps; its colour varies with diet. Broad parapodia partly cover a thin internal shell, while the head has long ear-shaped rhinophores and shorter oral tentacles. Adults often measure 7–15 cm and may reach 40 cm. A Jamaican feeding study used mature animals weighing 400–600 g; this laboratory sample is not a typical species-wide mass range. The consulted accounts give no standardized body width or height. The Indo-Pacific Aplysia argus was long called A. dactylomela, but genetic evidence separates them.",
+    "habitat": "It grazes in shallow tropical and subtropical coastal waters, especially tide pools, rocky or sandy bottoms and seagrass or algal beds. Records extend to about 40 m, although most observations are from much shallower water.",
+    "diet": "It is herbivorous, scraping red and green seaweeds with its jaws and radula; Jamaican observations found a preference for red algae, but it also eats Ulva and other greens. Pigments from algal food can alter the colour of its egg strings.",
+    "behavior": "During daylight it often shelters beneath rocks or in crevices, then forages after dusk. It usually crawls but can swim briefly by undulating its broad parapodia; when threatened, it may release purple defensive ink.",
+    "reproduction": "Like other sea hares, it is a simultaneous hermaphrodite: each adult has male and female reproductive organs, and several may mate in a chain. It lays long, tangled gelatinous egg strings; planktonic veliger larvae hatch, then settle and develop into juveniles.",
+    "ecology": "The species is native to the Atlantic, including the Caribbean, and was first reported in the Mediterranean in 2002. Genetic work confirms that sampled Mediterranean animals belong to the Atlantic species, but the arrival route remains uncertain. Indo-Pacific look-alikes belong to Aplysia argus.",
+    "conservation": "Aplysia dactylomela has not been evaluated for the IUCN Red List. Its Mediterranean expansion is monitored as a non-native occurrence, but the sources reviewed do not establish a global population trend or a quantified ecological impact."
+  },
+  "sources": [
+    {
+      "url": "https://doris.ffessm.fr/Especes/Aplysia-dactylomela-Lievre-de-mer-ocelle-2375",
+      "title": "Aplysia dactylomela — DORIS species sheet (French)"
+    },
+    {
+      "url": "https://opistobranquis.info/es/guia/aplysiida/aplysia-dactylomela/",
+      "title": "Aplysia dactylomela — OPK Opistobranquis guide (Spanish)"
+    },
+    {
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/310025.pdf",
+      "title": "The origin and dispersal pathway of Aplysia dactylomela in the Mediterranean Sea — Valdés et al. (2013)"
+    },
+    {
+      "url": "https://fire.biol.wwu.edu/donovan/papers/Aplysia_maa.pdf",
+      "title": "Distribution of mycosporine-like amino acids in Aplysia dactylomela — Carefoot et al. (1998)"
+    },
+    {
+      "url": "https://iucn-medmis.org/en/species/aplysia-dactylomela",
+      "title": "Aplysia dactylomela — IUCN MedMIS species sheet"
+    },
+    {
+      "url": "https://www.sealifebase.org/summary/Aplysia-dactylomela.html",
+      "title": "Aplysia dactylomela — SeaLifeBase species summary"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?p=taxdetails&id=138753",
+      "title": "WoRMS — Aplysia dactylomela taxon record"
+    }
+  ]
+}

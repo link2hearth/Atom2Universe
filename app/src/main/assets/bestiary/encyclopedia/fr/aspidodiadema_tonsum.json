@@ -1,0 +1,30 @@
+{
+  "id": "aspidodiadema_tonsum",
+  "name": "Oursin Aspidodiadema",
+  "scientific": "Aspidodiadema tonsum",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Aspidodiadema tonsum est un oursin régulier d’eaux profondes de la famille des Aspidodiadematidae. Les registres marins actuels retiennent ce nom scientifique.",
+    "identification": "Son test arrondi atteint environ 21 mm de diamètre, avec une face supérieure légèrement aplatie et une coquille compacte et délicate. De longues épines courbes forment des verticilles; test et épines sont décrits violets, avec des tubercules blancs.",
+    "habitat": "Il vit sur le fond marin du Pacifique occidental, du Japon aux Philippines et à la région malaise, jusqu’à l’est australien et aux îles Kermadec. Les données le situent vers 180 à 1 135 m de profondeur.",
+    "diet": "Les références consultées décrivent son anatomie et sa profondeur, mais ne déterminent pas son régime alimentaire. Ses habitudes de nourrissage restent donc incertaines dans cette fiche.",
+    "behavior": "Les références taxonomiques et de répartition consultées ne précisent ni déplacements, ni abris, ni rythme quotidien chez cette espèce.",
+    "reproduction": "Les fiches d’espèce et le manuel taxonomique consultés ne donnent ni saison de reproduction confirmée, ni mesure des œufs, ni calendrier larvaire pour Aspidodiadema tonsum.",
+    "ecology": "Cet échinoïde benthique fréquente des pentes continentales et insulaires, généralement plus profondes que les récifs côtiers. Ses relations alimentaires et effets écologiques propres restent absents des sources consultées.",
+    "conservation": "Les registres taxonomiques et de biodiversité consultés indiquent son identité et sa répartition, sans fournir d’évaluation de conservation ni de tendance démographique."
+  },
+  "sources": [
+    {
+      "url": "https://dokumen.pub/handbook-of-zoology-volume-1-echinoidea-9783110368574-9783110371703.html",
+      "title": "Handbook of Zoology, volume 1 : Echinoidea"
+    },
+    {
+      "url": "https://sealifebase.org/summary/SpeciesSummary.php?id=139091&lang=dutch",
+      "title": "Aspidodiadema tonsum — fiche d’espèce SeaLifeBase"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Aspidodiadema",
+      "title": "Aspidodiadema — Registre mondial des espèces marines"
+    }
+  ]
+}

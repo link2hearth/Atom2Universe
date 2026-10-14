@@ -1,0 +1,38 @@
+{
+  "id": "araniella_displicata",
+  "name": "Six-spotted Orbweaver",
+  "scientific": "Araniella displicata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Araniella displicata is a small orb-weaving spider in the family Araneidae, distributed across North America, Europe and northern Asia.",
+    "identification": "NMBE records adults at 4–4.5 mm for males and 6–11 mm for females, which are usually larger. A German regional sheet reports males at 5–6 mm, so published male ranges differ. The abdomen varies from whitish to rust-red, brown, pink or orange, but adults retain dark paired spots near its rear edge. This reddish pattern distinguishes it from the usually green, smaller cucumber spider, Araniella cucurbitina. In North America, the close relative Araniella proxima is hard to separate by colour; a Canadian study says reliable identification requires examining the genital structures.",
+    "habitat": "In Europe it is associated with dry deciduous and coniferous woods, often on young pines or in tree crowns. In Canada it also occurs in low shrubs and deciduous trees such as birch, maple, alder and hawthorn.",
+    "diet": "It feeds on insects. It captures them in a small orb web woven in the hollow of a leaf.",
+    "behavior": "The web often sits within one leaf whose edges are slightly raised; the spider waits between leaf and web, close to the hub. It rests there during daylight.",
+    "reproduction": "The female attaches a small woolly-looking egg sac, with a central mass about 4 mm across, to a plant and folds leaf edges around it for shelter. She guards the sac, although the duration is unknown. In northeastern North America and eastern Canada, juveniles overwinter and mature in spring; one generation is reported each year.",
+    "ecology": "Its exposed leaf web and small size may make this spider vulnerable to parasitism in field populations.",
+    "conservation": "In Canada’s Northwest Territories, regional experts classify the species as Secure. This is a local assessment and does not establish a global population trend."
+  },
+  "sources": [
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/9916",
+      "title": "Araniella displicata — World Spider Catalog, Natural History Museum Bern"
+    },
+    {
+      "url": "https://www.araneae.nmbe.ch/data/229/Araniella_displicata",
+      "title": "Araniella displicata — Spiders of Europe, NMBE"
+    },
+    {
+      "url": "https://www.natur-in-nrw.de/HTML/Tiere/Spinnen/TSP-56.html",
+      "title": "Rotbraune Kürbisspinne — Natur in NRW"
+    },
+    {
+      "url": "https://www.natureweb.com/articles-de-recherche/observations-sur-la-coloration-la-toile-et-le-sac-doeufs-daraniella-displicata-hentz-1847-araneae-araneidae",
+      "title": "Observations on colour, web and egg sac of Araniella displicata — Hutchinsonia"
+    },
+    {
+      "url": "https://www.gov.nt.ca/species-search/araniella-displicata",
+      "title": "Araniella displicata — Northwest Territories Species Search"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "id": "apistogramma_tucurui",
+  "name": "Tucuruí Dwarf Cichlid",
+  "scientific": "Apistogramma tucurui",
+  "group": "fish",
+  "sections": {
+    "overview": "Apistogramma tucurui is a Brazilian dwarf cichlid described by Wolfgang Staeck in 2003. Its type locality is a brook in the Tocantins system about 10 km south of Jacundá, Pará. Its name refers to the Tucuruí Reservoir, which inundated much of the surrounding river habitat.",
+    "identification": "The most striking clue is a set of fine dark pinstripes above and below the faint lateral band, reaching across the head and flanks. FishBase has no formal maximum; aquarium reports commonly give males around 8–9 cm total length and females near 5 cm. A Swedish register lists 6 cm without a measurement convention. No reliable mass, body width or height was found.",
+    "habitat": "Its documented range is the lower Tocantins basin in Brazil, east of the Tucuruí Reservoir. Field accounts describe small forest streams and overflow swamps with sandy bottoms, leaf debris and sedge-like plants along their edges.",
+    "diet": "FishBase provides no direct species-specific food record. Its trophic level is estimated from close relatives, supporting only a broad micropredator inference rather than a measured prey list.",
+    "behavior": "Males defend a larger territory that can overlap the smaller areas of several females, each guarding a separate cave. Early breeders described unusually strong aggression and warned that confined fish can harass one another persistently.",
+    "reproduction": "The species is a cave spawner: a female attaches eggs to a cave roof or wall and guards them and the fry. One breeder reported about 40 eggs beneath a clay pot. Another described an 80-egg spawn and brood losses, so these captive counts vary.",
+    "ecology": "Specialists place it in the Apistogramma regani group with A. regani and A. eunotus. Its many pinstripes make it more distinctive than those usually single-banded relatives.",
+    "conservation": "The global IUCN category is Data Deficient, assessed on 7 November 2018. Brazil’s national Red Book also recorded the species as DD in its 2014 assessment, and the reservoir has inundated part of its river habitat."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Apistogramma-tucurui.html",
+      "title": "Apistogramma tucurui — FishBase species summary"
+    },
+    {
+      "url": "https://www.aquaristatlas.com/species/apistogramma-tucurui/",
+      "title": "Apistogramma tucurui — Aquarist Atlas species account"
+    },
+    {
+      "url": "https://www.ciklid.org/artregister/art.php?ID=1583",
+      "title": "Apistogramma tucurui — Nordiska Ciklidsällskapet species register"
+    },
+    {
+      "url": "https://www.fishbase.net.br/summary/SpeciesSummary.php?id=62416&lang=spanish",
+      "title": "FishBase Spanish-language summary for Apistogramma tucurui"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=67840",
+      "title": "Eschmeyer’s Catalog of Fishes: Apistogramma tucurui"
+    },
+    {
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/livro_vermelho_2018_vol1.pdf",
+      "title": "Apistogramma tucurui — ICMBio Brazilian Red Book"
+    },
+    {
+      "url": "https://etyfish.org/cichlidae6/",
+      "title": "ETYFish: Cichlidae name etymologies"
+    },
+    {
+      "url": "https://www.pvas.com/post/apistogramma-tucurui-the-apisto-in-the-pin-striped-suit",
+      "title": "Pin-striped Apistogramma tucurui — Potomac Valley Aquarium Society"
+    },
+    {
+      "url": "https://www.thekrib.com/Apisto/A-tucurui.html",
+      "title": "Apistogramma tucurui — translated field and aquarium account by Ingo Koslowski"
+    },
+    {
+      "url": "https://www.tomc.no/page.aspx?pageid=127",
+      "title": "Apistogramma regani species group — Tom Christoffersen"
+    },
+    {
+      "url": "https://apistogramma.com/forum/threads/apistogramma-tucurui.2849/",
+      "title": "Apistogramma tucurui — aquarium breeding observation"
+    }
+  ]
+}

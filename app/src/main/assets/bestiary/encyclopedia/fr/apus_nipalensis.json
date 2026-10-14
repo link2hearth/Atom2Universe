@@ -1,0 +1,50 @@
+{
+  "id": "apus_nipalensis",
+  "name": "Martinet malais",
+  "scientific": "Apus nipalensis",
+  "group": "birds",
+  "sections": {
+    "overview": "Le martinet malais est un petit martinet sombre d’Asie du Sud et de l’Est, particulièrement à l’aise autour des villes et des bâtiments.",
+    "identification": "Au Japon, la longueur du corps mesurée est d’environ 13 cm et l’envergure de 28 cm. Des adultes étudiés au Vietnam pesaient en moyenne 29,6 g, avec une aile de 134,9 mm et une queue de 48,1 mm en moyenne. Les sexes se ressemblent. Les mesures vietnamiennes de masse et d’aile regroupent les adultes sans distinguer les sexes. L’oiseau est brun-noir fuligineux, avec la gorge claire, un croupion blanc net, de longues ailes courbes et une queue courte à peine échancrée. Le martinet des maisons, Apus affinis, est son plus proche cousin évolutif et lui ressemble beaucoup; il faut comparer avec soin la largeur du croupion blanc, la zone pâle sous la queue et la forme de la queue. Le martinet de Sibérie, Apus pacificus, plus grand, a des ailes plus longues et une queue davantage fourchue; ses dessous portent des écaillures pâles absentes chez le martinet malais. Aucune source comparable ne donne de largeur ou de hauteur standard du corps.",
+    "habitat": "Il fréquente les espaces ouverts, les villes et les paysages de plaine, et peut nicher sur des falaises comme sur des constructions humaines. Au Vietnam, une étude a trouvé la plupart des nids sur de vieux bâtiments, en particulier sous les avant-toits. Au Japon, il niche aussi sous les ponts et peut reprendre d’anciens nids d’hirondelles rousselines. Il chasse au-dessus des collines, rivières et lacs voisins.",
+    "diet": "Il se nourrit d’insectes volants qu’il capture en vol. Une étude vietnamienne a relevé parmi ses principales proies des hyménoptères, termites, coléoptères, punaises et mouches; le mélange apporté aux poussins différait quelque peu du régime des adultes.",
+    "behavior": "Les martinets malais chassent et nichent souvent en groupe, tournoyant rapidement au-dessus des agglomérations et des espaces dégagés. La plupart des populations sont décrites comme sédentaires, même si des déplacements saisonniers locaux existent; la vaste aire de l’espèce ne correspond pas à un seul schéma migratoire.",
+    "reproduction": "Le nid est une petite coupe de matériaux légers liés par de la salive, généralement sous un rebord abrité. Au Vietnam, deux couvées étaient habituelles au cours d’une saison de 164 à 168 jours; l’incubation durait 23 à 30 jours et les jeunes s’envolaient après 40 à 48 jours. Au Japon, des observations signalent deux ou trois tentatives par saison: le calendrier et le nombre de couvées varient selon les régions.",
+    "ecology": "En capturant des insectes au-dessus des villes et des espaces ouverts, il relie ses sites de nidification au réseau alimentaire aérien environnant.",
+    "conservation": "L’évaluation de l’UICN publiée en 2016 classait l’espèce en préoccupation mineure à l’échelle mondiale. À Kyoto, une petite colonie nicheuse est menacée par la destruction des anciens nids d’hirondelles rousselines."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.3406/revec.2006.1332",
+      "title": "Biologie du martinet malais Apus nipalensis au Vietnam — Revue d’Écologie"
+    },
+    {
+      "url": "https://www.pref.kyoto.jp/kankyo/rdb2002/bio/db/bird0048.html",
+      "title": "Martinet malais — Livre rouge de la préfecture de Kyoto"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/martinet.malais.html",
+      "title": "Martinet malais — Oiseaux.net"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22686861A93129265.en",
+      "title": "Martinet malais Apus nipalensis — Liste rouge de l’UICN, évaluation 2016"
+    },
+    {
+      "url": "https://absa.asn.au/wp-content/uploads/2022/11/FINAL_14_V46_Pg68-75_HouseSwifts_PMKyne_V3.pdf",
+      "title": "Progression des observations de martinet malais en Australie — Corella"
+    },
+    {
+      "url": "https://ornithology.jp/katsudo/Publications/checklist7.html",
+      "title": "ヒメアマツバメ — Liste des oiseaux du Japon, Société ornithologique du Japon"
+    },
+    {
+      "url": "https://birdsoftheworld.org/bow/species/houswi1/cur/introduction",
+      "title": "Martinet malais — Birds of the World, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://singaporebirds.com/species/house-swift",
+      "title": "Martinet malais — Birds of Singapore, Bird Society of Singapore"
+    }
+  ]
+}

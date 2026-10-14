@@ -1,0 +1,239 @@
+{
+  "id": "apistogramma_viejita",
+  "scientific": "Apistogramma viejita",
+  "group": "fish",
+  "name": {
+    "en": "Red-edge Dwarf Cichlid",
+    "fr": "Apistogramme viejita"
+  },
+  "sections": {
+    "overview": {
+      "en": "Apistogramma viejita is a small cichlid described by Sven Kullander in 1979 from Colombia's Orinoco drainage. Its type locality is a small stream near Puerto Gaitán in the Meta basin. The Spanish name viejita means “little old woman” and is a regional vernacular for cichlids.",
+      "fr": "Apistogramma viejita est un petit cichlidé décrit par Sven O. Kullander en 1979 dans le bassin colombien de l’Orénoque. Sa localité type est un petit cours d’eau près de Puerto Gaitán, dans le bassin du Meta. Le nom espagnol viejita signifie « petite vieille » et sert de nom vernaculaire à des cichlidés de la région."
+    },
+    "identification": {
+      "en": "It has a slender body, rounded tail and long dorsal-fin lappets; the male anal-fin filament can reach the tail margin. FishBase lists a male or unsexed maximum of 3 cm standard length and a female value of about four and a half centimetres, without specifying the latter convention. The Spanish revision reports one specimen at about 47 mm standard length, so these records do not establish a reliable sex-specific range. Species accounts give no body mass or directly comparable overall width and height measurements. Compared with Apistogramma macmasteri, specialists describe viejita as more slender, with longer male fin tips; many aquarium fish sold as viejita are macmasteri, so colour or shop labels alone are unreliable.",
+      "fr": "Son corps est élancé, sa queue arrondie et ses membranes dorsales longues ; le filament anal du mâle peut atteindre le bord de la queue. FishBase indique une longueur standard maximale de 3 cm pour un mâle ou un spécimen de sexe inconnu, et une valeur d’environ quatre centimètres et demi pour une femelle sans préciser cette convention. La révision espagnole rapporte un spécimen d’environ 47 mm de longueur standard ; ces données n’établissent pas une fourchette fiable selon le sexe. Les fiches d’espèce ne donnent ni masse ni mesure globale comparable de largeur ou de hauteur. Comparée à Apistogramma macmasteri, les spécialistes décrivent viejita comme plus élancée, avec des nageoires plus longues chez le mâle ; beaucoup de poissons vendus sous ce nom en aquarium sont des macmasteri, et la couleur ou l’étiquette commerciale ne suffisent pas à les identifier."
+    },
+    "habitat": {
+      "en": "The Spanish revision records it in lagoons of the middle Meta near Puerto López and in Cataniapo. At Meta sites it reports clear, low-conductivity water with pH around 5–6. FishBase summarizes the range as Colombia's upper Meta basin in the Orinoco.",
+      "fr": "La révision espagnole la signale dans les lagunes du moyen Meta, près de Puerto López, et du Cataniapo. Aux sites du Meta, elle décrit une eau claire et peu conductrice, de pH environ 5 à 6. FishBase résume son aire au haut bassin colombien du Meta, dans l’Orénoque."
+    },
+    "diet": {
+      "en": "FishBase gives no species-specific prey list; its estimated trophic level is inferred from close relatives, so a precise wild diet remains undocumented in the sources reviewed.",
+      "fr": "FishBase ne fournit pas de liste de proies propre à l’espèce ; son niveau trophique estimé est déduit de proches parents, et les sources consultées ne documentent donc pas précisément son régime à l’état sauvage."
+    },
+    "behavior": {
+      "en": "FishBase reports that males may spawn with several females when females are abundant, consistent with a harem-forming social arrangement.",
+      "fr": "FishBase rapporte que les mâles peuvent se reproduire avec plusieurs femelles lorsque celles-ci sont nombreuses, ce qui correspond à une organisation en harem."
+    },
+    "reproduction": {
+      "en": "The female attaches the eggs to the ceiling of a cave and tends the clutch; FishBase records up to about 100 eggs.",
+      "fr": "La femelle fixe les œufs au plafond d’une cavité et garde la ponte ; FishBase en rapporte jusqu’à une centaine."
+    },
+    "ecology": {
+      "en": "Kullander placed viejita among closely related Orinoco forms that include Apistogramma macmasteri and Apistogramma hongsloi.",
+      "fr": "Kullander a placé viejita parmi les formes apparentées de l’Orénoque, avec Apistogramma macmasteri et Apistogramma hongsloi."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists Apistogramma viejita as Least Concern, assessed on 6 August 2020; that category is an assessment date, not a guarantee that every local population is secure.",
+      "fr": "L’évaluation mondiale de l’UICN classe Apistogramma viejita en préoccupation mineure, selon l’évaluation du 6 août 2020 ; cette catégorie correspond à une date d’évaluation et ne garantit pas la sécurité de chaque population locale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apistogramma viejita — FishBase species summary",
+        "fr": "Apistogramma viejita — fiche de synthèse FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Apistogramma-viejita.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Records length, Orinoco range, cave spawning, harem spawning and global IUCN assessment."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.4",
+        "habitat.en.3",
+        "diet.en.1",
+        "behavior.en.1",
+        "reproduction.en.1",
+        "conservation.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 12,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma viejita — FishBase Spanish-language summary",
+        "fr": "Apistogramma viejita — fiche FishBase en espagnol"
+      },
+      "url": "https://www.fishbase.se/summary/SpeciesSummary.php?id=46716&lang=spanish",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish entry cross-checks reported lengths, range, spawning notes and IUCN category."
+      ],
+      "prose_claims": [
+        "identification.fr.2",
+        "identification.fr.4",
+        "habitat.fr.3",
+        "diet.fr.1",
+        "behavior.fr.1",
+        "reproduction.fr.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 11,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "III. Revision of the genus Apistogramma in the Orinoco basin — Lina Mesa Salazar (Spanish)",
+        "fr": "III. Révision du genre Apistogramma dans le bassin de l’Orénoque — Lina Mesa Salazar (en espagnol)"
+      },
+      "url": "https://www.mikolji.com/wp-content/uploads/2019/05/Libro-REVISION-DEL-GENERO-Apistogramma-EN-LA-CUENCA-DEL-RIO-ORINOCO.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The Spanish ichthyological revision gives local records, diagnostic fin traits, morphometrics and lagoon conditions."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 14,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Species of Apistogramma from the Orinoco Drainage Basin — Sven O. Kullander (1979)",
+        "fr": "Species of Apistogramma from the Orinoco Drainage Basin — Sven O. Kullander (1979)"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6409.1979.tb00620.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The original paper describes viejita near Puerto Gaitán and places it among closely related Orinoco forms."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 16,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apistogramma viejita and Apistogramma macmasteri — specialist identification discussion",
+        "fr": "Apistogramma viejita et Apistogramma macmasteri — discussion spécialisée sur leur identification"
+      },
+      "url": "https://apistogramma.com/forum/threads/please-id-macmasteri-viejita-or-an-other.4592/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "An Apistogramma specialist compares fin shape and reports recurrent trade misidentifications."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 11,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ETYFish — Cichlidae name etymologies",
+        "fr": "ETYFish — étymologie des noms de Cichlidae"
+      },
+      "url": "https://etyfish.org/cichlidae6/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The epithet is a Spanish diminutive of vieja, a regional cichlid name."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 12,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict a small, slender dwarf cichlid with rounded caudal fin, long pointed dorsal-fin lappets and a dark mid-flank band; make the adult male's fin extensions visible without assigning a specific aquarium colour form.",
+  "uncertainties": [
+    "Size sources disagree: FishBase gives 3.0 cm standard length for male or unknown sex and 4.6 cm for female without specifying that latter convention, while the Spanish revision reports a single 47.14 mm standard-length specimen. These observations are not a well-sampled sex-specific size range.",
+    "No consulted source reports body mass, body width or body height, or a species-specific prey list.",
+    "The original paper treats viejita and macmasteri as members of a related Orinoco group; this does not by itself settle their precise modern phylogenetic relationship."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase, the English original description, and a Spanish-language ichthyological revision. Kept the reported size conventions and sample limitation explicit, and framed A. macmasteri as a close identification comparison rather than asserting an exact sister-species relationship."
+}

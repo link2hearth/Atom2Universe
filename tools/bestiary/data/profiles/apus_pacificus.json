@@ -1,0 +1,264 @@
+{
+  "id": "apus_pacificus",
+  "scientific": "Apus pacificus",
+  "group": "birds",
+  "name": {
+    "en": "Pacific Swift",
+    "fr": "Martinet de Sibérie"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Pacific Swift is a large, dark swift that breeds in eastern and northern Asia and migrates south to Southeast Asia and Australasia. It spends most of its time in fast, sustained flight above cliffs, forests and open country.",
+      "fr": "Le martinet de Sibérie est un grand martinet sombre qui se reproduit en Asie orientale et septentrionale puis migre vers le sud-est asiatique et l’Australasie. Il passe l’essentiel de son temps en vol rapide et soutenu au-dessus des falaises, forêts et espaces ouverts."
+    },
+    "identification": {
+      "en": "Adults usually measure 17–21 cm long, have a 43–54 cm wingspan and weigh about 42–43 g. Japanese measurements for the local subspecies give 17.9–20.5 cm body length, 170–195 mm wing length, 10–13 mm tarsus and 39–56 g mass. Sexes look alike; no sex-specific size difference is reported. The body is dark, with a bright white rump and pale throat, long sickle-shaped wings and a deeply forked tail. White feather edges make the underside look scaled. Compared with the House Swift, Apus nipalensis, it is larger and longer-winged, with a deeper tail fork and clearer pale scalloping below; the House Swift is smaller, shorter-tailed and more uniformly dark underneath.",
+      "fr": "Les adultes mesurent généralement 17 à 21 cm, ont une envergure de 43 à 54 cm et pèsent environ 42 à 43 g. Les mesures japonaises de la sous-espèce locale donnent 17,9 à 20,5 cm de longueur corporelle, 170 à 195 mm d’aile, 10 à 13 mm de tarse et 39 à 56 g. Sexes semblables; aucune différence de taille n’est établie. Le corps est sombre, avec un croupion blanc éclatant et la gorge pâle, de longues ailes en faucille et une queue profondément fourchue. Les liserés blancs des plumes donnent aux dessous un aspect écailleux. Comparé au martinet malais, Apus nipalensis, il est plus grand et a des ailes plus longues, une fourche plus profonde et des écaillures pâles plus nettes dessous; le martinet malais est plus petit, a la queue plus courte et les dessous plus uniformément sombres."
+    },
+    "habitat": {
+      "en": "It occurs across coastal, forested and open landscapes, nesting mainly in cliff crevices and cavities, sometimes in caves or sheltered building sites. Japanese birds arrive for the summer, while northern and eastern populations migrate south for winter.",
+      "fr": "Il fréquente les milieux côtiers, forestiers et ouverts, et niche surtout dans les crevasses et cavités des falaises, parfois dans des grottes ou des parties abritées de bâtiments. Au Japon, il vient en été, tandis que les populations du nord et de l’est migrent vers le sud pour l’hiver."
+    },
+    "diet": {
+      "en": "It catches flying insects in open air, often circling through swarms. Prey include flies, bees, wasps, termites, beetles and moths.",
+      "fr": "Il capture des insectes en plein vol, souvent en tournoyant dans les essaims. Ses proies comprennent mouches, abeilles, guêpes, termites, coléoptères et papillons nocturnes."
+    },
+    "behavior": {
+      "en": "Its fast flight alternates shallow wingbeats with glides, and large flocks can form during migration. Long journeys connect Asian breeding areas with tropical wintering grounds, although timing varies among populations.",
+      "fr": "Son vol rapide alterne des battements peu amples avec des glissés, et de grands groupes peuvent se former pendant la migration. Ses longs trajets relient les sites de reproduction asiatiques aux quartiers d’hiver tropicaux, selon un calendrier qui varie entre populations."
+    },
+    "reproduction": {
+      "en": "It nests in colonies on cliffs and other rocky surfaces, using ledges, cavities and crevices; some populations also use sheltered parts of buildings. Both adults share nesting duties, but comparable clutch and incubation figures are unavailable across the species’ range.",
+      "fr": "Il niche en colonies sur les falaises et autres parois rocheuses, dans les corniches, cavités et crevasses; certaines populations utilisent aussi des parties abritées de bâtiments. Les deux adultes partagent les tâches du nid, mais les sources ne donnent pas de chiffres comparables de ponte et d’incubation pour toute l’aire."
+    },
+    "ecology": {
+      "en": "As an aerial insectivore, it feeds above land and coastal habitats and depends on abundant flying prey; its migration links distant breeding and wintering ecosystems.",
+      "fr": "Insectivore aérien, il chasse au-dessus des milieux terrestres et côtiers et dépend de proies volantes abondantes; sa migration relie des écosystèmes de reproduction et d’hivernage éloignés."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment, amended in 2019 from its 2016 evaluation, classifies the species as Least Concern. In Japan, a government assessment of the local subspecies reports a stable or expanding mapped range but fewer survey records and individuals, and suggests that feeding habitat may be worsening.",
+      "fr": "L’évaluation mondiale de l’UICN, amendée en 2019 à partir de celle de 2016, classe l’espèce en préoccupation mineure. Au Japon, une évaluation gouvernementale de la sous-espèce locale rapporte une aire cartographiée stable ou en expansion, mais moins de parcours positifs et d’individus observés; elle estime que les milieux d’alimentation pourraient se dégrader."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pacific Swift — Japanese Ministry of the Environment, Red Data Book",
+        "fr": "Martinet de Sibérie — Livre rouge du ministère japonais de l’Environnement"
+      },
+      "url": "https://ikilog.biodic.go.jp/rl_rdb/a/843.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Japanese assessment of Apus pacificus kurodae: measurements, sex plumage, habitat and local trend."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 13,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Martinet de Sibérie — Oiseaux-Birds.com",
+        "fr": "Martinet de Sibérie — Oiseaux-Birds.com"
+      },
+      "url": "https://www.oiseaux-birds.com/fiche-martinet-de-siberie.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French field account."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 3,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pacific Swift — eBird, Cornell Lab of Ornithology",
+        "fr": "Martinet de Sibérie — eBird, Cornell Lab of Ornithology"
+      },
+      "url": "https://ebird.org/species/fotswi",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Field identification: large dark swift with white rump, pale throat and deep forked tail."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 14,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pacific Swift — British Trust for Ornithology BirdFacts",
+        "fr": "Martinet de Sibérie — BirdFacts du British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/pacific-swift",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "BTO records eastern Asia–Australasia migration and global IUCN Least Concern status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 11,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pacific Swift Apus pacificus — IUCN Red List, amended 2019 assessment",
+        "fr": "Martinet de Sibérie Apus pacificus — Liste rouge UICN, amendement 2019"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22686845A155438660.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife International 2019 amended version of its 2016 global assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 10,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "アマツバメ — National Institute for Land and Infrastructure Management, Japan",
+        "fr": "アマツバメ — Institut national japonais des infrastructures et territoires"
+      },
+      "url": "https://www.nilim.go.jp/lab/bcg/siryou/tnn/tnn1094pdf/ks1094appendix.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Japanese technical report describes range, movement, body length and cliff nesting."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 100,
+        "notes_words": 11,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Increasing occurrence of House Swift in Australia — Corella",
+        "fr": "Progression des observations de martinet malais en Australie — Corella"
+      },
+      "url": "https://absa.asn.au/wp-content/uploads/2022/11/FINAL_14_V46_Pg68-75_HouseSwifts_PMKYne_V3.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Comparative field descriptions distinguish House Swift and Pacific Swift."
+      ],
+      "prose_claims": [
+        "identification.en.6",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 9,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Body mass figures differ by source and population: the French account reports 42–43 g, while Japanese government figures describe the local subspecies Apus pacificus kurodae at 39–56 g.",
+    "Older sources differ on the taxonomic limits of the Pacific Swift complex; this profile follows Apus pacificus as a species and does not merge other named swift species into it."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked French ornithological material, English eBird and BTO accounts, and Japanese government assessments; kept species-level measurements distinct from Japanese subspecies data."
+}

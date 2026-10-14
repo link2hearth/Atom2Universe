@@ -1,0 +1,46 @@
+{
+  "id": "arctonotus_lucidus",
+  "name": "Pacific Green Sphinx",
+  "scientific": "Arctonotus lucidus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The catalogue retains Arctonotus lucidus, its original combination; molecular work placed it within Proserpinus, so the accepted name is Proserpinus lucidus. English sources call it the Pacific Green Sphinx, while the 2009 revisers preferred Bear Sphinx.",
+    "identification": "Adults have a wingspan of about 4.8–6.1 cm and a short, stout body; the sources reviewed give no separate male and female size ranges. The forewings are green to olive with purple-pink bands, and the hindwings are rose-pink with a darker red band near the edge. The male's ciliate antennae and unusually heavy, woolly-looking vestiture helped distinguish the old genus Arctonotus, but molecular evidence now places it among Proserpinus. Young caterpillars have a small black anal horn; later instars lose the horn and develop a conspicuous yellow-ringed eyespot at the tail end. The late caterpillar varies from green to pink or nearly black, with pale bands and lines; it can be confused with the related Proserpinus clarkiae, but the two have different larval markings.",
+    "habitat": "Its Pacific North American range includes California, Oregon, Washington and Idaho, where it inhabits oak woodland and grassland.",
+    "diet": "The caterpillars feed on evening-primrose relatives in the family Onagraceae, including Clarkia, Camissonia and Oenothera. Field observations confirm Clarkia breweri and Clarkia modesta as host plants; other plants have been used in rearing but are less certain as wild hosts.",
+    "behavior": "Adults fly in winter and early spring, from December in southern California to April in Washington and British Columbia. They are nocturnal, come to lights, and do not feed because their proboscis is vestigial.",
+    "reproduction": "Females deposit eggs singly or in pairs; in one captive study, two females laid 380 eggs in total, so this count is a small laboratory sample. Larvae began pupating about four to five weeks after hatching, sometimes underground in host-plant roots, and the pupae produced adults the following winter.",
+    "ecology": "This winter-flying sphinx is adapted to open woodland: US Forest Service guidance notes that infrequent controlled burns or thinning can preserve suitable openings. Its pupae can develop when surface temperatures still fall below freezing.",
+    "conservation": "NatureServe ranks it G5, globally secure, though it may be rare at range edges and affected by invasive weeds."
+  },
+  "sources": [
+    {
+      "url": "https://images.peabody.yale.edu/lepsoc/jls/2000s/2009/2009-63-4-233.pdf",
+      "title": "Synonymization of Arctonotus based on molecular phylogeny — Journal of the Lepidopterists’ Society"
+    },
+    {
+      "url": "https://www.nhm.ac.uk/our-science/data/lepindex/detail?taxonno=55416",
+      "title": "Proserpinus lucidus — LepIndex, Natural History Museum, London"
+    },
+    {
+      "url": "https://www.butterfliesandmoths.org/species/Proserpinus-lucidus",
+      "title": "Pacific Green Sphinx — Butterflies and Moths of North America"
+    },
+    {
+      "url": "https://www.fs.usda.gov/foresthealth/technology/pdfs/MILLER_LEPIDOPTERA_WEB.pdf",
+      "title": "Arctonotus lucidus — Pacific Northwest Forest Service Lepidoptera profiles"
+    },
+    {
+      "url": "https://images.peabody.yale.edu/lepsoc/jls/2000s/2001/2001-55(2)78-Rubinoff.pdf",
+      "title": "Observations of adult and larval behavior in the winter sphingid — Journal of the Lepidopterists’ Society"
+    },
+    {
+      "url": "https://images.peabody.yale.edu/lepsoc/jls/1990s/1999/1999-53(4)169-Cordero.pdf",
+      "title": "Additional notes on Proserpinus clarkiae and Arctonotus lucidus life histories — Journal of the Lepidopterists’ Society"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Proserpinus_lucidus",
+      "title": "Proserpinus lucidus — French-language overview of the species"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "ariteus_flavescens",
+  "name": "Arite de la Jamaïque",
+  "scientific": "Ariteus flavescens",
+  "group": "mammals",
+  "sections": {
+    "overview": "Ariteus flavescens est une chauve-souris frugivore à nez en feuille de la famille des Phyllostomidae. C’est l’unique espèce actuelle de son genre, endémique de la Jamaïque.",
+    "identification": "La longueur tête-corps est d’environ 50 à 60 mm chez le mâle et 63 à 67 mm chez la femelle; la queue est absente. Le mâle pèse environ 9,2 à 12,9 g et la femelle 12,4 à 13,1 g; son avant-bras est également plus long. Le pelage est brun rougeâtre dessus et plus pâle dessous, avec des taches blanches nettes sur les épaules; la grande feuille nasale se termine par un bord inférieur caractéristique en forme de fourche. Elle est apparentée aux chauves-souris arboricoles antillaises de la tribu des Stenodermatini, mais sa petite taille et sa feuille nasale singulière la distinguent de ces cousines proches.",
+    "habitat": "Elle vit uniquement en Jamaïque, du niveau de la mer jusqu’à environ 1 500 m d’altitude. Elle a été observée en forêt primaire et secondaire, dans les pâturages, le long des rivières ainsi que dans des vergers et plantations fruitières.",
+    "diet": "Elle mange des fruits, notamment des figues, des sapotilles (Manilkara zapota) et des pommes roses; des observations de terrain la montrent aussi sur les fruits du fustic. Son régime reste peu étudié et pourrait inclure quelques insectes en complément.",
+    "behavior": "Cette chauve-souris arboricole et nocturne commence à voler et à s’alimenter vers le crépuscule. Les chercheurs l’ont capturée en forêt, dans des arbres en bordure de pâturage, des vergers et des plantations fruitières; les grottes ne sont pas considérées comme son gîte habituel.",
+    "reproduction": "Les rares données suggèrent que les naissances pourraient avoir lieu plusieurs fois par an: des femelles gestantes ont été observées en avril et en juin-juillet, et des femelles allaitantes en juin-juillet. Cet échantillon réduit ne permet pas de décrire le calendrier de reproduction sur toute l’île.",
+    "ecology": "Au crépuscule, elle peut rejoindre des rassemblements de chauves-souris d’espèces différentes dans les arbres fruitiers; des chercheurs l’ont observée partageant les fruits avec d’autres chauves-souris jamaïcaines. Elle consomme ainsi des fruits forestiers et cultivés pendant la nuit.",
+    "conservation": "L’évaluation de l’UICN publiée en 2019 la classe en préoccupation mineure, en raison de sa tolérance à plusieurs habitats et d’une population présumée importante; sa tendance démographique reste inconnue et les grands ouragans sont une menace possible."
+  },
+  "sources": [
+    {
+      "url": "https://academic.oup.com/mspecies/article/doi/10.1644/787.1/2600197",
+      "title": "Ariteus flavescens — Mammalian Species"
+    },
+    {
+      "url": "https://tb.plazi.org/GgServer/html/03A687BCFFD1FFD1138BF3E4F90AFA51",
+      "title": "Ariteus flavescens — traitement de Mammalian Species, Plazi TreatmentBank"
+    },
+    {
+      "url": "https://www.depts.ttu.edu/nsrl/publications/downloads/SP48.pdf",
+      "title": "Chauves-souris de Jamaïque — Museum of Texas Tech University"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-1.RLTS.T2110A21992222.en",
+      "title": "Ariteus flavescens — évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://de.wikipedia.org/wiki/Jamaika-Feigenfledermaus",
+      "title": "Chauve-souris mangeuse de figues de Jamaïque — fiche en allemand"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Ariteus_flavescens",
+      "title": "Ariteus flavescens — présentation en français"
+    },
+    {
+      "url": "https://batnames.org/genera/Ariteus",
+      "title": "Ariteus flavescens — base Bat Species of the World de l’American Museum of Natural History"
+    }
+  ]
+}

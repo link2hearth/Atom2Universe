@@ -1,0 +1,271 @@
+{
+  "id": "aplysia_dactylomela",
+  "scientific": "Aplysia dactylomela",
+  "group": "invertebrates",
+  "name": {
+    "en": "Spotted Sea Hare",
+    "fr": "Lièvre de mer ocellé"
+  },
+  "sections": {
+    "overview": {
+      "en": "Aplysia dactylomela is a large marine sea hare, a gastropod mollusc described by Rang in 1828.",
+      "fr": "Aplysia dactylomela est un grand lièvre de mer, un mollusque gastéropode décrit par Rang en 1828. Ses anneaux sombres caractéristiques lui valent les noms de spotted sea hare en anglais et de lièvre de mer ocellé en français."
+    },
+    "identification": {
+      "en": "Its soft oval body bears irregular black rings, flecks and pale spots across the mantle and side flaps; its colour varies with diet. Broad parapodia partly cover a thin internal shell, while the head has long ear-shaped rhinophores and shorter oral tentacles. Adults often measure 7–15 cm and may reach 40 cm. A Jamaican feeding study used mature animals weighing 400–600 g; this laboratory sample is not a typical species-wide mass range. The consulted accounts give no standardized body width or height. The Indo-Pacific Aplysia argus was long called A. dactylomela, but genetic evidence separates them.",
+      "fr": "Son corps mou et ovale porte des anneaux noirs irréguliers, des taches et des points pâles sur le manteau et ses lobes latéraux ; sa couleur varie selon l’alimentation. De larges parapodes recouvrent en partie une fine coquille interne ; la tête porte des rhinophores allongés en forme d’oreilles et des tentacules buccaux plus courts. Les adultes mesurent souvent de 7 à 15 cm et peuvent atteindre 40 cm. Une étude alimentaire en Jamaïque a utilisé des animaux adultes pesant de 400 à 600 g ; cet échantillon de laboratoire ne définit pas la masse habituelle de l’espèce. Les fiches consultées ne donnent pas de largeur ou de hauteur corporelle standardisée. L’Aplysia argus indo-pacifique a longtemps été appelée A. dactylomela, mais la génétique distingue les deux espèces."
+    },
+    "habitat": {
+      "en": "It grazes in shallow tropical and subtropical coastal waters, especially tide pools, rocky or sandy bottoms and seagrass or algal beds. Records extend to about 40 m, although most observations are from much shallower water.",
+      "fr": "Elle broute dans les eaux côtières tropicales et subtropicales peu profondes, notamment les mares de marée, les fonds rocheux ou sableux et les herbiers ou prairies d’algues. Des observations atteignent environ 40 m de profondeur, mais la plupart proviennent d’eaux bien plus superficielles."
+    },
+    "diet": {
+      "en": "It is herbivorous, scraping red and green seaweeds with its jaws and radula; Jamaican observations found a preference for red algae, but it also eats Ulva and other greens. Pigments from algal food can alter the colour of its egg strings.",
+      "fr": "Elle est herbivore et râpe des algues rouges et vertes avec ses mâchoires et sa radula ; des observations en Jamaïque indiquent une préférence pour les algues rouges, mais elle consomme aussi Ulva et d’autres algues vertes. Les pigments de son alimentation peuvent modifier la couleur de ses cordons d’œufs."
+    },
+    "behavior": {
+      "en": "During daylight it often shelters beneath rocks or in crevices, then forages after dusk. It usually crawls but can swim briefly by undulating its broad parapodia; when threatened, it may release purple defensive ink.",
+      "fr": "Le jour, elle se cache souvent sous des rochers ou dans des fissures, puis recherche sa nourriture après la tombée de la nuit. Elle se déplace surtout en rampant, mais peut nager brièvement en ondulant ses larges parapodes ; menacée, elle peut libérer une encre défensive violette."
+    },
+    "reproduction": {
+      "en": "Like other sea hares, it is a simultaneous hermaphrodite: each adult has male and female reproductive organs, and several may mate in a chain. It lays long, tangled gelatinous egg strings; planktonic veliger larvae hatch, then settle and develop into juveniles.",
+      "fr": "Comme les autres lièvres de mer, c’est un hermaphrodite simultané : chaque adulte possède des organes reproducteurs mâles et femelles, et plusieurs peuvent s’accoupler en chaîne. Elle pond de longs cordons d’œufs gélatineux et enchevêtrés ; les larves véligères planctoniques éclosent, puis se fixent et deviennent des juvéniles."
+    },
+    "ecology": {
+      "en": "The species is native to the Atlantic, including the Caribbean, and was first reported in the Mediterranean in 2002. Genetic work confirms that sampled Mediterranean animals belong to the Atlantic species, but the arrival route remains uncertain. Indo-Pacific look-alikes belong to Aplysia argus.",
+      "fr": "L’espèce est native de l’Atlantique, notamment des Caraïbes, et a été signalée pour la première fois en Méditerranée en 2002. Les analyses génétiques confirment que les individus méditerranéens étudiés appartiennent à l’espèce atlantique, mais leur voie d’arrivée reste incertaine. Les formes ressemblantes de l’Indo-Pacifique appartiennent à Aplysia argus."
+    },
+    "conservation": {
+      "en": "Aplysia dactylomela has not been evaluated for the IUCN Red List. Its Mediterranean expansion is monitored as a non-native occurrence, but the sources reviewed do not establish a global population trend or a quantified ecological impact.",
+      "fr": "Aucune évaluation de l’espèce n’apparaît sur la Liste rouge de l’Union internationale pour la conservation de la nature. Son expansion en Méditerranée fait l’objet d’un suivi comme présence non indigène, mais les sources consultées n’établissent ni tendance mondiale des effectifs ni impact écologique quantifié."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Aplysia dactylomela — DORIS species sheet (French)",
+        "fr": "Aplysia dactylomela — fiche espèce DORIS"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Aplysia-dactylomela-Lievre-de-mer-ocelle-2375",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French marine-species sheet describes appearance, dimensions, habitats, algae diet, movement and mating."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "overview.fr.2",
+        "identification.fr.3",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "diet.fr.1",
+        "behavior.fr.2",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 12,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aplysia dactylomela — OPK Opistobranquis guide (Spanish)",
+        "fr": "Aplysia dactylomela — guide OPK Opistobranquis (espagnol)"
+      },
+      "url": "https://opistobranquis.info/es/guia/aplysiida/aplysia-dactylomela/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Spanish-language guide cross-checks rings, parapodia, shallow habitat, algal food, swimming, defensive fluid and chain mating."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "habitat.en.2",
+        "diet.en.1",
+        "behavior.en.2",
+        "reproduction.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 15,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The origin and dispersal pathway of Aplysia dactylomela in the Mediterranean Sea — Valdés et al. (2013)",
+        "fr": "The origin and dispersal pathway of Aplysia dactylomela in the Mediterranean Sea — Valdés et al. (2013)"
+      },
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/310025.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Molecular sampling distinguishes Atlantic A. dactylomela from Indo-Pacific A. argus and confirms the Atlantic identity of Mediterranean specimens."
+      ],
+      "prose_claims": [
+        "identification.en.6",
+        "identification.fr.6",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 121,
+        "notes_words": 18,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Distribution of mycosporine-like amino acids in Aplysia dactylomela — Carefoot et al. (1998)",
+        "fr": "Distribution of mycosporine-like amino acids in Aplysia dactylomela — Carefoot et al. (1998)"
+      },
+      "url": "https://fire.biol.wwu.edu/donovan/papers/Aplysia_maa.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "A Jamaican study reports mature experimental animals of 400–600 g and documents diet-dependent pigment transfer into spawn."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 113,
+        "notes_words": 17,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aplysia dactylomela — IUCN MedMIS species sheet",
+        "fr": "Aplysia dactylomela — fiche espèce IUCN MedMIS"
+      },
+      "url": "https://iucn-medmis.org/en/species/aplysia-dactylomela",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "MedMIS describes the body pattern, shell, head tentacles, size, habitat and Mediterranean occurrence; ADW reports no IUCN assessment."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.en.5",
+        "identification.fr.5",
+        "habitat.en.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 18,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aplysia dactylomela — SeaLifeBase species summary",
+        "fr": "Aplysia dactylomela — fiche de synthèse SeaLifeBase"
+      },
+      "url": "https://www.sealifebase.org/summary/Aplysia-dactylomela.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "SeaLifeBase reports the current global IUCN Red List category as Not Evaluated."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 12,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "WoRMS — Aplysia dactylomela taxon record",
+        "fr": "WoRMS — fiche taxonomique d’Aplysia dactylomela"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?p=taxdetails&id=138753",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "WoRMS lists the accepted marine gastropod name and authority Rang, 1828."
+      ],
+      "prose_claims": [
+        "overview.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 16,
+        "notes_words": 11,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a soft oval sea hare with a yellow-green to olive body, distinctive irregular black rings and pale speckles on the mantle and parapodia; include the ear-like rhinophores and broad side flaps.",
+  "uncertainties": [
+    "Length sources differ: some field guides give common adult sizes of 7–15 cm, while maximum accounts report 40 cm; the laboratory mass of 400–600 g came from one Jamaican mature sample and is not a species-wide size estimate.",
+    "No standardized body height or width measurement was found. The mantle can change shape as the animal extends or contracts, which limits simple external width comparisons.",
+    "The Mediterranean arrival route remains unresolved; genetic evidence confirms Atlantic origin but does not distinguish natural dispersal from human-assisted transport."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked French and Spanish field guides with a molecular Mediterranean study and a Jamaican feeding experiment. Kept observed adult mass separate from species-wide maxima and updated the Indo-Pacific comparison to A. argus."
+}
