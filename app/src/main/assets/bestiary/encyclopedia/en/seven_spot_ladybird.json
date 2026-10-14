@@ -1,0 +1,30 @@
+{
+  "id": "seven_spot_ladybird",
+  "name": "Seven-spot ladybird",
+  "scientific": "Coccinella septempunctata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The seven-spot ladybird is a familiar predatory beetle.",
+    "identification": "Adults usually have red wing cases with seven black spots; other species can resemble them.",
+    "habitat": "It lives on vegetation in gardens, parks and woodland edges.",
+    "diet": "Aphids are its main prey, although it can also take other small invertebrates and supplementary foods.",
+    "behavior": "Both larvae and adults hunt on plants, and adults shelter in protected places during winter.",
+    "reproduction": "Females lay eggs on plants near prey; larvae hatch and pass through several growth stages before pupating.",
+    "ecology": "By consuming aphids, it is a predator in plant-based food webs and can contribute to natural pest control.",
+    "conservation": "The Woodland Trust describes it as common in Britain and not a UK species of conservation concern; this is not a global assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/beetles/7-spot-ladybird/",
+      "title": "Seven-spot ladybird — Woodland Trust"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/invertebres/coccinelle-a-sept-points",
+      "title": "Coccinelle à sept points — LPO"
+    },
+    {
+      "url": "https://encyclopedie-pucerons.hub.inrae.fr/fiche-especes/predateurs-insectes/coleoptera-coccinellidae/coccinella-septempunctata",
+      "title": "Coccinella septempunctata — INRAE aphid encyclopedia"
+    }
+  ]
+}

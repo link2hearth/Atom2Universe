@@ -1,0 +1,117 @@
+{
+  "id": "zebrafish",
+  "scientific": "Danio rerio",
+  "group": "fish",
+  "name": {
+    "en": "Zebrafish",
+    "fr": "Poisson-zèbre"
+  },
+  "sections": {
+    "overview": {
+      "en": "Danio rerio is a small freshwater fish native to South Asia.",
+      "fr": "Danio rerio est un petit poisson d’eau douce originaire d’Asie du Sud."
+    },
+    "identification": {
+      "en": "Its name refers to the conspicuous dark horizontal stripes running along the body and onto the tail.",
+      "fr": "Son nom évoque les bandes horizontales sombres qui parcourent le corps et se prolongent sur la queue."
+    },
+    "habitat": {
+      "en": "It is recorded from slow or still waters, including streams, ponds, canals and rice-field habitats.",
+      "fr": "On le trouve dans des eaux lentes ou stagnantes, notamment des ruisseaux, étangs, canaux et rizières."
+    },
+    "diet": {
+      "en": "Wild fish eat small invertebrates, including worms, crustaceans and insect larvae.",
+      "fr": "À l’état sauvage, il consomme de petits invertébrés, notamment des vers, des crustacés et des larves d’insectes."
+    },
+    "behavior": {
+      "en": "Field observations describe it among South Asian danionin fishes occupying freshwater sites with varied flow conditions.",
+      "fr": "Des observations de terrain le situent parmi les danioninés d’Asie du Sud fréquentant des eaux aux courants variés."
+    },
+    "reproduction": {
+      "en": "FishBase reports year-round breeding in the populations covered by its species account.",
+      "fr": "FishBase signale une reproduction toute l’année pour les populations couvertes par sa fiche."
+    },
+    "ecology": {
+      "en": "Studies of danionin fishes report insects as an important natural food resource, with diet varying among species and sites.",
+      "fr": "Les études sur les danioninés signalent l’importance des insectes dans leur alimentation naturelle, qui varie selon les espèces et les sites."
+    },
+    "conservation": {
+      "en": "FishBase displays a Least Concern assessment dated 2009; this is an older assessment, not a current population survey.",
+      "fr": "FishBase affiche une évaluation « Préoccupation mineure » datée de 2009 ; elle ne constitue pas un suivi actuel des populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — Danio rerio (French page)",
+        "fr": "FishBase — Danio rerio (French page)"
+      },
+      "url": "https://fishbase.se/Summary/SpeciesSummary.php?id=4653&lang=french",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase summarizes distribution, striped appearance, habitats, food, breeding and its dated Red List status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 14,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Natural diet and habitat of eight danionin fishes — Journal of Fish Biology",
+        "fr": "Natural diet and habitat of eight danionin fishes — Journal of Fish Biology"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1095-8649.2006.01125.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The field study compares diet and habitat at sites in India and Thailand."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 13,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Concise bilingual draft; claims remain scoped to the cited account and geography."
+}

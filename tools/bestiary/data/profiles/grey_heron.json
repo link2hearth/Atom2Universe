@@ -1,0 +1,119 @@
+{
+  "id": "grey_heron",
+  "scientific": "Ardea cinerea",
+  "group": "birds",
+  "name": {
+    "en": "Grey heron",
+    "fr": "Héron cendré"
+  },
+  "sections": {
+    "overview": {
+      "en": "The grey heron is a widespread wading bird that hunts by waiting or moving slowly through shallow water.",
+      "fr": "Le héron cendré est un échassier largement répandu qui chasse à l’affût ou en avançant lentement dans l’eau peu profonde."
+    },
+    "identification": {
+      "en": "It has a grey back, pale neck, dark head stripe and long bill; in flight it folds its neck into an S shape.",
+      "fr": "Il a le dos gris, le cou pâle, une bande sombre sur la tête et un long bec ; en vol, il replie son cou en forme de S."
+    },
+    "habitat": {
+      "en": "It forages around lakes, rivers, marshes and estuaries, including both fresh and brackish waters.",
+      "fr": "Il recherche sa nourriture autour des lacs, rivières, marais et estuaires, en eau douce comme saumâtre."
+    },
+    "diet": {
+      "en": "Fish are frequent prey, but it also takes amphibians, small mammals and other animals within striking range.",
+      "fr": "Les poissons sont des proies fréquentes, mais il capture aussi des amphibiens, de petits mammifères et d’autres animaux à sa portée."
+    },
+    "behavior": {
+      "en": "A heron may remain motionless before striking rapidly with its bill; individuals often feed alone.",
+      "fr": "Le héron peut rester immobile avant de frapper rapidement du bec ; les individus se nourrissent souvent seuls."
+    },
+    "reproduction": {
+      "en": "It commonly nests colonially in trees, in groups known as heronries.",
+      "fr": "Il niche souvent en colonies dans les arbres, au sein de groupes appelés héronnières."
+    },
+    "ecology": {
+      "en": "Its varied prey links wetland food webs, and its feeding range can extend beyond the water’s edge.",
+      "fr": "La diversité de ses proies le relie aux réseaux alimentaires des zones humides, et il peut se nourrir au-delà des berges."
+    },
+    "conservation": {
+      "en": "The RSPB lists the species as Green in its UK conservation-status system; this is a regional assessment.",
+      "fr": "La RSPB classe l’espèce en catégorie Green dans son système britannique de statut de conservation ; il s’agit d’une évaluation régionale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Grey Heron — RSPB",
+        "fr": "Héron cendré — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/grey-heron",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "The RSPB account describes appearance, prey and the UK Green status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 11,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Grey heron — FAUNA / INPN species account",
+        "fr": "Héron cendré — fiche FAUNA / INPN"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/2506",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "French species account based on INPN information describes shallow waters, feeding behavior and tree colonies."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 15,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation category cited is specific to the United Kingdom, not a global assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Checked against English and French-language natural-history accounts; UK conservation status is identified as regional."
+}

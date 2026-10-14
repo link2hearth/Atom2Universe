@@ -1,0 +1,34 @@
+{
+  "id": "ball_python",
+  "name": "Python royal",
+  "scientific": "Python regius",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Le Python royal, aussi appelé Ball python, est un petit python originaire d’Afrique de l’Ouest et centrale.",
+    "identification": "Son motif brun et doré est variable ; lorsqu’il est menacé, il s’enroule souvent en boule serrée, la tête protégée au centre.",
+    "habitat": "Il fréquente les savanes, les prairies et les forêts ouvertes, et peut s’abriter dans des terriers ou d’autres refuges au sol.",
+    "diet": "C’est un constricteur qui se nourrit surtout de petits mammifères, notamment de rongeurs.",
+    "behavior": "Il est surtout nocturne et passe généralement une grande partie de son temps au sol ou à proximité.",
+    "reproduction": "La femelle pond des œufs et s’enroule autour d’eux pendant l’incubation.",
+    "ecology": "Les populations sauvages sont touchées par les captures pour le commerce et par les transformations locales de l’habitat ; la pression de prélèvement varie selon les régions.",
+    "conservation": "L’UICN la classe à l’échelle mondiale dans la catégorie quasi menacée, en raison des prélèvements et de déclins soupçonnés dans certaines régions d’Afrique de l’Ouest."
+  },
+  "sources": [
+    {
+      "url": "https://www.marwell.org.uk/animals/royal-python/",
+      "title": "Python royal — Marwell Zoo"
+    },
+    {
+      "url": "https://www.parcanimalierlabarben.com/animal/python-royal/",
+      "title": "Python royal — Parc animalier de La Barben"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Python_regius/",
+      "title": "Ball python — Animal Diversity Web"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T177562A220378972.en",
+      "title": "Python royal — Liste rouge de l’UICN"
+    }
+  ]
+}

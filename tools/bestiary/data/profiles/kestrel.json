@@ -1,0 +1,139 @@
+{
+  "id": "kestrel",
+  "scientific": "Falco tinnunculus",
+  "group": "birds",
+  "name": {
+    "en": "Common kestrel",
+    "fr": "Faucon crécerelle"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common kestrel is a small falcon native across much of Europe, Asia and Africa.",
+      "fr": "Le Faucon crécerelle est un petit faucon présent dans une grande partie de l’Europe, de l’Asie et de l’Afrique."
+    },
+    "identification": {
+      "en": "Males have a grey head and tail with a chestnut back; females are more uniformly reddish-brown and barred.",
+      "fr": "Le mâle a la tête et la queue grises ainsi que le dos roux ; la femelle est plus uniformément brun-roux et barrée."
+    },
+    "habitat": {
+      "en": "It commonly hunts over open grassland and farmland, and can also use urban sites.",
+      "fr": "Il chasse souvent au-dessus des prairies ouvertes et des terres agricoles, et fréquente aussi des sites urbains."
+    },
+    "diet": {
+      "en": "Small mammals, especially voles and mice, are major prey, alongside insects and other small vertebrates.",
+      "fr": "Les petits mammifères, notamment campagnols et souris, sont des proies importantes, avec des insectes et d’autres petits vertébrés."
+    },
+    "behavior": {
+      "en": "It often hovers while searching below, then drops rapidly onto prey.",
+      "fr": "Il pratique souvent le vol stationnaire pour repérer ses proies, puis plonge rapidement sur elles."
+    },
+    "reproduction": {
+      "en": "It nests on ledges, in cavities or in old nests rather than building a substantial nest of its own.",
+      "fr": "Il niche sur des corniches, dans des cavités ou dans d’anciens nids, sans construire lui-même un nid élaboré."
+    },
+    "ecology": {
+      "en": "In some regions, small mammals dominate its diet, but prey composition varies with local availability.",
+      "fr": "Dans certaines régions, les petits mammifères dominent son régime, mais les proies varient selon les disponibilités locales."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment cited here is Least Concern; British monitoring nevertheless reports declines, a regional trend.",
+      "fr": "L’évaluation mondiale de l’UICN citée ici est « Préoccupation mineure » ; le suivi britannique signale toutefois un déclin régional."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Animal Diversity Web — Falco tinnunculus",
+        "fr": "Animal Diversity Web — Falco tinnunculus"
+      },
+      "url": "https://animaldiversity.org/accounts/Falco_tinnunculus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The species account describes distribution, open habitats, hovering, prey and nesting."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 11,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "BTO BirdFacts — Kestrel",
+        "fr": "BTO BirdFacts — Kestrel"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/kestrel",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "The British Trust for Ornithology describes plumage and reports population monitoring for Britain."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 78,
+        "notes_words": 13,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vertebrados Ibéricos — Cernícalo vulgar, trophic ecology (Spanish)",
+        "fr": "Vertebrados Ibéricos — Cernícalo vulgar, trophic ecology (Spanish)"
+      },
+      "url": "https://www.vertebradosibericos.org/aves/trofico/faltintr.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Spanish account notes that prey proportions vary among regions and highlights the role of voles in central Spain."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 19,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Concise bilingual draft; claims remain scoped to the cited account and geography."
+}

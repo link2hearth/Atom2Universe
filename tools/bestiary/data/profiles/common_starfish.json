@@ -1,0 +1,141 @@
+{
+  "id": "common_starfish",
+  "scientific": "Asterias rubens",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common starfish",
+    "fr": "Étoile de mer commune"
+  },
+  "sections": {
+    "overview": {
+      "en": "Asterias rubens is a common North-East Atlantic sea star that lives on the seabed.",
+      "fr": "Asterias rubens est une étoile de mer commune de l’Atlantique nord-est qui vit sur les fonds marins."
+    },
+    "identification": {
+      "en": "It usually has five tapering arms and varies from orange or pale brown to violet.",
+      "fr": "Elle possède généralement cinq bras effilés et sa couleur varie de l’orange ou du brun pâle au violet."
+    },
+    "habitat": {
+      "en": "It occurs on varied seabeds, including rock, gravel and mussel beds, from the shore into deeper water.",
+      "fr": "Elle fréquente des fonds variés, notamment rocheux, graveleux ou couverts de moules, du littoral aux eaux plus profondes."
+    },
+    "diet": {
+      "en": "It preys especially on bivalves, but also eats other invertebrates and carrion.",
+      "fr": "Elle s’attaque surtout aux bivalves, mais consomme aussi d’autres invertébrés et des charognes."
+    },
+    "behavior": {
+      "en": "Rows of tube feet help it move and handle prey; it can partly evert its stomach to digest food outside its body.",
+      "fr": "Des rangées de pieds ambulacraires l’aident à se déplacer et à manipuler ses proies ; elle peut dévaginer en partie son estomac pour digérer hors de son corps."
+    },
+    "reproduction": {
+      "en": "It releases eggs and sperm into the water, where fertilization takes place; spawning is seasonal in many populations.",
+      "fr": "Elle libère ovules et spermatozoïdes dans l’eau, où a lieu la fécondation ; la ponte est saisonnière dans de nombreuses populations."
+    },
+    "ecology": {
+      "en": "As a predator of mussels and other benthic animals, it can influence the local composition of seabed communities.",
+      "fr": "En prédatrice des moules et d’autres animaux benthiques, elle peut influencer la composition locale des communautés du fond."
+    },
+    "conservation": {
+      "en": "Marine Life Information Network describes it as abundant across much of the North-East Atlantic; this does not imply that every local population is stable.",
+      "fr": "Le Marine Life Information Network la décrit comme abondante dans une grande partie de l’Atlantique nord-est ; cela ne signifie pas que toutes les populations locales soient stables."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common starfish — MarLIN",
+        "fr": "Étoile de mer commune — MarLIN"
+      },
+      "url": "https://www.marlin.ac.uk/species/detail/1194",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "MarLIN describes the regional range, colour, arms, seabed habitats and abundance."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 11,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Asterias rubens — DORIS",
+        "fr": "Asterias rubens — DORIS"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Asterias-rubens-Etoile-de-mer-commune-132",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "French-language account explains feeding on bivalves and use of tube feet and stomach eversion."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 14,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common starfish — Aquarium de La Rochelle",
+        "fr": "Étoile de mer commune — Aquarium de La Rochelle"
+      },
+      "url": "https://www.aquarium-larochelle.com/preparer-sa-visite/encyclopedie-especes/etoile-de-mer-commune",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "French aquarium species account describes seasonal spawning and external fertilization."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 10,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Abundance varies strongly by habitat and locality; broad regional descriptions should not be read as a local population trend."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked English regional marine information with French DORIS and aquarium accounts; kept reproduction seasonal rather than assigning one calendar window everywhere."
+}

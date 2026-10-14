@@ -32,8 +32,8 @@
       "fr": "Il niche dans des trous et des fissures de bâtiments, de talus, de falaises ou de nichoirs. La saison de reproduction va d’avril à août, avec une ou deux couvées de cinq ou six œufs en général. Les deux sexes couvent 12 à 13 jours, et les poussins s’envolent après environ 15 à 17,5 jours. La reproduction débute en général à un an."
     },
     "ecology": {
-      "en": "Breeding success is linked to the invertebrate prey fed to the chicks, and in winter birds gather where seed food is available. A typical adult lives about two years, and the oldest ringed bird reached nearly eleven.",
-      "fr": "Le succès de la reproduction est lié aux invertébrés donnés aux poussins, et en hiver les oiseaux se rassemblent là où il y a des graines. Un adulte vit en général environ deux ans, et le plus âgé bagué a presque atteint onze ans."
+      "en": "Breeding success is linked to the invertebrate prey fed to the chicks, and in winter birds gather where seed food is available. A typical adult lives about two years, and the oldest ringed bird reached nearly eleven. Compared with the House Sparrow, it has a chestnut crown and black cheek spot, and the sexes look alike; see that profile for the reverse comparison.",
+      "fr": "Le succès de la reproduction est lié aux invertébrés donnés aux poussins, et en hiver les oiseaux se rassemblent là où il y a des graines. Un adulte vit en général environ deux ans, et le plus âgé bagué a presque atteint onze ans. Par rapport au Moineau domestique, il a la calotte marron et une tache noire sur la joue, et les sexes se ressemblent ; voir cette fiche pour comparer."
     },
     "conservation": {
       "en": "The IUCN Red List classes it as Least Concern, but in the UK it is Red-listed. UK numbers fell by an estimated 93% between 1970 and 2008; the breeding population was 245,000 territories in 2016, up 18% since 1995 but far below 1970s levels. In Europe it has declined since 1980.",
@@ -48,7 +48,15 @@
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/tree-sparrow",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Adult 21 g, wing 69.6 mm; incubation 12–13 days by both sexes; fledging 15–17.5 days; clutch typically 5–6; 1–2 broods; max age 10 years 10 months.",
         "UK 245,000 territories (2016), +18% 1995–2024 but about 20 times larger in the 1970s; Europe declining since 1980; UK Red; IUCN Least Concern."
@@ -61,10 +69,20 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/tree-sparrow",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "ecology"
+      ],
       "facts": [
         "Chestnut cap and nape, white cheeks with black spot, small black bib; sexes alike; seeds, grain and insects for the young; nests in holes and crevices.",
-        "UK numbers fell about 93% between 1970 and 2008; Red-listed; shy, social, nests in colonies."
+        "UK numbers fell about 93% between 1970 and 2008; Red-listed; shy, social, nests in colonies.",
+        "RSPB compares Tree and House Sparrows: the Tree Sparrow has a chestnut crown and dark cheek spot, and both sexes look alike."
       ]
     }
   ],
@@ -73,5 +91,5 @@
     "Breeding and survival figures come from British ringing and nest-record data and may differ elsewhere in the wide range."
   ],
   "reviewed": true,
-  "review_note": "Numbers from BTO BirdFacts, plumage, diet and nesting from the RSPB (both consulted 2026-10-12); illustration to be checked by the owner."
+  "review_note": "Reciprocal comparison with the House Sparrow is based on RSPB identification features."
 }

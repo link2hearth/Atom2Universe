@@ -1,0 +1,30 @@
+{
+  "id": "common_tern",
+  "name": "Sterne pierregarin",
+  "scientific": "Sterna hirundo",
+  "group": "birds",
+  "sections": {
+    "overview": "La Sterne pierregarin est un oiseau marin migrateur qui niche dans une grande partie de l’hémisphère Nord.",
+    "identification": "C’est une sterne élancée aux longues ailes pointues et à la queue fourchue ; en plumage nuptial, elle porte une calotte noire et un bec rouge à pointe sombre.",
+    "habitat": "Elle niche sur des rivages dégagés, des îles et des bancs de gravier ou de sable à l’intérieur des terres, souvent en colonies.",
+    "diet": "Elle capture de petits poissons en planant puis en plongeant vers l’eau ; elle consomme aussi quelques invertébrés aquatiques.",
+    "behavior": "C’est une grande migratrice qui se rassemble souvent pour s’alimenter ou nicher.",
+    "reproduction": "Elle pond dans une simple dépression au sol, et les deux membres du couple participent aux soins du nid.",
+    "ecology": "La Sterne arctique (Sterna paradisaea) est une proche parente plus océanique ; elle niche à haute latitude et migre jusqu’aux eaux antarctiques. Voir sa fiche.",
+    "conservation": "BirdLife classe actuellement la Sterne pierregarin en préoccupation mineure à l’échelle mondiale, tout en indiquant une tendance de population inconnue."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/common-tern-sterna-hirundo",
+      "title": "Sterne pierregarin — BirdLife DataZone"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/sterne-pierregarin2",
+      "title": "Sterne pierregarin — LPO"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/arctic-tern",
+      "title": "Sterne arctique — BTO BirdFacts"
+    }
+  ]
+}

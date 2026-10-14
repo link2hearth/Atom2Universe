@@ -1,0 +1,139 @@
+{
+  "id": "sand_lizard",
+  "scientific": "Lacerta agilis",
+  "group": "reptiles",
+  "name": {
+    "en": "Sand lizard",
+    "fr": "Lézard des souches"
+  },
+  "sections": {
+    "overview": {
+      "en": "The sand lizard ranges widely across Europe and into Central Asia.",
+      "fr": "Le Lézard des souches possède une vaste aire de répartition en Europe et jusqu’en Asie centrale."
+    },
+    "identification": {
+      "en": "Males often develop bright green flanks in spring; females are generally browner with rows of dark markings.",
+      "fr": "Au printemps, les flancs des mâles deviennent souvent vert vif ; les femelles sont généralement plus brunes et portent des rangées de marques sombres."
+    },
+    "habitat": {
+      "en": "It uses sunny habitats with cover and places to shelter or lay eggs; suitable sites vary across its broad range.",
+      "fr": "Il fréquente des milieux ensoleillés offrant abris et lieux de ponte ; les sites adaptés varient dans son vaste territoire."
+    },
+    "diet": {
+      "en": "Its prey includes insects and other small invertebrates.",
+      "fr": "Ses proies comprennent des insectes et d’autres petits invertébrés."
+    },
+    "behavior": {
+      "en": "In Britain, the species is associated especially with sandy heathland and coastal dunes; this is a regional pattern, not a range-wide rule.",
+      "fr": "En Grande-Bretagne, l’espèce est surtout associée aux landes sableuses et aux dunes côtières ; il s’agit d’un schéma régional, pas d’une règle valable partout."
+    },
+    "reproduction": {
+      "en": "Females lay eggs in warm, suitable ground; the young hatch after an incubation period that varies with conditions.",
+      "fr": "Les femelles pondent dans un sol chaud et adapté ; les jeunes éclosent après une incubation dont la durée dépend des conditions."
+    },
+    "ecology": {
+      "en": "Habitat degradation is identified as a major local threat in the French regional account.",
+      "fr": "La dégradation des habitats est désignée comme une menace locale importante dans la fiche régionale française."
+    },
+    "conservation": {
+      "en": "The global IUCN Red List assessment is Least Concern, assessed in 2018; local populations may face stronger pressures.",
+      "fr": "L’évaluation mondiale de la Liste rouge de l’UICN est « Préoccupation mineure » (2018) ; certaines populations locales peuvent subir des pressions plus fortes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "IUCN Red List — Lacerta agilis",
+        "fr": "IUCN Red List — Lacerta agilis"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-2.RLTS.T157288A49644624.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The global assessment gives the broad distribution, category and assessment year."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 11,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "SHNA-OFAB — Lézard des souches (French regional naturalist network)",
+        "fr": "SHNA-OFAB — Lézard des souches (French regional naturalist network)"
+      },
+      "url": "https://ressources.shna-ofab.fr/fr/fiches-especes/lezard-des-souches-lacerta-agilis_45_T77600.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The regional French account documents habitat, feeding, egg laying and habitat-related threats."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 12,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amphibian and Reptile Conservation — Sand lizard",
+        "fr": "Amphibian and Reptile Conservation — Sand lizard"
+      },
+      "url": "https://www.arc-trust.org/sand-lizard",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "The conservation organization describes British habitat and spring male coloration; those details are kept geographically scoped."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 16,
+        "total": 103,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Concise bilingual draft; claims remain scoped to the cited account and geography."
+}

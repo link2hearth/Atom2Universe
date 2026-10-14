@@ -1,0 +1,30 @@
+{
+  "id": "kestrel",
+  "name": "Faucon crécerelle",
+  "scientific": "Falco tinnunculus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Faucon crécerelle est un petit faucon présent dans une grande partie de l’Europe, de l’Asie et de l’Afrique.",
+    "identification": "Le mâle a la tête et la queue grises ainsi que le dos roux ; la femelle est plus uniformément brun-roux et barrée.",
+    "habitat": "Il chasse souvent au-dessus des prairies ouvertes et des terres agricoles, et fréquente aussi des sites urbains.",
+    "diet": "Les petits mammifères, notamment campagnols et souris, sont des proies importantes, avec des insectes et d’autres petits vertébrés.",
+    "behavior": "Il pratique souvent le vol stationnaire pour repérer ses proies, puis plonge rapidement sur elles.",
+    "reproduction": "Il niche sur des corniches, dans des cavités ou dans d’anciens nids, sans construire lui-même un nid élaboré.",
+    "ecology": "Dans certaines régions, les petits mammifères dominent son régime, mais les proies varient selon les disponibilités locales.",
+    "conservation": "L’évaluation mondiale de l’UICN citée ici est « Préoccupation mineure » ; le suivi britannique signale toutefois un déclin régional."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Falco_tinnunculus/",
+      "title": "Animal Diversity Web — Falco tinnunculus"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/kestrel",
+      "title": "BTO BirdFacts — Kestrel"
+    },
+    {
+      "url": "https://www.vertebradosibericos.org/aves/trofico/faltintr.html",
+      "title": "Vertebrados Ibéricos — Cernícalo vulgar, trophic ecology (Spanish)"
+    }
+  ]
+}

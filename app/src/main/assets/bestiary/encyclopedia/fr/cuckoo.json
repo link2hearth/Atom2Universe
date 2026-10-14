@@ -1,0 +1,30 @@
+{
+  "id": "cuckoo",
+  "name": "Coucou gris",
+  "scientific": "Cuculus canorus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le coucou gris est un oiseau migrateur d’Eurasie surtout connu pour pondre dans les nids d’autres oiseaux.",
+    "identification": "Les adultes sont élancés, à longue queue et aux ailes pointues ; beaucoup ont le dessus gris et le dessous pâle finement barré.",
+    "habitat": "Il fréquente lisières, broussailles et milieux ouverts où se trouvent des hôtes convenables et des insectes-proies.",
+    "diet": "Il se nourrit surtout d’insectes, notamment de chenilles velues que beaucoup d’oiseaux évitent.",
+    "behavior": "Le mâle lance le familier « cou-cou » répété ; les femelles sont plus discrètes et difficiles à observer.",
+    "reproduction": "La femelle pond dans le nid d’une espèce hôte, qui couve l’œuf et nourrit le poussin ; le choix des hôtes varie selon les régions.",
+    "ecology": "Sa reproduction dépend des oiseaux hôtes, tandis que son régime insectivore le lie aux populations saisonnières de chenilles.",
+    "conservation": "Le BTO signale un déclin de la population britannique, avec de fortes variations régionales ; cette tendance ne doit pas être généralisée à toute l’aire."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/cuckoo",
+      "title": "Coucou — BTO BirdFacts"
+    },
+    {
+      "url": "https://normandie.lpo.fr/oiseaux-de-normandie/inventaire-oiseaux-de-normandie-effectifs-et-populations/coucou-gris/",
+      "title": "Coucou gris — LPO Normandie"
+    },
+    {
+      "url": "https://paca.lpo.fr/protection/especes/zoom-sur-une-espece/6856-le-coucou-gris",
+      "title": "Coucou gris — LPO Provence-Alpes-Côte d’Azur"
+    }
+  ]
+}

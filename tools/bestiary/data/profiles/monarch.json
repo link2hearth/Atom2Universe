@@ -1,0 +1,139 @@
+{
+  "id": "monarch",
+  "scientific": "Danaus plexippus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Monarch butterfly",
+    "fr": "Monarque"
+  },
+  "sections": {
+    "overview": {
+      "en": "A familiar milkweed butterfly, the monarch occurs across the Americas and has also established populations elsewhere.",
+      "fr": "Papillon associé aux asclépiades, le monarque est présent dans les Amériques et a aussi établi des populations ailleurs."
+    },
+    "identification": {
+      "en": "Adults have orange wings edged in black and marked with white spots; the caterpillar is banded in black, white and yellow.",
+      "fr": "L’adulte a les ailes orange bordées de noir et ponctuées de blanc ; la chenille est rayée de noir, de blanc et de jaune."
+    },
+    "habitat": {
+      "en": "Breeding habitat includes places where milkweeds grow; migrating populations also depend on suitable seasonal stopovers and winter sites.",
+      "fr": "Les lieux où poussent les asclépiades servent à la reproduction ; les populations migratrices dépendent aussi d’étapes saisonnières et de sites d’hivernage adaptés."
+    },
+    "diet": {
+      "en": "Caterpillars feed on milkweeds, while adults visit flowers for nectar.",
+      "fr": "Les chenilles mangent des asclépiades, tandis que les adultes butinent le nectar des fleurs."
+    },
+    "behavior": {
+      "en": "The North American migratory population travels between breeding areas and wintering sites in Mexico or coastal California.",
+      "fr": "La population migratrice nord-américaine relie ses aires de reproduction à des sites d’hivernage au Mexique ou sur la côte californienne."
+    },
+    "reproduction": {
+      "en": "Females lay eggs on milkweed; the species passes through egg, caterpillar, chrysalis and adult stages.",
+      "fr": "Les femelles pondent sur les asclépiades ; le cycle comprend l’œuf, la chenille, la chrysalide et l’adulte."
+    },
+    "ecology": {
+      "en": "Milkweed compounds acquired by caterpillars can deter many vertebrate predators.",
+      "fr": "Les chenilles accumulent des substances des asclépiades qui repoussent de nombreux prédateurs vertébrés."
+    },
+    "conservation": {
+      "en": "IUCN lists the migratory monarch subspecies as Endangered; this assessment does not automatically apply to every monarch population.",
+      "fr": "L’UICN classe la sous-espèce migratrice du monarque « En danger » ; cette évaluation ne s’applique pas automatiquement à toutes les populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "COSEWIC — Monarch assessment, Canada (French)",
+        "fr": "COSEWIC — Monarch assessment, Canada (French)"
+      },
+      "url": "https://www.canada.ca/fr/environnement-changement-climatique/services/registre-public-especes-peril/evaluations-rapports-situations-cosepac/monarque-2016.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The Canadian COSEWIC account summarizes range, stages, appearance and cardenolide defense."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 102,
+        "notes_words": 11,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "U.S. Fish and Wildlife Service — Monarch",
+        "fr": "U.S. Fish and Wildlife Service — Monarch"
+      },
+      "url": "https://www.fws.gov/species/monarch-danaus-plexippus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The agency account describes milkweed dependence, adult nectar-feeding, egg laying and migration."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 134,
+        "notes_words": 12,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN — Migratory monarch assessment announcement",
+        "fr": "IUCN — Migratory monarch assessment announcement"
+      },
+      "url": "https://iucn.org/press-release/202207/migratory-monarch-butterfly-now-endangered-iucn-red-list?language=fr",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IUCN identifies the migratory subspecies as Endangered in its 2022 announcement."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 11,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Concise bilingual draft; claims remain scoped to the cited account and geography."
+}

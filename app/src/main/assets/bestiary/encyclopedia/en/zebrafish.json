@@ -1,0 +1,26 @@
+{
+  "id": "zebrafish",
+  "name": "Zebrafish",
+  "scientific": "Danio rerio",
+  "group": "fish",
+  "sections": {
+    "overview": "Danio rerio is a small freshwater fish native to South Asia.",
+    "identification": "Its name refers to the conspicuous dark horizontal stripes running along the body and onto the tail.",
+    "habitat": "It is recorded from slow or still waters, including streams, ponds, canals and rice-field habitats.",
+    "diet": "Wild fish eat small invertebrates, including worms, crustaceans and insect larvae.",
+    "behavior": "Field observations describe it among South Asian danionin fishes occupying freshwater sites with varied flow conditions.",
+    "reproduction": "FishBase reports year-round breeding in the populations covered by its species account.",
+    "ecology": "Studies of danionin fishes report insects as an important natural food resource, with diet varying among species and sites.",
+    "conservation": "FishBase displays a Least Concern assessment dated 2009; this is an older assessment, not a current population survey."
+  },
+  "sources": [
+    {
+      "url": "https://fishbase.se/Summary/SpeciesSummary.php?id=4653&lang=french",
+      "title": "FishBase — Danio rerio (French page)"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1095-8649.2006.01125.x",
+      "title": "Natural diet and habitat of eight danionin fishes — Journal of Fish Biology"
+    }
+  ]
+}

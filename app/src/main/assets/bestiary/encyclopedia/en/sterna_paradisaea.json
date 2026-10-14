@@ -10,7 +10,7 @@
     "diet": "It hovers above the water, then dives, often submerging completely, to catch small fish such as sand eels, sand lance and capelin, and it also takes small crustaceans. In Britain, breeding success is linked to how many sand eels are available.",
     "behavior": "Arctic terns nest in colonies and defend them vigorously. A tracking study of 11 birds fitted with tiny geolocators showed that some flew more than 80,000 km a year, using two main southbound routes along the African or South American coasts and an S-shaped route back across the Atlantic.",
     "reproduction": "In the UK a clutch is typically one or two eggs, with one brood a year. Both sexes incubate for 20–24 days. The downy chicks are semi-precocial and fledge after 21–24 days. Breeding typically starts at about four years of age. Nests are shallow scrapes on sand, gravel or moss.",
-    "ecology": "The tern is a predator of small fish and crustaceans, and its eggs and chicks are taken by foxes, rats, gulls and other animals. American mink are implicated in the loss of breeding range in western Scotland. In the past, DDT contamination of the fish it ate killed many terns.",
+    "ecology": "The tern is a predator of small fish and crustaceans, and its eggs and chicks are taken by foxes, rats, gulls and other animals. American mink are implicated in the loss of breeding range in western Scotland. In the past, DDT contamination of the fish it ate killed many terns. The BTO notes that Common and Arctic Terns are very similar in appearance and habits; see the Common Tern profile for the comparison.",
     "conservation": "The IUCN lists the species as Least Concern. In the UK it is Red-listed: the breeding population was about 54,000 pairs in 2000, and the breeding range shrank by 30.5% between 1968–72 and 2008–11. A tern that reaches breeding age typically lives about 13 years, and the oldest ringed bird exceeded 31."
   },
   "sources": [
@@ -29,6 +29,10 @@
     {
       "url": "https://nora.nerc.ac.uk/id/eprint/14091/",
       "title": "Tracking of Arctic terns Sterna paradisaea reveals longest animal migration — Egevang et al., PNAS 2010"
+    },
+    {
+      "url": "https://www.bto.org/learn/skills/bird-identification/videos/common-and-arctic-tern",
+      "title": "BTO — Identifying Common and Arctic Terns"
     }
   ]
 }

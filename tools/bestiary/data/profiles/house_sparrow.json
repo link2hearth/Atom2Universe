@@ -1,0 +1,163 @@
+{
+  "id": "house_sparrow",
+  "scientific": "Passer domesticus",
+  "group": "birds",
+  "name": {
+    "en": "House Sparrow",
+    "fr": "Moineau domestique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The House Sparrow is a highly human-associated passerine now established across much of the world.",
+      "fr": "Le Moineau domestique est un passereau très lié aux activités humaines, aujourd’hui établi dans une grande partie du monde."
+    },
+    "identification": {
+      "en": "The male has a grey crown and black bib; the female is duller brown, with a pale eyebrow and no black bib.",
+      "fr": "Le mâle porte une calotte grise et une bavette noire ; la femelle est plus terne, brune, avec un sourcil clair et sans bavette noire."
+    },
+    "habitat": {
+      "en": "It commonly nests in cavities and crevices in buildings, but also uses hedges and nest boxes.",
+      "fr": "Il niche souvent dans les cavités et fissures des bâtiments, mais utilise aussi les haies et les nichoirs."
+    },
+    "diet": {
+      "en": "Adults eat seeds and scraps, while growing chicks are fed many insects.",
+      "fr": "Les adultes consomment des graines et des restes alimentaires, tandis que les jeunes reçoivent beaucoup d’insectes."
+    },
+    "behavior": {
+      "en": "It is a sociable bird, often feeding or roosting in groups around human settlements.",
+      "fr": "C’est un oiseau sociable qui s’alimente ou dort souvent en groupe près des habitations."
+    },
+    "reproduction": {
+      "en": "It nests in cavities and can raise several broods in a long, favorable season.",
+      "fr": "Il niche dans des cavités et peut élever plusieurs nichées au cours d’une longue saison favorable."
+    },
+    "ecology": {
+      "en": "Compare the related Eurasian Tree Sparrow profile: that species has a chestnut crown and a black cheek spot, and the sexes look alike; the House Sparrow shows stronger sexual plumage differences.",
+      "fr": "Voir la fiche du Moineau friquet, espèce proche : il a la calotte marron et une tache noire sur la joue, et les sexes se ressemblent ; le Moineau domestique présente un dimorphisme de plumage plus marqué."
+    },
+    "conservation": {
+      "en": "The species remains widespread globally, but it is Red-listed in the UK, reflecting regional concern.",
+      "fr": "L’espèce reste largement répandue dans le monde, mais elle figure sur la liste rouge au Royaume-Uni, où sa situation régionale est préoccupante."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "House Sparrow — LPO",
+        "fr": "Moineau domestique — LPO"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/moineau-domestique",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "LPO describes male and female plumage and cavity nesting; it notes that the species remains abundant in France while warning that common species can decline."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 25,
+        "total": 102,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "House Sparrow — Natural History Museum",
+        "fr": "Moineau domestique — Natural History Museum"
+      },
+      "url": "https://www.nhm.ac.uk/discover/house-sparrow-passer-domesticus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The museum account covers this commensal species’ diet and social behavior."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 11,
+        "total": 101,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "House Sparrow — RSPB",
+        "fr": "Moineau domestique — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/house-sparrow",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "RSPB reports that the species is Red-listed in the UK and describes its nest sites; this is a national rather than global status."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 23,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eurasian Tree Sparrow — RSPB",
+        "fr": "Moineau friquet — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/tree-sparrow",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "RSPB contrasts the Tree Sparrow’s chestnut cap and black cheek spot with the House Sparrow and notes that the sexes look alike."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 22,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation sentence reports regional trends rather than a single worldwide population trend."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The Tree Sparrow cross-reference targets canonical profile passer_montanus; add the reciprocal link there during integration."
+}

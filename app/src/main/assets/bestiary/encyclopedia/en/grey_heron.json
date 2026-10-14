@@ -1,0 +1,26 @@
+{
+  "id": "grey_heron",
+  "name": "Grey heron",
+  "scientific": "Ardea cinerea",
+  "group": "birds",
+  "sections": {
+    "overview": "The grey heron is a widespread wading bird that hunts by waiting or moving slowly through shallow water.",
+    "identification": "It has a grey back, pale neck, dark head stripe and long bill; in flight it folds its neck into an S shape.",
+    "habitat": "It forages around lakes, rivers, marshes and estuaries, including both fresh and brackish waters.",
+    "diet": "Fish are frequent prey, but it also takes amphibians, small mammals and other animals within striking range.",
+    "behavior": "A heron may remain motionless before striking rapidly with its bill; individuals often feed alone.",
+    "reproduction": "It commonly nests colonially in trees, in groups known as heronries.",
+    "ecology": "Its varied prey links wetland food webs, and its feeding range can extend beyond the water’s edge.",
+    "conservation": "The RSPB lists the species as Green in its UK conservation-status system; this is a regional assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/grey-heron",
+      "title": "Grey Heron — RSPB"
+    },
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/2506",
+      "title": "Grey heron — FAUNA / INPN species account"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "common_tern",
+  "name": "Common Tern",
+  "scientific": "Sterna hirundo",
+  "group": "birds",
+  "sections": {
+    "overview": "The Common Tern is a migratory seabird that breeds across much of the Northern Hemisphere.",
+    "identification": "It is a slender tern with long pointed wings, a forked tail and, in breeding plumage, a dark cap and red bill with a dark tip.",
+    "habitat": "It nests on open shores, islands and inland gravel or sand sites, often in colonies.",
+    "diet": "It catches small fish by hovering or diving down to the water; it also takes some aquatic invertebrates.",
+    "behavior": "It is a strong migrant and often gathers in groups when feeding or nesting.",
+    "reproduction": "It lays its eggs in a shallow ground scrape, and both members of the pair take part in caring for the nest.",
+    "ecology": "The Arctic Tern (Sterna paradisaea) is a close relative and more oceanic; it breeds at high latitudes and migrates to Antarctic waters. See its profile.",
+    "conservation": "BirdLife currently lists the Common Tern globally as Least Concern, while its population trend is reported as unknown."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/common-tern-sterna-hirundo",
+      "title": "Common Tern — BirdLife DataZone"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/sterne-pierregarin2",
+      "title": "Sterne pierregarin — LPO"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/arctic-tern",
+      "title": "Arctic Tern — BTO BirdFacts"
+    }
+  ]
+}

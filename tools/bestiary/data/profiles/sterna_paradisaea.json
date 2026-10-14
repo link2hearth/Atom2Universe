@@ -32,8 +32,8 @@
       "fr": "Au Royaume-Uni, une ponte compte en général un ou deux œufs, pour une seule nichée par an. Les deux sexes couvent pendant 20 à 24 jours. Les poussins, couverts de duvet et semi-nidifuges, s’envolent après 21 à 24 jours. La reproduction débute en général vers quatre ans. Les nids sont de simples cuvettes dans le sable, le gravier ou la mousse."
     },
     "ecology": {
-      "en": "The tern is a predator of small fish and crustaceans, and its eggs and chicks are taken by foxes, rats, gulls and other animals. American mink are implicated in the loss of breeding range in western Scotland. In the past, DDT contamination of the fish it ate killed many terns.",
-      "fr": "La sterne est un prédateur de petits poissons et de crustacés, et ses œufs et ses poussins sont mangés par les renards, les rats, les goélands et d’autres animaux. Le vison d’Amérique est mis en cause dans la perte d’aire de reproduction dans l’ouest de l’Écosse. Autrefois, la contamination des poissons qu’elle mangeait par le DDT a tué de nombreuses sternes."
+      "en": "The tern is a predator of small fish and crustaceans, and its eggs and chicks are taken by foxes, rats, gulls and other animals. American mink are implicated in the loss of breeding range in western Scotland. In the past, DDT contamination of the fish it ate killed many terns. The BTO notes that Common and Arctic Terns are very similar in appearance and habits; see the Common Tern profile for the comparison.",
+      "fr": "La sterne est un prédateur de petits poissons et de crustacés, et ses œufs et ses poussins sont mangés par les renards, les rats, les goélands et d’autres animaux. Le vison d’Amérique est mis en cause dans la perte d’aire de reproduction dans l’ouest de l’Écosse. Autrefois, la contamination des poissons qu’elle mangeait par le DDT a tué de nombreuses sternes. Le BTO indique que les Sternes pierregarins et arctiques se ressemblent beaucoup par leur apparence et leurs habitudes ; voir la fiche de la Sterne pierregarin pour comparer."
     },
     "conservation": {
       "en": "The IUCN lists the species as Least Concern. In the UK it is Red-listed: the breeding population was about 54,000 pairs in 2000, and the breeding range shrank by 30.5% between 1968–72 and 2008–11. A tern that reaches breeding age typically lives about 13 years, and the oldest ringed bird exceeded 31.",
@@ -48,7 +48,14 @@
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/arctic-tern",
       "consulted": "2026-10-12",
-      "supports": ["habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Adults average 103.8 g; clutch 1–2 eggs; incubation 20–24 days by both sexes; fledging 21–24 days; breeding at ~4 years; max age 31 years.",
         "UK ~54,000 pairs (2000); range −30.5% 1968–72 to 2008–11; Red-listed; IUCN Least Concern; sandeel link to productivity; American Mink implicated in range loss in western Scotland."
@@ -61,7 +68,12 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/arctic-tern",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
       "facts": [
         "White with a black cap, long tail streamers and streamlined shape; mainly coastal; ‘ultimate distance migrant’ between the UK and the Antarctic.",
         "Red-listed in the UK; fish shortages affect some groups."
@@ -74,7 +86,14 @@
       },
       "url": "https://animaldiversity.org/accounts/Sterna_paradisaea/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "diet", "behavior", "reproduction", "ecology"],
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
       "facts": [
         "Length 36–43 cm, wingspan 74–84 cm, ~100 g; fully red bill in breeding season; very short legs; hovers then dives for sand lance, capelin and crustaceans; nests colonially in scrapes on sand, gravel or moss.",
         "Predators: foxes, rats, gulls; DDT in contaminated fish killed many terns. Its status line was not used."
@@ -87,11 +106,28 @@
       },
       "url": "https://nora.nerc.ac.uk/id/eprint/14091/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "behavior"],
+      "supports": [
+        "overview",
+        "behavior"
+      ],
       "facts": [
         "11 terns carried 1.4 g geolocators; some travelled more than 80,000 km a year; two southbound routes (African or South American coast) and an S-shaped return across the Atlantic.",
         "A previously unknown North Atlantic stopover area was found, used by birds from Greenland and Iceland (DOI 10.1073/pnas.0909493107)."
       ]
+    },
+    {
+      "title": {
+        "en": "BTO — Identifying Common and Arctic Terns",
+        "fr": "BTO — Distinguer les Sternes pierregarin et arctique"
+      },
+      "url": "https://www.bto.org/learn/skills/bird-identification/videos/common-and-arctic-tern",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "BTO describes the Common and Arctic Terns as very similar in appearance and habits."
+      ],
+      "consulted": "2026-10-14"
     }
   ],
   "uncertainties": [
@@ -100,5 +136,5 @@
     "The IUCN Red List pages could not be opened; Least Concern is taken from the BTO page. The UK population figure dates from 2000."
   ],
   "reviewed": true,
-  "review_note": "Numbers from BTO BirdFacts and Animal Diversity Web (consulted 2026-10-12); migration facts from the published tracking study; illustration to be checked by the owner."
+  "review_note": "Reciprocal comparison with the Common Tern uses the BTO species-identification account."
 }

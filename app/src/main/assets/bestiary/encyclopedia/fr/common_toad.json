@@ -1,0 +1,30 @@
+{
+  "id": "common_toad",
+  "name": "Crapaud commun",
+  "scientific": "Bufo bufo",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Le crapaud commun est un amphibien largement répandu en Eurasie, qui vit surtout à terre et rejoint l’eau pour se reproduire.",
+    "identification": "Il a une peau verruqueuse d’aspect sec, des pattes arrière relativement courtes et de grosses glandes derrière les yeux.",
+    "habitat": "Hors reproduction, il fréquente bois, broussailles, jardins et autres refuges terrestres humides ; il se reproduit en eau stagnante ou lente.",
+    "diet": "Les adultes mangent des invertébrés comme les limaces, escargots et insectes ; le régime varie selon les proies disponibles.",
+    "behavior": "Des déplacements saisonniers ramènent les adultes vers les sites de reproduction, et ils marchent souvent plutôt que de faire de grands bonds.",
+    "reproduction": "Les femelles pondent dans l’eau de longs cordons gélatineux d’œufs, où les têtards se développent.",
+    "ecology": "Prédateur terrestre qui se reproduit en milieu aquatique, il relie les zones d’alimentation aux habitats d’eau douce.",
+    "conservation": "L’évaluation de l’UICN classe l’espèce en Préoccupation mineure à l’échelle mondiale, tout en signalant des menaces liées aux habitats et des déclins locaux."
+  },
+  "sources": [
+    {
+      "url": "https://www.arc-trust.org/common-toad",
+      "title": "Crapaud commun — Amphibian and Reptile Conservation"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2023-1.RLTS.T88316072A78902726.en",
+      "title": "Bufo bufo — Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://webissimo.developpement-durable.gouv.fr/IMG/pdf/2_annexes_cle056627.pdf",
+      "title": "Crapaud commun — annexe naturaliste française"
+    }
+  ]
+}

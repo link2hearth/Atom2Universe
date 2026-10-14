@@ -1,0 +1,30 @@
+{
+  "id": "short_snouted_seahorse",
+  "name": "Short-snouted seahorse",
+  "scientific": "Hippocampus hippocampus",
+  "group": "fish",
+  "sections": {
+    "overview": "This seahorse occurs in the eastern Atlantic and Mediterranean; records span European and North African coasts.",
+    "identification": "It has a short, upturned snout, a prominent spine above each eye and a body that may reach about 15 cm.",
+    "habitat": "It is reported in shallow muddy or rocky coastal waters, including estuaries and areas with seaweed or seagrass.",
+    "diet": "Seahorses take small live crustaceans; the species account notes mysid shrimps among recorded prey.",
+    "behavior": "It anchors itself to nearby vegetation or other surfaces with its prehensile tail and is a relatively weak swimmer.",
+    "reproduction": "The male carries developing eggs in a brood pouch and releases live young after they hatch.",
+    "ecology": "Available biological information is limited; MarLIN notes that dispersal and recovery are poorly documented.",
+    "conservation": "FishBase reports the global IUCN category Data Deficient, assessed in 2017; a regional assessment should not be substituted for it."
+  },
+  "sources": [
+    {
+      "url": "https://doris.ffessm.fr/Especes/Hippocampus-hippocampus-Hippocampe-a-museau-court-299",
+      "title": "DORIS — Hippocampus hippocampus (French diving federation species database)"
+    },
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/1788",
+      "title": "MarLIN — Short-snouted seahorse"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/hippocampus-hippocampus",
+      "title": "FishBase — Hippocampus hippocampus"
+    }
+  ]
+}

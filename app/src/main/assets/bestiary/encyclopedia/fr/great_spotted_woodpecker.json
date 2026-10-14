@@ -1,0 +1,30 @@
+{
+  "id": "great_spotted_woodpecker",
+  "name": "Pic épeiche",
+  "scientific": "Dendrocopos major",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Pic épeiche est un oiseau des bois largement répandu en Eurasie.",
+    "identification": "Son plumage noir et blanc présente des taches blanches aux épaules et du rouge sous la queue ; le mâle a la nuque rouge et le jeune la calotte rouge.",
+    "habitat": "Il fréquente les forêts de feuillus, de conifères ou mixtes, ainsi que les parcs et jardins arborés.",
+    "diet": "Son régime varié comprend des invertébrés, des graines et des fruits ; il recherche des proies dans l’écorce et le bois superficiel.",
+    "behavior": "Il grimpe sur les troncs et les branches et utilise son bec pour sonder ou frapper le bois en quête de nourriture.",
+    "reproduction": "Le couple creuse une cavité de nidification dans un arbre ; les deux sexes participent à l’incubation et aux soins des jeunes.",
+    "ecology": "En forêt, conserver les arbres morts ou dépérissants préserve d’importantes ressources alimentaires pour ce pic.",
+    "conservation": "BirdLife classe l’espèce en « Préoccupation mineure » à l’échelle mondiale, tout en signalant une tendance démographique décroissante dans sa fiche 2026."
+  },
+  "sources": [
+    {
+      "url": "https://inpn.mnhn.fr/explorer/especes/dendrocopos_major/3611",
+      "title": "INPN — Dendrocopos major (French National Museum of Natural History)"
+    },
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/great-spotted-woodpecker-dendrocopos-major",
+      "title": "BirdLife DataZone — Great Spotted Woodpecker"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/pics/pic-epeiche",
+      "title": "LPO — Pic épeiche"
+    }
+  ]
+}

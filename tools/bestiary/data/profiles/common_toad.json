@@ -1,0 +1,142 @@
+{
+  "id": "common_toad",
+  "scientific": "Bufo bufo",
+  "group": "amphibians",
+  "name": {
+    "en": "Common toad",
+    "fr": "Crapaud commun"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common toad is a widespread Eurasian amphibian that spends much of the year on land and returns to water to breed.",
+      "fr": "Le crapaud commun est un amphibien largement répandu en Eurasie, qui vit surtout à terre et rejoint l’eau pour se reproduire."
+    },
+    "identification": {
+      "en": "It has dry-looking warty skin, relatively short hind legs and prominent glands behind the eyes.",
+      "fr": "Il a une peau verruqueuse d’aspect sec, des pattes arrière relativement courtes et de grosses glandes derrière les yeux."
+    },
+    "habitat": {
+      "en": "Outside the breeding season it uses woodland, scrub, gardens and other damp terrestrial refuges; breeding takes place in still or slow water.",
+      "fr": "Hors reproduction, il fréquente bois, broussailles, jardins et autres refuges terrestres humides ; il se reproduit en eau stagnante ou lente."
+    },
+    "diet": {
+      "en": "Adults eat invertebrates such as slugs, snails and insects; the exact diet changes with prey availability.",
+      "fr": "Les adultes mangent des invertébrés comme les limaces, escargots et insectes ; le régime varie selon les proies disponibles."
+    },
+    "behavior": {
+      "en": "Seasonal movements bring adults back to breeding waters, and they often walk rather than make long leaps.",
+      "fr": "Des déplacements saisonniers ramènent les adultes vers les sites de reproduction, et ils marchent souvent plutôt que de faire de grands bonds."
+    },
+    "reproduction": {
+      "en": "Females lay long gelatinous strings of eggs in water, where the tadpoles develop.",
+      "fr": "Les femelles pondent dans l’eau de longs cordons gélatineux d’œufs, où les têtards se développent."
+    },
+    "ecology": {
+      "en": "As a land-foraging predator and aquatic breeder, it connects terrestrial feeding areas with freshwater habitats.",
+      "fr": "Prédateur terrestre qui se reproduit en milieu aquatique, il relie les zones d’alimentation aux habitats d’eau douce."
+    },
+    "conservation": {
+      "en": "The IUCN assessment classifies the species globally as Least Concern, while noting habitat-related threats and declines in some areas.",
+      "fr": "L’évaluation de l’UICN classe l’espèce en Préoccupation mineure à l’échelle mondiale, tout en signalant des menaces liées aux habitats et des déclins locaux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common toad — Amphibian and Reptile Conservation",
+        "fr": "Crapaud commun — Amphibian and Reptile Conservation"
+      },
+      "url": "https://www.arc-trust.org/common-toad",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "ARC's English species account covers terrestrial habits, prey, appearance and movement."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 11,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bufo bufo — IUCN Red List",
+        "fr": "Bufo bufo — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2023-1.RLTS.T88316072A78902726.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The 2021 global assessment, published in 2023, reports Least Concern and notes habitat pressures."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 14,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Crapaud commun — French government species annex",
+        "fr": "Crapaud commun — annexe naturaliste française"
+      },
+      "url": "https://webissimo.developpement-durable.gouv.fr/IMG/pdf/2_annexes_cle056627.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "French-language account describes the species' broad Eurasian range, terrestrial life and seasonal return to water."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 15,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The IUCN global category does not describe the condition of every local population."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked an amphibian conservation organization, the IUCN global assessment and a French government natural-history account."
+}

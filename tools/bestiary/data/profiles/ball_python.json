@@ -1,0 +1,163 @@
+{
+  "id": "ball_python",
+  "scientific": "Python regius",
+  "group": "reptiles",
+  "name": {
+    "en": "Ball python",
+    "fr": "Python royal"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Ball python, also called the Royal python, is a small python native to West and Central Africa.",
+      "fr": "Le Python royal, aussi appelé Ball python, est un petit python originaire d’Afrique de l’Ouest et centrale."
+    },
+    "identification": {
+      "en": "Its brown-and-gold pattern is variable; when threatened, it commonly curls into a tight ball with its head protected inside.",
+      "fr": "Son motif brun et doré est variable ; lorsqu’il est menacé, il s’enroule souvent en boule serrée, la tête protégée au centre."
+    },
+    "habitat": {
+      "en": "It occurs in savannas, grasslands and open forests, and may shelter in burrows or other ground cover.",
+      "fr": "Il fréquente les savanes, les prairies et les forêts ouvertes, et peut s’abriter dans des terriers ou d’autres refuges au sol."
+    },
+    "diet": {
+      "en": "It is a constrictor that feeds mainly on small mammals, especially rodents.",
+      "fr": "C’est un constricteur qui se nourrit surtout de petits mammifères, notamment de rongeurs."
+    },
+    "behavior": {
+      "en": "It is mainly nocturnal and generally spends much of its time on or near the ground.",
+      "fr": "Il est surtout nocturne et passe généralement une grande partie de son temps au sol ou à proximité."
+    },
+    "reproduction": {
+      "en": "Females lay eggs and coil around them during incubation.",
+      "fr": "La femelle pond des œufs et s’enroule autour d’eux pendant l’incubation."
+    },
+    "ecology": {
+      "en": "Wild populations are affected by capture for trade and by local habitat change; harvest pressure differs across its range.",
+      "fr": "Les populations sauvages sont touchées par les captures pour le commerce et par les transformations locales de l’habitat ; la pression de prélèvement varie selon les régions."
+    },
+    "conservation": {
+      "en": "The IUCN assesses it globally as Near Threatened, citing concerns about exploitation and suspected declines in parts of West Africa.",
+      "fr": "L’UICN la classe à l’échelle mondiale dans la catégorie quasi menacée, en raison des prélèvements et de déclins soupçonnés dans certaines régions d’Afrique de l’Ouest."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ball python — Marwell Zoo",
+        "fr": "Python royal — Marwell Zoo"
+      },
+      "url": "https://www.marwell.org.uk/animals/royal-python/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Marwell describes the balling response, ground-oriented nocturnal habits, open habitats and egg incubation; its trade information is zoo-summary context."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 19,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Python royal — Parc animalier de La Barben",
+        "fr": "Python royal — Parc animalier de La Barben"
+      },
+      "url": "https://www.parcanimalierlabarben.com/animal/python-royal/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "La Barben describes the species’ West and Central African range and its grassland, forest and cultivated habitats."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 17,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ball python — Animal Diversity Web",
+        "fr": "Ball python — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Python_regius/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "ADW places the species in West and Central African grasslands and open forests and summarizes its animal diet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 18,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ball python — IUCN Red List",
+        "fr": "Python royal — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T177562A220378972.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The global assessment published in 2022 lists Python regius as Near Threatened, with exploitation and decline concerns."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 17,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Trade and population pressures are unevenly documented across the range; the conservation summary reflects the global IUCN assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. No close congener profile was identified for a justified cross-reference."
+}

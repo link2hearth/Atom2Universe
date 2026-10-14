@@ -1,0 +1,30 @@
+{
+  "id": "common_starfish",
+  "name": "Common starfish",
+  "scientific": "Asterias rubens",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Asterias rubens is a common North-East Atlantic sea star that lives on the seabed.",
+    "identification": "It usually has five tapering arms and varies from orange or pale brown to violet.",
+    "habitat": "It occurs on varied seabeds, including rock, gravel and mussel beds, from the shore into deeper water.",
+    "diet": "It preys especially on bivalves, but also eats other invertebrates and carrion.",
+    "behavior": "Rows of tube feet help it move and handle prey; it can partly evert its stomach to digest food outside its body.",
+    "reproduction": "It releases eggs and sperm into the water, where fertilization takes place; spawning is seasonal in many populations.",
+    "ecology": "As a predator of mussels and other benthic animals, it can influence the local composition of seabed communities.",
+    "conservation": "Marine Life Information Network describes it as abundant across much of the North-East Atlantic; this does not imply that every local population is stable."
+  },
+  "sources": [
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/1194",
+      "title": "Common starfish — MarLIN"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Asterias-rubens-Etoile-de-mer-commune-132",
+      "title": "Asterias rubens — DORIS"
+    },
+    {
+      "url": "https://www.aquarium-larochelle.com/preparer-sa-visite/encyclopedie-especes/etoile-de-mer-commune",
+      "title": "Common starfish — Aquarium de La Rochelle"
+    }
+  ]
+}

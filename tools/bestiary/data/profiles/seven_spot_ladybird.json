@@ -1,0 +1,142 @@
+{
+  "id": "seven_spot_ladybird",
+  "scientific": "Coccinella septempunctata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Seven-spot ladybird",
+    "fr": "Coccinelle à sept points"
+  },
+  "sections": {
+    "overview": {
+      "en": "The seven-spot ladybird is a familiar predatory beetle.",
+      "fr": "La coccinelle à sept points est un coléoptère prédateur familier."
+    },
+    "identification": {
+      "en": "Adults usually have red wing cases with seven black spots; other species can resemble them.",
+      "fr": "Les adultes ont généralement des élytres rouges à sept taches noires ; d’autres espèces peuvent leur ressembler."
+    },
+    "habitat": {
+      "en": "It lives on vegetation in gardens, parks and woodland edges.",
+      "fr": "Elle vit sur la végétation des jardins, parcs et lisières."
+    },
+    "diet": {
+      "en": "Aphids are its main prey, although it can also take other small invertebrates and supplementary foods.",
+      "fr": "Les pucerons constituent l’essentiel de ses proies, mais elle consomme aussi d’autres petits invertébrés et des ressources complémentaires."
+    },
+    "behavior": {
+      "en": "Both larvae and adults hunt on plants, and adults shelter in protected places during winter.",
+      "fr": "Les larves comme les adultes chassent sur les plantes, et les adultes s’abritent dans des lieux protégés en hiver."
+    },
+    "reproduction": {
+      "en": "Females lay eggs on plants near prey; larvae hatch and pass through several growth stages before pupating.",
+      "fr": "Les femelles pondent sur les plantes près des proies ; les larves éclosent puis traversent plusieurs stades avant la nymphose."
+    },
+    "ecology": {
+      "en": "By consuming aphids, it is a predator in plant-based food webs and can contribute to natural pest control.",
+      "fr": "En consommant des pucerons, elle participe aux réseaux alimentaires associés aux plantes et peut contribuer à la régulation naturelle des ravageurs."
+    },
+    "conservation": {
+      "en": "The Woodland Trust describes it as common in Britain and not a UK species of conservation concern; this is not a global assessment.",
+      "fr": "Le Woodland Trust la décrit comme commune en Grande-Bretagne et sans préoccupation de conservation dans ce pays ; ce n’est pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Seven-spot ladybird — Woodland Trust",
+        "fr": "Coccinelle à sept points — Woodland Trust"
+      },
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/beetles/7-spot-ladybird/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Woodland Trust describes the seven-spot pattern, habitats, overwintering and common UK status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 12,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coccinelle à sept points — LPO",
+        "fr": "Coccinelle à sept points — LPO"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/invertebres/coccinelle-a-sept-points",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "The French LPO account identifies aphids as the principal food and describes its life cycle."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 15,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coccinella septempunctata — INRAE aphid encyclopedia",
+        "fr": "Coccinella septempunctata — encyclopédie des pucerons INRAE"
+      },
+      "url": "https://encyclopedie-pucerons.hub.inrae.fr/fiche-especes/predateurs-insectes/coleoptera-coccinellidae/coccinella-septempunctata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "French research institute species file concerns this aphid predator and its ecological role."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 13,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The seven-spot pattern is typical but should not be used as the only identification character among all ladybird species."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared an English conservation-organization account with French LPO and INRAE species references; UK abundance is kept geographically qualified."
+}

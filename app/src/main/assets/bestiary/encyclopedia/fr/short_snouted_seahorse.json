@@ -1,0 +1,30 @@
+{
+  "id": "short_snouted_seahorse",
+  "name": "Hippocampe à museau court",
+  "scientific": "Hippocampus hippocampus",
+  "group": "fish",
+  "sections": {
+    "overview": "Cet hippocampe vit dans l’Atlantique est et la Méditerranée ; ses mentions couvrent les côtes européennes et nord-africaines.",
+    "identification": "Il possède un museau court et retroussé, une épine au-dessus de chaque œil et un corps pouvant atteindre environ 15 cm.",
+    "habitat": "Il est signalé dans des eaux côtières peu profondes, vaseuses ou rocheuses, notamment les estuaires et les zones d’algues ou d’herbiers.",
+    "diet": "Les hippocampes capturent de petits crustacés vivants ; la fiche de l’espèce mentionne notamment des mysidacés.",
+    "behavior": "Il s’agrippe à la végétation ou à d’autres supports avec sa queue préhensile et nage relativement peu efficacement.",
+    "reproduction": "Le mâle porte les œufs en développement dans une poche incubatrice et libère les jeunes après leur éclosion.",
+    "ecology": "Les données biologiques restent limitées ; MarLIN souligne que la dispersion et le rétablissement sont mal documentés.",
+    "conservation": "FishBase indique la catégorie mondiale UICN « Données insuffisantes », évaluée en 2017 ; une évaluation régionale ne doit pas la remplacer."
+  },
+  "sources": [
+    {
+      "url": "https://doris.ffessm.fr/Especes/Hippocampus-hippocampus-Hippocampe-a-museau-court-299",
+      "title": "DORIS — Hippocampus hippocampus (French diving federation species database)"
+    },
+    {
+      "url": "https://www.marlin.ac.uk/species/detail/1788",
+      "title": "MarLIN — Short-snouted seahorse"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/hippocampus-hippocampus",
+      "title": "FishBase — Hippocampus hippocampus"
+    }
+  ]
+}

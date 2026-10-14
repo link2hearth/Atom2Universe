@@ -1,0 +1,139 @@
+{
+  "id": "great_spotted_woodpecker",
+  "scientific": "Dendrocopos major",
+  "group": "birds",
+  "name": {
+    "en": "Great spotted woodpecker",
+    "fr": "Pic épeiche"
+  },
+  "sections": {
+    "overview": {
+      "en": "The great spotted woodpecker is a widespread Eurasian woodland bird.",
+      "fr": "Le Pic épeiche est un oiseau des bois largement répandu en Eurasie."
+    },
+    "identification": {
+      "en": "Its black-and-white plumage includes white shoulder patches and red beneath the tail; males have a red nape and juveniles a red crown.",
+      "fr": "Son plumage noir et blanc présente des taches blanches aux épaules et du rouge sous la queue ; le mâle a la nuque rouge et le jeune la calotte rouge."
+    },
+    "habitat": {
+      "en": "It uses deciduous, coniferous and mixed woods, as well as wooded parks and gardens.",
+      "fr": "Il fréquente les forêts de feuillus, de conifères ou mixtes, ainsi que les parcs et jardins arborés."
+    },
+    "diet": {
+      "en": "Its varied diet includes invertebrates, seeds and fruit; it searches bark and shallow wood for prey.",
+      "fr": "Son régime varié comprend des invertébrés, des graines et des fruits ; il recherche des proies dans l’écorce et le bois superficiel."
+    },
+    "behavior": {
+      "en": "It climbs trunks and branches and uses its bill to probe or hammer wood while feeding.",
+      "fr": "Il grimpe sur les troncs et les branches et utilise son bec pour sonder ou frapper le bois en quête de nourriture."
+    },
+    "reproduction": {
+      "en": "The pair excavates a nest cavity in a tree; both sexes take part in incubation and care of the young.",
+      "fr": "Le couple creuse une cavité de nidification dans un arbre ; les deux sexes participent à l’incubation et aux soins des jeunes."
+    },
+    "ecology": {
+      "en": "In woodland management, retaining dead and dying trees preserves important feeding resources for this woodpecker.",
+      "fr": "En forêt, conserver les arbres morts ou dépérissants préserve d’importantes ressources alimentaires pour ce pic."
+    },
+    "conservation": {
+      "en": "BirdLife lists the species globally as Least Concern, while reporting a decreasing population trend in its 2026 factsheet.",
+      "fr": "BirdLife classe l’espèce en « Préoccupation mineure » à l’échelle mondiale, tout en signalant une tendance démographique décroissante dans sa fiche 2026."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "INPN — Dendrocopos major (French National Museum of Natural History)",
+        "fr": "INPN — Dendrocopos major (French National Museum of Natural History)"
+      },
+      "url": "https://inpn.mnhn.fr/explorer/especes/dendrocopos_major/3611",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The INPN account describes plumage and records its varied food and foraging."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 12,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "BirdLife DataZone — Great Spotted Woodpecker",
+        "fr": "BirdLife DataZone — Great Spotted Woodpecker"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/great-spotted-woodpecker-dendrocopos-major",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife gives global range and the 2025 IUCN category and trend as displayed in its 2026 factsheet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 17,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "LPO — Great Spotted Woodpecker (French)",
+        "fr": "LPO — Pic épeiche"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/pics/pic-epeiche",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "LPO describes habitat, nest cavity and breeding biology, and explains the feeding value of deadwood."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 15,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Concise bilingual draft; claims remain scoped to the cited account and geography."
+}

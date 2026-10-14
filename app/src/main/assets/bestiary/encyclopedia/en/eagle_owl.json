@@ -1,0 +1,26 @@
+{
+  "id": "eagle_owl",
+  "name": "Eurasian eagle-owl",
+  "scientific": "Bubo bubo",
+  "group": "birds",
+  "sections": {
+    "overview": "The Eurasian eagle-owl is a large owl of Europe and Asia.",
+    "identification": "Orange eyes, feather tufts and mottled brown plumage are distinctive.",
+    "habitat": "It occupies varied landscapes and often nests on cliffs or sheltered ledges.",
+    "diet": "It takes mammals and birds, as well as other locally available prey.",
+    "behavior": "It is mainly active at dusk and night, when its territorial calls can carry far.",
+    "reproduction": "It lays in a sheltered site, often on a cliff ledge or directly on the ground.",
+    "ecology": "Its broad prey range makes it a top predator in many habitats.",
+    "conservation": "BirdLife International lists Bubo bubo as Least Concern globally, while regional populations can face different pressures."
+  },
+  "sources": [
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rapaces/grand-duc-d-europe",
+      "title": "Grand-duc d’Europe — LPO"
+    },
+    {
+      "url": "https://www.birdlife.org/birds/list-of-owl-species/",
+      "title": "List of owl species — BirdLife International"
+    }
+  ]
+}

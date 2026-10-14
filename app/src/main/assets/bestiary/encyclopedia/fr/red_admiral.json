@@ -1,0 +1,34 @@
+{
+  "id": "red_admiral",
+  "name": "Vulcain",
+  "scientific": "Vanessa atalanta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le Vulcain est un papillon largement répandu dans l’hémisphère Nord, dont de nombreuses populations effectuent des déplacements saisonniers.",
+    "identification": "Ses ailes sombres portent de vives bandes rouge orangé et des marques blanches près de l’extrémité des ailes antérieures.",
+    "habitat": "Les adultes fréquentent les jardins, les lisières et les espaces ouverts ; ils visitent les fleurs et les fruits mûrs ou fermentés.",
+    "diet": "Les chenilles se nourrissent surtout d’orties, tandis que les adultes prélèvent du nectar et d’autres liquides sucrés.",
+    "behavior": "Certains Vulcains migrent vers la Grande-Bretagne depuis le sud, tandis qu’une partie survit désormais aux hivers doux.",
+    "reproduction": "Les femelles pondent sur des plantes hôtes, et les chenilles s’abritent dans des feuilles qu’elles assemblent avec de la soie.",
+    "ecology": "Ses migrations et son hivernage varient selon les régions ; même en Grande-Bretagne, l’ampleur de l’hivernage réussi reste incertaine.",
+    "conservation": "L’UICN classe le Vulcain dans la catégorie préoccupation mineure à l’échelle mondiale, tout en indiquant que sa tendance de population est inconnue."
+  },
+  "sources": [
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/invertebres/papillons/vulcain",
+      "title": "Vulcain — LPO"
+    },
+    {
+      "url": "https://butterfly-conservation.org/news-and-blog/species-of-the-month-red-admiral",
+      "title": "Vulcain — Butterfly Conservation"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Vanessa_atalanta/",
+      "title": "Vulcain — Animal Diversity Web"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T174225A172421220.en",
+      "title": "Vulcain — Liste rouge de l’UICN"
+    }
+  ]
+}

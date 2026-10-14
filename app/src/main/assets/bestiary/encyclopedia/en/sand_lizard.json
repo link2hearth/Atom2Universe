@@ -1,0 +1,30 @@
+{
+  "id": "sand_lizard",
+  "name": "Sand lizard",
+  "scientific": "Lacerta agilis",
+  "group": "reptiles",
+  "sections": {
+    "overview": "The sand lizard ranges widely across Europe and into Central Asia.",
+    "identification": "Males often develop bright green flanks in spring; females are generally browner with rows of dark markings.",
+    "habitat": "It uses sunny habitats with cover and places to shelter or lay eggs; suitable sites vary across its broad range.",
+    "diet": "Its prey includes insects and other small invertebrates.",
+    "behavior": "In Britain, the species is associated especially with sandy heathland and coastal dunes; this is a regional pattern, not a range-wide rule.",
+    "reproduction": "Females lay eggs in warm, suitable ground; the young hatch after an incubation period that varies with conditions.",
+    "ecology": "Habitat degradation is identified as a major local threat in the French regional account.",
+    "conservation": "The global IUCN Red List assessment is Least Concern, assessed in 2018; local populations may face stronger pressures."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-2.RLTS.T157288A49644624.en",
+      "title": "IUCN Red List — Lacerta agilis"
+    },
+    {
+      "url": "https://ressources.shna-ofab.fr/fr/fiches-especes/lezard-des-souches-lacerta-agilis_45_T77600.html",
+      "title": "SHNA-OFAB — Lézard des souches (French regional naturalist network)"
+    },
+    {
+      "url": "https://www.arc-trust.org/sand-lizard",
+      "title": "Amphibian and Reptile Conservation — Sand lizard"
+    }
+  ]
+}

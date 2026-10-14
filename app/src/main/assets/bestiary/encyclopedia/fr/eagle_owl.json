@@ -1,0 +1,26 @@
+{
+  "id": "eagle_owl",
+  "name": "Grand-duc d’Europe",
+  "scientific": "Bubo bubo",
+  "group": "birds",
+  "sections": {
+    "overview": "Le grand-duc d’Europe est un grand-duc d’Eurasie.",
+    "identification": "Ses yeux orange, ses aigrettes et son plumage brun tacheté sont distinctifs.",
+    "habitat": "Il fréquente des paysages variés et niche souvent sur des falaises ou des replats abrités.",
+    "diet": "Il capture des mammifères et des oiseaux, ainsi que d’autres proies disponibles localement.",
+    "behavior": "Il est surtout actif au crépuscule et la nuit, lorsque ses appels territoriaux portent au loin.",
+    "reproduction": "Il pond dans un site abrité, souvent sur une corniche ou directement au sol.",
+    "ecology": "La diversité de ses proies en fait un prédateur supérieur dans de nombreux habitats.",
+    "conservation": "BirdLife International classe Bubo bubo en Préoccupation mineure à l’échelle mondiale, tandis que les populations régionales peuvent subir des pressions différentes."
+  },
+  "sources": [
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rapaces/grand-duc-d-europe",
+      "title": "Grand-duc d’Europe — LPO"
+    },
+    {
+      "url": "https://www.birdlife.org/birds/list-of-owl-species/",
+      "title": "Liste des espèces de chouettes et hiboux — BirdLife International"
+    }
+  ]
+}

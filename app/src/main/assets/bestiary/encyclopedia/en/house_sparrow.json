@@ -1,0 +1,34 @@
+{
+  "id": "house_sparrow",
+  "name": "House Sparrow",
+  "scientific": "Passer domesticus",
+  "group": "birds",
+  "sections": {
+    "overview": "The House Sparrow is a highly human-associated passerine now established across much of the world.",
+    "identification": "The male has a grey crown and black bib; the female is duller brown, with a pale eyebrow and no black bib.",
+    "habitat": "It commonly nests in cavities and crevices in buildings, but also uses hedges and nest boxes.",
+    "diet": "Adults eat seeds and scraps, while growing chicks are fed many insects.",
+    "behavior": "It is a sociable bird, often feeding or roosting in groups around human settlements.",
+    "reproduction": "It nests in cavities and can raise several broods in a long, favorable season.",
+    "ecology": "Compare the related Eurasian Tree Sparrow profile: that species has a chestnut crown and a black cheek spot, and the sexes look alike; the House Sparrow shows stronger sexual plumage differences.",
+    "conservation": "The species remains widespread globally, but it is Red-listed in the UK, reflecting regional concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/moineau-domestique",
+      "title": "House Sparrow — LPO"
+    },
+    {
+      "url": "https://www.nhm.ac.uk/discover/house-sparrow-passer-domesticus.html",
+      "title": "House Sparrow — Natural History Museum"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/house-sparrow",
+      "title": "House Sparrow — RSPB"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/tree-sparrow",
+      "title": "Eurasian Tree Sparrow — RSPB"
+    }
+  ]
+}
