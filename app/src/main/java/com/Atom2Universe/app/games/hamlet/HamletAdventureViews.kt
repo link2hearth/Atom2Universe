@@ -109,7 +109,8 @@ class HamletBattleView(context: Context, val battle: HamletBattle, private val a
                 HamletCharacterArt.Pose.ATTACK -> 0.22f - u.lunge
                 else -> battle.time + u.index * 0.31f
             }
-            HamletCharacterArt.draw(c, u.heroVisual, u.sprite, x, y, size, if (effectsEnabled) poseTime else 0f, pose, u.enemy)
+            HamletCharacterArt.draw(c, u.heroVisual, u.sprite, x, y, size, if (effectsEnabled) poseTime else 0f, pose, u.enemy,
+                fx = if (effectsEnabled) battle.time + u.index * 0.31f else 0f)
             if (u.shield > 0) {
                 paint.color = 0x775CDBF3; paint.style = Paint.Style.STROKE; paint.strokeWidth = 2f * dp
                 c.drawOval(x - size * 0.32f, y - size * 0.88f, x + size * 0.32f, y, paint); paint.style = Paint.Style.FILL

@@ -2,48 +2,52 @@ package com.Atom2Universe.app.games.hamlet
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Path
 import android.graphics.RectF
 import android.util.LruCache
 
-/** Original, articulated pixel art. Frames are rendered once on a 48 × 56 grid; scaling keeps
- * their crisp pixels. A shared bounded cache serves portraits, residents and battle units. */
+/** Original, articulated pixel art. Frames are rendered once on a 48 × 56 grid, with a margin for
+ * heroes' halos and companions; scaling keeps their crisp pixels. A shared bounded cache serves
+ * portraits, residents and battle units. */
 object HamletCharacterArt {
     enum class Pose(val frames: Int, val fps: Float) {
         IDLE(4, 3f), WALK(6, 9f), ATTACK(4, 16f), CAST(4, 7f), HURT(2, 12f), DOWN(1, 1f)
     }
     private const val W = 48
     private const val H = 56
-    private val cache = object : LruCache<Int, Bitmap>(6 * 1024 * 1024) {
+    private const val PAD_X = 11
+    private const val PAD_TOP = 12
+    private const val PAD_BOTTOM = 4
+    private val cache = object : LruCache<Int, Bitmap>(12 * 1024 * 1024) {
         override fun sizeOf(key: Int, value: Bitmap) = value.allocationByteCount
     }
     private val paint = Paint().apply { isFilterBitmap = false; isAntiAlias = false }
+    private val haloPaint = Paint().apply { isFilterBitmap = false; isAntiAlias = false }
     private val destination = RectF()
-    private val ink = 0xFF263440.toInt()
-    private val cream = 0xFFFFEFC4.toInt()
     private data class Colors(val cloth: Int, val light: Int, val dark: Int, val skin: Int, val hair: Int, val trim: Int)
     private fun color(hex: Int) = hex or 0xFF000000.toInt()
     private fun palette(cloth: Int, light: Int, dark: Int, skin: Int, hair: Int, trim: Int) =
         Colors(color(cloth), color(light), color(dark), color(skin), color(hair), color(trim))
-    private val palettes = arrayOf(
-        palette(0x4D9264, 0xA6CB79, 0x306344, 0xF5BA8C, 0x814831, 0xEED18A), // Lina
-        palette(0x508AA6, 0xA3CDD0, 0x315D78, 0xEABA8E, 0x784D36, 0xD8AB64), // Basile
-        palette(0x357C7C, 0x84BBB1, 0x234C62, 0xE2A77C, 0x283E43, 0xC0DBC2), // Maël
-        palette(0x937CB0, 0xC7ADE0, 0x5D527F, 0xF4CBB5, 0xE6E5E1, 0xC9E5B5), // Alba
-        palette(0xC66F8C, 0xF0B1B0, 0x874E78, 0xB97954, 0x493440, 0xF4D48D), // Rose
-        palette(0x445F9D, 0x8499CA, 0x323F76, 0xEEC4A3, 0xD7DFE6, 0xE8C96C), // Orion
-        palette(0xB98648, 0xE7C27E, 0x79533A, 0xCB9166, 0x593F2E, 0x8AC7B5), // Gaïa
-        palette(0xB95348, 0xEE9D68, 0x733E45, 0xF0B18A, 0xCB613D, 0xEDC26C), // Cyran
-        palette(0xE1D4A8, 0xFFF3D1, 0xAB976D, 0xAC6C4A, 0x433332, 0xE5B755), // Solène
-        palette(0x788958, 0xC2BF76, 0x4C6149, 0xDEAE80, 0x70472F, 0xEAD7A0), // Bran
-        palette(0x7EAEBE, 0xCEEAF0, 0x556C9F, 0xF1CDBF, 0xDCE9ED, 0xACDFDD), // Névé
-        palette(0xBB9254, 0xE5BD79, 0x76613F, 0xD49A72, 0x61493B, 0x9AD0CF) // Niko
+    private val residentPalettes = arrayOf(
+        palette(0x4D9264, 0xA6CB79, 0x306344, 0xF5BA8C, 0x814831, 0xEED18A),
+        palette(0x508AA6, 0xA3CDD0, 0x315D78, 0xEABA8E, 0x784D36, 0xD8AB64),
+        palette(0x357C7C, 0x84BBB1, 0x234C62, 0xE2A77C, 0x283E43, 0xC0DBC2),
+        palette(0x937CB0, 0xC7ADE0, 0x5D527F, 0xF4CBB5, 0xE6E5E1, 0xC9E5B5),
+        palette(0xC66F8C, 0xF0B1B0, 0x874E78, 0xB97954, 0x493440, 0xF4D48D),
+        palette(0x445F9D, 0x8499CA, 0x323F76, 0xEEC4A3, 0xD7DFE6, 0xE8C96C),
+        palette(0xB98648, 0xE7C27E, 0x79533A, 0xCB9166, 0x593F2E, 0x8AC7B5),
+        palette(0xB95348, 0xEE9D68, 0x733E45, 0xF0B18A, 0xCB613D, 0xEDC26C),
+        palette(0xE1D4A8, 0xFFF3D1, 0xAB976D, 0xAC6C4A, 0x433332, 0xE5B755),
+        palette(0x788958, 0xC2BF76, 0x4C6149, 0xDEAE80, 0x70472F, 0xEAD7A0),
+        palette(0x7EAEBE, 0xCEEAF0, 0x556C9F, 0xF1CDBF, 0xDCE9ED, 0xACDFDD),
+        palette(0xBB9254, 0xE5BD79, 0x76613F, 0xD49A72, 0x61493B, 0x9AD0CF)
     )
 
     fun prewarm(hero: Boolean, id: Int) {
-        for (pose in Pose.entries) for (frame in 0 until pose.frames) sprite(hero, id, pose, frame)
+        for (pose in Pose.entries) for (frame in 0 until pose.frames) {
+            sprite(hero, id, pose, frame)
+            if (hero && pose != Pose.DOWN && HamletHeroes.defs[Math.floorMod(id, HamletHeroes.defs.size)].rarity != HeroRarity.COMMON) halo(id, pose, frame)
+        }
     }
 
     fun prewarmResident(id: Int) {
@@ -54,241 +58,150 @@ object HamletCharacterArt {
     fun drawResident(c: Canvas, id: Int, x: Float, foot: Float, size: Float, time: Float = 0f,
                      walking: Boolean = false, working: Boolean = false, mirrored: Boolean = false) {
         val pose = if (walking) Pose.WALK else if (working) Pose.CAST else Pose.IDLE
-        val frame = if (time.isFinite()) (time.coerceAtLeast(0f) * pose.fps).toInt() % pose.frames else 0
-        drawBitmap(c, sprite(true, id, pose, frame, resident = true), x, foot, size, mirrored, 255)
+        drawBitmap(c, sprite(true, id, pose, frame(pose, time), resident = true), x, foot, size, mirrored, paint, 255)
     }
 
-    fun bitmap(hero: Boolean, id: Int, pose: Pose = Pose.IDLE, time: Float = 0f): Bitmap {
-        val frame = if (time.isFinite()) ((time.coerceAtLeast(0f) * pose.fps).toInt() % pose.frames) else 0
-        return sprite(hero, id, pose, frame)
+    fun bitmap(hero: Boolean, id: Int, pose: Pose = Pose.IDLE, time: Float = 0f): Bitmap = sprite(hero, id, pose, frame(pose, time))
+
+    /** Where [bitmap] lands for a character whose box is [size] tall with its feet on [foot]. */
+    fun bounds(x: Float, foot: Float, size: Float, out: RectF) {
+        val k = size / H
+        out.set(x - (W / 2f + PAD_X) * k, foot - (H + PAD_TOP) * k, x + (W / 2f + PAD_X) * k, foot + PAD_BOTTOM * k)
     }
 
-    /** Size is the containing square; foot is the ground anchor, independent of pose. */
+    /** Size is the character's box; foot is the ground anchor, independent of pose. Heroes also get
+     * their rarity effects, animated by [fx] (pass 0 to keep them still). */
     fun draw(c: Canvas, hero: Boolean, id: Int, x: Float, foot: Float, size: Float,
-             time: Float = 0f, pose: Pose = Pose.IDLE, mirrored: Boolean = false, alpha: Int = 255) {
-        val sprite = bitmap(hero, id, pose, time)
-        drawBitmap(c, sprite, x, foot, size, mirrored, alpha)
+             time: Float = 0f, pose: Pose = Pose.IDLE, mirrored: Boolean = false, alpha: Int = 255, fx: Float = time) {
+        val frame = frame(pose, time)
+        val sprite = sprite(hero, id, pose, frame)
+        val rarity = if (hero && pose != Pose.DOWN) HamletHeroes.defs[Math.floorMod(id, HamletHeroes.defs.size)].rarity else null
+        if (rarity == null || rarity == HeroRarity.COMMON) { drawBitmap(c, sprite, x, foot, size, mirrored, paint, alpha); return }
+        HamletHeroFx.under(c, rarity, x, foot, size, fx, mirrored, alpha)
+        haloPaint.color = HamletHeroFx.aura(rarity, fx)
+        drawBitmap(c, halo(id, pose, frame), x, foot, size, mirrored, haloPaint, (HamletHeroFx.haloAlpha(rarity, fx) * alpha).toInt())
+        drawBitmap(c, sprite, x, foot, size, mirrored, paint, alpha)
+        HamletHeroFx.over(c, rarity, x, foot, size, fx, mirrored, alpha)
     }
 
-    private fun drawBitmap(c: Canvas, sprite: Bitmap, x: Float, foot: Float, size: Float, mirrored: Boolean, alpha: Int) {
-        val wide = size * W / H
-        destination.set(x - wide / 2, foot - size, x + wide / 2, foot)
-        paint.alpha = alpha.coerceIn(0, 255)
+    private fun frame(pose: Pose, time: Float) = if (time.isFinite()) (time.coerceAtLeast(0f) * pose.fps).toInt() % pose.frames else 0
+
+    private fun drawBitmap(c: Canvas, sprite: Bitmap, x: Float, foot: Float, size: Float, mirrored: Boolean, p: Paint, alpha: Int) {
+        bounds(x, foot, size, destination)
+        p.alpha = alpha.coerceIn(0, 255)
         c.save()
         if (mirrored) { c.translate(x * 2, 0f); c.scale(-1f, 1f) }
-        c.drawBitmap(sprite, null, destination, paint)
+        c.drawBitmap(sprite, null, destination, p)
         c.restore()
-        paint.alpha = 255
+        p.alpha = 255
     }
 
     private fun sprite(hero: Boolean, rawId: Int, pose: Pose, frame: Int, resident: Boolean = false): Bitmap {
         val id = Math.floorMod(rawId, if (resident) 12 else if (hero) HamletHeroes.defs.size else 8)
         val key = (if (resident) 20000 else if (hero) 10000 else 0) + id * 256 + pose.ordinal * 16 + frame
         cache.get(key)?.let { return it }
-        val bmp = Bitmap.createBitmap(W, H, Bitmap.Config.ARGB_8888)
-        val p = Pixels(Canvas(bmp))
+        val bmp = Bitmap.createBitmap(W + PAD_X * 2, H + PAD_TOP + PAD_BOTTOM, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bmp)
+        canvas.translate(PAD_X.toFloat(), PAD_TOP.toFloat())
         if (pose == Pose.DOWN) {
-            p.c.translate(5f, 43f); p.c.scale(0.8f, 0.8f); p.c.rotate(76f); p.c.translate(-24f, -50f)
+            canvas.translate(5f, 43f); canvas.scale(0.8f, 0.8f); canvas.rotate(76f); canvas.translate(-24f, -50f)
         }
-        if (hero) {
-            val def = if (resident) null else HamletHeroes.defs[id]
-            p.hero(def?.portraitBase ?: id, pose, frame, resident, heroPalette(id, resident),
-                if (!resident && id >= 12) def else null)
-        } else p.enemy(id, pose, frame)
+        when {
+            resident -> Pixels(canvas).resident(id, pose, frame, residentPalettes[id])
+            hero -> HeroPainter(canvas).paint(HamletHeroLooks[id], HamletHeroes.defs[id], pose, frame)
+            else -> Pixels(canvas).enemy(id, pose, frame)
+        }
         cache.put(key, bmp)
         return bmp
     }
 
-    private fun heroPalette(id: Int, resident: Boolean): Colors {
-        val base = palettes[id % palettes.size]
-        if (resident || id < 12) return base
-        val def = HamletHeroes.defs[id]
-        val faction = when (def.faction) {
-            HeroFaction.GROVE -> intArrayOf(0x438A78, 0xB6D995, 0x28564C)
-            HeroFaction.DAWN -> intArrayOf(0x596FAD, 0xC6CBF1, 0x384773)
-            HeroFaction.FORGE -> intArrayOf(0xA55D4F, 0xE7AC7A, 0x653D42)
+    /** Glow around the hero's silhouette, as an alpha mask tinted when drawn. */
+    private fun halo(rawId: Int, pose: Pose, frame: Int): Bitmap {
+        val id = Math.floorMod(rawId, HamletHeroes.defs.size)
+        val key = 30000 + id * 256 + pose.ordinal * 16 + frame
+        cache.get(key)?.let { return it }
+        val source = sprite(true, id, pose, frame)
+        val w = source.width; val h = source.height
+        val radius = HamletHeroFx.haloRadius(HamletHeroes.defs[id].rarity)
+        val pixels = IntArray(w * h)
+        source.getPixels(pixels, 0, w, 0, 0, w, h)
+        val glow = IntArray(w * h)
+        val strength = intArrayOf(0, 255, 140, 60)
+        for (y in 0 until h) for (x in 0 until w) {
+            if (pixels[y * w + x] ushr 24 != 0) continue
+            var nearest = Int.MAX_VALUE
+            for (dy in -radius..radius) for (dx in -radius..radius) {
+                val d = dx * dx + dy * dy
+                if (d == 0 || d >= nearest || d > radius * radius) continue
+                val xx = x + dx; val yy = y + dy
+                if (xx in 0 until w && yy in 0 until h && pixels[yy * w + xx] ushr 24 != 0) nearest = d
+            }
+            if (nearest == Int.MAX_VALUE) continue
+            val ring = if (nearest <= 1) 1 else if (nearest <= 4) 2 else 3
+            glow[y * w + x] = (strength[ring] shl 24) or 0xFFFFFF
         }
-        val shift = if (id >= 24) .18f else -.08f
-        val trim = when (def.rarity) {
-            HeroRarity.COMMON -> 0xB5BEA8
-            HeroRarity.RARE -> 0xA4D7D2
-            HeroRarity.EPIC -> 0xD0A0E4
-            HeroRarity.LEGENDARY -> 0xF0CB6B
-            HeroRarity.MYTHIC -> 0xF19DA5
-        }
-        return base.copy(cloth = Iso.shade(faction[0], shift), light = color(faction[1]),
-            dark = color(faction[2]), trim = color(trim))
+        val shape = Bitmap.createBitmap(glow, w, h, Bitmap.Config.ARGB_8888)
+        val mask = shape.extractAlpha()
+        shape.recycle()
+        cache.put(key, mask)
+        return mask
     }
 
-    /** Only used while constructing cached frames, never during the game's drawing loop. */
-    private class Pixels(val c: Canvas) {
-        private val p = Paint().apply { isAntiAlias = false; strokeCap = Paint.Cap.SQUARE }
-        private fun rect(x: Int, y: Int, w: Int, h: Int, col: Int) { p.color = col; c.drawRect(x.toFloat(), y.toFloat(), (x + w).toFloat(), (y + h).toFloat(), p) }
-        private fun line(x: Int, y: Int, xx: Int, yy: Int, col: Int, width: Int = 1) {
-            p.color = col; p.strokeWidth = width.toFloat(); c.drawLine(x.toFloat(), y.toFloat(), xx.toFloat(), yy.toFloat(), p)
-        }
-        private fun poly(col: Int, vararg points: Int) {
-            val path = Path(); path.moveTo(points[0].toFloat(), points[1].toFloat())
-            for (i in 2 until points.size step 2) path.lineTo(points[i].toFloat(), points[i + 1].toFloat())
-            path.close(); p.color = col; c.drawPath(path, p)
-        }
-        private fun box(x: Int, y: Int, w: Int, h: Int, col: Int, border: Int = ink) {
-            rect(x + 1, y, w - 2, h, border); rect(x, y + 1, w, h - 2, border)
-            rect(x + 1, y + 1, w - 2, h - 2, col)
-        }
-        private fun glint(x: Int, y: Int, col: Int, size: Int = 2) { rect(x, y - size, 1, size * 2 + 1, col); rect(x - size, y, size * 2 + 1, 1, col) }
-        private fun gem(x: Int, y: Int, col: Int, light: Int, size: Int = 4) {
-            poly(ink, x, y - size - 1, x + size + 1, y, x, y + size + 1, x - size - 1, y)
-            poly(col, x, y - size, x + size, y, x, y + size, x - size, y)
-            line(x - 1, y - 2, x - 2, y, light, 2)
-        }
-
-        fun hero(id: Int, pose: Pose, f: Int, resident: Boolean, q: Colors, variant: HeroDef?) {
+    /** Residents and enemies; only used while constructing cached frames, never in a drawing loop. */
+    private class Pixels(c: Canvas) : PixelPen(c) {
+        fun resident(id: Int, pose: Pose, f: Int, q: Colors) {
             val walk = if (pose == Pose.WALK) intArrayOf(0, 2, 3, 0, -2, -3)[f] else 0
             val bob = if (pose == Pose.WALK) if (f % 3 == 1) -1 else 0 else if (pose == Pose.IDLE && f == 2) -1 else 0
-            val attack = pose == Pose.ATTACK
             val cast = pose == Pose.CAST
-            val hurt = pose == Pose.HURT
-            val lean = if (attack) intArrayOf(-2, 0, 3, 1)[f] else if (hurt) -2 else 0
-            c.save(); c.translate(lean.toFloat(), bob.toFloat())
-            // Cloak, hair and legs are separate joints, with a second stride phase for the arms.
-            if (!resident && id in intArrayOf(0, 2, 3, 4, 5, 8, 9, 10)) {
-                val flutter = if (pose == Pose.WALK || cast) if (f % 2 == 0) -2 else 1 else f % 2
-                poly(ink, 18, 27, 28, 28, 32 + flutter, 45, 15 + flutter, 44, 14, 33)
-                poly(q.dark, 18, 29, 27, 29, 30 + flutter, 43, 17 + flutter, 42)
-                line(18, 32, 17 + flutter, 40, q.cloth, 2)
-            }
+            c.save(); c.translate(0f, bob.toFloat())
             box(18 - walk / 2, 39, 6, 11 - kotlin.math.abs(walk) / 2, q.dark)
             box(25 + walk / 2, 39, 6, 11 + kotlin.math.abs(walk) / 2, q.cloth)
             box(17 - walk / 2, 48 - kotlin.math.abs(walk) / 2, 8, 4, color(0x594B44))
             box(24 + walk / 2, 49, 9, 4, color(0x594B44))
             rect(26 + walk / 2, 49, 4, 1, q.trim)
-            // Torso and layered collar. Armoured characters have broader shoulders.
-            val armored = !resident && (id == 1 || id == 6 || id == 7)
-            box(if (armored) 15 else 17, 27, if (armored) 17 else 14, 16, q.cloth)
+            box(17, 27, 14, 16, q.cloth)
             rect(19, 30, 3, 9, q.light); rect(28, 30, 2, 10, q.dark)
-            if (!resident && (id == 3 || id == 5 || id == 8 || id == 10)) {
-                poly(ink, 18, 34, 30, 34, 33, 48, 16, 48)
-                poly(q.cloth, 19, 35, 29, 35, 31, 46, 18, 46)
-                rect(21, 36, 2, 10, q.light); rect(18, 45, 13, 2, q.trim)
-            }
             rect(17, 39, 14, 3, q.dark); box(23, 39, 4, 3, q.trim)
-            if (armored) { box(13, 27, 8, 6, q.light); box(27, 27, 8, 6, q.cloth); rect(19, 33, 10, 2, q.trim) }
-            // Far hand follows walking; front hand has attack and casting key poses.
-            val handY = if (cast) intArrayOf(29, 23, 21, 25)[f] else if (attack) intArrayOf(33, 30, 33, 35)[f] else 37 - walk / 2
-            val handX = if (attack) intArrayOf(31, 34, 39, 34)[f] else if (cast) 34 else 32
+            val handY = if (cast) intArrayOf(29, 23, 21, 25)[f] else 37 - walk / 2
+            val handX = if (cast) 34 else 32
             line(18, 29, 15 - walk / 2, 36 + walk / 2, ink, 6)
             line(18, 29, 15 - walk / 2, 36 + walk / 2, q.cloth, 4)
             box(12 - walk / 2, 34 + walk / 2, 5, 5, q.skin)
             line(29, 30, handX, handY, ink, 6); line(29, 30, handX, handY, q.light, 4)
-            // Head, expressive eyes and individual hairstyles.
             box(17, 14, 16, 16, q.hair)
             box(20, 17, 13, 12, q.skin)
             rect(19, 17, 4, 4, q.hair); rect(20, 15, 11, 3, q.hair)
             rect(21, 19, 3, 2, blend(q.hair, cream)); rect(32, 23, 2, 3, q.skin)
-            val blink = (pose == Pose.IDLE && f == 3) || hurt || pose == Pose.DOWN
+            val blink = pose == Pose.IDLE && f == 3
             rect(26, 22, 2, if (blink) 1 else 3, ink); rect(31, 22, 1, if (blink) 1 else 2, ink)
             if (!blink) rect(26, 22, 1, 1, cream)
             rect(27, 27, 3, 1, color(0xAA6D60))
-            when (if (resident && id in intArrayOf(1, 2, 5, 6, 8, 9)) -1 else id) {
-                0 -> { // Leaf hairclip and swinging braid.
+            when (id) {
+                0 -> {
                     for (j in 0..4) box(16 + (j + f) % 2, 25 + j * 3, 4, 4, q.hair)
                     poly(q.light, 17, 15, 14, 10, 19, 12, 23, 9, 21, 15); rect(16, 38, 4, 2, q.trim)
                 }
-                1 -> { box(17, 14, 17, 5, q.dark); rect(19, 14, 12, 2, q.light); rect(18, 25, 4, 5, q.hair) }
-                2 -> { poly(ink, 16, 24, 15, 15, 24, 10, 32, 14, 35, 20, 21, 19, 21, 28); poly(q.cloth, 17, 22, 17, 16, 24, 12, 30, 15, 32, 18, 20, 18, 20, 25); rect(22, 26, 12, 3, q.dark); line(18, 28, 9 - f % 2, 32, q.light, 3) }
                 3 -> { rect(16, 18, 4, 20, q.hair); rect(18, 31, 3, 10, color(0xBDBDD4)); box(24, 13, 5, 4, q.trim); rect(32, 17, 3, 7, q.hair) }
                 4 -> { for (j in 0..3) box(15 + j * 4, 12 + j % 2, 6, 6, q.hair); box(14, 18, 5, 15, q.hair); box(16, 15, 5, 4, q.light); rect(18, 16, 1, 1, cream) }
-                5 -> { poly(ink, 14, 17, 17, 12, 20, 3, 27, 8, 31, 15, 36, 18, 34, 21, 15, 20); poly(q.cloth, 17, 16, 20, 5, 25, 9, 30, 16); rect(17, 17, 16, 2, q.trim); glint(23, 12, cream); poly(q.hair, 23, 26, 33, 25, 29, 35, 25, 31) }
-                6 -> { box(17, 12, 17, 8, q.cloth); rect(18, 14, 15, 2, q.trim); rect(24, 11, 4, 8, q.light); rect(16, 19, 4, 9, q.dark) }
                 7 -> { poly(q.hair, 17, 22, 15, 14, 20, 15, 19, 9, 25, 13, 28, 10, 34, 18, 24, 18, 20, 21); rect(17, 28, 16, 3, q.trim); line(18, 30, 9, 34 - f % 2, q.cloth, 3) }
-                8 -> { poly(q.light, 16, 22, 15, 14, 22, 11, 29, 12, 34, 17, 29, 16, 22, 15, 19, 23); box(22, 14, 5, 4, q.trim); glint(24, 15, cream, 1); rect(17, 24, 3, 16, q.light) }
-                9 -> { line(19, 17, 13, 9, q.trim, 3); line(13, 9, 13, 4, q.trim, 2); line(15, 12, 9, 11, q.trim, 2); line(28, 15, 32, 8, q.trim, 3); line(32, 8, 31, 3, q.trim, 2); line(31, 10, 37, 8, q.trim, 2); poly(q.hair, 22, 27, 32, 26, 29, 32, 24, 31) }
                 10 -> { poly(q.hair, 16, 32, 17, 16, 23, 12, 31, 14, 35, 22, 31, 20, 28, 18, 22, 18, 20, 35); gem(25, 14, q.trim, cream, 2); rect(18, 28, 2, 11, color(0xA8C7DB)) }
                 11 -> { box(16, 14, 18, 7, q.dark); box(18, 15, 6, 5, q.trim); box(26, 15, 6, 5, q.trim); rect(19, 16, 3, 2, q.light); rect(27, 16, 3, 2, q.light); box(12, 29, 7, 12, q.dark); rect(13, 29, 3, 8, q.trim) }
             }
-            if (resident) {
-                // Aprons and everyday tools, rather than armed miniature heroes.
-                rect(20, 32, 9, 10, q.light); rect(21, 34, 2, 7, q.trim)
-                if (id % 4 == 0) {
-                    box(handX - 3, handY + 1, 10, 8, color(0xB58D53)); rect(handX - 2, handY + 3, 8, 1, q.trim)
-                    poly(color(0x69A873), handX - 3, handY + 1, handX - 4, handY - 4, handX, handY - 2, handX + 3, handY - 6, handX + 5, handY + 1)
-                } else if (id % 4 == 1) {
-                    line(handX, handY + 5, handX + 2, handY - 7, color(0x946E45), 2); box(handX - 2, handY - 9, 9, 4, color(0x9DAFB5))
-                } else if (id % 4 == 2) {
-                    box(handX - 2, handY - 2, 8, 10, q.dark); rect(handX + 1, handY, 4, 6, cream)
-                } else {
-                    box(handX - 1, handY, 9, 8, color(0x75ADB6)); line(handX + 7, handY + 4, handX + 11, handY, color(0x75ADB6), 3)
-                    if (cast) { rect(handX + 11, handY + 4, 1, 2, color(0xB7E2E0)); rect(handX + 13, handY + 7 + f % 2, 1, 2, color(0xB7E2E0)) }
-                }
-            } else weapon(id, q, handX, handY, attack, cast, f)
-            if (variant != null) {
-                // Distinct faction insignia and rank ornaments keep a large roster readable.
-                box(21, 29, 7, 6, q.dark)
-                when (variant.faction) {
-                    HeroFaction.GROVE -> poly(q.trim, 23, 30, 26, 30, 25, 34, 22, 33)
-                    HeroFaction.DAWN -> glint(24, 32, q.trim, 2)
-                    HeroFaction.FORGE -> { rect(22, 31, 5, 2, q.trim); rect(24, 31, 1, 4, q.trim) }
-                }
-                if (variant.id >= 24) { box(16, 14, 4, 4, q.trim); rect(17, 15, 2, 2, cream) }
-                if (variant.rarity == HeroRarity.MYTHIC) {
-                    poly(q.trim, 16, 28, 12, 26, 13, 32, 17, 33)
-                    glint(34, 13, q.trim, 1)
-                }
+            // Aprons and everyday tools, rather than armed miniature heroes.
+            rect(20, 32, 9, 10, q.light); rect(21, 34, 2, 7, q.trim)
+            if (id % 4 == 0) {
+                box(handX - 3, handY + 1, 10, 8, color(0xB58D53)); rect(handX - 2, handY + 3, 8, 1, q.trim)
+                poly(color(0x69A873), handX - 3, handY + 1, handX - 4, handY - 4, handX, handY - 2, handX + 3, handY - 6, handX + 5, handY + 1)
+            } else if (id % 4 == 1) {
+                line(handX, handY + 5, handX + 2, handY - 7, color(0x946E45), 2); box(handX - 2, handY - 9, 9, 4, color(0x9DAFB5))
+            } else if (id % 4 == 2) {
+                box(handX - 2, handY - 2, 8, 10, q.dark); rect(handX + 1, handY, 4, 6, cream)
+            } else {
+                box(handX - 1, handY, 9, 8, color(0x75ADB6)); line(handX + 7, handY + 4, handX + 11, handY, color(0x75ADB6), 3)
+                if (cast) { rect(handX + 11, handY + 4, 1, 2, color(0xB7E2E0)); rect(handX + 13, handY + 7 + f % 2, 1, 2, color(0xB7E2E0)) }
             }
             box(handX - 2, handY - 2, 5, 5, q.skin)
-            if (cast && !resident) { gem(38, 13 + f % 2, q.trim, cream, 3); glint(13 + f * 3, 12 + (f % 2) * 4, q.light, 1) }
-            if (hurt) { rect(20, 22, 4, 1, color(0xDB7767)); line(36, 20, 39, 16, cream, 2) }
             c.restore()
-        }
-
-        private fun weapon(id: Int, q: Colors, x: Int, y: Int, attack: Boolean, cast: Boolean, f: Int) {
-            when (id) {
-                0 -> { // Bow bends between draw and release; arrow arm follows it.
-                    val flex = if (attack && f == 1) 3 else 0
-                    line(x + 1, y - 13, x + 6 + flex, y - 7, ink, 3); line(x + 6 + flex, y - 7, x + 6 + flex, y + 6, ink, 3); line(x + 6 + flex, y + 6, x + 1, y + 12, ink, 3)
-                    line(x + 1, y - 12, x + 5 + flex, y - 6, q.trim, 2); line(x + 5 + flex, y - 6, x + 5 + flex, y + 5, q.trim, 2); line(x + 5 + flex, y + 5, x + 1, y + 11, q.trim, 2)
-                    line(x, y - 12, x - flex, y, cream); line(x - flex, y, x, y + 11, cream)
-                    if (!attack || f < 2) { line(x - 6, y, x + 9, y, cream); poly(q.light, x + 8, y - 2, x + 12, y, x + 8, y + 2) }
-                }
-                1, 6 -> {
-                    val sy = if (attack) -2 else 0
-                    poly(ink, 9, 31 + sy, 20, 29 + sy, 22, 42 + sy, 16, 48 + sy, 9, 43 + sy)
-                    poly(q.dark, 11, 33 + sy, 18, 31 + sy, 20, 41 + sy, 16, 45 + sy, 11, 41 + sy)
-                    line(15, 33 + sy, 16, 43 + sy, q.trim, 2); line(12, 37 + sy, 19, 37 + sy, q.trim, 2)
-                    line(x, y + 8, x + (if (attack) 5 else 0), y - 14, color(0x6B503D), 3)
-                    if (id == 1) { box(x - 5, y - 17, 13, 8, q.dark); rect(x - 4, y - 16, 10, 3, q.light) }
-                    else { poly(ink, x - 4, y - 12, x, y - 24, x + 4, y - 12); poly(q.light, x - 2, y - 13, x, y - 22, x + 2, y - 13) }
-                }
-                2, 7 -> {
-                    val tipX = if (attack && f >= 2) x + 8 else x + 3
-                    val tipY = if (attack && f >= 2) y - 8 else y - 21
-                    line(x, y + 4, x, y - 5, q.dark, 3); line(x - 4, y - 4, x + 4, y - 4, q.trim, 2)
-                    poly(ink, x - 2, y - 5, tipX, tipY, x + 3, y - 5)
-                    poly(q.light, x - 1, y - 6, tipX, tipY + 2, x + 2, y - 5)
-                    line(x, y - 6, tipX, tipY + 2, cream)
-                    if (id == 2) { line(13, 39, 9, 44, q.trim, 2); line(10, 42, 7, 47, q.light, 2) }
-                }
-                4 -> { // Lute's fingerboard and plucked strings.
-                    line(23, 40, 36, 23, ink, 5); line(23, 40, 36, 23, q.trim, 3)
-                    box(18, 32, 12, 14, color(0xA86D44)); box(20, 34, 8, 10, color(0xE6AF72)); rect(24, 36, 3, 4, q.dark)
-                    line(23, 44, 35, 25, cream); if (cast || attack) { glint(39, 20 + f, q.trim, 2); rect(12, 26 - f, 3, 2, q.light); rect(14, 21 - f, 1, 6, q.light) }
-                }
-                11 -> {
-                    line(x, y + 5, x + 4, y - 12, q.trim, 4)
-                    box(x - 1, y - 18, 11, 11, q.dark); rect(x, y - 17, 4, 7, q.light); rect(x + 6, y - 17, 3, 7, q.light); rect(x + 3, y - 20, 3, 9, Color.TRANSPARENT)
-                    box(12, 37, 9, 9, q.cloth); rect(14, 39, 5, 2, q.trim)
-                }
-                else -> {
-                    line(x + 1, y + 13, x + 1, y - 18, ink, 4); line(x + 1, y + 12, x + 1, y - 17, q.trim, 2)
-                    when (id) {
-                        3, 9 -> { poly(q.light, x + 1, y - 17, x - 5, y - 20, x - 6, y - 26, x, y - 23, x + 1, y - 17, x + 4, y - 25, x + 9, y - 27, x + 8, y - 20); gem(x + 1, y - 19, q.trim, cream, 3) }
-                        8 -> { glint(x + 1, y - 21, q.trim, 6); gem(x + 1, y - 21, q.light, cream, 3) }
-                        else -> { gem(x + 1, y - 21, q.light, cream, 5); rect(x - 3, y - 15, 8, 2, q.trim) }
-                    }
-                    if (cast) glint(x + 7, y - 24, cream, if (f % 2 == 0) 2 else 1)
-                }
-            }
         }
 
         fun enemy(id: Int, pose: Pose, f: Int) {
@@ -380,6 +293,5 @@ object HamletCharacterArt {
             rect(x, y, 3, if (closed) 1 else 4, ink); rect(x + distance, y, 2, if (closed) 1 else 3, ink)
             if (!closed) { rect(x + 1, y, 1, 1, cream); rect(x + distance, y, 1, 1, cream) }
         }
-        private fun blend(a: Int, b: Int) = Color.rgb((Color.red(a) * 3 + Color.red(b)) / 4, (Color.green(a) * 3 + Color.green(b)) / 4, (Color.blue(a) * 3 + Color.blue(b)) / 4)
     }
 }

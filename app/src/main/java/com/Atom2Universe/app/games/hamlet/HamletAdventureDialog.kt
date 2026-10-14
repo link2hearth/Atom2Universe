@@ -8,6 +8,9 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.View
@@ -139,10 +142,25 @@ internal class HamletAdventureDialog(private val context: Context, private val g
             resourceChips[i].contentDescription = description; resourceChips[i].tooltipText = description
         }
     }
-    private fun portrait(kind: String, id: Int, heightDp: Int = 94): View = object : View(context) {
+    /** Rarity colour on the card's edge, so a hero's rank reads before its name. */
+    private fun rarityCard(owned: Boolean, rarity: HeroRarity) = GradientDrawable().apply {
+        setColor(if (owned) 0xFFF0E4CB.toInt() else 0xFFC6CFC5.toInt()); cornerRadius = dp(14).toFloat()
+        setStroke(dp(1 + (rarity.ordinal + 1) / 2), HamletHeroFx.main(rarity))
+    }
+    private fun tinted(value: String, part: String, rarity: HeroRarity): CharSequence = SpannableString(value).apply {
+        val start = value.lastIndexOf(part)
+        if (start >= 0) {
+            setSpan(ForegroundColorSpan(HamletHeroFx.deep(rarity)), start, start + part.length, 0)
+            setSpan(StyleSpan(Typeface.BOLD), start, start + part.length, 0)
+        }
+    }
+    /** Framed hero portraits stand on their rarity backdrop, with room under the feet for the rune circle. */
+    private fun portrait(kind: String, id: Int, heightDp: Int = 94, framed: Boolean = false): View = object : View(context) {
         private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { isFilterBitmap = true }
         private val destination = RectF()
         private val sprite = if (kind == "building") buildingArt.forDef(Hamlet.byId.getValue(HamletAdventure.FACILITIES[id])) else null
+        private val rarity = if (framed && kind == "hero") HamletHeroes.defs[id].rarity else null
+        private val backdrop = rarity?.let { HeroBackdrop(it, resources.displayMetrics.density) }
         override fun onDraw(c: Canvas) {
             val size = minOf(width.toFloat(), height.toFloat())
             if (sprite != null) {
@@ -152,8 +170,13 @@ internal class HamletAdventureDialog(private val context: Context, private val g
                 c.drawBitmap(sprite.bmp, null, destination, paint)
             } else {
                 val time = if (effectsEnabled) android.os.SystemClock.uptimeMillis() / 1000f else 0f
-                HamletCharacterArt.draw(c, kind == "hero", id, width / 2f, height.toFloat(), size, time = time)
-                if (effectsEnabled && isAttachedToWindow && windowVisibility == View.VISIBLE && hasWindowFocus()) postInvalidateDelayed(140L)
+                if (backdrop != null) {
+                    backdrop.draw(c, width.toFloat(), height.toFloat(), time)
+                    val inner = size * .86f
+                    HamletCharacterArt.draw(c, true, id, width / 2f, height - inner * .07f, inner, time = time)
+                } else HamletCharacterArt.draw(c, kind == "hero", id, width / 2f, height.toFloat(), size, time = time)
+                val delay = if ((rarity?.ordinal ?: 0) >= HeroRarity.EPIC.ordinal) 90L else 140L
+                if (effectsEnabled && isAttachedToWindow && windowVisibility == View.VISIBLE && hasWindowFocus()) postInvalidateDelayed(delay)
             }
         }
         override fun onWindowFocusChanged(hasWindowFocus: Boolean) { super.onWindowFocusChanged(hasWindowFocus); if (hasWindowFocus) invalidate() }
@@ -255,14 +278,12 @@ internal class HamletAdventureDialog(private val context: Context, private val g
             val line = LinearLayout(context)
             for (h in pair) {
                 val box = column().apply {
-                    setPadding(dp(8), dp(8), dp(8), dp(8)); background = bg(if (h.owned) 0xFFF0E4CB.toInt() else 0xFFC6CFC5.toInt())
+                    setPadding(dp(8), dp(8), dp(8), dp(8)); background = rarityCard(h.owned, h.def.rarity)
                 }
-                box.addView(portrait("hero", h.id, 116).apply {
-                    background = HamletUi.panel(context, intArrayOf(0xFFD9E7D2.toInt(), 0xFFEAE1C4.toInt(), 0xFFE4D4C8.toInt())[h.def.faction.ordinal], 12)
-                    contentDescription = heroName(h.id)
-                })
+                box.addView(portrait("hero", h.id, 116, framed = true).apply { contentDescription = heroName(h.id) })
                 text(box, heroName(h.id), true)
-                text(box, s("hero_card", s("faction_${h.def.faction.ordinal}"), s("role_${h.def.role.name.lowercase()}"), s("rarity_${h.def.rarity.ordinal}")))
+                val rarityName = s("rarity_${h.def.rarity.ordinal}")
+                text(box, "").text = tinted(s("hero_card", s("faction_${h.def.faction.ordinal}"), s("role_${h.def.role.name.lowercase()}"), rarityName), rarityName, h.def.rarity)
                 text(box, if (h.owned) s("hero_growth", a.effectiveLevel(h.id), h.stars, h.shards) else recruitmentRequirement(h))
                 if (!h.owned) text(box, s("shards_progress", h.shards, a.shardUnlockCost(h.id)))
                 box.addView(button(s("details")) { showHero(h.id) })
@@ -284,9 +305,10 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         for (result in results) {
             val h = a.heroes[result.hero]
             val row = LinearLayout(context).apply { gravity = Gravity.CENTER_VERTICAL }
-            row.addView(portrait("hero", h.id, 76), LinearLayout.LayoutParams(dp(76), dp(76)))
+            row.addView(portrait("hero", h.id, 76, framed = true), LinearLayout.LayoutParams(dp(76), dp(76)))
             val detail = column()
-            text(detail, if (result.newHero) s("recruit_new", heroName(h.id), s("rarity_${h.def.rarity.ordinal}")) else s("recruit_duplicate", heroName(h.id), s("rarity_${h.def.rarity.ordinal}"), result.shards), true)
+            val rarityName = s("rarity_${h.def.rarity.ordinal}")
+            text(detail, "", true).text = tinted(if (result.newHero) s("recruit_new", heroName(h.id), rarityName) else s("recruit_duplicate", heroName(h.id), rarityName, result.shards), rarityName, h.def.rarity)
             if (result.guaranteed) text(detail, s("recruit_pity"))
             row.addView(detail, LinearLayout.LayoutParams(0, -2, 1f)); content.addView(row)
         }
@@ -296,7 +318,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
     private fun showHero(hero: Int) {
         val h = a.heroes[hero]
         val content = column().apply { setPadding(dp(14), dp(10), dp(14), dp(10)); setBackgroundColor(0xFFF3E8D1.toInt()) }
-        content.addView(portrait("hero", hero, 142))
+        content.addView(portrait("hero", hero, 142, framed = true))
         text(content, s("hero_story_$hero"))
         text(content, s("hero_growth", a.effectiveLevel(hero), h.stars, h.shards), true)
         if (h.owned && a.effectiveLevel(hero) > h.level) text(content, raw("hamlet_progression_training_hero", h.level, a.effectiveLevel(hero)))
@@ -351,7 +373,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
             for (slot in range) {
                 val hero = a.teams[a.selectedTeam][slot]
                 val cell = column().apply { setPadding(dp(2), dp(3), dp(2), dp(3)) }
-                if (hero >= 0) cell.addView(portrait("hero", hero, if (slot < 2) 105 else 80))
+                if (hero >= 0) cell.addView(portrait("hero", hero, if (slot < 2) 105 else 80, framed = true))
                 val unlocked = slot < a.slotCount()
                 cell.addView(button(if (!unlocked) s("slot_locked", if (slot == 4) 10 else 24) else if (hero < 0) s("empty_slot") else heroName(hero), unlocked) { chooseHero(slot) })
                 line.addView(cell, LinearLayout.LayoutParams(0, -2, 1f))
@@ -405,7 +427,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         if (!showLegacyGear) return
         text(rows, s("forge_help"), dark = false)
         for (hero in a.teams[a.selectedTeam].filter { it >= 0 }) {
-            val h = a.heroes[hero]; val row = card(heroName(hero)); row.addView(portrait("hero", hero, 75))
+            val h = a.heroes[hero]; val row = card(heroName(hero)); row.addView(portrait("hero", hero, 75, framed = true))
             for (slot in 0..3) {
                 text(row, s("gear_row", s("gear_$slot"), raw("hamlet_armory_rarity_${h.gearTier[slot]}"), h.gear[slot]))
                 val buttons = LinearLayout(context)

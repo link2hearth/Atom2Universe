@@ -474,4 +474,58 @@ class HamletApercuTest {
         assertTrue("photo hides selection", first.sameAs(second))
         first.recycle(); second.recycle(); activity.finish()
     }
+
+    private val herosParRarete = HamletHeroes.defs.sortedWith(compareBy<HeroDef> { it.rarity.ordinal }.thenBy { it.id }).map { it.id }
+
+    private fun grilleHeros(nom: String, ids: List<Int>, cols: Int, cell: Int, fond: Int, temps: Float = .4f) {
+        val rows = (ids.size + cols - 1) / cols
+        val bmp = Bitmap.createBitmap(cols * cell, rows * (cell + 26), Bitmap.Config.ARGB_8888)
+        val c = Canvas(bmp)
+        c.drawColor(0xFF2B3A36.toInt())
+        val text = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE; textSize = 18f }
+        val back = Paint().apply { color = fond }
+        for ((i, id) in ids.withIndex()) {
+            val x = (i % cols) * cell.toFloat(); val y = (i / cols) * (cell + 26).toFloat()
+            c.drawRect(x + 3, y + 3, x + cell - 3, y + cell - 3, back)
+            HamletCharacterArt.draw(c, true, id, x + cell / 2f, y + cell - cell * .08f, cell * .74f, temps)
+            val d = HamletHeroes.defs[id]
+            c.drawText("$id ${d.rarity.name.lowercase()} ${d.role.name.lowercase()}", x + 6, y + cell + 19f, text)
+        }
+        ecrire(nom, bmp)
+    }
+
+    /** Les 36 héros par rareté (jour, nuit, gros plans), leurs poses et leurs cadres de portrait. */
+    @Test fun heros() {
+        grilleHeros("heros", herosParRarete, 6, 230, 0xFF6E8C6A.toInt())
+        grilleHeros("heros_nuit", herosParRarete, 6, 230, 0xFF1C2A33.toInt(), temps = 1.7f)
+        herosParRarete.chunked(6).forEachIndexed { i, ids -> grilleHeros("heros_gros_plan_$i", ids, 3, 420, 0xFF6E8C6A.toInt()) }
+        val ids = listOf(0, 16, 32, 8, 30, 35, 10)
+        val poses = HamletCharacterArt.Pose.entries
+        val cell = 170
+        val sheet = Bitmap.createBitmap(poses.sumOf { it.frames } * cell, ids.size * cell, Bitmap.Config.ARGB_8888)
+        val c = Canvas(sheet)
+        c.drawColor(0xFF6E8C6A.toInt())
+        for ((row, id) in ids.withIndex()) {
+            var col = 0
+            for (pose in poses) for (frame in 0 until pose.frames) {
+                val t = (frame + .5f) / pose.fps
+                HamletCharacterArt.draw(c, true, id, col * cell + cell / 2f, row * cell + cell * .92f, cell * .7f, t, pose, fx = t)
+                col++
+            }
+        }
+        ecrire("heros_poses", sheet)
+        val cards = listOf(0, 6, 5, 8, 10)
+        val w = 330; val h = 240
+        val strip = Bitmap.createBitmap(cards.size * (w + 20), h + 20, Bitmap.Config.ARGB_8888)
+        val sc = Canvas(strip)
+        sc.drawColor(0xFFF0E4CB.toInt())
+        for ((i, id) in cards.withIndex()) {
+            sc.save(); sc.translate(10f + i * (w + 20f), 10f)
+            HeroBackdrop(HamletHeroes.defs[id].rarity, 2.6f).draw(sc, w.toFloat(), h.toFloat(), 1.1f)
+            val size = minOf(w, h) * .86f
+            HamletCharacterArt.draw(sc, true, id, w / 2f, h - size * .07f, size, 1.1f)
+            sc.restore()
+        }
+        ecrire("heros_cartes", strip)
+    }
 }

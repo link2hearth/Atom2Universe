@@ -75,8 +75,7 @@ class HamletHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Context) : Ca
             canvas.drawOval(w * x - heroSize * .26f, foot - heroSize * .045f,
                 w * x + heroSize * .26f, foot + heroSize * .018f, paint)
             val sprite = HamletCharacterArt.bitmap(true, hero)
-            val halfWidth = heroSize * sprite.width / sprite.height / 2
-            destination.set(w * x - halfWidth, foot - heroSize, w * x + halfWidth, foot)
+            HamletCharacterArt.bounds(w * x, foot, heroSize, destination)
             paint.color = 0xFFFFFFFF.toInt()
             canvas.drawBitmap(sprite, null, destination, paint)
         }

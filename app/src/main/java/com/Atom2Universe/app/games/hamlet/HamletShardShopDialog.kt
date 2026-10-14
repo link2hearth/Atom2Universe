@@ -106,13 +106,16 @@ internal class HamletShardShopDialog(private val context: Context, private val g
             rows.addView(box, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(9) })
             val identity = LinearLayout(context)
             identity.addView(object : View(context) {
+                private val backdrop = HeroBackdrop(h.def.rarity, resources.displayMetrics.density)
                 override fun onDraw(canvas: Canvas) {
-                    HamletCharacterArt.draw(canvas, true, h.id, width / 2f, height.toFloat(), minOf(width, height).toFloat(), time = 0f)
+                    backdrop.draw(canvas, width.toFloat(), height.toFloat(), 0f)
+                    val size = minOf(width, height) * .86f
+                    HamletCharacterArt.draw(canvas, true, h.id, width / 2f, height - size * .07f, size, time = 0f)
                 }
             }.apply { contentDescription = name(h.id) }, LinearLayout.LayoutParams(dp(68), dp(76)))
             val details = column()
             text(details, name(h.id), true)
-            text(details, rarity(h.def.rarity))
+            text(details, rarity(h.def.rarity)).setTextColor(HamletHeroFx.deep(h.def.rarity))
             text(details, raw("hamlet_a_hero_growth", g.adventure.effectiveLevel(h.id), h.stars, h.shards))
             identity.addView(details, LinearLayout.LayoutParams(0, -2, 1f)); box.addView(identity)
             if (h.stars < HamletHeroes.STAR_CAP) {

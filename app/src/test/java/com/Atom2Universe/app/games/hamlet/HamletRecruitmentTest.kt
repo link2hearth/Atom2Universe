@@ -18,7 +18,7 @@ class HamletRecruitmentTest {
             assertEquals(HeroRole.entries.toSet(), defs.filter { it.faction == faction }.map { it.role }.toSet())
         }
         assertEquals(4, game().adventure.heroes.count { it.owned })
-        assertTrue(defs.all { it.portraitBase in 0..11 })
+        assertEquals(defs.size, HamletHeroLooks.size)
         assertEquals(listOf(12, 12, 8, 3, 1), HeroRarity.entries.map { rarity -> defs.count { it.rarity == rarity } })
         assertTrue(game().adventure.heroes.filter { it.owned }.all { it.def.rarity == HeroRarity.COMMON })
     }

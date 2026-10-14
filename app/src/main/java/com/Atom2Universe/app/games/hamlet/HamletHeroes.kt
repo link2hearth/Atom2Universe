@@ -7,12 +7,7 @@ enum class HeroAbility { NONE, WARD, PURIFY, FROST, EXPOSE, REJUVENATE, EXECUTIO
 
 data class HeroDef(val id: Int, val faction: HeroFaction, val role: HeroRole, val rarity: HeroRarity,
     val rescue: Int, val hp: Int, val attack: Int, val armor: Int, val interval: Float, val skill: Float, val ultimate: Float,
-    val ability: HeroAbility = HeroAbility.NONE) {
-    val portraitBase: Int get() = if (id < 12) id else when (role) {
-        HeroRole.RANGER -> 0; HeroRole.GUARDIAN -> 1; HeroRole.ROGUE -> 2; HeroRole.HEALER -> 3
-        HeroRole.BARD -> 4; HeroRole.MAGE -> 5; HeroRole.DUELIST -> 7; HeroRole.SUMMONER -> 9; HeroRole.ENGINEER -> 11
-    }
-}
+    val ability: HeroAbility = HeroAbility.NONE)
 
 class HeroState(val id: Int) {
     var owned = false
