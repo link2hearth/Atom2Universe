@@ -3464,4 +3464,6 @@
     <string name="pt_wikidata_ref">Wikidata : %1$s · révision %2$s</string>
     <string name="pt_zoom_in">Agrandir</string>
     <string name="pt_zoom_out">Réduire</string>
+    <string name="pt_species_40244">Lactarius torminosus</string>
+    <string name="pt_species_49490">Xerocomellus rubellus</string>
 </resources>

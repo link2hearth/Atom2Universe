@@ -352546,6 +352546,45 @@
       },
       "conflicts_with": {},
       "species": false
+    },
+    {
+      "id": "ott40244",
+      "parent": "mrcaott471ott5265",
+      "scientific": "Lactarius torminosus",
+      "ott": 40244,
+      "tax_sources": [
+        "if:228133",
+        "ncbi:93008",
+        "ncbi:152948",
+        "gbif:5248619",
+        "irmng:11321258"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott40244"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_40244",
+      "requested_node_id": "ott40244"
+    },
+    {
+      "id": "ott49490",
+      "parent": "ott1012685",
+      "scientific": "Xerocomellus rubellus",
+      "ott": 49490,
+      "tax_sources": [
+        "if:511900",
+        "ncbi:73893",
+        "ncbi:545451",
+        "ncbi:545448"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott49490"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_49490",
+      "requested_node_id": "ott49490"
     }
   ]
 }

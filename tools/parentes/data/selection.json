@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2169,
+  "candidate_count": 2170,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -19738,6 +19738,22 @@
       "seed": false,
       "id": "ott556043",
       "ott": 556043
+    },
+    {
+      "name": "Lactarius torminosus",
+      "en": "Woolly milkcap",
+      "fr": "Lactaire à toison",
+      "seed": false,
+      "id": "ott40244",
+      "ott": 40244
+    },
+    {
+      "name": "Xerocomellus rubellus",
+      "en": "Ruby bolete",
+      "fr": "Bolet framboise",
+      "seed": false,
+      "id": "ott49490",
+      "ott": 49490
     }
   ],
   "excluded": [
@@ -20171,10 +20187,6 @@
     },
     {
       "name": "Koolasuchus cleelandi",
-      "reason": "No unique accepted species in synthesis"
-    },
-    {
-      "name": "Lactarius torminosus",
       "reason": "No unique accepted species in synthesis"
     },
     {

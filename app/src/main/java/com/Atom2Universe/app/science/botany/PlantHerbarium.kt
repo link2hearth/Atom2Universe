@@ -92,10 +92,9 @@ internal object PlantHerbarium {
     // Iriartea deltoidea depicts blue-black fruit, unlike its documented yellow-green fruit;
     // N. inermis depicts a prominent pitcher rim, unlike its nearly absent peristome;
     // P. usta depicts a self-rooted plant with red cones, unlike the parasitic species;
-    // S. alatum depicts broad toothed leaves, unlike the species' narrow, divided lower leaves;
-    // T. funalis depicts flattened pads and a mismatching flower and fruit;
-    // V. lantana depicts pinnate leaves instead of the species' simple, opposite leaves.
-    private val mismatchedPlates = setOf("dracaena_braunii", "iriartea_deltoidea", "nepenthes_inermis", "parasitaxus_usta", "sesamum_alatum", "tacinga_funalis", "viburnum_lantana")
+    // The replacement plates for S. alatum, T. funalis, and V. lantana were checked against
+    // their diagnostic leaf, stem, flower, and fruit characters.
+    private val mismatchedPlates = setOf("dracaena_braunii", "iriartea_deltoidea", "nepenthes_inermis", "parasitaxus_usta")
 
     fun hasPlate(id: String) = id in speciesIds && id !in mismatchedPlates
 

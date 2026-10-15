@@ -8,7 +8,7 @@
     1000,
     1500
   ],
-  "scope": "Candidate sample only; not a full Wikidata export. Names must be accepted by OpenTree before inclusion. Atlas botanical taxa added by editorial request 2026-10-13; only unique accepted source lineages may be included.",
+  "scope": "Candidate sample only; not a full Wikidata export. Names must be accepted by OpenTree before inclusion. Atlas botanical taxa added by editorial request 2026-10-13; only unique accepted source lineages may be included. New fungal link species added at owner request 2026-10-15; source names resolve exactly to OTT taxa.",
   "candidates": [
     {
       "name": "Abarema obovalis",
@@ -12571,6 +12571,12 @@
       "en": "Zungaropsis multimaculatus",
       "fr": "Zungaropsis multimaculatus",
       "qid": "Q26959"
+    },
+    {
+      "name": "Xerocomellus rubellus",
+      "en": "Ruby bolete",
+      "fr": "Bolet framboise",
+      "taxonomy_context": "Fungi"
     }
   ],
   "editorial_additions_2026_10_12": {
