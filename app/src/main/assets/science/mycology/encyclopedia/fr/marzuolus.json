@@ -1,0 +1,32 @@
+{
+  "id": "marzuolus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 2,5 à 12 cm, convexe, visqueux, gris brunâtre pâle au centre et plus foncé, gris noirâtre vers la marge",
+    "Lames larges, espacées, blanches puis grises à gris bleuâtre",
+    "Pied de 3 à 10 cm, blanchâtre, grisonnant",
+    "Chair imbibée d’eau sous la peau du chapeau, grisâtre ; ni odeur ni saveur marquées",
+    "Sous conifères et hêtres, sur sol calcaire, sous la neige qui fond · fin d’hiver à début de printemps, surtout en mars"
+  ],
+  "safetyNote": "Comestible et estimé (Wikipédia, fr et en) ; la DGfM et la VAPKO le listent, et la DGfM le marque comme protégé en Allemagne et sur la liste rouge (catégorie 2). Il sort en hiver, quand peu d’autres champignons poussent. La page française est presque vide : la description vient de Wikipédia (en).",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Hygrophorus marzuolus",
+      "url": "https://fr.wikipedia.org/wiki/Hygrophorus_marzuolus"
+    },
+    {
+      "title": "Wikipedia (en): Hygrophorus marzuolus",
+      "url": "https://en.wikipedia.org/wiki/Hygrophorus_marzuolus"
+    }
+  ],
+  "related": []
+}

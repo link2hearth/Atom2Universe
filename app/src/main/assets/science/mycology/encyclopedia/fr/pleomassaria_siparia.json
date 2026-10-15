@@ -1,0 +1,22 @@
+{
+  "id": "pleomassaria_siparia",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : champignon microscopique formant des fructifications noires sur le bois.",
+    "Repère écologique : champignon microscopique formant des fructifications noires sur le bois. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Pleomassaria siparia.",
+      "url": "https://www.gbif.org/species/3535813"
+    },
+    {
+      "title": "Index Fungorum, name record 238646: Pleomassaria siparia.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=238646"
+    }
+  ],
+  "related": []
+}

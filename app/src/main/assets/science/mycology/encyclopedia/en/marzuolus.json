@@ -1,0 +1,32 @@
+{
+  "id": "marzuolus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 2.5 to 12 cm, convex, sticky, pale greyish-brown in the centre and darker, blackish-grey toward the margin",
+    "Gills broad, distant, white then grey to bluish-grey",
+    "Stem 3 to 10 cm, whitish, greying",
+    "Flesh water-soaked under the cap skin, greyish; no noticeable smell or taste",
+    "Under conifers, beech, on chalky soil, under melting snow · late winter to early spring, mainly March"
+  ],
+  "safetyNote": "Edible and well regarded (Wikipedia, fr and en); the DGfM and the VAPKO list it, and the DGfM marks it as protected in Germany and on the red list (category 2). It comes up in winter, when few other mushrooms do. The French page is nearly empty: the description comes from Wikipedia (en).",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Hygrophorus marzuolus",
+      "url": "https://fr.wikipedia.org/wiki/Hygrophorus_marzuolus"
+    },
+    {
+      "title": "Wikipedia (en): Hygrophorus marzuolus",
+      "url": "https://en.wikipedia.org/wiki/Hygrophorus_marzuolus"
+    }
+  ],
+  "related": []
+}

@@ -7,7 +7,7 @@ import android.graphics.Path
 import android.view.View
 
 /** Petit schéma de groupe, volontairement sans détails qui prétendraient identifier l’espèce. */
-internal class FungusDiagramView(context: Context, private val kind: FungusDiagramKind) : View(context) {
+internal class FungusDiagramView(context: Context, private val kind: FungusDiagramKind, private val speciesId: String? = null) : View(context) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
     private val line = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -38,15 +38,66 @@ internal class FungusDiagramView(context: Context, private val kind: FungusDiagr
 
     private fun fill(color: Int) { paint.color = color; paint.style = Paint.Style.FILL }
     private fun mushroom(c: Canvas) {
-        fill(0xFFD7C7A6.toInt())
+        val picinus = speciesId == "lactarius_picinus"
+        val zonarioides = speciesId == "lactarius_zonarioides"
+        val purpurascens = speciesId == "hygrophorus_purpurascens"
+        fill(when {
+            picinus -> 0xFF8E8274.toInt()
+            zonarioides -> 0xFFE2D6C4.toInt()
+            purpurascens -> 0xFFD0BFC7.toInt()
+            else -> 0xFFD7C7A6.toInt()
+        })
         c.drawRoundRect(106f, 98f, 134f, 177f, 12f, 12f, paint)
-        fill(0xFF9E7554.toInt())
+        fill(when {
+            picinus -> 0xFF332C29.toInt()
+            zonarioides -> 0xFFC48F70.toInt()
+            purpurascens -> 0xFF8F667A.toInt()
+            else -> 0xFF9E7554.toInt()
+        })
         val cap = Path().apply { moveTo(42f, 102f); cubicTo(49f, 43f, 191f, 43f, 198f, 102f); close() }
         c.drawPath(cap, paint)
-        line.color = 0xFF66594B.toInt()
+        line.color = when {
+            picinus -> 0xFF6B594C.toInt()
+            zonarioides -> 0xFFE9D4B7.toInt()
+            purpurascens -> 0xFFEEE8E4.toInt()
+            else -> 0xFF66594B.toInt()
+        }
         c.drawLine(60f, 105f, 180f, 105f, line)
+        if (zonarioides) {
+            line.color = 0xFF966D5B.toInt()
+            val outerZone = Path().apply { moveTo(59f, 85f); cubicTo(82f, 103f, 158f, 103f, 181f, 85f) }
+            val innerZone = Path().apply { moveTo(82f, 69f); cubicTo(98f, 80f, 142f, 80f, 158f, 69f) }
+            c.drawPath(outerZone, line)
+            c.drawPath(innerZone, line)
+        }
+        if (purpurascens) {
+            fill(0xFF9A6B83.toInt())
+            c.drawRoundRect(110f, 122f, 130f, 177f, 8f, 8f, paint)
+            line.color = 0xFFAA8598.toInt()
+            val fibril = Path().apply { moveTo(57f, 95f); cubicTo(87f, 92f, 135f, 96f, 181f, 91f) }
+            c.drawPath(fibril, line)
+        }
     }
     private fun jelly(c: Canvas) {
+        if (speciesId == "exidia_nigricans") {
+            fill(0xFF75573D.toInt())
+            c.drawRoundRect(27f, 143f, 213f, 173f, 12f, 12f, paint)
+            fill(0xFF201C1A.toInt())
+            val mass = Path().apply {
+                moveTo(40f, 142f); cubicTo(31f, 125f, 43f, 107f, 60f, 110f)
+                cubicTo(58f, 89f, 79f, 78f, 94f, 94f); cubicTo(104f, 70f, 130f, 76f, 136f, 97f)
+                cubicTo(154f, 80f, 178f, 92f, 174f, 111f); cubicTo(198f, 104f, 212f, 123f, 199f, 143f); close()
+            }
+            c.drawPath(mass, paint)
+            line.color = 0xFF756862.toInt()
+            val foldOne = Path().apply { moveTo(69f, 126f); cubicTo(79f, 113f, 73f, 101f, 91f, 94f) }
+            val foldTwo = Path().apply { moveTo(115f, 128f); cubicTo(128f, 114f, 119f, 99f, 139f, 96f) }
+            val foldThree = Path().apply { moveTo(158f, 131f); cubicTo(169f, 121f, 163f, 108f, 179f, 108f) }
+            c.drawPath(foldOne, line); c.drawPath(foldTwo, line); c.drawPath(foldThree, line)
+            fill(0xFF3E3430.toInt())
+            listOf(54f to 120f, 101f to 104f, 151f to 116f, 188f to 126f).forEach { (x, y) -> c.drawCircle(x, y, 3f, paint) }
+            return
+        }
         fill(0xFFDAAA57.toInt())
         c.drawOval(46f, 69f, 122f, 145f, paint); c.drawOval(96f, 45f, 188f, 130f, paint)
         c.drawOval(116f, 91f, 199f, 158f, paint)
@@ -90,7 +141,9 @@ internal class FungusDiagramView(context: Context, private val kind: FungusDiagr
     }
     private fun corticioid(c: Canvas) {
         fill(0xFF8A6546.toInt()); c.drawRoundRect(25f, 133f, 215f, 171f, 8f, 8f, paint)
-        fill(0xFFCDBB93.toInt()); c.drawRoundRect(35f, 115f, 207f, 140f, 10f, 10f, paint)
-        line.color = 0xFF77684F.toInt(); c.drawLine(39f, 115f, 202f, 115f, line)
+        val crust = if (speciesId == "botryobasidium_simile") 0xFFF0EBDD.toInt() else 0xFFCDBB93.toInt()
+        fill(crust); c.drawRoundRect(35f, 115f, 207f, 140f, 10f, 10f, paint)
+        line.color = if (speciesId == "botryobasidium_simile") 0xFFD2CABB.toInt() else 0xFF77684F.toInt()
+        c.drawLine(39f, 115f, 202f, 115f, line)
     }
 }

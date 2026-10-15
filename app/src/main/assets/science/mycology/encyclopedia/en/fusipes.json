@@ -1,0 +1,28 @@
+{
+  "id": "fusipes",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 3 to 10 cm, convex to conical, slightly nippled, reddish-brown and paler at the centre",
+    "Gills spaced, whitish-pink, staining rusty red",
+    "Stem 8 to 14 cm, swollen in the middle and tapering at both ends, rooting, deeply grooved, reddish-brown to blackish below, no ring",
+    "Firm whitish flesh, mild sweet taste",
+    "In clumps on broadleaf stumps, mostly oak · summer to autumn"
+  ],
+  "safetyNote": "Toxic: the DGfM lists it for a gastrointestinal syndrome. The sources read disagree: Wikipedia (fr) calls it fairly good if only very young caps are eaten, with the tough stem removed, and warns that late harvests cause indigestion; Wikipedia (en) says most authors do not think it worth a meal and that old ones risk gastro-enteritis. The most prudent status, the DGfM one, is kept. Wikipedia (fr) says beginners may take it for a pholiota, a hypholoma or an honey fungus; it has no ring and a grooved spindle stem.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Gymnopus fusipes",
+      "url": "https://fr.wikipedia.org/wiki/Gymnopus_fusipes"
+    },
+    {
+      "title": "Wikipedia (en): Gymnopus fusipes",
+      "url": "https://en.wikipedia.org/wiki/Gymnopus_fusipes"
+    }
+  ],
+  "related": []
+}

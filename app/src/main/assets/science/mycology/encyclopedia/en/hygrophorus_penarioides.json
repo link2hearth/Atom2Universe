@@ -1,0 +1,27 @@
+{
+  "id": "hygrophorus_penarioides",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognizing the taxon", "text": "The classic concept describes a robust, white to ivory Hygrophorus. The cap is initially convex with a margin that stays rolled inward for a long time, then may expand and show a broad, blunt umbo; it can become cream or faintly pinkish with age. The gills are thick, distant and waxy, whitish to cream, attached and sometimes slightly decurrent. The stem is solid, sturdy and white, sometimes ochraceous near the base."},
+    {"title": "Identification limits", "text": "Hygrophorus penarioides is close to H. penarius. Molecular studies distinguish two lineages, but a comparison of collections found no consistent morphological difference that reliably separates them by appearance. A plate therefore shows only an example of the described concept and cannot confirm the species; host tree or photograph alone is insufficient."},
+    {"title": "Habitat and season", "text": "Observations of the H. penarioides concept are associated with oaks (Quercus), including temperate and Mediterranean woodlands, sometimes on calcareous soils. It is ectomycorrhizal. Published collections are seasonal, but the fruiting period varies with regional climate."},
+    {"title": "Status and safety", "text": "Macroscopic identification remains uncertain against H. penarius and other pale waxcaps. Food status is not assessed here; this reference entry is not foraging or consumption advice."}
+  ],
+  "traits": [
+    "Robust white to ivory waxcap, sometimes cream or faintly pinkish with age",
+    "Convex cap with a broad blunt umbo and a margin that stays rolled inward; cap may expand at maturity",
+    "Thick, distant, waxy gills, whitish to cream, attached to slightly decurrent",
+    "Solid, firm, sturdy white stem, sometimes ochraceous near the base",
+    "Reported with Quercus; ectomycorrhizal in temperate to Mediterranean woodlands",
+    "Very close to H. penarius: appearance and host tree alone cannot confirm the species"
+  ],
+  "safetyNote": "Taxonomic reference only. Visible characters do not reliably distinguish H. penarioides from H. penarius; food status not assessed.",
+  "sources": [
+    {"title": "Kovács et al. (2019), Phytotaxa — molecular and morphological comparison of Hygrophorus penarioides and H. penarius", "url": "https://phytotaxa.mapress.com/pt/article/view/phytotaxa.392.2.2"},
+    {"title": "Jacobsson & Larsson (2007), Mycotaxon — protologue and description of Hygrophorus penarioides", "url": "https://www.biodiversitylibrary.org/part/419210"},
+    {"title": "Micobotánica-Jaén — observations and description of Hygrophorus penarioides", "url": "https://www.micobotanicajaen.com/Revista/Hemeroteca/PDF/A12N04.pdf"},
+    {"title": "GBIF Backbone Taxonomy — Hygrophorus penarioides", "url": "https://www.gbif.org/species/3344835"},
+    {"title": "Index Fungorum, name record 510527 — Hygrophorus penarioides", "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=510527"}
+  ],
+  "related": []
+}

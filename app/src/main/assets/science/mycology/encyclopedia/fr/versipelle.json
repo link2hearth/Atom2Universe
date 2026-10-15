@@ -1,0 +1,32 @@
+{
+  "id": "versipelle",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 3 à 18 cm, ocre orangé à brun orangé, velouté à feutré",
+    "Pores gris, de la couleur des tubes",
+    "Pied de 3 à 20 cm, couvert de mèches noires très denses",
+    "Chair blanche virant au gris rosé puis au gris violet sombre à la coupe ; saveur douce, odeur faible",
+    "Sous les bouleaux · juillet à novembre"
+  ],
+  "safetyNote": "Comestible bien cuit : la DGfM le liste et la VAPKO liste les bolets rudes. Wikipédia (fr) dit que le pied fibreux est souvent jeté et que les bolets rudes donnent des troubles digestifs crus ou mal cuits ; Wikipédia (en) le dit légèrement toxique s’il n’est pas bien chauffé (15 à 20 minutes de friture ou d’ébullition), avec nausées et vomissements. La couleur de la chair à la coupe diffère : gris rosé à gris violet (fr), rougeâtre puis brunâtre (en). Il noircit à la cuisson.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Leccinum versipelle",
+      "url": "https://fr.wikipedia.org/wiki/Leccinum_versipelle"
+    },
+    {
+      "title": "Wikipedia (en): Leccinum versipelle",
+      "url": "https://en.wikipedia.org/wiki/Leccinum_versipelle"
+    }
+  ],
+  "related": []
+}

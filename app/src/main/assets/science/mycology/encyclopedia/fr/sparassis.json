@@ -1,0 +1,32 @@
+{
+  "id": "sparassis",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Un gros bloc de 10 à 40 cm de large et 8 à 20 cm de haut, fait de lobes plats, ondulés et crépus, comme des lasagnes, qui partent d’une base épaisse",
+    "Blanc crème à jaune pâle, parfois rosé, brunissant au bord des lobes avec l’âge",
+    "Ni lames ni pores · sporée crème",
+    "Chair tendre et croquante, odeur agréable, goût de noix",
+    "À la base et sur les racines des conifères, surtout des pins ; de la fin de l’été à l’automne"
+  ],
+  "safetyNote": "Comestible : il est sur la liste de la société allemande de mycologie (2026) et sur celle des contrôleurs suisses (2023). Les lobes retiennent terre, aiguilles et larves : il faut le nettoyer longuement (Wikipédia en). Trop gros ou trop vieux, il devient dur et indigeste (Wikipédia fr). Le Sparassis brevipes, plus petit, plus jaune, sous les feuillus, à odeur d’eau de Javel, est à éviter (Wikipédia fr). La clavaire jolie, toxique, a des branches rondes.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Sparassis crispa",
+      "url": "https://fr.wikipedia.org/wiki/Sparassis_crispa"
+    },
+    {
+      "title": "Wikipedia (en): Sparassis crispa",
+      "url": "https://en.wikipedia.org/wiki/Sparassis_crispa"
+    }
+  ],
+  "related": []
+}

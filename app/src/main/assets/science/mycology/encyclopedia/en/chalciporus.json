@@ -1,0 +1,28 @@
+{
+  "id": "chalciporus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 1.5 to 9 cm, dry or slightly sticky, brownish-yellow to brownish-red",
+    "Pores slightly angular, rust-brown to reddish-brown",
+    "Stem 3 to 9 cm, red-brown over yellow, with yellow mycelium at the base, no ring",
+    "Cream flesh, bright yellow at the base of the stem; distinctly peppery taste",
+    "Under broadleaf and conifer trees · July to November"
+  ],
+  "safetyNote": "Not recommended: the VAPKO lists it, but Wikipedia (fr) says it has no food interest because of its peppery taste, and Wikipedia (en) says it is usually considered inedible and contains toxins, advising thorough cooking to reduce the risk of stomach upset. It can serve as a condiment, finely diced or dried and powdered (Wikipedia, fr). The false peppery bolete (Chalciporus pseudopiperatus) is a cryptic species: only DNA tells them apart.",
+  "sources": [
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Chalciporus piperatus",
+      "url": "https://fr.wikipedia.org/wiki/Chalciporus_piperatus"
+    },
+    {
+      "title": "Wikipedia (en): Chalciporus piperatus",
+      "url": "https://en.wikipedia.org/wiki/Chalciporus_piperatus"
+    }
+  ],
+  "related": []
+}

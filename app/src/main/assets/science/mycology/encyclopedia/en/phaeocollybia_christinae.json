@@ -1,0 +1,22 @@
+{
+  "id": "phaeocollybia_christinae",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: small woodland mushroom with a long rooting base.",
+    "Ecological context: small woodland mushroom with a long rooting base. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Phaeocollybia christinae.",
+      "url": "https://www.gbif.org/species/3351252"
+    },
+    {
+      "title": "Index Fungorum, name record 251405: Phaeocollybia christinae.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=251405"
+    }
+  ],
+  "related": []
+}

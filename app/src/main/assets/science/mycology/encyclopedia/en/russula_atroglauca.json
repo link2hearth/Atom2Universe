@@ -1,0 +1,22 @@
+{
+  "id": "russula_atroglauca",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: russula with dark green tones.",
+    "Ecological context: russula with dark green tones. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Russula atroglauca.",
+      "url": "https://www.gbif.org/species/3359578"
+    },
+    {
+      "title": "Index Fungorum, name record 111919: Russula atroglauca.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=111919"
+    }
+  ],
+  "related": []
+}

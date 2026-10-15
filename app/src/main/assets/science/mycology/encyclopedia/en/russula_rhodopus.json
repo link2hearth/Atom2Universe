@@ -1,0 +1,22 @@
+{
+  "id": "russula_rhodopus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: forest russula with brittle flesh.",
+    "Ecological context: forest russula with brittle flesh. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Russula rhodopus.",
+      "url": "https://www.gbif.org/species/7239976"
+    },
+    {
+      "title": "Index Fungorum, name record 447527: Russula rhodopus.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=447527"
+    }
+  ],
+  "related": []
+}

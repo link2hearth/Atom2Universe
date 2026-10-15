@@ -1,0 +1,46 @@
+{
+  "id": "citrinum",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognition", "text": "Scleroderma citrinum forms a firm, sometimes flattened ball about 2–12 cm across, without a distinct stem and attached to the ground by mycelial cords. Its thick, ochre-yellow skin bears coarse brown scales or warts, sometimes arranged in rosettes around a central pyramidal point."},
+    {"title": "Cut surface and maturation", "text": "The gleba is pale and firm at first, then mottled grey-purple and white before turning violet-black. At maturity the interior becomes dark and powdery, and the outer skin splits irregularly. The microscopic spores are round and strongly ornamented."},
+    {"title": "Habitat", "text": "This ectomycorrhizal fungus grows on the ground near broad-leaved or coniferous trees, sometimes among woody debris, in woods and parks. It appears mainly from late summer into autumn."},
+    {"title": "Lookalikes and safety", "text": "A young edible puffball is generally white and uniform inside, while Scleroderma has a thick leathery skin and gleba that darkens early. This comparison is not sufficient to establish edibility. The genus Scleroderma has been implicated in poisonings; French records from 2000–2022 cover the whole genus and were not all identified to species. Do not eat it."}
+  ],
+  "traits": [
+    "Irregular ball, often flattened at the poles, 2 to 12 cm, almost no stem, fixed to the ground by mycelial cords",
+    "Very thick skin (1 to 5 mm), ochre yellow with brown scales, cracking into pyramidal warts",
+    "Dense inside, pale grey at first, then violet-black marbled with white, powdery at the end",
+    "Tough outer skin 1–5 mm thick, with brown warts often arranged in rosettes",
+    "The gleba changes from pale to grey-purple marbling and then violet-black; it becomes powdery and the skin splits irregularly at maturity",
+    "Ectomycorrhizal near broad-leaved or coniferous trees · late summer to autumn"
+  ],
+  "safetyNote": "Do not eat: the genus Scleroderma is toxic and has been implicated in digestive poisonings. French records from 2000–2022 include several species and do not support attributing every reported symptom to S. citrinum.",
+  "sources": [
+    {
+      "title": "Arnaud E. (2024). Étude rétrospective des cas d’intoxication après ingestion de champignons du genre Scleroderma. Thèse d’exercice de pharmacie, Université d’Angers.",
+      "url": "https://dune.univ-angers.fr/documents/dune20320"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Missouri Department of Conservation — Pigskin Puffball / Common Earthball",
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/pigskin-puffball-common-earthball"
+    },
+    {
+      "title": "E-Flora BC, University of British Columbia — Scleroderma citrinum",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Scleroderma+citrinum"
+    },
+    {
+      "title": "Bruneau et al. (2025), Mycological Progress — French Scleroderma poisoning series",
+      "url": "https://link.springer.com/article/10.1007/s11557-025-02116-w"
+    },
+    {
+      "title": "Species Fungorum — Scleroderma citrinum taxonomy",
+      "url": "https://www.speciesfungorum.org/Names/NamesRecord.asp?RecordID=181865"
+    }
+  ],
+  "related": ["perlatum"]
+}

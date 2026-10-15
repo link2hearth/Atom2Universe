@@ -1,0 +1,31 @@
+{
+  "id": "sordida",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau violet clair, rose lilas ou lilas, lisse, un peu gras par temps humide",
+    "Lames échancrées et serrées, bleues comme le chapeau",
+    "Pied cylindrique, droit, lisse et fibrilleux, sans bulbe, sans anneau",
+    "Bois clairs de feuillus et de conifères, herbe des jardins, parcs, prés, gazons et bords de chemins · septembre à décembre"
+  ],
+  "safetyNote": "Comestible : la DGfM et la VAPKO le listent (la DGfM le signale sur la liste rouge allemande). Wikipédia (fr) ne donne pas de verdict propre et nomme les pieds-bleus avec lesquels on peut le confondre, tous comestibles : le pied bleu, à pied bleuté, et le pied violet ; celui-ci a un pied droit, sans bulbe. Elle cite aussi parmi les sosies un cortinaire violet (Cortinarius azureus), absent de cet atlas : des lames violettes ne suffisent pas à reconnaître un pied-bleu. Wikipédia (en) est une ébauche sans description, le texte suit donc la page française ; elle ne donne ni tailles, ni chair, ni sporée, et le dessin ne montre que des formes typiques.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Lepista sordida",
+      "url": "https://fr.wikipedia.org/wiki/Lepista_sordida"
+    },
+    {
+      "title": "Wikipedia (en): Lepista sordida",
+      "url": "https://en.wikipedia.org/wiki/Lepista_sordida"
+    }
+  ],
+  "related": []
+}

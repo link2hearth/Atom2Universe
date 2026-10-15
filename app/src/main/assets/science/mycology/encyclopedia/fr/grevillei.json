@@ -1,0 +1,32 @@
+{
+  "id": "grevillei",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 2 à 15 cm, visqueux, jaune citron à orange vif ou brun rougeâtre",
+    "Pores fins et jaunes, qui descendent sur le pied, jaune olive avec l’âge",
+    "Pied de 3 à 12 cm, jaune au-dessus d’un anneau blanc puis jaune, brun orangé rougeâtre à la base",
+    "Chair molle jaune vif, virant vite au crème taché d’orange ; saveur douce et sucrée",
+    "Uniquement sous les mélèzes · été à fin d’automne"
+  ],
+  "safetyNote": "Comestible mais médiocre : la DGfM et la VAPKO le listent, la VAPKO ajoutant qu’il faut ôter la peau du chapeau. Wikipédia (fr) le trouve fade et flasque et dit qu’il peut être laxatif pour certains ; elle conseille les jeunes seulement, le pied ôté, le chapeau pelé et une petite première portion. Il est difficile à confondre grâce à ses couleurs, son pied annelé et les mélèzes (Wikipédia, fr) : les autres bolets visqueux sous les mélèzes ont de grands pores.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Suillus grevillei",
+      "url": "https://fr.wikipedia.org/wiki/Suillus_grevillei"
+    },
+    {
+      "title": "Wikipedia (en): Suillus grevillei",
+      "url": "https://en.wikipedia.org/wiki/Suillus_grevillei"
+    }
+  ],
+  "related": []
+}

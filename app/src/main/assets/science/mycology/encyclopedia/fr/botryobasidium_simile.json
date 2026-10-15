@@ -1,0 +1,28 @@
+{
+  "id": "botryobasidium_simile",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Forme visible", "text": "Botryobasidium simile ne forme pas de chapeau ni de pied. Sa fructification sexuée (téléomorphe) est une couche très mince, blanche à ivoire pâle, étalée sur le bois mort. Sa surface est lâchement réticulée à hypochnoïde, comme un fin réseau irrégulier. Cette forme est rarement observée en nature."},
+    {"title": "Habitat et autre forme", "text": "L’espèce est décrite sur du bois mort de feuillus, notamment du chêne ; des observations l’ont aussi trouvée sur du peuplier et de l’aulne. Une forme asexuée (anamorphe) peut apparaître en petites plages poudreuses, d’abord blanches puis jaune-orangé à rouille. Les deux formes ne doivent pas être confondues avec un champignon à lames ou à pores."},
+    {"title": "Caractères microscopiques", "text": "Les basidiospores sont lisses, incolores, à paroi mince et fusiformes à naviculaires, environ 9–10,5 × 3–4 µm dans la description originale. Leur forme n’est observable qu’au microscope ; elle n’est pas représentée sur la planche."},
+    {"title": "Taxonomie et prudence", "text": "Le nom Botryobasidium simile Pouzar & Hol.-Jech. date de 1969 et le taxon est placé dans les Cantharellales, famille Botryobasidiaceae. Oidium simile et Haplotrichum simile sont des noms historiques associés à l’état asexué. L’identité peut demander un examen microscopique. Sa comestibilité et sa toxicité ne sont pas évaluées ; ne pas le consommer sur la base de cette fiche."}
+  ],
+  "traits": [
+    "Fructification sexuée en couche très mince, blanche à ivoire, lâchement réticulée, sans chapeau ni pied",
+    "Sur bois mort de feuillus ; forme asexuée parfois en plages poudreuses jaune-orangé à rouille",
+    "Basidiospores lisses et incolores, fusiformes à naviculaires, visibles seulement au microscope",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Botryobasidium simile.",
+      "url": "https://www.gbif.org/species/3367506"
+    },
+    {"title": "Species Fungorum — Botryobasidium simile, record 327097", "url": "https://www.speciesfungorum.org/names/NamesRecord.asp?RecordId=327097"},
+    {"title": "Pouzar & Holubová-Jechová (1969), Česká Mykologie 23(2): 99 — description originale", "url": "https://czechmycology.org/_cm/CM232.pdf"},
+    {"title": "Zíbarová et al. (2020), Catathelasma 21 — observations en Slovaquie", "url": "https://mykospol.sk/wp-content/uploads/2020/12/Catathelasma-21-na-web.pdf"},
+    {"title": "Stalpers et al. (2021), IMA Fungus — révision des genres Botryobasidium et Haplotrichum", "url": "https://link.springer.com/article/10.1186/s43008-021-00061-3"}
+  ],
+  "related": []
+}

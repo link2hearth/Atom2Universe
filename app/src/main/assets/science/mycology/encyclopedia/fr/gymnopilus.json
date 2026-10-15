@@ -1,0 +1,28 @@
+{
+  "id": "gymnopilus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 5 à 15 cm (parfois jusqu’à 30), jaune orangé vif puis brun orangé, sec, fibrilleux ou écailleux ; bombé puis étalé",
+    "Lames serrées, adnées à un peu décurrentes, jaune rouille puis brunes · sporée brun rouille",
+    "Pied de 5 à 20 cm, jaune orangé, fibreux, avec un anneau fragile poudré de spores rouille",
+    "Chair jaune, épaisse, odeur faible, saveur amère",
+    "En touffes de quelques-uns à plusieurs dizaines, sur les souches, les troncs et la base des arbres, surtout de feuillus ; été et automne"
+  ],
+  "safetyNote": "Toxique : la société allemande de mycologie (2026) le range parmi les champignons à psilocybine et note qu’il contient de la gymnopiline ; Wikipédia (fr) le dit vénéneux et hallucinogène, Wikipédia (en) dit qu’il n’a pas de psilocybine mais des neurotoxines, dont la gymnopiline. Son amertume le rend de toute façon immangeable. Wikipédia (en) le dit semblable à l’armillaire couleur de miel (sporée blanche), Wikipédia (fr) à plusieurs pholiotes ; la sporée rouille et le goût amer le distinguent.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Gymnopilus junonius",
+      "url": "https://fr.wikipedia.org/wiki/Gymnopilus_junonius"
+    },
+    {
+      "title": "Wikipedia (en): Gymnopilus junonius",
+      "url": "https://en.wikipedia.org/wiki/Gymnopilus_junonius"
+    }
+  ],
+  "related": []
+}

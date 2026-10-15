@@ -1,0 +1,32 @@
+{
+  "id": "reticulatus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 4 to 20 cm, dry, velvety, fairly uniform brown, often cracked in dry weather: the white flesh shows in the cracks",
+    "White pores, then yellow, finally olive · olive spores",
+    "Stem 5 to 15 cm, beige to brown, swollen, covered with a fine net that often runs down to the base",
+    "Thick white flesh, a little less firm than in the other ceps, yellowing with age; pleasant smell",
+    "In broadleaf woods, mostly under oaks; from May to November, after hot, damp weather"
+  ],
+  "safetyNote": "Edible: it is on the German mycological society list (2026) and on the Swiss controllers’ list (2023). It lacks the pinkish flesh under the cap skin seen in the porcino, and its net runs further down (Wikipedia fr). The bitter bolete, which is inedible, has a coarser, darker net.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Boletus reticulatus",
+      "url": "https://fr.wikipedia.org/wiki/Boletus_reticulatus"
+    },
+    {
+      "title": "Wikipedia (en): Boletus reticulatus",
+      "url": "https://en.wikipedia.org/wiki/Boletus_reticulatus"
+    }
+  ],
+  "related": []
+}

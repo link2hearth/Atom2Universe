@@ -1,0 +1,31 @@
+{
+  "id": "sordida",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap light violet, lilac-pink or lilac, smooth, a little greasy in wet weather",
+    "Gills notched and crowded, blue like the cap",
+    "Stem cylindrical, straight, smooth and fibrillose, no bulb, no ring",
+    "Light woods of broadleaf trees and conifers, garden grass, parks, meadows, lawns, roadsides · September to December"
+  ],
+  "safetyNote": "Edible: the DGfM and the VAPKO list it (the DGfM marks it as on the German red list). Wikipedia (fr) gives no verdict of its own and names the blewits it is mistaken for, all edible: the wood blewit, with a blue stem, and the field blewit, with a violet stem; this one has a straight stem with no bulb. It also names a violet Cortinarius (Cortinarius azureus) among the look-alikes, which is not in this atlas: purple gills alone do not identify a blewit. Wikipedia (en) is a stub with no description, so the text follows the French page; sizes, flesh and spore print are not given there, and the drawing only shows typical shapes.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Lepista sordida",
+      "url": "https://fr.wikipedia.org/wiki/Lepista_sordida"
+    },
+    {
+      "title": "Wikipedia (en): Lepista sordida",
+      "url": "https://en.wikipedia.org/wiki/Lepista_sordida"
+    }
+  ],
+  "related": []
+}

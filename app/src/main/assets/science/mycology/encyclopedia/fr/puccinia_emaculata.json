@@ -1,0 +1,22 @@
+{
+  "id": "puccinia_emaculata",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : rouille de graminées.",
+    "Repère écologique : rouille de graminées. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Puccinia emaculata.",
+      "url": "https://www.gbif.org/species/2515498"
+    },
+    {
+      "title": "Index Fungorum, name record 202871: Puccinia emaculata.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=202871"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,33 @@
+{
+  "id": "hebeloma",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 5 to 10 cm, convex then spreading, with a central boss; whitish ochre to reddish, paler at the margin; sticky in damp weather",
+    "Fairly close, toothed gills, whitish then brown; in damp weather they weep brownish drops",
+    "Stem 5 to 10 cm, whitish, rust-stained towards the base, slightly swollen below, frosted over a good length; no ring",
+    "Fairly thick white flesh · distinct smell of radish, bitter taste",
+    "Ochre to brown spores",
+    "Fairly common in summer and autumn, under broadleaves or conifers, in groups along paths and ditches, in lawns"
+  ],
+  "safetyNote": "Toxic: digestive upset, from mild to marked (nausea, vomiting, diarrhoea, cramps) (Wikipedia EN). The German mycological society lists the whole Hebeloma genus among the gastrointestinal-syndrome mushrooms, and the Belgian poison centre cites the poison pie among the causes of the mild resinoid syndrome: moderate gastroenteritis, less than 3 hours after the meal, lasting under 12 hours. The risk is confusion with tricholomas (Wikipedia FR): the radish smell and the browning gills help to recognise it.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Hébélome échaudé",
+      "url": "https://fr.wikipedia.org/wiki/H%C3%A9b%C3%A9lome_cro%C3%BBte-de-pain"
+    },
+    {
+      "title": "Wikipedia (en): Hebeloma crustuliniforme",
+      "url": "https://en.wikipedia.org/wiki/Hebeloma_crustuliniforme"
+    }
+  ],
+  "related": []
+}

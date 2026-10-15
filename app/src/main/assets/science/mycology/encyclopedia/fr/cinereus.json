@@ -1,0 +1,32 @@
+{
+  "id": "cinereus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 2 à 6 cm, en entonnoir percé au centre, noir quand il est jeune puis gris noirâtre, bord très lobé",
+    "Plis, pas de vraies lames : décurrents, souvent anastomosés, gris bleuâtre puis gris",
+    "Pied de 2 à 5 cm, creux, courbé et sillonné, évasé en éventail sous les plis",
+    "Chair très mince, noire, élastique ; saveur douce, faible odeur de mirabelle",
+    "Bois de feuillus, châtaigneraies, sol calcaire · fin d’été à automne"
+  ],
+  "safetyNote": "Comestible : la DGfM et la VAPKO la listent ; Wikipédia (fr) la dit réputée et à chair supportant une longue cuisson, Wikipédia (en) plus douce que la trompette de la mort. La trompette de la mort est creuse, en cornet, à dessous lisse ; la fausse chanterelle des charbonnières (Faerberia carbonaria) est plus pâle, à pied plein et vraies lames, sur sol brûlé et sans valeur culinaire (Wikipédia, fr).",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Cantharellus cinereus",
+      "url": "https://fr.wikipedia.org/wiki/Cantharellus_cinereus"
+    },
+    {
+      "title": "Wikipedia (en): Craterellus cinereus",
+      "url": "https://en.wikipedia.org/wiki/Craterellus_cinereus"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "integra",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 6 to 15 cm, shiny, usually brown with violet, purple, yellow or green tints, nearly spherical then flat or depressed",
+    "Gills thin, well spaced, crumbly, white then bright yellow",
+    "Stem 5 to 12 cm, thick and white, spotted yellow or rusty with age",
+    "Very firm white flesh, mild sweet taste, crunchy",
+    "Scattered under conifers, often mountain spruce and fir woods"
+  ],
+  "safetyNote": "Not recommended: the DGfM and the VAPKO list it, and it is widely eaten in northern Europe and good when young (Wikipedia). But Wikipedia (en) lists it as not recommended, and both pages quote an 1878 study saying poisonings were once frequent: long cooking removes the toxic properties, quick methods such as roasting do not. The most prudent status is kept. Similar species of unknown edibility look like it; Wikipedia (en) names Russula mustelina.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Russula integra",
+      "url": "https://fr.wikipedia.org/wiki/Russula_integra"
+    },
+    {
+      "title": "Wikipedia (en): Russula integra",
+      "url": "https://en.wikipedia.org/wiki/Russula_integra"
+    }
+  ],
+  "related": []
+}

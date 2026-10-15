@@ -1,0 +1,33 @@
+{
+  "id": "egg",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaître le stade œuf", "text": "Une jeune amanite est entièrement enfermée dans un voile universel blanc, lisse et épais. Une coupe longitudinale peut révéler un pied, des lames et un chapeau déjà formés à l’intérieur; une vesse-de-loup reste uniformément blanche et homogène. Cette coupe montre un œuf d’amanite, mais ne suffit pas à déterminer l’espèce."},
+    {"title": "Évolution", "text": "En grandissant, le voile se déchire et laisse un anneau sur le pied ainsi qu’une volve en sac à la base. Chez Amanita phalloides, le chapeau peut devenir verdâtre, jaune-vert ou olive, mais les jeunes sujets sont souvent presque blancs."},
+    {"title": "Confusion et sécurité", "text": "Les œufs d’amanites peuvent être pris pour des vesses-de-loup. Une phalloïde est déjà dangereuse à ce stade : les amanitines résistent à la cuisson et une petite quantité peut entraîner une intoxication grave. Une ingestion possible exige un appel immédiat aux urgences ou au centre antipoison; ne pas attendre les symptômes."},
+    {"title": "Délai des symptômes", "text": "Les signes digestifs apparaissent souvent après plusieurs heures, généralement autour de 6 à 24 heures et parfois jusqu’à 48 heures. Le foie est principalement atteint; les reins peuvent également être touchés."}
+  ],
+  "traits": [
+    "Au stade jeune, un œuf blanc, enveloppé du voile universel",
+    "Surface lisse, sans pointes ni verrues",
+    "La coupe longitudinale révèle un jeune champignon formé dans le voile, mais n’identifie pas l’espèce à elle seule",
+    "En grandissant : anneau et volve en sac; le chapeau de la phalloïde peut devenir verdâtre, mais reste souvent pâle jeune",
+    "Peut être confondu avec une vesse-de-loup uniformément blanche; ne pas consommer"
+  ],
+  "safetyNote": "Une phalloïde peut déjà être mortelle au stade œuf. Les amanitines résistent à la cuisson; les symptômes peuvent apparaître 6 à 48 heures après ingestion, le foie étant principalement atteint. En cas d’ingestion possible, appelle immédiatement les urgences ou un centre antipoison et ne te fie pas à une simple coupe pour identifier le champignon.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Australian National Botanic Gardens — Deathcap and puffball comparison",
+      "url": "https://www.cpbr.gov.au/fungi/deathcap.html"
+    },
+    {
+      "title": "US FDA — Bad Bug Book, amatoxin poisoning",
+      "url": "https://www.fda.gov/media/83271/download"
+    }
+  ],
+  "related": []
+}

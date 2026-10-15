@@ -1,0 +1,32 @@
+{
+  "id": "xerampelina",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 4 to 20 cm, wine-red to purple with a carmine edge and a blackish-purple centre, sometimes greenish",
+    "Gills nearly free, cream, yellowing with age, with purplish edges",
+    "Stem 4 to 12 cm, white, sometimes tinged red, browning when bruised",
+    "Smell of boiled crab or shrimp, stronger with age; mild taste",
+    "Mostly under conifers, spruce, pine or fir · summer to autumn"
+  ],
+  "safetyNote": "Edible: the DGfM and the VAPKO list it. Wikipedia (en) counts it among the best edibles of its genus, young caps being good for stuffing; Wikipedia (fr) places it among the edibles but finds its crayfish or herring taste unappealing. The shellfish smell stays when cooked (Wikipedia, en). The sickener has a white stem and white gills (Wikipedia, en): see the group.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Russula xerampelina",
+      "url": "https://fr.wikipedia.org/wiki/Russula_xerampelina"
+    },
+    {
+      "title": "Wikipedia (en): Russula xerampelina",
+      "url": "https://en.wikipedia.org/wiki/Russula_xerampelina"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "parmelia_sulcata",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : lichen foliacé gris, formé par une symbiose.",
+    "Repère écologique : lichen foliacé gris, formé par une symbiose. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Parmelia sulcata.",
+      "url": "https://www.gbif.org/species/7248320"
+    },
+    {
+      "title": "Index Fungorum, name record 123425: Parmelia sulcata.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=123425"
+    }
+  ],
+  "related": []
+}

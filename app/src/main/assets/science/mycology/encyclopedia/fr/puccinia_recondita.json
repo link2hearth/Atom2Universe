@@ -1,0 +1,22 @@
+{
+  "id": "puccinia_recondita",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : rouille foliaire du blé.",
+    "Repère écologique : rouille foliaire du blé. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Puccinia recondita.",
+      "url": "https://www.gbif.org/species/2514697"
+    },
+    {
+      "title": "Index Fungorum, name record 145187: Puccinia recondita.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=145187"
+    }
+  ],
+  "related": []
+}

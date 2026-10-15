@@ -1,0 +1,22 @@
+{
+  "id": "spongiforma_squarepantsii",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: spongy, porous fruiting body.",
+    "Ecological context: spongy, porous fruiting body. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Spongiforma squarepantsii.",
+      "url": "https://www.gbif.org/species/7397659"
+    },
+    {
+      "title": "Index Fungorum, name record 519524: Spongiforma squarepantsii.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=519524"
+    }
+  ],
+  "related": []
+}

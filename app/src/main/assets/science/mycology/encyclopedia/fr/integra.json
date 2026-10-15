@@ -1,0 +1,32 @@
+{
+  "id": "integra",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 6 à 15 cm, luisant, généralement brun à reflets violets, pourpres, jaunes ou verts, presque sphérique puis plan ou déprimé",
+    "Lames minces, espacées, friables, blanches puis jaune vif",
+    "Pied de 5 à 12 cm, épais et blanc, taché de jaune ou de rouille avec l’âge",
+    "Chair blanche très ferme, saveur douce et sucrée, croquante",
+    "Isolée sous les conifères, souvent dans les forêts de montagne d’épicéas et de sapins"
+  ],
+  "safetyNote": "Non recommandée : la DGfM et la VAPKO la listent, et elle est très mangée en Europe du Nord, bonne jeune (Wikipédia). Mais Wikipédia (en) la range parmi les non recommandées, et les deux pages citent une étude de 1878 selon laquelle les intoxications étaient autrefois fréquentes : une longue cuisson en retire les propriétés toxiques, pas les méthodes rapides comme le grill. Le statut le plus prudent est retenu. Des espèces proches de comestibilité inconnue lui ressemblent ; Wikipédia (en) cite Russula mustelina.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Russula integra",
+      "url": "https://fr.wikipedia.org/wiki/Russula_integra"
+    },
+    {
+      "title": "Wikipedia (en): Russula integra",
+      "url": "https://en.wikipedia.org/wiki/Russula_integra"
+    }
+  ],
+  "related": []
+}

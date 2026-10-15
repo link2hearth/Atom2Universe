@@ -1,0 +1,34 @@
+{
+  "id": "decastes",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaître l’espèce", "text": "Lyophyllum decastes forme souvent des groupes denses de champignons aux pieds convergents vers la base. Le chapeau lisse, fauve à brun gris, mesure généralement 4 à 15 cm ; sa marge d’abord enroulée peut devenir ondulée. Les lames serrées, blanches à gris pâle, sont adnées. Le pied est blanc et trapu, parfois légèrement brun à la base. Des spécimens isolés sont aussi possibles."},
+    {"title": "Écologie et spores", "text": "Cette espèce saprotrophe pousse sur des sols riches en humus, dans les lisières, près des chemins et sur des sols perturbés ; elle peut être associée à du bois enterré en décomposition. Elle fructifie surtout de la fin de l’été à l’automne. La sporée est blanche."},
+    {"title": "Complexe d’espèces", "text": "Lyophyllum decastes au sens large regroupe des taxons proches qui peuvent être difficiles à séparer par les seuls caractères visibles. Les teintes, l’attache des lames et l’odeur varient ; une odeur farineuse n’est pas un caractère fiable pour l’ensemble du complexe. La planche montre une combinaison typique, pas une identification certaine."},
+    {"title": "Usage alimentaire et prudence", "text": "L’espèce est généralement considérée comestible et figure dans certaines listes mycologiques positives, mais des troubles digestifs sont rapportés chez certaines personnes et quelques guides déconseillent sa consommation. Ne consomme que des spécimens identifiés avec certitude par un spécialiste. Un cas d’hépatotoxicité publié concernait un complément alimentaire ; il ne démontre pas une toxicité équivalente lors d’un repas ordinaire."}
+  ],
+  "traits": [
+    "Chapeau de 4 à 15 cm, fauve à brun clair, parfois grisâtre, marge enroulée et ondulée",
+    "Lames serrées, blanchâtres à crème",
+    "Pied blanc et trapu, souvent convergent avec les autres pieds à la base ; pas d’anneau",
+    "Odeur faible ou peu caractéristique",
+    "Sols humifères, lisières, chemins ou bois enterré en décomposition · sporée blanche · fin été-automne"
+  ],
+  "safetyNote": "Généralement considérée comestible et présente dans des listes positives, mais des troubles digestifs sont rapportés et certains guides déconseillent sa consommation. Le complexe Lyophyllum decastes est difficile à identifier ; ne consomme que des spécimens identifiés avec certitude par un spécialiste.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {"title": "Université Claude Bernard Lyon 1 — Lyophyllum decastes", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/lyophyllum-decastes/"},
+    {"title": "UNAM — Lyophyllum decastes sensu lato", "url": "https://hongoscomestiblesytoxicos.ib.unam.mx/fichas/Lyophyllum%20decastes%20sl.html"},
+    {"title": "First Nature — Lyophyllum decastes", "url": "https://www.first-nature.com/fungi/lyophyllum-decastes.php"},
+    {"title": "MushroomExpert — Lyophyllum decastes complex", "url": "https://www.mushroomexpert.com/lyophyllum_decastes.html"},
+    {"title": "DGfM — Positivliste der Speisepilze (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"}
+  ],
+  "related": []
+}

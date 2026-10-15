@@ -1,0 +1,22 @@
+{
+  "id": "inocybe_aeruginascens",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : inocybe à coloration verdissante caractéristique.",
+    "Repère écologique : inocybe à coloration verdissante caractéristique. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Inocybe aeruginascens.",
+      "url": "https://www.gbif.org/species/3331845"
+    },
+    {
+      "title": "Index Fungorum, name record 315818: Inocybe aeruginascens.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=315818"
+    }
+  ],
+  "related": []
+}

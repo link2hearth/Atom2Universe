@@ -1,0 +1,33 @@
+{
+  "id": "egg",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognising the egg stage", "text": "A young amanita is entirely enclosed in a smooth, thick, white universal veil. A lengthwise cut may reveal a formed stem, gills and cap inside; a puffball remains uniformly white and homogeneous. The cut shows an amanita egg but cannot identify the species by itself."},
+    {"title": "Development", "text": "As it grows, the veil splits, leaving a ring on the stem and a sac-like volva at the base. In Amanita phalloides the cap may become greenish, yellow-green or olive, though young specimens are often nearly white."},
+    {"title": "Lookalike and safety", "text": "Amanita eggs can be mistaken for puffballs. A death cap is already dangerous at this stage: amatoxins resist cooking and a small amount can cause severe poisoning. Possible ingestion requires an immediate call to emergency services or a poison centre; do not wait for symptoms."},
+    {"title": "Symptom delay", "text": "Digestive symptoms often begin after several hours, commonly around 6–24 hours and sometimes as late as 48 hours. The liver is mainly affected; the kidneys can also be injured."}
+  ],
+  "traits": [
+    "When young, a white egg wrapped in the universal veil",
+    "Smooth surface, no spines or warts",
+    "A lengthwise cut reveals a formed young mushroom inside the veil, but does not identify the species by itself",
+    "As it grows: ring and sac-like volva; the death-cap can become greenish, though young caps are often pale",
+    "Can be mistaken for a uniformly white puffball; do not eat"
+  ],
+  "safetyNote": "A death cap may already be deadly at the egg stage. Amatoxins resist cooking; symptoms can appear 6–48 hours after ingestion, mainly affecting the liver. If ingestion is possible, call emergency services or a poison centre immediately and do not rely on a simple cut for identification.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Australian National Botanic Gardens — Deathcap and puffball comparison",
+      "url": "https://www.cpbr.gov.au/fungi/deathcap.html"
+    },
+    {
+      "title": "US FDA — Bad Bug Book, amatoxin poisoning",
+      "url": "https://www.fda.gov/media/83271/download"
+    }
+  ],
+  "related": []
+}

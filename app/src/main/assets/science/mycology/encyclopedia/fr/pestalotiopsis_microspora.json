@@ -1,0 +1,22 @@
+{
+  "id": "pestalotiopsis_microspora",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : moisissure à spores cloisonnées, parfois associée à des plantes.",
+    "Repère écologique : moisissure à spores cloisonnées, parfois associée à des plantes. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Pestalotiopsis microspora.",
+      "url": "https://www.gbif.org/species/2574966"
+    },
+    {
+      "title": "Index Fungorum, name record 437946: Pestalotiopsis microspora.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=437946"
+    }
+  ],
+  "related": []
+}

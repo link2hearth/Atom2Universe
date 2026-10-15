@@ -1,0 +1,29 @@
+{
+  "id": "sulphureum",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau jusqu’à 8 cm, convexe, jaune soufre, parfois brunâtre au centre, léger mamelon",
+    "Lames épaisses, très espacées, échancrées",
+    "Pied jusqu’à 10 cm, nu",
+    "Chair mince ; forte odeur de gaz de houille (scatol), nauséabonde ; saveur amère",
+    "Bois de feuillus, surtout hêtre · printemps à automne",
+    "Sporée blanche"
+  ],
+  "safetyNote": "Toxique : la DGfM le range pour un syndrome gastro-intestinal, et Wikipédia (en) le dit non comestible et soupçonné d’être vénéneux, avec quelques troubles neurologiques signalés. L’odeur et la couleur le distinguent du tricholome équestre, plus foncé, au chapeau visqueux, à la chair blanche, aux lames minces et serrées et à l’odeur de farine (Wikipédia, en).",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Tricholoma sulphureum",
+      "url": "https://fr.wikipedia.org/wiki/Tricholoma_sulphureum"
+    },
+    {
+      "title": "Wikipedia (en): Tricholoma sulphureum",
+      "url": "https://en.wikipedia.org/wiki/Tricholoma_sulphureum"
+    }
+  ],
+  "related": []
+}

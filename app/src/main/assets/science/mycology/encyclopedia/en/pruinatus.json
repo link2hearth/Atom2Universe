@@ -1,0 +1,28 @@
+{
+  "id": "pruinatus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 4 to 12 cm, dry or velvety, brownish to blackish, often mauve near the edge, little cracked",
+    "Pores the colour of the tubes, golden-yellow then olive-yellow, bluish when pressed",
+    "Stem 3 to 10 cm, bright yellow when young, turning reddish to red, bruising blue easily",
+    "Firm bright yellow flesh, weakly bluing, slowly; mild sweet taste",
+    "Under conifers and broadleaf trees, mostly beech, on acid soils · September to November"
+  ],
+  "safetyNote": "Edible after cooking: the DGfM and the VAPKO list it; Wikipedia (fr) advises removing the stem and choosing young firm ones. Look-alikes (Wikipedia, fr): the red-cracking bolete (usually a reddish zone in the flesh and no bluing), the bay bolete (no red or mauve, brown stem), the cisalpine bolete (no food interest), Hortiboletus engelii. The English page is nearly empty: the text comes from Wikipedia (fr) and the lists.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Xerocomellus pruinatus",
+      "url": "https://fr.wikipedia.org/wiki/Xerocomellus_pruinatus"
+    }
+  ],
+  "related": []
+}

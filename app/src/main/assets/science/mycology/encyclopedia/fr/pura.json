@@ -1,0 +1,33 @@
+{
+  "id": "pura",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 3 à 7 cm, convexe sans être pointu, puis étalé à léger mamelon ; du rose pur au violet ou au gris, il blanchit par temps sec ; marge très mince, striée par les lames",
+    "Lames inégales, assez espacées, blanchâtres à rosées",
+    "Pied de 4 à 9 cm, de la couleur du chapeau ou plus violet, légèrement strié, fragile, creux",
+    "Chair blanche · odeur et saveur nettes de radis",
+    "Sporée blanche",
+    "Commun du printemps à l’automne, sous feuillus et sous conifères"
+  ],
+  "safetyNote": "Toxique : il contient de la muscarine, qui provoque le syndrome sudorien : sueurs, larmes et salivation abondantes, souffle court, nausées et vomissements, en quelques minutes à 2 heures (centre antipoison belge). La société allemande de mycologie range le mycène pur et le mycène rose parmi les champignons à muscarine ; le mycène rose n’en est souvent qu’une variété. En 2022, des cueilleurs de laccaires améthystes ont cueilli des mycènes (ANSES). Le laccaire a des lames plus espacées, un pied dur et pas d’odeur de radis.",
+  "sources": [
+    {
+      "title": "ANSES (2023). Intoxications accidentelles par des champignons en France métropolitaine : bilan des cas enregistrés par les centres antipoison du 1er juillet au 31 décembre 2022. Rapport d’étude de toxicovigilance n° 2023-VIG-0127.",
+      "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Mycène pur",
+      "url": "https://fr.wikipedia.org/wiki/Mycena_pura"
+    },
+    {
+      "title": "Wikipedia (en): Mycena pura",
+      "url": "https://en.wikipedia.org/wiki/Mycena_pura"
+    }
+  ],
+  "related": []
+}

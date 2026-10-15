@@ -1,0 +1,22 @@
+{
+  "id": "fusarium_oxysporum",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : moisissure du sol comprenant des lignées pathogènes de plantes.",
+    "Repère écologique : moisissure du sol comprenant des lignées pathogènes de plantes. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Fusarium oxysporum.",
+      "url": "https://www.gbif.org/species/5251961"
+    },
+    {
+      "title": "Index Fungorum, name record 218372: Fusarium oxysporum.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=218372"
+    }
+  ],
+  "related": []
+}

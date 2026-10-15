@@ -1,0 +1,34 @@
+{
+  "id": "castanea",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognition", "text": "Lepiota castanea is a small dapperling: its cap is usually 1–4 cm wide, bell-shaped at first, then expanded with a raised centre. The pale cream background is marked with reddish-chestnut scales, densest toward the centre. The gills are whitish to cream and free. The slender stem is pale near the top, reddish brown and finely scaly below; its thin ring is fugitive."},
+    {"title": "Flesh, habitat and spores", "text": "The whitish flesh may become slightly reddish. The stem is hollow at maturity. The spore print is white; the smooth, spindle-shaped spores have a small lateral spur and are microscopic. The species grows on forest litter and humus in coniferous and broad-leaved woods, alone or in small groups, mainly in summer and autumn."},
+    {"title": "Taxonomy", "text": "The accepted name is Lepiota castanea Quél. (1881). Small dapperlings with brown or reddish pigments can be difficult to identify without careful examination. A scaly cap or visible ring alone does not establish the species."},
+    {"title": "Safety", "text": "Do not eat: the species is treated as potentially deadly. The presence of amatoxins in Lepiota castanea remains uncertain; some analysed specimens did not contain them. This does not establish that all populations are harmless. If ingestion is suspected, seek urgent medical or poison-centre advice."}
+  ],
+  "traits": [
+    "Cap 1–4 cm, pale cream with reddish-chestnut scales, bell-shaped then expanded with a raised centre",
+    "Free gills, whitish to cream",
+    "Slender stem pale near the top, reddish brown and scaly below; thin fugitive ring",
+    "Whitish flesh, stem hollow at maturity; white spore print",
+    "Forest litter and humus in broad-leaved or coniferous woods, alone or in small groups · summer-autumn"
+  ],
+  "safetyNote": "Do not eat: the species is treated as potentially deadly. The presence of amatoxins in Lepiota castanea remains uncertain; some analysed specimens did not contain them, which does not establish that all populations are harmless. If ingestion is suspected, contact a poison centre immediately.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {"title": "Index Fungorum — Lepiota castanea, record 846199", "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=846199"},
+    {"title": "MushroomExpert — Lepiota castanea", "url": "https://www.mushroomexpert.com/indianamushrooms/lepiota_castanea.html"},
+    {"title": "Latvijas Daba — Lepiota castanea", "url": "https://www.latvijasdaba.lv/senes/lepiota-castanea-quel/"},
+    {"title": "Giftinformasjonen / Helsenorge — Kastanjeparasollsopp", "url": "https://www.helsenorge.no/giftinformasjon/sopp/kastanjeparasollsopp/"},
+    {"title": "Toxicon (2024), doi:10.1016/j.toxicon.2024.107736 — amatoxin and phallotoxin analysis", "url": "https://doi.org/10.1016/j.toxicon.2024.107736"}
+  ],
+  "related": ["subincarnata", "brunneoincarnata"]
+}

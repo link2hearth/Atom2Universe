@@ -1,0 +1,32 @@
+{
+  "id": "gigantea",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Boule blanche sans pied, de 10 à 50 cm (jusqu’à 80), qui peut dépasser un ballon de football",
+    "Intérieur blanc pur et uniforme chez le jeune ; jaunâtre ou brun verdâtre en vieillissant",
+    "Jeune, odeur de farine fraîche",
+    "Spores blanches chez le jeune, olive à maturité",
+    "Prés riches en déjections de ruminants ou d’oiseaux, parfois en groupes, bois de feuillus · fin d’été et automne"
+  ],
+  "safetyNote": "Seulement jeune, quand l’intérieur est blanc pur et uniforme : jaunâtre ou brun verdâtre, il peut donner des troubles digestifs (Wikipédia EN), et elle pourrit en quelques semaines. Elle est sur la liste de la société allemande de mycologie et sur celle des contrôleurs suisses. Wikipédia FR la dit capable de fixer des métaux lourds comme le mercure : pas en grande quantité. On la coupe en deux : un jeune œuf d’amanite montre déjà le futur chapeau et le pied, on le jette et on lave le couteau.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Vesse-de-loup géante",
+      "url": "https://fr.wikipedia.org/wiki/Calvatia_gigantea"
+    },
+    {
+      "title": "Wikipedia (en): Calvatia gigantea",
+      "url": "https://en.wikipedia.org/wiki/Calvatia_gigantea"
+    }
+  ],
+  "related": []
+}

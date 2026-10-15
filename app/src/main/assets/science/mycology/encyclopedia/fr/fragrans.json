@@ -1,0 +1,24 @@
+{
+  "id": "fragrans",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 1 à 5 cm, blanc et plat",
+    "Lames assez serrées, décurrentes, blanchâtres",
+    "Pied de 2 à 6 cm, mince, nu",
+    "Odeur parfumée d’anis",
+    "Bois de feuillus en Europe · août à décembre"
+  ],
+  "safetyNote": "Toxique : la DGfM la liste pour le syndrome muscarinien. Wikipédia (en) la donne comestible mais non recommandée, certains guides la déconseillant parce qu’on peut la prendre pour des espèces mortelles, et cite Clitocybe dealbata (mortel, sans odeur d’anis) et le clitocybe odorant comme sosies. Le statut le plus prudent est retenu. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Clitocybe fragrans",
+      "url": "https://en.wikipedia.org/wiki/Clitocybe_fragrans"
+    }
+  ],
+  "related": []
+}

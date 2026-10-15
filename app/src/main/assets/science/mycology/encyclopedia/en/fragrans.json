@@ -1,0 +1,24 @@
+{
+  "id": "fragrans",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 1 to 5 cm, white and flat",
+    "Gills somewhat close, running down the stem, whitish",
+    "Stem 2 to 6 cm, thin, bare",
+    "Fragrant smell of aniseed",
+    "Broadleaf woods in Europe · August to December"
+  ],
+  "safetyNote": "Toxic: the DGfM lists it for the muscarine syndrome. Wikipedia (en) gives it as edible but not recommended, some guides advising against it because it can be mistaken for deadly poisonous species, and names Clitocybe dealbata (the ivory funnel, deadly, with no aniseed smell) and the blue-green anise mushroom as look-alikes. The most prudent status is kept. It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Clitocybe fragrans",
+      "url": "https://en.wikipedia.org/wiki/Clitocybe_fragrans"
+    }
+  ],
+  "related": []
+}

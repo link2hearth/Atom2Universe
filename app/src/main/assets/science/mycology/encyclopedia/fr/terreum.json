@@ -1,0 +1,49 @@
+{
+  "id": "terreum",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau gris souris à gris foncé, 4 à 8 cm, feutré, à fibrilles rayonnantes qui montrent la chair blanche en vieillissant ; marge pâle, ondulée",
+    "Lames échancrées, fragiles, peu serrées, blanchâtres à gris perle",
+    "Pied blanchâtre, 3 à 8 cm, sans anneau",
+    "Chair blanche à gris clair",
+    "Sporée blanche",
+    "Conifères clairsemés, surtout sous les pins · automne, jusqu’en hiver"
+  ],
+  "safetyNote": "Les avis divergent. La société allemande de mycologie (2026), les contrôleurs suisses (2023) et Wikipédia FR le disent comestible. Une étude chinoise de 2014 y a trouvé des substances qui abîment les muscles chez la souris, comme chez le tricholome équestre ; un commentaire de 2016 la conteste et une étude italienne de 2024 n’en retrouve aucune et conclut qu’il est comestible. Statut le plus prudent retenu : non recommandé. Les contrôleurs suisses le disent facile à confondre avec le tricholome tigré, toxique, et avec certains inocybes ; l’ANSES relève des entolomes livides cueillis à la place de « petits gris », nom qu’elle donne au tricholome terreux.",
+  "sources": [
+    {
+      "title": "ANSES (2023). Intoxications accidentelles par des champignons en France métropolitaine : bilan des cas enregistrés par les centres antipoison du 1er juillet au 31 décembre 2022. Rapport d’étude de toxicovigilance n° 2023-VIG-0127.",
+      "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "Yin X., Feng T., Shang J.-H. et al. (2014). Chemical and toxicological investigations of a previously unknown poisonous European mushroom Tricholoma terreum. Chem Eur J 20 : 7001-7009.",
+      "url": "https://doi.org/10.1002/chem.201400226"
+    },
+    {
+      "title": "Davoli P., Floriani M., Assisi F., Kob K., Sitta N. (2016). Comment on « Chemical and toxicological investigations of a previously unknown poisonous European mushroom Tricholoma terreum ». Chem Eur J 22 : 5786-5788.",
+      "url": "https://doi.org/10.1002/chem.201406655"
+    },
+    {
+      "title": "Clericuzio M., Serra S., Vidari G. (2024). No evidence was found for the presence of terreolides, terreumols or saponaceolides H-S in the fruiting bodies of Tricholoma terreum (Basidiomycota, Agaricales). Molecules 29(8) : 1794.",
+      "url": "https://doi.org/10.3390/molecules29081794"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Tricholoma terreum",
+      "url": "https://fr.wikipedia.org/wiki/Tricholoma_terreum"
+    },
+    {
+      "title": "Wikipedia (en): Tricholoma terreum",
+      "url": "https://en.wikipedia.org/wiki/Tricholoma_terreum"
+    }
+  ],
+  "related": []
+}

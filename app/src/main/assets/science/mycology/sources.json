@@ -244,8 +244,9 @@
     { "id": "wp-en-orellanus", "kind": "encyclopedia", "citation": "Wikipedia (en): Cortinarius orellanus", "url": "https://en.wikipedia.org/wiki/Cortinarius_orellanus", "species": ["orellanus"] },
     { "id": "wp-fr-virescens", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Russule verdoyante", "url": "https://fr.wikipedia.org/wiki/Russule_verdoyante", "species": ["virescens"] },
     { "id": "wp-en-virescens", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula virescens", "url": "https://en.wikipedia.org/wiki/Russula_virescens", "species": ["virescens"] },
-    { "id": "wp-fr-columbetta", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Tricholome colombette", "url": "https://fr.wikipedia.org/wiki/Tricholome_colombette", "species": ["columbetta"] },
-    { "id": "wp-en-columbetta", "kind": "encyclopedia", "citation": "Wikipedia (en): Tricholoma columbetta", "url": "https://en.wikipedia.org/wiki/Tricholoma_columbetta", "species": ["columbetta"] },
+    { "id": "lyon1_columbetta", "kind": "morphology", "citation": "Université Claude Bernard Lyon 1: Tricholoma columbetta.", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/tricholoma-columbetta/", "species": ["columbetta"] },
+    { "id": "xunta_columbetta", "kind": "morphology", "citation": "Xunta de Galicia, Guía micolóxica: Tricholoma columbetta.", "url": "https://mediorural.xunta.gal/sites/default/files/publicacions/2024-02/es-libro-setas-ngsg_2023-rrss-min.pdf", "species": ["columbetta"] },
+    { "id": "anses_white_tricholoma_confusion", "kind": "safety", "citation": "ANSES, assessment of mushroom poisoning risks: white Amanita confusion with Tricholoma columbetta.", "url": "https://www.anses.fr/fr/system/files/ERCA2015SA0180.pdf", "species": ["columbetta", "phalloides", "virosa", "verna"] },
     { "id": "wp-fr-ostreatus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Pleurotus ostreatus", "url": "https://fr.wikipedia.org/wiki/Pleurotus_ostreatus", "species": ["ostreatus"] },
     { "id": "wp-en-ostreatus", "kind": "encyclopedia", "citation": "Wikipedia (en): Pleurotus ostreatus", "url": "https://en.wikipedia.org/wiki/Pleurotus_ostreatus", "species": ["ostreatus"] },
     { "id": "wp-fr-perlatum", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lycoperdon perlatum", "url": "https://fr.wikipedia.org/wiki/Lycoperdon_perlatum", "species": ["perlatum"] },
@@ -373,7 +374,10 @@
     { "id": "wp-en-porphyria", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita porphyria", "url": "https://en.wikipedia.org/wiki/Amanita_porphyria", "species": ["porphyria"] },
     { "id": "wp-fr-moelleri", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Agaricus moelleri", "url": "https://fr.wikipedia.org/wiki/Agaricus_moelleri", "species": ["moelleri"] },
     { "id": "wp-en-moelleri", "kind": "encyclopedia", "citation": "Wikipedia (en): Agaricus moelleri", "url": "https://en.wikipedia.org/wiki/Agaricus_moelleri", "species": ["moelleri"] },
-    { "id": "wp-en-clavipes", "kind": "encyclopedia", "citation": "Wikipedia (en): Ampulloclitocybe clavipes", "url": "https://en.wikipedia.org/wiki/Ampulloclitocybe_clavipes", "species": ["clavipes"] },
+    { "id": "naturalis_clavipes", "kind": "morphology", "citation": "Naturalis Biodiversity Center: Clitocybe clavipes.", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=100316", "species": ["clavipes"] },
+    { "id": "eppo_clavipes", "kind": "taxonomy", "citation": "EPPO Global Database: Ampulloclitocybe clavipes.", "url": "https://gd.eppo.int/taxon/ACLTCL", "species": ["clavipes"] },
+    { "id": "nama_alcohol_syndromes", "kind": "safety", "citation": "North American Mycological Association: Mushroom Poisoning Syndromes.", "url": "https://namyco.org/interests/toxicology/mushroom-poisoning-syndromes/", "species": ["clavipes"] },
+    { "id": "sfmu_coprine_reports", "kind": "safety", "citation": "SFMU / Université Grenoble-Alpes: Syndrome coprinien.", "url": "https://www.sfmu.org/toxin/CHAMPIGN/CHPGSYND/COPRIN/COPRIN2.HTM", "species": ["clavipes"] },
     { "id": "wp-fr-helvus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lactarius helvus", "url": "https://fr.wikipedia.org/wiki/Lactarius_helvus", "species": ["helvus"] },
     { "id": "wp-en-helvus", "kind": "encyclopedia", "citation": "Wikipedia (en): Lactarius helvus", "url": "https://en.wikipedia.org/wiki/Lactarius_helvus", "species": ["helvus"] },
     { "id": "wp-fr-platyphylla", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Megacollybia platyphylla", "url": "https://fr.wikipedia.org/wiki/Megacollybia_platyphylla", "species": ["platyphylla"] },
@@ -589,14 +593,32 @@
     },
     {
       "id": "gbif_exidia_nigricans", "kind": "taxonomy",
-      "citation": "GBIF Backbone Taxonomy name search: Exidia nigricans.",
-      "url": "https://www.gbif.org/species/search?q=Exidia%20nigricans",
+      "citation": "GBIF Backbone Taxonomy: Exidia nigricans.",
+      "url": "https://www.gbif.org/taxon/3DL34",
       "species": ["exidia_nigricans"]
     },
     {
       "id": "indexfungorum_exidia_nigricans", "kind": "taxonomy",
       "citation": "Index Fungorum, name record 512661: Exidia nigricans.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=512661",
+      "species": ["exidia_nigricans"]
+    },
+    {
+      "id": "firstnature_exidia_nigricans", "kind": "morphology",
+      "citation": "First Nature: Exidia nigricans, Warlock's Butter.",
+      "url": "https://www.first-nature.com/fungi/exidia-nigricans.php",
+      "species": ["exidia_nigricans"]
+    },
+    {
+      "id": "nhm_exidia_nigricans", "kind": "taxonomy",
+      "citation": "Natural History Museum UK, Species Dictionary: Exidia nigricans.",
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=BMSSYS0000045417",
+      "species": ["exidia_nigricans"]
+    },
+    {
+      "id": "eflora_exidia_glandulosa_group", "kind": "taxonomy",
+      "citation": "E-Flora BC / University of British Columbia: Exidia glandulosa group and taxonomic uncertainty.",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Exidia+glandulosa+group",
       "species": ["exidia_nigricans"]
     },
     {
@@ -660,6 +682,24 @@
       "species": ["lactarius_zonarioides"]
     },
     {
+      "id": "funganordica_lactarius_zonarioides", "kind": "morphology",
+      "citation": "Heilmann-Clausen, Verbeken & Vesterholt (2000), The Genus Lactarius, Funga Nordica.",
+      "url": "https://www.mykoweb.com/CAF/PDF/FungaNordica/FungaNordica-Lactarius.pdf",
+      "species": ["lactarius_zonarioides"]
+    },
+    {
+      "id": "naturalis_lactarius_zonarioides", "kind": "morphology",
+      "citation": "Naturalis Biodiversity Center, Interactive Paddenstoelengids: Lactarius zonarioides.",
+      "url": "https://paddenstoelen.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?epi=2&id=3372",
+      "species": ["lactarius_zonarioides"]
+    },
+    {
+      "id": "mykowebcz_lactarius_zonarioides", "kind": "morphology",
+      "citation": "MykoWeb Czech: Lactarius zonarioides.",
+      "url": "https://www.mykoweb.cz/houba/lactarius-zonarioides",
+      "species": ["lactarius_zonarioides"]
+    },
+    {
       "id": "gbif_lactarius_torminosulus", "kind": "taxonomy",
       "citation": "GBIF Backbone Taxonomy: Lactarius torminosulus.",
       "url": "https://www.gbif.org/species/5463362",
@@ -693,6 +733,24 @@
       "id": "indexfungorum_lactarius_picinus", "kind": "taxonomy",
       "citation": "Index Fungorum, name record 175312: Lactarius picinus.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=175312",
+      "species": ["lactarius_picinus"]
+    },
+    {
+      "id": "myko_atlas_lactarius_picinus", "kind": "morphology",
+      "citation": "Czech Mycological Society, Myko Atlas: Lactarius picinus.",
+      "url": "https://www.myko.cz/myko-atlas/Lactarius-picinus/",
+      "species": ["lactarius_picinus"]
+    },
+    {
+      "id": "adonif_mycota_lactarius_picinus", "kind": "taxonomy",
+      "citation": "ADONIF / INPN-MNHN (2023), Catalogue actualisé des Mycota français: Lactarius fuliginosus et taxons associés.",
+      "url": "https://inpn.mnhn.fr/docs-web/docs/download/431501",
+      "species": ["lactarius_picinus"]
+    },
+    {
+      "id": "barakaldo_lactarius_picinus", "kind": "morphology",
+      "citation": "Sociedad Micológica Barakaldo: Lactarius picinus.",
+      "url": "https://micologica-barakaldo.org/lactarius-picinus/",
       "species": ["lactarius_picinus"]
     },
     {
@@ -732,6 +790,24 @@
       "species": ["hygrophorus_pustulatus"]
     },
     {
+      "id": "alaskamycoflora_hygrophorus_pustulatus", "kind": "morphology",
+      "citation": "The Mycota of Alaska: Hygrophorus pustulatus.",
+      "url": "https://www.alaskamycoflora.org/genera/hygrophorus/hygrophorus-pustulatus.php",
+      "species": ["hygrophorus_pustulatus"]
+    },
+    {
+      "id": "mushroomexpert_hygrophorus_pustulatus", "kind": "morphology",
+      "citation": "Kuo, M. (2014). Hygrophorus pustulatus. MushroomExpert.Com.",
+      "url": "https://www.mushroomexpert.com/hygrophorus_pustulatus.html",
+      "species": ["hygrophorus_pustulatus"]
+    },
+    {
+      "id": "nhm_hygrophorus_pustulatus", "kind": "taxonomy",
+      "citation": "Natural History Museum, UK Species Dictionary: Hygrophorus pustulatus.",
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NHMSYS0001484676",
+      "species": ["hygrophorus_pustulatus"]
+    },
+    {
       "id": "gbif_hygrophorus_purpurascens", "kind": "taxonomy",
       "citation": "GBIF Backbone Taxonomy: Hygrophorus purpurascens.",
       "url": "https://www.gbif.org/species/3344741",
@@ -744,6 +820,24 @@
       "species": ["hygrophorus_purpurascens"]
     },
     {
+      "id": "eflora_hygrophorus_purpurascens", "kind": "morphology",
+      "citation": "E-Flora BC / University of British Columbia: Hygrophorus purpurascens.",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Hygrophorus+purpurascens",
+      "species": ["hygrophorus_purpurascens"]
+    },
+    {
+      "id": "mushroomexpert_hygrophorus_purpurascens", "kind": "morphology",
+      "citation": "MushroomExpert: Hygrophorus purpurascens.",
+      "url": "https://www.mushroomexpert.com/hygrophorus_purpurascens.html",
+      "species": ["hygrophorus_purpurascens"]
+    },
+    {
+      "id": "alaskamycoflora_hygrophorus_purpurascens", "kind": "morphology",
+      "citation": "The Mycota of Alaska: Hygrophorus purpurascens.",
+      "url": "https://www.alaskamycoflora.org/genera/hygrophorus/hygrophorus-purpurascens.php",
+      "species": ["hygrophorus_purpurascens"]
+    },
+    {
       "id": "gbif_hygrophorus_penarioides", "kind": "taxonomy",
       "citation": "GBIF Backbone Taxonomy: Hygrophorus penarioides.",
       "url": "https://www.gbif.org/species/3344835",
@@ -753,6 +847,24 @@
       "id": "indexfungorum_hygrophorus_penarioides", "kind": "taxonomy",
       "citation": "Index Fungorum, name record 510527: Hygrophorus penarioides.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=510527",
+      "species": ["hygrophorus_penarioides"]
+    },
+    {
+      "id": "phytotaxa_hygrophorus_penarioides_2019", "kind": "research",
+      "citation": "Kovács et al. (2019), Phytotaxa: New insights on Hygrophorus penarioides and H. penarius from Hungary.",
+      "url": "https://phytotaxa.mapress.com/pt/article/view/phytotaxa.392.2.2",
+      "species": ["hygrophorus_penarioides"]
+    },
+    {
+      "id": "jacobsson_larsson_hygrophorus_penarioides_2007", "kind": "research",
+      "citation": "Jacobsson & Larsson (2007), Mycotaxon: Hygrophorus penarioides, a new species identified using morphology and ITS sequence data.",
+      "url": "https://www.biodiversitylibrary.org/part/419210",
+      "species": ["hygrophorus_penarioides"]
+    },
+    {
+      "id": "micobotanica_hygrophorus_penarioides", "kind": "morphology",
+      "citation": "Micobotánica-Jaén: Hygrophorus penarioides observations and description.",
+      "url": "https://www.micobotanicajaen.com/Revista/Hemeroteca/PDF/A12N04.pdf",
       "species": ["hygrophorus_penarioides"]
     },
     {

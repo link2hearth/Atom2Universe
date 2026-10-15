@@ -1,0 +1,27 @@
+{
+  "id": "lactarius_picinus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaître l’espèce", "text": "Lactarius picinus est un lactaire trapu, au chapeau brun très sombre à noirâtre, mat et finement velouté. Le centre peut se creuser légèrement avec l’âge. Les lames assez serrées sont blanchâtres à crème. Le pied cylindrique, brun grisâtre, peut pâlir sous le chapeau et vers la base; il devient souvent creux à maturité."},
+    {"title": "Coupe et caractères utiles", "text": "La chair blanchâtre peut prendre des teintes roses à orangées après la coupe. Le latex est blanc et ne change pas de couleur lorsqu’il est observé seul; au contact de la chair, il peut rosir. Il est âcre, tout comme la chair. La sporée est ocre. Ces caractères doivent être considérés ensemble: ils ne suffisent pas à eux seuls à garantir une identification."},
+    {"title": "Habitat et saison", "text": "Cette espèce ectomycorhizienne pousse sur le sol des forêts de conifères humides, surtout sous l’épicéa; le sapin est également mentionné comme hôte possible. Elle est signalée de la fin de l’été au début de l’automne, généralement d’août à octobre."},
+    {"title": "Confusions et sécurité", "text": "Lactarius lignyotus peut lui ressembler, mais il est généralement plus petit et ses lames descendent davantage sur le pied; Lactarius fuliginosus est plutôt associé aux feuillus. Le statut taxonomique varie selon les référentiels: certains maintiennent L. picinus comme espèce, tandis que le catalogue français ADONIF le traite dans L. fuliginosus. Le Myko Atlas tchèque le donne comme non comestible; cette fiche de référence ne recommande aucune consommation."}
+  ],
+  "traits": [
+    "Chapeau brun très sombre à noirâtre, mat, finement velouté, souvent légèrement déprimé au centre à maturité",
+    "Lames assez serrées, blanchâtres à crème",
+    "Pied cylindrique brun à gris brun, plus pâle sous le chapeau ou vers la base, souvent creux à maturité",
+    "Chair blanchâtre rosissant à orangée après la coupe; latex blanc immuable seul, parfois rosissant au contact de la chair, de saveur âcre",
+    "Forêts humides de conifères, surtout sous épicéas · fin d’été et automne",
+    "Référentiels divergents: espèce reconnue par certaines sources, incluse dans Lactarius fuliginosus par le catalogue français ADONIF"
+  ],
+  "safetyNote": "Référence taxonomique et écologique uniquement. Une source mycologique le classe non comestible; ne consomme pas un champignon identifié sur la base de cette fiche.",
+  "sources": [
+    {"title": "Česká mykologická společnost — Myko Atlas, Lactarius picinus (description, habitat, confusions et usage culinaire)", "url": "https://www.myko.cz/myko-atlas/Lactarius-picinus/"},
+    {"title": "ADONIF / INPN-MNHN, 2023 — Catalogue actualisé des Mycota français, entrée Lactarius fuliginosus et taxons associés", "url": "https://inpn.mnhn.fr/docs-web/docs/download/431501"},
+    {"title": "Sociedad Micológica Barakaldo — Lactarius picinus (description et écologie)", "url": "https://micologica-barakaldo.org/lactarius-picinus/"},
+    {"title": "GBIF Backbone Taxonomy — Lactarius picinus", "url": "https://www.gbif.org/species/9476870"},
+    {"title": "Index Fungorum, name record 175312 — Lactarius picinus", "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=175312"}
+  ],
+  "related": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "lactarius_torminosulus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: small milkcap with a hairy margin, associated with birch.",
+    "Ecological context: small milkcap with a hairy margin, associated with birch. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Lactarius torminosulus.",
+      "url": "https://www.gbif.org/species/5463362"
+    },
+    {
+      "title": "Index Fungorum, name record 436327: Lactarius torminosulus.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=436327"
+    }
+  ],
+  "related": []
+}

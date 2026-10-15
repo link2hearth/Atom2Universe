@@ -1,0 +1,41 @@
+{
+  "id": "prunulus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "White to pale grey cap, matt, as if frosted, 3 to 13 cm, dished in the centre with age; margin rolled and wavy",
+    "Decurrent gills, white then pink when ripe",
+    "Short stem, 2 to 5 cm, often off-centre and flared at the top",
+    "Soft white flesh with a strong smell of fresh flour that disappears when cooked",
+    "Pink to salmon-pink spores",
+    "Grass and woodland edges, under broadleaves or conifers · summer to autumn, a few weeks before porcini"
+  ],
+  "safetyNote": "Toxic white clitocybes (muscarine) are sometimes mistaken for it: their gills stay white or cream and their spores are white, whereas its spores are pink. The floury smell is not enough: the livid pinkgill has it too.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2024 durch das Kantonale Laboratorium Basel-Stadt. 16 janvier 2025.",
+      "url": "https://media.bs.ch/original_file/51e1d6b315312707b136dffb8f09d5688c27447f/2024-pilze-0.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Clitopilus prunulus",
+      "url": "https://fr.wikipedia.org/wiki/Clitopilus_prunulus"
+    },
+    {
+      "title": "Wikipedia (en): Clitopilus prunulus",
+      "url": "https://en.wikipedia.org/wiki/Clitopilus_prunulus"
+    }
+  ],
+  "related": []
+}

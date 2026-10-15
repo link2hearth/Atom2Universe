@@ -1,0 +1,24 @@
+{
+  "id": "platyphylla",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 5 à 12 cm, gris cendré, olive ou gris brun, plus foncé au centre, à fibrilles rayonnantes, souvent fendu au bord",
+    "Lames larges et profondes, blanchâtres puis crème, presque libres, à arête dentée",
+    "Pied de 5 à 12 cm, fibreux et coriace, plus pâle que le chapeau, avec des cordons blancs à la base",
+    "Chair mince, blanchâtre ; saveur douce à un peu amère, sans odeur marquée",
+    "Bois pourri de feuillus, aussi faînes enfouies · fin de printemps à automne"
+  ],
+  "safetyNote": "Toxique : la DGfM le liste pour un syndrome gastro-intestinal, et Wikipédia (fr) dit qu’il était mangé en Italie, mélangé à d’autres espèces, malgré son amertume, et qu’il est maintenant tenu pour toxique. Wikipédia (fr) cite parmi ses sosies Pluteus cervinus, Hymenopellis radicata et Tricholoma portentosum ; la chair mince, les lames larges et molles et les cordons blancs aident à le distinguer. Aucune page anglaise n’a pu être lue : le texte vient de Wikipédia (fr) et de la DGfM.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Megacollybia platyphylla",
+      "url": "https://fr.wikipedia.org/wiki/Megacollybia_platyphylla"
+    }
+  ],
+  "related": []
+}

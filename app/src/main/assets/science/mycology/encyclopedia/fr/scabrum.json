@@ -1,0 +1,32 @@
+{
+  "id": "scabrum",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 4 à 20 cm, brun clair à brun foncé, lisse ou velouté, visqueux par temps humide",
+    "Pores blanchâtres puis gris, qui brunissent au toucher",
+    "Pied de 5 à 20 cm, blanc, couvert de petites écailles brun noirâtre",
+    "Chair blanchâtre, presque inchangée à la coupe ; saveur douce, odeur faible",
+    "Presque uniquement sous les bouleaux · été à fin d’automne"
+  ],
+  "safetyNote": "Comestible bien cuit : la DGfM et la VAPKO listent les bolets rudes, et Wikipédia (fr) avertit que crus ou mal cuits ils donnent des troubles digestifs. Valeur moyenne ; le pied fibreux est souvent jeté, on préfère les jeunes chapeaux. La chair noircit à la cuisson (Wikipédia, fr et en). Les nombreux autres bolets rudes sont proches ; les sources lues ne donnent aucune règle simple pour les séparer.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Leccinum scabrum",
+      "url": "https://fr.wikipedia.org/wiki/Leccinum_scabrum"
+    },
+    {
+      "title": "Wikipedia (en): Leccinum scabrum",
+      "url": "https://en.wikipedia.org/wiki/Leccinum_scabrum"
+    }
+  ],
+  "related": []
+}

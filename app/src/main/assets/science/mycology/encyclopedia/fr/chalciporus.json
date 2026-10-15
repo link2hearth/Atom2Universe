@@ -1,0 +1,28 @@
+{
+  "id": "chalciporus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 1,5 à 9 cm, sec ou peu visqueux, jaune brunâtre à brun rougeâtre",
+    "Pores un peu anguleux, brun rouille à brun rougeâtre",
+    "Pied de 3 à 9 cm, brun rouge sur fond jaune, à mycélium jaune à la base, sans anneau",
+    "Chair crème, jaune vif à la base du pied ; saveur nettement poivrée",
+    "Sous les feuillus et les conifères · juillet à novembre"
+  ],
+  "safetyNote": "Non recommandé : la VAPKO le liste, mais Wikipédia (fr) dit qu’il est sans intérêt alimentaire à cause de sa saveur poivrée, et Wikipédia (en) qu’il est généralement tenu pour immangeable et contient des toxines, en conseillant une cuisson soignée contre les troubles d’estomac. Il peut servir de condiment, en petits dés ou séché et réduit en poudre (Wikipédia, fr). Le bolet faux-poivré (Chalciporus pseudopiperatus) est une espèce cryptique : seul l’ADN les sépare.",
+  "sources": [
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Chalciporus piperatus",
+      "url": "https://fr.wikipedia.org/wiki/Chalciporus_piperatus"
+    },
+    {
+      "title": "Wikipedia (en): Chalciporus piperatus",
+      "url": "https://en.wikipedia.org/wiki/Chalciporus_piperatus"
+    }
+  ],
+  "related": []
+}

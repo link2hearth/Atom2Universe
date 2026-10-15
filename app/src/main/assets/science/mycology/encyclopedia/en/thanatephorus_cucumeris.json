@@ -1,0 +1,22 @@
+{
+  "id": "thanatephorus_cucumeris",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: microscopic fungus associated with rhizoctonia disease.",
+    "Ecological context: microscopic fungus associated with rhizoctonia disease. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Thanatephorus cucumeris.",
+      "url": "https://www.gbif.org/species/2555173"
+    },
+    {
+      "title": "Index Fungorum, name record 306777: Thanatephorus cucumeris.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=306777"
+    }
+  ],
+  "related": []
+}

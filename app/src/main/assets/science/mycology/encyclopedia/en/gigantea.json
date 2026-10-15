@@ -1,0 +1,32 @@
+{
+  "id": "gigantea",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "White ball without a stem, 10 to 50 cm (up to 80), which can exceed a football",
+    "Pure white, even inside when young; yellowish or greenish brown with age",
+    "When young, smell of fresh flour",
+    "White spores when young, olive when ripe",
+    "Meadows rich in droppings of ruminants or birds, sometimes in groups, broadleaf woods · late summer and autumn"
+  ],
+  "safetyNote": "Only when young, with pure white, even flesh inside: yellowish or greenish brown, it can cause digestive upset (Wikipedia EN), and it rots within weeks. It is on the German mycological society list and on the Swiss controllers’ list. Wikipedia FR says it can fix heavy metals such as mercury: not in large quantities. Cut it in two: a young amanita egg already shows the future cap and stem; throw it away and wash the knife.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Vesse-de-loup géante",
+      "url": "https://fr.wikipedia.org/wiki/Calvatia_gigantea"
+    },
+    {
+      "title": "Wikipedia (en): Calvatia gigantea",
+      "url": "https://en.wikipedia.org/wiki/Calvatia_gigantea"
+    }
+  ],
+  "related": []
+}

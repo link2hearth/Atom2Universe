@@ -1,0 +1,35 @@
+{
+  "id": "decastes",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognition", "text": "Lyophyllum decastes often forms dense groups of mushrooms whose stems converge at the base. The smooth, fawn to grey-brown cap is usually 4–15 cm across; its margin starts inrolled and may become wavy. The crowded white to pale-grey gills are adnate. The stem is white and stout, sometimes slightly brown at the base. Solitary specimens also occur."},
+    {"title": "Ecology and spores", "text": "This saprotrophic species grows on humus-rich soil, woodland edges, paths and disturbed ground; it may be associated with buried, decaying wood. It fruits mainly from late summer into autumn. The spore print is white."},
+    {"title": "Species complex", "text": "Lyophyllum decastes in the broad sense includes closely related taxa that can be difficult to separate by visible characters alone. Colours, gill attachment and smell vary; a farinaceous smell is not a reliable character for the whole complex. The plate shows a typical combination, not a certain identification."},
+    {"title": "Food use and caution", "text": "The species is generally regarded as edible and appears on some positive mushroom lists, but digestive upsets are reported in some people and some guides advise against eating it. Eat only specimens identified with certainty by an expert. A published case of liver injury involved a dietary supplement and does not establish equivalent toxicity from an ordinary meal."}
+  ],
+  "traits": [
+    "Cap 4 to 15 cm, fawn to light brown, sometimes greyish, rolled wavy margin",
+    "Gills close, whitish to cream",
+    "White stout stem, often converging with other stems at the base; no ring",
+    "Smell weak or not distinctive",
+    "Humus-rich soil, woodland edges, paths or buried decaying wood · white spore print · late summer-autumn"
+  ],
+  "safetyNote": "Generally regarded as edible and included in positive lists, but digestive upsets are reported and some guides advise against eating it. The Lyophyllum decastes complex is difficult to identify; eat only specimens identified with certainty by an expert.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {"title": "Université Claude Bernard Lyon 1 — Lyophyllum decastes", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/lyophyllum-decastes/"},
+    {"title": "UNAM — Lyophyllum decastes sensu lato", "url": "https://hongoscomestiblesytoxicos.ib.unam.mx/fichas/Lyophyllum%20decastes%20sl.html"},
+    {"title": "First Nature — Lyophyllum decastes", "url": "https://www.first-nature.com/fungi/lyophyllum-decastes.php"},
+    {"title": "MushroomExpert — Lyophyllum decastes complex", "url": "https://www.mushroomexpert.com/lyophyllum_decastes.html"},
+    {"title": "PubMed — supplement-associated liver injury case report", "url": "https://pubmed.ncbi.nlm.nih.gov/16868813/"},
+    {"title": "DGfM — Positivliste der Speisepilze (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"}
+  ],
+  "related": []
+}

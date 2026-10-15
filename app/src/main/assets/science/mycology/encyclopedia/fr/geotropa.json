@@ -1,0 +1,37 @@
+{
+  "id": "geotropa",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 7 à 20 cm, crème, beige à brun cannelle : en forme de quille chez le jeune, puis bombé, puis étalé avec un mamelon, enfin creusé en entonnoir ; marge lisse",
+    "Lames fines, très décurrentes, crème à beige",
+    "Pied plein et fibreux, 10 à 20 cm, très renflé chez le jeune, de la couleur du chapeau ; pas d’anneau",
+    "Chair blanche, ferme chez le jeune · odeur forte, douce, d’amande amère ou de foin",
+    "Sporée blanche",
+    "Sol des bois de feuillus, lisières et clairières, souvent en troupes ou en ronds, de la fin de l’été jusqu’aux premières gelées"
+  ],
+  "safetyNote": "Comestible de valeur moyenne, seulement jeune : le pied fibreux devient coriace et se jette. Il est sur la liste de la société allemande de mycologie (« Mönchskopf ») et sur celle des contrôleurs suisses (« tête de moine »). L’ANSES relève des entolomes livides cueillis à la place de clitocybes géotropes (2022) : l’entolome a des lames échancrées qui rosissent, une odeur de farine et une sporée rose. Le clitopile, comestible aussi, a la sporée rose.",
+  "sources": [
+    {
+      "title": "ANSES (2023). Intoxications accidentelles par des champignons en France métropolitaine : bilan des cas enregistrés par les centres antipoison du 1er juillet au 31 décembre 2022. Rapport d’étude de toxicovigilance n° 2023-VIG-0127.",
+      "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Infundibulicybe geotropa",
+      "url": "https://fr.wikipedia.org/wiki/Infundibulicybe_geotropa"
+    },
+    {
+      "title": "Wikipedia (en): Infundibulicybe geotropa",
+      "url": "https://en.wikipedia.org/wiki/Infundibulicybe_geotropa"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "russula_adulterina",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : russule de conifères montagnards.",
+    "Repère écologique : russule de conifères montagnards. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "NCBI Taxonomy Browser: Russula adulterina.",
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=36059"
+    },
+    {
+      "title": "Index Fungorum, name record 168833: Russula adulterina.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=168833"
+    }
+  ],
+  "related": []
+}

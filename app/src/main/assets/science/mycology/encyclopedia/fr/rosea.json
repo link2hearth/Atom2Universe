@@ -1,0 +1,28 @@
+{
+  "id": "rosea",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 2 à 6 cm, rose vif à rose pâle, avec un petit mamelon et une marge striée",
+    "Lames adnées ou échancrées, rose pâle à blanches",
+    "Pied très cassant, blanc teinté de rose",
+    "Odeur de radis",
+    "Lisières de bois de feuillus"
+  ],
+  "safetyNote": "Toxique : muscarine (la DGfM et Wikipédia, fr), avec transpiration, nausées et vomissements. Wikipédia (en) la liste comme vénéneuse sans nommer de toxine. Elle est proche de Mycena sororia, qu’on ne sépare qu’au microscope (Wikipédia, en).",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Mycena rosea",
+      "url": "https://fr.wikipedia.org/wiki/Mycena_rosea"
+    },
+    {
+      "title": "Wikipedia (en): Mycena rosea",
+      "url": "https://en.wikipedia.org/wiki/Mycena_rosea"
+    }
+  ],
+  "related": []
+}

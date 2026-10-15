@@ -1,0 +1,32 @@
+{
+  "id": "xerampelina",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 4 à 20 cm, rouge vineux à pourpre, marge carmin et centre pourpre noirâtre, parfois verdâtre",
+    "Lames presque libres, crème, jaunissant avec l’âge, à arêtes pourpres",
+    "Pied de 4 à 12 cm, blanc, parfois teinté de rouge, qui brunit au toucher",
+    "Odeur de crabe ou de crevette cuits, plus forte avec l’âge ; saveur douce",
+    "Surtout sous les conifères, épicéas, pins ou sapins · été à automne"
+  ],
+  "safetyNote": "Comestible : la DGfM et la VAPKO le listent. Wikipédia (en) le compte parmi les meilleurs comestibles de son genre, les jeunes chapeaux se prêtant à la farce ; Wikipédia (fr) le range parmi les comestibles mais trouve son goût d’écrevisse ou de hareng peu attirant. L’odeur de crustacé persiste à la cuisson (Wikipédia, en). La russule émétique a le pied et les lames blancs (Wikipédia, en) : voir le groupe.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Russula xerampelina",
+      "url": "https://fr.wikipedia.org/wiki/Russula_xerampelina"
+    },
+    {
+      "title": "Wikipedia (en): Russula xerampelina",
+      "url": "https://en.wikipedia.org/wiki/Russula_xerampelina"
+    }
+  ],
+  "related": []
+}

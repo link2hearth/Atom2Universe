@@ -1,0 +1,22 @@
+{
+  "id": "thanatephorus_cucumeris",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : champignon microscopique responsable de la maladie du rhizoctone.",
+    "Repère écologique : champignon microscopique responsable de la maladie du rhizoctone. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Thanatephorus cucumeris.",
+      "url": "https://www.gbif.org/species/2555173"
+    },
+    {
+      "title": "Index Fungorum, name record 306777: Thanatephorus cucumeris.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=306777"
+    }
+  ],
+  "related": []
+}

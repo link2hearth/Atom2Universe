@@ -1,0 +1,24 @@
+{
+  "id": "platyphylla",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 5 to 12 cm, ash-grey, olive or grey-brown, darker at the centre, with radial fibrils, often split at the edge",
+    "Gills broad and deep, whitish then cream, nearly free, edges serrated",
+    "Stem 5 to 12 cm, fibrous and tough, paler than the cap, with white cords at the base",
+    "Thin, whitish flesh; mild to slightly bitter taste, no distinctive smell",
+    "Rotting broadleaf wood, also beechnuts in the soil · late spring to autumn"
+  ],
+  "safetyNote": "Toxic: the DGfM lists it for a gastrointestinal syndrome, and Wikipedia (fr) says it was eaten in Italy, mixed with other species, despite its bitterness, and is now considered toxic. Wikipedia (fr) names look-alikes among Pluteus cervinus, Hymenopellis radicata and Tricholoma portentosum; the thin flesh, broad soft gills and white cords help set it apart. There is no English page read: the text comes from Wikipedia (fr) and the DGfM.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Megacollybia platyphylla",
+      "url": "https://fr.wikipedia.org/wiki/Megacollybia_platyphylla"
+    }
+  ],
+  "related": []
+}

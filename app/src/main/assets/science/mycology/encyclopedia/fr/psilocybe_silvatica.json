@@ -1,0 +1,22 @@
+{
+  "id": "psilocybe_silvatica",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : petit psilocybe saprotrophe de milieux boisés.",
+    "Repère écologique : petit psilocybe saprotrophe de milieux boisés. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Psilocybe silvatica.",
+      "url": "https://www.gbif.org/species/5459328"
+    },
+    {
+      "title": "Index Fungorum, name record 304494: Psilocybe silvatica.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=304494"
+    }
+  ],
+  "related": []
+}

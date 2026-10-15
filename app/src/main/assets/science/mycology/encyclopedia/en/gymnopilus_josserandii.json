@@ -1,0 +1,22 @@
+{
+  "id": "gymnopilus_josserandii",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: woodland Gymnopilus with rusty spores.",
+    "Ecological context: woodland Gymnopilus with rusty spores. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Gymnopilus josserandii.",
+      "url": "https://www.gbif.org/species/3343024"
+    },
+    {
+      "title": "Index Fungorum, name record 482824: Gymnopilus josserandii.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=482824"
+    }
+  ],
+  "related": []
+}

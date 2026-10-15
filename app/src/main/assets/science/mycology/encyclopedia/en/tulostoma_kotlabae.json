@@ -1,0 +1,22 @@
+{
+  "id": "tulostoma_kotlabae",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: small stalked puffball of dry habitats.",
+    "Ecological context: small stalked puffball of dry habitats. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Tulostoma kotlabae.",
+      "url": "https://www.gbif.org/species/5454064"
+    },
+    {
+      "title": "Index Fungorum, name record 307217: Tulostoma kotlabae.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=307217"
+    }
+  ],
+  "related": []
+}

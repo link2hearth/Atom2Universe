@@ -1,0 +1,22 @@
+{
+  "id": "histoplasma_capsulatum",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : champignon dimorphe présent dans l’environnement, étudié en microbiologie.",
+    "Repère écologique : champignon dimorphe présent dans l’environnement, étudié en microbiologie. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Histoplasma capsulatum.",
+      "url": "https://www.gbif.org/species/3469218"
+    },
+    {
+      "title": "Index Fungorum, name record 102749: Histoplasma capsulatum.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=102749"
+    }
+  ],
+  "related": []
+}

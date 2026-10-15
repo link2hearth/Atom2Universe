@@ -1,0 +1,22 @@
+{
+  "id": "lactarius_fennoscandicus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: boreal milkcap associated with conifers.",
+    "Ecological context: boreal milkcap associated with conifers. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Lactarius fennoscandicus.",
+      "url": "https://www.gbif.org/species/5463476"
+    },
+    {
+      "title": "Index Fungorum, name record 445020: Lactarius fennoscandicus.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=445020"
+    }
+  ],
+  "related": []
+}

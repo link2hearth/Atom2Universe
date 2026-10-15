@@ -512,6 +512,7 @@
     <string name="myco_l_pores_olive_yellow">Pores jaune olive</string>
     <string name="myco_l_pores_yellow">Pores jaunes</string>
     <string name="myco_l_smooth_stem">Pied lisse, sans réseau</string>
+    <string name="myco_l_stem_finely_fibrillose">Pied finement fibrilleux, sans réseau</string>
     <string name="myco_l_cracked_cap">Chapeau craquelé</string>
     <string name="myco_l_red_spotted_stem">Pied ponctué de rouge</string>
     <string name="myco_l_dark_velvet_cap">Chapeau brun foncé, velouté</string>
@@ -534,6 +535,7 @@
     <string name="myco_l_green_cracked_cap">Chapeau vert, craquelé</string>
     <string name="myco_l_white_silky_cap">Chapeau blanc, soyeux</string>
     <string name="myco_l_white_wide_gills">Lames blanches, larges</string>
+    <string name="myco_l_white_emarginate_gills">Lames blanches serrées et échancrées</string>
     <string name="myco_l_oyster_cap">Chapeau en coquille d’huître</string>
     <string name="myco_l_lateral_stub">Pied latéral, presque nul</string>
     <string name="myco_l_on_wood">Sur le bois</string>
@@ -929,7 +931,7 @@
         <item>Lames blanches à crème, très serrées</item>
         <item>Pied court et trapu, blanchâtre, légèrement strié</item>
         <item>Chair blanche, épaisse · forte odeur et saveur de farine fraîche</item>
-        <item>Sporée blanche</item>
+        <item>Sporée blanche à crème très pâle</item>
         <item>Prairies, haies, vergers, souvent en ronds · fin avril à juin</item>
     </string-array>
     <string name="myco_gambosa_note">Comestible après identification fiable. L’inocybe rougissant mortel peut pousser au printemps ; l’entolome livide, surtout automnal, sent aussi la farine. Vérifier les lames pâles serrées, la base entière du pied et, au besoin, la sporée. Odeur et saison ne suffisent pas.</string>
@@ -1083,12 +1085,12 @@
     <string-array name="myco_badia_traits">
         <item>Chapeau brun châtain à brun bai, assez uniforme, 5 à 15 cm, un peu visqueux jeune puis sec ; marge enroulée chez le jeune</item>
         <item>Tubes blanchâtres puis jaune verdâtre ; pores fins, de la même couleur, qui bleuissent nettement au toucher ou à la coupe</item>
-        <item>Pied cylindrique, 5 à 12 cm, lisse, sans réseau, brun clair à ocre, coriace en vieillissant</item>
+        <item>Pied cylindrique brun clair à ocre, sans réseau, souvent finement fibrilleux ou marbré</item>
         <item>Chair blanchâtre, ferme, qui bleuit un peu au-dessus des tubes · odeur faible, saveur douce</item>
         <item>Sporée brun olive</item>
         <item>Surtout sous les conifères, sur mousse ou humus, sol non calcaire · été à automne</item>
     </string-array>
-    <string name="myco_badia_note">À manger bien cuit : Tox Info Suisse demande au moins 20 minutes de cuisson. Le bleuissement n’est pas un signe de poison. Pas de réseau sur le pied, pas de pores rouges : sinon, ce n’est pas un bolet bai.</string>
+    <string name="myco_badia_note">Cru ou insuffisamment cuit, ce champignon peut provoquer des troubles digestifs. Tox Info Suisse recommande au moins 20 minutes de cuisson. Le bleuissement et l’absence de réseau ne prouvent ni l’identité ni la sécurité : fais contrôler toute récolte par un spécialiste.</string>
 
     <!-- Bolet à chair jaune -->
     <string name="myco_chrysenteron_name">Bolet à chair jaune</string>
@@ -1096,12 +1098,12 @@
     <string-array name="myco_chrysenteron_traits">
         <item>Chapeau brun gris à brun olive, 3 à 8 cm, sec, qui se craquelle vite et laisse voir une chair rose rouge dans les fentes</item>
         <item>Tubes jaunes puis jaune olive ; pores larges, anguleux, qui bleuissent à peine</item>
-        <item>Pied mince, 4 à 8 cm, jaune, strié ou ponctué de rouge grenat, plus pourpre vers la base</item>
-        <item>À la coupe, la moitié basse du pied devient rouge betterave ; chair jaunâtre dans le pied, blanchâtre dans le chapeau</item>
+        <item>Pied mince et jaune, souvent marqué de fibrilles rouges surtout près de la base</item>
+        <item>Chair crème à jaunâtre, avec parfois du rouge sous la surface basale; elle ne devient pas uniformément rouge à la coupe</item>
         <item>Sporée brun olive</item>
-        <item>Tous les bois, de l’été à novembre</item>
+        <item>Souvent sous les conifères, parfois près du hêtre et d’autres feuillus · été à automne</item>
     </string-array>
-    <string name="myco_chrysenteron_note">Comestible de qualité moyenne, seulement cuit : on le choisit jeune et ferme et on retire le pied. Ses nombreux sosies du même groupe se distinguent à la coupe (couleur de la chair du pied), pas à l’œil nu.</string>
+    <string name="myco_chrysenteron_note">Classé comestible par la DGfM et la VAPKO, mais de qualité culinaire modeste et à cuire complètement. Plusieurs espèces proches sont difficiles à distinguer; fais contrôler l’identification.</string>
 
     <!-- Bolet à pied rouge -->
     <string name="myco_erythropus_name">Bolet à pied rouge</string>
@@ -1196,16 +1198,16 @@
 
     <!-- Tricholome colombette -->
     <string name="myco_columbetta_name">Tricholome colombette</string>
-    <string name="myco_columbetta_alt">Dove-coloured tricholoma</string>
+    <string name="myco_columbetta_alt">Colombette · tricholome blanche-colombe</string>
     <string-array name="myco_columbetta_traits">
         <item>Chapeau blanc pur, parfois crème au centre, 4 à 10 cm, soyeux et brillant, un peu visqueux par temps humide ; conique puis convexe, marge ondulée</item>
-        <item>Lames blanches, larges</item>
-        <item>Pied blanc, 6 à 14 cm, cylindrique, duveteux, sans anneau ni volve</item>
-        <item>Chair blanche et ferme, odeur et saveur de farine</item>
+        <item>Lames blanches serrées et échancrées, parfois tachées de rose; arête parfois irrégulière</item>
+        <item>Pied blanc fibrilleux, parfois radicant; base parfois bleue, verte ou rose</item>
+        <item>Chair blanche ferme, odeur farineuse et saveur douce</item>
         <item>Sporée blanche</item>
-        <item>Chênes, hêtres, sols pauvres et acides · août à novembre</item>
+        <item>Forêts de feuillus, surtout chênes, hêtres et bouleaux · été et automne</item>
     </string-array>
-    <string name="myco_columbetta_note">Tout est blanc, comme chez l’amanite vireuse et chez la forme blanche de la phalloïde, mortelles : l’anneau et la volve, absents ici, les distinguent, et la volve est sous terre. L’entolome livide pâle lui ressemble aussi : chapeau très fibrilleux, lames jaunes ou roses. Assez rare en France.</string>
+    <string name="myco_columbetta_note">Répertorié comme comestible par des sources mycologiques, mais des amanites blanches mortelles peuvent lui ressembler. Une volve enterrée ou un anneau manquant peut échapper à l’examen; ne consomme jamais une récolte identifiée uniquement par photo ou fiche et fais-la contrôler par une personne qualifiée.</string>
 
     <!-- Pleurote en huître -->
     <string name="myco_ostreatus_name">Pleurote en huître</string>
@@ -1238,11 +1240,11 @@
     <string-array name="myco_egg_traits">
         <item>Au stade jeune, un œuf blanc, enveloppé du voile universel</item>
         <item>Surface lisse, sans pointes ni verrues</item>
-        <item>Coupé en deux dans la hauteur : le chapeau et le pied sont déjà formés, enfermés dans un sac épais</item>
-        <item>Plus tard : chapeau vert pâle, vert jaune ou vert olive, anneau, volve en sac</item>
-        <item>Les formes jeunes, en forme d’œuf, peuvent être confondues avec des vesses-de-loup</item>
+        <item>La coupe longitudinale révèle un jeune champignon formé dans le voile, mais n’identifie pas l’espèce à elle seule</item>
+        <item>En grandissant : anneau et volve en sac; le chapeau de la phalloïde peut devenir verdâtre, mais reste souvent pâle jeune</item>
+        <item>Peut être confondu avec une vesse-de-loup uniformément blanche; ne pas consommer</item>
     </string-array>
-    <string name="myco_egg_note">Un seul champignon suffit à provoquer une intoxication grave : les amanitines détruisent le foie, et les signes arrivent tard, plus de 6 heures après le repas. On coupe l’œuf en deux, dans la hauteur, avant de rien conclure : une vesse-de-loup est blanche et pleine de part en part, un œuf d’amanite montre déjà le champignon.</string>
+    <string name="myco_egg_note">Une phalloïde peut déjà être mortelle au stade œuf. Les amanitines résistent à la cuisson; les symptômes peuvent apparaître 6 à 48 heures après ingestion, le foie étant principalement atteint. En cas d’ingestion possible, appelle immédiatement les urgences ou un centre antipoison et ne te fie pas à une simple coupe pour identifier le champignon.</string>
 
     <!-- Scléroderme commun -->
     <string name="myco_citrinum_name">Scléroderme commun</string>
@@ -1251,11 +1253,11 @@
         <item>Boule irrégulière, souvent aplatie aux pôles, 2 à 12 cm, presque sans pied, fixée au sol par des cordons de mycélium</item>
         <item>Peau très épaisse (1 à 5 mm), jaune ocre à écailles brunes, qui se craquelle en verrues pyramidales</item>
         <item>Intérieur dense, d’abord gris pâle, puis noir violacé veiné de blanc, poudreux à la fin</item>
-        <item>Odeur désagréable, aigre (vieux oignons, caoutchouc)</item>
-        <item>Pas d’ouverture nette au sommet : la peau se déchire à maturité</item>
-        <item>Sporée brun olive foncé · sols acides, sous feuillus ou conifères · fin d’été et automne</item>
+        <item>Enveloppe coriace de 1 à 5 mm, à verrues brunes souvent en rosettes</item>
+        <item>La gleba passe du clair au marbré gris-violet, puis au violet-noir poudreux; fissuration irrégulière à maturité</item>
+        <item>Ectomycorhizien près de feuillus ou de conifères · fin d’été à automne</item>
     </string-array>
-    <string name="myco_citrinum_note">Toxique : une thèse de pharmacie d’Angers sur 134 cas notés par les centres antipoison français entre 2000 et 2022 relève des troubles digestifs et, parfois sévères, des signes cardiaques et neurologiques inhabituels. On le prend pour une vesse-de-loup : celle-ci est d’un blanc pur et uniforme à l’intérieur, pas gris puis noir. Il se déchire à maturité au lieu de s’ouvrir par un pore.</string>
+    <string name="myco_citrinum_note">Ne pas consommer : le genre Scleroderma est toxique et associé à des intoxications digestives. Les données françaises de 2000 à 2022 regroupent plusieurs espèces et ne permettent pas d’attribuer tous les symptômes à S. citrinum.</string>
 
     <!-- Tricholome tigré -->
     <string name="myco_pardinum_name">Tricholome tigré</string>
@@ -1442,7 +1444,7 @@
         <item>Sporée blanche</item>
         <item>Sous feuillus et conifères, surtout hêtres et épicéas, du début de l’été à la fin de l’automne</item>
     </string-array>
-    <string name="myco_cyanoxantha_note">Excellent comestible selon Wikipédia, sur les listes de la société allemande de mycologie et des contrôleurs suisses. Sa marque : des lames souples et grasses, qui plient sans casser, alors que celles des autres russules sont cassantes. Beaucoup de russules se ressemblent, et la société allemande classe les russules âcres et amères parmi les champignons à syndrome gastro-intestinal ; l’ANSES relève des cueilleurs de russules charbonnières qui ont cueilli une autre russule (2022). Une russule n’a ni anneau ni volve, contrairement à la phalloïde.</string>
+    <string name="myco_cyanoxantha_note">Espèce classée comestible par la DGfM et la VAPKO. Les russules âcres peuvent provoquer des troubles digestifs et plusieurs espèces se ressemblent : fais contrôler ta récolte par un spécialiste. L’absence de volve et d’anneau ne suffit pas à identifier une russule comestible.</string>
 
     <!-- Hébélome échaudé -->
     <string name="myco_hebeloma_name">Hébélome échaudé</string>
@@ -1585,13 +1587,13 @@
     <string name="myco_formosa_name">Clavaire jolie</string>
     <string name="myco_formosa_alt">Beautiful clavaria</string>
     <string-array name="myco_formosa_traits">
-        <item>Buisson en corail de 7 à 30 cm de haut et 6 à 15 cm de large, sur une grosse base épaisse</item>
-        <item>Branches rose saumon à blanchâtres, aux pointes jaunes ; les derniers rameaux font moins de 5 mm</item>
-        <item>Ni lames ni pores · sporée jaune</item>
-        <item>Chair blanche, rosée au milieu, qui peut virer au lie-de-vin ou au noirâtre à la blessure ; odeur désagréable, saveur amère</item>
-        <item>Sur le sol des bois, notamment sous les hêtres ; en automne</item>
+        <item>Buisson coralloïde généralement large et haut de 7 à 20 cm, porté par une base épaisse et blanchâtre</item>
+        <item>Branches rose saumon à blanchâtres ; pointes jaune citron chez les jeunes exemplaires, qui pâlissent ensuite</item>
+        <item>Pas de lames ni de pores visibles · sporée jaune ocrée</item>
+        <item>Chair blanche à rosée, pouvant brunir ou noircir après une blessure · odeur peu distinctive</item>
+        <item>Sur le sol des forêts de feuillus, surtout sous hêtres ou chênes, souvent sur calcaire · fin d’été à automne</item>
     </string-array>
-    <string name="myco_formosa_note">Toxique : la société allemande de mycologie (2026) la range parmi les champignons à syndrome gastro-intestinal, et le centre antipoison belge cite les clavaires (dont Clavaria formosa) parmi les causes d’un syndrome digestif léger : nausées, vomissements, diarrhée. Wikipédia (en) dit qu’on la mange parfois sans ses pointes âcres ; l’atlas ne la compte pas parmi les comestibles.</string>
+    <string name="myco_formosa_note">Toxique : peut provoquer nausées, vomissements et diarrhée. Ne pas consommer. Retirer les pointes ne rend pas le champignon sûr.</string>
 
     <!-- Cèpe des pins -->
     <string name="myco_pinophilus_name">Cèpe des pins</string>
@@ -1904,12 +1906,13 @@
     <string name="myco_bovinus_alt">Bovine bolete, Jersey cow mushroom</string>
     <string-array name="myco_bovinus_traits">
         <item>Chapeau de 3 à 10 cm, visqueux, ocre à jaune brunâtre, parfois teinté de rose, bord ondulé</item>
-        <item>Pores très grands et anguleux, décurrents, jaunes à olive</item>
+        <item>Pores très grands, irréguliers et anguleux, parfois subdivisés, jaunes à olive et un peu décurrents</item>
         <item>Pied de 3 à 10 cm, mince, beige à ocre, sans anneau</item>
-        <item>Chair molle, élastique, crème, saveur douce</item>
+        <item>Chair crème à chamois, parfois rosée, molle dans le chapeau, sans bleuissement notable</item>
+        <item>Sporée brun olive</item>
         <item>Sous les pins, en groupes · juillet à novembre</item>
     </string-array>
-    <string name="myco_bovinus_note">Comestible mais de piètre qualité : la DGfM et la VAPKO le listent ; Wikipédia (fr) lui trouve la chair flasque et insipide et, comme les autres bolets visqueux, laxative pour certains ; elle conseille les jeunes seulement, le pied ôté et le chapeau pelé. Wikipédia (en) ajoute que les vieux sont caoutchouteux et souvent véreux. Il n’a pas d’anneau, contrairement à la nonnette voilée ; le bolet moucheté a des pores ronds plus petits qui bleuissent.</string>
+    <string name="myco_bovinus_note">Souvent classé comestible, mais sa saveur est très poivrée et sa qualité culinaire limitée. Les sources divergent sur son usage alimentaire ; les affirmations de toxicité ou d’effet laxatif ne sont pas confirmées par les références consultées. Fais identifier toute récolte par un spécialiste.</string>
     <string name="myco_scabrum_name">Bolet rude</string>
     <string name="myco_scabrum_alt">Bolet des bouleaux, birch bolete</string>
     <string-array name="myco_scabrum_traits">
@@ -1945,11 +1948,11 @@
     <string-array name="myco_decastes_traits">
         <item>Chapeau de 4 à 15 cm, fauve à brun clair, parfois grisâtre, marge enroulée et ondulée</item>
         <item>Lames serrées, blanchâtres à crème</item>
-        <item>Pied trapu, blanc, sans anneau ; pieds soudés en touffe</item>
-        <item>Odeur farineuse à fongique, parfois absente</item>
-        <item>Lisières et chemins de bois, surtout sous les peupliers · fin d’été à automne</item>
+        <item>Pied blanc et trapu, souvent convergent avec les autres pieds à la base ; pas d’anneau</item>
+        <item>Odeur faible ou peu caractéristique</item>
+        <item>Sols humifères, lisières, chemins ou bois enterré en décomposition · sporée blanche · fin été-automne</item>
     </string-array>
-    <string name="myco_decastes_note">Non recommandé : les sources divergent. La DGfM et la VAPKO le listent et Wikipédia (en) le dit comestible ou excellent, mais Wikipédia (fr) dit que certains le décrivent comme à ne pas manger et d’autres comme mal toléré, et conseille de s’abstenir dans le doute ; des troubles gastriques sont signalés (Wikipédia, en). Le statut le plus prudent est retenu. Les deux pages mettent en garde contre des sosies parmi les entolomes (voir le groupe), et Wikipédia (en) contre Clitocybe dilatata.</string>
+    <string name="myco_decastes_note">Généralement considérée comestible et présente dans des listes positives, mais des troubles digestifs sont rapportés et certaines sources déconseillent sa consommation. Le complexe Lyophyllum decastes est difficile à identifier ; ne consomme que des spécimens identifiés avec certitude par un spécialiste.</string>
     <string name="myco_l_apricot_velvet_cap">Chapeau abricot à fauve, velouté</string>
     <string name="myco_l_golden_crowded_gills">Lames serrées, jaune d’or</string>
     <string name="myco_l_stem_paler_than_cap">Pied plus pâle que le chapeau</string>
@@ -2093,16 +2096,16 @@
         <item>Bois de feuillus, surtout sur sol calcaire, aussi parcs et prairies</item>
     </string-array>
     <string name="myco_moelleri_note">Toxique : la DGfM le classe parmi les espèces à syndrome gastro-intestinal. Le jaunissement jaune chrome près de la base du pied et l’odeur de phénol ou d’encre alertent, mais un seul signe ne suffit pas à l’identifier.</string>
-    <string name="myco_clavipes_name">Ampulloclitocybe clavipes</string>
-    <string name="myco_clavipes_alt">Club foot, club-footed clitocybe</string>
+    <string name="myco_clavipes_name">Clitocybe à pied en massue</string>
+    <string name="myco_clavipes_alt">Ampulloclitocybe clavipes</string>
     <string-array name="myco_clavipes_traits">
-        <item>Chapeau de 4 à 8 cm, convexe puis plan ou en coupe, gris brun parfois olivâtre, marge plus pâle</item>
-        <item>Lames jaune crème, très décurrentes, certaines fourchues</item>
-        <item>Pied de 3 à 7 cm, soyeux, de la couleur du chapeau, à base nettement bulbeuse en massue</item>
-        <item>Chair blanche et épaisse, un peu jaune à la base ; odeur faible, aqueuse, douceâtre</item>
-        <item>Bois de conifères et de feuillus, surtout sous les hêtres · août à novembre</item>
+        <item>Chapeau gris brun à brun ochracé, marge plus pâle, convexe puis aplati et déprimé au centre</item>
+        <item>Lames serrées crème à jaune pâle, parfois fourchues et très décurrentes</item>
+        <item>Pied fibreux concolore, nettement renflé en massue à la base</item>
+        <item>Chair blanchâtre parfois jaunâtre à la base; odeur douce ou épicée variable; sporée blanche</item>
+        <item>Litière de feuilles et d’aiguilles en forêts de feuillus et de conifères · fin d’été et automne</item>
     </string-array>
-    <string name="myco_clavipes_note">Non recommandé : jamais avec de l’alcool. La DGfM le dit inoffensif sans alcool et donne le syndrome de type coprine avec ; Wikipédia (en) décrit une réaction 5 à 10 minutes après avoir bu (rougeur, battements dans la tête et le cou, mains gonflées) et le dit comestible mais peu appétissant, certaines sources le disant immangeable. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM. Wikipédia (en) le sépare du clitocybe nébuleux par son pied en massue.</string>
+    <string name="myco_clavipes_note">Traité comme non comestible. Des réactions après alcool ont été rapportées, mais la coprine et un mécanisme unique ne sont pas démontrés; les sources divergent sur les délais et symptômes. Évite l’association avec l’alcool.</string>
     <string name="myco_helvus_name">Lactaire à odeur d’érable</string>
     <string name="myco_helvus_alt">Fenugreek milkcap</string>
     <string-array name="myco_helvus_traits">
@@ -2171,13 +2174,15 @@
     <string name="myco_castanea_name">Lépiote châtain</string>
     <string name="myco_castanea_alt">Chestnut dapperling</string>
     <string-array name="myco_castanea_traits">
-        <item>Chapeau jusqu’à 3 cm, largement en cloche à plan, blanc à écailles brun rouge foncé</item>
-        <item>Lames blanchâtres</item>
-        <item>Pied jusqu’à 8 cm, typiquement brun châtain, avec un anneau peu net</item>
-        <item>Chair blanchâtre, saveur douce</item>
-        <item>Bois de conifères et de feuillus, isolée ou en petits groupes</item>
+        <item>Chapeau de 1 à 4 cm, crème pâle à écailles brun roux, campanulé puis étalé, centre surélevé</item>
+        <item>Lames libres, blanchâtres à crème</item>
+        <item>Pied mince, pâle au sommet, roux et écailleux vers le bas ; anneau mince et fugace</item>
+        <item>Chair blanchâtre, pied creux à maturité ; sporée blanche</item>
+        <item>Litière et humus en forêt de feuillus ou de conifères, seule ou en petits groupes · été-automne</item>
     </string-array>
-    <string name="myco_castanea_note">Mortelle : les sources divergent sur la cause. Wikipédia (en) dit qu’elle contient des amatoxines, potentiellement mortelles pour le foie ; la DGfM la range sous le syndrome de l’amanite phalloïde mais note que des travaux plus récents n’y trouvent pas d’amatoxines ; Wikipédia (fr) la dit moyennement toxique et déconseille de la manger. Le statut le plus prudent est retenu. La DGfM prévient que les petites lépiotes à pigments brunâtres et rouges sont soupçonnées de contenir des amatoxines ; le centre antipoison belge déconseille toute lépiote de moins de 10 cm. La page Wikipédia française est une ébauche : la description vient de Wikipédia (en).</string>
+    <string name="myco_l_ring_fugitive">Anneau mince et fugace</string>
+    <string name="myco_l_chestnut_lower_stem">Écailles châtain sur le bas du pied</string>
+    <string name="myco_castanea_note">Ne pas consommer : cette espèce est traitée comme potentiellement mortelle. La présence d’amatoxines chez Lepiota castanea reste incertaine ; certains spécimens analysés n’en contenaient pas, ce qui ne prouve pas l’innocuité de toutes les populations. En cas d’ingestion suspectée, contacte immédiatement un centre antipoison.</string>
     <string name="myco_maculatum_name">Inosperma maculatum</string>
     <string name="myco_maculatum_alt">Frosty fibrecap, brown inocybe</string>
     <string-array name="myco_maculatum_traits">
@@ -2406,11 +2411,11 @@
     <string-array name="myco_crocipodium_traits">
         <item>Chapeau brun, brun jaune à cannelle, velouté, souvent craquelé ou tesselé à maturité</item>
         <item>Pores petits, jaune soufre à beige, qui virent à l’olive et au brun ocre à la pression</item>
-        <item>Pied fusiforme, côtelé, blanchâtre à jaune soufre, à fines écailles jaunâtres à orangées</item>
-        <item>Chair blanchâtre virant au rosé ou saumon, puis violet rougeâtre et noirâtre à la coupe ; saveur douce ou sucrée</item>
-        <item>Sous les chênes, parfois sous le hêtre · juin à septembre</item>
+        <item>Pied fusiforme et ridé verticalement, crème à jaune pâle, couvert de squamules qui brunissent avec l’âge ; pas de vrai réseau</item>
+        <item>Chair blanchâtre à crème, pouvant rosir puis noircir à la coupe · sporée brun olive</item>
+        <item>Sous les feuillus, surtout chênes et hêtres · juillet à novembre</item>
     </string-array>
-    <string name="myco_crocipodium_note">Comestible cuit : la DGfM le liste. Wikipédia (fr) lui donne une comestibilité moyenne, dit que le pied fibreux est jeté et que seuls les jeunes chapeaux sont gardés, et avertit de troubles digestifs cru ou mal cuit. Sosies (Wikipédia, fr) : Leccinellum pseudoscabrum (pores blanchâtres), L. lepidum et L. corsicum (chapeaux plus foncés, automne et hiver, comestibles) et les Butyriboletus, pris pour lui à cause du réseau du pied. La page anglaise est presque vide : la description vient de Wikipédia (fr).</string>
+    <string name="myco_crocipodium_note">La DGfM le classe comestible après cuisson suffisante et le signale comme particulièrement protégé (§) et RL3 en Allemagne. Ces statuts de protection sont régionaux; vérifie les règles locales et fais confirmer l’identification.</string>
     <string name="myco_l_brown_violet_shiny_cap">Chapeau brun luisant, reflets violets</string>
     <string name="myco_l_far_yellowing_gills">Lames espacées, qui jaunissent</string>
     <string name="myco_l_red_pink_purple_cap">Chapeau rouge, rose ou pourpre</string>
@@ -2419,7 +2424,7 @@
     <string name="myco_l_stem_yellow_red">Pied jaune virant au rouge</string>
     <string name="myco_l_bright_red_felt_cap">Chapeau rouge vif, feutré</string>
     <string name="myco_l_yellow_scaly_stem">Pied jaunâtre à fines écailles</string>
-    <string name="myco_l_flesh_pink_violet_black">Chair rosée, puis violette, puis noire</string>
+    <string name="myco_l_flesh_pink_violet_black">Chair coupée pouvant rosir, puis noircir</string>
     <string name="myco_g_redbolete_title">Petits bolets à pied rouge : lequel ?</string>
     <string name="myco_g_redbolete_evidence">Wikipédia</string>
     <string-array name="myco_g_redbolete_points">
@@ -2539,7 +2544,7 @@
     <string name="myco_exidia_nigricans_name">exidie noire</string>
     <string name="myco_exidia_nigricans_alt">Nom commun non stabilisé</string>
     <string name="myco_exidia_nigricans_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
-    <string-array name="myco_exidia_nigricans_traits"><item>Forme générale : masse gélatineuse sombre sur le bois mort.</item><item>Repère écologique : masse gélatineuse sombre sur le bois mort. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string-array name="myco_exidia_nigricans_traits"><item>Masse gélatineuse brun sépia à noire, formée de lobes fusionnés et cérébriformes.</item><item>Surface humide brillante et ponctuée de papilles; elle sèche en croûte verruqueuse.</item><item>Fixée directement au bois mort de feuillus, sans chapeau ni pied.</item><item>Regonfle lorsqu’elle est réhumidifiée.</item><item>Statut alimentaire non évalué; pas d’intérêt culinaire établi.</item></string-array>
     <string name="myco_agaricus_pilatianus_name">Agaricus pilatianus</string>
     <string name="myco_agaricus_pilatianus_alt">Nom commun stable non retenu faute de source concordante</string>
     <string name="myco_agaricus_pilatianus_note">Toxique : les descriptions signalent de graves troubles digestifs. Caractères habituels : chapeau trapu gris brun et squamuleux, anneau très plissé, jaunissement jaune chrome à la base du pied ; une odeur phénolique ou iodée est parfois présente. Ces caractères ne rendent pas sûr un Agaricus dont l’identification est incertaine.</string>
@@ -2550,8 +2555,8 @@
     <string-array name="myco_thanatephorus_cucumeris_traits"><item>Forme générale : champignon microscopique responsable de la maladie du rhizoctone.</item><item>Repère écologique : champignon microscopique responsable de la maladie du rhizoctone. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
     <string name="myco_botryobasidium_simile_name">Botryobasidium simile</string>
     <string name="myco_botryobasidium_simile_alt">Nom commun stable non retenu faute de source concordante</string>
-    <string name="myco_botryobasidium_simile_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
-    <string-array name="myco_botryobasidium_simile_traits"><item>Forme générale : champignon corticioïde formant une couche sur le bois.</item><item>Repère écologique : champignon corticioïde formant une couche sur le bois. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_botryobasidium_simile_note">Champignon microscopique du bois ; comestibilité et toxicité non évaluées. Cette fiche ne sert pas à identifier une récolte.</string>
+    <string-array name="myco_botryobasidium_simile_traits"><item>Fine couche blanche à ivoire, légèrement réticulée, sans chapeau ni pied</item><item>Sur bois mort de feuillus ; plages asexuées parfois jaune-orangé à rouille</item><item>Spores lisses et incolores, fusiformes, visibles seulement au microscope</item></string-array>
     <string name="myco_athelia_rolfsii_name">Athelia rolfsii</string>
     <string name="myco_athelia_rolfsii_alt">Nom commun stable non retenu faute de source concordante</string>
     <string name="myco_athelia_rolfsii_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
@@ -2559,7 +2564,7 @@
     <string name="myco_lactarius_zonarioides_name">Lactarius zonarioides</string>
     <string name="myco_lactarius_zonarioides_alt">Nom commun stable non retenu faute de source concordante</string>
     <string name="myco_lactarius_zonarioides_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
-    <string-array name="myco_lactarius_zonarioides_traits"><item>Forme générale : lactaire à zones concentriques et lait à la cassure.</item><item>Repère écologique : lactaire à zones concentriques et lait à la cassure. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string-array name="myco_lactarius_zonarioides_traits"><item>Chapeau visqueux jaune chamois à saumoné, avec des zones concentriques plus sombres.</item><item>Lames assez serrées rose crème; pied crème, lisse et sec.</item><item>Latex blanc immuable et très âcre; sporée ocre.</item><item>Sous épicéas ou parfois sapins en forêt montagnarde ou boréale · fin d’été et automne.</item><item>Statut alimentaire non évalué; signalements et traitements taxonomiques variables selon les régions.</item></string-array>
     <string name="myco_lactarius_torminosulus_name">Lactarius torminosulus</string>
     <string name="myco_lactarius_torminosulus_alt">Nom commun stable non retenu faute de source concordante</string>
     <string name="myco_lactarius_torminosulus_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
@@ -2571,7 +2576,7 @@
     <string name="myco_lactarius_picinus_name">Lactarius picinus</string>
     <string name="myco_lactarius_picinus_alt">Nom commun stable non retenu faute de source concordante</string>
     <string name="myco_lactarius_picinus_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
-    <string-array name="myco_lactarius_picinus_traits"><item>Forme générale : lactaire sombre des pessières.</item><item>Repère écologique : lactaire sombre des pessières. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string-array name="myco_lactarius_picinus_traits"><item>Chapeau brun très sombre à noirâtre, mat et finement velouté, souvent légèrement déprimé à maturité.</item><item>Lames serrées blanchâtres à crème; pied brun à gris brun, parfois plus pâle à la base.</item><item>Chair blanchâtre qui rosit à orangit après la coupe; latex blanc pouvant rosir au contact de la chair et de saveur âcre.</item><item>Forêts humides de conifères, surtout sous épicéas · fin d’été et automne.</item><item>Traitements taxonomiques divergents; certaines sources incluent ce taxon dans Lactarius fuliginosus.</item></string-array>
     <string name="myco_lactarius_fennoscandicus_name">Lactarius fennoscandicus</string>
     <string name="myco_lactarius_fennoscandicus_alt">Nom commun stable non retenu faute de source concordante</string>
     <string name="myco_lactarius_fennoscandicus_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
@@ -2581,17 +2586,17 @@
     <string name="myco_russula_laricina_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
     <string-array name="myco_russula_laricina_traits"><item>Forme générale : russule associée au mélèze.</item><item>Repère écologique : russule associée au mélèze. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
     <string name="myco_hygrophorus_pustulatus_name">Hygrophorus pustulatus</string>
-    <string name="myco_hygrophorus_pustulatus_alt">Nom commun stable non retenu faute de source concordante</string>
-    <string name="myco_hygrophorus_pustulatus_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
-    <string-array name="myco_hygrophorus_pustulatus_traits"><item>Forme générale : hygrophore visqueux à pied ponctué.</item><item>Repère écologique : hygrophore visqueux à pied ponctué. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_hygrophorus_pustulatus_alt">Hygrophore pustuleux</string>
+    <string name="myco_hygrophorus_pustulatus_note">Statut alimentaire inconnu ou non évalué; ponctuations du pied et couleur variables.</string>
+    <string-array name="myco_hygrophorus_pustulatus_traits"><item>Chapeau gris à brun gris, visqueux frais et souvent plus sombre au centre.</item><item>Lames blanches, cireuses et espacées, attachées à légèrement décurrentes.</item><item>Pied blanchâtre couvert de petits points ou fibrilles brun-gris, surtout visibles dans sa moitié supérieure.</item><item>Chair blanche, odeur peu marquée; sporée blanche.</item><item>Ectomycorhizien avec des conifères, notamment sapins, épicéas et pruches · fin d’été et automne.</item></string-array>
     <string name="myco_hygrophorus_purpurascens_name">Hygrophorus purpurascens</string>
     <string name="myco_hygrophorus_purpurascens_alt">Nom commun stable non retenu faute de source concordante</string>
     <string name="myco_hygrophorus_purpurascens_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
-    <string-array name="myco_hygrophorus_purpurascens_traits"><item>Forme générale : hygrophore à teintes pourpres.</item><item>Repère écologique : hygrophore à teintes pourpres. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string-array name="myco_hygrophorus_purpurascens_traits"><item>Chapeau visqueux blanc à rose ou rouge violacé, souvent marqué de fibrilles pourpres.</item><item>Lames cireuses blanches, parfois rosées ou ponctuées de pourpre, attachées et parfois légèrement décurrentes.</item><item>Sommet du pied pâle, base teintée de pourpre; zone annulaire fragile parfois présente.</item><item>Chair blanche parfois rosée ou violacée; sporée blanche.</item><item>Associé aux épicéas et aux pins en milieux montagnards frais · fin d’été et automne.</item></string-array>
     <string name="myco_hygrophorus_penarioides_name">Hygrophorus penarioides</string>
     <string name="myco_hygrophorus_penarioides_alt">Nom commun stable non retenu faute de source concordante</string>
-    <string name="myco_hygrophorus_penarioides_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
-    <string-array name="myco_hygrophorus_penarioides_traits"><item>Forme générale : hygrophore forestier du groupe des espèces blanchâtres.</item><item>Repère écologique : hygrophore forestier du groupe des espèces blanchâtres. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_hygrophorus_penarioides_note">Espèce très proche de H. penarius : les caractères visibles ne suffisent pas à confirmer l’identification; statut alimentaire non évalué.</string>
+    <string-array name="myco_hygrophorus_penarioides_traits"><item>Hygrophore robuste blanc à ivoire, parfois crème ou légèrement rosé avec l’âge.</item><item>Chapeau convexe à large umbo obtus; marge longtemps enroulée, chapeau parfois plus étalé à maturité.</item><item>Lames épaisses, espacées et cireuses, blanchâtres à crème, attachées à légèrement décurrentes.</item><item>Pied plein, ferme et robuste, blanc, parfois ocracé vers la base.</item><item>Signalé sous Quercus en forêts tempérées à méditerranéennes · ectomycorhizien.</item></string-array>
     <string name="myco_amanita_beckeri_name">Amanita beckeri</string>
     <string name="myco_amanita_beckeri_alt">Amanite noisette</string>
     <string name="myco_amanita_beckeri_note">Référence taxonomique : ce nom n’est pas une recommandation alimentaire. L’absence d’anneau ne prouve pas l’innocuité ; n’en consomme pas et fais vérifier tout spécimen entier par un spécialiste.</string>

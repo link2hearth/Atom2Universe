@@ -1,0 +1,41 @@
+{
+  "id": "olivacea",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau mat, ridulé, jusqu’à 20 cm, de couleur variable, souvent panaché de vert et de rouge",
+    "Lames crème, puis jaune ocracé à reflets glauques, puis orangés ; arête soulignée de rouge vers la marge",
+    "Pied d’environ 12 × 4 cm, pointillé, rosé lilas au moins sous les lames, plus ou moins jaunissant",
+    "Chair douce · odeur un peu fruitée",
+    "Sporée jaune",
+    "Sous les feuillus, surtout les hêtres, en plaine mais surtout en montagne, jusqu’à 1 800 m · juillet à novembre"
+  ],
+  "safetyNote": "Des intoxications digestives sont signalées surtout quand elle est mangée crue ou peu cuite, au barbecue notamment : en Italie, quelques dizaines de cas par an ; au Pays basque, plus de 40 cas en vingt ans ; en France, 3 cas groupés en 2012, avec des vomissements 2 heures après. L’ANSES juge en 2015 que le risque ne peut être exclu, même après cuisson ; Tox Info Suisse demande au moins 20 minutes de cuisson.",
+  "sources": [
+    {
+      "title": "ANSES (2015). Avis relatif à l’évaluation des risques liés à la consommation des champignons dénommés Suillus granulatus, Russula olivacea et Armillaria mellea. Saisine n° 2014-SA-0256, 29 juillet 2015.",
+      "url": "https://www.anses.fr/fr/system/files/ERCA2014sa0256.pdf"
+    },
+    {
+      "title": "Arrêté du 5 août 2016 relatif à la suspension de la mise sur le marché des champignons des espèces Suillus granulatus, Russula olivacea, Armillaria mellea et Lentinula edodes (JORF n° 0191 du 18 août 2016, NOR EINC1622686A).",
+      "url": "https://nouvelle-aquitaine.dreets.gouv.fr/sites/nouvelle-aquitaine.dreets.gouv.fr/IMG/pdf/arrete_du_5_aout_2016suspensionchampignons.pdf"
+    },
+    {
+      "title": "Tox Info Suisse (2025). Edible mushrooms: unpleasant gastrointestinal symptoms. Dernière mise à jour : mai 2025.",
+      "url": "https://toxinfo.ch/edible_mushrooms_unpleasant_gastrointestinal_symptoms"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Russula olivacea",
+      "url": "https://fr.wikipedia.org/wiki/Russula_olivacea"
+    },
+    {
+      "title": "Wikipedia (en): Russula olivacea",
+      "url": "https://en.wikipedia.org/wiki/Russula_olivacea"
+    }
+  ],
+  "related": []
+}

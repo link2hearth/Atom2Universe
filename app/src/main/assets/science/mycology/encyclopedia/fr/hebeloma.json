@@ -1,0 +1,33 @@
+{
+  "id": "hebeloma",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 5 à 10 cm, convexe puis étalé, avec un mamelon central ; blanc ocre à rougeâtre, plus pâle sur la marge ; visqueux par temps humide",
+    "Lames assez serrées, dentées, blanchâtres puis brunes ; par temps humide, elles laissent perler des gouttes brunâtres",
+    "Pied de 5 à 10 cm, blanchâtre, taché de rouille vers la base, un peu renflé en bas, pruineux sur une bonne longueur ; pas d’anneau",
+    "Chair assez épaisse et blanche · odeur nette de radis, saveur amère",
+    "Sporée ocre à brune",
+    "Assez commun en été et en automne, sous feuillus ou conifères, en groupes le long des chemins et des fossés, dans les pelouses"
+  ],
+  "safetyNote": "Toxique : troubles digestifs, de légers à marqués (nausées, vomissements, diarrhée, crampes) (Wikipédia EN). La société allemande de mycologie range tout le genre Hebeloma parmi les champignons à syndrome gastro-intestinal, et le centre antipoison belge cite l’hébélome parmi les causes du syndrome résinoïdien léger : gastro-entérite modérée, moins de 3 heures après le repas, moins de 12 heures de durée. Le risque est la confusion avec des tricholomes (Wikipédia FR) : l’odeur de radis et les lames qui brunissent aident à le reconnaître.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Hébélome échaudé",
+      "url": "https://fr.wikipedia.org/wiki/H%C3%A9b%C3%A9lome_cro%C3%BBte-de-pain"
+    },
+    {
+      "title": "Wikipedia (en): Hebeloma crustuliniforme",
+      "url": "https://en.wikipedia.org/wiki/Hebeloma_crustuliniforme"
+    }
+  ],
+  "related": []
+}

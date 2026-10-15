@@ -1,0 +1,22 @@
+{
+  "id": "russula_laricina",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : russule associée au mélèze.",
+    "Repère écologique : russule associée au mélèze. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Russula laricina.",
+      "url": "https://www.gbif.org/species/6016725"
+    },
+    {
+      "title": "Index Fungorum, name record 268996: Russula laricina.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=268996"
+    }
+  ],
+  "related": []
+}

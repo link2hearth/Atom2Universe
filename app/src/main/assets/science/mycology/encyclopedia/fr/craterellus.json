@@ -1,0 +1,37 @@
+{
+  "id": "craterellus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cornet entièrement creux, très mince, rarement plus de 10 cm, au bord largement ondulé et festonné",
+    "Intérieur couvert d’écailles, gris noir à brun foncé selon l’humidité",
+    "Face externe presque lisse, gris clair à gris foncé : ni lames ni pores",
+    "Pied creux, de la couleur du chapeau, qui s’effile vers la base",
+    "Odeur agréable, fruitée (mirabelle) · sporée blanche",
+    "Feuillus (hêtre, chêne, châtaignier), en groupes, sols lourds et humides · août à novembre"
+  ],
+  "safetyNote": "La face externe est lisse : pas de lames. Une très vieille russule noircie a un chapeau convexe et de larges lames ; la fausse chanterelle des charbonnières, sans valeur, a des lames fourchues et ne pousse que sur sol brûlé. Les champignons sauvages se préparent dans les 24 heures.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2024 durch das Kantonale Laboratorium Basel-Stadt. 16 janvier 2025.",
+      "url": "https://media.bs.ch/original_file/51e1d6b315312707b136dffb8f09d5688c27447f/2024-pilze-0.pdf"
+    },
+    {
+      "title": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2025 durch das Kantonale Laboratorium Basel-Stadt. 11 décembre 2025.",
+      "url": "https://media.bs.ch/original_file/3b21f43ba564dd2745141309ffd3df6fd3027319/2025-pilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Trompette de la mort",
+      "url": "https://fr.wikipedia.org/wiki/Trompette_de_la_mort"
+    }
+  ],
+  "related": []
+}

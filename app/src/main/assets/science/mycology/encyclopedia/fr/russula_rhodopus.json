@@ -1,0 +1,22 @@
+{
+  "id": "russula_rhodopus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : russule forestière à chair cassante.",
+    "Repère écologique : russule forestière à chair cassante. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Russula rhodopus.",
+      "url": "https://www.gbif.org/species/7239976"
+    },
+    {
+      "title": "Index Fungorum, name record 447527: Russula rhodopus.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=447527"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "hypothejus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 3 à 6 cm, jaunâtre à brun olive à centre sombre, visqueux, en entonnoir avec l’âge",
+    "Lames jaunes, décurrentes",
+    "Pied de 4 à 7 cm, mince, nu",
+    "Chair jaune pâle, qui vire au rouge orangé au froissement",
+    "Dans les pinèdes, souvent en grands groupes · octobre et novembre, aux premières gelées"
+  ],
+  "safetyNote": "Comestible, de qualité variable parce que certains sont visqueux : la DGfM le liste et Wikipédia (en) le dit. Wikipédia (en) cite le gomphide glutineux comme sosie : ses lames se séparent facilement du chapeau, contrairement aux lames cireuses de cette espèce. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Hygrophorus hypothejus",
+      "url": "https://en.wikipedia.org/wiki/Hygrophorus_hypothejus"
+    }
+  ],
+  "related": []
+}

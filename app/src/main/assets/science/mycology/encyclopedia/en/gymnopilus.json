@@ -1,0 +1,28 @@
+{
+  "id": "gymnopilus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 5 to 15 cm (sometimes up to 30), bright yellow-orange then orange-brown, dry, fibrous or scaly; bun-shaped then spreading",
+    "Close gills, adnate to slightly decurrent, rusty yellow then brown · rusty-brown spores",
+    "Stem 5 to 20 cm, yellow-orange, fibrous, with a frail ring dusted with rusty spores",
+    "Thick yellow flesh, faint smell, bitter taste",
+    "In clumps of a few to several dozen, on stumps, logs and tree bases, mostly of broadleaves; summer and autumn"
+  ],
+  "safetyNote": "Toxic: the German mycological society (2026) lists it among the psilocybin mushrooms and notes that it contains gymnopilin; Wikipedia (fr) calls it poisonous and hallucinogenic, Wikipedia (en) says it has no psilocybin but neurotoxins, among them gymnopilin. Its bitterness makes it inedible anyway. Wikipedia (en) says it resembles the honey fungus (white spores), Wikipedia (fr) several scalycaps; the rusty spores and the bitter taste tell it apart.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Gymnopilus junonius",
+      "url": "https://fr.wikipedia.org/wiki/Gymnopilus_junonius"
+    },
+    {
+      "title": "Wikipedia (en): Gymnopilus junonius",
+      "url": "https://en.wikipedia.org/wiki/Gymnopilus_junonius"
+    }
+  ],
+  "related": []
+}

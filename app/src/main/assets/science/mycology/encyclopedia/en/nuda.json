@@ -1,0 +1,33 @@
+{
+  "id": "nuda",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Blue-violet to grey-violet cap, often brownish in the centre, 4 to 15 cm, smooth and moist; margin rolled",
+    "Deep violet, close gills turning dull brown with age",
+    "Stocky stem, 2 to 10 cm, lilac to grey-violet, slightly swollen at the base, with silvery fibrils",
+    "White flesh tinged violet at the top of the stem · pleasant, fruity, slightly aniseed smell",
+    "Pale pink spores",
+    "Broadleaf and conifer woods, on litter, often in rings · late season, after the first frosts"
+  ],
+  "safetyNote": "Some violet webcaps look like it and are very toxic: their spores are rusty brown (its spores are pale pink), they often keep remnants of a cortina and their smell is unpleasant. All red, purple or orange webcaps are to be distrusted.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Pied bleu",
+      "url": "https://fr.wikipedia.org/wiki/Pied_bleu"
+    },
+    {
+      "title": "Wikipedia (en): Lepista nuda",
+      "url": "https://en.wikipedia.org/wiki/Lepista_nuda"
+    }
+  ],
+  "related": []
+}

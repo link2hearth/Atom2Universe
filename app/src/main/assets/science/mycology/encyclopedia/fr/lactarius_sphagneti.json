@@ -1,0 +1,22 @@
+{
+  "id": "lactarius_sphagneti",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : lactaire des tourbières et des sphaignes.",
+    "Repère écologique : lactaire des tourbières et des sphaignes. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Lactarius sphagneti.",
+      "url": "https://www.gbif.org/species/8346076"
+    },
+    {
+      "title": "Index Fungorum, name record 461563: Lactarius sphagneti.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=461563"
+    }
+  ],
+  "related": []
+}

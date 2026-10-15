@@ -1,0 +1,33 @@
+{
+  "id": "erythropus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau brun foncé à brun chocolat, 5 à 20 cm, sec, velouté",
+    "Tubes jaunes ; pores fins, rouge sang à rouge orangé, qui bleuissent fortement à la pression",
+    "Pied épais, 5 à 15 cm, jaune sous de fins points rouge vif : des points, pas de réseau",
+    "Chair jaune vif, ferme, qui bleuit fortement à la coupe (le bleu s’efface en une à quelques heures) · saveur douce",
+    "Sporée brun olive",
+    "Bois de feuillus et de conifères, sols non calcaires · juin à novembre"
+  ],
+  "safetyNote": "À manger seulement bien cuit : cru ou insuffisamment cuit, il donne une gastro-entérite, et Tox Info Suisse demande au moins 20 minutes de cuisson. Un pied à points rouges et sans réseau est le critère principal qui le sépare du bolet de Satan et de plusieurs autres bolets rouges toxiques, dont le pied est en réseau.",
+  "sources": [
+    {
+      "title": "Tox Info Suisse (2025). Edible mushrooms: unpleasant gastrointestinal symptoms. Dernière mise à jour : mai 2025.",
+      "url": "https://toxinfo.ch/edible_mushrooms_unpleasant_gastrointestinal_symptoms"
+    },
+    {
+      "title": "Kanton Basel-Stadt, Kantonales Laboratorium (2022). Pilzkontrolle findet immer wieder Giftpilze. Communiqué du 21 décembre 2022.",
+      "url": "https://www.bs.ch/news/2022-pilzkontrolle-findet-immer-wieder-giftpilze"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Bolet à pied rouge",
+      "url": "https://fr.wikipedia.org/wiki/Bolet_%C3%A0_pied_rouge"
+    }
+  ],
+  "related": []
+}

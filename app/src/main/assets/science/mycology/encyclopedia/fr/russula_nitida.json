@@ -1,0 +1,22 @@
+{
+  "id": "russula_nitida",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : russule associée aux bois humides.",
+    "Repère écologique : russule associée aux bois humides. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Russula nitida.",
+      "url": "https://www.gbif.org/species/9089269"
+    },
+    {
+      "title": "Index Fungorum, name record 211457: Russula nitida.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=211457"
+    }
+  ],
+  "related": []
+}

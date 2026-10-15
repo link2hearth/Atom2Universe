@@ -1,0 +1,32 @@
+{
+  "id": "scabrum",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 4 to 20 cm, tan to dark brown, smooth or velvety, sticky when wet",
+    "Pores whitish then grey, browning when touched",
+    "Stem 5 to 20 cm, white, covered in small blackish-brown scales",
+    "Whitish flesh, almost unchanging when cut; mild taste, faint smell",
+    "Almost only under birch · summer to late autumn"
+  ],
+  "safetyNote": "Edible when well cooked: the DGfM and the VAPKO list the rough-stemmed boletes, and Wikipedia (fr) warns that raw or undercooked ones cause digestive upset. Of medium value; the fibrous stem is often thrown away, young caps are preferred. The flesh darkens, even turns black, when cooked (Wikipedia, fr and en). The many other rough-stemmed boletes are close; the sources read give no simple rule to separate them.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Leccinum scabrum",
+      "url": "https://fr.wikipedia.org/wiki/Leccinum_scabrum"
+    },
+    {
+      "title": "Wikipedia (en): Leccinum scabrum",
+      "url": "https://en.wikipedia.org/wiki/Leccinum_scabrum"
+    }
+  ],
+  "related": []
+}

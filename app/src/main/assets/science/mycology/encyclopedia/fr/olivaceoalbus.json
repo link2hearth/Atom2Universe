@@ -1,0 +1,24 @@
+{
+  "id": "olivaceoalbus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 3 à 12 cm, brun olive à gris ou brun suie, visqueux, strié de sombre, à mamelon sombre persistant",
+    "Lames épaisses, très espacées, blanches, cireuses",
+    "Pied de 3 à 12 cm, visqueux par temps humide, blanc au-dessus d’une zone annulaire, avec des bandes d’écailles sombres et déchirées en dessous",
+    "Chair blanche et mince, sans odeur nette, saveur fade",
+    "Sous les conifères, dans les bois de montagne, sur sol acide · fin d’été à début d’hiver"
+  ],
+  "safetyNote": "Comestible, aux avis partagés sur le goût : la DGfM le liste ; Wikipédia (en) dit que certains ôtent la peau du chapeau, conseille la prudence, et qu’il est plus mangé en Europe qu’en Amérique du Nord. La page dit qu’il n’y a pas de risque de confusion avec des champignons toxiques, et cite d’autres hygrophores comme sosies (Hygrophorus latitabundus, H. pustulatus, H. persoonii sous les chênes). Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Hygrophorus olivaceoalbus",
+      "url": "https://en.wikipedia.org/wiki/Hygrophorus_olivaceoalbus"
+    }
+  ],
+  "related": []
+}

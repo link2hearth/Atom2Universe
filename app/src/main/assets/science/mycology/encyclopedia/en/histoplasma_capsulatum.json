@@ -1,0 +1,22 @@
+{
+  "id": "histoplasma_capsulatum",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: dimorphic fungus in the environment, studied in microbiology.",
+    "Ecological context: dimorphic fungus in the environment, studied in microbiology. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Histoplasma capsulatum.",
+      "url": "https://www.gbif.org/species/3469218"
+    },
+    {
+      "title": "Index Fungorum, name record 102749: Histoplasma capsulatum.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=102749"
+    }
+  ],
+  "related": []
+}

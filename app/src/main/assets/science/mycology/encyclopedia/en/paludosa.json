@@ -1,0 +1,28 @@
+{
+  "id": "paludosa",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 6 to 20 cm, convex to depressed, mostly blood red, pink, crimson or purple, sometimes with a yellowish or orange centre",
+    "Gills crowded, cream then yellow, sometimes reddish at the edges",
+    "Stem 5 to 15 cm, white, sometimes tinged pink, slightly club-shaped",
+    "White flesh, mild taste, no smell, soon soft and greyish",
+    "Coniferous woods and peat bogs, especially under pines; locally very common"
+  ],
+  "safetyNote": "Edible: the DGfM and the VAPKO list it, and Wikipedia (en) says it is a common sight in Finnish markets. Wikipedia (en) warns that it can easily be mistaken for the sickener, which is poisonous: see the group. It has no French Wikipedia page and no English common name: the text comes from Wikipedia (en) and the DGfM.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Russula paludosa",
+      "url": "https://en.wikipedia.org/wiki/Russula_paludosa"
+    }
+  ],
+  "related": []
+}

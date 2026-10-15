@@ -1,0 +1,37 @@
+{
+  "id": "vesca",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 5 à 10 cm, pâle puis rose ocracé, rose vineux ou brun pourpre, souvent marbré de taches olivâtres ou rouille",
+    "La peau n’atteint pas la marge, et les lames « montrent les dents »",
+    "Lames blanches à crème, serrées, fourchues près du pied, tachées de rouille avec l’âge",
+    "Pied de 2 à 10 cm, ferme, blanc, parfois teinté de rose, brunissant à la base",
+    "Chair blanche et ferme, saveur douce à note de noisette",
+    "Sous les feuillus, surtout les chênes, sur sols légers et acides · juillet à octobre, parfois dès mai"
+  ],
+  "safetyNote": "Bon comestible (Wikipédia, fr) ; la DGfM et la VAPKO le listent. Frotté au sulfate de fer, le pied vire au saumon (Wikipédia, en). Wikipédia (fr) cite parmi ses sosies la russule charbonnière et la russule olivacée (voir leurs fiches). Le centre antipoison belge range la russule émétique parmi les russules qui donnent une gastro-entérite légère.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Russula vesca",
+      "url": "https://fr.wikipedia.org/wiki/Russula_vesca"
+    },
+    {
+      "title": "Wikipedia (en): Russula vesca",
+      "url": "https://en.wikipedia.org/wiki/Russula_vesca"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,29 @@
+{
+  "id": "sulphureum",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap up to 8 cm, convex, sulphur-yellow, sometimes brownish at the centre, faint boss",
+    "Gills thick, widely spaced, notched",
+    "Stem up to 10 cm, bare",
+    "Thin flesh; strong smell of coal gas (skatole), nauseating; bitter taste",
+    "Deciduous woods, especially beech · spring to autumn",
+    "White spore print"
+  ],
+  "safetyNote": "Toxic: the DGfM lists it for a gastrointestinal syndrome, and Wikipedia (en) calls it inedible and suspected poisonous, with some neurological symptoms reported. Smell and colour tell it from the yellow knight, which is darker, with a sticky cap, white flesh, thin crowded gills and a smell of flour (Wikipedia, en).",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Tricholoma sulphureum",
+      "url": "https://fr.wikipedia.org/wiki/Tricholoma_sulphureum"
+    },
+    {
+      "title": "Wikipedia (en): Tricholoma sulphureum",
+      "url": "https://en.wikipedia.org/wiki/Tricholoma_sulphureum"
+    }
+  ],
+  "related": []
+}

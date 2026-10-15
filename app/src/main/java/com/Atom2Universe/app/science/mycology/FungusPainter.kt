@@ -331,6 +331,34 @@ internal class SpecimenPainter(
     }
 
     private fun facePores(rx: Float) {
+        if (look.largeIrregularPores) {
+            val random = Random(look.seed + 121)
+            val spacing = max(0.16f, look.capDiam * 0.035f)
+            val color = withAlpha(darken(look.hymColor, 0.52f), 180)
+            var row = -r
+            var rowIndex = 0
+            while (row <= r) {
+                var x = -r + if (rowIndex % 2 == 0) 0f else spacing * 0.5f
+                while (x <= r) {
+                    val cx0 = x + (random.nextFloat() - 0.5f) * spacing * 0.24f
+                    val cy0 = row + (random.nextFloat() - 0.5f) * spacing * 0.24f
+                    if (cx0 * cx0 + cy0 * cy0 < (r * 0.91f) * (r * 0.91f) && hypot2(cx0, cy0) > rx * 0.16f) {
+                        val w = spacing * (0.42f + random.nextFloat() * 0.48f)
+                        val h = spacing * (0.34f + random.nextFloat() * 0.36f)
+                        val left = px(cx0 - w * 0.5f)
+                        val yA = py(y0 + cy0 * look.tilt + h * 0.5f)
+                        val yB = py(y0 + cy0 * look.tilt - h * 0.5f)
+                        val rect = RectF(left, min(yA, yB), px(cx0 + w * 0.5f), max(yA, yB))
+                        fill(color)
+                        c.drawRoundRect(rect, hair * 0.45f, hair * 0.45f, p)
+                    }
+                    x += spacing
+                }
+                row += spacing
+                rowIndex++
+            }
+            return
+        }
         val dot = withAlpha(darken(look.hymColor, 0.5f), 150)
         val spacing = max(0.08f, look.capDiam * 0.012f)
         fill(dot)

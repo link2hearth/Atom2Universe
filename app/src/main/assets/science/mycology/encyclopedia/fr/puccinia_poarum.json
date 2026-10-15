@@ -1,0 +1,22 @@
+{
+  "id": "puccinia_poarum",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : rouille foliaire du tussilage.",
+    "Repère écologique : rouille foliaire du tussilage. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Puccinia poarum.",
+      "url": "https://www.gbif.org/species/2514368"
+    },
+    {
+      "title": "Index Fungorum, name record 194454: Puccinia poarum.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=194454"
+    }
+  ],
+  "related": []
+}

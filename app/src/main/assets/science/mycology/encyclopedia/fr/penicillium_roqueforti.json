@@ -1,0 +1,34 @@
+{
+  "id": "penicillium_roqueforti",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Moisissure filamenteuse ascomycète ; elle ne forme pas un champignon à chapeau et à pied.",
+    "Utilisée comme culture d’affinage de fromages persillés, dont le roquefort.",
+    "Les souches peuvent différer par la couleur, l’arôme et les métabolites secondaires, dont des mycotoxines."
+  ],
+  "safetyNote": "Certaines souches sélectionnées sont utilisées dans la fabrication maîtrisée de fromages persillés. Les souches et les conditions de production diffèrent ; voir une moisissure bleu-vert ailleurs ne permet ni de l’identifier ni d’établir qu’elle est sans danger. Cette fiche décrit le champignon et ne constitue pas une évaluation de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Penicillium roqueforti.",
+      "url": "https://www.gbif.org/species/2597774"
+    },
+    {
+      "title": "Index Fungorum, name record 213525: Penicillium roqueforti.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=213525"
+    },
+    {
+      "title": "USDA Agricultural Marketing Service (2014). Microorganisms & Microbial-Derived Ingredients Used in Food Production: Technical Evaluation Report.",
+      "url": "https://www.ams.usda.gov/sites/default/files/media/MicroorgTechnical%20Evaluation%20Report%20%282014%29.pdf"
+    },
+    {
+      "title": "Cleere M. et al. (2024). New colours for old in the blue-cheese fungus Penicillium roqueforti. npj Science of Food 8, 3.",
+      "url": "https://www.nature.com/articles/s41538-023-00244-9"
+    },
+    {
+      "title": "Salo O. et al. (2016). Secondary Metabolites from Penicillium roqueforti, a Starter for the Production of Gorgonzola Cheese. Toxins 8(11), 336.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5076727/"
+    }
+  ],
+  "related": []
+}

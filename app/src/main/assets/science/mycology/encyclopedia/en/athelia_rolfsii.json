@@ -1,0 +1,21 @@
+{
+  "id": "athelia_rolfsii",
+  "reviewStatus": "verified",
+  "safetyNote": "Agroathelia rolfsii (formerly Athelia rolfsii; the Sclerotium rolfsii form) is a plant pathogen, not a mushroom for food identification. White fungal growth and brown sclerotia at a diseased plant base suggest southern blight but do not alone confirm the species; other plant diseases can resemble it. Seek a plant diagnostic service for a consequential identification, and avoid moving infested plants or soil to clean sites.",
+  "sections": [
+    {"title": "Name and life form", "text": "The catalogue retains the historical name Athelia rolfsii. Species Fungorum now gives Agroathelia rolfsii (Sacc.) Redhead & Mullineux, published in 2023, as its current name; Sclerotium rolfsii is the long-used name for its asexual, sclerotium-producing form. This soilborne basidiomycete does not normally present as a cap-and-stem mushroom. The flat sexual crust is rarely seen on hosts or in culture."},
+    {"title": "Field recognition", "text": "At the soil line, an infected plant may show browning and soft decay around the crown or lower stem, then yellowing and rapid wilt. A coarse, cottony white mycelial mat can spread over the stem base and adjacent soil in a fan-like pattern. Numerous small, hard, rounded sclerotia form in this mat; they begin white, then become tan to reddish or dark brown, usually about 0.5–2 mm across. These are survival bodies, not loose spores or seeds."},
+    {"title": "Hosts and conditions", "text": "The pathogen has a very broad host range, reported from more than 500 plant species, including vegetables, field crops and ornamentals. Warm, moist conditions favour disease. The fungus persists in plant debris as mycelium and in soil as sclerotia; infested plants, soil and water can move it to new sites. Symptoms and abundance of visible fungal growth vary by host, weather and disease stage."},
+    {"title": "Confirmation and lookalikes", "text": "A white mat and brown sclerotia are strong field clues but require comparison with other crown and root diseases. Onion southern blight is especially liable to confusion with white rot. Laboratory examination may show hyaline septate hyphae with clamp connections; culture and molecular methods can support identification when needed. The uncommon sexual form is a thin, appressed, whitish and irregular crust with basidia, rather than a stalked fruit body."},
+    {"title": "About the plate", "text": "The white-background plate shows a host plant base with fan-like white mycelium, tiny attached sclerotia changing from pale to brown, an enlarged view of the infected crown, and a separate microscopic view of septate hyphae and clamp connections. The views use distinct scales; no free spores are depicted."}
+  ],
+  "sources": [
+    {"title": "GBIF Backbone Taxonomy. Historical name record: Athelia rolfsii.", "url": "https://www.gbif.org/species/2554082"},
+    {"title": "Species Fungorum. Athelia rolfsii name record 309351, current name Agroathelia rolfsii.", "url": "https://www.speciesfungorum.org/Names/NamesRecord.asp?RecordID=309351"},
+    {"title": "Redhead & Mullineux (2023). Index Fungorum no. 554, original publication of Agroathelia rolfsii combination.", "url": "https://www.indexfungorum.org/Publications/Index%20Fungorum%20no.554.pdf"},
+    {"title": "Virginia Tech Extension (2021). An Overview of Southern Blight, Caused by Sclerotium rolfsii.", "url": "https://ext.vt.edu/content/pubs_ext_vt_edu/en/SPES/SPES-325/SPES-325.html"},
+    {"title": "UC Statewide IPM Program. Southern Blight of Onion and Garlic: signs and differential diagnosis.", "url": "https://ipm.ucanr.edu/agriculture/onion-and-garlic/southern-blight/"},
+    {"title": "NC State Extension (reviewed 2024). Southern Stem Blight of Strawberry: sclerotia, hyphae and rare sexual form.", "url": "https://content.ces.ncsu.edu/southern-stem-blight-of-strawberry"}
+  ],
+  "related": ["thanatephorus_cucumeris", "fusarium_oxysporum"]
+}

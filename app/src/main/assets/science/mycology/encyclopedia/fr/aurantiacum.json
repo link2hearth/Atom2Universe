@@ -1,0 +1,30 @@
+{
+  "id": "aurantiacum",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Nom et périmètre taxonomique", "text": "Leccinum aurantiacum (Bull.) Gray est un bolet orangé européen à pied rugueux. Une révision moderne englobe sous ce nom l'ancien L. quercinum, associé aux chênes, alors que des ouvrages anciens appliquaient L. aurantiacum à des récoltes de peupliers à rugosités pâles, désormais séparées comme L. albostipitatum. Le chapeau orange ou l'arbre voisin ne suffisent donc pas à nommer une récolte. Il faut aussi éviter d'appliquer automatiquement le nom européen aux bolets ressemblants d'Amérique du Nord."},
+    {"title": "Chapeau, pores et pied rugueux", "text": "Le chapeau mesure généralement 5–15 cm ; arrondi ou très convexe au départ, il s'étale avec l'âge. Sa surface sèche et finement feutrée varie du rouge orangé au rouge brique et au brun rouge. La cuticule déborde la couche de tubes en petites languettes irrégulières ou triangulaires, parfois encore visibles chez les vieux sujets. Le dessous montre de minuscules pores crème à blanchâtres, se ternissant puis brunissant ou grisonnant ; il n'y a pas de lames. Le pied pâle, plein, allongé et robuste porte de nombreuses aspérités saillantes : dans le concept européen révisé, elles sont généralement roussâtres dès le jeune âge, puis brun rouge foncé, et non uniformément blanches au départ."},
+    {"title": "Coupe, milieu et espèces proches", "text": "La chair fraîche est blanche, puis peut virer progressivement au rosé ou au gris vineux, au gris violet et jusqu'au noirâtre après la coupe ; la base du pied peut montrer un ton bleuâtre ou verdâtre. Ces changements varient selon l'âge et le délai d'observation : ce n'est pas un bleuissement instantané unique. L'espèce forme une ectomycorhize avec divers feuillus, dont chêne, peuplier, bouleau et hêtre ; le nom « des chênes » ne décrit pas un hôte exclusif. L. albostipitatum, notamment sous peuplier, possède des rugosités initialement blanches ; L. versipelle, également orangé, est souvent lié au bouleau. Des distinctions fines demandent parfois la microscopie et l'examen des arbres proches."},
+    {"title": "Sécurité alimentaire et conservation", "text": "La Société allemande de mycologie (DGfM) inscrit le bolet orangé des chênes sous L. quercinum, avec L. aurantiacum en synonyme, mais signale aussi les troubles digestifs dus aux bolets à pied rude crus ou insuffisamment cuits ; elle recommande une cuisson complète. Des réactions individuelles et des erreurs d'identification restent possibles. Un rapport nord-américain décrit un décès auquel aurait contribué un Leccinum du complexe aurantiacum au sens large : il ne prouve pas qu'un L. aurantiacum européen déterminé avec certitude soit en cause. Ne décide pas d'une consommation sur une image. La liste allemande signale en outre une protection spéciale et la catégorie de Liste rouge G ; vérifie les règles locales avant toute récolte."}
+  ],
+  "traits": [
+    "Chapeau sec et finement feutré rouge orangé à rouge brique, généralement 5–15 cm, marge en languettes triangulaires débordantes",
+    "Dessous à pores minuscules crème à blanchâtres, ternissant ou brun-gris avec l'âge ; aucune lame",
+    "Pied pâle et plein, à rugosités saillantes déjà roussâtres jeune, puis brun rouge foncé",
+    "Chair blanche virant progressivement au rosé ou gris vineux, puis gris violet/noirâtre ; parfois bleu-vert à la base du pied",
+    "Ectomycorhize avec plusieurs feuillus, dont chêne, peuplier, bouleau et hêtre"
+  ],
+  "safetyNote": "La DGfM inscrit ce taxon européen parmi les comestibles sous L. quercinum, mais les bolets à pied rude crus ou mal cuits peuvent provoquer des troubles digestifs ; des réactions individuelles sont possibles. Le décès publié concerne un Leccinum nord-américain non déterminé du complexe aurantiacum au sens large, et non un spécimen confirmé de cette espèce. Ne te fie jamais à une image pour choisir un aliment : fais confirmer localement toute récolte, cuis-la complètement si elle est jugée consommable et consulte un centre antipoison en cas de symptômes.",
+  "sources": [
+    {
+      "title": "Société allemande de mycologie (DGfM), liste positive 2026 : L. quercinum (syn. L. aurantiacum)",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {"title": "DGfM — Syndromes d'intoxication : bolets à pied rude crus", "url": "https://www.dgfm-ev.de/de/beschreibung-symptome-und-karenzzeiten"},
+    {"title": "Den Bakker et Noordeloos (2005), Persoonia — révision des espèces européennes de Leccinum", "url": "https://repository.naturalis.nl/pub/532241"},
+    {"title": "Den Bakker et coll. (2004), New Phytologist — arbres hôtes de L. aurantiacum", "url": "https://nph.onlinelibrary.wiley.com/doi/10.1111/j.1469-8137.2004.01090.x"},
+    {"title": "First Nature — description de Leccinum aurantiacum", "url": "https://www.first-nature.com/fungi/leccinum-aurantiacum.php"},
+    {"title": "North American Mycological Association, rapport toxicologique 2009 — cas du complexe aurantiacum", "url": "https://namyco.org/wp-content/uploads/2023/08/NAMA_Toxicology_Committee_Report_2009-1.pdf"}
+  ],
+  "related": ["versipelle", "scabrum"]
+}

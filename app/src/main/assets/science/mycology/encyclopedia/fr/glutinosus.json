@@ -1,0 +1,32 @@
+{
+  "id": "glutinosus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 3 à 12 cm, convexe puis plan, brun foncé à gris pourpre, couvert d’un épais mucilage",
+    "Lames espacées, décurrentes, blanches puis grises, noircies par les spores",
+    "Pied de 4 à 10 cm, blanc en haut, jaune à la base ; le voile ne laisse qu’une zone annulaire floue, noircie par les spores",
+    "Chair blanchâtre, odeur faible, saveur douce ou un peu acide",
+    "Sous les conifères, souvent l’épicéa · juillet à novembre"
+  ],
+  "safetyNote": "Comestible une fois le mucilage et la peau du chapeau ôtés : la DGfM et la VAPKO le disent, Wikipédia (fr) le dit honorable ou médiocre, Wikipédia (en) dit que les avis divergent et qu’il accumule des métaux lourds. Vu de dessus, un jeune ressemble à la nonnette voilée, mais il a des lames, pas des pores (Wikipédia, en) ; Wikipédia (fr) cite Gomphidius maculatus, sous les mélèzes, comme principal sosie.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Gomphidius glutinosus",
+      "url": "https://fr.wikipedia.org/wiki/Gomphidius_glutinosus"
+    },
+    {
+      "title": "Wikipedia (en): Gomphidius glutinosus",
+      "url": "https://en.wikipedia.org/wiki/Gomphidius_glutinosus"
+    }
+  ],
+  "related": []
+}

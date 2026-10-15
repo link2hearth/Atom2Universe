@@ -1,0 +1,26 @@
+{
+  "id": "aurea",
+  "reviewStatus": "verified",
+  "safetyNote": "Russula aurea is listed as edible by DGfM and Swiss VAPKO, but red-capped brittlegills include acrid, inedible and poisonous lookalikes such as R. emetica and R. nobilis. Confirm the characteristic golden-yellow gill edges, yellow tones on the stem and mild flesh with an expert before any food use; a cap colour or illustration alone is insufficient. Cook collected mushrooms adequately. DGfM marks this species RL V (near threatened/watch list) in Germany, so follow local collection rules and leave scarce populations undisturbed.",
+  "sections": [
+    {"title": "Red, orange and gold cap", "text": "The fleshy but brittle cap measures about 4–10 cm. It begins rounded, then becomes convex to flat, often with a shallow central depression. Red or orange-red usually mingles with conspicuous golden-yellow areas; a wholly yellow cap is unusual. The margin is long smooth, becoming faintly striate or wavy only when mature. Its skin is matt when dry, shiny when wet, and can peel about halfway towards the centre."},
+    {"title": "Golden gill edges and pale stem", "text": "The relatively close to moderately spaced, rather thick brittle gills are whitish or cream when young and become yellowish with age. Their golden- or lemon-yellow edges are often strikingly brighter than the gill faces; some gills fork, and their attachment is nearly free or narrowly attached. The 4–9 cm stem is stout, cylindrical to slightly clubbed, white at first and often washed golden yellow with age, faintly wrinkled lengthwise. It has no ring. White brittle flesh is yellow just beneath the cap skin, with no marked smell and a mild taste. The spore print is ochre to yellow."},
+    {"title": "Woodland, season and comparison", "text": "Russula aurea forms mycorrhizae mainly with broadleaf trees, especially oak and beech in warmer European woodland; it occurs less often with conifers. Fruiting is mainly in summer and early autumn, with local variation. Typical mixed red-orange-gold caps, yellow gill edges and yellow stem tones together are distinctive, but atypically pale or pinkish specimens may need microscopic examination. Red-capped R. emetica and R. nobilis lack this consistent gold edging and have acrid flesh; R. paludosa can have orange-red cap tones but its stem remains white or pinkish. Do not identify from colour alone."},
+    {"title": "Food use and regional conservation", "text": "Both DGfM and VAPKO include this species on their edible lists. The Czech Mycological Society calls it an excellent edible russula, but notes that it is rarely abundant. DGfM records it as RL V on the German Red List, a regional watch-list designation rather than a worldwide status. Leave isolated or scarce specimens, respect local restrictions, and use only expertly confirmed material cooked adequately."}
+  ],
+  "traits": [
+    "Brittle 4–10 cm cap, red to orange-red with golden-yellow areas, shallowly depressed when mature",
+    "Cream to yellowish, rather close or moderately spaced gills with conspicuous golden-yellow edges; some fork",
+    "Stout 4–9 cm white stem that can become golden-yellow, without a ring",
+    "White brittle flesh yellow directly under cap skin; mild taste; ochre to yellow spore print",
+    "Mycorrhizal mainly with oak and beech in warm deciduous woodland; summer to early autumn",
+    "Listed as edible; German Red List RL V and red Russula lookalikes warrant caution"
+  ],
+  "sources": [
+    {"title": "Czech Mycological Society — Russula aurea", "url": "https://www.myko.cz/myko-atlas/Russula-aurea/"},
+    {"title": "First Nature — Russula aurea identification guide", "url": "https://www.first-nature.com/fungi/russula-aurea.php"},
+    {"title": "German Society for Mycology (2026) — positive list of edible mushrooms", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023) — Swiss recommended mushroom list", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
+  ],
+  "related": ["emetica", "nobilis", "paludosa"]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "columbetta",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognizing the species", "text": "Tricholoma columbetta is a white tricholoma with a silky, fibrillose cap, sometimes cream at the centre; it begins convex and later flattens, and may be slightly sticky when young or damp. The white gills are crowded and emarginate near the stem; their edges may become irregular and pink-stained. The stem is white, fibrillose and sometimes rooting."},
+    {"title": "Stem base and useful characters", "text": "The stem base may show blue, green or pink staining, although this is not always present. The firm flesh is white, with a farinaceous smell and a mild or slightly farinaceous taste. The spore print is white. The stem has neither ring nor volva, but the entire base must be checked because a volva may be buried."},
+    {"title": "Habitat and season", "text": "It grows singly or in small groups on soil in broad-leaved woodland, especially with oak, beech or birch, usually on acid to neutral soils; it is less common under conifers. It fruits from summer to autumn, with exact timing depending on local climate."},
+    {"title": "Lookalikes and safety", "text": "Deadly white Amanita species, including Amanita virosa and the white forms of A. phalloides or A. verna, can be confused with white tricholomas. The volva may remain underground and a ring may be missing, damaged or hidden; neither character alone makes an identification safe. Entoloma sinuatum has pale gills when young that turn pink at maturity. Lyon 1, DGfM and VAPKO list this species as edible; have any collection checked by a qualified person."}
+  ],
+  "traits": [
+    "White silky, fibrillose cap, sometimes cream at the centre, convex then flattened; slightly sticky when young or damp",
+    "Crowded, emarginate white gills, sometimes pink-stained, with an edge that may become irregular",
+    "White fibrillose stem, sometimes rooting; base may stain blue, green or pink",
+    "Firm white flesh, farinaceous smell, mild to slightly farinaceous taste; white spore print",
+    "Broad-leaved woodland, especially oak, beech and birch, on acid to neutral soils · summer and autumn",
+    "Listed as edible by mycological sources; can be confused with deadly white Amanitas"
+  ],
+  "safetyNote": "Listed as edible by Lyon 1, DGfM and VAPKO, but deadly white Amanitas can look similar. A buried volva or a missing ring can escape notice; never eat a collection identified only from a photo or entry, and have it checked by a qualified person.",
+  "sources": [
+    {"title": "Claude Bernard University Lyon 1 — Champignons: Tricholoma columbetta (morphology, habitat and lookalikes)", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/tricholoma-columbetta/"},
+    {"title": "Xunta de Galicia, mycological guide — Tricholoma columbetta (description, season and habitat)", "url": "https://mediorural.xunta.gal/sites/default/files/publicacions/2024-02/es-libro-setas-ngsg_2023-rrss-min.pdf"},
+    {"title": "ANSES (2017), assessment of mushroom poisoning risks: confusion between deadly Amanitas and Tricholoma columbetta", "url": "https://www.anses.fr/en/system/files/BIORISK2014sa0232FiEN.pdf?download=1"},
+    {"title": "Deutsche Gesellschaft für Mykologie (DGfM), Positivliste der Speisepilze (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, Switzerland — list of recommended mushrooms (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
+  ],
+  "related": ["virosa", "sinuatum"]
+}

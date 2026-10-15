@@ -1,0 +1,32 @@
+{
+  "id": "glutinosus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 3 to 12 cm, convex then flat, dark brownish to purplish-grey, covered in thick slime",
+    "Gills widely spaced, running down the stem, white then grey, blackening with the spores",
+    "Stem 4 to 10 cm, white above, yellow at the base; the veil leaves only an indistinct ring zone, stained by the spores",
+    "Whitish flesh, faint smell, mild or slightly acidic taste",
+    "Under conifers, often spruce · July to November"
+  ],
+  "safetyNote": "Edible once the slime and the skin of the cap are removed: the DGfM and the VAPKO say so, Wikipedia (fr) calls it honourable or mediocre, Wikipedia (en) says opinions differ and that it accumulates heavy metals. Seen from above a young one looks like the slippery jack, but it has gills, not pores (Wikipedia, en); Wikipedia (fr) names Gomphidius maculatus, under larches, as its main look-alike.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Gomphidius glutinosus",
+      "url": "https://fr.wikipedia.org/wiki/Gomphidius_glutinosus"
+    },
+    {
+      "title": "Wikipedia (en): Gomphidius glutinosus",
+      "url": "https://en.wikipedia.org/wiki/Gomphidius_glutinosus"
+    }
+  ],
+  "related": []
+}

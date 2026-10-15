@@ -1,0 +1,32 @@
+{
+  "id": "grevillei",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 2 to 15 cm, sticky, lemon-yellow to bright orange or reddish-brown",
+    "Fine yellow pores running down the stem, olive-yellow with age",
+    "Stem 3 to 12 cm, yellow above a white then yellow ring, orange-reddish brown at the base",
+    "Soft bright yellow flesh, quickly turning cream with orange spots; mild, sweet taste",
+    "Only under larches · summer to late autumn"
+  ],
+  "safetyNote": "Edible but mediocre: the DGfM and the VAPKO list it, the VAPKO adding that the cap skin must be removed. Wikipedia (fr) finds it bland and flabby and says it can be laxative for some; it advises young ones only, the stem removed, the cap peeled and a small first portion. It is hard to mix up thanks to its colours, its ringed stem and the larches (Wikipedia, fr): the other slippery boletes under larches have large pores.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Suillus grevillei",
+      "url": "https://fr.wikipedia.org/wiki/Suillus_grevillei"
+    },
+    {
+      "title": "Wikipedia (en): Suillus grevillei",
+      "url": "https://en.wikipedia.org/wiki/Suillus_grevillei"
+    }
+  ],
+  "related": []
+}

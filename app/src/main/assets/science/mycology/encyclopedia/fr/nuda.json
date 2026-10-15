@@ -1,0 +1,33 @@
+{
+  "id": "nuda",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau bleu violet à gris violet, souvent brunâtre au centre, 4 à 15 cm, lisse et humide ; marge enroulée",
+    "Lames violet foncé, serrées, qui passent au brun terne avec l’âge",
+    "Pied trapu, 2 à 10 cm, lilas à gris violet, un peu renflé à la base, strié de fibrilles argentées",
+    "Chair blanche teintée de violet en haut du pied · odeur agréable, fruitée, un peu anisée",
+    "Sporée rose pâle",
+    "Feuillus et conifères, sur litière, souvent en rond · arrière-saison, après les premières gelées"
+  ],
+  "safetyNote": "Certains cortinaires violets lui ressemblent et sont très toxiques : leur sporée est brun rouille (la sienne est rose pâle), ils gardent souvent des restes de cortine et leur odeur est désagréable. On se méfie de tous les cortinaires rouges, pourpres ou orangés.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Pied bleu",
+      "url": "https://fr.wikipedia.org/wiki/Pied_bleu"
+    },
+    {
+      "title": "Wikipedia (en): Lepista nuda",
+      "url": "https://en.wikipedia.org/wiki/Lepista_nuda"
+    }
+  ],
+  "related": []
+}

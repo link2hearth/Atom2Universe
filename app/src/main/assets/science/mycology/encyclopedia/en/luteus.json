@@ -1,0 +1,33 @@
+{
+  "id": "luteus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 4 to 15 cm, brown to chestnut, very slimy and glossy, the skin peels off",
+    "Fine yellow pores, turning olive with age",
+    "Stem 4 to 12 cm, pale, with a wide ring: white above, violet-brown below",
+    "Glandular dots above the ring",
+    "Mild taste, faint pleasant smell",
+    "Under pines · mostly autumn"
+  ],
+  "safetyNote": "Edible: the DGfM and the VAPKO list it. Wikipedia (fr) calls it mediocre, the tastiest of its genus, and advises picking only young ones, peeling the cap and removing the stem; the slimy skin is laxative and may cause indigestion, and allergies are possible. It strongly accumulates caesium-137 (Wikipedia, fr). The granulated bolete has no ring; the larch bolete grows under larches; a young Gomphidius looks alike from above but has gills (Wikipedia, en).",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Suillus luteus",
+      "url": "https://fr.wikipedia.org/wiki/Suillus_luteus"
+    },
+    {
+      "title": "Wikipedia (en): Suillus luteus",
+      "url": "https://en.wikipedia.org/wiki/Suillus_luteus"
+    }
+  ],
+  "related": []
+}

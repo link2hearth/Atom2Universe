@@ -1,0 +1,22 @@
+{
+  "id": "lactarius_fennoscandicus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : lactaire boréal associé aux conifères.",
+    "Repère écologique : lactaire boréal associé aux conifères. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Lactarius fennoscandicus.",
+      "url": "https://www.gbif.org/species/5463476"
+    },
+    {
+      "title": "Index Fungorum, name record 445020: Lactarius fennoscandicus.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=445020"
+    }
+  ],
+  "related": []
+}

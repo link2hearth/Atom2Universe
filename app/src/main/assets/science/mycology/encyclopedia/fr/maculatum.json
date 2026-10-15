@@ -1,0 +1,24 @@
+{
+  "id": "maculatum",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau jusqu’à 8 cm, conique ou en cloche puis à large mamelon, fibreux, brun châtain et plus pâle à la marge, qui est souvent fendue ; restes blancs du voile au centre quand il est jeune",
+    "Lames serrées, blanc grisâtre puis brun olive, à arête blanche finement dentée",
+    "Pied jusqu’à 8 cm, crème puis plus brun, souvent plus épais à la base, plein puis creux",
+    "Chair blanche, saveur douce, forte odeur piquante et fruitée",
+    "Bois de feuillus ou mixtes, au pied des arbres, surtout du hêtre, sur sol calcaire · sporée brun tabac"
+  ],
+  "safetyNote": "Toxique : muscarine (la DGfM et Wikipédia, en). Symptômes : salivation, larmes, urines, diarrhée, troubles digestifs et vomissements ; la mort par insuffisance respiratoire est possible (Wikipédia, en). Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM. Wikipédia (en) cite parmi ses sosies d’autres inocybes (Inocybe lacera, I. lanatodisca, I. fastigiata).",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Inosperma maculatum",
+      "url": "https://en.wikipedia.org/wiki/Inosperma_maculatum"
+    }
+  ],
+  "related": []
+}

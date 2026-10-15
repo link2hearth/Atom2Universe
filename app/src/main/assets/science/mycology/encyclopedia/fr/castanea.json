@@ -1,0 +1,34 @@
+{
+  "id": "castanea",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaître l’espèce", "text": "Lepiota castanea est une petite lépiote : le chapeau mesure généralement 1 à 4 cm, d’abord campanulé puis étalé avec un centre surélevé. Son fond crème pâle est couvert d’écailles brun roux à châtain, plus denses vers le centre. Les lames sont blanchâtres à crème et libres. Le pied mince est pâle au sommet, roux et finement écailleux vers le bas ; l’anneau est mince et fugace."},
+    {"title": "Chair, habitat et spores", "text": "La chair blanchâtre peut roussir légèrement. Le pied devient creux à maturité. La sporée est blanche ; les spores lisses, fusiformes avec un petit éperon, sont microscopiques. L’espèce vit sur la litière et l’humus des forêts de feuillus et de conifères, seule ou en petits groupes, surtout en été et en automne."},
+    {"title": "Taxonomie", "text": "Le nom accepté est Lepiota castanea Quél. (1881). Les petites lépiotes à pigments bruns ou roux sont difficiles à identifier sans examen attentif. Un chapeau écailleux ou un anneau visible ne suffit pas à établir l’espèce."},
+    {"title": "Sécurité", "text": "Ne pas consommer : l’espèce est traitée comme potentiellement mortelle. La présence d’amatoxines chez Lepiota castanea reste incertaine ; certains spécimens analysés n’en contenaient pas. Cela ne prouve pas l’innocuité de toutes les populations. En cas d’ingestion suspectée, demande sans attendre un avis médical ou celui d’un centre antipoison."}
+  ],
+  "traits": [
+    "Chapeau de 1 à 4 cm, crème pâle à écailles brun roux, campanulé puis étalé, centre surélevé",
+    "Lames libres, blanchâtres à crème",
+    "Pied mince, pâle au sommet, roux et écailleux vers le bas ; anneau mince et fugace",
+    "Chair blanchâtre, pied creux à maturité ; sporée blanche",
+    "Litière et humus en forêt de feuillus ou de conifères, seule ou en petits groupes · été-automne"
+  ],
+  "safetyNote": "Ne pas consommer : l’espèce est traitée comme potentiellement mortelle. La présence d’amatoxines chez Lepiota castanea reste incertaine ; certains spécimens analysés n’en contenaient pas, ce qui ne prouve pas l’innocuité de toutes les populations. En cas d’ingestion suspectée, contacter immédiatement un centre antipoison.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {"title": "Index Fungorum — Lepiota castanea, record 846199", "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=846199"},
+    {"title": "MushroomExpert — Lepiota castanea", "url": "https://www.mushroomexpert.com/indianamushrooms/lepiota_castanea.html"},
+    {"title": "Latvijas Daba — Lepiota castanea", "url": "https://www.latvijasdaba.lv/senes/lepiota-castanea-quel/"},
+    {"title": "Giftinformasjonen / Helsenorge — Kastanjeparasollsopp", "url": "https://www.helsenorge.no/giftinformasjon/sopp/kastanjeparasollsopp/"},
+    {"title": "Toxicon (2024), doi:10.1016/j.toxicon.2024.107736 — recherche d’amatoxines et phallotoxines", "url": "https://doi.org/10.1016/j.toxicon.2024.107736"}
+  ],
+  "related": ["subincarnata", "brunneoincarnata"]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "inocybe_tricolor",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: Inocybe with a fibrillose cap and brown spores.",
+    "Ecological context: Inocybe with a fibrillose cap and brown spores. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Inocybe tricolor.",
+      "url": "https://www.gbif.org/species/7449828"
+    },
+    {
+      "title": "Index Fungorum, name record 298984: Inocybe tricolor.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=298984"
+    }
+  ],
+  "related": []
+}

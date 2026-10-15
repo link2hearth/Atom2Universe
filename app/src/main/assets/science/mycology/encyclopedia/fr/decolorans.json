@@ -1,0 +1,28 @@
+{
+  "id": "decolorans",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau jusqu’à 15 cm, rouge à orangé, visqueux par temps humide, convexe à plan ou déprimé",
+    "Lames pâles, devenant jaunâtres, parfois tachées de gris",
+    "Pied jusqu’à 12 cm, nu",
+    "Chair blanche qui noircit au froissement ; saveur et odeur douces",
+    "Bois mixtes et sous les conifères, isolée ou en groupes"
+  ],
+  "safetyNote": "Comestible : la DGfM et la VAPKO la listent. Wikipédia (en) déconseille de manger des exemplaires sauvages à cause de sosies de comestibilité inconnue, sans les nommer ; sa chair noircit au froissement. Le chapeau rouge et le noircissement sont ce que donne la page. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM ; la page est courte.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Russula decolorans",
+      "url": "https://en.wikipedia.org/wiki/Russula_decolorans"
+    }
+  ],
+  "related": []
+}

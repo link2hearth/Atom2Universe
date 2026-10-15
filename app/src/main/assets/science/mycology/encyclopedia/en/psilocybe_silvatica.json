@@ -1,0 +1,22 @@
+{
+  "id": "psilocybe_silvatica",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: small saprotrophic Psilocybe of wooded habitats.",
+    "Ecological context: small saprotrophic Psilocybe of wooded habitats. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Psilocybe silvatica.",
+      "url": "https://www.gbif.org/species/5459328"
+    },
+    {
+      "title": "Index Fungorum, name record 304494: Psilocybe silvatica.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=304494"
+    }
+  ],
+  "related": []
+}

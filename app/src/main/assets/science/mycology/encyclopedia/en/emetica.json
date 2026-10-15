@@ -1,0 +1,33 @@
+{
+  "id": "emetica",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 3 to 10 cm, bright cherry red, sticky; convex then spreading and slightly dished; the skin peels almost to the centre",
+    "White to cream, close, broad, adnate gills",
+    "White stem, 5 to 9 cm, sometimes swollen at the base; no ring",
+    "White flesh, pinkish under the skin, brittle · faintly fruity smell",
+    "White spores",
+    "Sandy soils, among mosses and sphagnum, mostly under conifers and pines · July to October"
+  ],
+  "safetyNote": "Toxic: digestive upset, mostly vomiting, between half an hour and three hours after the meal; it usually passes by itself (Wikipedia EN). The German mycological society lists the Russula emetica group among the gastrointestinal-syndrome mushrooms, and the Belgian poison centre cites the sickener among the causes of the mild resinoid syndrome (under 12 hours). Many red russulas look alike and some can only be told apart under a microscope: the cap is not enough.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Russule émétique",
+      "url": "https://fr.wikipedia.org/wiki/Russule_%C3%A9m%C3%A9tique"
+    },
+    {
+      "title": "Wikipedia (en): Russula emetica",
+      "url": "https://en.wikipedia.org/wiki/Russula_emetica"
+    }
+  ],
+  "related": []
+}

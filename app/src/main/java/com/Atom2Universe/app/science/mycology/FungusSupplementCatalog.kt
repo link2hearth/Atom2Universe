@@ -124,7 +124,15 @@ internal object FungusSupplementCatalog {
             diagram = FungusDiagramKind.GENERIC_MUSHROOM),
         FungusSpecies(id = "hygrophorus_pustulatus", name = R.string.myco_hygrophorus_pustulatus_name, altNames = R.string.myco_hygrophorus_pustulatus_alt,
             latin = R.string.myco_hygrophorus_pustulatus_latin, status = FungusStatus.REFERENCE_ONLY,
-            look = schematic(26), traits = R.array.myco_hygrophorus_pustulatus_traits, note = R.string.myco_hygrophorus_pustulatus_note,
+            look = FungusLook(
+                capDiam = 6.4f, capRise = 2.5f, capN = 2.0f, edgeDrop = 0.2f,
+                capCenter = c(0x665F58), capMid = c(0x837B73), capEdge = c(0xA79D91),
+                stipeH = 6f, stipeW = 1.25f, stipeBaseW = 1.15f, stipeForm = StipeForm.CYLINDER,
+                stipeTop = c(0xF1EEE6), stipeBottom = c(0xE8E3D8),
+                stipeDecos = listOf(StipeDeco.Dots(c(0x756B61), 0.48f, 0.065f, 200, 0.95f)),
+                hymColor = c(0xF1EEE6), attach = GillAttach.DECURRENT, crowd = 0.42f,
+                flesh = c(0xF2EFE7), spore = c(0xF5F1E8), seed = 26
+            ), traits = R.array.myco_hygrophorus_pustulatus_traits, note = R.string.myco_hygrophorus_pustulatus_note,
             diagram = FungusDiagramKind.GENERIC_MUSHROOM),
         FungusSpecies(id = "hygrophorus_purpurascens", name = R.string.myco_hygrophorus_purpurascens_name, altNames = R.string.myco_hygrophorus_purpurascens_alt,
             latin = R.string.myco_hygrophorus_purpurascens_latin, status = FungusStatus.REFERENCE_ONLY,
@@ -132,7 +140,14 @@ internal object FungusSupplementCatalog {
             diagram = FungusDiagramKind.GENERIC_MUSHROOM),
         FungusSpecies(id = "hygrophorus_penarioides", name = R.string.myco_hygrophorus_penarioides_name, altNames = R.string.myco_hygrophorus_penarioides_alt,
             latin = R.string.myco_hygrophorus_penarioides_latin, status = FungusStatus.REFERENCE_ONLY,
-            look = schematic(28), traits = R.array.myco_hygrophorus_penarioides_traits, note = R.string.myco_hygrophorus_penarioides_note,
+            look = FungusLook(
+                capDiam = 10.5f, capRise = 4.1f, capN = 2.8f, edgeDrop = 0.25f,
+                capCenter = c(0xE6E0D3), capMid = c(0xF0EBDF), capEdge = c(0xF4F0E7),
+                stipeH = 8.5f, stipeW = 2.7f, stipeBaseW = 2.1f, stipeForm = StipeForm.TAPER_DOWN,
+                stipeTop = c(0xF4F0E7), stipeBottom = c(0xEAE4D8), interior = Interior.STUFFED,
+                hymColor = c(0xF2EEE5), attach = GillAttach.DECURRENT, crowd = 0.48f,
+                flesh = c(0xF4F0E7), spore = c(0xF4F0E7), seed = 28
+            ), traits = R.array.myco_hygrophorus_penarioides_traits, note = R.string.myco_hygrophorus_penarioides_note,
             diagram = FungusDiagramKind.GENERIC_MUSHROOM),
         FungusSpecies(id = "amanita_beckeri", name = R.string.myco_amanita_beckeri_name, altNames = R.string.myco_amanita_beckeri_alt,
             latin = R.string.myco_amanita_beckeri_latin, status = FungusStatus.REFERENCE_ONLY,

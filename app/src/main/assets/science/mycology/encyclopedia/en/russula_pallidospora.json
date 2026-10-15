@@ -1,0 +1,22 @@
+{
+  "id": "russula_pallidospora",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: russula with pale spore print.",
+    "Ecological context: russula with pale spore print. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Russula pallidospora.",
+      "url": "https://www.gbif.org/species/3360492"
+    },
+    {
+      "title": "Index Fungorum, name record 338709: Russula pallidospora.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=338709"
+    }
+  ],
+  "related": []
+}

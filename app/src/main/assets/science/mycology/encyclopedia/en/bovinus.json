@@ -1,0 +1,35 @@
+{
+  "id": "bovinus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognition", "text": "Suillus bovinus is a small bolete with a convex then flatter ochre to orange-brown cap, sometimes tinged pink and sticky in wet weather. The stem is slender, pale to ochre and has no ring. Beneath the cap, the tubes end in very large, irregular, angular yellow to olive pores that may be subdivided; they run slightly down the stem."},
+    {"title": "Flesh and spores", "text": "The flesh is cream to buff, sometimes faintly pink, soft in the cap and firmer in the stem. It generally does not turn blue. The spore print is olive-brown; the smooth spores are ellipsoid to slightly spindle-shaped and visible only under a microscope."},
+    {"title": "Habitat and season", "text": "It is often found in pine woods, sometimes near spruce, birch, oak or beech, from summer into autumn. It is commonly described as ectomycorrhizal, but the available evidence does not firmly establish that association."},
+    {"title": "Lookalikes and food use", "text": "The very large, irregular and sometimes labyrinthine pores, together with the lack of a ring, help distinguish it from boletes with smaller pores. Its strongly peppery taste and often poor texture limit its culinary value; sources differ on its use as a condiment or food. The toxicity and laxative claims in older versions of this entry were not confirmed by the reference sources consulted. Have any wild collection identified with certainty by an expert."}
+  ],
+  "traits": [
+    "Cap 3 to 10 cm, sticky, ochre to brownish-yellow, sometimes tinged pink, wavy edge",
+    "Very large, irregular angular pores, sometimes subdivided, yellow to olive and slightly decurrent",
+    "Stem 3 to 10 cm, slim, beige to ochre, no ring",
+    "Cream to buff flesh, sometimes pinkish, soft in the cap and with little or no bluing",
+    "Olive-brown spore print",
+    "Under pines, in groups · July to November"
+  ],
+  "safetyNote": "Often listed as edible, but its taste is strongly peppery and its culinary quality is limited. Sources differ on food use; toxicity or laxative claims were not confirmed by the references consulted. An image cannot identify a wild collection.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {"title": "NDFF / Nederlandse Mycologische Vereniging — Suillus bovinus", "url": "https://www.verspreidingsatlas.nl/0135020"},
+    {"title": "Boletales.com — Suillus bovinus", "url": "https://boletales.com/genera/suillus/s-bovinus/"},
+    {"title": "Landcare Research / Virtual Mycota — Suillus bovinus", "url": "https://virtualmycota.landcareresearch.co.nz/webforms/vM_Species_Details.aspx?pk=16711"},
+    {"title": "Naturalis — Interactive Guide to Mushrooms and other fungi", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100524"},
+    {"title": "Nuhn et al. (2013), Molecular Phylogenetics and Evolution — Suillus ecology and phylogeny", "url": "https://wi.knaw.nl/images/ResearchGroups/Phytopathology/pdf/Nuhn%20et%20al%202013.pdf"}
+  ],
+  "related": ["granulatus", "luteus", "variegatus"]
+}

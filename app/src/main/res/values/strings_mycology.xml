@@ -517,6 +517,7 @@
     <string name="myco_l_pores_olive_yellow">Olive-yellow pores</string>
     <string name="myco_l_pores_yellow">Yellow pores</string>
     <string name="myco_l_smooth_stem">Smooth stem, no net</string>
+    <string name="myco_l_stem_finely_fibrillose">Finely fibrillose stem, no net</string>
     <string name="myco_l_cracked_cap">Cracked cap</string>
     <string name="myco_l_red_spotted_stem">Stem spotted with red</string>
     <string name="myco_l_dark_velvet_cap">Dark brown, velvety cap</string>
@@ -539,6 +540,7 @@
     <string name="myco_l_green_cracked_cap">Green, cracked cap</string>
     <string name="myco_l_white_silky_cap">White, silky cap</string>
     <string name="myco_l_white_wide_gills">Wide white gills</string>
+    <string name="myco_l_white_emarginate_gills">Crowded white, notched gills</string>
     <string name="myco_l_oyster_cap">Oyster-shell cap</string>
     <string name="myco_l_lateral_stub">Lateral, almost no stem</string>
     <string name="myco_l_on_wood">On wood</string>
@@ -957,7 +959,7 @@
         <item>White to cream gills, very close</item>
         <item>Short, stocky stem, whitish, faintly striate</item>
         <item>Thick white flesh · strong smell and taste of fresh flour</item>
-        <item>White spores</item>
+        <item>White to very pale cream spore deposit</item>
         <item>Meadows, hedges, orchards, often in rings · late April to June</item>
     </string-array>
     <string name="myco_gambosa_note">Edible after reliable identification. The deadly red-staining fibrecap can fruit in spring; livid pinkgill, mainly autumnal, also smells mealy. Check the crowded pale gills, whole stem base and, if needed, the spore print. Smell or season alone is insufficient.</string>
@@ -1123,12 +1125,12 @@
     <string-array name="myco_badia_traits">
         <item>Chestnut to bay-brown cap, fairly uniform, 5 to 15 cm, slightly sticky when young then dry; margin rolled in young ones</item>
         <item>Tubes whitish then greenish yellow; fine pores of the same colour that turn clearly blue when pressed or cut</item>
-        <item>Cylindrical stem, 5 to 12 cm, smooth, no net, light brown to ochre, tough with age</item>
+        <item>Cylindrical light-brown to ochre stem, without a net but often finely fibrillose or marbled</item>
         <item>Whitish, firm flesh that turns a little blue above the tubes · faint smell, mild taste</item>
         <item>Olive-brown spores</item>
         <item>Mostly under conifers, on moss or humus, non-chalky soil · summer to autumn</item>
     </string-array>
-    <string name="myco_badia_note">Eat only well cooked: Tox Info Suisse asks for at least 20 minutes of cooking. The bluing is not a sign of poison. No net on the stem, no red pores: otherwise it is not a bay bolete.</string>
+    <string name="myco_badia_note">Raw or undercooked specimens can cause digestive symptoms. Tox Info Suisse recommends at least 20 minutes of cooking. Bluing and the absence of a net are clues, not proof of identity or safety; have wild mushrooms checked by an expert.</string>
 
     <!-- Red-cracking bolete -->
     <string name="myco_chrysenteron_name">Red-cracking bolete</string>
@@ -1137,12 +1139,12 @@
     <string-array name="myco_chrysenteron_traits">
         <item>Grey-brown to olive-brown cap, 3 to 8 cm, dry, quickly cracking to show pink-red flesh in the cracks</item>
         <item>Yellow then olive-yellow tubes; wide, angular pores that hardly turn blue</item>
-        <item>Slender stem, 4 to 8 cm, yellow, ribbed or spotted with garnet red, more purplish towards the base</item>
-        <item>When cut, the lower half of the stem turns beetroot red; yellowish flesh in the stem, whitish in the cap</item>
+        <item>Slender yellow stem, often marked with red fibrils, especially near the base</item>
+        <item>Cream to yellow flesh, sometimes red beneath the basal surface; it does not turn uniformly red when cut</item>
         <item>Olive-brown spores</item>
-        <item>All woods, summer to November</item>
+        <item>Often under conifers, sometimes near beech and other broad-leaved trees · summer to autumn</item>
     </string-array>
-    <string name="myco_chrysenteron_note">An edible of middling quality, only cooked: pick young, firm ones and remove the stem. Its many look-alikes in the same group are told apart when cut (colour of the stem flesh), not by eye.</string>
+    <string name="myco_chrysenteron_note">Listed as edible by DGfM and VAPKO, but of modest culinary quality and requiring thorough cooking. Several close relatives are difficult to distinguish; have the identification checked.</string>
 
     <!-- Dotted-stem bolete -->
     <string name="myco_erythropus_name">Dotted-stem bolete</string>
@@ -1244,17 +1246,17 @@
 
     <!-- Dove-coloured tricholoma -->
     <string name="myco_columbetta_name">Dove-coloured tricholoma</string>
-    <string name="myco_columbetta_alt">Tricholome colombette</string>
+    <string name="myco_columbetta_alt">Dove tricholoma</string>
     <string name="myco_columbetta_latin" translatable="false">Tricholoma columbetta</string>
     <string-array name="myco_columbetta_traits">
         <item>Pure white cap, sometimes cream in the centre, 4 to 10 cm, silky and shiny, slightly sticky in damp weather; conical then convex, wavy margin</item>
-        <item>Broad white gills</item>
-        <item>White stem, 6 to 14 cm, cylindrical, downy, no ring and no volva</item>
-        <item>Firm white flesh, floury smell and taste</item>
-        <item>White spores</item>
-        <item>Oaks, beeches, poor acid soils · August to November</item>
+        <item>Crowded, emarginate white gills, sometimes pink-stained, with an irregular edge</item>
+        <item>White fibrillose stem, sometimes rooting; base may stain blue, green or pink</item>
+        <item>Firm white flesh, farinaceous smell and mild taste</item>
+        <item>White spore print</item>
+        <item>Broad-leaved woodland, especially oak, beech and birch · summer and autumn</item>
     </string-array>
-    <string name="myco_columbetta_note">Everything is white, as in the destroying angel and the white form of the death cap, which are deadly: the ring and the volva, both absent here, set them apart, and the volva is underground. A pale livid pinkgill looks like it too: very fibrous cap, yellow or pink gills. Fairly rare in France.</string>
+    <string name="myco_columbetta_note">Listed as edible by mycological sources, but deadly white Amanitas can look similar. A buried volva or missing ring can escape notice; never eat a collection identified only from a photo or entry, and have it checked by a qualified person.</string>
 
     <!-- Oyster mushroom -->
     <string name="myco_ostreatus_name">Oyster mushroom</string>
@@ -1290,11 +1292,11 @@
     <string-array name="myco_egg_traits">
         <item>When young, a white egg wrapped in the universal veil</item>
         <item>Smooth surface, no spines or warts</item>
-        <item>Cut in two lengthwise: the cap and stem are already formed, enclosed in a thick sac</item>
-        <item>Later: pale green, yellow-green or olive-green cap, ring, sac-like volva</item>
-        <item>The young, egg-shaped forms can be mistaken for puffballs</item>
+        <item>A lengthwise cut reveals a formed young mushroom inside the veil, but does not identify the species by itself</item>
+        <item>As it grows: ring and sac-like volva; the death-cap can become greenish, though young caps are often pale</item>
+        <item>Can be mistaken for a uniformly white puffball; do not eat</item>
     </string-array>
-    <string name="myco_egg_note">A single mushroom is enough to cause serious poisoning: the amatoxins destroy the liver, and the signs come late, over 6 hours after the meal. Cut the egg in two lengthwise before concluding anything: a puffball is white and solid all through, an amanita egg already shows the mushroom.</string>
+    <string name="myco_egg_note">A death cap may already be deadly at the egg stage. Amatoxins resist cooking; symptoms can appear 6–48 hours after ingestion, mainly affecting the liver. If ingestion is possible, call emergency services or a poison centre immediately and do not rely on a simple cut for identification.</string>
 
     <!-- Common earthball -->
     <string name="myco_citrinum_name">Common earthball</string>
@@ -1304,11 +1306,11 @@
         <item>Irregular ball, often flattened at the poles, 2 to 12 cm, almost no stem, fixed to the ground by mycelial cords</item>
         <item>Very thick skin (1 to 5 mm), ochre yellow with brown scales, cracking into pyramidal warts</item>
         <item>Dense inside, pale grey at first, then violet-black marbled with white, powdery at the end</item>
-        <item>Unpleasant, sour smell (old onions, rubber)</item>
-        <item>No clear opening at the top: the skin tears at maturity</item>
-        <item>Dark olive-brown spores · acid soils, under broadleaves or conifers · late summer and autumn</item>
+        <item>Tough outer skin 1–5 mm thick, with brown warts often arranged in rosettes</item>
+        <item>The gleba changes from pale to grey-purple marbling and then violet-black; it becomes powdery and the skin splits irregularly at maturity</item>
+        <item>Ectomycorrhizal near broad-leaved or coniferous trees · late summer to autumn</item>
     </string-array>
-    <string name="myco_citrinum_note">Toxic: a pharmacy thesis from Angers on 134 cases recorded by the French poison centres between 2000 and 2022 reports digestive upset and, sometimes severely, unusual heart and nervous-system signs. It is mistaken for a puffball: a puffball is pure white and even inside, not grey then black. It tears open at maturity instead of opening by a pore.</string>
+    <string name="myco_citrinum_note">Do not eat: the genus Scleroderma is toxic and has been implicated in digestive poisonings. French records from 2000–2022 include several species and do not support attributing every reported symptom to S. citrinum.</string>
 
     <!-- Tiger tricholoma -->
     <string name="myco_pardinum_name">Tiger tricholoma</string>
@@ -1509,7 +1511,7 @@
         <item>White spores</item>
         <item>Under broadleaves and conifers, mostly beeches and spruces, from early summer to late autumn</item>
     </string-array>
-    <string name="myco_cyanoxantha_note">An excellent edible according to Wikipedia, on the German mycological society and Swiss controllers’ lists. Its mark: flexible, greasy gills that bend without breaking, whereas other russulas have brittle gills. Many russulas look alike, and the German society puts acrid and bitter russulas among the gastrointestinal-syndrome mushrooms; ANSES records pickers of charcoal burners who picked another russula (2022). A russula has neither ring nor volva, unlike the death cap.</string>
+    <string name="myco_cyanoxantha_note">Listed as edible by DGfM and VAPKO. Acrid russulas can cause digestive symptoms, and several species look alike: have your collection checked by an expert. The absence of a volva and ring does not by itself identify an edible russula.</string>
 
     <!-- Poison pie -->
     <string name="myco_hebeloma_name">Poison pie</string>
@@ -1664,13 +1666,13 @@
     <string name="myco_formosa_alt">Clavaire jolie</string>
     <string name="myco_formosa_latin" translatable="false">Ramaria formosa</string>
     <string-array name="myco_formosa_traits">
-        <item>Coral-like bush 7 to 30 cm high and 6 to 15 cm wide, on a thick base</item>
-        <item>Salmon-pink to whitish branches with yellow tips; the last twigs are under 5 mm</item>
-        <item>No gills or pores · yellow spores</item>
-        <item>White flesh, pink in the middle, which may turn wine-coloured or blackish when bruised; unpleasant smell, bitter taste</item>
-        <item>On the ground in woods, notably under beeches; in autumn</item>
+        <item>Coral-like bush generally 7–20 cm wide and high, on a thick whitish base</item>
+        <item>Salmon-pink to whitish branches; lemon-yellow tips in young specimens, fading with age</item>
+        <item>No visible gills or pores · ochre-yellow spore deposit</item>
+        <item>White to pinkish flesh that may turn brown or black after injury · odour not distinctive</item>
+        <item>On the ground in broad-leaved woods, especially under beech or oak, often on calcareous soil · late summer to autumn</item>
     </string-array>
-    <string name="myco_formosa_note">Toxic: the German mycological society (2026) lists it among the gastrointestinal-syndrome mushrooms, and the Belgian poison centre names the clavarias (Clavaria formosa among them) as a cause of a mild digestive syndrome: nausea, vomiting, diarrhoea. Wikipedia (en) says it is sometimes eaten with its acrid tips removed; the atlas does not count it among the edible species.</string>
+    <string name="myco_formosa_note">Toxic: may cause nausea, vomiting and diarrhoea. Do not eat it. Removing the tips does not make the mushroom safe.</string>
 
     <!-- Pine bolete -->
     <string name="myco_pinophilus_name">Pine bolete</string>
@@ -2007,12 +2009,13 @@
     <string name="myco_bovinus_latin" translatable="false">Suillus bovinus</string>
     <string-array name="myco_bovinus_traits">
         <item>Cap 3 to 10 cm, sticky, ochre to brownish-yellow, sometimes tinged pink, wavy edge</item>
-        <item>Very large angular pores, running down the stem, yellow to olive</item>
+        <item>Very large irregular angular pores, sometimes divided, yellow to olive and running slightly down the stem</item>
         <item>Stem 3 to 10 cm, slim, beige to ochre, no ring</item>
-        <item>Soft, elastic, cream flesh, mild taste</item>
+        <item>Cream to buff flesh, sometimes pinkish, soft in the cap, little or no bluing</item>
+        <item>Olive-brown spore print</item>
         <item>Under pines, in groups · July to November</item>
     </string-array>
-    <string name="myco_bovinus_note">Edible but of poor quality: the DGfM and the VAPKO list it; Wikipedia (fr) calls the flesh flabby and tasteless and, like other slippery boletes, laxative for some people; it advises young ones only, the stem removed and the cap peeled. Wikipedia (en) adds that old ones are rubbery and often full of maggots. It has no ring, unlike the slippery jack; the variegated bolete has smaller round pores that blue.</string>
+    <string name="myco_bovinus_note">Often listed as edible, but its taste is strongly peppery and its culinary quality is limited. Sources differ on food use; toxicity or laxative claims were not confirmed by the references consulted. Have wild mushrooms identified by an expert.</string>
     <string name="myco_scabrum_name">Birch bolete</string>
     <string name="myco_scabrum_alt">Bolet rude</string>
     <string name="myco_scabrum_latin" translatable="false">Leccinum scabrum</string>
@@ -2052,11 +2055,11 @@
     <string-array name="myco_decastes_traits">
         <item>Cap 4 to 15 cm, fawn to light brown, sometimes greyish, rolled wavy margin</item>
         <item>Gills close, whitish to cream</item>
-        <item>Stem stocky, white, no ring; stems fused in a clump</item>
-        <item>Smell floury to fungal, sometimes absent</item>
-        <item>Edges and paths of woods, especially under poplars · late summer to autumn</item>
+        <item>White stout stem, often converging with other stems at the base; no ring</item>
+        <item>Smell weak or not distinctive</item>
+        <item>Humus-rich soil, woodland edges, paths or buried decaying wood · white spore print · late summer-autumn</item>
     </string-array>
-    <string name="myco_decastes_note">Not recommended: the sources disagree. The DGfM and the VAPKO list it and Wikipedia (en) calls it edible or choice, but Wikipedia (fr) says some describe it as not to be eaten and others as poorly tolerated, and advises abstaining when in doubt; some gastric upset is reported (Wikipedia, en). The most prudent status is kept. Both pages warn of look-alikes among the entolomas (see the group) and Wikipedia (en) of Clitocybe dilatata.</string>
+    <string name="myco_decastes_note">Generally regarded as edible and included in positive lists, but digestive upsets are reported and some guides advise against eating it. The Lyophyllum decastes complex is difficult to identify; eat only specimens identified with certainty by an expert.</string>
     <string name="myco_l_apricot_velvet_cap">Apricot to tawny, velvety cap</string>
     <string name="myco_l_golden_crowded_gills">Crowded, golden-yellow gills</string>
     <string name="myco_l_stem_paler_than_cap">Stem paler than the cap</string>
@@ -2211,16 +2214,16 @@
     </string-array>
     <string name="myco_moelleri_note">Toxic: the DGfM lists it for gastrointestinal poisoning. Chrome-yellow staining near the stem base and a carbolic or inky odour are warning signs, but a single feature cannot secure identification.</string>
     <string name="myco_clavipes_name">Club foot</string>
-    <string name="myco_clavipes_alt">Club-footed clitocybe</string>
+    <string name="myco_clavipes_alt">Club-footed funnel cap</string>
     <string name="myco_clavipes_latin" translatable="false">Ampulloclitocybe clavipes</string>
     <string-array name="myco_clavipes_traits">
-        <item>Cap 4 to 8 cm, convex then flat or dished, grey-brown sometimes olive, paler margin</item>
-        <item>Gills cream-yellow, strongly running down the stem, some forked</item>
-        <item>Stem 3 to 7 cm, silky, the colour of the cap, with a markedly bulbous, club-shaped base</item>
-        <item>Thick white flesh, slightly yellow at the base; faint, watery, sweetish smell</item>
-        <item>Conifer and broadleaf woods, especially beech · August to November</item>
+        <item>Grey-brown to ochre-brown cap, paler margin, convex then flattened and depressed at centre</item>
+        <item>Crowded cream to pale yellow gills, sometimes forked and strongly decurrent</item>
+        <item>Fibrous stem matching the cap, markedly swollen into a club-shaped base</item>
+        <item>Whitish flesh, sometimes yellowish at stem base; variable mild or spicy smell; white spore print</item>
+        <item>Leaf and needle litter in broad-leaved and coniferous woodland · late summer and autumn</item>
     </string-array>
-    <string name="myco_clavipes_note">Not recommended: never with alcohol. The DGfM lists it as harmless without alcohol and gives the coprine-type syndrome with it; Wikipedia (en) describes a reaction 5 to 10 minutes after drinking (flushing, throbbing in the head and neck, puffy hands) and says it is edible but unpalatable, some sources listing it inedible. There is no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM. Wikipedia (en) separates it from the clouded agaric by its club-shaped stem.</string>
+    <string name="myco_clavipes_note">Treated as inedible. Reactions after alcohol have been reported, but coprine and a single mechanism have not been demonstrated; sources do not agree on timing or symptoms. Avoid combining it with alcohol.</string>
     <string name="myco_helvus_name">Fenugreek milkcap</string>
     <string name="myco_helvus_alt">Lactaire à odeur d’érable</string>
     <string name="myco_helvus_latin" translatable="false">Lactarius helvus</string>
@@ -2294,13 +2297,15 @@
     <string name="myco_castanea_alt">Lépiote châtain</string>
     <string name="myco_castanea_latin" translatable="false">Lepiota castanea</string>
     <string-array name="myco_castanea_traits">
-        <item>Cap up to 3 cm, broadly bell-shaped to flat, white with dark red-brown scales</item>
-        <item>Gills whitish</item>
-        <item>Stem up to 8 cm, typically chestnut-brown, with an indistinct ring</item>
-        <item>Whitish flesh, mild taste</item>
-        <item>Coniferous and deciduous woods, alone or in small groups</item>
+        <item>Cap 1 to 4 cm, pale cream with reddish-chestnut scales, bell-shaped then expanded with a raised centre</item>
+        <item>Free gills, whitish to cream</item>
+        <item>Slender stem pale near the top, reddish brown and scaly below; thin fugitive ring</item>
+        <item>Whitish flesh, stem hollow at maturity; white spore print</item>
+        <item>Forest litter and humus in broad-leaved or coniferous woods, alone or in small groups · summer-autumn</item>
     </string-array>
-    <string name="myco_castanea_note">Deadly: the sources disagree on the cause. Wikipedia (en) says it contains amatoxins, potentially deadly for the liver; the DGfM lists it under the death-cap syndrome but notes that more recent findings show no amatoxins; Wikipedia (fr) calls it moderately toxic and advises against eating it. The most prudent status is kept. The DGfM warns that small lepiotas with brownish and red pigments are suspected of containing amatoxins; the Belgian poison centre advises against any lepiota under 10 cm. The French Wikipedia page is a stub: the description comes from Wikipedia (en).</string>
+    <string name="myco_l_ring_fugitive">Thin fugitive ring</string>
+    <string name="myco_l_chestnut_lower_stem">Chestnut scales on the lower stem</string>
+    <string name="myco_castanea_note">Do not eat: this species is treated as potentially deadly. The presence of amatoxins in Lepiota castanea remains uncertain; some analysed specimens did not contain them, which does not establish that all populations are harmless. If ingestion is suspected, contact a poison centre immediately.</string>
     <string name="myco_maculatum_name">Frosty fibrecap</string>
     <string name="myco_maculatum_alt">Brown inocybe</string>
     <string name="myco_maculatum_latin" translatable="false">Inosperma maculatum</string>
@@ -2549,11 +2554,11 @@
     <string-array name="myco_crocipodium_traits">
         <item>Cap brown, yellow-brown to cinnamon, velvety, often cracked or tessellated at maturity</item>
         <item>Pores small, sulphur yellow to beige, turning olive and ochre-brown when pressed</item>
-        <item>Stem fusoid, ribbed, whitish to sulphur yellow, with fine yellowish to orange scales</item>
-        <item>Whitish flesh turning pinkish or salmon, then reddish-violet and blackish when cut; mild or sweet taste</item>
-        <item>Under oaks, sometimes beech · June to September</item>
+        <item>Spindle-shaped, vertically ridged stem, cream to pale yellow, with scales that brown with age; no true net</item>
+        <item>Whitish to cream flesh that may turn pink then black when cut · olive-brown spore print</item>
+        <item>Under broad-leaved trees, especially oak and beech · July to November</item>
     </string-array>
-    <string name="myco_crocipodium_note">Edible when cooked: the DGfM lists it. Wikipedia (fr) calls its edibility medium, says the fibrous stem is thrown away and only young caps kept, and warns of stomach upset if raw or undercooked. Look-alikes (Wikipedia, fr): Leccinellum pseudoscabrum (whitish pores), L. lepidum and L. corsicum (darker caps, autumn and winter, edible) and the Butyriboletus, taken for it because of the stem network. The English page is nearly empty: the description comes from Wikipedia (fr).</string>
+    <string name="myco_crocipodium_note">DGfM lists it as edible after sufficient cooking and marks it as particularly protected (§) and RL3 in Germany. Protection categories are regional; check local rules and have the identification confirmed.</string>
     <string name="myco_l_brown_violet_shiny_cap">Shiny brown cap with violet tints</string>
     <string name="myco_l_far_yellowing_gills">Spaced gills, yellowing</string>
     <string name="myco_l_red_pink_purple_cap">Red, pink or purple cap</string>
@@ -2562,7 +2567,7 @@
     <string name="myco_l_stem_yellow_red">Stem yellow, turning red</string>
     <string name="myco_l_bright_red_felt_cap">Bright red, felted cap</string>
     <string name="myco_l_yellow_scaly_stem">Yellowish stem with fine scales</string>
-    <string name="myco_l_flesh_pink_violet_black">Flesh pink, then violet, then black</string>
+    <string name="myco_l_flesh_pink_violet_black">Cut flesh may pink, then darken to black</string>
     <string name="myco_g_redbolete_title">Small red-stemmed boletes: which one?</string>
     <string name="myco_g_redbolete_evidence">Wikipedia</string>
     <string-array name="myco_g_redbolete_points">
@@ -2700,7 +2705,7 @@
     <string name="myco_exidia_nigricans_alt">No stable common name</string>
     <string name="myco_exidia_nigricans_latin" translatable="false">Exidia nigricans</string>
     <string name="myco_exidia_nigricans_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
-    <string-array name="myco_exidia_nigricans_traits"><item>General form: dark gelatinous mass on dead wood.</item><item>Ecological context: dark gelatinous mass on dead wood. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string-array name="myco_exidia_nigricans_traits"><item>Dark sepia to black gelatinous mass of fused, brain-like lobes.</item><item>Wet surface glossy and dotted with small pegs; dries into a warty crust.</item><item>Attached directly to dead broad-leaved wood, without cap or stem.</item><item>Rehydrates and swells when damp.</item><item>Food status not assessed; no established culinary value.</item></string-array>
     <string name="myco_agaricus_pilatianus_name">Agaricus pilatianus</string>
     <string name="myco_agaricus_pilatianus_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_agaricus_pilatianus_latin" translatable="false">Agaricus pilatianus</string>
@@ -2714,8 +2719,8 @@
     <string name="myco_botryobasidium_simile_name">Botryobasidium simile</string>
     <string name="myco_botryobasidium_simile_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_botryobasidium_simile_latin" translatable="false">Botryobasidium simile</string>
-    <string name="myco_botryobasidium_simile_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
-    <string-array name="myco_botryobasidium_simile_traits"><item>General form: corticioid fungus forming a layer on wood.</item><item>Ecological context: corticioid fungus forming a layer on wood. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_botryobasidium_simile_note">A microscopic wood-inhabiting fungus; edibility and toxicity are not assessed. This entry is not a foraging identification guide.</string>
+    <string-array name="myco_botryobasidium_simile_traits"><item>Thin white to ivory crust, loosely reticulate, with no cap or stem</item><item>On dead broad-leaved wood; asexual patches can become yellow-orange to rust-coloured</item><item>Smooth, colourless, spindle-shaped spores visible only under a microscope</item></string-array>
     <string name="myco_athelia_rolfsii_name">Athelia rolfsii</string>
     <string name="myco_athelia_rolfsii_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_athelia_rolfsii_latin" translatable="false">Athelia rolfsii</string>
@@ -2725,7 +2730,7 @@
     <string name="myco_lactarius_zonarioides_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_lactarius_zonarioides_latin" translatable="false">Lactarius zonarioides</string>
     <string name="myco_lactarius_zonarioides_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
-    <string-array name="myco_lactarius_zonarioides_traits"><item>General form: milkcap with concentric zones and latex when cut.</item><item>Ecological context: milkcap with concentric zones and latex when cut. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string-array name="myco_lactarius_zonarioides_traits"><item>Sticky buff-yellow to salmon cap with darker concentric zones.</item><item>Fairly crowded cream-pink gills and smooth, dry cream stem.</item><item>White, unchanged and very acrid milk; ochre spore print.</item><item>With spruce or sometimes fir in montane or boreal forest · late summer and autumn.</item><item>Food status not assessed; records and taxonomic treatments vary by region.</item></string-array>
     <string name="myco_lactarius_torminosulus_name">Lactarius torminosulus</string>
     <string name="myco_lactarius_torminosulus_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_lactarius_torminosulus_latin" translatable="false">Lactarius torminosulus</string>
@@ -2740,7 +2745,7 @@
     <string name="myco_lactarius_picinus_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_lactarius_picinus_latin" translatable="false">Lactarius picinus</string>
     <string name="myco_lactarius_picinus_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
-    <string-array name="myco_lactarius_picinus_traits"><item>General form: dark milkcap of spruce forests.</item><item>Ecological context: dark milkcap of spruce forests. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string-array name="myco_lactarius_picinus_traits"><item>Very dark brown to blackish, matte, finely velvety cap; often slightly depressed when mature.</item><item>Crowded whitish to cream gills; brown to grey-brown stem, sometimes paler at the base.</item><item>Whitish flesh turns pink to orange after cutting; white milk may turn pink against the flesh and tastes acrid.</item><item>Damp conifer forests, especially spruce · late summer and autumn.</item><item>Taxonomic treatments differ; some sources include this taxon in Lactarius fuliginosus.</item></string-array>
     <string name="myco_lactarius_fennoscandicus_name">Lactarius fennoscandicus</string>
     <string name="myco_lactarius_fennoscandicus_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_lactarius_fennoscandicus_latin" translatable="false">Lactarius fennoscandicus</string>
@@ -2752,20 +2757,20 @@
     <string name="myco_russula_laricina_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
     <string-array name="myco_russula_laricina_traits"><item>General form: russula associated with larch.</item><item>Ecological context: russula associated with larch. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
     <string name="myco_hygrophorus_pustulatus_name">Hygrophorus pustulatus</string>
-    <string name="myco_hygrophorus_pustulatus_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_hygrophorus_pustulatus_alt">Blistered woodwax</string>
     <string name="myco_hygrophorus_pustulatus_latin" translatable="false">Hygrophorus pustulatus</string>
-    <string name="myco_hygrophorus_pustulatus_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
-    <string-array name="myco_hygrophorus_pustulatus_traits"><item>General form: waxy cap with a sticky surface and dotted stem.</item><item>Ecological context: waxy cap with a sticky surface and dotted stem. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_hygrophorus_pustulatus_note">Food status unknown or not assessed; stem markings and cap colour vary.</string>
+    <string-array name="myco_hygrophorus_pustulatus_traits"><item>Gray to gray-brown cap, sticky when fresh and often darker at the center.</item><item>White, waxy, well-spaced gills, attached to slightly decurrent.</item><item>Whitish stem covered with tiny gray-brown dots or fibrils, especially over its upper half.</item><item>White flesh, indistinct odor; white spore print.</item><item>Ectomycorrhizal with conifers, including fir, spruce and hemlock · late summer and fall.</item></string-array>
     <string name="myco_hygrophorus_purpurascens_name">Hygrophorus purpurascens</string>
     <string name="myco_hygrophorus_purpurascens_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_hygrophorus_purpurascens_latin" translatable="false">Hygrophorus purpurascens</string>
     <string name="myco_hygrophorus_purpurascens_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
-    <string-array name="myco_hygrophorus_purpurascens_traits"><item>General form: waxy cap with purple tones.</item><item>Ecological context: waxy cap with purple tones. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string-array name="myco_hygrophorus_purpurascens_traits"><item>Sticky white to pink or purplish-red cap, often marked with purple fibrils.</item><item>Waxy white gills, sometimes pinkish or purple-spotted, attached and sometimes slightly decurrent.</item><item>Pale stem top, purplish lower stem, fragile ring zone sometimes present.</item><item>White flesh, sometimes tinged pink or violet; white spore print.</item><item>Associated with spruce and pine in cool montane habitats · late summer and autumn.</item></string-array>
     <string name="myco_hygrophorus_penarioides_name">Hygrophorus penarioides</string>
     <string name="myco_hygrophorus_penarioides_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_hygrophorus_penarioides_latin" translatable="false">Hygrophorus penarioides</string>
-    <string name="myco_hygrophorus_penarioides_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
-    <string-array name="myco_hygrophorus_penarioides_traits"><item>General form: woodland waxcap in a group of pale species.</item><item>Ecological context: woodland waxcap in a group of pale species. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_hygrophorus_penarioides_note">Very close to H. penarius: visible characters alone cannot confirm identification; food status not assessed.</string>
+    <string-array name="myco_hygrophorus_penarioides_traits"><item>Robust white to ivory waxcap, sometimes cream or faintly pinkish with age.</item><item>Convex cap with a broad blunt umbo; margin stays rolled inward, cap may expand at maturity.</item><item>Thick, distant, waxy gills, whitish to cream, attached to slightly decurrent.</item><item>Solid, firm, sturdy white stem, sometimes ochraceous near the base.</item><item>Reported with Quercus in temperate to Mediterranean woodlands · ectomycorrhizal.</item></string-array>
     <string name="myco_amanita_beckeri_name">Amanita beckeri</string>
     <string name="myco_amanita_beckeri_alt">Becker’s ringless amanita</string>
     <string name="myco_amanita_beckeri_latin" translatable="false">Amanita beckeri</string>

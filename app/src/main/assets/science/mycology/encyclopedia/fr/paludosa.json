@@ -1,0 +1,28 @@
+{
+  "id": "paludosa",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 6 à 20 cm, convexe à déprimé, surtout rouge sang, rose, cramoisi ou pourpre, parfois à centre jaunâtre ou orangé",
+    "Lames serrées, crème puis jaunes, parfois rougeâtres à l’arête",
+    "Pied de 5 à 15 cm, blanc, parfois teinté de rose, un peu en massue",
+    "Chair blanche, saveur douce, sans odeur, vite molle et grisâtre",
+    "Bois de conifères et tourbières, surtout sous les pins ; très commune par endroits"
+  ],
+  "safetyNote": "Comestible : la DGfM et la VAPKO la listent, et Wikipédia (en) dit qu’on la voit souvent sur les marchés finlandais. Wikipédia (en) prévient qu’on peut facilement la prendre pour la russule émétique, vénéneuse : voir le groupe. Il n’existe ni page Wikipédia française ni nom anglais courant : le texte vient de Wikipédia (en) et de la DGfM.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Russula paludosa",
+      "url": "https://en.wikipedia.org/wiki/Russula_paludosa"
+    }
+  ],
+  "related": []
+}

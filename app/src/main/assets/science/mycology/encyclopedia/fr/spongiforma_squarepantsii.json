@@ -1,0 +1,22 @@
+{
+  "id": "spongiforma_squarepantsii",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : corps fructifère spongieux et poreux.",
+    "Repère écologique : corps fructifère spongieux et poreux. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Spongiforma squarepantsii.",
+      "url": "https://www.gbif.org/species/7397659"
+    },
+    {
+      "title": "Index Fungorum, name record 519524: Spongiforma squarepantsii.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=519524"
+    }
+  ],
+  "related": []
+}

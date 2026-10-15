@@ -1,0 +1,46 @@
+{
+  "id": "cyanoxantha",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaître l’espèce", "text": "Russula cyanoxantha forme un chapeau de 5 à 15 cm, d’abord convexe puis étalé et souvent déprimé au centre. Sa couleur varie beaucoup : violet, bleu, vert, olive, gris ou pourpre peuvent se mêler sur un même chapeau. La cuticule porte parfois de fines stries radiales. Les lames sont blanches à crème pâle, assez espacées, parfois fourchues, et remarquablement souples et grasses au toucher."},
+    {"title": "Chair et caractères utiles", "text": "Le pied et la chair sont blancs; la chair reste généralement immuable à la coupe. La sporée est blanche à crème très pâle. Les lames souples sont un indice utile, mais les couleurs seules ne suffisent pas à reconnaître une russule."},
+    {"title": "Habitat et saison", "text": "Cette espèce ectomycorhizienne pousse dans les bois de feuillus et de conifères, notamment près des hêtres et des chênes, mais aussi sous des conifères. Elle apparaît généralement de l’été à l’automne, selon la région."},
+    {"title": "Confusions et sécurité", "text": "D’autres russules colorées peuvent lui ressembler; une identification fiable repose sur un ensemble de caractères et, pour certains sosies, sur l’examen microscopique. La DGfM et la VAPKO la classent parmi les espèces comestibles, mais les russules âcres peuvent provoquer des troubles digestifs. Une russule n’a pas de volve ni d’anneau : ce constat ne suffit pas à identifier une espèce. Ne consomme pas un champignon sauvage sans contrôle compétent."}
+  ],
+  "traits": [
+    "Chapeau de 5 à 12 cm (jusqu’à 15), convexe puis aplati et creusé ; couleurs très variables, souvent mêlées : noir verdâtre, gris violet, bleu vert, lilas, rose, ocre, jaune, vert",
+    "Lames blanches puis crème pâle, souvent fourchues, souples et grasses au toucher : elles plient sans casser",
+    "Pied blanc, 5 à 10 cm, plein à farci ; pas d’anneau",
+    "Chair blanche · saveur douce, qui rappelle la noisette",
+    "Sporée blanche à crème très pâle",
+    "Sous feuillus et conifères, surtout hêtres et épicéas, du début de l’été à la fin de l’automne"
+  ],
+  "safetyNote": "La DGfM et la VAPKO classent cette espèce parmi les champignons comestibles. Les russules âcres peuvent causer des troubles digestifs, et plusieurs espèces se ressemblent : fais contrôler la récolte par un spécialiste. L’absence de volve et d’anneau n’identifie pas à elle seule une russule comestible.",
+  "sources": [
+    {
+      "title": "ANSES (2023). Intoxications accidentelles par des champignons en France métropolitaine : bilan des cas enregistrés par les centres antipoison du 1er juillet au 31 décembre 2022. Rapport d’étude de toxicovigilance n° 2023-VIG-0127.",
+      "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Naturalis Biodiversity Center — Russula cyanoxantha",
+      "url": "https://paddenstoelen.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100489"
+    },
+    {
+      "title": "Burke Herbarium Image Collection — Russula cyanoxantha",
+      "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Russula+cyanoxantha"
+    },
+    {
+      "title": "MushroomExpert — Russula cyanoxantha",
+      "url": "https://www.mushroomexpert.com/russula_cyanoxantha.html"
+    }
+  ],
+  "related": ["emetica", "decolorans", "virescens"]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "pinophilus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 4 à 25 cm, ferme, bordeaux, brun rouge à acajou, mat et un peu ridé ; la marge des jeunes porte parfois un givre blanc",
+    "Pores fins : blancs, puis jaunes, enfin olive · sporée olive",
+    "Pied de 5 à 15 cm sur 3 à 8, trapu, blanchâtre à rosé en haut, ocre à brun rouge en bas, avec un réseau blanc sur les deux tiers du haut",
+    "Chair blanche, ferme, qui ne change pas à la coupe · odeur de noix, saveur douce",
+    "Sous les pins surtout, aussi sous épicéas et sapins, sur sol acide et sableux ; de juin à novembre"
+  ],
+  "safetyNote": "Comestible : il est sur la liste de la société allemande de mycologie (2026), qui le note « protégé sans dérogation » en Allemagne, et sur celle des contrôleurs suisses (2023). Le bolet amer, non comestible, lui ressemble (Wikipédia fr) : ses pores rosissent avec l’âge, son réseau est plus gros et plus sombre, son goût amer.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Boletus pinophilus",
+      "url": "https://fr.wikipedia.org/wiki/Boletus_pinophilus"
+    },
+    {
+      "title": "Wikipedia (en): Boletus pinophilus",
+      "url": "https://en.wikipedia.org/wiki/Boletus_pinophilus"
+    }
+  ],
+  "related": []
+}

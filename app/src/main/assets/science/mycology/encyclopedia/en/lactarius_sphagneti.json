@@ -1,0 +1,22 @@
+{
+  "id": "lactarius_sphagneti",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: milkcap of bogs and sphagnum habitats.",
+    "Ecological context: milkcap of bogs and sphagnum habitats. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Lactarius sphagneti.",
+      "url": "https://www.gbif.org/species/8346076"
+    },
+    {
+      "title": "Index Fungorum, name record 461563: Lactarius sphagneti.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=461563"
+    }
+  ],
+  "related": []
+}

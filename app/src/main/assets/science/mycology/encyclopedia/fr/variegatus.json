@@ -1,0 +1,32 @@
+{
+  "id": "variegatus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 5 à 15 cm, jaune terne à ocre ou rouille, feutré et moucheté de petites écailles, à peine visqueux",
+    "Pores assez grands, ocre puis brun olive",
+    "Pied de 4 à 12 cm, presque lisse, de la couleur du chapeau ou plus pâle, sans anneau",
+    "Chair crème à jaunâtre, qui peut bleuir un peu près des tubes ; odeur et saveur de chlore",
+    "Uniquement sous les pins, sur sol sableux pauvre en calcaire"
+  ],
+  "safetyNote": "Comestible mais médiocre : la DGfM et la VAPKO le listent. Wikipédia (fr) lui trouve la chair flasque, l’odeur de chlore passant dans le plat, et dit qu’il peut être laxatif ; elle conseille les jeunes et fermes, le pied ôté, le chapeau pelé et une petite première portion. Il accumule fortement le césium 137 et les métaux (Wikipédia, fr). Le bolet des bouviers a un chapeau uni, plus pâle, et un pied plus mince (Wikipédia, fr). Wikipédia (en) juge son odeur et son goût désagréables.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Suillus variegatus",
+      "url": "https://fr.wikipedia.org/wiki/Suillus_variegatus"
+    },
+    {
+      "title": "Wikipedia (en): Suillus variegatus",
+      "url": "https://en.wikipedia.org/wiki/Suillus_variegatus"
+    }
+  ],
+  "related": []
+}

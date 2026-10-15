@@ -1,0 +1,24 @@
+{
+  "id": "conica",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap up to 10 cm, narrowly conical then umbonate and often lobed, yellow to orange or scarlet, viscid when young",
+    "Gills waxy, white to pale yellow or greyish",
+    "Stem up to 20 cm, fibrillose, yellow to orange-red, whitish at the base, no ring",
+    "Yellowish flesh; every part greys with age and finally turns black",
+    "Waxcap grassland, dunes, road verges · summer and autumn"
+  ],
+  "safetyNote": "Toxic: the DGfM lists it for a gastrointestinal syndrome. Wikipedia (en) says its edibility is unknown and that it may be poisonous, quoting Arora: reported poisonings may come from other species, and it may cause minor effects such as lightheadedness. There is no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM. The most prudent status is kept.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Hygrocybe conica",
+      "url": "https://en.wikipedia.org/wiki/Hygrocybe_conica"
+    }
+  ],
+  "related": []
+}

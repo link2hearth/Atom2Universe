@@ -1,0 +1,22 @@
+{
+  "id": "candida_parapsilosis",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: unicellular yeast studied in clinical microbiology.",
+    "Ecological context: unicellular yeast studied in clinical microbiology. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Candida parapsilosis.",
+      "url": "https://www.gbif.org/species/2599539"
+    },
+    {
+      "title": "NCBI Taxonomy Browser: Candida parapsilosis.",
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=5480"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "sparassis",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "A large mass 10 to 40 cm wide and 8 to 20 cm high, made of flat, wavy, crimped lobes like lasagna sheets, growing from a thick base",
+    "Cream white to pale yellow, sometimes pinkish, browning at the edge of the lobes with age",
+    "No gills or pores · cream spores",
+    "Tender, crunchy flesh, pleasant smell, walnut-like taste",
+    "At the base and on the roots of conifers, mostly pines; from late summer to autumn"
+  ],
+  "safetyNote": "Edible: it is on the German mycological society list (2026) and on the Swiss controllers’ list (2023). The lobes trap soil, needles and grubs: it has to be cleaned at length (Wikipedia en). Too big or too old, it becomes tough and hard to digest (Wikipedia fr). Sparassis brevipes, smaller, yellower, under broadleaves, smelling of bleach, is to be avoided (Wikipedia fr). The beautiful clavaria, which is toxic, has round branches.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Sparassis crispa",
+      "url": "https://fr.wikipedia.org/wiki/Sparassis_crispa"
+    },
+    {
+      "title": "Wikipedia (en): Sparassis crispa",
+      "url": "https://en.wikipedia.org/wiki/Sparassis_crispa"
+    }
+  ],
+  "related": []
+}

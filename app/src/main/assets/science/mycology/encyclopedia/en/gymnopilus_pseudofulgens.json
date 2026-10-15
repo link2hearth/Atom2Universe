@@ -1,0 +1,22 @@
+{
+  "id": "gymnopilus_pseudofulgens",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: rust-spored Gymnopilus associated with wood.",
+    "Ecological context: rust-spored Gymnopilus associated with wood. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Gymnopilus pseudofulgens.",
+      "url": "https://www.gbif.org/species/3343066"
+    },
+    {
+      "title": "Index Fungorum, name record 314801: Gymnopilus pseudofulgens.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=314801"
+    }
+  ],
+  "related": []
+}

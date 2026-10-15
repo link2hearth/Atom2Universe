@@ -1,0 +1,28 @@
+{
+  "id": "rubellus_b",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 3 à 12 cm, feutré, rouge vif et plus pâle au bord, finement craquelé à maturité",
+    "Pores jaunes puis jaune olive, généralement bleuissant au froissement",
+    "Pied de 3 à 10 cm, jaune ou rouge, souvent bulbeux ; petits points rouge sang ou orangés à la toute base",
+    "Chair blanchâtre à jaune pâle, parfois à peine bleuâtre sous le chapeau ; saveur douce",
+    "Sous les feuillus, dans les parcs, jardins, clairières et bords de routes, sur sol calcaire"
+  ],
+  "safetyNote": "Non recommandé : la DGfM le liste et Wikipédia (fr) le dit comestible après cuisson, jeune et ferme, le pied ôté, mais à éviter en zone urbaine où il absorbe les polluants ; Wikipédia (en) le dit comestible mais souvent véreux, de piètre qualité, classé non recommandé et à la comestibilité contestée. Le statut le plus prudent est retenu. Wikipédia (fr) le sépare de plusieurs petits bolets sans intérêt alimentaire, dont Xerocomellus ripariellus et X. redeuilhii.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Hortiboletus rubellus",
+      "url": "https://fr.wikipedia.org/wiki/Hortiboletus_rubellus"
+    },
+    {
+      "title": "Wikipedia (en): Hortiboletus rubellus",
+      "url": "https://en.wikipedia.org/wiki/Hortiboletus_rubellus"
+    }
+  ],
+  "related": []
+}

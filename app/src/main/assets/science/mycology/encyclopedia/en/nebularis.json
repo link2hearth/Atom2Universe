@@ -1,0 +1,33 @@
+{
+  "id": "nebularis",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Grey to grey-brown cap, 5 to 25 cm, often with a white bloom when young, rolled margin",
+    "Pale, close gills, often forked, up to slightly decurrent",
+    "Light grey stem, stout, swollen at the base",
+    "White, very thick flesh · strong smell, from floury to rancid",
+    "Pale yellow spores",
+    "Under broadleaves and conifers · autumn"
+  ],
+  "safetyNote": "Not recommended: even a small portion can upset the digestion of some people. It is mistaken for the livid pinkgill, which is toxic, and whose gills turn pink.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Tox Info Suisse (2025). Edible mushrooms: unpleasant gastrointestinal symptoms. Dernière mise à jour : mai 2025.",
+      "url": "https://toxinfo.ch/edible_mushrooms_unpleasant_gastrointestinal_symptoms"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Clitocybe nebularis",
+      "url": "https://en.wikipedia.org/wiki/Clitocybe_nebularis"
+    }
+  ],
+  "related": []
+}

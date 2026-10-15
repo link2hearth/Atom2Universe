@@ -1,0 +1,22 @@
+{
+  "id": "saccharomyces_cerevisiae",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: unicellular yeast used in fermentation and research.",
+    "Ecological context: unicellular yeast used in fermentation and research. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Saccharomyces cerevisiae.",
+      "url": "https://www.gbif.org/species/2599166"
+    },
+    {
+      "title": "NCBI Taxonomy Browser: Saccharomyces cerevisiae.",
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=4932"
+    }
+  ],
+  "related": []
+}

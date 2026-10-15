@@ -1,0 +1,27 @@
+{
+  "id": "hygrophorus_pustulatus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognizing the species", "text": "This small to medium waxcap has a gray to gray-brown, sometimes tan cap that is sticky when fresh and usually darker at the center. The gills are white, waxy and well spaced, attached to the stem and sometimes slightly decurrent. The whitish stem is marked with tiny gray-brown dots or fibrils, especially over its upper half; these marks darken with age or drying. Flesh is white and odor is indistinct."},
+    {"title": "Habitat and season", "text": "An ectomycorrhizal species associated with conifers, including fir, spruce and hemlock depending on region. It fruits mainly in late summer and fall; timing and form can vary geographically. The spore print is white."},
+    {"title": "Lookalikes", "text": "Hygrophorus tephroleucus is often treated as a synonym of H. pustulatus, but some references still discuss the boundary and describe more slender forms with less conspicuous stem ornamentation. Stem dots and cap colour vary and are not sufficient alone to establish an identification."},
+    {"title": "Status and safety", "text": "Edibility is unknown or not assessed in the references consulted. This reference entry is not foraging or consumption advice."}
+  ],
+  "traits": [
+    "Small to medium waxcap with a gray to gray-brown cap, sticky when fresh and often darker at the center",
+    "White, waxy, well-spaced gills, attached to slightly decurrent",
+    "Whitish stem covered with tiny gray-brown dots or fibrils, often clearer above and darkening with age",
+    "White flesh, indistinct odor; white spore print",
+    "Ectomycorrhizal with conifers, including fir, spruce and hemlock · late summer and fall",
+    "Close to H. tephroleucus; synonymy and slender, less ornamented forms are discussed differently by sources"
+  ],
+  "safetyNote": "Food status is unknown or not assessed. Identification reference only, not foraging or consumption advice.",
+  "sources": [
+    {"title": "The Mycota of Alaska — Hygrophorus pustulatus: characters, ecology and food status", "url": "https://www.alaskamycoflora.org/genera/hygrophorus/hygrophorus-pustulatus.php"},
+    {"title": "MushroomExpert — Hygrophorus pustulatus: description and note on H. tephroleucus", "url": "https://www.mushroomexpert.com/hygrophorus_pustulatus.html"},
+    {"title": "Natural History Museum — taxonomy and English common name Blistered Woodwax", "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NHMSYS0001484676"},
+    {"title": "GBIF Backbone Taxonomy — Hygrophorus pustulatus", "url": "https://www.gbif.org/species/9210249"},
+    {"title": "Index Fungorum, name record 187146 — Hygrophorus pustulatus", "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=187146"}
+  ],
+  "related": []
+}

@@ -1,0 +1,33 @@
+{
+  "id": "tubaeformis",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 3 à 7 cm, convexe puis creusé en entonnoir, souvent percé au centre sur le pied creux ; brun à fauve, grisé ; marge enroulée chez le jeune puis ondulée",
+    "Dessous sans vraies lames : des plis gris ou jaune argenté, ramifiés et fourchus près du bord, qui descendent sur le pied",
+    "Pied de 3 à 12 cm, jaune vif, long, mince, sinueux et creux",
+    "Chair mince et jaunâtre, odeur faible",
+    "Sporée pâle (crème à rose orangé pâle)",
+    "Par groupes, souvent en files, dans les bois de feuillus ou mixtes, sur la mousse et la litière, près du bois très pourri · de la mi-automne aux premières gelées"
+  ],
+  "safetyNote": "Comestible réputé, frais ou séché ; il est sur la liste de la société allemande de mycologie (« Trompeten-Pfifferling ») et sur celle des contrôleurs suisses. Il a des sosies comestibles (chanterelle jaune, chanterelle noircissante) ; la léotie lubrique, gélatineuse et dite suspecte, peut pousser à côté (Wikipédia FR).",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Craterellus tubaeformis",
+      "url": "https://fr.wikipedia.org/wiki/Craterellus_tubaeformis"
+    },
+    {
+      "title": "Wikipedia (en): Craterellus tubaeformis",
+      "url": "https://en.wikipedia.org/wiki/Craterellus_tubaeformis"
+    }
+  ],
+  "related": []
+}

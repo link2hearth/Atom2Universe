@@ -1,0 +1,22 @@
+{
+  "id": "inocybe_tricolor",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : inocybe à chapeau fibrilleux et sporée brune.",
+    "Repère écologique : inocybe à chapeau fibrilleux et sporée brune. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Inocybe tricolor.",
+      "url": "https://www.gbif.org/species/7449828"
+    },
+    {
+      "title": "Index Fungorum, name record 298984: Inocybe tricolor.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=298984"
+    }
+  ],
+  "related": []
+}

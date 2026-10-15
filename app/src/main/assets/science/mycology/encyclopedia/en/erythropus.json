@@ -1,0 +1,33 @@
+{
+  "id": "erythropus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Dark brown to chocolate-brown cap, 5 to 20 cm, dry, velvety",
+    "Yellow tubes; fine blood-red to orange-red pores that turn strongly blue when pressed",
+    "Thick stem, 5 to 15 cm, yellow under fine bright red dots: dots, not a net",
+    "Bright yellow, firm flesh that turns strongly blue when cut (the blue fades within an hour or a few) · mild taste",
+    "Olive-brown spores",
+    "Broadleaf and conifer woods, non-chalky soil · June to November"
+  ],
+  "safetyNote": "Eat only well cooked: raw or undercooked it causes gastroenteritis, and Tox Info Suisse asks for at least 20 minutes of cooking. A stem with red dots and no net is the main feature that sets it apart from Satan’s bolete and several other toxic red boletes, whose stem has a net.",
+  "sources": [
+    {
+      "title": "Tox Info Suisse (2025). Edible mushrooms: unpleasant gastrointestinal symptoms. Dernière mise à jour : mai 2025.",
+      "url": "https://toxinfo.ch/edible_mushrooms_unpleasant_gastrointestinal_symptoms"
+    },
+    {
+      "title": "Kanton Basel-Stadt, Kantonales Laboratorium (2022). Pilzkontrolle findet immer wieder Giftpilze. Communiqué du 21 décembre 2022.",
+      "url": "https://www.bs.ch/news/2022-pilzkontrolle-findet-immer-wieder-giftpilze"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Bolet à pied rouge",
+      "url": "https://fr.wikipedia.org/wiki/Bolet_%C3%A0_pied_rouge"
+    }
+  ],
+  "related": []
+}

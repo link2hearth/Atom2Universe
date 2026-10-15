@@ -1,0 +1,27 @@
+{
+  "id": "columbetta",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaître l’espèce", "text": "Tricholoma columbetta est un tricholome blanc au chapeau soyeux et fibrilleux, parfois crème au centre, d’abord convexe puis étalé, un peu visqueux lorsqu’il est jeune ou humide. Les lames blanches sont serrées et échancrées près du pied; leur arête peut devenir irrégulière et se tacher de rose. Le pied est blanc, fibrilleux et parfois radicant."},
+    {"title": "Base du pied et caractères utiles", "text": "La base du pied peut présenter des teintes bleues, vertes ou roses, mais ce caractère n’est pas toujours visible. La chair ferme est blanche, à odeur farineuse et saveur douce ou légèrement farineuse. La sporée est blanche. Le pied n’a ni anneau ni volve, mais l’absence de volve doit se vérifier sur toute la base, qui peut être enfouie."},
+    {"title": "Habitat et saison", "text": "L’espèce pousse seule ou en petits groupes sur le sol des forêts de feuillus, surtout sous chênes, hêtres ou bouleaux, généralement sur sol acide à neutre; elle est plus rare sous conifères. Elle fructifie de l’été à l’automne, et la période exacte dépend du climat local."},
+    {"title": "Confusions et sécurité", "text": "Des amanites blanches mortelles, notamment Amanita virosa et les formes blanches d’A. phalloides ou d’A. verna, peuvent être confondues avec des tricholomes blancs. La volve peut rester enterrée et l’anneau peut être absent, abîmé ou caché: aucun de ces signes pris isolément ne rend l’identification sûre. L’Entoloma sinuatum a des lames pâles lorsqu’il est jeune qui deviennent roses à maturité. La comestibilité est indiquée par Lyon 1, la DGfM et la VAPKO; fais contrôler toute récolte par une personne qualifiée."}
+  ],
+  "traits": [
+    "Chapeau blanc soyeux et fibrilleux, parfois crème au centre, convexe puis étalé; légèrement visqueux jeune ou par temps humide",
+    "Lames blanches, serrées et échancrées, parfois tachées de rose; arête pouvant devenir irrégulière",
+    "Pied blanc fibrilleux, parfois radicant; base parfois bleue, verte ou rose",
+    "Chair blanche ferme, odeur farineuse, saveur douce à légèrement farineuse; sporée blanche",
+    "Feuillus, notamment chêne, hêtre et bouleau, sur sol acide à neutre · été et automne",
+    "Comestible selon des listes mycologiques; risque de confusion avec des amanites blanches mortelles"
+  ],
+  "safetyNote": "Comestible selon Lyon 1, la DGfM et la VAPKO, mais les amanites blanches mortelles peuvent lui ressembler. Une volve enfouie ou un anneau manquant peut échapper à l’examen; ne consomme jamais une récolte déterminée uniquement par photo ou fiche et fais-la contrôler par une personne qualifiée.",
+  "sources": [
+    {"title": "Université Claude Bernard Lyon 1 — Champignons: Tricholoma columbetta (morphologie, habitat, confusions)", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/tricholoma-columbetta/"},
+    {"title": "Xunta de Galicia, Guía micolóxica — Tricholoma columbetta (description, saison et habitat)", "url": "https://mediorural.xunta.gal/sites/default/files/publicacions/2024-02/es-libro-setas-ngsg_2023-rrss-min.pdf"},
+    {"title": "ANSES (2017), Avis relatif aux risques d’intoxication par les champignons: confusion entre amanites mortelles et Tricholoma columbetta", "url": "https://www.anses.fr/fr/system/files/ERCA2015SA0180.pdf"},
+    {"title": "Deutsche Gesellschaft für Mykologie (DGfM), Positivliste der Speisepilze (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, Suisse — liste des champignons recommandés (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
+  ],
+  "related": ["virosa", "sinuatum"]
+}

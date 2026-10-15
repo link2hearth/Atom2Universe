@@ -1,0 +1,32 @@
+{
+  "id": "pinophilus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 4 to 25 cm, firm, maroon, reddish-brown to mahogany, matt and slightly wrinkled; the margin of young ones sometimes has a white bloom",
+    "Fine pores: white, then yellow, finally olive · olive spores",
+    "Stem 5 to 15 cm by 3 to 8, stout, whitish to pinkish above, ochre to reddish-brown below, with a white net on the upper two thirds",
+    "White, firm flesh that does not change when cut · smell of walnut, mild taste",
+    "Mostly under pines, also under spruces and firs, on acid, sandy soil; from June to November"
+  ],
+  "safetyNote": "Edible: it is on the German mycological society list (2026), which marks it « protected without exception » in Germany, and on the Swiss controllers’ list (2023). The bitter bolete, which is inedible, looks like it (Wikipedia fr): its pores turn pink with age, its net is coarser and darker, and its taste is bitter.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Boletus pinophilus",
+      "url": "https://fr.wikipedia.org/wiki/Boletus_pinophilus"
+    },
+    {
+      "title": "Wikipedia (en): Boletus pinophilus",
+      "url": "https://en.wikipedia.org/wiki/Boletus_pinophilus"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "reticulatus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 4 à 20 cm, sec, velouté, brun assez uniforme, souvent craquelé par temps sec : la chair blanche apparaît dans les fentes",
+    "Pores blancs, puis jaunes, enfin olive · sporée olive",
+    "Pied de 5 à 15 cm, beige à brun, renflé, couvert d’un réseau fin qui descend souvent jusqu’à la base",
+    "Chair blanche, épaisse, un peu moins ferme que chez les autres cèpes, qui jaunit avec l’âge ; odeur agréable",
+    "Dans les bois de feuillus, surtout sous les chênes ; de mai à novembre, après la chaleur et l’humidité"
+  ],
+  "safetyNote": "Comestible : il est sur la liste de la société allemande de mycologie (2026) et sur celle des contrôleurs suisses (2023). Il n’a pas la chair rosée sous la peau du chapeau que l’on voit chez le cèpe de Bordeaux, et son réseau descend plus bas (Wikipédia fr). Le bolet amer, non comestible, a un réseau plus gros et plus sombre.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Boletus reticulatus",
+      "url": "https://fr.wikipedia.org/wiki/Boletus_reticulatus"
+    },
+    {
+      "title": "Wikipedia (en): Boletus reticulatus",
+      "url": "https://en.wikipedia.org/wiki/Boletus_reticulatus"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "tremella_mesenterica",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : gelée jaune lobée sur le bois mort.",
+    "Repère écologique : gelée jaune lobée sur le bois mort. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Tremella mesenterica.",
+      "url": "https://www.gbif.org/species/7577590"
+    },
+    {
+      "title": "Index Fungorum, name record 154470: Tremella mesenterica.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=154470"
+    }
+  ],
+  "related": []
+}

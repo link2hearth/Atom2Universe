@@ -1,0 +1,37 @@
+{
+  "id": "crocipodium",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognition", "text": "Leccinellum crocipodium has an ochre-yellow to brown cap, velvety at first and often cracked with age. The tubes and pores start lemon yellow and become olive grey; they may brown when pressed. The stem is spindle-shaped and vertically ridged, pale to yellow, with small scales that brown with age. Their alignment can resemble a net, but it is not a true reticulation."},
+    {"title": "Cut surface and useful characters", "text": "The flesh is whitish to cream; when cut it may turn pink and then black. The spore print is olive-brown. The colour sequence varies among specimens, and the scaly stem should not be described as reticulated."},
+    {"title": "Habitat and season", "text": "This ectomycorrhizal species grows with broad-leaved trees, especially oak and beech. It fruits mainly from July to November, depending on climate and region."},
+    {"title": "Lookalikes and safety", "text": "Other boletes with yellow pores or a dotted stem may look similar. The DGfM positive list considers it edible after sufficient cooking; this advice does not replace identification and reflects the German source. DGfM also marks it as particularly protected and RL3 in Germany. Check local rules before picking."}
+  ],
+  "traits": [
+    "Cap brown, yellow-brown to cinnamon, velvety, often cracked or tessellated at maturity",
+    "Pores small, sulphur yellow to beige, turning olive and ochre-brown when pressed",
+    "Spindle-shaped, vertically ridged stem, cream to pale yellow, with scales that brown with age; no true net",
+    "Whitish to cream flesh that may turn pink then black when cut · olive-brown spore print",
+    "Under broad-leaved trees, especially oak and beech · July to November"
+  ],
+  "safetyNote": "DGfM lists it as edible after sufficient cooking and marks it as particularly protected (§) and RL3 in Germany. Protection categories are regional; check local rules and have the identification confirmed.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "Champignons de Lyon 1 — Leccinellum crocipodium",
+      "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/leccinum-crocipodium/"
+    },
+    {
+      "title": "Species Fungorum — accepted name and basionym",
+      "url": "https://www.speciesfungorum.org/names/NamesRecord.asp?RecordID=550655"
+    },
+    {
+      "title": "Natural History Museum UK — taxon record",
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=BMSSYS0000047067"
+    }
+  ],
+  "related": ["scabrum"]
+}

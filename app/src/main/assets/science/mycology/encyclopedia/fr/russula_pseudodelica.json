@@ -1,0 +1,22 @@
+{
+  "id": "russula_pseudodelica",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : russule à silhouette en entonnoir.",
+    "Repère écologique : russule à silhouette en entonnoir. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Russula pseudodelica.",
+      "url": "https://www.gbif.org/species/3360222"
+    },
+    {
+      "title": "Index Fungorum, name record 275416: Russula pseudodelica.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=275416"
+    }
+  ],
+  "related": []
+}

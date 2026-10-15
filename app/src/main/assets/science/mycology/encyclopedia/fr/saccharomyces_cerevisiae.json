@@ -1,0 +1,22 @@
+{
+  "id": "saccharomyces_cerevisiae",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : levure unicellulaire utilisée en fermentation et en recherche.",
+    "Repère écologique : levure unicellulaire utilisée en fermentation et en recherche. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Saccharomyces cerevisiae.",
+      "url": "https://www.gbif.org/species/2599166"
+    },
+    {
+      "title": "NCBI Taxonomy Browser: Saccharomyces cerevisiae.",
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=4932"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,37 @@
+{
+  "id": "virescens",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau vert pâle à vert-de-gris sur fond crème, 5 à 12 cm, sec, qui se craquelle en petites plaques polygonales",
+    "Lames blanc crème, cassantes, parfois tachées de brun rouille",
+    "Pied blanc, 4 à 8 cm, épais, cassant, sans anneau ni volve",
+    "Chair blanche, épaisse, cassante · saveur douce, de noisette",
+    "Sporée blanche",
+    "Feuillus, bois chauds, lisières · juillet à octobre"
+  ],
+  "safetyNote": "Le chapeau craquelé en plaques, la chair qui se brise comme de la craie, l’absence d’anneau et de volve la distinguent de l’amanite phalloïde, qui est lisse, a un anneau et une volve, et dont la chair ne se casse pas. La forme verte de la phalloïde est parfois prise pour une russule (centre antipoison belge).",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Russule verdoyante",
+      "url": "https://fr.wikipedia.org/wiki/Russule_verdoyante"
+    },
+    {
+      "title": "Wikipedia (en): Russula virescens",
+      "url": "https://en.wikipedia.org/wiki/Russula_virescens"
+    }
+  ],
+  "related": []
+}

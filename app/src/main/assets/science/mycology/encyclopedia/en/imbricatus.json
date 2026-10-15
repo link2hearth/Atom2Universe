@@ -1,0 +1,29 @@
+{
+  "id": "imbricatus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap up to 15 cm, brownish to buff, funnel-shaped, with coarse dark scales that turn up with age",
+    "Spines instead of gills: soft and pale grey, 0.5 to 1.5 cm, browner with age",
+    "Stem pale grey or brown, up to 10 cm, sometimes off-centre",
+    "Soft, whitish to tan flesh; can be bitter, especially when old",
+    "Brown spore print",
+    "With spruce and fir, often in hills and mountains, sometimes in rings · August to October"
+  ],
+  "safetyNote": "Not recommended: the Swiss controllers (VAPKO) list it only as a seasoning, and Wikipedia (en) calls it edible but not recommended: bitter when old, it can upset the gut. Other mushrooms with spines look alike: Sarcodon amarascens (bitter, with a bluish-black stripe) and Hydnellum scabrosum (bitter, turquoise-tinted base).",
+  "sources": [
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Sarcodon imbricatus",
+      "url": "https://fr.wikipedia.org/wiki/Sarcodon_imbricatus"
+    },
+    {
+      "title": "Wikipedia (en): Sarcodon imbricatus",
+      "url": "https://en.wikipedia.org/wiki/Sarcodon_imbricatus"
+    }
+  ],
+  "related": []
+}

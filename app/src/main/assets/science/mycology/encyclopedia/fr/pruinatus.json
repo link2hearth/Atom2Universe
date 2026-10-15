@@ -1,0 +1,28 @@
+{
+  "id": "pruinatus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 4 à 12 cm, sec ou velouté, brunâtre à noirâtre, souvent mauve près du bord, peu craquelé",
+    "Pores de la couleur des tubes, jaune d’or puis jaune olive, qui bleuissent à la pression",
+    "Pied de 3 à 10 cm, jaune vif quand il est jeune, virant au rougeâtre puis au rouge, bleuissant facilement",
+    "Chair jaune vif et ferme, bleuissant faiblement, lentement ; saveur douce et sucrée",
+    "Sous conifères et feuillus, surtout le hêtre, sur sols acides · septembre à novembre"
+  ],
+  "safetyNote": "Comestible après cuisson : la DGfM et la VAPKO le listent ; Wikipédia (fr) conseille d’ôter le pied et de choisir des jeunes et fermes. Sosies (Wikipédia, fr) : le bolet à chair jaune (en général une zone rougeâtre dans la chair, sans bleuissement), le bolet bai (sans rouge ni mauve, pied brun), le bolet cisalpin (sans intérêt alimentaire), Hortiboletus engelii. La page anglaise est presque vide : le texte vient de Wikipédia (fr) et des listes.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Xerocomellus pruinatus",
+      "url": "https://fr.wikipedia.org/wiki/Xerocomellus_pruinatus"
+    }
+  ],
+  "related": []
+}

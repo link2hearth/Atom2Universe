@@ -163,6 +163,8 @@ class FungusLook(
     val forked: Boolean = false,
     /** Lames très serrées (1) ou espacées (0). */
     val crowd: Float = 0.7f,
+    /** Pores larges et labyrinthiques de certains bolets, plutôt que points réguliers. */
+    val largeIrregularPores: Boolean = false,
     // Accessoires
     val ring: RingKind = RingKind.NONE,
     val ringAt: Float = 0.78f,

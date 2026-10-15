@@ -1,0 +1,37 @@
+{
+  "id": "granulatus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau visqueux, brillant, lisse, jusqu’à 12 cm, beige jaunâtre à brun rougeâtre, souvent d’une couleur uniforme",
+    "Tubes adnés, jaune pâle puis jaune olivâtre ; pores de couleur uniforme, qui pleurent au début des gouttes laiteuses",
+    "Pied d’environ 10 × 2 cm, jaunâtre à gouttelettes opalescentes, puis plus jaune et ponctué en haut de granulations brunes ou rousses ; pas d’anneau",
+    "Chair blanc jaunâtre, subacidulée · odeur épicée",
+    "Sporée brun orangé à reflet olive",
+    "Sous les pins"
+  ],
+  "safetyNote": "Sa peau visqueuse est laxative. L’ANSES lui attribue des troubles digestifs, souvent avec tremblements, maux de tête et angoisse, quelques heures après le repas : 25 cas notés en France entre 1999 et 2015. Aucune cuisson n’est prouvée efficace. Le contact avec la peau peut aussi donner une dermite. Les contrôleurs suisses le rangent parmi les comestibles en demandant d’enlever la peau du chapeau, et la société allemande de mycologie le range aussi parmi les comestibles : statut le plus prudent retenu.",
+  "sources": [
+    {
+      "title": "ANSES (2015). Avis relatif à l’évaluation des risques liés à la consommation des champignons dénommés Suillus granulatus, Russula olivacea et Armillaria mellea. Saisine n° 2014-SA-0256, 29 juillet 2015.",
+      "url": "https://www.anses.fr/fr/system/files/ERCA2014sa0256.pdf"
+    },
+    {
+      "title": "Arrêté du 5 août 2016 relatif à la suspension de la mise sur le marché des champignons des espèces Suillus granulatus, Russula olivacea, Armillaria mellea et Lentinula edodes (JORF n° 0191 du 18 août 2016, NOR EINC1622686A).",
+      "url": "https://nouvelle-aquitaine.dreets.gouv.fr/sites/nouvelle-aquitaine.dreets.gouv.fr/IMG/pdf/arrete_du_5_aout_2016suspensionchampignons.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Suillus granulatus",
+      "url": "https://fr.wikipedia.org/wiki/Suillus_granulatus"
+    }
+  ],
+  "related": []
+}

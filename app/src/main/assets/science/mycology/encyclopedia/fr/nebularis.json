@@ -1,0 +1,33 @@
+{
+  "id": "nebularis",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau gris à brun gris, 5 à 25 cm, souvent voilé de blanc chez le jeune, marge enroulée",
+    "Lames pâles, serrées, souvent fourchues, jusqu’à légèrement décurrentes",
+    "Pied gris clair, massif, renflé à la base",
+    "Chair blanche, très épaisse · odeur forte, farineuse à rance",
+    "Sporée jaune pâle",
+    "Sous feuillus et conifères · automne"
+  ],
+  "safetyNote": "Non recommandé : même une petite portion peut donner des troubles digestifs à certaines personnes. On le confond avec l’entolome livide, toxique, dont les lames deviennent roses.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Tox Info Suisse (2025). Edible mushrooms: unpleasant gastrointestinal symptoms. Dernière mise à jour : mai 2025.",
+      "url": "https://toxinfo.ch/edible_mushrooms_unpleasant_gastrointestinal_symptoms"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Clitocybe nebularis",
+      "url": "https://en.wikipedia.org/wiki/Clitocybe_nebularis"
+    }
+  ],
+  "related": []
+}

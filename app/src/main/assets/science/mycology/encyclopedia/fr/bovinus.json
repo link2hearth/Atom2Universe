@@ -1,0 +1,35 @@
+{
+  "id": "bovinus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaître l’espèce", "text": "Suillus bovinus est un petit bolet au chapeau convexe puis étalé, ocre à brun orangé, parfois rosé, visqueux par temps humide. Le pied est mince, pâle à ocre et sans anneau. Sous le chapeau, les tubes se terminent par de très grands pores jaunes à olive, irréguliers, anguleux et parfois subdivisés ; ils descendent un peu sur le pied."},
+    {"title": "Chair et spores", "text": "La chair est crème à chamois, parfois légèrement rosée, molle dans le chapeau et plus ferme dans le pied. Elle ne bleuit généralement pas. La sporée est brun olive ; les spores lisses sont ellipsoïdes à légèrement fusiformes, visibles seulement au microscope."},
+    {"title": "Habitat et saison", "text": "Il est souvent observé dans les bois de pins, parfois près d’épicéas, de bouleaux, de chênes ou de hêtres, de l’été à l’automne. Son mode trophique est généralement présenté comme ectomycorhizien, mais cette association n’est pas fermement établie par les données disponibles."},
+    {"title": "Confusions et usage alimentaire", "text": "Les pores très larges, irréguliers et parfois labyrinthiques, ainsi que l’absence d’anneau, aident à le distinguer de bolets à pores plus petits. La saveur très poivrée et la texture souvent médiocre limitent son intérêt culinaire ; les sources divergent sur son usage comme condiment ou aliment. Les affirmations de toxicité ou d’effet laxatif ne sont pas confirmées par les sources de référence consultées. Toute récolte doit être identifiée avec certitude par un spécialiste."}
+  ],
+  "traits": [
+    "Chapeau de 3 à 10 cm, visqueux, ocre à jaune brunâtre, parfois teinté de rose, bord ondulé",
+    "Pores très grands, irréguliers et anguleux, parfois subdivisés, jaunes à olive et un peu décurrents",
+    "Pied de 3 à 10 cm, mince, beige à ocre, sans anneau",
+    "Chair crème à chamois, parfois rosée, molle dans le chapeau, sans bleuissement notable",
+    "Sporée brun olive",
+    "Sous les pins, en groupes · juillet à novembre"
+  ],
+  "safetyNote": "Souvent classé comestible, mais la saveur est très poivrée et la qualité culinaire limitée. Les sources divergent sur son usage alimentaire ; les affirmations de toxicité ou d’effet laxatif n’ont pas été confirmées par les références consultées. Une image ne suffit pas à identifier une récolte.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {"title": "NDFF / Nederlandse Mycologische Vereniging — Suillus bovinus", "url": "https://www.verspreidingsatlas.nl/0135020"},
+    {"title": "Boletales.com — Suillus bovinus", "url": "https://boletales.com/genera/suillus/s-bovinus/"},
+    {"title": "Landcare Research / Virtual Mycota — Suillus bovinus", "url": "https://virtualmycota.landcareresearch.co.nz/webforms/vM_Species_Details.aspx?pk=16711"},
+    {"title": "Naturalis — Interactive Guide to Mushrooms and other fungi", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100524"},
+    {"title": "Nuhn et al. (2013), Molecular Phylogenetics and Evolution — écologie et phylogénie des Suillus", "url": "https://wi.knaw.nl/images/ResearchGroups/Phytopathology/pdf/Nuhn%20et%20al%202013.pdf"}
+  ],
+  "related": ["granulatus", "luteus", "variegatus"]
+}

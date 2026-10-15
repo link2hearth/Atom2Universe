@@ -1,0 +1,27 @@
+{
+  "id": "lactarius_zonarioides",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognizing the species", "text": "Lactarius zonarioides is a medium to large milkcap with a sticky cap, buff-yellow to salmon in colour and marked with darker concentric zones. The fairly crowded gills are cream-pink, attached to the stem and sometimes slightly decurrent. The cream stem is smooth and dry."},
+    {"title": "Milk and useful characters", "text": "The milk that appears when the gills are damaged is white and very acrid. The spore print is ochre. Smell and peppery taste alone do not identify the species; zoned Lactarius species are also distinguished by colour, gills and host trees."},
+    {"title": "Habitat and season", "text": "This species is associated with conifers, especially spruce and sometimes fir, in montane or boreal forests. It is mainly recorded in late summer and autumn. Observations and nomenclature for this taxon have varied by region, so records should be interpreted in context."},
+    {"title": "Lookalikes and safety", "text": "Lactarius zonarius and other milkcaps with zoned caps may look similar. Sources describe L. zonarioides as very acrid, but food-status opinions are not uniform; this entry therefore leaves its food status unassessed. This reference plate cannot identify a collection or advise its consumption."}
+  ],
+  "traits": [
+    "Sticky buff-yellow to salmon cap with darker concentric zones",
+    "Fairly crowded cream-pink gills, attached to the stem and sometimes slightly decurrent",
+    "Smooth, dry cream stem",
+    "White, unchanging and very acrid milk; ochre spore print",
+    "With spruce or sometimes fir in montane or boreal forest · late summer and autumn",
+    "Distinguish from other zoned milkcaps; nomenclature and records vary by region"
+  ],
+  "safetyNote": "Food status not assessed: sources consulted do not agree. A very acrid taste alone is not a safety assessment. Do not eat a mushroom identified from this entry.",
+  "sources": [
+    {"title": "Heilmann-Clausen, Verbeken & Vesterholt (2000), The Genus Lactarius — Funga Nordica, specialist key", "url": "https://www.mykoweb.com/CAF/PDF/FungaNordica/FungaNordica-Lactarius.pdf"},
+    {"title": "Naturalis Biodiversity Center — Interactive Paddenstoelengids, Lactarius zonarioides", "url": "https://paddenstoelen.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?epi=2&id=3372"},
+    {"title": "MykoWeb Czech — Lactarius zonarioides, description and ecology", "url": "https://www.mykoweb.cz/houba/lactarius-zonarioides"},
+    {"title": "ADONIF / INPN-MNHN (2023), Updated Catalogue of French Mycota — nomenclatural notes", "url": "https://inpn.mnhn.fr/docs-web/docs/download/431501"},
+    {"title": "Index Fungorum, name record 299335 — Lactarius zonarioides", "url": "https://www.indexfungorum.org/names/NamesRecord.asp?RecordID=299335"}
+  ],
+  "related": []
+}

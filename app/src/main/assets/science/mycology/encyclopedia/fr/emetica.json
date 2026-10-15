@@ -1,0 +1,33 @@
+{
+  "id": "emetica",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 3 à 10 cm, rouge cerise vif, visqueux ; convexe puis étalé et un peu creusé ; la cuticule se détache presque jusqu’au centre",
+    "Lames blanches à crème, serrées, larges, adnées",
+    "Pied blanc, 5 à 9 cm, parfois renflé à la base ; pas d’anneau",
+    "Chair blanche, rosée sous la cuticule, cassante · odeur légèrement fruitée",
+    "Sporée blanche",
+    "Sols sableux, parmi les mousses et les sphaignes, surtout sous les conifères et les pins · de juillet à octobre"
+  ],
+  "safetyNote": "Toxique : troubles digestifs, vomissements surtout, entre une demi-heure et trois heures après le repas ; ils passent en général d’eux-mêmes (Wikipédia EN). La société allemande de mycologie range le groupe Russula emetica parmi les champignons à syndrome gastro-intestinal, et le centre antipoison belge cite la russule émétique parmi les causes du syndrome résinoïdien léger (moins de 12 heures). Beaucoup de russules rouges se ressemblent et certaines ne se distinguent qu’au microscope : le chapeau ne suffit pas.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Russule émétique",
+      "url": "https://fr.wikipedia.org/wiki/Russule_%C3%A9m%C3%A9tique"
+    },
+    {
+      "title": "Wikipedia (en): Russula emetica",
+      "url": "https://en.wikipedia.org/wiki/Russula_emetica"
+    }
+  ],
+  "related": []
+}

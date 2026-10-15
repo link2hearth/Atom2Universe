@@ -1,0 +1,22 @@
+{
+  "id": "russula_nitida",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: russula associated with damp woodland.",
+    "Ecological context: russula associated with damp woodland. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Russula nitida.",
+      "url": "https://www.gbif.org/species/9089269"
+    },
+    {
+      "title": "Index Fungorum, name record 211457: Russula nitida.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=211457"
+    }
+  ],
+  "related": []
+}

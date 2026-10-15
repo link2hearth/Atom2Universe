@@ -1,0 +1,22 @@
+{
+  "id": "russula_laricina",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: russula associated with larch.",
+    "Ecological context: russula associated with larch. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Russula laricina.",
+      "url": "https://www.gbif.org/species/6016725"
+    },
+    {
+      "title": "Index Fungorum, name record 268996: Russula laricina.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=268996"
+    }
+  ],
+  "related": []
+}

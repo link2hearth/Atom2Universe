@@ -284,7 +284,7 @@ class MycologyActivity : ThemedActivity() {
                 setOnClickListener { open(Sheet.Species(sp.id)) }
             }
             val thumb: View = if (sp.diagram == FungusDiagramKind.MUSHROOM) plate(sp.look, PlateMode.SIDE, compact = true)
-                else FungusDiagramView(this, sp.diagram)
+                else FungusDiagramView(this, sp.diagram, sp.id)
             rowView.addView(thumb, LinearLayout.LayoutParams(dp(68), dp(88)))
             val col = column()
             col.addView(label(getString(sp.name), 16f, true))
@@ -389,7 +389,7 @@ class MycologyActivity : ThemedActivity() {
         } else {
             drawing.addView(label(getString(R.string.myco_supplement_illustration), 12f).apply { setTextColor(palette.secondary) }, full(4))
             FitFrame(this, 1.1f, dp(480)).apply {
-                addView(FungusDiagramView(this@MycologyActivity, sp.diagram), FrameLayout.LayoutParams(-1, -1, Gravity.CENTER))
+                addView(FungusDiagramView(this@MycologyActivity, sp.diagram, sp.id), FrameLayout.LayoutParams(-1, -1, Gravity.CENTER))
             }
         }
         drawing.addView(frame, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = dp(8) }

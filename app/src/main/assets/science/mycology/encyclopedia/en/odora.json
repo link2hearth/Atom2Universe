@@ -1,0 +1,32 @@
+{
+  "id": "odora",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 3 to 8 cm, bluish to grey-green, fading, frosted, inrolled margin",
+    "Gills thin, widely spaced, slightly running down the stem, whitish",
+    "Stem fibrous, bent, pale bluish-green, thicker at the base, no ring",
+    "Strong sweet smell of aniseed, which stays when dried",
+    "Mostly broadleaf woods, sometimes conifers · midsummer to late autumn"
+  ],
+  "safetyNote": "Not recommended: the sources disagree. The DGfM and the VAPKO list it, Wikipedia (fr) calls it a good edible used mostly as a seasoning, while Wikipedia (en) says edible but not recommended, some guides advising against it, and warns that young ones may be mistaken for the verdigris agaric and other poisonous species. The most prudent status is kept.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Clitocybe odora",
+      "url": "https://fr.wikipedia.org/wiki/Clitocybe_odora"
+    },
+    {
+      "title": "Wikipedia (en): Clitocybe odora",
+      "url": "https://en.wikipedia.org/wiki/Clitocybe_odora"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "versipelle",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 3 to 18 cm, ochre-orange to orange-brown, velvety to felty",
+    "Pores grey, the same colour as the tubes",
+    "Stem 3 to 20 cm, covered with dense black tufts",
+    "White flesh turning grey-pink then dark grey-violet when cut; mild taste, faint smell",
+    "Under birch · July to November"
+  ],
+  "safetyNote": "Edible when well cooked: the DGfM lists it and the VAPKO lists the rough-stemmed boletes. Wikipedia (fr) says the fibrous stem is often thrown away and that rough-stemmed boletes upset the stomach if raw or undercooked; Wikipedia (en) calls it mildly toxic unless properly heated (15 to 20 minutes of frying or boiling), with nausea and vomiting. Flesh colour on cutting differs: pink to grey-violet (fr), reddish then brownish (en). It turns black when cooked.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Leccinum versipelle",
+      "url": "https://fr.wikipedia.org/wiki/Leccinum_versipelle"
+    },
+    {
+      "title": "Wikipedia (en): Leccinum versipelle",
+      "url": "https://en.wikipedia.org/wiki/Leccinum_versipelle"
+    }
+  ],
+  "related": []
+}

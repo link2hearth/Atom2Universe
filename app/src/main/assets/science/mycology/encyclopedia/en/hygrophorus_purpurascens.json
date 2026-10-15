@@ -1,0 +1,27 @@
+{
+  "id": "hygrophorus_purpurascens",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognizing the species", "text": "Hygrophorus purpurascens has a cap that is sticky in damp weather, whitish to pink or purplish red, often marked with fine purple fibrils. The waxy gills are white, sometimes pinkish or spotted purple; they are attached to the stem and can be slightly decurrent. The stem is pale at the top and tinted pink-purple towards the base."},
+    {"title": "Veil and useful characters", "text": "On young specimens, a fibrillose partial veil may leave a fragile ring zone that becomes faint or disappears. The flesh is white, sometimes tinged pink or violet; the spore print is white. The ring character varies with age and specimen condition, and purple colouring can be irregular."},
+    {"title": "Habitat and season", "text": "This ectomycorrhizal species is associated with conifers, including spruce and pine, in cool montane habitats. It appears mainly in late summer and autumn. Sequences from North American specimens do not always match the classic European concept, so the taxonomic range may require verification."},
+    {"title": "Lookalikes and safety", "text": "Other purple Hygrophorus species can look similar. These characters describe the classic European concept, but an image cannot confirm an identification. Some references describe it as edible while noting that specimens may be bitter; this reference entry does not recommend consumption."}
+  ],
+  "traits": [
+    "Sticky white to pink or purplish-red cap, often with purple fibrils",
+    "Waxy white gills, sometimes pinkish or purple-spotted, attached and sometimes slightly decurrent",
+    "Stem pale at the top and coloured like the cap towards the base; a fragile fibrillose ring zone may be present",
+    "White flesh, sometimes tinged pink or violet; white spore print",
+    "Associated with conifers, including spruce and pine · cool montane habitats, late summer and autumn",
+    "The classic European concept may differ from some North American specimens"
+  ],
+  "safetyNote": "Reference information only. Some sources report possible edibility, sometimes with bitterness; this entry is not foraging or consumption advice.",
+  "sources": [
+    {"title": "E-Flora BC / University of British Columbia — Hygrophorus purpurascens (morphology, ecology and taxonomic variation)", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Hygrophorus+purpurascens"},
+    {"title": "MushroomExpert — Hygrophorus purpurascens, description and spore print", "url": "https://www.mushroomexpert.com/hygrophorus_purpurascens.html"},
+    {"title": "The Mycota of Alaska — Hygrophorus purpurascens", "url": "https://www.alaskamycoflora.org/genera/hygrophorus/hygrophorus-purpurascens.php"},
+    {"title": "GBIF Backbone Taxonomy — Hygrophorus purpurascens", "url": "https://www.gbif.org/species/3344741"},
+    {"title": "Index Fungorum, name record 182721 — Hygrophorus purpurascens", "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=182721"}
+  ],
+  "related": []
+}

@@ -1,0 +1,29 @@
+{
+  "id": "imbricatus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau jusqu’à 15 cm, brunâtre à chamois, en entonnoir, à grosses écailles sombres qui se relèvent avec l’âge",
+    "Des aiguillons à la place des lames : mous et gris pâle, de 0,5 à 1,5 cm, plus bruns avec l’âge",
+    "Pied gris pâle ou brun, jusqu’à 10 cm, parfois excentré",
+    "Chair molle, blanchâtre à fauve ; peut être amère, surtout chez les vieux",
+    "Sporée brune",
+    "Avec l’épicéa et le sapin, souvent en collines et en montagne, parfois en ronds · août à octobre"
+  ],
+  "safetyNote": "Non recommandé : les contrôleurs suisses (VAPKO) ne le citent que comme condiment, et Wikipédia (en) le dit comestible mais non recommandé : amer quand il est vieux, il peut irriter le tube digestif. D’autres champignons à aiguillons lui ressemblent : Sarcodon amarascens (amer, avec une bande noir bleuâtre) et Hydnellum scabrosum (amer, base teintée de turquoise).",
+  "sources": [
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Sarcodon imbricatus",
+      "url": "https://fr.wikipedia.org/wiki/Sarcodon_imbricatus"
+    },
+    {
+      "title": "Wikipedia (en): Sarcodon imbricatus",
+      "url": "https://en.wikipedia.org/wiki/Sarcodon_imbricatus"
+    }
+  ],
+  "related": []
+}

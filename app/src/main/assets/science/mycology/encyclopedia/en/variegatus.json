@@ -1,0 +1,32 @@
+{
+  "id": "variegatus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap 5 to 15 cm, dull yellow to ochre or rusty, felted and speckled with small scales, barely sticky",
+    "Fairly large pores, ochre then olive-brown",
+    "Stem 4 to 12 cm, nearly smooth, the colour of the cap or paler, no ring",
+    "Cream to yellowish flesh, which may turn slightly blue near the tubes; chlorine-like smell and taste",
+    "Only under pines, on sandy soil poor in lime"
+  ],
+  "safetyNote": "Edible but mediocre: the DGfM and the VAPKO list it. Wikipedia (fr) finds the flesh flabby, the chlorine smell passing into the dish, and says it can be laxative; it advises young firm ones, the stem removed, the cap peeled and a small first portion. It strongly accumulates caesium-137 and metals (Wikipedia, fr). The bovine bolete has a plain, paler cap and a slimmer stem (Wikipedia, fr). Wikipedia (en) calls its smell and taste unpleasant.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Suillus variegatus",
+      "url": "https://fr.wikipedia.org/wiki/Suillus_variegatus"
+    },
+    {
+      "title": "Wikipedia (en): Suillus variegatus",
+      "url": "https://en.wikipedia.org/wiki/Suillus_variegatus"
+    }
+  ],
+  "related": []
+}

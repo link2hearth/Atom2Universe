@@ -1,0 +1,22 @@
+{
+  "id": "gymnopilus_pseudofulgens",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : gymnopile à sporée rouille, lié au bois.",
+    "Repère écologique : gymnopile à sporée rouille, lié au bois. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Gymnopilus pseudofulgens.",
+      "url": "https://www.gbif.org/species/3343066"
+    },
+    {
+      "title": "Index Fungorum, name record 314801: Gymnopilus pseudofulgens.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=314801"
+    }
+  ],
+  "related": []
+}

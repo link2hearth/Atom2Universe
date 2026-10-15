@@ -1,0 +1,22 @@
+{
+  "id": "russula_maculata",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : russule à chapeau parfois taché.",
+    "Repère écologique : russule à chapeau parfois taché. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Russula maculata.",
+      "url": "https://www.gbif.org/species/2551519"
+    },
+    {
+      "title": "Index Fungorum, name record 214247: Russula maculata.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=214247"
+    }
+  ],
+  "related": []
+}

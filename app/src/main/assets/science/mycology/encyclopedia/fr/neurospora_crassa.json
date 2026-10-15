@@ -1,0 +1,22 @@
+{
+  "id": "neurospora_crassa",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : moisissure orange, organisme modèle de la génétique.",
+    "Repère écologique : moisissure orange, organisme modèle de la génétique. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Neurospora crassa.",
+      "url": "https://www.gbif.org/species/5253986"
+    },
+    {
+      "title": "Index Fungorum, name record 262212: Neurospora crassa.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=262212"
+    }
+  ],
+  "related": []
+}

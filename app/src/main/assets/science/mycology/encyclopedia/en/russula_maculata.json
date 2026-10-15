@@ -1,0 +1,22 @@
+{
+  "id": "russula_maculata",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: russula with a sometimes spotted cap.",
+    "Ecological context: russula with a sometimes spotted cap. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Russula maculata.",
+      "url": "https://www.gbif.org/species/2551519"
+    },
+    {
+      "title": "Index Fungorum, name record 214247: Russula maculata.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=214247"
+    }
+  ],
+  "related": []
+}

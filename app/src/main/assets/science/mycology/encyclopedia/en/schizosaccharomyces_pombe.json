@@ -1,0 +1,22 @@
+{
+  "id": "schizosaccharomyces_pombe",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: unicellular yeast that divides by fission.",
+    "Ecological context: unicellular yeast that divides by fission. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Schizosaccharomyces pombe.",
+      "url": "https://www.gbif.org/species/2586935"
+    },
+    {
+      "title": "Index Fungorum, name record 212377: Schizosaccharomyces pombe.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=212377"
+    }
+  ],
+  "related": []
+}

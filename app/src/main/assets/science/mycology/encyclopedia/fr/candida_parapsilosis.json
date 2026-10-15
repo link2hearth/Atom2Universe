@@ -1,0 +1,22 @@
+{
+  "id": "candida_parapsilosis",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : levure unicellulaire étudiée en microbiologie clinique.",
+    "Repère écologique : levure unicellulaire étudiée en microbiologie clinique. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Candida parapsilosis.",
+      "url": "https://www.gbif.org/species/2599539"
+    },
+    {
+      "title": "NCBI Taxonomy Browser: Candida parapsilosis.",
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=5480"
+    }
+  ],
+  "related": []
+}

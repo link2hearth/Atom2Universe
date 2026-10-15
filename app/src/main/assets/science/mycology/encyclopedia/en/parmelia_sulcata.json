@@ -1,0 +1,22 @@
+{
+  "id": "parmelia_sulcata",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: grey foliose lichen formed by a symbiosis.",
+    "Ecological context: grey foliose lichen formed by a symbiosis. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Parmelia sulcata.",
+      "url": "https://www.gbif.org/species/7248320"
+    },
+    {
+      "title": "Index Fungorum, name record 123425: Parmelia sulcata.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=123425"
+    }
+  ],
+  "related": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "neurospora_crassa",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: orange mould, a model organism in genetics.",
+    "Ecological context: orange mould, a model organism in genetics. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Neurospora crassa.",
+      "url": "https://www.gbif.org/species/5253986"
+    },
+    {
+      "title": "Index Fungorum, name record 262212: Neurospora crassa.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=262212"
+    }
+  ],
+  "related": []
+}

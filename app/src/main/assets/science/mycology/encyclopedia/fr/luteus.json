@@ -1,0 +1,33 @@
+{
+  "id": "luteus",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 4 à 15 cm, brun à marron, très visqueux et luisant, la peau se détache",
+    "Pores fins, jaunes, qui virent à l’olive avec l’âge",
+    "Pied de 4 à 12 cm, pâle, avec un large anneau : blanc dessus, brun violacé dessous",
+    "Granulations glanduleuses au-dessus de l’anneau",
+    "Saveur douce, odeur faible et agréable",
+    "Sous les pins · surtout en automne"
+  ],
+  "safetyNote": "Comestible : la DGfM et la VAPKO le listent. Wikipédia (fr) le dit médiocre, le plus savoureux de son genre, et conseille de ne cueillir que des jeunes, de peler le chapeau et d’enlever le pied ; la peau visqueuse est laxative et peut donner des indigestions, et des allergies sont possibles. Il accumule fortement le césium 137 (Wikipédia, fr). Le bolet granulé n’a pas d’anneau ; le bolet élégant pousse sous les mélèzes ; un jeune gomphide lui ressemble vu de dessus mais a des lames (Wikipédia, en).",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Suillus luteus",
+      "url": "https://fr.wikipedia.org/wiki/Suillus_luteus"
+    },
+    {
+      "title": "Wikipedia (en): Suillus luteus",
+      "url": "https://en.wikipedia.org/wiki/Suillus_luteus"
+    }
+  ],
+  "related": []
+}

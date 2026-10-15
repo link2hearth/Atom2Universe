@@ -1,0 +1,22 @@
+{
+  "id": "tulostoma_kotlabae",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Forme générale : petite vesse pédicellée des milieux secs.",
+    "Repère écologique : petite vesse pédicellée des milieux secs. Les détails peuvent varier selon le taxon et le milieu.",
+    "Statut alimentaire non évalué."
+  ],
+  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Tulostoma kotlabae.",
+      "url": "https://www.gbif.org/species/5454064"
+    },
+    {
+      "title": "Index Fungorum, name record 307217: Tulostoma kotlabae.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=307217"
+    }
+  ],
+  "related": []
+}

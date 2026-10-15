@@ -1,0 +1,41 @@
+{
+  "id": "formosa",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Recognition", "text": "Ramaria formosa forms a branched coral-like bush, generally 7–20 cm wide and 7–20 cm high. Its branches are salmon-pink to whitish, with lemon-yellow tips in young specimens; the tips fade with age. The base is thick and whitish."},
+    {"title": "Cut surface and useful characters", "text": "The flesh is white to pinkish and may turn brown or black after injury. The fungus has no visible gills or pores; the hymenium covers the branch surfaces. The spore deposit is ochre-yellow. Odour is not a consistent character, and reports of taste vary."},
+    {"title": "Habitat and season", "text": "This fungus grows on the ground in broad-leaved woods, especially under beech and oak, often on calcareous soil. It appears mainly in late summer and autumn."},
+    {"title": "Lookalikes and safety", "text": "Other pink or yellow ramarias may look similar; identifying a branched coral requires checking its base, colours and habitat, and sometimes microscopic characters. Ramaria formosa is toxic and can cause nausea, vomiting and diarrhoea. Do not eat it."}
+  ],
+  "traits": [
+    "Coral-like bush generally 7–20 cm wide and high, on a thick whitish base",
+    "Salmon-pink to whitish branches; lemon-yellow tips in young specimens, fading with age",
+    "No visible gills or pores · ochre-yellow spore deposit",
+    "White to pinkish flesh that may turn brown or black after injury · odour not distinctive",
+    "On the ground in broad-leaved woods, especially under beech or oak, often on calcareous soil · late summer to autumn"
+  ],
+  "safetyNote": "Toxic: may cause nausea, vomiting and diarrhoea. Do not eat it. Removing the tips does not make the mushroom safe.",
+  "sources": [
+    {
+      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "E-Flora BC, University of British Columbia — Ramaria formosa",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Ramaria+formosa"
+    },
+    {
+      "title": "Naturalis Biodiversity Center — Ramaria formosa",
+      "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=100821"
+    },
+    {
+      "title": "SFMU / Université Grenoble Alpes — Ramaria formosa entry",
+      "url": "https://www.sfmu.org/toxin/CHAMPIGN/CHPGMONO/RAMFORM0.HTM"
+    }
+  ],
+  "related": ["botryobasidium_simile", "sparassis"]
+}

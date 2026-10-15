@@ -1,0 +1,22 @@
+{
+  "id": "puccinia_poarum",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "General form: coltsfoot leaf rust.",
+    "Ecological context: coltsfoot leaf rust. Details vary with taxon and habitat.",
+    "Food status not assessed."
+  ],
+  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy: Puccinia poarum.",
+      "url": "https://www.gbif.org/species/2514368"
+    },
+    {
+      "title": "Index Fungorum, name record 194454: Puccinia poarum.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=194454"
+    }
+  ],
+  "related": []
+}

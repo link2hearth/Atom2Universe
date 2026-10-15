@@ -1,0 +1,28 @@
+{
+  "id": "fusipes",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Chapeau de 3 à 10 cm, convexe à conique, légèrement mamelonné, brun rougeâtre et plus pâle au centre",
+    "Lames espacées, blanc rosé, tachées de rouille",
+    "Pied de 8 à 14 cm, renflé au milieu et aminci aux deux bouts, radicant, profondément sillonné, brun rougeâtre à brun noirâtre en bas, sans anneau",
+    "Chair ferme et blanchâtre, saveur douce et sucrée",
+    "En touffes sur les souches de feuillus, surtout le chêne · été à automne"
+  ],
+  "safetyNote": "Toxique : la DGfM le liste pour un syndrome gastro-intestinal. Les sources lues divergent : Wikipédia (fr) le dit assez bon si l’on ne mange que de très jeunes chapeaux, le pied coriace ôté, et prévient que les récoltes tardives donnent des indigestions ; Wikipédia (en) dit que la plupart des auteurs ne le jugent pas digne d’un repas et que les vieux risquent une gastro-entérite. Le statut le plus prudent, celui de la DGfM, est retenu. Wikipédia (fr) dit que les débutants peuvent le prendre pour une pholiote, un hypholome ou une armillaire ; il n’a pas d’anneau et son pied en fuseau est sillonné.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
+    },
+    {
+      "title": "Wikipédia (fr) : Gymnopus fusipes",
+      "url": "https://fr.wikipedia.org/wiki/Gymnopus_fusipes"
+    },
+    {
+      "title": "Wikipedia (en): Gymnopus fusipes",
+      "url": "https://en.wikipedia.org/wiki/Gymnopus_fusipes"
+    }
+  ],
+  "related": []
+}

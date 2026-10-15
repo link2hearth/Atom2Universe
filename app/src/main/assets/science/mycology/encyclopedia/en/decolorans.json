@@ -1,0 +1,28 @@
+{
+  "id": "decolorans",
+  "reviewStatus": "pending",
+  "sections": [],
+  "traits": [
+    "Cap up to 15 cm, red to orange, sticky when moist, convex to flat or depressed",
+    "Gills pale, turning yellowish, sometimes staining greyish",
+    "Stem up to 12 cm, bare",
+    "White flesh that blackens when bruised; mild taste and smell",
+    "Mixed woods and under conifers, alone or in groups"
+  ],
+  "safetyNote": "Edible: the DGfM and the VAPKO list it. Wikipedia (en) advises against eating wild ones because of look-alikes of unknown edibility, without naming them; its flesh blackens when bruised. The red cap and the blackening are what the page gives. It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM; the page is short.",
+  "sources": [
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    },
+    {
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+    },
+    {
+      "title": "Wikipedia (en): Russula decolorans",
+      "url": "https://en.wikipedia.org/wiki/Russula_decolorans"
+    }
+  ],
+  "related": []
+}
