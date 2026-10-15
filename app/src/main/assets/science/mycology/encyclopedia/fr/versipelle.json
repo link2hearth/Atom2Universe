@@ -1,32 +1,26 @@
 {
   "id": "versipelle",
-  "reviewStatus": "pending",
-  "sections": [],
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Chapeau et silhouette", "text": "Leccinum versipelle, le bolet orangé des bouleaux, est un bolet de taille moyenne à grande. À maturité, son chapeau mesure souvent 8 à 20 cm, reste largement convexe et présente un revêtement finement velouté, jaune orangé à brun orangé; le bord dépasse souvent légèrement les tubes et peut être irrégulier. La couleur varie et n’est pas un critère absolu : de rares formes pâles sont signalées."},
+    {"title": "Tubes, pores et pied", "text": "L’hyménophore est constitué de tubes gris souris à pâles, terminés par de petits pores qui peuvent prendre une teinte ocre avec l’âge; il n’y a pas de lamelles. Le pied, souvent long et robuste, est blanchâtre à gris pâle ou jaunâtre, couvert de méchules laineuses brun foncé à noirâtres. Les pores et les extrémités des tubes peuvent se colorer au froissement. La sporée est brun ochracé."},
+    {"title": "Chair et milieu", "text": "La chair du chapeau est ferme et blanche à la coupe, puis peut griser progressivement et finir presque noire, parfois avec une nuance violette. Dans le pied, le changement peut être plus marqué : gris près du sommet et bleu-vert à noirâtre vers la base. L’intensité varie entre spécimens. L’espèce est mycorhizienne, généralement associée au bouleau en Europe; des références régionales rapportent aussi des récoltes sous d’autres feuillus. Elle pousse au sol, surtout en été et en automne."},
+    {"title": "Distinction avec Leccinum scabrum et sécurité", "text": "Les deux espèces peuvent être rencontrées sous bouleau. L. versipelle a le plus souvent un chapeau orange à brun orangé et sa chair se colore davantage après la coupe; L. scabrum a plutôt un chapeau brun gris et une chair qui change peu. Ces tendances ne sont pas infaillibles : les couleurs varient et la réaction de la chair dépend de la partie observée et du spécimen. La DGfM inclut L. versipelle dans sa liste positive de champignons comestibles, tandis qu’E-Flora BC signale qu’il peut provoquer des troubles digestifs chez certaines personnes. N’en consomme pas sur la seule base d’une photo; fais confirmer l’identification et cuis-le soigneusement. En cas de symptômes après ingestion, contacte un centre antipoison ou les urgences."}
+  ],
   "traits": [
-    "Chapeau de 3 à 18 cm, ocre orangé à brun orangé, velouté à feutré",
-    "Pores gris, de la couleur des tubes",
-    "Pied de 3 à 20 cm, couvert de mèches noires très denses",
-    "Chair blanche virant au gris rosé puis au gris violet sombre à la coupe ; saveur douce, odeur faible",
-    "Sous les bouleaux · juillet à novembre"
+    "Chapeau souvent large (8–20 cm), convexe, jaune orangé à brun orangé, finement velouté; sa couleur peut varier",
+    "Tubes gris souris à pâles et petits pores qui peuvent devenir ocre avec l’âge — jamais de lamelles",
+    "Pied blanchâtre à gris pâle, souvent robuste, couvert de méchules laineuses brun foncé à noirâtres",
+    "Chair blanche à la coupe, pouvant griser puis devenir très sombre; le pied peut bleuir ou verdir localement à la base",
+    "Mycorhizien, principalement sous bouleaux en Europe; été et automne; sporée brun ochracé"
   ],
-  "safetyNote": "Comestible bien cuit : la DGfM le liste et la VAPKO liste les bolets rudes. Wikipédia (fr) dit que le pied fibreux est souvent jeté et que les bolets rudes donnent des troubles digestifs crus ou mal cuits ; Wikipédia (en) le dit légèrement toxique s’il n’est pas bien chauffé (15 à 20 minutes de friture ou d’ébullition), avec nausées et vomissements. La couleur de la chair à la coupe diffère : gris rosé à gris violet (fr), rougeâtre puis brunâtre (en). Il noircit à la cuisson.",
+  "safetyNote": "La DGfM inclut Leccinum versipelle dans sa liste positive de champignons comestibles, mais E-Flora BC signale de possibles troubles digestifs chez certaines personnes. Ne le consomme que si l’identification est certaine et après cuisson soigneuse; une photo ou cette fiche ne suffit pas pour déterminer qu’un champignon est comestible. En cas de symptômes après ingestion, contacte un centre antipoison ou les urgences.",
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
-    },
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Leccinum versipelle",
-      "url": "https://fr.wikipedia.org/wiki/Leccinum_versipelle"
-    },
-    {
-      "title": "Wikipedia (en): Leccinum versipelle",
-      "url": "https://en.wikipedia.org/wiki/Leccinum_versipelle"
-    }
+    {"title": "GBIF Backbone Taxonomy — Leccinum versipelle", "url": "https://www.gbif.org/taxon/3STGG"},
+    {"title": "E-Flora BC / University of British Columbia — Leccinum versipelle : caractères, habitat et réserves alimentaires", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Leccinum+versipelle"},
+    {"title": "First Nature — Orange Birch Bolete (Leccinum versipelle) : description et photos de terrain", "url": "https://www.first-nature.com/fungi/leccinum-versipelle.php"},
+    {"title": "VAPKO Suisse romande — Principaux genres de bolets : comparaison des Leccinum", "url": "https://vapko.ch/index.php/fr/questions-de-champignons/la-page-du-debutant/07-principaux-genres-de-bolets"},
+    {"title": "Deutsche Gesellschaft für Mykologie (DGfM) — Positivliste der Speisepilze, 1er mai 2026", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"}
   ],
-  "related": []
+  "related": ["scabrum", "aurantiacum"]
 }

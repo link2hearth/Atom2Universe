@@ -1,21 +1,65 @@
 {
   "id": "puccinia_recondita",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: wheat leaf rust.",
-    "Ecological context: wheat leaf rust. Details vary with taxon and habitat.",
-    "Food status not assessed."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Name and taxonomic scope",
+      "text": "Puccinia recondita Roberge ex Desm. (1857) is a rust fungus in the Pucciniaceae, Basidiomycota. Its scope has varied in the literature: the name was long applied to cereal leaf rusts, including wheat leaf rust. Modern taxonomic and plant-pathology sources generally distinguish P. triticina, the agent of wheat leaf rust, from P. recondita f. sp. secalis, associated with rye. An experimental study also separated population groups by their telial and aecial hosts and their compatibility. This entry therefore focuses on the rye-associated rust and notes the broader historical use of the name."
+    },
+    {
+      "title": "Appearance on the host",
+      "text": "This is an obligate biotrophic parasite: it grows in living grass tissues and forms sori on leaves. On rye (Secale cereale), the uredinial stage produces small, powdery orange-brown to brown pustules scattered irregularly across the blade; spores detach readily. Darker sori form at other stages. Their colour and distribution vary with stage, host and population; the image is a botanical illustration, not a diagnostic criterion for an unknown host."
+    },
+    {
+      "title": "Life cycle and hosts",
+      "text": "The P. recondita complex includes macrocyclic, heteroecious rusts: a complete cycle has five spore types and alternates between a grass and a dicot host. Rye-associated populations studied experimentally have been linked to aecial hosts in the Boraginaceae, including Lycopsis arvensis and Anchusa undulata; other groups use different hosts. The rust can also spread from cereal to cereal through urediniospores, so an alternate host need not be locally present. Alternate plants and their epidemiological importance depend on the specialized form and region."
+    },
+    {
+      "title": "Distinction and caution",
+      "text": "Wheat leaf rust is generally attributed today to Puccinia triticina; the older combination P. recondita f. sp. tritici still appears in references and databases. Host identity, spore stages and sometimes microscopy are needed to distinguish cereal rusts that look similar in photographs. This plant-pathogenic fungus is not a food resource; this entry gives no foraging or consumption recommendation."
+    }
   ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "traits": [
+    "Pucciniaceae rust fungus; Puccinia recondita has been used in a broad sense, including for cereal rusts",
+    "Rye-associated forms on Secale cereale produce irregularly scattered, powdery orange-brown to brown pustules on leaves",
+    "Obligate biotroph and parasite of living plant tissues",
+    "The complex is macrocyclic and heteroecious, with five spore stages alternating between grasses and dicot hosts",
+    "Rye-derived populations have been experimentally associated with aecial hosts in the Boraginaceae, including Lycopsis arvensis and Anchusa undulata",
+    "Distinguish it from Puccinia triticina, the name generally used today for wheat leaf rust"
+  ],
+  "safetyNote": "This plant-pathogenic rust is not an edible mushroom. Cereal rusts can look similar; do not identify a specimen or assess agricultural risk from this illustration alone.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Puccinia recondita.",
+      "title": "Index Fungorum — Puccinia recondita Roberge ex Desm., name and taxonomic record (record 145187).",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=145187"
+    },
+    {
+      "title": "GBIF Backbone Taxonomy — Puccinia recondita, classification and name data (taxon 2514697).",
       "url": "https://www.gbif.org/species/2514697"
     },
     {
-      "title": "Index Fungorum, name record 145187: Puccinia recondita.",
-      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=145187"
+      "title": "Species Fungorum — nomenclatural record 348736 and synonymy involving Puccinia recondita and P. triticina.",
+      "url": "https://www.speciesfungorum.org/names/NamesRecord.asp?RecordId=348736"
+    },
+    {
+      "title": "Anikster et al. (1997), Canadian Journal of Botany 75(12): 2082–2096 — experimental comparison of telial/aecial hosts and P. recondita groups from wheat, rye and wild wheats.",
+      "url": "https://doi.org/10.1139/b97-919"
+    },
+    {
+      "title": "USDA Agricultural Research Service, Cereal Disease Laboratory — cereal hosts and diseases: P. recondita f. sp. secalis on rye and distinction from P. triticina on wheat.",
+      "url": "https://www.ars.usda.gov/midwest-area/stpaul/cereal-disease-lab/docs/cereal-rusts/cereal-rusts-and-their-hosts/"
+    },
+    {
+      "title": "Singh, Huerta-Espino & Roelfs, FAO — The wheat rusts: hosts, historical taxonomy and distinction between wheat and rye leaf rusts.",
+      "url": "https://www.fao.org/4/Y4011E/y4011e0g.htm"
+    },
+    {
+      "title": "Bolton, Kolmer & Garvin (2008), Wheat leaf rust caused by Puccinia triticina, Molecular Plant Pathology 9(5): 563–575 — uredinia, urediniospores, host infection and taxonomic relation to the former P. recondita complex.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6640346/"
+    },
+    {
+      "title": "Krępski et al. (2024), Leaf rust (Puccinia recondita f. sp. secalis) triggers substantial changes in rye (Secale cereale L.) at the transcriptome and metabolome levels, BMC Plant Biology 24:107 — rye host and illustrated symptoms (Figure 1).",
+      "url": "https://doi.org/10.1186/s12870-024-04726-0"
     }
   ],
   "related": []

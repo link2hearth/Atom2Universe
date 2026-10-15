@@ -1,13 +1,32 @@
 {
   "id": "schizosaccharomyces_pombe",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: unicellular yeast that divides by fission.",
-    "Ecological context: unicellular yeast that divides by fission. Details vary with taxon and habitat.",
-    "Food status not assessed."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Taxonomy and general form",
+      "text": "Schizosaccharomyces pombe is a unicellular yeast in the phylum Ascomycota. In vegetative growth its cells are cylindrical rods with rounded ends; typical dimensions are about 7–14 µm long and 4 µm in diameter, varying with cell cycle and culture conditions. It does not form a mushroom-like fruiting body with a cap and stem."
+    },
+    {
+      "title": "Cell wall and organization",
+      "text": "The cell is enclosed by a glucan-rich cell wall and a plasma membrane; its cytoplasm contains a nucleus and other eukaryotic organelles. The cutaway in the plate is schematic and does not show their exact positions or proportions to scale. The outer surface is a cell wall, not a fruiting surface bearing gills or pores."
+    },
+    {
+      "title": "Growth and fission",
+      "text": "The cell elongates mainly by growth at its ends. During division, a contractile ring forms at the middle and a new cell-wall septum grows inward, perpendicular to the long axis. The septum has a primary layer between two secondary layers; its cleavage releases two daughter cells of comparable length. This is medial fission, not budding."
+    },
+    {
+      "title": "Research use and limits",
+      "text": "This yeast is a widely used model organism for studying cell shape, the cell cycle, and cytokinesis. General microscopic appearance alone is not sufficient to identify an unknown yeast. Food status is not assessed here; this entry is not consumption or food-safety advice."
+    }
   ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "traits": [
+    "Microscopic unicellular ascomycete yeast; cells are cylindrical rods with rounded ends",
+    "Vegetative cells typically 7–14 µm long and about 4 µm wide; dimensions vary with cell cycle and culture",
+    "Growth mainly at cell ends; vegetative division by medial fission, without budding",
+    "Medial septum with one primary layer flanked by two secondary layers, shown schematically",
+    "Cell-biology model organism; no cap-and-stem fruit body, gills, or pores"
+  ],
+  "safetyNote": "Taxonomic and biological reference. This entry is not for identifying an unknown yeast and gives no consumption or food-safety advice.",
   "sources": [
     {
       "title": "GBIF Backbone Taxonomy: Schizosaccharomyces pombe.",
@@ -16,6 +35,14 @@
     {
       "title": "Index Fungorum, name record 212377: Schizosaccharomyces pombe.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=212377"
+    },
+    {
+      "title": "Piel, M. & Tran, P. T. (2009). Cell Shape and Cell Division in Fission Yeast. Current Biology, 19(17), R823–R827.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2997724/"
+    },
+    {
+      "title": "García Cortés, J. C. et al. (2016). The Cell Biology of Fission Yeast Septation. Microbiology and Molecular Biology Reviews, 80(3), 779–791.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4981666/"
     }
   ],
   "related": []

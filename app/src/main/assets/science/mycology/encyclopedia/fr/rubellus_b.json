@@ -1,27 +1,52 @@
 {
   "id": "rubellus_b",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau de 3 à 12 cm, feutré, rouge vif et plus pâle au bord, finement craquelé à maturité",
-    "Pores jaunes puis jaune olive, généralement bleuissant au froissement",
-    "Pied de 3 à 10 cm, jaune ou rouge, souvent bulbeux ; petits points rouge sang ou orangés à la toute base",
-    "Chair blanchâtre à jaune pâle, parfois à peine bleuâtre sous le chapeau ; saveur douce",
-    "Sous les feuillus, dans les parcs, jardins, clairières et bords de routes, sur sol calcaire"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Nom et classification",
+      "text": "Hortiboletus rubellus (Krombh.) Simonini, Vizzini & Gelardi est un bolet de la famille des Boletaceae. Décrit comme Boletus rubellus en 1836, il a été transféré dans Hortiboletus en 2015 après des travaux moléculaires. Les noms Boletus rubellus et Xerocomellus rubellus apparaissent dans la littérature plus ancienne."
+    },
+    {
+      "title": "Description",
+      "text": "Ce bolet plutôt petit porte un chapeau d’abord convexe puis étalé, généralement rouge vif à rouge rubis, qui peut pâlir avec l’âge. La surface sèche est finement veloutée ou tomenteuse; elle reste souvent lisse, mais peut se fissurer en période sèche ou vers la marge. Les tubes et pores sont jaunes, puis deviennent jaune olive à verdâtres; les pores anguleux bleuissent lentement sous la pression. La chair est claire à jaune pâle et peut bleuir après une coupe, de façon variable."
+    },
+    {
+      "title": "Pied et habitat",
+      "text": "Le pied est généralement élancé, jaune au sommet et rougeâtre ou strié de rouge plus bas, sans réseau réticulé. La chair de la base peut montrer de petits points orange à rouge vermillon, mais ce caractère est variable et se rencontre aussi chez Hortiboletus engelii : il ne suffit pas à identifier l’espèce. C’est un champignon ectomycorhizien, rencontré sous divers feuillus — notamment chênes et hêtres — dans les bois clairs, parcs, jardins et autres milieux herbeux anthropisés."
+    },
+    {
+      "title": "Confusions et comestibilité",
+      "text": "La couleur du chapeau et les pores jaunes le distinguent mal, à eux seuls, d’autres bolets rougeâtres, notamment Hortiboletus engelii. L’identification peut demander l’examen de la base du pied, de caractères microscopiques, de l’habitat et parfois des données moléculaires. La liste positive 2026 de la DGfM inclut H. rubellus parmi les espèces considérées consommables après cuisson suffisante; cette indication ne permet pas d’identifier un spécimen et ne constitue pas un conseil de consommation."
+    }
   ],
-  "safetyNote": "Non recommandé : la DGfM le liste et Wikipédia (fr) le dit comestible après cuisson, jeune et ferme, le pied ôté, mais à éviter en zone urbaine où il absorbe les polluants ; Wikipédia (en) le dit comestible mais souvent véreux, de piètre qualité, classé non recommandé et à la comestibilité contestée. Le statut le plus prudent est retenu. Wikipédia (fr) le sépare de plusieurs petits bolets sans intérêt alimentaire, dont Xerocomellus ripariellus et X. redeuilhii.",
+  "traits": [
+    "Chapeau généralement rouge rubis à rouge vif, convexe puis étalé; surface sèche finement veloutée, parfois fissurée par temps sec",
+    "Tubes et pores jaunes, devenant jaune olive; pores anguleux et bleuissant lentement au froissement",
+    "Pied élancé, jaune au sommet et souvent rougeâtre ou strié de rouge vers le bas; sans réticulation",
+    "Petits points orange-rouge possibles dans la chair de la base du pied, caractère variable et partagé avec H. engelii",
+    "Bolet ectomycorhizien des feuillus, souvent en parcs, jardins et bois clairs"
+  ],
+  "safetyNote": "La DGfM inclut cette espèce dans sa liste positive sous réserve d’une cuisson suffisante; une fiche et une photo ne permettent pas une identification alimentaire sûre. Ne consomme pas un spécimen sur la base de cette entrée.",
   "sources": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Species Fungorum — nom accepté et autorité de Hortiboletus rubellus",
+      "url": "https://www.speciesfungorum.org/names/NamesRecord.asp?RecordID=551214"
+    },
+    {
+      "title": "Biketova et al. (2025), Morphological and molecular re-assessment of European and Levantine species of the genus Hortiboletus",
+      "url": "https://doi.org/10.3897/imafungus.16.144731"
+    },
+    {
+      "title": "First Nature — description illustrée, pores, pied, habitat et variations",
+      "url": "https://www.first-nature.com/fungi/hortiboletus-rubellus.php"
+    },
+    {
+      "title": "BioImages — observation documentée de Hortiboletus rubellus avec vues in situ, dessus et pores",
+      "url": "https://www.bioimages.org.uk/html/r158848.htm"
+    },
+    {
+      "title": "DGfM, Positivliste der Speisepilze (1 mai 2026) — liste d’aide à la détermination gastronomique",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Hortiboletus rubellus",
-      "url": "https://fr.wikipedia.org/wiki/Hortiboletus_rubellus"
-    },
-    {
-      "title": "Wikipedia (en): Hortiboletus rubellus",
-      "url": "https://en.wikipedia.org/wiki/Hortiboletus_rubellus"
     }
   ],
   "related": []

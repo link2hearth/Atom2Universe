@@ -1,21 +1,52 @@
 {
   "id": "russula_atroglauca",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : russule aux tons vert sombre.",
-    "Repère écologique : russule aux tons vert sombre. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Nom et reconnaissance",
+      "text": "Russula atroglauca Einhell. est le nom retenu dans les bases nomenclaturales consultées; le taxon a été décrit en 1980. Cette russule européenne forme un chapeau d’environ 3–6 cm, parfois jusqu’à 8 cm, convexe puis aplani et souvent un peu déprimé au centre. Sa couleur va du vert grisâtre ou olivâtre sombre au bleu-vert, avec le centre souvent plus foncé; la surface sèche est mate, parfois veloutée ou pruineuse, et peut porter des taches rouille. Les lames sont crème, le pied blanc, cylindrique ou un peu rétréci, parfois taché de rouille vers la base. La chair reste claire dans les descriptions de terrain et le goût est décrit comme doux, mais ces caractères ne suffisent pas à l’identifier."
+    },
+    {
+      "title": "Habitat et statut",
+      "text": "C’est un champignon ectomycorhizien associé à des arbres. Les sources européennes mentionnent notamment le bouleau, l’épicéa et le tremble; les associations rapportées varient selon les régions. Il pousse sur le sol, en forêt, et fructifie en été ou en automne. Les données sont dispersées et l’espèce peut être confondue avec Russula parazurea, ce qui rend les signalements et l’identification délicats."
+    },
+    {
+      "title": "Limites d’identification et prudence",
+      "text": "La couleur du chapeau varie et peut être modifiée par la lumière ou la balance des blancs des photos. D’autres russules gris-vert lui ressemblent; une détermination fiable peut demander l’examen des spores et de la cuticule, ainsi que des réactions chimiques. Les sources consultées ne justifient pas une recommandation alimentaire : ne pas consommer un spécimen sur la base de cette fiche ou de l’image."
+    }
   ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "traits": [
+    "Chapeau convexe puis aplani ou légèrement déprimé, sombre, gris-vert à bleu-vert, centre souvent plus foncé",
+    "Surface mate, parfois veloutée-pruineuse; parfois marquée de taches rouille",
+    "Lames crème; pied blanc, parfois taché de rouille à la base",
+    "Espèce ectomycorhizienne de forêts, signalée avec Betula, Picea et Populus selon les régions",
+    "Espèce européenne peu documentée, à distinguer notamment de Russula parazurea"
+  ],
+  "safetyNote": "Fiche descriptive, pas une aide à la cueillette. Les russules gris-vert peuvent être difficiles à distinguer; ne pas consommer sur la base d’une photo ou de ce résumé.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Russula atroglauca.",
+      "title": "GBIF Backbone Taxonomy — Russula atroglauca Einhell., classification et référence de publication (1980).",
       "url": "https://www.gbif.org/species/3359578"
     },
     {
-      "title": "Index Fungorum, name record 111919: Russula atroglauca.",
+      "title": "Index Fungorum — Russula atroglauca Einhell., nom actuel et référence originale, enregistrement 111919.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=111919"
+    },
+    {
+      "title": "Knudsen, H., Ruotsalainen, J. & Vauras, J. (2008). Russula. In: Knudsen & Vesterholt (eds.), Funga Nordica, pp. 107–148 — caractères macroscopiques, écologie et spores.",
+      "url": "https://www.mykoweb.com/CAF/PDF/FungaNordica/FungaNordica-Russula.pdf"
+    },
+    {
+      "title": "Davies, V., Jordan, M. & Nichol, P. (2017). Red Data conservation assessment: Russula atroglauca — distribution, associations avec les arbres et risques de confusion avec R. parazurea. Fungus Conservation Trust.",
+      "url": "https://www.fungustrust.org.uk/page/red-lists/51/redlist4.html"
+    },
+    {
+      "title": "Dämmrich et al. (2016). Liste rouge des grands champignons d’Allemagne — Russula atroglauca, statut et habitat pionnier avec Populus tremula.",
+      "url": "https://www.rote-liste-zentrum.de/en/detailseite/?species_uuid=b3eff8d4-6143-43d9-9b61-1b96d8c5d9ac"
+    },
+    {
+      "title": "Pilzbestimmer.de / MycoKey — photographie de terrain attribuée à Russula atroglauca, par Jens H. Petersen, utilisée comme référence visuelle.",
+      "url": "https://pilzbestimmer.de/Detailed/11949.html"
     }
   ],
   "related": []

@@ -1,31 +1,27 @@
 {
   "id": "sordida",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap light violet, lilac-pink or lilac, smooth, a little greasy in wet weather",
-    "Gills notched and crowded, blue like the cap",
-    "Stem cylindrical, straight, smooth and fibrillose, no bulb, no ring",
-    "Light woods of broadleaf trees and conifers, garden grass, parks, meadows, lawns, roadsides · September to December"
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and classification", "text": "Index Fungorum uses Collybia sordida (Schumach.) Z.M. He & Zhu L. Yang, a combination published in 2023 in a phylogenetic revision of Clitocybaceae. However, GBIF/Catalogue of Life still accepts Lepista sordida and treats Collybia sordida as a synonym; many field guides also retain the older name. Generic placement is therefore not harmonized. Index Fungorum places the species in Agaricales and Clitocybaceae."},
+    {"title": "Appearance", "text": "A small gilled mushroom, usually more slender than the wood blewit Collybia nuda. The cap starts convex and later flattens or becomes slightly depressed at the centre; its smooth surface is hygrophanous: lilac or greyish violet when moist, it fades on drying towards pinkish beige, sometimes with a more olive-toned centre. The fairly crowded gills are lilac at first and later pale; they are adnate to slightly decurrent. The thin, fibrillose and often sinuous stem is lilac to greyish or whitish, with white mycelium at the base; it has no ring or volva."},
+    {"title": "Habitat and ecology", "text": "This is a saprotrophic fungus growing on organic-rich soil among grass and litter, including lawns, gardens, parks and woodland edges. It can fruit in small groups or fairy rings. Documented collections from lawns and grassland support that it is not tied to a particular tree species."},
+    {"title": "Lookalikes and caution", "text": "Collybia sordida may be confused with C. nuda, which is generally more robust and less hygrophanous, and with other lilac mushrooms. Purple-gilled Cortinarius species can be dangerous; colour alone cannot rule them out. DGfM and VAPKO lists include the species under its older name Lepista sordida, but that does not identify a specimen from a picture. Seek a local expert's confirmation before any consumption."}
   ],
-  "safetyNote": "Edible: the DGfM and the VAPKO list it (the DGfM marks it as on the German red list). Wikipedia (fr) gives no verdict of its own and names the blewits it is mistaken for, all edible: the wood blewit, with a blue stem, and the field blewit, with a violet stem; this one has a straight stem with no bulb. It also names a violet Cortinarius (Cortinarius azureus) among the look-alikes, which is not in this atlas: purple gills alone do not identify a blewit. Wikipedia (en) is a stub with no description, so the text follows the French page; sizes, flesh and spore print are not given there, and the drawing only shows typical shapes.",
+  "traits": [
+    "Small lilac to greyish-violet agaric; hygrophanous cap fades when dry, sometimes to pinkish beige",
+    "Fairly crowded gills, lilac when young then paler, adnate to slightly decurrent",
+    "Thin, fibrillose and sometimes sinuous stem, without ring or volva; white mycelium at the base",
+    "Saprotroph on organic-rich soil among grass and litter; may fruit in groups or fairy rings",
+    "Current name in Index Fungorum: Collybia sordida; Lepista sordida remains a common synonym in books"
+  ],
+  "safetyNote": "DGfM and VAPKO recommendation lists include this species under the name Lepista sordida. Lilac mushrooms can resemble one another and some Cortinarius species are dangerous; this entry and its image cannot provide a safe food identification. Have any collection checked by a local expert.",
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
-    },
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Lepista sordida",
-      "url": "https://fr.wikipedia.org/wiki/Lepista_sordida"
-    },
-    {
-      "title": "Wikipedia (en): Lepista sordida",
-      "url": "https://en.wikipedia.org/wiki/Lepista_sordida"
-    }
+    {"title": "Index Fungorum — Collybia sordida, current name published in 2023 and classification", "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=847254"},
+    {"title": "GBIF Backbone / Catalogue of Life — Lepista sordida accepted, with Collybia sordida listed as synonym", "url": "https://www.gbif.org/taxon/3TFTT"},
+    {"title": "He et al. (2023), Systematic arrangement within the family Clitocybaceae — phylogeny and new combination Collybia sordida", "url": "https://doi.org/10.1007/s13225-023-00527-2"},
+    {"title": "Alim, Sidhoum & Dib (2023), First Record of the Edible Mushroom Lepista sordida in Western Algerian Forest — observations, photographs and fruitbody section", "url": "https://doi.org/10.3390/jof9080858"},
+    {"title": "DGfM, Positivliste der Speisepilze (1 May 2026) — guidance list assuming adequate cooking", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023), Empfehlungsliste — Swiss official mushroom inspection recommendation list", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
   ],
   "related": []
 }

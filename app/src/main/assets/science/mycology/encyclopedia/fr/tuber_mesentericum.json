@@ -1,21 +1,52 @@
 {
   "id": "tuber_mesentericum",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : truffe souterraine à surface verruqueuse.",
-    "Repère écologique : truffe souterraine à surface verruqueuse. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Nom et classification",
+      "text": "Tuber mesentericum Vittad. (1831) est une truffe de la famille des Tuberaceae, dans l’ordre des Pezizales. Une étude multilocus a séparé trois lignées du complexe : T. mesentericum au sens strict, T. bituminatum et T. suave. Leurs caractères morphologiques se recouvrent largement; une identification fiable peut nécessiter une analyse moléculaire."
+    },
+    {
+      "title": "Aspect externe et coupe",
+      "text": "L’ascome souterrain est généralement arrondi à irrégulièrement lobé, avec un creux basal souvent marqué. Son péridium sombre, brun-noir à noir, porte des verrues pyramidales aplaties, souvent à plusieurs côtés et marquées de sillons. À maturité, la gléba ferme devient gris-brun à brun foncé, parfois violacée, et est parcourue de nombreuses veines stériles blanches qui restent claires; elle est blanchâtre avant maturité. Il ne s’agit pas d’un champignon à chapeau : aucune lame ni aucun pied n’est présent."
+    },
+    {
+      "title": "Écologie",
+      "text": "Espèce hypogée et ectomycorhizienne, elle fructifie sous terre en association avec des arbres, surtout feuillus comme le hêtre, le chêne et le charme; des associations avec des conifères sont également rapportées. Elle est souvent signalée sur des sols calcaires. La saison de fructification varie selon les régions et peut s’étendre de l’automne à l’hiver, parfois jusqu’au printemps dans les zones méditerranéennes."
+    },
+    {
+      "title": "Odeur et portée alimentaire",
+      "text": "L’odeur est fréquemment décrite comme forte, bitumineuse ou évoquant le goudron, mais son intensité varie et elle ne constitue pas à elle seule un critère de détermination. TuberID la répertorie comme comestible; cette fiche ne permet toutefois pas d’identifier une récolte ni de donner un conseil de consommation, notamment parce que le complexe comporte des lignées cryptiques proches."
+    }
   ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "traits": [
+    "Truffe souterraine, arrondie à irrégulièrement lobée, avec un creux basal souvent marqué",
+    "Péridium brun-noir à noir, couvert de verrues pyramidales aplaties et sillonnées",
+    "Gléba ferme gris-brun à brun foncé à maturité, marbrée de nombreuses veines blanches",
+    "Ectomycorhizienne sous des arbres, surtout hêtres, chênes et charmes; souvent sur sols calcaires",
+    "Odeur souvent bitumineuse; complexe taxonomique comprenant des lignées cryptiques proches"
+  ],
+  "safetyNote": "Certaines bases décrivent l’espèce comme comestible, mais cette fiche n’est pas un guide de récolte ou de sécurité alimentaire. Le complexe Tuber mesentericum comprend des lignées proches qui ne se distinguent pas toujours à l’œil nu; ne consomme pas un spécimen identifié uniquement à partir de cette image.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Tuber mesentericum.",
+      "title": "GBIF Backbone Taxonomy — Tuber mesentericum Vittad.",
       "url": "https://www.gbif.org/species/5258471"
     },
     {
-      "title": "Index Fungorum, name record 180551: Tuber mesentericum.",
-      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=180551"
+      "title": "Index Fungorum / Species Fungorum — nom et synonymie de Tuber mesentericum (record 180551)",
+      "url": "https://www.speciesfungorum.org/names/Synonymy.asp?RecordId=180551"
+    },
+    {
+      "title": "TuberID (Consiglio Nazionale delle Ricerche, IBBR) — identification morphologique et moléculaire, photos et caractères diagnostiques",
+      "url": "https://www.ibbr.cnr.it/tuberid/record/5"
+    },
+    {
+      "title": "Leonardi et al. (2021), Multilocus Phylogeography of the Tuber mesentericum Complex Unearths Three Highly Divergent Cryptic Species",
+      "url": "https://doi.org/10.3390/jof7121090"
+    },
+    {
+      "title": "Région Émilie-Romagne — fiche de terrain Tuber mesentericum Vittad.",
+      "url": "https://agricoltura.regione.emilia-romagna.it/tartufi/conoscere-il-tartufo/tuber-mesentericum-vittad"
     }
   ],
   "related": []

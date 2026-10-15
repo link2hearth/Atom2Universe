@@ -1,32 +1,24 @@
 {
   "id": "reticulatus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 4 to 20 cm, dry, velvety, fairly uniform brown, often cracked in dry weather: the white flesh shows in the cracks",
-    "White pores, then yellow, finally olive · olive spores",
-    "Stem 5 to 15 cm, beige to brown, swollen, covered with a fine net that often runs down to the base",
-    "Thick white flesh, a little less firm than in the other ceps, yellowing with age; pleasant smell",
-    "In broadleaf woods, mostly under oaks; from May to November, after hot, damp weather"
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and recognition", "text": "Boletus reticulatus Schaeff. is the name accepted by Species Fungorum; B. aestivalis (Paulet) Fr. is treated as a synonym. The cap, commonly 5–20 cm across, is hemispherical at first, then convex to nearly flat, hazelnut to ochre-brown, matte and finely velvety. It may crack into patches in dry weather, exposing the pale flesh. The tubes and pores are white at first, then cream, yellow to yellow-green or olive at maturity; they generally do not blue when pressed. The stem is bulbous when young, later club-shaped or cylindrical, pale brown, with a raised net pattern often pronounced on the upper half and paler than the background. The flesh is white and does not change when cut; it softens in older specimens. The spore print is olive-brown."},
+    {"title": "Habitat and season", "text": "This ectomycorrhizal bolete grows in broadleaf and mixed woodland, especially with oaks, and also with beech and lime; occasional records under conifers also exist. Records vary by region. It fruits from late spring into autumn, including after warm, damp periods; May–November is documented in central Europe, not a universal calendar."},
+    {"title": "Similar species and caution", "text": "The penny bun (Boletus edulis) shares white flesh and pores, but its cap often has a paler margin and its stem reticulation is usually less extensive. The bitter bolete (Tylopilus felleus) can also have a netted stem; its pores become pinkish and its flesh is very bitter. No single feature, and no image on this page, can securely identify a collected specimen. The DGfM and VAPKO include B. reticulatus on their recommended edible mushroom lists; those lists do not verify a photo identification or a particular find."}
   ],
-  "safetyNote": "Edible: it is on the German mycological society list (2026) and on the Swiss controllers’ list (2023). It lacks the pinkish flesh under the cap skin seen in the porcino, and its net runs further down (Wikipedia fr). The bitter bolete, which is inedible, has a coarser, darker net.",
+  "traits": [
+    "Hazelnut-brown cap, matte and velvety when young, often cracking into patches in dry weather",
+    "Tubes white, then cream, yellow to yellow-green or olive; pores generally do not blue",
+    "Stem bulbous, then club-shaped or cylindrical, with a raised pale net pattern",
+    "White flesh, unchanged when cut; olive-brown spore print",
+    "Broadleaf woodland, especially with oak, also beech and lime; late spring to autumn"
+  ],
+  "safetyNote": "The DGfM and VAPKO list Boletus reticulatus among recommended edible mushrooms. This does not confirm the identity of a collection, and a picture is not enough to decide whether to eat a specimen. Do not consume an uncertain mushroom; have it checked by a qualified mycologist or mushroom controller.",
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
-    },
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Boletus reticulatus",
-      "url": "https://fr.wikipedia.org/wiki/Boletus_reticulatus"
-    },
-    {
-      "title": "Wikipedia (en): Boletus reticulatus",
-      "url": "https://en.wikipedia.org/wiki/Boletus_reticulatus"
-    }
+    {"title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, Swiss Association of Official Mushroom Inspection Bodies (2023). Empfehlungsliste, version 09.2023.", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "Species Fungorum, species synonymy record 200521: Boletus reticulatus Schaeff. and synonyms", "url": "https://www.speciesfungorum.org/names/Synonymy.asp?RecordID=200521"},
+    {"title": "Česká mykologická společnost (Czech Mycological Society). Myko atlas: Boletus reticulatus Schaeff.", "url": "https://www.myko.cz/myko-atlas/Boletus-reticulatus/"}
   ],
   "related": []
 }

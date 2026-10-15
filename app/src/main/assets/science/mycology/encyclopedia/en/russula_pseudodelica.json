@@ -1,22 +1,25 @@
 {
   "id": "russula_pseudodelica",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: funnel-shaped russula.",
-    "Ecological context: funnel-shaped russula. Details vary with taxon and habitat.",
-    "Food status not assessed."
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and recognition", "text": "Russula pseudodelica J.E. Lange is recorded as a current name by Index Fungorum (published in 1926). It is a large white to cream russula with a deeply depressed, eventually funnel-shaped cap that soon becomes dirty yellow and often holds soil debris. The gills are narrow, crowded and decurrent, sometimes forked or anastomosing; they become pale ochre. The stem is short, stout and white, sometimes greyish at the base. The flesh is white and may grey at the stem base; the spore deposit is pale ochre. Funga Nordica also notes a slightly acrid taste; this is not a reason to taste an unidentified mushroom."},
+    {"title": "Habitat and taxonomic limits", "text": "European descriptions report it in broadleaf woodland, including under beech, fruiting in autumn; it is rare in several regions. The field concept follows Lange’s Danish description as used in Funga Nordica. A 2025 molecular study and a recent European key discuss the interpretation of the name: R. pseudodelica may be the correct name for R. flavispora, but a Danish epitype is still needed. Index Fungorum records the current name without resolving that discussion; photographs cannot settle these difficult identifications."},
+    {"title": "Caution", "text": "Edibility is not established by the sources consulted. Do not consume a specimen identified from this entry or its image; similar white russulas may require microscopic or chemical examination to distinguish."}
   ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "traits": [
+    "Large white to cream russula, cap deeply depressed and eventually funnel-shaped",
+    "Narrow, crowded, decurrent gills, sometimes forked; cream then pale ochre",
+    "Short, stout, white stem; base may turn greyish",
+    "White flesh, sometimes greying at the stem base; cream to pale ochre spore deposit",
+    "Broadleaf woodland, beech reported; autumn in European sources"
+  ],
+  "safetyNote": "Edibility is not established in the sources consulted. Do not consume a specimen identified from this entry or illustration. Distinguishing it from similar white russulas may require specialist examination.",
   "sources": [
-    {
-      "title": "GBIF Backbone Taxonomy: Russula pseudodelica.",
-      "url": "https://www.gbif.org/species/3360222"
-    },
-    {
-      "title": "Index Fungorum, name record 275416: Russula pseudodelica.",
-      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=275416"
-    }
+    {"title": "Index Fungorum, name record 275416: Russula pseudodelica J.E. Lange", "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=275416"},
+    {"title": "Knudsen, H. & Vesterholt, J. (eds.) (2008). Funga Nordica: Agaricoid, boletoid and cyphelloid genera. Russula, pp. 107–148 (key, p. 110).", "url": "https://www.mykoweb.com/CAF/PDF/FungaNordica/FungaNordica-Russula.pdf"},
+    {"title": "Marxmüller, H. et al. (2025). Russula subpallidospora sp. nov.: an uncommon, cream-spored milk-white brittlegill species. Zeitschrift für Mykologie 92(2): 295–318.", "url": "https://biblio.ugent.be/publication/01K47N1FWC96PZWS42MWVKVWXJ"},
+    {"title": "Læssøe et al. (2025), Keys to the fungi of Temperate Europe — note on Russula pseudodelica and R. flavispora", "url": "https://www.mycokey.com/keys/FTE-russulas.pdf"},
+    {"title": "AMFB (2008). Une Russule très intéressante: Russula pseudodelica Lange 1926 (field observations and comparative photographs).", "url": "https://www.amfb.eu/Publications/2008/russula_pseudodelica.pdf"}
   ],
   "related": []
 }

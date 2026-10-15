@@ -1,21 +1,52 @@
 {
   "id": "tuber_mesentericum",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: underground truffle with a warty surface.",
-    "Ecological context: underground truffle with a warty surface. Details vary with taxon and habitat.",
-    "Food status not assessed."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Name and classification",
+      "text": "Tuber mesentericum Vittad. (1831) is a truffle in the family Tuberaceae, order Pezizales. A multilocus study separated three lineages in the complex: T. mesentericum in the strict sense, T. bituminatum and T. suave. Their morphological characters overlap substantially; reliable identification may require molecular analysis."
+    },
+    {
+      "title": "External form and section",
+      "text": "The underground ascoma is generally rounded to irregularly lobed with an often marked basal depression. Its dark brown-black to black peridium bears flattened pyramidal warts, often several-sided and marked by grooves. At maturity, the firm gleba becomes grey-brown to dark brown, sometimes with violet tones, and is traversed by numerous white sterile veins that remain pale; it is whitish before maturity. This is not a cap-forming mushroom: it has neither gills nor a stem."
+    },
+    {
+      "title": "Ecology",
+      "text": "This hypogeous ectomycorrhizal species fruits underground in association with trees, especially broadleaves such as beech, oak and hornbeam; associations with conifers are also reported. It is often recorded on calcareous soils. Fruiting season varies by region and may extend from autumn into winter, and sometimes spring in Mediterranean areas."
+    },
+    {
+      "title": "Odour and food status",
+      "text": "The odour is often described as strong and bituminous or tar-like, but its intensity varies and it is not by itself a reliable identification character. TuberID lists the species as edible; this entry does not identify a collection or provide consumption advice, especially because the complex contains closely related cryptic lineages."
+    }
   ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "traits": [
+    "Underground truffle, rounded to irregularly lobed, with an often marked basal depression",
+    "Dark brown-black to black peridium covered with flattened, grooved pyramidal warts",
+    "Firm gleba grey-brown to dark brown at maturity, marbled with numerous white veins",
+    "Ectomycorrhizal with trees, especially beech, oak and hornbeam; often on calcareous soils",
+    "Often bituminous odour; taxonomic complex includes closely related cryptic lineages"
+  ],
+  "safetyNote": "Some databases describe this species as edible, but this entry is not a foraging or food-safety guide. The Tuber mesentericum complex includes close lineages that may not be distinguishable by eye; do not consume a specimen identified solely from this image.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Tuber mesentericum.",
+      "title": "GBIF Backbone Taxonomy — Tuber mesentericum Vittad.",
       "url": "https://www.gbif.org/species/5258471"
     },
     {
-      "title": "Index Fungorum, name record 180551: Tuber mesentericum.",
-      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=180551"
+      "title": "Index Fungorum / Species Fungorum — name and synonymy for Tuber mesentericum (record 180551)",
+      "url": "https://www.speciesfungorum.org/names/Synonymy.asp?RecordId=180551"
+    },
+    {
+      "title": "TuberID (Italian National Research Council, IBBR) — morphological and molecular identification, images and diagnostic characters",
+      "url": "https://www.ibbr.cnr.it/tuberid/record/5"
+    },
+    {
+      "title": "Leonardi et al. (2021), Multilocus Phylogeography of the Tuber mesentericum Complex Unearths Three Highly Divergent Cryptic Species",
+      "url": "https://doi.org/10.3390/jof7121090"
+    },
+    {
+      "title": "Emilia-Romagna Region — field profile for Tuber mesentericum Vittad.",
+      "url": "https://agricoltura.regione.emilia-romagna.it/tartufi/conoscere-il-tartufo/tuber-mesentericum-vittad"
     }
   ],
   "related": []

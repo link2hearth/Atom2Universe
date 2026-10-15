@@ -1,28 +1,26 @@
 {
   "id": "rosea",
-  "reviewStatus": "pending",
-  "sections": [],
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Chapeau et silhouette", "text": "Mycena rosea, la mycène rose, est un agarical de petite à moyenne taille. Son chapeau mesure environ 2,5 à 7 cm : d’abord convexe, il s’aplanit et garde souvent un faible mamelon central. La surface lisse, d’aspect cireux, est hygrophane : rose à rose lilas, elle pâlit en séchant ou avec l’âge, parfois avec un centre jaunâtre. La marge est finement striée par transparence."},
+    {"title": "Lames, pied et chair", "text": "Les lames sont pâles, blanches à rosées, assez espacées, ventrues et ascendantes; elles sont échancrées près du pied, parfois reliées entre elles par des veines en vieillissant. Le pied mesure généralement 6 à 10 cm, est creux, blanchâtre à rose pâle, souvent élargi vers la base et couvert à sa base de fibrilles blanchâtres, parfois jaunâtres. La chair est mince et blanche; l’odeur est nettement raphanoïde, évoquant le radis. La sporée est blanche."},
+    {"title": "Milieu et identification", "text": "L’espèce pousse seule ou dispersée dans la litière des forêts de feuillus, surtout sous hêtre et chêne, parfois dans des bois mêlés; elle est surtout observée en automne. Mycena pura est une proche ressemblante. La teinte rose plus uniforme et la stature souvent plus robuste aident, mais les caractères se recouvrent et la distinction ne se traduit pas toujours par un critère macroscopique sûr; la microscopie et l’ensemble des caractères peuvent être nécessaires."},
+    {"title": "Sécurité", "text": "Cette espèce est considérée toxique et ne doit pas être consommée. Des guides la classent dans les intoxications de type muscarinien; toutefois, la fiche de l’Université Lyon 1 précise que M. rosea ne contient pas de muscarine et évoque d’autres composés possibles. La substance responsable n’est donc pas présentée ici comme établie. En cas d’ingestion, contacte immédiatement un centre antipoison ou les urgences."}
+  ],
   "traits": [
-    "Chapeau de 2 à 6 cm, rose vif à rose pâle, avec un petit mamelon et une marge striée",
-    "Lames adnées ou échancrées, rose pâle à blanches",
-    "Pied très cassant, blanc teinté de rose",
-    "Odeur de radis",
-    "Lisières de bois de feuillus"
+    "Chapeau rose à rose lilas de 2,5–7 cm, souvent légèrement mamelonné, à marge striée et surface hygrophane qui pâlit en séchant",
+    "Lames blanches à rosées, ventrues et ascendantes, échancrées près du pied; sporée blanche",
+    "Pied creux, blanc à rose pâle, souvent élargi et fibrilleux à la base",
+    "Chair mince, blanche, à odeur raphanoïde (de radis)",
+    "Litière de forêts de feuillus, notamment sous hêtre ou chêne; surtout en automne"
   ],
-  "safetyNote": "Toxique : muscarine (la DGfM et Wikipédia, fr), avec transpiration, nausées et vomissements. Wikipédia (en) la liste comme vénéneuse sans nommer de toxine. Elle est proche de Mycena sororia, qu’on ne sépare qu’au microscope (Wikipédia, en).",
+  "safetyNote": "Mycena rosea est toxique et ne doit pas être consommée. La DGfM la classe dans le groupe des intoxications de type muscarinien, mais l’Université Lyon 1 indique que l’espèce ne contient pas de muscarine; la toxine exacte n’est pas affirmée ici. En cas d’ingestion, contacte immédiatement un centre antipoison ou les urgences.",
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Mycena rosea",
-      "url": "https://fr.wikipedia.org/wiki/Mycena_rosea"
-    },
-    {
-      "title": "Wikipedia (en): Mycena rosea",
-      "url": "https://en.wikipedia.org/wiki/Mycena_rosea"
-    }
+    {"title": "GBIF Backbone Taxonomy — Mycena rosea Gramberg", "url": "https://www.gbif.org/species/4911705"},
+    {"title": "Université Claude Bernard Lyon 1 — Mycena rosea : morphologie, habitat et toxicité", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/mycena-rosea/"},
+    {"title": "Arne Aronsen — The genus Mycena of Northern Europe, Mycena rosea : description et photos", "url": "https://mycena.no/rosea.htm"},
+    {"title": "NatureSpot — Rosy Bonnet (Mycena rosea) : observations photographiques et habitat", "url": "https://www.naturespot.org/species/rosy-bonnet"},
+    {"title": "Deutsche Gesellschaft für Mykologie (DGfM) — Liste des champignons toxiques par syndrome", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"}
   ],
-  "related": []
+  "related": ["pura"]
 }

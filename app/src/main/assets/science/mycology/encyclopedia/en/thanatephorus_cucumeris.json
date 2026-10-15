@@ -1,21 +1,61 @@
 {
   "id": "thanatephorus_cucumeris",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: microscopic fungus associated with rhizoctonia disease.",
-    "Ecological context: microscopic fungus associated with rhizoctonia disease. Details vary with taxon and habitat.",
-    "Food status not assessed."
-  ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Thanatephorus cucumeris.",
-      "url": "https://www.gbif.org/species/2555173"
+      "title": "Taxonomy and general form",
+      "text": "Thanatephorus cucumeris (A. B. Frank) Donk is the historical name given to the sexual stage associated with Rhizoctonia solani J. G. Kühn. The taxonomic databases consulted currently treat T. cucumeris as a synonym of R. solani, the accepted name, rather than as a separate species. In plant pathology, R. solani refers in practice to a highly diverse set of isolates divided into anastomosis groups (AGs). The fungus is usually encountered as vegetative mycelium; it is not a cap-forming mushroom."
     },
     {
-      "title": "Index Fungorum, name record 306777: Thanatephorus cucumeris.",
+      "title": "Hyphae and sclerotia",
+      "text": "Young hyphae are pale or nearly colorless, becoming tan to light brown with age. They are septate, and their characteristic branches often arise near a right angle, with a slight constriction at the base and a septum close to the branch point. The fungus persists in soil and plant debris as mycelium and as sclerotia, compact, irregular, brown to nearly black survival structures. Their appearance and abundance vary with isolate and conditions."
+    },
+    {
+      "title": "Ecology and plant disease",
+      "text": "Rhizoctonia solani is a soilborne pathogen with a broad host range, but anastomosis groups and isolates differ in host range and aggressiveness. Depending on the crop and isolate, it can cause damping-off, root or crown rots, stem cankers, tuber lesions, or foliar blights. Sclerotia and mycelium can survive in soil or crop debris; moisture, temperature, and plant condition influence symptoms. Symptoms alone are not sufficient to identify the species without plant-pathology examination."
+    },
+    {
+      "title": "Rare sexual stage",
+      "text": "Under some humid conditions, some isolates produce the sexual stage: a thin, whitish hymenial layer spread over plant tissue near the soil surface, where basidia bearing basidiospores form. This layer can be delicate and easily removed. The stage is encountered far less often than mycelium and sclerotia; it does not form a cap, stalk, gills, or pores."
+    }
+  ],
+  "traits": [
+    "Soilborne basidiomycete usually encountered as vegetative mycelium called Rhizoctonia solani; Thanatephorus cucumeris is the traditional name for its associated sexual stage",
+    "Septate hyphae, often branching near a right angle with a constriction at the branch base and a nearby septum",
+    "Young mycelium pale, becoming tan to light brown; compact, irregular, dark sclerotia can act as survival structures",
+    "A highly diverse set of isolates grouped by anastomosis group, with variable host ranges and aggressiveness",
+    "May cause damping-off, root or stem rots, cankers, and blights depending on host plant and isolate",
+    "Rare sexual stage: a thin, whitish effused layer bearing basidia and basidiospores; no mushroom-like anatomy"
+  ],
+  "safetyNote": "This is a plant-pathogenic fungus with no food use described in this entry. This reference alone cannot diagnose a plant disease.",
+  "sources": [
+    {
+      "title": "Index Fungorum — Thanatephorus cucumeris, name record 306777, with current name Rhizoctonia solani.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=306777"
+    },
+    {
+      "title": "Species Fungorum — Thanatephorus cucumeris synonymy under Rhizoctonia solani, taxonomic database of the Royal Botanic Gardens, Kew.",
+      "url": "https://www.speciesfungorum.org/names/Synonymy.asp?RecordID=306777"
+    },
+    {
+      "title": "O’Donnell, Linde & May (2025), Rise up, Rhizoctonia: moving to one fungus, one name in the Ceratobasidiaceae — nomenclatural revision of the group.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12308286/"
+    },
+    {
+      "title": "University of Nebraska–Lincoln, CropWatch — Rhizoctonia Root Rot in Dry Bean: morphology, sexual stage, and symptoms.",
+      "url": "https://cropwatch.unl.edu/plant-disease/dry-bean/rhizoctonia-root-rot/"
+    },
+    {
+      "title": "Cornell University, Vegetable MD Online — Rhizoctonia Canker and Black Scurf of Potato: superficial sexual mat on stems.",
+      "url": "https://www.vegetables.cornell.edu/pest-management/disease-factsheets/rhizoctonia-canker-and-black-scurf-of-potato/"
+    },
+    {
+      "title": "American Phytopathological Society, Plant Health Progress (2022) — Aerial Blight of Soybean Caused by Rhizoctonia solani AG1-IA: diagnostic guide and hyphal micrographs.",
+      "url": "https://apsjournals.apsnet.org/doi/10.1094/PHP-05-22-0043-DG"
+    },
+    {
+      "title": "EPPO Global Database — Rhizoctonia solani photo gallery, including the Thanatephorus cucumeris sexual stage at soil level.",
+      "url": "https://gd.eppo.int/taxon/RHIZSO/photos"
     }
   ],
   "related": []

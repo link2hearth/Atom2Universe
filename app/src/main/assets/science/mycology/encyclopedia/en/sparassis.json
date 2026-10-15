@@ -1,15 +1,20 @@
 {
   "id": "sparassis",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "A large mass 10 to 40 cm wide and 8 to 20 cm high, made of flat, wavy, crimped lobes like lasagna sheets, growing from a thick base",
-    "Cream white to pale yellow, sometimes pinkish, browning at the edge of the lobes with age",
-    "No gills or pores · cream spores",
-    "Tender, crunchy flesh, pleasant smell, walnut-like taste",
-    "At the base and on the roots of conifers, mostly pines; from late summer to autumn"
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Form and structure", "text": "Sparassis crispa (Wulfen) Fr., the cauliflower fungus, forms a large rounded fruitbody, usually 10–25 cm tall and up to about 40 cm wide. Numerous flattened, wavy and frilled ribbons arise from a thick central base, often buried and connected to roots. The smooth fertile surface covers the lobes: this species has no cap, ordinary aerial stem, gills or pores."},
+    {"title": "Colour and flesh", "text": "The lobes are whitish to cream or pale yellow, sometimes tinged with ochre or pink; they brown and become tougher with age. Young flesh is pliable, firm and somewhat cartilaginous. The spore print is off-white. A cut through the centre shows pale tissue arranged in flattened branches, without tubes or a hollow centre."},
+    {"title": "Habitat and season", "text": "This species grows at the base of, or on the roots of, conifers, especially pine and more rarely other conifers depending on region. It causes brown root and butt rot and may fruit at the same location for several years. Fruiting bodies appear mainly from late summer into autumn."},
+    {"title": "Look-alikes and caution", "text": "Other Sparassis species, including S. brevipes, are close and their distinction may depend on habitat, fine characters and region; a photograph alone may not settle the identification. Ramaria and other coral fungi have more cylindrical branches, unlike the broad frilled ribbons of S. crispa. DGfM and VAPKO lists include it among edible species, but those lists never confirm the identity of a find. Do not eat an uncertain specimen."}
   ],
-  "safetyNote": "Edible: it is on the German mycological society list (2026) and on the Swiss controllers’ list (2023). The lobes trap soil, needles and grubs: it has to be cleaned at length (Wikipedia en). Too big or too old, it becomes tough and hard to digest (Wikipedia fr). Sparassis brevipes, smaller, yellower, under broadleaves, smelling of bleach, is to be avoided (Wikipedia fr). The beautiful clavaria, which is toxic, has round branches.",
+  "traits": [
+    "Large rounded fruitbody of flattened, frilled ribbons, up to about 40 cm wide, arising from a central base",
+    "Lobes whitish to cream or pale yellow, browning and toughening with age",
+    "Smooth fertile surface on the lobes · no gills or pores · off-white spore print",
+    "Young flesh pliable, firm and somewhat cartilaginous; base often connected to roots",
+    "At the base of or on conifer roots, especially pine; mainly late summer to autumn"
+  ],
+  "safetyNote": "DGfM and VAPKO lists include Sparassis crispa among edible species; this does not confirm the identity of a specimen. The lobes readily trap debris, and older fruitbodies become tough. Do not eat a mushroom identified only from this page or a photograph; if uncertain, ask a qualified mycologist or mushroom inspector.",
   "sources": [
     {
       "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
@@ -19,14 +24,10 @@
       "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
-    {
-      "title": "Wikipédia (fr) : Sparassis crispa",
-      "url": "https://fr.wikipedia.org/wiki/Sparassis_crispa"
-    },
-    {
-      "title": "Wikipedia (en): Sparassis crispa",
-      "url": "https://en.wikipedia.org/wiki/Sparassis_crispa"
-    }
+    {"title": "Species Fungorum — name and authority for Sparassis crispa", "url": "https://www.speciesfungorum.org/names/NamesRecord.asp?RecordId=469819"},
+    {"title": "Sharma et al. (2022), Medicinal, nutritional, and nutraceutical potential of Sparassis crispa s. lat.: a review, IMA Fungus", "url": "https://doi.org/10.1186/s43008-022-00095-1"},
+    {"title": "First Nature — illustrated description, dimensions, spore print and habitat", "url": "https://www.first-nature.com/fungi/sparassis-crispa.php"},
+    {"title": "CONECTFOR (2021) — Guide to recognising saproxylic fungi: Sparassis crispa", "url": "https://doctech.cbnpmp.fr/mycologie/013_Guide-reco_Champignon-saproxyliques_ConectFor-2021_Sparassis.pdf"}
   ],
   "related": []
 }

@@ -1,13 +1,32 @@
 {
   "id": "schizosaccharomyces_pombe",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : levure unicellulaire qui se divise par scissiparité.",
-    "Repère écologique : levure unicellulaire qui se divise par scissiparité. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Taxonomie et forme générale",
+      "text": "Schizosaccharomyces pombe est une levure unicellulaire de l’embranchement des Ascomycota. En croissance végétative, ses cellules ont une forme cylindrique en bâtonnet, avec des extrémités arrondies; elles mesurent typiquement environ 7–14 µm de long pour 4 µm de diamètre, avec des variations selon le cycle cellulaire et les conditions de culture. Elle ne forme pas de sporophore à chapeau et à pied."
+    },
+    {
+      "title": "Paroi et organisation cellulaire",
+      "text": "La cellule est entourée d’une paroi riche en glucanes et d’une membrane plasmique; son cytoplasme contient notamment un noyau et des organites eucaryotes. La coupe dessinée sur la planche est schématique et ne représente ni leurs positions exactes ni leurs proportions à l’échelle. La surface externe est une paroi cellulaire, pas une surface fructifère portant des lames ou des pores."
+    },
+    {
+      "title": "Croissance et division par fission",
+      "text": "La cellule s’allonge principalement par croissance à ses extrémités. Lors de la division, un anneau contractile se met en place au milieu et un septum de nouvelle paroi progresse vers le centre, perpendiculairement au grand axe. Le septum comprend une couche primaire entre deux couches secondaires; sa séparation libère deux cellules filles de longueur comparable. Ce processus est une fission médiane, pas un bourgeonnement."
+    },
+    {
+      "title": "Usage et limites de la fiche",
+      "text": "Cette levure est un organisme modèle largement utilisé pour étudier la forme cellulaire, le cycle cellulaire et la cytocinèse. Une observation microscopique générale ne suffit pas à identifier une levure inconnue. Son statut alimentaire n’est pas évalué ici; cette fiche n’est pas un conseil de consommation ou de sécurité."
+    }
   ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "traits": [
+    "Levure unicellulaire microscopique, ascomycète, à cellules cylindriques en bâtonnet et extrémités arrondies",
+    "Cellules végétatives typiquement longues de 7–14 µm et larges d’environ 4 µm; dimensions variables selon le cycle et la culture",
+    "Croissance surtout aux extrémités; division végétative par fission au milieu, sans bourgeonnement",
+    "Septum médian constitué d’une couche primaire encadrée par deux couches secondaires, selon un schéma simplifié",
+    "Organisme modèle en biologie cellulaire; aucune fructification à chapeau ni structure à lames ou à pores"
+  ],
+  "safetyNote": "Référence taxonomique et biologique. Cette fiche ne sert pas à identifier une levure inconnue et ne donne pas de conseil de consommation ou de sécurité alimentaire.",
   "sources": [
     {
       "title": "GBIF Backbone Taxonomy: Schizosaccharomyces pombe.",
@@ -16,6 +35,14 @@
     {
       "title": "Index Fungorum, name record 212377: Schizosaccharomyces pombe.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=212377"
+    },
+    {
+      "title": "Piel, M. & Tran, P. T. (2009). Cell Shape and Cell Division in Fission Yeast. Current Biology, 19(17), R823–R827.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2997724/"
+    },
+    {
+      "title": "García Cortés, J. C. et al. (2016). The Cell Biology of Fission Yeast Septation. Microbiology and Molecular Biology Reviews, 80(3), 779–791.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4981666/"
     }
   ],
   "related": []

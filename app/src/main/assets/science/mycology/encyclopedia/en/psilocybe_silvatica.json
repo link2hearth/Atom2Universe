@@ -1,21 +1,48 @@
 {
   "id": "psilocybe_silvatica",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: small saprotrophic Psilocybe of wooded habitats.",
-    "Ecological context: small saprotrophic Psilocybe of wooded habitats. Details vary with taxon and habitat.",
-    "Food status not assessed."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Name and recognition",
+      "text": "Psilocybe silvatica (Peck) Singer & A.H. Sm. is the currently accepted name for this very small brown agaric; its basionym is Psathyra silvatica Peck. In the protologue, Peck describes a bell-shaped cap 8–10 mm across, dark brown and striate when wet, becoming grey-brown as it dries; the gills are ascending, distant, ferruginous brown with a white edge, and the stem is slender, hollow and slightly flexuous. Later descriptions add a viscid, hygrophanous surface and gills that darken toward purplish-brown. A slight bluish tint has been mentioned in some accounts, but several North American descriptions do not report it; it is not a dependable identification character. This American species is morphologically similar to P. medullosa, a distinct European species in the 2015 phylogenetic study."
+    },
+    {
+      "title": "Habitat",
+      "text": "Typical records place it in woodland, on mossy ground and plant debris; the epitype published in 2015 was collected in a group on fir debris in Newfoundland. These records support a saprotrophic ecology but do not establish an exclusive host tree or habitat. Collections are rare, and older identifications may be uncertain."
+    },
+    {
+      "title": "Chemical evidence and caution",
+      "text": "Some books have called it psychoactive by analogy, but Borovička et al. (2015) report that no chemical analysis of P. silvatica had been published at that time. The sources consulted therefore do not confirm its chemistry or any psychoactive effect. Edibility is not established: do not consume it or use this entry to identify a wild collection. Small brown agarics are difficult to distinguish, and a photograph cannot confirm a species."
+    }
   ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "traits": [
+    "Very small bell-shaped, hygrophanous cap, dark brown when wet and paler as it dries",
+    "Attached gills, grey-brown at first then dark purplish-brown at maturity",
+    "Slender, often flexuous, hollow stem; bluing is inconsistent and not diagnostic",
+    "Mossy woodland ground and plant debris; the Newfoundland epitype was on fir debris",
+    "Rare North American species, distinct from the European Psilocybe medullosa"
+  ],
+  "safetyNote": "Chemical composition and edibility are not established in the sources consulted. Do not consume it or infer psychoactive effects or identity from this entry or its image. If accidental ingestion is followed by symptoms, promptly contact a poison centre or medical service.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Psilocybe silvatica.",
+      "title": "GBIF Backbone Taxonomy: Psilocybe silvatica",
       "url": "https://www.gbif.org/species/5459328"
     },
     {
-      "title": "Index Fungorum, name record 304494: Psilocybe silvatica.",
+      "title": "Index Fungorum, name record 304494: Psilocybe silvatica",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=304494"
+    },
+    {
+      "title": "Species Fungorum, name record 179953: Psathyra silvatica basionym and type data",
+      "url": "https://www.speciesfungorum.org/names/NamesRecord.asp?RecordID=179953"
+    },
+    {
+      "title": "Peck, C.H. (1889). Annual Report of the State Botanist (1888). Annual Report on the New York State Museum of Natural History 42: 116 (protologue of Psathyra silvatica)",
+      "url": "https://www.biodiversitylibrary.org/item/52512"
+    },
+    {
+      "title": "Borovička et al. (2015), Phylogenetic and chemical studies in the potential psychotropic species complex of Psilocybe atrobrunnea, Persoonia 34:1–9",
+      "url": "https://doi.org/10.3767/003158515X685283"
     }
   ],
   "related": []

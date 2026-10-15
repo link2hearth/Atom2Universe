@@ -1,32 +1,43 @@
 {
   "id": "tubaeformis",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau de 3 à 7 cm, convexe puis creusé en entonnoir, souvent percé au centre sur le pied creux ; brun à fauve, grisé ; marge enroulée chez le jeune puis ondulée",
-    "Dessous sans vraies lames : des plis gris ou jaune argenté, ramifiés et fourchus près du bord, qui descendent sur le pied",
-    "Pied de 3 à 12 cm, jaune vif, long, mince, sinueux et creux",
-    "Chair mince et jaunâtre, odeur faible",
-    "Sporée pâle (crème à rose orangé pâle)",
-    "Par groupes, souvent en files, dans les bois de feuillus ou mixtes, sur la mousse et la litière, près du bois très pourri · de la mi-automne aux premières gelées"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Reconnaissance",
+      "text": "Craterellus tubaeformis (Fr.) Quél., aussi publié autrefois sous Cantharellus tubaeformis, porte un chapeau brun gris à brun jaune, d’abord convexe puis nettement déprimé en entonnoir; le centre peut s’ouvrir jusqu’au pied creux. Le bord est mince et souvent ondulé. Le dessous n’a ni vraies lames ni tubes : l’hyménium forme des plis bas, ramifiés et parfois reliés entre eux, grisâtres à jaunâtres, qui descendent sur le pied. Celui-ci est mince, jaune à jaune orangé et creux; la chair est mince et l’odeur faible."
+    },
+    {
+      "title": "Milieu",
+      "text": "En Europe du Nord, elle fructifie souvent en groupes dans les bois humides de conifères, notamment sous épicéas et pins, parmi la mousse, plutôt tard en automne. Des observations européennes la signalent aussi en bois mêlés ou sous hêtre; l’habitat varie selon la région."
+    },
+    {
+      "title": "Comestibilité et prudence",
+      "text": "La VAPKO inclut ce taxon sous son nom actuel; la DGfM le répertorie sous l’ancien nom Cantharellus tubaeformis. Les deux listes le rangent parmi les champignons alimentaires recommandés. La DGfM précise que sa liste vise des espèces consommées après cuisson suffisante et en quantité raisonnable. Cette mention ne valide pas l’identification d’un spécimen : dans les mêmes sous-bois peut pousser le Cortinaire couleur de rocou, très toxique. Ne consomme pas un champignon identifié seulement avec cette fiche ou son illustration; fais confirmer toute récolte par un contrôleur compétent."
+    }
   ],
-  "safetyNote": "Comestible réputé, frais ou séché ; il est sur la liste de la société allemande de mycologie (« Trompeten-Pfifferling ») et sur celle des contrôleurs suisses. Il a des sosies comestibles (chanterelle jaune, chanterelle noircissante) ; la léotie lubrique, gélatineuse et dite suspecte, peut pousser à côté (Wikipédia FR).",
+  "traits": [
+    "Chapeau brun gris à brun jaune, profondément déprimé puis en entonnoir; marge mince et souvent ondulée",
+    "Hyménium à plis bas, ridés, ramifiés/anastomosés et décurrents — ni vraies lamelles ni pores",
+    "Pied mince, jaune à jaune orangé, creux; chair mince et odeur faible",
+    "Fructification en groupes, souvent tard en automne dans les bois humides et moussus; conifères fréquents en Europe du Nord"
+  ],
+  "safetyNote": "Espèce incluse dans des listes européennes de champignons alimentaires recommandés (la DGfM l’inscrit sous Cantharellus tubaeformis), avec cuisson suffisante selon la DGfM. Une fiche ou une image ne permet pas de valider une récolte. Risque de confusion dans le même habitat avec le Cortinaire couleur de rocou (Cortinarius rubellus), très toxique; faire contrôler les spécimens.",
   "sources": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026 (notes thorough cooking and moderate quantities).",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "VAPKO (2023). Empfehlungsliste / liste de recommandations, version septembre 2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Craterellus tubaeformis",
-      "url": "https://fr.wikipedia.org/wiki/Craterellus_tubaeformis"
+      "title": "Høiland, K. (Store norske leksikon). Traktkantarell (Craterellus tubaeformis): description, habitat and confusion warning.",
+      "url": "https://snl.no/traktkantarell"
     },
     {
-      "title": "Wikipedia (en): Craterellus tubaeformis",
-      "url": "https://en.wikipedia.org/wiki/Craterellus_tubaeformis"
+      "title": "Archivio Micologico Generale Fotografico (AMINT) (2016–2025). Craterellus tubaeformis: field photographs and observations of branched, anastomosing folds and hollow stem.",
+      "url": "https://www.funghiitaliani.it/topic/15665-craterellus-tubaeformis-fr-qu%C3%A9l-1888/page/3/"
     }
   ],
   "related": []

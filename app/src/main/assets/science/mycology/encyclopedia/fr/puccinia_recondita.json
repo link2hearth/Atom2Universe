@@ -1,21 +1,65 @@
 {
   "id": "puccinia_recondita",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : rouille foliaire du blé.",
-    "Repère écologique : rouille foliaire du blé. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Nom et périmètre taxonomique",
+      "text": "Puccinia recondita Roberge ex Desm. (1857) est une rouille des Pucciniaceae, Basidiomycota. Son périmètre a varié dans la littérature : le nom a longtemps été appliqué à des rouilles foliaires des céréales, dont celle du blé. Les sources taxonomiques et phytopathologiques récentes distinguent généralement P. triticina, agent de la rouille foliaire du blé, de P. recondita f. sp. secalis, forme associée au seigle. Une étude expérimentale a aussi séparé des groupes de populations par leurs hôtes téliaux et éciaux et leur compatibilité. Cette fiche présente donc surtout la rouille liée au seigle et signale les emplois historiques plus larges du nom."
+    },
+    {
+      "title": "Aspect sur la plante hôte",
+      "text": "C’est un champignon parasite biotrophe obligatoire : il se développe dans les tissus vivants de plantes graminées et produit des sores sur les feuilles. Sur le seigle (Secale cereale), la phase uredinienne forme de petites pustules brun-orangé à brun, poudreuses et irrégulièrement disséminées sur le limbe; les spores se détachent facilement. Des sores plus foncés apparaissent à d’autres stades. Leur couleur et leur répartition varient avec le stade, l’hôte et la population; l’image est une illustration botanique, pas un critère de diagnostic sur un hôte inconnu."
+    },
+    {
+      "title": "Cycle et hôtes",
+      "text": "Le complexe P. recondita comprend des rouilles macrocycliques et hétéroéciques : leur cycle complet comporte cinq types de spores et alterne entre une graminée et une plante dicotylédone. Les populations étudiées sur seigle ont été associées à des hôtes éciaux de Boraginaceae, notamment Lycopsis arvensis et Anchusa undulata; d’autres groupes ont des hôtes différents. La rouille peut aussi se propager de céréale en céréale par ses urédiniospores, sans que l’hôte alternatif soit forcément présent localement. Les plantes alternantes et leur importance épidémiologique dépendent de la forme spécialisée et de la région."
+    },
+    {
+      "title": "Distinction et prudence",
+      "text": "La rouille foliaire du blé est aujourd’hui généralement attribuée à Puccinia triticina; l’ancienne combinaison P. recondita f. sp. tritici reste visible dans des références et bases. L’hôte, les stades sporifères et parfois l’examen microscopique sont nécessaires pour différencier les rouilles des céréales, qui se ressemblent sur photo. Cette espèce phytopathogène n’est pas une ressource alimentaire; la fiche ne recommande ni cueillette ni consommation."
+    }
   ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "traits": [
+    "Rouille des Pucciniaceae; le nom Puccinia recondita a été utilisé dans un sens large, notamment pour des rouilles des céréales",
+    "Les formes associées au seigle (Secale cereale) produisent des pustules brun-orangé à brunes, poudreuses et irrégulières sur les feuilles",
+    "Champignon biotrophe obligatoire, parasite de tissus végétaux vivants",
+    "Le complexe est macrocyclique et hétéroécique : cinq stades sporifères sur des graminées et des hôtes dicotylédones alternants",
+    "Des populations du seigle ont pour hôtes éciaux signalés des Boraginaceae, notamment Lycopsis arvensis et Anchusa undulata",
+    "À distinguer de Puccinia triticina, nom généralement utilisé aujourd’hui pour la rouille foliaire du blé"
+  ],
+  "safetyNote": "Cette rouille phytopathogène n’est pas un champignon alimentaire. Les rouilles des céréales peuvent se ressembler; ne déterminez pas un spécimen ou un risque agricole à partir de cette illustration seule.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Puccinia recondita.",
+      "title": "Index Fungorum — Puccinia recondita Roberge ex Desm., nom et référence taxonomiques (enregistrement 145187).",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=145187"
+    },
+    {
+      "title": "GBIF Backbone Taxonomy — Puccinia recondita, classification et données de nom (taxon 2514697).",
       "url": "https://www.gbif.org/species/2514697"
     },
     {
-      "title": "Index Fungorum, name record 145187: Puccinia recondita.",
-      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=145187"
+      "title": "Species Fungorum — enregistrement nomenclatural 348736, synonymie autour de Puccinia recondita et P. triticina.",
+      "url": "https://www.speciesfungorum.org/names/NamesRecord.asp?RecordId=348736"
+    },
+    {
+      "title": "Anikster et al. (1997), Canadian Journal of Botany 75(12): 2082–2096 — comparaison expérimentale des hôtes téliaux/éciaux et groupes de P. recondita issus du blé, du seigle et de blés sauvages.",
+      "url": "https://doi.org/10.1139/b97-919"
+    },
+    {
+      "title": "USDA Agricultural Research Service, Cereal Disease Laboratory — hôtes et maladies des céréales : P. recondita f. sp. secalis sur seigle et distinction de P. triticina sur blé.",
+      "url": "https://www.ars.usda.gov/midwest-area/stpaul/cereal-disease-lab/docs/cereal-rusts/cereal-rusts-and-their-hosts/"
+    },
+    {
+      "title": "Singh, Huerta-Espino & Roelfs, FAO — The wheat rusts : hôtes, taxonomie historique et distinction entre les rouilles foliaires du blé et du seigle.",
+      "url": "https://www.fao.org/4/Y4011E/y4011e0g.htm"
+    },
+    {
+      "title": "Bolton, Kolmer & Garvin (2008), Wheat leaf rust caused by Puccinia triticina, Molecular Plant Pathology 9(5): 563–575 — uredinies, urediniospores, infection de l’hôte et relation taxonomique avec l’ancien complexe P. recondita.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6640346/"
+    },
+    {
+      "title": "Krępski et al. (2024), Leaf rust (Puccinia recondita f. sp. secalis) triggers substantial changes in rye (Secale cereale L.) at the transcriptome and metabolome levels, BMC Plant Biology 24:107 — hôte rye et symptômes illustrés (figure 1).",
+      "url": "https://doi.org/10.1186/s12870-024-04726-0"
     }
   ],
   "related": []

@@ -1,15 +1,20 @@
 {
   "id": "sparassis",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Un gros bloc de 10 à 40 cm de large et 8 à 20 cm de haut, fait de lobes plats, ondulés et crépus, comme des lasagnes, qui partent d’une base épaisse",
-    "Blanc crème à jaune pâle, parfois rosé, brunissant au bord des lobes avec l’âge",
-    "Ni lames ni pores · sporée crème",
-    "Chair tendre et croquante, odeur agréable, goût de noix",
-    "À la base et sur les racines des conifères, surtout des pins ; de la fin de l’été à l’automne"
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Silhouette et structure", "text": "Sparassis crispa (Wulfen) Fr., le sparassis crépu, forme une grande touffe arrondie, généralement de 10 à 25 cm de haut et jusqu’à environ 40 cm de large. De nombreux rubans aplatis, ondulés et frisés émergent d’une base centrale épaisse, souvent enfouie et reliée aux racines. La surface fertile lisse couvre les lobes : l’espèce n’a ni chapeau, ni pied aérien classique, ni lamelles, ni pores."},
+    {"title": "Couleur et chair", "text": "Les lobes sont blanchâtres à crème ou jaune pâle, parfois teintés d’ocre ou de rose; ils brunissent et deviennent plus coriaces avec l’âge. La chair jeune est souple, ferme et un peu cartilagineuse. La sporée est blanc cassé. La coupe révèle une masse claire organisée en branches aplaties, sans tubes ni cavité centrale."},
+    {"title": "Habitat et saison", "text": "Cette espèce vit au pied ou sur les racines de conifères, surtout le pin, plus rarement d’autres conifères selon les régions. Elle provoque une pourriture brune des racines et de la base du tronc, et peut fructifier au même endroit plusieurs années. Les fructifications apparaissent surtout de la fin de l’été à l’automne."},
+    {"title": "Espèces proches et prudence", "text": "D’autres Sparassis, notamment S. brevipes, sont proches et leur distinction peut dépendre de l’habitat, de caractères fins et de la région; une photo seule ne suffit pas toujours à trancher. Les Ramaria et autres champignons coralloïdes ont plutôt des rameaux cylindriques, et non les larges rubans crépus de S. crispa. Les listes DGfM et VAPKO le classent parmi les espèces consommables, mais elles ne confirment jamais l’identité d’une récolte. Ne consomme pas un spécimen incertain."}
   ],
-  "safetyNote": "Comestible : il est sur la liste de la société allemande de mycologie (2026) et sur celle des contrôleurs suisses (2023). Les lobes retiennent terre, aiguilles et larves : il faut le nettoyer longuement (Wikipédia en). Trop gros ou trop vieux, il devient dur et indigeste (Wikipédia fr). Le Sparassis brevipes, plus petit, plus jaune, sous les feuillus, à odeur d’eau de Javel, est à éviter (Wikipédia fr). La clavaire jolie, toxique, a des branches rondes.",
+  "traits": [
+    "Grande touffe arrondie de rubans aplatis et frisés, jusqu’à environ 40 cm, émergeant d’une base centrale",
+    "Lobes blanchâtres à crème ou jaune pâle, qui brunissent et durcissent avec l’âge",
+    "Surface fertile lisse sur les lobes · aucune lamelle ni aucun pore · sporée blanc cassé",
+    "Chair jeune souple, ferme et un peu cartilagineuse; base souvent reliée à des racines",
+    "Au pied ou sur les racines de conifères, surtout des pins; surtout de la fin de l’été à l’automne"
+  ],
+  "safetyNote": "Les listes DGfM et VAPKO classent Sparassis crispa parmi les espèces consommables; cela ne confirme pas l’identification d’un spécimen. Les lobes retiennent facilement des débris, et les exemplaires âgés deviennent coriaces. Ne consomme pas un champignon déterminé uniquement à partir de cette fiche ou d’une photo; en cas de doute, demande l’avis d’un mycologue ou d’un contrôleur qualifié.",
   "sources": [
     {
       "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
@@ -19,14 +24,10 @@
       "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
-    {
-      "title": "Wikipédia (fr) : Sparassis crispa",
-      "url": "https://fr.wikipedia.org/wiki/Sparassis_crispa"
-    },
-    {
-      "title": "Wikipedia (en): Sparassis crispa",
-      "url": "https://en.wikipedia.org/wiki/Sparassis_crispa"
-    }
+    {"title": "Species Fungorum — nom et autorité de Sparassis crispa", "url": "https://www.speciesfungorum.org/names/NamesRecord.asp?RecordId=469819"},
+    {"title": "Sharma et al. (2022), Medicinal, nutritional, and nutraceutical potential of Sparassis crispa s. lat.: a review, IMA Fungus", "url": "https://doi.org/10.1186/s43008-022-00095-1"},
+    {"title": "First Nature — description illustrée, dimensions, sporée et habitat", "url": "https://www.first-nature.com/fungi/sparassis-crispa.php"},
+    {"title": "CONECTFOR (2021) — Guide de reconnaissance des champignons saproxyliques : Sparassis crispa", "url": "https://doctech.cbnpmp.fr/mycologie/013_Guide-reco_Champignon-saproxyliques_ConectFor-2021_Sparassis.pdf"}
   ],
   "related": []
 }

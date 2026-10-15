@@ -1,31 +1,27 @@
 {
   "id": "sordida",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau violet clair, rose lilas ou lilas, lisse, un peu gras par temps humide",
-    "Lames échancrées et serrées, bleues comme le chapeau",
-    "Pied cylindrique, droit, lisse et fibrilleux, sans bulbe, sans anneau",
-    "Bois clairs de feuillus et de conifères, herbe des jardins, parcs, prés, gazons et bords de chemins · septembre à décembre"
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Nom et classification", "text": "Index Fungorum retient Collybia sordida (Schumach.) Z.M. He & Zhu L. Yang, combinaison publiée en 2023 dans une révision phylogénétique des Clitocybaceae. Lepista sordida reste toutefois accepté par GBIF/Catalogue of Life, qui traite Collybia sordida comme synonyme; plusieurs guides gardent également l’ancien nom. Le classement générique n’est donc pas harmonisé. Index Fungorum place l’espèce dans les Agaricales et les Clitocybaceae."},
+    {"title": "Aspect", "text": "Petit champignon à lames, souvent plus grêle que le pied-bleu Collybia nuda. Le chapeau est d’abord convexe, puis s’étale ou se déprime légèrement au centre; sa surface lisse est hygrophane : lilas ou violet grisâtre quand elle est humide, elle pâlit en séchant vers le beige rosé, parfois avec un centre plus olivâtre. Les lames assez serrées sont lilas au début puis pâlissent; elles sont adnées à légèrement décurrentes. Le pied mince, fibrilleux et souvent sinueux, est lilas à grisâtre ou blanchâtre et porte du mycélium blanc à la base; il n’a ni anneau ni volve."},
+    {"title": "Habitat et cycle", "text": "C’est un champignon saprotrophe qui pousse sur le sol riche en matière organique, parmi l’herbe et la litière, notamment dans les pelouses, jardins, parcs et lisières. Il peut fructifier en petits groupes ou en cercles de sorcières. Les récoltes documentées en pelouse et en prairie confirment qu’il n’est pas lié à une essence d’arbre particulière."},
+    {"title": "Confusions et prudence", "text": "Collybia sordida peut être confondu avec C. nuda, généralement plus robuste et moins hygrophane, ainsi qu’avec d’autres champignons lilas. Les cortinaires à lames violettes peuvent notamment être dangereux : la couleur seule ne permet pas de les exclure. La DGfM et la VAPKO répertorient l’espèce sous son ancien nom Lepista sordida; cela ne permet pas d’identifier un spécimen à partir d’une image. Demande une vérification mycologique locale avant toute consommation."}
   ],
-  "safetyNote": "Comestible : la DGfM et la VAPKO le listent (la DGfM le signale sur la liste rouge allemande). Wikipédia (fr) ne donne pas de verdict propre et nomme les pieds-bleus avec lesquels on peut le confondre, tous comestibles : le pied bleu, à pied bleuté, et le pied violet ; celui-ci a un pied droit, sans bulbe. Elle cite aussi parmi les sosies un cortinaire violet (Cortinarius azureus), absent de cet atlas : des lames violettes ne suffisent pas à reconnaître un pied-bleu. Wikipédia (en) est une ébauche sans description, le texte suit donc la page française ; elle ne donne ni tailles, ni chair, ni sporée, et le dessin ne montre que des formes typiques.",
+  "traits": [
+    "Petit agaric lilas à violet grisâtre; chapeau hygrophane qui pâlit en séchant, parfois vers le beige rosé",
+    "Lames assez serrées, lilas jeunes puis plus pâles, adnées à légèrement décurrentes",
+    "Pied mince, fibrilleux et parfois sinueux, sans anneau ni volve, base avec mycélium blanc",
+    "Saprotrophe du sol riche en matière organique, parmi l’herbe et la litière; parfois en groupes ou cercles",
+    "Nom actuel dans Index Fungorum : Collybia sordida; Lepista sordida reste un synonyme fréquent dans les ouvrages"
+  ],
+  "safetyNote": "Des listes de recommandations (DGfM et VAPKO) mentionnent l’espèce sous le nom Lepista sordida. Les champignons lilas se ressemblent et certains cortinaires sont dangereux : cette fiche et son image ne permettent pas une identification alimentaire fiable. Fais vérifier toute récolte par un spécialiste local.",
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
-    },
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Lepista sordida",
-      "url": "https://fr.wikipedia.org/wiki/Lepista_sordida"
-    },
-    {
-      "title": "Wikipedia (en): Lepista sordida",
-      "url": "https://en.wikipedia.org/wiki/Lepista_sordida"
-    }
+    {"title": "Index Fungorum — Collybia sordida, nom actuel publié en 2023 et classification", "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=847254"},
+    {"title": "GBIF Backbone / Catalogue of Life — Lepista sordida accepted, with Collybia sordida listed as synonym", "url": "https://www.gbif.org/taxon/3TFTT"},
+    {"title": "He et al. (2023), Systematic arrangement within the family Clitocybaceae — phylogénie et nouvelle combinaison Collybia sordida", "url": "https://doi.org/10.1007/s13225-023-00527-2"},
+    {"title": "Alim, Sidhoum & Dib (2023), First Record of the Edible Mushroom Lepista sordida in Western Algerian Forest — observations, photos et coupe du sporophore", "url": "https://doi.org/10.3390/jof9080858"},
+    {"title": "DGfM, Positivliste der Speisepilze (1 mai 2026) — liste d’aide à l’évaluation alimentaire sous cuisson adéquate", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023), Empfehlungsliste — liste de recommandations mycologiques suisses", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
   ],
   "related": []
 }

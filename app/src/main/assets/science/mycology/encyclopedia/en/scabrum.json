@@ -1,32 +1,28 @@
 {
   "id": "scabrum",
-  "reviewStatus": "pending",
-  "sections": [],
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Cap and form", "text": "Leccinum scabrum, the brown birch bolete, produces a medium to large fruitbody. Its cap is usually 4–20 cm wide, convex at first and later expanding; colour ranges from grey-brown or yellow-brown to darker brown, sometimes becoming olive-tinged with age. The surface is smooth to slightly velvety, dry or somewhat viscid in wet weather, and may crack as it ages."},
+    {"title": "Tubes, pores and stem", "text": "The cap underside bears whitish tubes that darken to greyish or brownish as they mature, not gills. Their openings are small, round pores, cream to grey-beige, sometimes staining slightly yellowish when handled. The pale stem is slender to club-shaped, often long relative to the cap, and dotted with small grey-brown to blackish scales (scabers) that darken with age. It has no ring or volva."},
+    {"title": "Flesh and habitat", "text": "Flesh is white and firm in young specimens; it changes little when cut, although it may sometimes become faintly brownish or slowly pinkish, and localized colour changes are reported near the stem base. Taste and smell are mild or indistinct. This is an ectomycorrhizal fungus associated with birches (Betula), growing on the ground in open woods, heaths and damp sites, mainly in summer and autumn. The spore deposit is olive-brown."},
+    {"title": "Identification and food safety", "text": "The brown cap, pale stem with dark scabers, and growth beneath birch are useful characters, but closely related rough-stemmed boletes can be difficult to distinguish. The DGfM positive list includes L. scabrum s.l. among edible mushrooms; this does not replace reliable identification. Eat it only thoroughly cooked, never raw or undercooked. A 2014 NAMA report of illness after raw consumption concerned a specimen reported as L. alaskanum or L. scabrum; that determination does not establish L. scabrum as the cause. Do not eat a mushroom based only on this page or its image."}
+  ],
   "traits": [
-    "Cap 4 to 20 cm, tan to dark brown, smooth or velvety, sticky when wet",
-    "Pores whitish then grey, browning when touched",
-    "Stem 5 to 20 cm, white, covered in small blackish-brown scales",
-    "Whitish flesh, almost unchanging when cut; mild taste, faint smell",
-    "Almost only under birch · summer to late autumn"
+    "Convex then expanding cap, 4–20 cm, grey-brown to yellow-brown or darker; dry to slightly viscid in wet weather",
+    "Whitish tubes darkening greyish to brownish with age, ending in small round pores — never gills",
+    "Pale, slender stem dotted with grey-brown to blackish scabers; no ring or volva",
+    "White flesh, usually changing little when cut but sometimes staining faintly brownish or pinkish",
+    "Ectomycorrhizal with birches, growing on the ground, mainly in summer and autumn; olive-brown spore print"
   ],
-  "safetyNote": "Edible when well cooked: the DGfM and the VAPKO list the rough-stemmed boletes, and Wikipedia (fr) warns that raw or undercooked ones cause digestive upset. Of medium value; the fibrous stem is often thrown away, young caps are preferred. The flesh darkens, even turns black, when cooked (Wikipedia, fr and en). The many other rough-stemmed boletes are close; the sources read give no simple rule to separate them.",
+  "safetyNote": "The DGfM positive list includes Leccinum scabrum s.l. among edible mushrooms; this does not replace reliable identification. Eat it only thoroughly cooked, never raw or undercooked. A photograph or this page alone is not enough to decide that a mushroom is safe to eat. Contact a poison centre or emergency services if symptoms develop after ingestion.",
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
-    },
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Leccinum scabrum",
-      "url": "https://fr.wikipedia.org/wiki/Leccinum_scabrum"
-    },
-    {
-      "title": "Wikipedia (en): Leccinum scabrum",
-      "url": "https://en.wikipedia.org/wiki/Leccinum_scabrum"
-    }
+    {"title": "GBIF Backbone Taxonomy — Leccinum scabrum (Bull.) Gray", "url": "https://www.gbif.org/taxon/3STFC"},
+    {"title": "Université Claude Bernard Lyon 1 — Leccinum scabrum: description, habitat and spore print", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/leccinum-scabrum/"},
+    {"title": "E-Flora BC / University of British Columbia — Leccinum scabrum: description from expert references", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Leccinum+scabrum"},
+    {"title": "Burke Herbarium, University of Washington — Leccinum scabrum: photographs and identification characters", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Leccinum+scabrum"},
+    {"title": "VAPKO Suisse romande — Main bolete genera, characters of Leccinum scabrum", "url": "https://vapko.ch/index.php/fr/questions-de-champignons/la-page-du-debutant/07-principaux-genres-de-bolets"},
+    {"title": "Deutsche Gesellschaft für Mykologie (DGfM) — Positive list of edible mushrooms, 1 May 2026", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "North American Mycological Association — 2014 Toxicology Committee Report: mushroom poisoning case reported as Leccinum alaskanum or L. scabrum", "url": "https://namyco.org/interests/toxicology/2014-nama-toxicology-committee-report-north-american-mushroom-poisonings/"}
   ],
-  "related": []
+  "related": ["versipelle", "aurantiacum"]
 }

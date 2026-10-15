@@ -1,32 +1,26 @@
 {
   "id": "versipelle",
-  "reviewStatus": "pending",
-  "sections": [],
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Cap and form", "text": "Leccinum versipelle, the orange birch bolete, is a medium to large bolete. At maturity its cap is often 8–20 cm wide, broadly convex, and covered with a finely downy surface ranging from yellow-orange to orange-brown; the margin often slightly overhangs the tubes and may be irregular. Colour varies and is not an absolute diagnostic character; rare pale forms are reported."},
+    {"title": "Tubes, pores and stem", "text": "The hymenophore consists of mouse-grey to pale tubes ending in small pores that may become ochre with age; there are no gills. The stem is often long and robust, whitish to pale grey or yellowish, and covered with dark-brown to blackish woolly scabers. The pores and tube ends may stain when bruised. The spore print is ochraceous brown."},
+    {"title": "Flesh and habitat", "text": "The cap flesh is firm and white when cut, then may gradually turn grey and eventually nearly black, sometimes with a violet tinge. In the stem the change can be more pronounced: grey near the top and blue-green to blackish toward the base. The intensity varies between specimens. This is a mycorrhizal fungus usually associated with birch in Europe; regional sources also report it beneath other broadleaf trees. It grows on the ground, mainly in summer and autumn."},
+    {"title": "Distinguishing it from Leccinum scabrum and food safety", "text": "Both species may occur beneath birch. L. versipelle most often has an orange to orange-brown cap and its flesh stains more strongly after cutting; L. scabrum usually has a grey-brown cap and flesh that changes little. These are tendencies, not guarantees: colour varies, and staining depends on the tissue and specimen. DGfM includes L. versipelle in its positive list of edible mushrooms, while E-Flora BC notes that it may cause gastric distress in some people. Do not eat it based on a photograph alone; have the identification confirmed and cook it thoroughly. Contact a poison centre or emergency services if symptoms follow ingestion."}
+  ],
   "traits": [
-    "Cap 3 to 18 cm, ochre-orange to orange-brown, velvety to felty",
-    "Pores grey, the same colour as the tubes",
-    "Stem 3 to 20 cm, covered with dense black tufts",
-    "White flesh turning grey-pink then dark grey-violet when cut; mild taste, faint smell",
-    "Under birch · July to November"
+    "Often broad cap (8–20 cm), convex, yellow-orange to orange-brown and finely downy; colour is variable",
+    "Mouse-grey to pale tubes ending in small pores that may become ochre with age — never gills",
+    "Whitish to pale-grey, often robust stem covered with dark-brown to blackish woolly scabers",
+    "White flesh when cut, which may turn grey then very dark; the stem base can stain locally blue-green",
+    "Mycorrhizal, mainly beneath birch in Europe; summer and autumn; ochraceous-brown spore print"
   ],
-  "safetyNote": "Edible when well cooked: the DGfM lists it and the VAPKO lists the rough-stemmed boletes. Wikipedia (fr) says the fibrous stem is often thrown away and that rough-stemmed boletes upset the stomach if raw or undercooked; Wikipedia (en) calls it mildly toxic unless properly heated (15 to 20 minutes of frying or boiling), with nausea and vomiting. Flesh colour on cutting differs: pink to grey-violet (fr), reddish then brownish (en). It turns black when cooked.",
+  "safetyNote": "DGfM includes Leccinum versipelle in its positive list of edible mushrooms, but E-Flora BC notes possible gastric distress in some people. Eat it only after reliable identification and thorough cooking; a photograph or this page is not enough to determine that a mushroom is safe to eat. Contact a poison centre or emergency services if symptoms follow ingestion.",
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
-    },
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Leccinum versipelle",
-      "url": "https://fr.wikipedia.org/wiki/Leccinum_versipelle"
-    },
-    {
-      "title": "Wikipedia (en): Leccinum versipelle",
-      "url": "https://en.wikipedia.org/wiki/Leccinum_versipelle"
-    }
+    {"title": "GBIF Backbone Taxonomy — Leccinum versipelle", "url": "https://www.gbif.org/taxon/3STGG"},
+    {"title": "E-Flora BC / University of British Columbia — Leccinum versipelle: characters, habitat and food-safety caveat", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Leccinum+versipelle"},
+    {"title": "First Nature — Orange Birch Bolete (Leccinum versipelle): description and field photographs", "url": "https://www.first-nature.com/fungi/leccinum-versipelle.php"},
+    {"title": "VAPKO Suisse romande — Main bolete genera: comparison of Leccinum species", "url": "https://vapko.ch/index.php/fr/questions-de-champignons/la-page-du-debutant/07-principaux-genres-de-bolets"},
+    {"title": "Deutsche Gesellschaft für Mykologie (DGfM) — Positive list of edible mushrooms, 1 May 2026", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"}
   ],
-  "related": []
+  "related": ["scabrum", "aurantiacum"]
 }

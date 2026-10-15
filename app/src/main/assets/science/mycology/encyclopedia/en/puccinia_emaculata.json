@@ -1,21 +1,56 @@
 {
   "id": "puccinia_emaculata",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: grass rust.",
-    "Ecological context: grass rust. Details vary with taxon and habitat.",
-    "Food status not assessed."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Name and host plant",
+      "text": "Puccinia emaculata Schwein. is a microscopic grass rust (Pucciniales, Pucciniaceae). The molecular revision of rust fungi on Panicum by Demers et al. (2017) retains P. capillare, witchgrass, as a confirmed host of the strict P. emaculata concept. Several rusts found on switchgrass (Panicum virgatum) and formerly called P. emaculata were separated as distinct species, including P. amari, P. novopanici and P. pammelii. Some later reports nevertheless retained the P. emaculata identification on switchgrass, so that host association should be treated cautiously."
+    },
+    {
+      "title": "Symptoms and spores",
+      "text": "The rust forms small cinnamon-brown pustules or sori, often elongated or aligned near the veins, on leaves and sometimes stems. Uredinia produce single-celled urediniospores with finely echinulate walls. Telia, reported especially in late summer, contain dark-brown, oblong to ellipsoid teliospores divided into two cells. These microscopic characters, together with the host and DNA sequences, help distinguish related rusts; pustule colour alone is not sufficient."
+    },
+    {
+      "title": "Life cycle and uncertainties",
+      "text": "Uredinial and telial stages are documented on grasses. The aecial stage and an alternate host have not been securely established for P. emaculata in the strict sense. Older references suggested Euphorbiaceae as alternate hosts, but this association is not confirmed for the strict concept. Molecular work demonstrated alternation between Euphorbia corollata and Panicum virgatum in Puccinia pammelii, a different switchgrass rust; these taxa should not be confused."
+    },
+    {
+      "title": "Scope of this entry",
+      "text": "This is a plant pathogen, not a mushroom for collection. The visual description is indicative: species-level identification of rust fungi may require spore examination, host study and molecular comparison, especially within the Panicum rust complex."
+    }
   ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "traits": [
+    "Microscopic grass rust; confirmed host of the strict species concept: Panicum capillare",
+    "Cinnamon-brown pustules, often elongated or aligned near veins; on leaves and sometimes stems",
+    "Single-celled, finely echinulate urediniospores; dark-brown, two-celled teliospores",
+    "Aecial stage and alternate host remain unconfirmed for P. emaculata in the strict sense",
+    "Several switchgrass rusts formerly called P. emaculata were reassigned using phylogenetic evidence"
+  ],
+  "safetyNote": "Reference entry for a plant-pathogenic rust and its host plants. This entry is not for identifying an edible collection and provides no consumption advice.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Puccinia emaculata.",
+      "title": "GBIF Backbone Taxonomy — Puccinia emaculata Schwein.",
       "url": "https://www.gbif.org/species/2515498"
     },
     {
-      "title": "Index Fungorum, name record 202871: Puccinia emaculata.",
+      "title": "Index Fungorum — Puccinia emaculata, name record 202871",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=202871"
+    },
+    {
+      "title": "Demers et al. (2017), Rust fungi on Panicum — phylogeny, hosts and species formerly confused with P. emaculata",
+      "url": "https://doi.org/10.1080/00275514.2016.1262656"
+    },
+    {
+      "title": "Kenaley et al. (2018), New insight into the species diversity and life cycles of rust fungi affecting switchgrass",
+      "url": "https://doi.org/10.1007/s11557-018-1434-1"
+    },
+    {
+      "title": "University of Michigan Herbarium Catalog Collection — Puccinia emaculata specimen no. 284679, herbarium visual reference (host not inferred from this image alone).",
+      "url": "https://quod.lib.umich.edu/h/herb00ic/x-284679/mich-f-284679"
+    },
+    {
+      "title": "Burke Herbarium Image Collection, University of Washington — Panicum capillare, host-plant morphology and silhouette used as visual reference.",
+      "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Panicum+capillare"
     }
   ],
   "related": []
