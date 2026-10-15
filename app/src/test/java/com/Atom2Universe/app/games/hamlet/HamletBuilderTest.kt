@@ -8,7 +8,7 @@ import kotlin.random.Random
 class HamletBuilderTest {
     private var time = 1_000_000_000L
     private fun game(sandbox: Boolean = false) = HamletGame({ time }, Random(34)).apply {
-        startNew(sandbox); xp = 100_000; coins = 100_000; gems = 100; buildHistory.clear()
+        startNew(sandbox); established(); xp = 100_000; coins = 100_000; gems = 100; buildHistory.clear()
     }
     private fun spot(g: HamletGame, id: String): Pair<Int, Int> {
         val origin = g.realmOrigin()
@@ -38,10 +38,10 @@ class HamletBuilderTest {
     }
 
     @Test fun `repeated buy and undo cannot farm coins xp or level gems`() {
-        val g = game(); g.xp = 28; g.gems = 2
+        val g = game(); g.xp = 43; g.gems = 2
         val coins = g.coins
         repeat(12) { buy(g, "field"); assertEquals(2, g.level()); assertTrue(g.buildHistory.undo()) }
-        assertEquals(coins, g.coins); assertEquals(28L, g.xp); assertEquals(2, g.gems)
+        assertEquals(coins, g.coins); assertEquals(43L, g.xp); assertEquals(2, g.gems)
         assertEquals(0L, g.stats["built"])
     }
 
@@ -66,8 +66,8 @@ class HamletBuilderTest {
     }
 
     @Test fun `undo refuses removing a later independently earned level`() {
-        val g = game(); g.xp = 74
-        buy(g, "field") // 79 XP, still level 2.
+        val g = game(); g.xp = 124
+        buy(g, "field") // 129 XP, still level 2.
         g.addXp(2) // Level 3 belongs to another activity.
         val xp = g.xp; val gems = g.gems; val coins = g.coins
         assertFalse(g.buildHistory.undo())
@@ -168,7 +168,7 @@ class HamletBuilderTest {
             assertEquals(0L, g.journey.expeditionLeft()); assertTrue(g.journey.collectExpedition())
         }
         assertEquals(80L, g.coins); assertEquals(0, g.gems)
-        val field = buy(g, "field"); assertTrue(g.plant(field, "corn"))
-        assertEquals(80L - Hamlet.byId.getValue("field").cost - Hamlet.cropById.getValue("corn").cost, g.coins)
+        val field = buy(g, "field"); assertTrue(g.plant(field, "wheat"))
+        assertEquals(80L - Hamlet.byId.getValue("field").cost - Hamlet.cropById.getValue("wheat").cost, g.coins)
     }
 }

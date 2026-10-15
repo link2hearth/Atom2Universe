@@ -6,7 +6,7 @@ import kotlin.random.Random
 
 class HamletSystemsTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(4)).apply { startNew(false) }.withStarters()
+    private fun game() = HamletGame({ time }, Random(4)).apply { startNew(false) }.established().withStarters()
     private fun building(g: HamletGame, id: String, tier: Int = 1) {
         // Scène préparée : les tests d'achat et placement existent dans HamletGameTest.
         g.objs[g.nextId] = Obj(g.nextId++, id, 0, 0).apply { this.tier = tier }

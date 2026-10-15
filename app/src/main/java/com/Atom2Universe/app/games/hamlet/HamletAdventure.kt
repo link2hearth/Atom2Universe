@@ -54,7 +54,8 @@ class HamletAdventure(private val g: HamletGame) {
     var activeBattle: HamletBattle? = null
         private set
     fun reset() {
-        bag.fill(0); bag[0] = 180; bag[1] = 80; bag[2] = 80; bag[3] = 35; bag[4] = 30
+        // Presque rien au départ : le bois et la pierre de la première maison viennent du premier héros.
+        bag.fill(0); bag[0] = START_FOOD
         heroes.forEach { h -> h.owned = g.sandbox; h.level = 1; h.stars = 0; h.shards = 0; h.skills.fill(1); h.traits.fill(0) }
         teams.forEach { it.fill(-1) }
         selectedTeam = 0; frontier = 0; trial = 0; bounty = 0; raid = 0; arena = 0
@@ -297,14 +298,16 @@ class HamletAdventure(private val g: HamletGame) {
     private fun productionRates(at: Long, objects: List<Obj>): DoubleArray {
         val complete = objects.filter { completedAt(it) <= at }
         fun facility(id: String) = complete.filter { it.t == id }.maxOfOrNull { it.tier } ?: 0
-        var available = (complete.sumOf { it.def.pop } / 2).coerceIn(3, 24)
+        var available = crewSize(complete.sumOf { it.def.pop })
         val active = IntArray(workers.size) { i -> minOf(workers[i], available).also { available -= it } }
         val boost = 1 + tech[2] * 0.04 + facility("adventureStore") * 0.1
         val amounts = doubleArrayOf(active[0] * 3.0 + 1, active[1] * 2.0, active[2] * 2.0,
             active[4].toDouble() + facility("adventureForge"), active[3].toDouble() + facility("adventureAcademy"))
         return DoubleArray(amounts.size) { amounts[it] * boost * (1 + g.stewardship.productionBonus(AdventureResource.entries[it]) / 100.0) }
     }
-    fun workerCapacity() = (g.realms.allObjects().filter { g.buildLeft(it) == 0L }.sumOf { it.def.pop } / 2).coerceIn(3, 24)
+    /** Un ouvrier pour deux habitants, trois au moins dès la première maison : sans habitant, le camp ne produit rien. */
+    private fun crewSize(population: Int) = (population / 2).coerceIn(if (population > 0) 3 else 0, 24)
+    fun workerCapacity() = crewSize(g.realms.allObjects().filter { g.buildLeft(it) == 0L }.sumOf { it.def.pop })
     fun assignWorker(job: Int, delta: Int): Boolean {
         if (job !in workers.indices || delta !in listOf(-1, 1) || workers[job] + delta < 0 || (delta > 0 && workers.sum() >= workerCapacity())) return false
         advanceProduction(true); workers[job] += delta; changed(); return true
@@ -428,7 +431,7 @@ class HamletAdventure(private val g: HamletGame) {
     fun gather(stage: Int): Boolean {
         if (stage < 0 || stage > frontier || node(stage) !in listOf(AdventureNode.GATHER, AdventureNode.SHRINE)) return false
         // La cueillette est la voie sûre des matériaux : un tarif régulier, sans hasard (les combats donnent les fragments et les trouvailles).
-        grantLoot(stage, first = stage == frontier, combat = false, share = if (stage == frontier) 2.0 else 1.0)
+        grantLoot(stage, first = isFirst(stage), combat = false, share = if (isFirst(stage)) 2.0 else 1.0)
         record(stage, 3); g.stat("adventure_gathered"); changed(); return true
     }
     fun sweepCost(stage: Int) = stage.coerceAtLeast(0).let { 50L + (it / 10) * 8L + it / 2 }
@@ -507,7 +510,7 @@ class HamletAdventure(private val g: HamletGame) {
         val stage = battle.stage
         when (battle.mode) {
             BattleMode.CAMPAIGN -> {
-                val first = stage == frontier
+                val first = isFirst(stage)
                 grantLoot(stage, first, true, recent = stage >= frontier - FARM_WINDOW)
                 record(stage, if (battle.survivors() >= battle.fielded()) 3 else 2)
                 if (first) add(AdventureResource.TICKETS, ticketReward(stage))
@@ -525,9 +528,25 @@ class HamletAdventure(private val g: HamletGame) {
         }
         g.stat("battles_won"); changed(); return true
     }
+    /**
+     * Jusqu'où la route peut avancer pour l'instant. L'ouverture est un entonnoir : une seule étape à farmer tant que le
+     * village n'a pas de maison, les quatre premières jusqu'au premier chapitre, onze jusqu'au deuxième ; ensuite la
+     * route est libre. Les butins de première victoire ne se gagnent qu'une fois, même quand la route ne bouge plus.
+     */
+    fun frontierCap(): Int = when {
+        g.sandbox -> Int.MAX_VALUE
+        g.realms.allObjects().none { it.def.cat == Cat.HOME } -> 0
+        g.journey.chapter < 1 -> 3
+        g.journey.chapter < 2 -> FOURTH_SLOT
+        else -> Int.MAX_VALUE
+    }
+    /** La route est fermée pour l'instant : l'étape de la frontière est déjà gagnée et rien ne l'ouvre encore. */
+    fun roadClosed() = (stars[frontier] ?: 0) > 0 && frontier >= frontierCap()
+    /** Une étape jamais gagnée, la plus loin que l'on puisse jouer : sa première victoire paie largement. */
+    fun isFirst(stage: Int) = stage == frontier && (stars[stage] ?: 0) == 0
     private fun record(stage: Int, score: Int) {
         stars[stage] = max(stars[stage] ?: 0, score)
-        if (stage == frontier) frontier++
+        if (stage == frontier && frontier < frontierCap()) frontier++
         if (frontier >= 10 && relics[0] == 0) relics[0] = 1
         if (frontier >= 30 && relics[1] == 0) relics[1] = 1
         if (frontier >= 60 && relics[2] == 0) relics[2] = 1
@@ -553,7 +572,9 @@ class HamletAdventure(private val g: HamletGame) {
         val find = share == null && !first && roll < (if (boss) FIND_BOSS else FIND_CHANCE)
         lastFirst = first && share == null; lastFind = find
         val part = share ?: when { first -> FIRST_SHARE; find -> FIND_SHARE; else -> REPEAT_SHARE }
-        fun share(base: Long) = max(1L, Math.round(base * part))
+        // Les premières étapes paient moins que les suivantes (voir [lootRamp]) : le village ouvre la route, pas l'inverse.
+        val ramp = lootRamp(stage)
+        fun share(base: Long) = max(1L, Math.round(base * part * ramp))
         add(AdventureResource.FOOD, share(25L + scale * 8))
         add(AdventureResource.TIMBER, share(15L + scale * 4))
         add(AdventureResource.STONE, share(12L + scale * 4))
@@ -571,8 +592,13 @@ class HamletAdventure(private val g: HamletGame) {
         }
         g.journey.supplies += 1 + scale
         g.workSeconds = (g.workSeconds + (if (boss) 180 else 45) + tech[3] * 5).coerceAtMost(7200)
-        g.reward(null, share(35L + scale * 15).toInt(), share(8L + scale * 3).toInt())
+        // Au tout début, les combats rapportent surtout du butin : l'expérience vient du village.
+        val xp = Math.round((8L + scale * 3) * part * xpRamp(stage)).coerceAtLeast(1L)
+        g.reward(null, share(35L + scale * 15).toInt(), xp.toInt())
     }
+    /** Le butin des toutes premières étapes, puis de plus en plus complet jusqu'à l'étape [FULL_LOOT_STAGE]. */
+    fun lootRamp(stage: Int) = minOf(1.0, LOOT_FLOOR + stage * (1.0 - LOOT_FLOOR) / FULL_LOOT_STAGE)
+    fun xpRamp(stage: Int) = minOf(1.0, XP_FLOOR + stage * (1.0 - XP_FLOOR) / FULL_LOOT_STAGE)
     fun copyFrom(other: HamletAdventure) {
         other.bag.copyInto(bag); other.tech.copyInto(tech); other.workers.copyInto(workers)
         other.troops.copyInto(troops); other.troopTier.copyInto(troopTier)
@@ -593,6 +619,11 @@ class HamletAdventure(private val g: HamletGame) {
     }
     companion object {
         const val MAX_SLOTS = 5
+        const val START_FOOD = 40L
+        /** Part du butin et de l'expérience de combat à l'étape 0 ; la pleine part arrive à l'étape [FULL_LOOT_STAGE]. */
+        const val LOOT_FLOOR = 0.5
+        const val XP_FLOOR = 0.25
+        const val FULL_LOOT_STAGE = 20
         /** Étape de campagne qui ouvre la quatrième, puis la cinquième place. */
         const val FOURTH_SLOT = 10
         const val FIFTH_SLOT = 40

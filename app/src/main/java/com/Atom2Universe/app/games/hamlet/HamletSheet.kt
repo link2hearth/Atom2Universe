@@ -87,6 +87,12 @@ internal class HamletSheet(private val context: Context, title: CharSequence, he
     }
 
     fun title(value: CharSequence) { titleView.text = value }
+    /** Puts a long list that scrolls by itself (a recycled grid) where the plain column was; [body] is then unused. */
+    fun content(view: View) {
+        val at = card.indexOfChild(scroll)
+        card.removeViewAt(at)
+        card.addView(view, at, LinearLayout.LayoutParams(-1, 0, 1f))
+    }
     /** Buttons kept under the content, sharing the width by their weights. */
     fun footer(vararg buttons: Pair<Button, Float>) {
         footer.removeAllViews(); footer.visibility = if (buttons.isEmpty()) View.GONE else View.VISIBLE

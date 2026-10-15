@@ -21,6 +21,7 @@
     <string name="hamlet_a_loot_preview">Butin de rang %1$d</string>
     <string name="hamlet_a_enemy_hint">Ennemis : %1$s</string>
     <string name="hamlet_a_route_locked">Réussis d’abord la route %1$d.</string>
+    <string name="hamlet_a_route_closed">La route au-delà est fermée pour l’instant.</string>
     <string name="hamlet_a_gather">Récolter</string>
     <string name="hamlet_a_battle">Combattre</string>
     <string name="hamlet_a_prepare">Équipe</string>

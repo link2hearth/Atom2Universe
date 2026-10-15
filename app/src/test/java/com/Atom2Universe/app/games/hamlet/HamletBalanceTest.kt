@@ -7,7 +7,7 @@ import kotlin.random.Random
 
 class HamletBalanceTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(23)).apply { startNew(false) }
+    private fun game() = HamletGame({ time }, Random(23)).apply { startNew(false) }.established()
     private fun rate(id: String, resource: AdventureResource) =
         (HamletIndustry.recipe(id, 1).output[resource] ?: 0) * 3600.0 / Hamlet.byId.getValue(id).job
 

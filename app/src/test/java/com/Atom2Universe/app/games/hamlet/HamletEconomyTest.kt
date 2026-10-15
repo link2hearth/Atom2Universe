@@ -7,7 +7,7 @@ import kotlin.random.Random
 /** Les promesses de l'économie : une base, une courbe de durée, le niveau de déblocage ne change pas le prix. */
 class HamletEconomyTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(9)).apply { startNew(false) }
+    private fun game() = HamletGame({ time }, Random(9)).apply { startNew(false) }.established()
 
     @Test fun `les cultures courtes paient deux a trois fois la base et les longues une demie a une fois`() {
         for (c in Hamlet.crops.filter { !it.magic }) {

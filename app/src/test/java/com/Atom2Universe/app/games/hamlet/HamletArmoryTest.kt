@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 class HamletArmoryTest {
     private var time = 1_800_000_000_000L
-    private fun game(sandbox: Boolean = false) = HamletGame({ time }, Random(9)).apply { startNew(sandbox) }.withStarters()
+    private fun game(sandbox: Boolean = false) = HamletGame({ time }, Random(9)).apply { startNew(sandbox) }.established().withStarters()
     private fun funded(): HamletGame = game().apply {
         coins = 1_000_000; xp = 1_000_000
         val origin = realmOrigin()

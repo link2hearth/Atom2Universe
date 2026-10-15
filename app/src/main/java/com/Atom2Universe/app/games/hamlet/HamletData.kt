@@ -86,7 +86,7 @@ object Hamlet {
 
     /** XP cumulé de base nécessaire pour terminer chaque niveau (avant l'allongement des niveaux élevés). */
     private val baseXp = intArrayOf(
-        0, 30, 80, 160, 300, 500, 800, 1200, 1800, 2600, 3700, 5500, 8000, 12000, 18000, 27000, 40000,
+        0, 45, 130, 280, 520, 850, 1300, 1900, 2600, 3300, 3700, 5500, 8000, 12000, 18000, 27000, 40000,
         60000, 90000, 130000, 185000, 230000, 285000, 350000, 430000, 520000, 630000, 760000, 910000,
         1080000, 1280000, 1500000, 1750000, 2050000, 2400000, 2800000, 3250000, 3750000, 4300000, 4900000,
     )
@@ -130,13 +130,14 @@ object Hamlet {
      * l'expérience viennent de [HamletEconomy] ; le niveau décide seulement de l'ouverture.
      */
     val crops: List<Crop> = listOf(
-        crop("corn", 1, 45, "stalk", 0x6FB83A, 0xF2D12E),
-        crop("wheat", 1, 5 * MIN, "grain", 0xC9B04A, 0xE8CF5A),
-        // Dès le départ, une plantation viable pour revenir le lendemain.
-        crop("oats", 1, 6 * HOUR, "grain", 0xA9B45D, 0xDED496),
-        crop("radish", 2, 2 * MIN, "root", 0x4F9D37, 0xD8334A),
+        // Le tout début : un seul champ et du blé, deux minutes. Le maïs vient avec le niveau 2 (les poulaillers s'en nourrissent).
+        crop("wheat", 1, 2 * MIN, "grain", 0xC9B04A, 0xE8CF5A),
+        crop("corn", 2, 45, "stalk", 0x6FB83A, 0xF2D12E),
+        crop("radish", 2, 3 * MIN, "root", 0x4F9D37, 0xD8334A),
         crop("carrots", 2, 15 * MIN, "root", 0x4F9D37, 0xF08A1C),
         crop("turnips", 2, 2 * HOUR, "root", 0x6C9C45, 0xD5B9D6),
+        // Une plantation viable pour revenir le lendemain, dès que le village a pris forme.
+        crop("oats", 3, 6 * HOUR, "grain", 0xA9B45D, 0xDED496),
         crop("lettuce", 3, 20 * MIN, "head", 0x7CC545, 0xA6DC5A),
         crop("strawberries", 3, 30 * MIN, "bush", 0x3F8F3A, 0xE0263A),
         crop("beans", 3, 24 * HOUR, "tall", 0x4F9D37, 0x5AB83C),
@@ -569,8 +570,9 @@ object Hamlet {
      * en offrent un autre au fil des grands jalons. Les quêtes de récolte demandent une culture précise.
      */
     val quests = listOf(
-        Quest("planted", 3, 50, 10), Quest("harvested", 3, 80, 15, tickets = 1), Quest("built_cottage", 1, 100, 20),
-        Quest("taxes", 2, 100, 20), Quest("roads", 5, 120, 25), Quest("built_field", 2, 150, 30),
+        // L'ouverture, pas à pas : un semis, la première récolte (et le premier héros), des combats, la première maison, un deuxième champ.
+        Quest("planted", 1, 8, 3), Quest("harvested", 1, 15, 6, tickets = 1), Quest("battles_won", 3, 25, 8),
+        Quest("built_cottage", 1, 40, 12), Quest("built_field", 1, 50, 15), Quest("taxes", 2, 60, 20),
         Quest("built_bakery", 1, 300, 60), Quest("accepted", 1, 200, 40), Quest("delivered", 1, 300, 60),
         Quest("cat_decor", 5, 500, 120), Quest("cat_nature", 8, 500, 120), Quest("harvested", 20, 600, 150),
         Quest("harvest_carrots", 12, 700, 160), Quest("cat_home", 3, 1000, 250), Quest("upgrades", 1, 600, 150),

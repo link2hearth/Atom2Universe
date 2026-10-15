@@ -21,7 +21,7 @@ import com.Atom2Universe.app.games.hamlet.HamletUi.Weight
  * les explications derrière un « ? ».
  */
 internal class HamletJournalPage(private val context: Context, private val g: HamletGame, private val nav: HamletNav,
-                                 private val onQuest: () -> Unit) : HamletPage {
+                                 private val onQuest: () -> Unit, private val onGoal: (String) -> Unit) : HamletPage {
     companion object {
         const val TODAY = 0
         const val CHAPTERS = 1
@@ -48,6 +48,9 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
     private var collectAction: Button? = null
     private var expeditionAction: Button? = null
     private var shown: List<Any>? = null
+    /** A region the player was sent to from a chapter goal: its card is brought to the top of the list. */
+    private var focusRegion = -1
+    private var scrollTarget: View? = null
     private val vigils = HashMap<Int, TextView>()
     private fun dp(v: Int) = HamletUi.dp(context, v)
     private fun s(id: Int, vararg args: Any) = if (args.isEmpty()) context.getString(id) else context.getString(id, *args)
@@ -103,7 +106,7 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
         rows.addView(head)
     }
     /** A bar with "done / target" beside it. */
-    private fun progress(parent: LinearLayout, done: Long, target: Long, label: CharSequence? = null) {
+    private fun progress(parent: LinearLayout, done: Long, target: Long, label: CharSequence? = null, go: (() -> Unit)? = null) {
         val row = line().apply { setPadding(dp(3), dp(2), dp(3), dp(2)) }
         if (label != null) row.addView(TextView(context).apply { text = label; textSize = HamletUi.SMALL; setTextColor(HamletUi.INK) }, LinearLayout.LayoutParams(0, -2, 1.2f).apply { marginEnd = dp(8) })
         row.addView(HamletBar(context).apply { set(done, target) }, LinearLayout.LayoutParams(0, dp(9), 1f))
@@ -111,6 +114,10 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
             text = s(R.string.hamlet_ui_progress, done.coerceAtMost(target), target); textSize = HamletUi.SMALL
             setTextColor(if (done >= target) HamletUi.GOOD else HamletUi.MUTED); setTypeface(null, Typeface.BOLD); setPadding(dp(8), 0, 0, 0)
         })
+        if (go != null) row.addView(HamletUi.round(context, "signpost", s(R.string.hamlet_s_go), 38) {
+            if (nav.haptics) root.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+            go()
+        }, LinearLayout.LayoutParams(dp(42), dp(42)).apply { marginStart = dp(6) })
         parent.addView(row)
     }
 
@@ -172,7 +179,9 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
         supplies(); tabDots()
         when (tab) { TODAY -> today(); CHAPTERS -> chapters(); EXPEDITIONS -> expeditions(); LEGENDS -> legends(); RESEARCH -> research(); WORK -> workshop(); else -> posts() }
         shown = snapshot()
-        scroll.post { scroll.scrollTo(0, y) }
+        val target = scrollTarget
+        scrollTarget = null; focusRegion = -1
+        scroll.post { if (target != null) scroll.scrollTo(0, (target.top - dp(8)).coerceAtLeast(0)) else scroll.scrollTo(0, y) }
     }
 
     private fun today() {
@@ -186,36 +195,49 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
             expeditionAction = button(overview, if (back) s(R.string.hamlet_expedition_collect) else s(R.string.hamlet_s_trip_wait, duration(j.expeditionLeft())),
                 back, if (back) Weight.MAIN else Weight.NORMAL, "ship") { if (j.collectExpedition()) { nav.changed(); render() } }
         } else button(overview, s(R.string.hamlet_s_plan_trip), glyph = "ship") { tab = EXPEDITIONS; scroll.scrollTo(0, 0); render() }
-        section(s(R.string.hamlet_daily_tasks), s(R.string.hamlet_s_daily_help, duration(Hamlet.DAY_MS - g.now() % Hamlet.DAY_MS)))
-        val labels = intArrayOf(R.string.hamlet_s_task_village, R.string.hamlet_s_task_adventure, R.string.hamlet_s_task_growth)
-        val help = intArrayOf(R.string.hamlet_s_task_village_help, R.string.hamlet_s_task_adventure_help, R.string.hamlet_s_task_growth_help)
-        val glyphs = arrayOf("house", "sword", "star")
-        for (i in labels.indices) {
-            val claimed = state.claimed and (1 shl i) != 0
-            val box = card(s(labels[i]), s(help[i]), glyphs[i], claimed)
-            progress(box, state.progress(i), HamletStewardship.TARGETS[i].toLong())
-            val reward = context.resources.getQuantityString(R.plurals.hamlet_ui_tickets, HamletStewardship.TICKETS[i].toInt(), HamletStewardship.TICKETS[i])
-            text(box, HamletUi.tint(s(R.string.hamlet_ui_reward_line, reward), reward to 0xFFB27A12.toInt()), small = true)
-            when {
-                claimed -> Unit
-                state.canClaim(i) -> action(box, s(R.string.hamlet_claim), weight = Weight.MAIN, glyph = "ticket") { state.claim(i) }
-                else -> button(box, s(R.string.hamlet_s_go), weight = Weight.QUIET, glyph = glyphs[i]) {
-                    when (i) {
-                        0 -> nav.open(HamletModule.VILLAGE)
-                        1 -> nav.open(HamletModule.ADVENTURE, HamletAdventurePage.EXPLORE)
-                        else -> nav.open(HamletModule.HEROES, HamletAdventurePage.HEROES)
+        if (state.unlocked()) {
+            section(s(R.string.hamlet_daily_tasks), s(R.string.hamlet_s_daily_help, duration(Hamlet.DAY_MS - g.now() % Hamlet.DAY_MS)))
+            val labels = intArrayOf(R.string.hamlet_s_task_village, R.string.hamlet_s_task_adventure, R.string.hamlet_s_task_growth)
+            val help = intArrayOf(R.string.hamlet_s_task_village_help, R.string.hamlet_s_task_adventure_help, R.string.hamlet_s_task_growth_help)
+            val glyphs = arrayOf("house", "sword", "star")
+            for (i in labels.indices) {
+                val claimed = state.claimed and (1 shl i) != 0
+                val box = card(s(labels[i]), s(help[i]), glyphs[i], claimed)
+                progress(box, state.progress(i), HamletStewardship.TARGETS[i].toLong())
+                val reward = context.resources.getQuantityString(R.plurals.hamlet_ui_tickets, HamletStewardship.TICKETS[i].toInt(), HamletStewardship.TICKETS[i])
+                text(box, HamletUi.tint(s(R.string.hamlet_ui_reward_line, reward), reward to 0xFFB27A12.toInt()), small = true)
+                when {
+                    claimed -> Unit
+                    state.canClaim(i) -> action(box, s(R.string.hamlet_claim), weight = Weight.MAIN, glyph = "ticket") { state.claim(i) }
+                    else -> button(box, s(R.string.hamlet_s_go), weight = Weight.QUIET, glyph = glyphs[i]) {
+                        when (i) {
+                            0 -> nav.open(HamletModule.VILLAGE)
+                            1 -> nav.open(HamletModule.ADVENTURE, HamletAdventurePage.EXPLORE)
+                            else -> nav.open(HamletModule.HEROES, HamletAdventurePage.HEROES)
+                        }
                     }
                 }
             }
+            val chest = card(s(R.string.hamlet_s_chest), s(R.string.hamlet_s_chest_help), "chest", state.chestClaimed)
+            progress(chest, (0..2).count { state.claimed and (1 shl it) != 0 }.toLong(), 3L)
+            if (!state.chestClaimed) action(chest, s(R.string.hamlet_claim), state.canClaimChest(), Weight.MAIN, "chest") { state.claimChest() }
         }
-        val chest = card(s(R.string.hamlet_s_chest), s(R.string.hamlet_s_chest_help), "chest", state.chestClaimed)
-        progress(chest, (0..2).count { state.claimed and (1 shl it) != 0 }.toLong(), 3L)
-        if (!state.chestClaimed) action(chest, s(R.string.hamlet_claim), state.canClaimChest(), Weight.MAIN, "chest") { state.claimChest() }
     }
     private fun goalLabel(goal: HamletJourney.Goal): String = when {
         goal.key.startsWith("built_") -> s(R.string.hamlet_goal_build, itemName(goal.key.removePrefix("built_")))
         goal.key.startsWith("region_") -> s(R.string.hamlet_goal_explore, name("region", goal.key.removePrefix("region_").toInt()))
         else -> byName("hamlet_goal_${goal.key}")
+    }
+    /** Where a goal still to do is worked on; null when it is done or there is nowhere to send the player. */
+    private fun goTo(goal: HamletJourney.Goal): (() -> Unit)? {
+        if (j.progress(goal) >= goal.target) return null
+        val key = goal.key
+        return when {
+            key.startsWith("region_") -> fun() { focusRegion = key.removePrefix("region_").toInt(); tab = EXPEDITIONS; render(preserve = false) }
+            key == "research" -> fun() { tab = RESEARCH; scroll.scrollTo(0, 0); render() }
+            key.startsWith("built_") && Hamlet.byId[key.removePrefix("built_")]?.let { g.journey.unlocked(it) } != true -> null
+            else -> fun() { onGoal(key) }
+        }
     }
     private fun chapters() {
         section(s(R.string.hamlet_chapters), s(R.string.hamlet_chapter_help))
@@ -234,7 +256,7 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
             if (done) continue
             text(box, s(R.string.hamlet_chapter_requirements, c.level, c.hall), small = true, color = if (i == j.chapter) 0 else HamletUi.MUTED)
             if (i != j.chapter) continue
-            for (goal in c.goals) progress(box, j.progress(goal), goal.target.toLong(), goalLabel(goal))
+            for (goal in c.goals) progress(box, j.progress(goal), goal.target.toLong(), goalLabel(goal), goTo(goal))
             val reward = s(R.string.hamlet_ui_reward_chapter, c.coins, c.supplies)
             text(box, HamletUi.tint(s(R.string.hamlet_ui_reward_line, reward), reward to 0xFFB27A12.toInt()), small = true)
             action(box, s(R.string.hamlet_claim), j.canClaim(), Weight.MAIN, "gift") { j.claim() }
@@ -255,6 +277,7 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
         for (i in HamletJourney.regions.indices) {
             val r = HamletJourney.regions[i]
             val box = card(name("region", i), byName("hamlet_region_story_$i"), "map", j.explored[i] > 0)
+            if (i == focusRegion) scrollTarget = box
             text(box, s(R.string.hamlet_region_detail, r.chapter, r.power, duration(j.expeditionSeconds(i) * 1000L), r.coins, r.supplies, j.explored[i]), small = true)
             text(box, s(R.string.hamlet_s_expedition_loot, j.expeditionFood(i), j.expeditionOre(i), j.expeditionBooks(i), j.expeditionCrystal(i), j.expeditionTickets(i)), small = true)
             if (j.expedition < 0) action(box, s(R.string.hamlet_expedition_start), j.canExplore(i), Weight.MAIN, "ship") { j.startExpedition(i) }

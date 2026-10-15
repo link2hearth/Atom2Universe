@@ -3,6 +3,7 @@
     <string name="hamlet_map_accessibility">Carte du village. Glisse pour te déplacer, pince pour zoomer, touche un bâtiment pour le sélectionner.</string>
     <string name="hamlet_gain">+%1$d</string>
     <string name="hamlet_dashboard">MON HAMEAU · Niveau %1$d\n%2$d pièces · %3$d gemmes\n%4$d habitants · Bonheur %5$d%%</string>
+    <string name="hamlet_msg_level_tools">Niveau 8 : 20 outils pour les bâtisseurs.</string>
     <string name="hamlet_level_up">Niveau %1$d ! Nouveaux bâtiments débloqués · +%2$d gemmes</string>
     <string name="hamlet_quest_ready">Quête ✓</string>
     <string name="hamlet_object_line">%1$s · Rang %2$d · %3$s</string>

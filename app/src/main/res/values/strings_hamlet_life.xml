@@ -3,6 +3,7 @@
     <string name="hamlet_map_accessibility">Village map. Drag to move, pinch to zoom, tap a building to select it.</string>
     <string name="hamlet_gain">+%1$d</string>
     <string name="hamlet_dashboard">HAMLET · Level %1$d\n%2$d coins · %3$d gems\n%4$d residents · Happiness %5$d%%</string>
+    <string name="hamlet_msg_level_tools">Level 8: 20 tools for the builders.</string>
     <string name="hamlet_level_up">Level %1$d! New buildings unlocked · +%2$d gems</string>
     <string name="hamlet_quest_ready">Quest ✓</string>
     <string name="hamlet_object_line">%1$s · Tier %2$d · %3$s</string>

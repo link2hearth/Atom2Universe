@@ -265,8 +265,8 @@ internal class HamletAdventurePage(private val context: Context, private val gam
         side(headline, *nav.toTypedArray())
         val box = card(s("stage_choice", selected + 1, s("node_${a.node(selected).name.lowercase()}")))
         text(box, s("loot_preview", 1 + selected / 10), small = true)
-        if (selected == a.frontier) text(box, s("loot_first", HamletAdventure.FIRST_SHARE.toInt()), color = HamletUi.GOOD)
-        if (selected > a.frontier) text(box, s("route_locked", a.frontier + 1), color = HamletUi.BAD)
+        if (a.isFirst(selected)) text(box, s("loot_first", HamletAdventure.FIRST_SHARE.toInt()), color = HamletUi.GOOD)
+        if (selected > a.frontier) text(box, if (a.roadClosed()) s("route_closed") else s("route_locked", a.frontier + 1), color = HamletUi.BAD)
         if (a.node(selected) !in listOf(AdventureNode.GATHER, AdventureNode.SHRINE)) {
             val foes = a.encounter(BattleMode.CAMPAIGN, selected)
             val field = BattleField.fromRegion(a.region(selected))

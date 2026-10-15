@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 class HamletIndustryTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(12)).apply { startNew(false) }
+    private fun game() = HamletGame({ time }, Random(12)).apply { startNew(false) }.established()
     private fun location(g: HamletGame, id: String): Pair<Int, Int> {
         val from = g.realmOrigin()
         for (y in from until from + g.realmSize()) for (x in from until from + g.realmSize())
@@ -92,11 +92,11 @@ class HamletIndustryTest {
         val wood = g.adventure[TIMBER]; val ore = g.adventure[ORE]
         order(g, forge)
         assertEquals(wood - 8, g.adventure[TIMBER]); assertEquals(ore - 4, g.adventure[ORE])
-        assertEquals(2, g.adventure[TOOLS]); assertFalse(g.deliver(forge)); assertEquals(2, g.adventure[TOOLS])
+        assertEquals(6, g.adventure[TOOLS]); assertFalse(g.deliver(forge)); assertEquals(6, g.adventure[TOOLS])
         assertFalse(HamletIndustry.building(Hamlet.byId.getValue("adventureForge")).resources.containsKey(TOOLS))
         assertFalse(HamletIndustry.building(Hamlet.byId.getValue("blacksmith")).resources.containsKey(TOOLS))
         assertTrue(HamletIndustry.building(Hamlet.byId.getValue("library")).resources.getValue(TOOLS) > 0)
-        assertTrue(HamletSave.fromJson(g, HamletSave.toJson(g))); assertEquals(2, g.adventure[TOOLS])
+        assertTrue(HamletSave.fromJson(g, HamletSave.toJson(g))); assertEquals(6, g.adventure[TOOLS])
     }
 
     @Test fun animalFoodComesFromCornAndNeverCreatesOre() {

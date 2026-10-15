@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 class HamletRealmTransferTest {
     private var time = 1_700_000_000_000L
-    private fun game(creative: Boolean = false) = HamletGame({ time }, Random(14)).apply { startNew(creative) }
+    private fun game(creative: Boolean = false) = HamletGame({ time }, Random(14)).apply { startNew(creative) }.established()
 
     @Test fun `founding charges once then keeps a shared purse`() {
         val g = game()

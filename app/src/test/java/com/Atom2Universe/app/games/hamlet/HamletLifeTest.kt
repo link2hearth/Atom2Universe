@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 class HamletLifeTest {
     private var time = 1_000_000_000L
-    private fun game(): HamletGame = HamletGame({ time }, Random(17)).apply { startNew(false) }
+    private fun game(): HamletGame = HamletGame({ time }, Random(17)).apply { startNew(false) }.established()
     private fun buy(g: HamletGame, id: String): Obj {
         val origin = g.realmOrigin()
         for (y in origin until origin + g.realmSize()) for (x in origin until origin + g.realmSize()) {

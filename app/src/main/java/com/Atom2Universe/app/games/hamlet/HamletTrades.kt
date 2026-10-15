@@ -20,7 +20,7 @@ object HamletTrades {
             "greenhouse" -> mapOf(MEDICINE to 28L)
             "conservatory" -> mapOf(MEDICINE to 36L)
             "skygarden" -> mapOf(MEDICINE to 96L)
-            "prismforge" -> mapOf(TOOLS to 32L)
+            "prismforge" -> mapOf(TOOLS to 72L)
             "lighthouse", "lighthouseBlue", "lighthouseStone", "lighthouseGrand", "clocktower" -> mapOf(BOOKS to 24 * lots)
             "stables", "ridingschool" -> mapOf(BOOKS to 16 * lots)
             else -> null

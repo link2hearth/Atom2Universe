@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 class HamletShardShopTest {
     private var time = 1_800_000_000_000L
-    private fun game(sandbox: Boolean = false) = HamletGame({ time }, Random(8)).apply { startNew(sandbox) }.withStarters()
+    private fun game(sandbox: Boolean = false) = HamletGame({ time }, Random(8)).apply { startNew(sandbox) }.established().withStarters()
     private fun facility(g: HamletGame, type: String, tier: Int) {
         g.objs.values.firstOrNull { it.t == type }?.let { it.tier = tier; return }
         val id = 9000 + g.objs.size
@@ -198,6 +198,6 @@ class HamletShardShopTest {
     @Test fun `mode libre ouvre les fragments sans facturer ni limiter le stock`() {
         val g = game(true); val s = g.shardShop; g.adventure.bag.fill(0)
         assertEquals(5, s.rank()); assertTrue(s.buy(10, 100)); assertTrue(s.buy(10, 100))
-        assertEquals(200L, g.adventure.heroes[10].shards); assertArrayEquals(LongArray(8), g.adventure.bag)
+        assertEquals(200L, g.adventure.heroes[10].shards); assertArrayEquals(LongArray(g.adventure.bag.size), g.adventure.bag)
     }
 }

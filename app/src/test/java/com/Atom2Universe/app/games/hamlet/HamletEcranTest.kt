@@ -99,6 +99,8 @@ class HamletEcranTest {
         assertFalse("sans la récolte, l'amélioration reste grisée", bouton(vide, "Améliorer")?.isEnabled ?: false)
         org.robolectric.shadows.ShadowDialog.getLatestDialog().dismiss()
         for (n in besoins) game.pantry[n.crop] = n.units
+        // une amélioration demande aussi des matériaux du camp, que la nouvelle ouverture ne donne plus au départ
+        game.adventure.add(AdventureResource.TIMBER, 1_000); game.adventure.add(AdventureResource.STONE, 1_000)
         upgrade.invoke(activity, champ); idle()
         val plein = org.robolectric.shadows.ShadowDialog.getLatestDialog().window!!.decorView
         assertTrue("avec les récoltes, l'amélioration se lance", bouton(plein, "Améliorer")!!.let { it.isEnabled && it.performClick() })

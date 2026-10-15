@@ -140,7 +140,7 @@ class HamletJourney(private val g: HamletGame) {
             Chapter(3, 1, goals("harvested" to 8, "built_bench" to 1), 150, 12),
             Chapter(4, 1, goals("population" to 6, "delivered" to 6, "built_waypost" to 1, "region_0" to 2), 400, 24),
             Chapter(6, 2, goals("products" to 15, "built_seedhouse" to 1, "region_1" to 1), 900, 40),
-            Chapter(9, 2, goals("delivered" to 80, "upgrades" to 4, "region_1" to 8, "research" to 2), 1800, 60),
+            Chapter(9, 2, goals("delivered" to 50, "upgrades" to 4, "region_1" to 5, "research" to 2), 1800, 60),
             Chapter(12, 3, goals("products" to 100, "built_gardenremedies" to 1, "region_2" to 6), 4000, 90),
             Chapter(15, 3, goals("population" to 24, "built_weavery" to 1, "region_2" to 24, "research" to 4), 8000, 120),
             Chapter(18, 4, goals("delivered" to 500, "built_cartographers" to 1, "region_3" to 16), 15000, 160),

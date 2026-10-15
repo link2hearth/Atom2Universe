@@ -21,6 +21,7 @@
     <string name="hamlet_a_loot_preview">Rank %1$d loot</string>
     <string name="hamlet_a_enemy_hint">Enemies: %1$s</string>
     <string name="hamlet_a_route_locked">Clear route %1$d first.</string>
+    <string name="hamlet_a_route_closed">The road beyond is closed for now.</string>
     <string name="hamlet_a_gather">Gather</string>
     <string name="hamlet_a_battle">Fight</string>
     <string name="hamlet_a_prepare">Team</string>

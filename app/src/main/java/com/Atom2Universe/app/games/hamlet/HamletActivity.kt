@@ -240,8 +240,12 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
             button(R.string.hamlet_reveal_continue, null, if (collect) Weight.QUIET else Weight.MAIN) { sheet.dismiss() } to 1f).toTypedArray())
         sheet.show()
     }
+    private val thumbsHolder = lazy { HamletCatalogThumbs() }
+    /** The build menu's pictures, prepared in the background and kept from one opening to the next. */
+    internal val catalogThumbs: HamletCatalogThumbs get() = thumbsHolder.value
     override fun onDestroy() {
         handler.removeCallbacksAndMessages(null); worldFiles.close(); village.stop(); village.art.clear()
+        if (thumbsHolder.isInitialized()) thumbsHolder.value.close()
         for (p in listOfNotNull(adventure, journal, neighbors)) p.close()
         game.listener = null; super.onDestroy()
     }
@@ -255,7 +259,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         HamletModule.NEIGHBORS -> neighbors
     }
     private fun create(m: HamletModule): HamletPage = page(m) ?: when (m) {
-        HamletModule.JOURNAL -> HamletJournalPage(this, game, this, ::showQuest).also { journal = it }
+        HamletModule.JOURNAL -> HamletJournalPage(this, game, this, ::showQuest, ::guideToGoal).also { journal = it }
         HamletModule.NEIGHBORS -> HamletNeighborsPage(this, game, this).also { neighbors = it }
         else -> HamletAdventurePage(this, game, this).also { adventure = it }
     }
@@ -328,7 +332,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         dock.badge(HamletModule.VILLAGE, if (module != HamletModule.VILLAGE) game.collectableCount() else 0)
         dock.badge(HamletModule.HEROES, if (game.adventure[AdventureResource.TICKETS] >= 1 || game.adventure.heroes.any { it.owned && game.adventure.canPromote(it.id) }) -1 else 0)
         // un premier héros qui n'a encore jamais combattu : la carte l'attend
-        dock.badge(HamletModule.ADVENTURE, if (module != HamletModule.ADVENTURE && earned && game.adventure.frontier == 0 && game.adventure.fielded() > 0) -1 else 0)
+        dock.badge(HamletModule.ADVENTURE, if (module != HamletModule.ADVENTURE && earned && game.adventure.stars.isEmpty() && game.adventure.fielded() > 0) -1 else 0)
         dock.badge(HamletModule.JOURNAL, if (rewardReady()) -1 else 0)
         dock.badge(HamletModule.NEIGHBORS, game.neighbors.readyCount())
         top.menuBadge(game.giftReady() || (0..2).any { game.dailyClaimed and (1 shl it) == 0 && game.dailyProgress(it) >= HamletLife.dailyTargets[it] })
@@ -732,7 +736,30 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
             q.key == "expanded" -> expandLand()
             q.key == "gifts" -> game.openGift()
             q.key == "work_used" -> open(HamletModule.JOURNAL, HamletJournalPage.WORK)
+            q.key == "battles_won" -> open(HamletModule.ADVENTURE)
             else -> HamletCatalogDialog(this).show()
+        }
+    }
+    /**
+     * Where a chapter goal is worked on: the building to place, the object to touch, the list to open. A goal with
+     * nowhere to go (a building not unlocked yet) leaves the screen as it is.
+     */
+    internal fun guideToGoal(key: String) {
+        fun touch(o: Obj) {
+            open(HamletModule.VILLAGE); village.browse(); village.renderer.centerOn(o.x + o.w / 2f, o.y + o.d / 2f)
+            onTapObject(o)
+        }
+        when {
+            key.startsWith("built_") -> Hamlet.byId[key.removePrefix("built_")]?.takeIf { game.journey.unlocked(it) }?.let { build(it) }
+            key == "population" -> { open(HamletModule.VILLAGE); HamletCatalogDialog(this).show(start = Cat.HOME) }
+            key == "harvested" || key == "delivered" -> guideToQuest(Quest(key, 0, 0, 0))
+            key == "products" -> {
+                val ready = game.objs.values.firstOrNull { game.status(it) == Status.PRODUCT }
+                    ?: game.objs.values.firstOrNull { it.t in HamletLife.produce && game.buildLeft(it) == 0L }
+                if (ready != null) touch(ready) else { open(HamletModule.VILLAGE); HamletCatalogDialog(this).show(start = Cat.RANCH) }
+            }
+            key == "upgrades" -> (game.objs.values.firstOrNull { game.canAffordUpgrade(it) } ?: game.objs.values.firstOrNull { game.canUpgrade(it) })?.let { touch(it) }
+            else -> open(HamletModule.VILLAGE)
         }
     }
     private fun setPhotoMode(enabled: Boolean) {
@@ -810,7 +837,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
     }
     internal fun itemName(id: String) = stringByName(if (id == "hall") "hamlet_n_hall${game.hall}" else "hamlet_n_$id")
     internal fun stringByName(name: String): String {
-        val id = resources.getIdentifier(name, "string", packageName)
+        val id = HamletUi.stringId(this, name)
         return if (id == 0) getString(R.string.hamlet_title) else getString(id)
     }
     internal fun duration(ms: Long): String {

@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 class HamletNeighborsTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(31)).apply { startNew(false) }
+    private fun game() = HamletGame({ time }, Random(31)).apply { startNew(false) }.established()
 
     @Test fun `douze villages deterministes visites sans remplacer ni modifier le domicile`() {
         val home = game()

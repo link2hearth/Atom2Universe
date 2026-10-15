@@ -6,7 +6,7 @@ import kotlin.random.Random
 
 class HamletRecruitmentTest {
     private var time = 1_800_000_000_000L
-    private fun game(seed: Int = 31) = HamletGame({ time }, Random(seed)).apply { startNew(false) }
+    private fun game(seed: Int = 31) = HamletGame({ time }, Random(seed)).apply { startNew(false) }.established()
     /** Une équipe de départ pour les tests qui n'ont pas besoin du scénario d'ouverture. */
     private fun starters(a: HamletAdventure) { for (id in intArrayOf(0, 1, 3, 7)) a.welcome(a.heroes[id]) }
 
@@ -239,6 +239,8 @@ class HamletRecruitmentTest {
         assertEquals(1, a.traitCap(0)); assertTrue(a.promoteTrait(0, 0)); assertFalse(a.promoteTrait(0, 0))
         assertFalse(a.research(0))
         g.coins = 1_000_000; g.xp = 1_000_000
+        // Une construction demande aussi des matériaux du camp.
+        a.bag[AdventureResource.TIMBER.ordinal] = 10_000; a.bag[AdventureResource.STONE.ordinal] = 10_000
         val origin = g.realmOrigin()
         outer@ for (y in origin until origin + g.realmSize()) for (x in origin until origin + g.realmSize())
             if (g.canPlace("adventureAcademy", x, y, false)) { val o = g.buy("adventureAcademy", x, y, false)!!; time += o.def.build * 1000L + 1; break@outer }

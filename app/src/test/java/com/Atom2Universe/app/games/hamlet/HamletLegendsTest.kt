@@ -7,7 +7,7 @@ import kotlin.random.Random
 /** Les légendes ne sortent jamais d'un appel : une rumeur, un cercle de pierres et trois veillées. */
 class HamletLegendsTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(5)).apply { startNew(false) }
+    private fun game() = HamletGame({ time }, Random(5)).apply { startNew(false) }.established()
     private fun circle(g: HamletGame) {
         g.coins = 10_000_000; g.xp = 5_000_000
         val origin = g.realmOrigin()

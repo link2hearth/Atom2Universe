@@ -157,7 +157,7 @@ object HamletTransfer {
                 if (stats.has(old)) stats.put(new, stats.optLong(old))
             }
         }
-        val oldGoals = arrayOf("planted" to 3, "harvested" to 3, "built_cottage" to 1, "taxes" to 2, "roads" to 5, "built_field" to 2,
+        val oldGoals = arrayOf("planted" to 1, "harvested" to 1, "built_cottage" to 1, "taxes" to 2, "roads" to 5, "built_field" to 1,
             "built_bakery" to 1, "accepted" to 1, "delivered" to 1, "visited" to 1, "ordered" to 1, "pickedUp" to 1,
             "harvested" to 20, "cat_decor" to 5, "cat_nature" to 8, "cat_home" to 3, "delivered" to 10, "mojoUsed" to 1,
             "castle" to 1, "earned" to 25000, "harvested" to 100)

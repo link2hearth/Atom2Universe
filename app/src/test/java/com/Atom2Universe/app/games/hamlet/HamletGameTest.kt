@@ -17,7 +17,7 @@ class HamletGameTest {
     private fun game(sandbox: Boolean = false): HamletGame {
         val g = HamletGame({ t }, Random(5))
         g.startNew(sandbox)
-        return g
+        return g.established()
     }
 
     private fun freeSpot(g: HamletGame, id: String): Pair<Int, Int> {
@@ -28,12 +28,33 @@ class HamletGameTest {
     }
 
     @Test
-    fun `une nouvelle partie a une halle, des champs et une chaumiere`() {
-        val g = game()
+    fun `une nouvelle partie a une halle et un seul champ de ble, sans maison ni materiaux`() {
+        val g = HamletGame({ t }, Random(5)).apply { startNew(false) }
         assertEquals(1, g.objs.values.count { it.t == "hall" })
-        assertEquals(2, g.objs.values.count { it.t == "field" })
-        assertEquals(1, g.objs.values.count { it.t == "cottage" })
-        assertEquals(250L, g.coins)
+        assertEquals(1, g.objs.values.count { it.t == "field" })
+        assertEquals(0, g.objs.values.count { it.def.cat == Cat.HOME })
+        assertEquals(HamletGame.START_COINS, g.coins)
+        assertEquals(0L, g.adventure[AdventureResource.TIMBER]); assertEquals(0L, g.adventure[AdventureResource.STONE])
+        // seul le blé se plante, et il pousse en deux minutes
+        val f = g.objs.values.first { it.t == "field" }
+        assertEquals(setOf("wheat"), Hamlet.crops.filter { it.lvl <= g.level() }.map { it.id }.toSet())
+        assertEquals(120, Hamlet.cropById.getValue("wheat").time)
+        assertFalse(g.plant(f, "corn")); assertTrue(g.plant(f, "wheat"))
+        // ni bois ni pierre ne tombent du camp tant que le village n'a pas d'habitant
+        assertEquals(0, g.adventure.workerCapacity()); assertEquals(0.0, g.adventure.productionPerMinute()[1], 0.0); assertEquals(0.0, g.adventure.productionPerMinute()[2], 0.0)
+        t += 60_000
+        assertFalse(g.giftReady())
+    }
+
+    @Test
+    fun `une plante pousse a son rythme sans travail ni gemmes`() {
+        val g = HamletGame({ t }, Random(5)).apply { startNew(false); gems = 50; workSeconds = 600 }
+        val f = g.objs.values.first { it.t == "field" }
+        assertTrue(g.plant(f, "wheat"))
+        assertEquals(0L, g.workLeft(f)); assertFalse(g.applyWork(f)); assertEquals(600, g.workSeconds)
+        assertEquals(0, g.hurryCost(f)); assertFalse(g.hurry(f)); assertEquals(50, g.gems)
+        t += 119_000; assertFalse(g.harvest(f))
+        t += 2_000; assertTrue(g.harvest(f))
     }
 
     @Test
@@ -198,8 +219,8 @@ class HamletGameTest {
     @Test
     fun `monter de niveau donne des gemmes`() {
         val g = game()
-        g.gems = 0
-        g.addXp(30)
+        g.gems = 0; g.xp = 0
+        g.addXp(45)
         assertEquals(2, g.level())
         assertEquals(1, g.gems)
         g.addXp(100_000)
@@ -225,26 +246,29 @@ class HamletGameTest {
     @Test
     fun `les quetes avancent et se reclament`() {
         val g = game()
+        g.stats.clear()
         val f = g.objs.values.first { it.t == "field" }
-        g.plant(f, "corn"); g.plant(g.objs.values.last { it.t == "field" }, "corn")
         val q = g.currentQuest()!!
         assertEquals("planted", q.key)
         assertFalse(g.questDone(q))
-        val third = g.objs.values.first { it.t == "field" }
-        t += 46_000
-        g.harvest(third); g.plant(third, "corn")
+        g.plant(f, "wheat")
         assertTrue(g.questDone(q))
         val coins = g.coins
         assertTrue(g.claimQuest())
         assertEquals(1, g.quest)
         assertTrue(g.coins > coins)
+        // la deuxième quête est la première récolte, qui offre le premier appel
+        assertEquals("harvested", g.currentQuest()!!.key)
+        assertEquals(1, g.currentQuest()!!.tickets)
     }
 
     @Test
     fun `le cadeau du jour ne s'ouvre qu'une fois par jour`() {
         val g = game()
         assertFalse(g.giftReady())
-        t += 4 * 60_000
+        t += 9 * 60_000
+        assertFalse(g.giftReady())
+        t += 2 * 60_000
         assertTrue(g.giftReady())
         assertTrue(g.openGift())
         assertFalse(g.giftReady())

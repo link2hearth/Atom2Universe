@@ -31,8 +31,13 @@ import com.Atom2Universe.app.R
  * the app's colour theme, so every text keeps its contrast whatever theme the player chose.
  */
 internal object HamletUi {
+    private val stringIds = java.util.concurrent.ConcurrentHashMap<String, Int>()
+    /** A string's id by name. Looking a name up walks the resource tables, and the answer never changes while the app runs: ask once. */
+    fun stringId(context: Context, name: String): Int =
+        stringIds.getOrPut(name) { context.resources.getIdentifier(name, "string", context.packageName) }
+
     fun costText(context: Context, cost: VillageCost, game: HamletGame? = null): String {
-        fun named(key: String) = context.getString(context.resources.getIdentifier(key, "string", context.packageName))
+        fun named(key: String) = context.getString(stringId(context, key))
         val parts = mutableListOf<String>()
         fun amount(name: String, need: Long, have: Long?) {
             if (need <= 0) return
@@ -54,7 +59,7 @@ internal object HamletUi {
         val sources = recipe.cost.resources.keys.mapNotNull { r ->
             val buildings = HamletIndustry.sources(r).take(3)
             if (buildings.isEmpty()) return@mapNotNull null
-            fun named(key: String) = context.getString(context.resources.getIdentifier(key, "string", context.packageName))
+            fun named(key: String) = context.getString(stringId(context, key))
             context.getString(R.string.hamlet_industry_source_row, named("hamlet_a_resource_${r.name.lowercase()}"),
                 buildings.joinToString(context.getString(R.string.hamlet_list_separator)) {
                     context.getString(R.string.hamlet_industry_source_building, named("hamlet_n_${it.id}"), it.lvl)

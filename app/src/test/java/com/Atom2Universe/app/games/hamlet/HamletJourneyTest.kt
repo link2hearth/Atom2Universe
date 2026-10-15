@@ -7,7 +7,7 @@ import kotlin.random.Random
 
 class HamletJourneyTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(7)).apply { startNew(false) }
+    private fun game() = HamletGame({ time }, Random(7)).apply { startNew(false) }.established()
     private fun buy(g: HamletGame, id: String): Obj? {
         val start = g.realmOrigin()
         for (y in start until start + g.realmSize()) for (x in start until start + g.realmSize())
@@ -47,7 +47,7 @@ class HamletJourneyTest {
     }
 
     @Test fun `reclamer un chapitre ne paie pas deux fois et un chapitre sur deux offre un appel`() {
-        val g = game(); g.xp = 80; g.stats["harvested"] = 8; g.stats["built_bench"] = 1
+        val g = game(); g.xp = 130; g.stats["harvested"] = 8; g.stats["built_bench"] = 1
         assertTrue(g.journey.claim())
         assertEquals(1, g.journey.chapter); assertEquals(0L, g.adventure[AdventureResource.TICKETS])
         assertEquals(0, g.adventure.ownedCount())
@@ -135,10 +135,10 @@ class HamletJourneyTest {
         assertEquals(0, g.workSeconds)
     }
 
-    @Test fun `les cultures les commandes et les animaux acceptent aussi le travail gratuit`() {
+    @Test fun `les commandes et les animaux acceptent le travail gratuit, pas les cultures`() {
         val g = game(); val f = g.objs.values.first { it.t == "field" }
         assertTrue(g.plant(f, "corn")); g.workSeconds = 100
-        assertTrue(g.applyWork(f)); assertEquals(Status.RIPE, g.status(f)); assertEquals(55, g.workSeconds)
+        assertFalse(g.applyWork(f)); assertEquals(Status.GROWING, g.status(f)); assertEquals(100, g.workSeconds)
         g.sandbox = true
         val b = buy(g, "bakery")!!; b.order = Order("Odile", time)
         g.workSeconds = 300; val left = g.jobLeft(b)

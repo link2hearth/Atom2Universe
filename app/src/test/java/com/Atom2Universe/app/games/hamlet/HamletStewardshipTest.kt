@@ -7,7 +7,7 @@ import kotlin.random.Random
 
 class HamletStewardshipTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(5)).apply { startNew(false) }.withStarters()
+    private fun game() = HamletGame({ time }, Random(5)).apply { startNew(false) }.established().withStarters().apply { journey.chapter = 1 }
 
     @Test fun `les gestes du village et les aventures alimentent le meme carnet sans doubles gains`() {
         val g = game(); val s = g.stewardship

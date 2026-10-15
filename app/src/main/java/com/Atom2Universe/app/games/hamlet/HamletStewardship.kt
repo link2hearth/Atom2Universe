@@ -24,13 +24,15 @@ class HamletStewardship(private val g: HamletGame) {
         day = current; claimed = 0; chestClaimed = false
         for (i in baseline.indices) baseline[i] = total(i)
     }
+    /** Les tâches du jour viennent après le premier chapitre : au début, les héros arrivent un à un. */
+    fun unlocked() = g.sandbox || g.journey.chapter >= 1
     fun progress(index: Int): Long {
         ensureDay()
         return if (index in baseline.indices) (total(index) - baseline[index]).coerceAtLeast(0) else 0
     }
     fun canClaim(index: Int): Boolean {
         ensureDay()
-        return index in TARGETS.indices && claimed and (1 shl index) == 0 && progress(index) >= TARGETS[index]
+        return unlocked() && index in TARGETS.indices && claimed and (1 shl index) == 0 && progress(index) >= TARGETS[index]
     }
     fun claim(index: Int): Boolean {
         if (!canClaim(index)) return false

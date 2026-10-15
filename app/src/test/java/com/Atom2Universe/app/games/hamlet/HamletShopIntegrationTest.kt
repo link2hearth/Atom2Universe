@@ -7,7 +7,7 @@ import kotlin.random.Random
 
 class HamletShopIntegrationTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(5)).apply { startNew(false) }.withStarters()
+    private fun game() = HamletGame({ time }, Random(5)).apply { startNew(false) }.established().withStarters()
     private fun openShop(g: HamletGame) {
         g.sandbox = true
         val origin = g.realmOrigin()

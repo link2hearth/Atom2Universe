@@ -120,10 +120,16 @@ class HamletGame(
         val after = level()
         if (after > before) {
             var g = 0
-            for (l in before + 1..after) g += Hamlet.gemsForLevel(l)
+            var tools = false
+            for (l in before + 1..after) {
+                g += Hamlet.gemsForLevel(l)
+                // Dès le niveau 8, chaque construction demande des outils : un petit stock pour les premiers jours.
+                if (l == TOOLS_GIFT_LEVEL && !sandbox) { adventure.add(AdventureResource.TOOLS, TOOLS_GIFT); tools = true }
+            }
             gems += g
             chronicle.record(HamletChronicle.Kind.LEVEL, amount = after.toLong())
             listener?.onLevelUp(after, g)
+            if (tools) listener?.onMessage("level_tools")
         }
         changed()
     }
@@ -372,7 +378,7 @@ class HamletGame(
     fun workLeft(o: Obj): Long = when {
         !owns(o) -> 0
         buildLeft(o) > 0 -> buildLeft(o)
-        o.crop != null && cropStage(o) < 2 -> cropLeft(o)
+        // Une plante pousse à son rythme : ni le travail ni les gemmes ne la pressent.
         o.order?.t0?.let { it > 0 } == true -> jobLeft(o)
         o.t in HamletLife.produce && o.t0 > 0 -> productLeft(o)
         else -> 0
@@ -390,7 +396,6 @@ class HamletGame(
                 if (o.t in HamletLife.produce && o.def.cat != Cat.RANCH) o.t0 -= ms
                 if (buildLeft(o) == 0L) o.b0 = 0
             }
-            o.crop != null -> o.t0 -= ms
             o.order != null -> o.order!!.t0 -= ms
             else -> o.t0 -= ms
         }
@@ -599,7 +604,6 @@ class HamletGame(
         val d = o.def
         val left = when {
             buildLeft(o) > 0 -> buildLeft(o)
-            d.cat == Cat.FIELD && o.crop != null && cropLeft(o) > 0 -> cropLeft(o)
             d.cat == Cat.SHOP && o.order?.t0 != 0L && o.order != null && jobLeft(o) > 0 -> jobLeft(o)
             o.t in HamletLife.produce && o.t0 != 0L && productLeft(o) > 0 -> productLeft(o)
             else -> 0L
@@ -616,7 +620,6 @@ class HamletGame(
         val d = o.def
         when {
             buildLeft(o) > 0 -> { o.b0 = 0; if (o.t in HamletLife.produce && o.def.cat != Cat.RANCH) o.t0 = now() }
-            d.cat == Cat.FIELD -> o.t0 = now() - cropOf(o)!!.time * 1000L
             d.cat == Cat.SHOP -> o.order!!.t0 = now() - d.job * 1000L
             o.t in HamletLife.produce -> o.t0 = now() - HamletLife.produce.getValue(o.t).seconds * 1000L
         }
@@ -917,20 +920,20 @@ class HamletGame(
         nextId = 1; quest = 0; questBase = 0; questNoted = -1; expand = 0; hall = 1; xp = 0
         dailyDay = -1; dailyClaimed = 0; dailyBase.fill(0); tickAt = 0; giftT = 0; visitT = 0
         sandbox = sandboxMode
-        coins = 250; gems = 5
+        coins = START_COINS; gems = 5
         created = now()
-        giftT = now() - Hamlet.DAY_MS + 180_000
+        // Le premier cadeau est une surprise, mais pas avant que le village ait pris forme.
+        giftT = now() - Hamlet.DAY_MS + FIRST_GIFT_MS
         val o = realmOrigin()
         val hx = o + realmSize() / 2 - 2
         val hy = o + 1
         insert(Obj(nextId++, "hall", hx, hy))
-        // une allée jusqu'à la halle, un carrefour, deux champs et une chaumière
+        // une allée jusqu'à la halle, un carrefour et un seul champ : la première chaumière et le deuxième champ se gagnent
         for (y in hy + 4..hy + 12) { put(hx + 1, y, 1); put(hx + 2, y, 1) }
         for (x in hx - 4..hx + 7) put(x, hy + 8, 1)
         val fx = hx - 3
         val fy = hy + 10
-        place("field", fx, fy); place("field", fx + 2, fy)
-        place("cottage", hx + 5, hy + 9)?.t0 = now()
+        place("field", fx, fy)
         scatter(Random(7), o, 0.06)
         ensureDaily()
         chronicle.record(HamletChronicle.Kind.WELCOME)
@@ -941,7 +944,7 @@ class HamletGame(
 
     private fun put(x: Int, y: Int, code: Int) { if (inRealm(x, y)) paths[idx(x, y)] = code }
 
-    private fun place(id: String, x: Int, y: Int): Obj? {
+    internal fun place(id: String, x: Int, y: Int): Obj? {
         if (!canPlace(id, x, y, false)) return null
         val o = Obj(nextId++, id, x, y)
         insert(o)
@@ -976,6 +979,11 @@ class HamletGame(
     }
 
     companion object {
+        /** Assez de pièces pour les premières graines de blé, pas pour une maison : le premier héros paie le reste. */
+        const val START_COINS = 12L
+        const val TOOLS_GIFT_LEVEL = 8
+        const val TOOLS_GIFT = 20L
+        const val FIRST_GIFT_MS = 10 * 60_000L
         const val COLLECT_ALL_CHAPTER = 10
         const val CHARM_RANGE = 4
         const val CHARM_PERCENT = 0.8

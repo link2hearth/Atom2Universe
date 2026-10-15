@@ -6,7 +6,7 @@ import kotlin.random.Random
 
 class HamletCollectionTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(5)).apply { startNew(false) }
+    private fun game() = HamletGame({ time }, Random(5)).apply { startNew(false) }.established()
     private fun buy(g: HamletGame, type: String): Obj {
         val creative = g.sandbox
         g.sandbox = true
@@ -61,7 +61,7 @@ class HamletCollectionTest {
 
     @Test fun `tout recolter arrive apres le chapitre dix et survit a la sauvegarde`() {
         val g = game(); val home = g.objs.values.first { it.t == "cottage" }
-        time += 301_000
+        time += 601_000
         val coins = g.coins
         assertFalse(g.canCollectAll()); assertEquals(0, g.collectAll()); assertEquals(coins, g.coins)
         assertEquals(Status.TAX, g.status(home))

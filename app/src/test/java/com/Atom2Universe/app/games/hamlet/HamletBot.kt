@@ -38,6 +38,9 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
     val a get() = g.adventure
     private val startMs = startMs
     var activeSeconds = 0.0
+    /** Achats voulus, pièces suffisantes, mais matériaux manquants : combien de fois, et à quelle minute active la première. */
+    val blocked = LinkedHashMap<String, Int>()
+    val firstBlocked = LinkedHashMap<String, Double>()
     var battles = 0; var defeats = 0
     var outfits = 0; var craftTrades = 0; var bulkWorkTrades = 0
     /** Jour (depuis le début) où chaque événement s'est produit. */
@@ -187,7 +190,7 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
         var neededRoom = max(1, (fields.size * (if (legendOpen) 0.6 else 0.34)).toInt()) - fields.count { it.crop != null && it.crop in wanted }
         for (o in g.objs.values.toList()) {
             if (o.def.cat != Cat.FIELD || o.crop != null || g.buildLeft(o) > 0) continue
-            val options = Hamlet.crops.filter { it.lvl <= g.level() && it.magic == o.def.magic && it.cost <= g.coins - 30 }
+            val options = Hamlet.crops.filter { it.lvl <= g.level() && it.magic == o.def.magic && it.cost <= g.coins - minOf(30L, g.coins / 4) }
             if (options.isEmpty()) continue
             val fitsReturn = options.filter { it.time * 1000L <= untilNext }
             val short = options.filter { it.time * 1000L <= inSession }
@@ -255,6 +258,7 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
     private fun buy(id: String, reserve: Int = 40): Boolean {
         val d = Hamlet.byId[id] ?: return false
         if (!g.journey.unlocked(d) || g.coins < d.cost + reserve || d.gems > 0) return false
+        if (!HamletIndustry.building(d).canPay(g)) { blocked.merge(id, 1, Int::plus); if (id !in firstBlocked) firstBlocked[id] = activeSeconds / 60.0; return false }
         val origin = g.realmOrigin()
         for (y in origin until origin + g.realmSize()) for (x in origin until origin + g.realmSize()) if (g.canPlace(id, x, y, false)) {
             if (g.buy(id, x, y, false) == null) return false
@@ -468,7 +472,11 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
         if (a.heroes.all { it.owned }) mark("all_heroes")
     }
 
+    /** Crochet de mesure : appelé à chaque relevé, pour les bancs qui veulent plus que la ligne du tableau. */
+    var onSnapshot: ((HamletBot) -> Unit)? = null
+
     private fun snapshot() {
+        onSnapshot?.invoke(this)
         val team = a.teams[a.selectedTeam].take(a.slotCount()).filter { it >= 0 }
         val owned = a.heroes.filter { it.owned }
         timeline.append(listOf(

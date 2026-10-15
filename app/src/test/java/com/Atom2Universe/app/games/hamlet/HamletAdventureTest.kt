@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 class HamletAdventureTest {
     private var time = 1_800_000_000_000L
-    private fun game() = HamletGame({ time }, Random(3)).apply { startNew(false) }
+    private fun game() = HamletGame({ time }, Random(3)).apply { startNew(false) }.established()
     /** Une équipe de départ pour les tests de combat, sans passer par le scénario d'ouverture. */
     private fun gameWithHeroes(): HamletGame = game().also { g -> for (id in intArrayOf(7, 3, 0)) g.adventure.welcome(g.adventure.heroes[id]) }
     private fun finish(b: HamletBattle) { b.advance(100f); assertNotEquals(BattleOutcome.RUNNING, b.outcome) }
@@ -63,7 +63,7 @@ class HamletAdventureTest {
         finish(b); assertEquals(BattleOutcome.DEFEAT, b.outcome); assertTrue(a.settle(b))
         assertArrayEquals(before, a.bag); assertNotNull(a.beginBattle(BattleMode.CAMPAIGN, 200, 2)); a.abandonBattle()
         repeat(100) { assertTrue(a.gather(1)) }
-        assertTrue(a[AdventureResource.FOOD] > before[0] + 3000)
+        assertTrue(a[AdventureResource.FOOD] > before[0] + 1500)
         assertFalse(a.gather(201)); assertFalse(a.gather(0)); assertEquals(200, a.frontier)
         assertTrue(g.workSeconds in 4500..7200)
     }

@@ -22,7 +22,7 @@ class HamletPlayabilityTest {
         }
         val field = game.objs.values.first { it.def.cat == Cat.FIELD }
         assertTrue(game.coins >= 60)
-        assertTrue(game.plant(field, "corn"))
+        assertTrue(game.plant(field, "wheat"))
         assertEquals(0, game.gems)
     }
 
