@@ -1,27 +1,61 @@
 {
   "id": "paludosa",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 6 to 20 cm, convex to depressed, mostly blood red, pink, crimson or purple, sometimes with a yellowish or orange centre",
-    "Gills crowded, cream then yellow, sometimes reddish at the edges",
-    "Stem 5 to 15 cm, white, sometimes tinged pink, slightly club-shaped",
-    "White flesh, mild taste, no smell, soon soft and greyish",
-    "Coniferous woods and peat bogs, especially under pines; locally very common"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Recognizing the species",
+      "text": "Russula paludosa Britzelm. (the bog russula) is a robust brittlegill, usually with a cap 6–15 cm across and sometimes over 20 cm. The cap starts convex, expands, and becomes depressed in the centre. It ranges from strawberry-red or carmine to orange-red; the centre often becomes paler, yellowish or ochre, and rain may fade the surface. The cap is glossy and slightly sticky when wet."
+    },
+    {
+      "title": "Gills, stem and flesh",
+      "text": "The gills are crowded and brittle, whitish at first, then cream to pale yellow or ochre; their edges may turn reddish near the cap margin. The stout stem is white, sometimes tinged pink or red, and has no ring or volva. The white, brittle flesh does not change when cut; it may be pinkish just beneath the cap skin. The spore print is cream to pale yellow or ochre."
+    },
+    {
+      "title": "Habitat and similar species",
+      "text": "This mycorrhizal species grows on the ground in coniferous or mixed woodland, especially with spruce and pine, on acidic, damp, mossy or peaty soils; it may also associate with fir, larch or birch. Fruiting is mainly in summer and autumn (July to September in Finland; other atlases give July to October). Russula emetica may share the damp habitat and red colours, but its gills and spore print remain white. Several characters must be checked: cap colour or a photograph alone cannot identify a russula."
+    },
+    {
+      "title": "Edibility and caution",
+      "text": "Russula paludosa is included in the DGfM positive list and the VAPKO list of recommended edible mushrooms. These lists do not identify a collected specimen. The sickener (Russula emetica), which can resemble it and cause gastrointestinal illness, is an important look-alike. Never eat a wild mushroom based on this page or a photograph; have it confirmed by a local expert."
+    }
   ],
-  "safetyNote": "Edible: the DGfM and the VAPKO list it, and Wikipedia (en) says it is a common sight in Finnish markets. Wikipedia (en) warns that it can easily be mistaken for the sickener, which is poisonous: see the group. It has no French Wikipedia page and no English common name: the text comes from Wikipedia (en) and the DGfM.",
+  "traits": [
+    "Robust cap 6–15 cm across, sometimes over 20 cm; convex then expanded and centrally depressed, strawberry-red to carmine or orange-red, often paler in the centre",
+    "Cap glossy and slightly sticky when wet; colour may fade in rain",
+    "Crowded, brittle gills, whitish then cream to pale yellow or ochre, sometimes with reddish edges",
+    "Stout white stem, sometimes tinged pink or red, without a ring or volva; white brittle flesh unchanged on cutting",
+    "Cream to pale yellow/ochre spore print; mycorrhizal with conifers and sometimes birch",
+    "Coniferous or mixed woodland on acidic, damp soils, moss and peat; fruiting mainly July to October depending on region"
+  ],
+  "safetyNote": "Listed as edible by the DGfM and VAPKO sources consulted. A similar red russula, Russula emetica, can cause gastrointestinal illness. These lists do not replace identification: do not eat a wild mushroom based on a photo or this page; ask a qualified local expert.",
   "sources": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Index Fungorum via EU-Nomen (PESI) — Russula paludosa Britzelm., accepted name and taxonomic classification.",
+      "url": "https://www.eu-nomen.eu/portal/taxon.php?GUID=urn%3Alsid%3Aindexfungorum.org%3Anames%3A206457"
+    },
+    {
+      "title": "Finnish Biodiversity Information Facility (Laji.fi), Finnish species portal — biology, morphology, habitat and season for Russula paludosa; source cited: Pinkka, University of Helsinki.",
+      "url": "https://laji.fi/taxon/MX.72321/biology"
+    },
+    {
+      "title": "Finnish Food Authority (Ruokavirasto) — Isohapero (Russula paludosa): identifying features, habitat, look-alike risks and food status.",
+      "url": "https://www.ruokavirasto.fi/elintarvikkeet/ohjeita-kuluttajille/turvallisen-kayton-ohjeet/ruokasienet/suositeltavat-ruokasienet/isohapero/"
+    },
+    {
+      "title": "Naturalis Biodiversity Center, Interactive Guide to Mushrooms and other fungi — morphology, spore print, mycorrhizae and similar species of Russula paludosa.",
+      "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?epi=137&id=100499"
+    },
+    {
+      "title": "Mushroom atlas, Czechia — Russula paludosa: detailed description, habitat, season and comparison with Russula emetica.",
+      "url": "https://kderostouhouby.cz/en/atlas/holubinka-jahodova"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), positive list of edible mushrooms, 1 May 2026 version — Russula paludosa.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "VAPKO, list of recommended mushrooms, version 09.2023 — Russula paludosa.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipedia (en): Russula paludosa",
-      "url": "https://en.wikipedia.org/wiki/Russula_paludosa"
     }
   ],
   "related": []

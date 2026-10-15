@@ -1,29 +1,29 @@
 {
   "id": "imbricatus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap up to 15 cm, brownish to buff, funnel-shaped, with coarse dark scales that turn up with age",
-    "Spines instead of gills: soft and pale grey, 0.5 to 1.5 cm, browner with age",
-    "Stem pale grey or brown, up to 10 cm, sometimes off-centre",
-    "Soft, whitish to tan flesh; can be bitter, especially when old",
-    "Brown spore print",
-    "With spruce and fir, often in hills and mountains, sometimes in rings · August to October"
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Identification", "text": "Sarcodon imbricatus (L.) P. Karst. is a terrestrial tooth fungus. Its cap, usually 6–22 cm across in a recent description, starts convex and flattens, often becoming depressed at the center. The yellowish-brown surface bears coarse scales with raised tips; the scales are initially close in color to the background and darken to brown with age. The older name Hydnum imbricatum L. is its basionym."},
+    {"title": "Spines, stem and flesh", "text": "The underside bears crowded, decurrent spines, never gills or pores: they are grayish white when young, pale gray at maturity, and may turn brown when touched; a recent study measured them to about 9 mm long. The pale stem is usually eccentric, about 2.5–6 cm long, and may turn brownish or greenish when touched. The flesh is grayish white. Taste descriptions differ: mild in the recent taxonomic study, but slightly bitter after a few minutes in a regional synthesis. Taste is therefore not a constant character. The smell becomes more pronounced on drying, and the spore print is brownish."},
+    {"title": "Habitat and similar species", "text": "It grows on the ground in mycorrhizal association with conifers, especially spruce (Picea); specimens have also been reported in forests with both fir and spruce. Fruiting is in late summer and autumn. Older records from pine may refer to Sarcodon squamosus: a molecular and morphological study separated that pine-associated species from spruce-associated S. imbricatus. Cap color and scales alone may not be enough to identify a specimen."},
+    {"title": "Edibility and caution", "text": "The VAPKO list of edible mushrooms presented includes S. imbricatus. This is not foraging advice or an identification: tooth fungi can resemble one another, and characters vary. Never eat a wild mushroom based only on an image."}
   ],
-  "safetyNote": "Not recommended: the Swiss controllers (VAPKO) list it only as a seasoning, and Wikipedia (en) calls it edible but not recommended: bitter when old, it can upset the gut. Other mushrooms with spines look alike: Sarcodon amarascens (bitter, with a bluish-black stripe) and Hydnellum scabrosum (bitter, turquoise-tinted base).",
+  "traits": [
+    "Cap 6–22 cm across, convex then flattening, often depressed in the center, yellowish brown with coarse raised scales that darken with age",
+    "Crowded, decurrent spines, grayish white then pale gray, sometimes browning when touched, up to about 9 mm long; no gills or pores",
+    "Pale, usually eccentric stem about 2.5–6 cm long, sometimes turning brownish or greenish when touched",
+    "Grayish-white flesh; taste reported as mild or becoming slightly bitter depending on sources; smell stronger when dried",
+    "Brownish spore print",
+    "On the ground beneath conifers, especially spruce; late summer and autumn"
+  ],
+  "safetyNote": "The VAPKO list of edible mushrooms presented includes Sarcodon imbricatus. Taste reports vary, and consumption requires certain identification; never eat a wild mushroom based only on a photo. If symptoms occur after ingestion, contact a poison centre or emergency services immediately.",
   "sources": [
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Sarcodon imbricatus",
-      "url": "https://fr.wikipedia.org/wiki/Sarcodon_imbricatus"
-    },
-    {
-      "title": "Wikipedia (en): Sarcodon imbricatus",
-      "url": "https://en.wikipedia.org/wiki/Sarcodon_imbricatus"
-    }
+    {"title": "Wang, D. et al. (2024). New insights into the stipitate hydnoid fungi Sarcodon, Hydnellum, and the formerly informally defined Neosarcodon. IMA Fungus 15:8. Description based on 132 specimens, morphology, taste and habitat of S. imbricatus.", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10964585/"},
+    {"title": "Johannesson, H., Ryman, S., Lundmark, H. & Danell, E. (1999). Sarcodon imbricatus and S. squamosus — two confused species. Mycological Research 103(11): 1447–1452. DOI: 10.1017/S0953756299008709.", "url": "https://doi.org/10.1017/S0953756299008709"},
+    {"title": "NCBI Taxonomy Browser — Sarcodon imbricatus (L.) P. Karst.; accepted name and basionym Hydnum imbricatum L.", "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=57136"},
+    {"title": "VAPKO (2022). Champignons comestibles présentés — official list of mushrooms presented as edible, including Sarcodon imbricatus.", "url": "https://prestations.vapko.ch/wp-content/uploads/2022/09/Champignons-comestibles-presentes.pdf"},
+    {"title": "E-Flora BC, University of British Columbia — Sarcodon imbricatus: comparative characters, host trees and distinction from S. squamosus.", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=1&sciname=Sarcodon+imbricatus"},
+    {"title": "University of Lyon 1 — Sarcodon imbricatus: field guide and photographs of diagnostic features, including spines and cross-section.", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/sarcodon-imbricatus/"},
+    {"title": "Ethnobiology of fungi and lichens of Georgia — Sarcodon imbricatus: morphology, sometimes bitter taste, habitat and season (regional literature synthesis).", "url": "https://fungi.biodiversity-georgia.iliauni.edu.ge/sarcodon-imbricatus-l-p-karst/"}
   ],
   "related": []
 }

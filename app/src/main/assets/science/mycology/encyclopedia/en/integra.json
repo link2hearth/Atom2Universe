@@ -1,32 +1,61 @@
 {
   "id": "integra",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 6 to 15 cm, shiny, usually brown with violet, purple, yellow or green tints, nearly spherical then flat or depressed",
-    "Gills thin, well spaced, crumbly, white then bright yellow",
-    "Stem 5 to 12 cm, thick and white, spotted yellow or rusty with age",
-    "Very firm white flesh, mild sweet taste, crunchy",
-    "Scattered under conifers, often mountain spruce and fir woods"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Recognizing the species",
+      "text": "Russula integra (L.) Fr., the entire russula, has a fleshy cap 4–15 cm across. It is convex at first, then expands and may become slightly depressed. The surface is smooth and shiny, a little viscid in damp weather. Its highly variable colours are most often brown to yellow-brown, but may also be purplish red, greyish or, more rarely, greenish."
+    },
+    {
+      "title": "Gills, stem and flesh",
+      "text": "The gills are thick, fragile and more or less widely spaced; they may fork near the stem. They start whitish and turn yellow as the spores mature, with paler edges. The stem is white, sometimes stained brownish, and has neither a ring nor a volva. The firm white flesh may be wine-brown just beneath the cap skin; its odour is faint and fruity, and its mild taste is reminiscent of nuts. The spore print is yellow to ochre. One published description gives subglobose to ellipsoid spores about 7.5–10 × 7–9 μm, with low warts sometimes linked by ridges; microscopic examination provides additional identification characters."
+    },
+    {
+      "title": "Habitat and similar species",
+      "text": "It grows on the ground in montane conifer forests, especially with firs and spruces, sometimes on calcareous soils; the French source gives August to October as its fruiting season. Cap colour and a yellow spore print are not enough to identify it. Russula olivacea can share olive or wine-red tones and an ochre spore print, but often has a dull, concentrically wrinkled or cracked cap near the margin, more crowded gills and a stem often flushed pink; it grows mostly with beech, but sometimes with spruce. These are clues rather than standalone diagnoses: closely related russulas require several characters to be assessed, sometimes under a microscope."
+    },
+    {
+      "title": "Edibility and caution",
+      "text": "Russula integra appears on the DGfM positive list; the VAPKO field guide classifies the Russula integra aggregate (R. integra agg.) as category C. That does not identify a collected specimen: russulas can be difficult to distinguish, and similar species may have a different edibility. Never eat a wild mushroom based only on a photo or this page; have it confirmed by a qualified local expert."
+    }
   ],
-  "safetyNote": "Not recommended: the DGfM and the VAPKO list it, and it is widely eaten in northern Europe and good when young (Wikipedia). But Wikipedia (en) lists it as not recommended, and both pages quote an 1878 study saying poisonings were once frequent: long cooking removes the toxic properties, quick methods such as roasting do not. The most prudent status is kept. Similar species of unknown edibility look like it; Wikipedia (en) names Russula mustelina.",
+  "traits": [
+    "Fleshy cap 4–15 cm across, convex then expanded and sometimes slightly depressed, smooth and shiny, a little viscid in damp weather",
+    "Highly variable colour: mostly brown or yellow-brown, sometimes purplish red or greyish, more rarely greenish",
+    "Thick, fragile, more or less widely spaced gills, sometimes forked near the stem; whitish then yellow with paler edges",
+    "White stem, sometimes brown-stained, without ring or volva; firm white flesh with faint fruity odour and mild nutty taste",
+    "Yellow to ochre spore print; subglobose to ellipsoid spores around 7.5–10 × 7–9 μm, with low warts in one published description",
+    "On the ground in montane conifer forests, especially with spruce and fir; French source gives August to October"
+  ],
+  "safetyNote": "The DGfM lists Russula integra as edible; the VAPKO field guide classifies the Russula integra aggregate (R. integra agg.) as category C. Russulas can be difficult to identify, and cap colour alone cannot separate similar species. Do not eat a wild mushroom based on a photo or this page; ask a qualified local expert to confirm it.",
   "sources": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Université Claude Bernard Lyon 1, Champignons database — Russula integra: description, habitat, season, spore print and edibility.",
+      "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/russula-integra/"
+    },
+    {
+      "title": "VAPKO, Champignons: Guide de terrain, 2nd edition (excerpt), p. 111 — Russula integra agg.: traits and habitat; category C.",
+      "url": "https://www.vapko.ch/images/articles/guide_terrain_GS2_extraits.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Positivliste der Speisepilze, 1 May 2026 version — Russula integra.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+      "title": "Index Fungorum (Royal Botanic Gardens, Kew) — name Russula integra (L.) Fr. and basionym Agaricus integer L.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=182048"
     },
     {
-      "title": "Wikipédia (fr) : Russula integra",
-      "url": "https://fr.wikipedia.org/wiki/Russula_integra"
+      "title": "Mushroom World — Russula integra: morphology, dimensions, habitat, spore print and spores.",
+      "url": "https://www.mushroom.world/show?n=Russula-integra"
     },
     {
-      "title": "Wikipedia (en): Russula integra",
-      "url": "https://en.wikipedia.org/wiki/Russula_integra"
+      "title": "Société Mycologique du Nord de la France — Russula olivacea: comparative characters, habitat and limits of identification.",
+      "url": "https://www.smnf.fr/wp-content/Photos_SMNF/Photos_SMNF_R/Textes_R2/Russula_olivacea.htm"
     }
   ],
-  "related": []
+  "related": [
+    "olivacea",
+    "badia"
+  ]
 }

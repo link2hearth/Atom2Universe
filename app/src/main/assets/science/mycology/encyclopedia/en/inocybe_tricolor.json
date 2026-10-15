@@ -1,21 +1,57 @@
 {
   "id": "inocybe_tricolor",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: Inocybe with a fibrillose cap and brown spores.",
-    "Ecological context: Inocybe with a fibrillose cap and brown spores. Details vary with taxon and habitat.",
-    "Food status not assessed."
-  ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Inocybe tricolor.",
-      "url": "https://www.gbif.org/species/7449828"
+      "title": "Vinaceous-brown cap",
+      "text": "Inocybe tricolor Kühner is a small fibrecap. In Kuyper’s revision, the cap reaches 38 mm, flattens while retaining a broad, blunt umbo, and is dark vinaceous brown, paler toward the margin. Its surface is fibrillose to finely squamulose; the margin may become slightly rimulose with age."
     },
     {
-      "title": "Index Fungorum, name record 298984: Inocybe tricolor.",
+      "title": "Gills and reddish stem",
+      "text": "The gills are very crowded, greyish yellow and adnate, with a white-flocculose edge that may turn vinaceous when damaged. The described stem is about 50 × 5 mm, fairly equal and solid, whitish at the apex then orange-red to vinaceous lower down; it is slightly pruinose at the very top and fibrillose farther down. The flesh is whitish in the cap and orange-red to vinaceous in the stem."
+    },
+    {
+      "title": "Smell and microscopic characters",
+      "text": "Kuyper’s description notes a smell reminiscent of Peru balsam. The spores are smooth, regular to slightly amygdaloid, with a somewhat conical apex; those measured for the described collection were 7.0–9.0 × 5.0–6.0 µm. Microscopy and examined specimens are needed to support an identification: this illustration cannot identify a foraged mushroom."
+    },
+    {
+      "title": "Ecology, rarity and caution",
+      "text": "In central Europe the species is reported under Norway spruce (Picea abies) on calcareous soil. Norway’s red-list account also records calcareous spruce or pine forests and Dryas heath, while noting that the mycorrhizal hosts there are only presumed; it assesses the species as Near Threatened (NT) in Norway. One specimen identified as I. tricolor tested positive for psilocybin, while muscarine was not detected in the 1985 analysis. This single result does not characterize every population and does not establish safety; edibility remains unassessed."
+    }
+  ],
+  "traits": [
+    "Cap up to about 38 mm, dark vinaceous brown and paler at the margin, fibrillose to finely squamulose, with a broad blunt umbo",
+    "Very crowded, greyish-yellow, adnate gills with a whitish edge that may stain vinaceous",
+    "Solid, fairly equal stem, whitish at the top then orange-red to vinaceous lower down",
+    "Flesh whitish in the cap and orange-red to vinaceous in the stem",
+    "Smooth, regular to slightly amygdaloid spores, about 7–9 × 5–6 µm in the description consulted",
+    "Reported under Picea abies on calcareous soil in central Europe; Norwegian mycorrhizal ecology remains partly hypothetical"
+  ],
+  "safetyNote": "Psilocybin was detected in one specimen identified as I. tricolor; an older analysis of one specimen cannot establish the composition of every collection or assess a dose or risk. This rare species requires specialist identification; do not consume based on this entry or image.",
+  "sources": [
+    {
+      "title": "Kuyper, T.W. (1986). A revision of the Genus Inocybe in Europe I. Persoonia Supplement 3: 1–247. Detailed account of I. tricolor, Fig. 45.",
+      "url": "https://repository.naturalis.nl/pub/532490/PERSSUP1986003001001.pdf"
+    },
+    {
+      "title": "Kühner, R. (1955). Compléments à la Flore analytique V. Inocybes léiosporés cystidiés. Espèces nouvelles ou critiques. Bulletin de la Société des Naturalistes d’Oyonnax 9 (suppl.), p. 6. Original description; name record in Index Fungorum.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=298984"
+    },
+    {
+      "title": "Besl, H. & Mack, P. (1985). Halluzinogene Rißpilze. Zeitschrift für Mykologie 51(2): 183–184. Chromatographic analysis of an I. tricolor specimen: psilocybin detected, muscarine not demonstrated.",
+      "url": "https://www.zobodat.at/pdf/Z-Mykologie_51_1985_0183-0184.pdf"
+    },
+    {
+      "title": "Ludwig, E. (2017). Pilzkompendium, Volume 4, plate 758. Photograph and description cited by the Hérault Mycological Society.",
+      "url": "https://mycologie66.wixsite.com/mycologie66/post/inocybe-tricolor"
+    },
+    {
+      "title": "Brandrud et al. (2021). Assessment of Inocybe tricolor for Norway. Norwegian Red List for Species 2021, Artsdatabanken. Reported hosts and habitats, rarity estimate and Norwegian NT status.",
+      "url": "https://lister.artsdatabanken.no/rodlisteforarter/2021/11479"
+    },
+    {
+      "title": "Matheny et al. (2013). Evolution of the toxins muscarine and psilocybin in a family of mushroom-forming fungi. BMC Evolutionary Biology 13:63. Review of chemical assays in Inocybaceae.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23717644/"
     }
   ],
   "related": []

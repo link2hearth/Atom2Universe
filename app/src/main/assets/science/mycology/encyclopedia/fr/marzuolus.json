@@ -1,15 +1,33 @@
 {
   "id": "marzuolus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau de 2,5 à 12 cm, convexe, visqueux, gris brunâtre pâle au centre et plus foncé, gris noirâtre vers la marge",
-    "Lames larges, espacées, blanches puis grises à gris bleuâtre",
-    "Pied de 3 à 10 cm, blanchâtre, grisonnant",
-    "Chair imbibée d’eau sous la peau du chapeau, grisâtre ; ni odeur ni saveur marquées",
-    "Sous conifères et hêtres, sur sol calcaire, sous la neige qui fond · fin d’hiver à début de printemps, surtout en mars"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Taxonomie",
+      "text": "Le nom retenu est Hygrophorus marzuolus (Fr.) Bres., dans la famille des Hygrophoraceae et l’ordre des Agaricales. Elias Fries l’a décrit en 1821 sous le nom Agaricus marzuolus ; Bresadola l’a transféré dans Hygrophorus en 1893. Le nom commun français est hygrophore de mars."
+    },
+    {
+      "title": "Chapeau et lames",
+      "text": "Le chapeau mesure généralement 2,5 à 12 cm. D’abord convexe, il s’étale et peut devenir irrégulier ou légèrement déprimé. Sa surface lisse, parfois visqueuse quand elle est humide, est souvent gris clair à brun-gris au centre et plus sombre, parfois presque noire, vers le bord ; elle peut montrer des stries radiales. Les lames sont épaisses, cireuses et espacées, blanches puis grisâtres à gris bleuté avec l’âge ; elles sont adnées à échancrées et parfois un peu décurrentes, avec de petites lamelles intermédiaires."
+    },
+    {
+      "title": "Pied et chair",
+      "text": "Le pied robuste mesure environ 3 à 10 cm de haut et 1 à 3 cm de large. Il est plein, cylindrique ou légèrement aminci vers la base, blanchâtre à gris pâle, souvent plus gris dans sa partie supérieure et parfois couvert d’une pruine blanchâtre au sommet. Il n’a ni anneau ni volve. La chair épaisse est ferme et blanche à légèrement grisâtre ; juste sous la cuticule du chapeau, elle peut sembler imbibée d’eau. L’odeur est absente ou discrète et la saveur douce."
+    },
+    {
+      "title": "Habitat, saison et conservation",
+      "text": "Ce champignon ectomycorhizien vit principalement avec des conifères, notamment le sapin et l’épicéa, et plus rarement avec le hêtre ou d’autres feuillus. Il pousse dans des forêts montagnardes fraîches, souvent caché sous la litière, la mousse ou les aiguilles ; les fructifications apparaissent en fin d’hiver et au début du printemps, parfois sous la neige ou près de sa fonte. Il a été observé sur des sols calcaires, neutres ou acides et sableux. L’évaluation publiée en 2025 le classe Vulnérable sur la base des données européennes ; le nom appliqué aux spécimens nord-américains pourrait désigner un autre taxon. En Allemagne, l’espèce figure parmi les champignons sauvages protégés à l’annexe 1 de la réglementation fédérale ; une liste de comestibilité ne renseigne pas sur les règles locales de récolte ni sur l’identification d’un spécimen."
+    }
   ],
-  "safetyNote": "Comestible et estimé (Wikipédia, fr et en) ; la DGfM et la VAPKO le listent, et la DGfM le marque comme protégé en Allemagne et sur la liste rouge (catégorie 2). Il sort en hiver, quand peu d’autres champignons poussent. La page française est presque vide : la description vient de Wikipédia (en).",
+  "traits": [
+    "Chapeau de 2,5 à 12 cm, gris à brun-gris, souvent plus sombre à la marge ; parfois visqueux humide, il sèche souvent.",
+    "Lames épaisses, cireuses et espacées, blanches puis grises à gris bleuté ; attachées au pied ou légèrement décurrentes, avec lamellules.",
+    "Pied robuste, plein, blanchâtre à gris pâle, souvent plus gris dans la partie supérieure ; sans anneau ni volve.",
+    "Chair épaisse, ferme, blanche à grisâtre et parfois d’aspect aqueux sous la cuticule ; odeur discrète, saveur douce.",
+    "Ectomycorhizien surtout avec Abies et Picea, plus rarement avec Fagus et d’autres feuillus ; sols calcaires à acides/sableux.",
+    "Fructifie en fin d’hiver et au début du printemps, parfois sous la neige ou à proximité de la fonte ; espèce classée Vulnérable dans l’évaluation 2025 fondée sur les données européennes."
+  ],
+  "safetyNote": "La DGfM l’inclut dans sa liste positive des espèces considérées comme comestibles et la VAPKO le recommande en Suisse. En Allemagne, Hygrophorus marzuolus figure à l’annexe 1 de la Bundesartenschutzverordnung, qui répertorie des champignons sauvages protégés. Les règles de récolte dépendent du droit applicable ; vérifiez les restrictions locales. Cette fiche ne permet pas d’identifier ni de consommer une récolte sauvage.",
   "sources": [
     {
       "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
@@ -20,12 +38,24 @@
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Hygrophorus marzuolus",
-      "url": "https://fr.wikipedia.org/wiki/Hygrophorus_marzuolus"
+      "title": "Species Fungorum / Index Fungorum, nom accepté et autorité : Hygrophorus marzuolus (Fr.) Bres., basionyme Agaricus marzuolus Fr. (1821).",
+      "url": "https://www.speciesfungorum.org/names/NamesRecord.asp?RecordId=652726"
     },
     {
-      "title": "Wikipedia (en): Hygrophorus marzuolus",
-      "url": "https://en.wikipedia.org/wiki/Hygrophorus_marzuolus"
+      "title": "E-Flora BC Atlas, University of British Columbia : description morphologique compilée (chapeau, chair, lames, pied et neige fondante).",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Hygrophorus+marzuolus"
+    },
+    {
+      "title": "Kautmanova, I. (2025). Hygrophorus marzuolus. The IUCN Red List of Threatened Species 2025: e.T70406801A70406836 — statut Vulnérable, évaluation basée sur les données européennes et note taxonomique sur les spécimens nord-américains.",
+      "url": "https://redlist.info/iucn/species_view/181113"
+    },
+    {
+      "title": "Lothar & Katharina Krieglsteiner, Pilzkunde.de (2016), März-Schneckling : photos de référence et observations de terrain sur lames cireuses, couleur, saison, hôtes et habitat.",
+      "url": "https://www.pilzkunde.de/index.php/pilz-des-monats/pilz-des-monats-aeltere-beitraege/pilz-des-monats-2016?start=8"
+    },
+    {
+      "title": "Bundesartenschutzverordnung (Allemagne), § 1, § 2 et annexe 1 — statut de protection des populations sauvages indigènes de Hygrophorus marzuolus.",
+      "url": "https://www.gesetze-im-internet.de/bartschv_2005/BJNR025810005.html"
     }
   ],
   "related": []

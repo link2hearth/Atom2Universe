@@ -1,21 +1,65 @@
 {
   "id": "neurospora_crassa",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: orange mould, a model organism in genetics.",
-    "Ecological context: orange mould, a model organism in genetics. Details vary with taxon and habitat.",
-    "Food status not assessed."
-  ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Neurospora crassa.",
-      "url": "https://www.gbif.org/species/5253986"
+      "title": "Taxonomy and model organism",
+      "text": "Neurospora crassa Shear & B.O. Dodge is a filamentous mold in the phylum Ascomycota, class Sordariomycetes, order Sordariales and family Sordariaceae. It is a haploid model organism long used in genetics and cell biology. Its orange mold-like appearance in culture comes from a microscopic growth and sporulation phase; it is not a mushroom with a cap."
     },
     {
-      "title": "Index Fungorum, name record 262212: Neurospora crassa.",
+      "title": "Hyphae and asexual spores",
+      "text": "The mycelium is a network of branching tubular hyphae divided by porous septa that allow cytoplasm to pass between compartments. Under the Fungal Genetics Stock Center’s (FGSC) reference conditions, hyphae are about 8–15 µm in diameter. Aerial hyphae form conidiophores that produce dispersal conidia. Macroconidia, often the most abundant, are spherical and about 5–8 µm in diameter; they usually contain two or three nuclei, although counts vary. Smaller uninucleate microconidia (about 2.5–3.5 µm) are also produced. Masses of conidia give cultures their characteristic orange color."
+    },
+    {
+      "title": "Perithecia, asci and ascospores",
+      "text": "Sexual reproduction in N. crassa requires contact between compatible mating types. It produces flask-shaped microscopic fruiting bodies called perithecia, each with a neck and an apical opening (ostiole), about 400–500 µm in diameter. Each contains many elongated asci, typically 180–200 × 15–18 µm; a mature ascus holds eight linearly arranged ascospores. Mature ascospores are dark, thick-walled and marked by longitudinal ridges; the FGSC lists them at about 27–30 × 13–15 µm. They are discharged through the ostiole."
+    },
+    {
+      "title": "Ecology and illustration scale",
+      "text": "In nature, sporulating Neurospora is often observed on burned or charred plant material after fires, including sugarcane residues. A 2025 study found that N. crassa degraded uncharred grass residues better than strongly heat-treated material; post-fire growth therefore does not show that the fungus feeds on char itself. Its natural lifestyle remains under investigation. The accompanying image is an explanatory microscopic schematic, not to scale: hyphae and conidia, an opened perithecium and a detailed ascus are shown side by side so structures of very different sizes remain legible."
+    }
+  ],
+  "traits": [
+    "Orange filamentous mold; its mycelium is microscopic, and aerial conidia give colonies their visible color",
+    "Branching hyphae about 8–15 µm in diameter; conidiophores bear macroconidia about 5–8 µm across and smaller microconidia",
+    "Spherical macroconidia, usually with two or three nuclei; smaller microconidia are uninucleate",
+    "Sexual perithecia are flask-shaped and about 0.4–0.5 mm in diameter, with a neck and apical ostiole",
+    "Elongated asci each contain eight linearly ordered ascospores; mature spores are dark, longitudinally ridged and discharged through the ostiole",
+    "Often observed on burned plant material after fires; its natural ecological strategy remains under study"
+  ],
+  "safetyNote": "This entry describes a microscopic species and model organism; it cannot identify an unknown mold or assess the food safety of contaminated food.",
+  "sources": [
+    {
+      "title": "Index Fungorum (Royal Botanic Gardens, Kew) — accepted name Neurospora crassa Shear & B.O. Dodge and taxonomic classification.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=262212"
+    },
+    {
+      "title": "Fungal Genetics Stock Center (FGSC), Neurospora LIFE CYCLE — hyphae, conidia, mating types, perithecia and eight ascospores per ascus.",
+      "url": "https://www.fgsc.net/Neurospora/sectionB2.htm"
+    },
+    {
+      "title": "Fungal Genetics Stock Center (FGSC), Neurospora Basic Cell Structure — morphology and role of macroconidia and ascospores.",
+      "url": "https://www.fgsc.net/Neurospora/sectionB3.htm"
+    },
+    {
+      "title": "Fungal Genetics Stock Center (FGSC), Neurospora crassa dimensions at 25°C — diameters of hyphae, macro- and microconidia, perithecia, asci and ascospores.",
+      "url": "https://www.fgsc.net/Neurospora/dimensions.htm"
+    },
+    {
+      "title": "Raju, N. B. (2009). Neurospora genetics and sexual biology. Journal of Biosciences 34: 139–159 — linear ascospore arrangement and dimensions of perithecia/asci.",
+      "url": "https://www.fgsc.net/NeurosporaGenomeProject/2009Raju.JBiosciReview.pdf"
+    },
+    {
+      "title": "Borkovich, K. A. et al. (2014). Global Gene Expression and Focused Knockout Analysis Reveals Genes Associated with Fungal Fruiting Body Development in Neurospora crassa. Eukaryotic Cell 13 — figures of perithecial, ascus and ascospore development.",
+      "url": "https://journals.asm.org/doi/full/10.1128/ec.00248-13"
+    },
+    {
+      "title": "Simpson, H. J. & Schilling, J. S. (2025). Saprotrophic Capabilities of Neurospora crassa on Charred Plant Biomass. Environmental Microbiology 27: e70132 — comparison of decay on heated and unheated grass and wood.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12186714/"
+    },
+    {
+      "title": "Borkovich, K. A. et al. (2004). Lessons from the Genome Sequence of Neurospora crassa: Tracing the Path from Genomic Blueprint to Multicellular Organism. Microbiology and Molecular Biology Reviews 68 — hyphal morphology and compartmentation.",
+      "url": "https://journals.asm.org/doi/10.1128/mmbr.68.1.1-108.2004"
     }
   ],
   "related": []

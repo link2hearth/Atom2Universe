@@ -1,33 +1,65 @@
 {
   "id": "luteus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 4 to 15 cm, brown to chestnut, very slimy and glossy, the skin peels off",
-    "Fine yellow pores, turning olive with age",
-    "Stem 4 to 12 cm, pale, with a wide ring: white above, violet-brown below",
-    "Glandular dots above the ring",
-    "Mild taste, faint pleasant smell",
-    "Under pines · mostly autumn"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Identification",
+      "text": "Suillus luteus, the slippery jack, is a bolete with a cap that starts convex and flattens with age, usually chestnut to yellowish brown. Its cuticle becomes thickly slimy and glossy in wet weather and separates readily from the flesh; it looks more matte when dry. The cap is most often about 5–12 cm across, with variation among sources and specimens."
+    },
+    {
+      "title": "Pores, stem and flesh",
+      "text": "The fertile surface consists of short to moderately long tubes ending in small, round to slightly angular pores. They are pale yellow at first, becoming yellow to olive-yellow with age. A white partial veil may cover the pores on young specimens. The whitish to pale-yellow stem normally bears a broad, membranous ring; its lower surface often develops violet to brown tones with age. Brownish glandular dots are common above the ring. The white to pale-yellow flesh generally does not blue when cut; the spore print is cinnamon brown to ochre."
+    },
+    {
+      "title": "Habitat and similar species",
+      "text": "This ectomycorrhizal species grows on the ground with pines (Pinus), often in groups, mainly from late summer into autumn. It is widespread in its Eurasian range and has been introduced to several other regions. The ring often distinguishes S. luteus from Suillus granulatus, which lacks one, but the ring may disappear on old specimens; consider the full set of features and the associated tree."
+    },
+    {
+      "title": "Edibility and caution",
+      "text": "Suillus luteus is listed as edible by the DGfM and VAPKO; the US Forest Service field guide advises removing the cap skin. Culinary recommendations do not establish a specimen’s identity: never eat a wild mushroom based on an image alone."
+    }
   ],
-  "safetyNote": "Edible: the DGfM and the VAPKO list it. Wikipedia (fr) calls it mediocre, the tastiest of its genus, and advises picking only young ones, peeling the cap and removing the stem; the slimy skin is laxative and may cause indigestion, and allergies are possible. It strongly accumulates caesium-137 (Wikipedia, fr). The granulated bolete has no ring; the larch bolete grows under larches; a young Gomphidius looks alike from above but has gills (Wikipedia, en).",
+  "traits": [
+    "Cap usually 5–12 cm across, convex then flattening, chestnut to yellowish brown, very slimy and glossy when wet; cuticle readily separable",
+    "Small round to slightly angular pores, yellow then olive-yellow with age; tubes, never gills",
+    "Whitish to pale-yellow stem, normally with a broad membranous ring whose underside often becomes violet to brown",
+    "Brownish glandular dots common on the stem above the ring",
+    "White to pale-yellow flesh, generally unchanged when cut; cinnamon-brown to ochre spore print",
+    "On the ground with pines (Pinus), often in groups, mainly from late summer into autumn"
+  ],
+  "safetyNote": "The DGfM and VAPKO list Suillus luteus as edible, and the US Forest Service field guide recommends removing the cap skin. Food recommendations cannot identify a specimen: never eat a wild mushroom based on a photo alone. If symptoms occur after ingestion, contact poison control or emergency services promptly.",
   "sources": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Species Fungorum (Royal Botanic Gardens, Kew) — Suillus luteus (L.) Roussel, current name and nomenclatural status.",
+      "url": "https://www.speciesfungorum.org/Names/NamesRecord.asp?RecordID=494956"
+    },
+    {
+      "title": "SMART Champignons, University of Rouen — Suillus luteus: morphology, habitat, lookalikes and edibility.",
+      "url": "https://smartchampi.univ-rouen.fr/champignons/suillus-luteus.html"
+    },
+    {
+      "title": "Kuo, M. (MushroomExpert.com) — Suillus luteus: identification, ecology, pore surface, stem and flesh.",
+      "url": "https://www.mushroomexpert.com/suillus_luteus.html"
+    },
+    {
+      "title": "USDA Forest Service (2016). Field Guide to Common Macrofungi in Eastern Forests and Their Ecosystem Functions, General Technical Report NRS-79, Suillus luteus account.",
+      "url": "https://www.fs.usda.gov/nrs/pubs/gtr/gtr_nrs79r.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, as of 1 May 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste, version 09.2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Suillus luteus",
-      "url": "https://fr.wikipedia.org/wiki/Suillus_luteus"
-    },
-    {
-      "title": "Wikipedia (en): Suillus luteus",
-      "url": "https://en.wikipedia.org/wiki/Suillus_luteus"
+      "title": "E-Flora BC Atlas, University of British Columbia — morphological synthesis for Suillus luteus and information on its native European range and introductions with Pinus.",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Suillus+luteus"
     }
   ],
-  "related": []
+  "related": [
+    "granulatus",
+    "grevillei"
+  ]
 }

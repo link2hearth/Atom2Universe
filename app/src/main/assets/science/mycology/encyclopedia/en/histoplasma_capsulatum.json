@@ -1,22 +1,29 @@
 {
   "id": "histoplasma_capsulatum",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: dimorphic fungus in the environment, studied in microbiology.",
-    "Ecological context: dimorphic fungus in the environment, studied in microbiology. Details vary with taxon and habitat.",
-    "Food status not assessed."
+  "reviewStatus": "verified",
+  "safetyNote": "Histoplasma capsulatum is a pathogenic dimorphic fungus. Its environmental conidia can be infectious when inhaled, and sporulating cultures pose a serious occupational hazard. This plate is an educational illustration, not an invitation to collect, culture, or handle the fungus. Identification belongs to specialized diagnostic methods.",
+  "sections": [
+    {"title": "A dimorphic fungus", "text": "Histoplasma capsulatum changes form with its environment. In nature it grows as a filamentous mould; in tissues at body temperature it takes a yeast form. This plate compares those two morphologies and does not depict a mushroom with a cap and stem."},
+    {"title": "Mycelial phase and conidia", "text": "The mould forms hyaline, septate, branching hyphae. They bear small, smooth microconidia, usually oval to pyriform and about 2–4 µm, and larger globose, thick-walled macroconidia, about 7–15 µm, with characteristic tuberculate projections. Microconidia are the environmental propagules chiefly associated with infection by inhalation."},
+    {"title": "Tissue yeast phase", "text": "In tissue, cells are small oval yeasts, generally about 2–4 µm, with narrow-based budding. They are often seen inside macrophages, but may also occur extracellularly. A clear halo around a cell in a tissue section can give the impression of a capsule; H. capsulatum does not have a true capsule."},
+    {"title": "Ecology and diagnosis", "text": "Histoplasma occurs in several regions of the world and lives in soil. Soil or material enriched with bird or bat droppings can support its growth, but these droppings are not required for its presence. Conidia may become airborne when contaminated material is disturbed. Tuberculate macroconidia are suggestive, but are not sufficient by themselves to confirm the species; morphology must be interpreted by a specialist laboratory and supplemented as appropriate."},
+    {"title": "Reading the plate", "text": "On the left, the mycelial phase shows septate hyphae bearing smooth microconidia and large, rounded macroconidia with tuberculate projections. On the right, the tissue phase shows oval, narrow-budding yeasts, some within a macrophage. These are schematic microscopic views at different scales; no macroscopic fruit body is expected."}
   ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "traits": [
+    "Pathogenic microscopic dimorphic fungus, with no cap-and-stem fruit body.",
+    "Mycelial phase: hyaline, septate and branching hyphae.",
+    "Smooth, oval-to-pyriform microconidia, about 2–4 µm.",
+    "Globose, thick-walled, tuberculate macroconidia, about 7–15 µm.",
+    "Tissue phase: oval yeasts about 2–4 µm, with narrow-based budding, often intracellular in macrophages.",
+    "Inhaled conidia can cause infection; morphology alone cannot confirm identification."
+  ],
   "sources": [
-    {
-      "title": "GBIF Backbone Taxonomy: Histoplasma capsulatum.",
-      "url": "https://www.gbif.org/species/3469218"
-    },
-    {
-      "title": "Index Fungorum, name record 102749: Histoplasma capsulatum.",
-      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=102749"
-    }
+    {"title": "CDC Public Health Image Library, image 4022 — Histoplasma capsulatum mycelial phase; photomicrograph and dimorphism.", "url": "https://phil.cdc.gov/Details.aspx?pid=4022"},
+    {"title": "Kauffman, C.A. (2007). Histoplasmosis: a Clinical and Laboratory Update. Clinical Microbiology Reviews 20(1): 115–132.", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1797635/"},
+    {"title": "Azar, M.M. & Hage, C.A. (2017). Laboratory Diagnostics for Histoplasmosis. Journal of Clinical Microbiology 55(6): 1612–1620.", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5442517/"},
+    {"title": "CDC/NIOSH — Histoplasma in the Environment: An Overview.", "url": "https://www.cdc.gov/niosh/histoplasmosis/about/environment.html"},
+    {"title": "World Health Organization — Laboratory manual for diagnosis of fungal opportunistic infections in HIV/AIDS patients: histoplasmosis morphology and diagnosis.", "url": "https://iris.who.int/bitstream/handle/10665/205404/B4416.pdf?sequence=1"},
+    {"title": "CDC/NIH. Biosafety in Microbiological and Biomedical Laboratories, 6th edition — Histoplasma capsulatum.", "url": "https://www.cdc.gov/covid/media/pdfs/2024/07/SF__19_308133-A_BMBL6_00-BOOK-WEB-final-3.pdf"}
   ],
   "related": []
 }

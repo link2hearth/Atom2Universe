@@ -1,21 +1,52 @@
 {
   "id": "parmelia_sulcata",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : lichen foliacé gris, formé par une symbiose.",
-    "Repère écologique : lichen foliacé gris, formé par une symbiose. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
-  ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Parmelia sulcata.",
-      "url": "https://www.gbif.org/species/7248320"
+      "title": "Taxonomie et symbiose",
+      "text": "Parmelia sulcata Taylor (1836) est un lichen foliacé de la famille des Parmeliaceae, et non un lichen crustacé. Son thalle est construit par un champignon ascomycète associé à un photobionte, ici une algue verte chlorococcoïde. Les lobes forment généralement une rosette appliquée sur l’écorce ou la roche."
     },
     {
-      "title": "Index Fungorum, name record 123425: Parmelia sulcata.",
+      "title": "Thalle et surface supérieure",
+      "text": "Le thalle forme le plus souvent une rosette distincte de 4 à 10 cm, parfois jusqu’à 20 cm. Ses lobes gris à gris blanchâtre, étroits et aplatis, mesurent environ 2 à 5 mm de large et se chevauchent parfois. La surface supérieure porte un réseau de pseudocyphelles allongées et saillantes, qui la fissurent ou la creusent en fines dépressions. Des soralies granuleuses, gris pâle et poudreuses se développent en lignes le long de ce réseau et peuvent s’étendre vers le centre du thalle. Les isidies sont absentes."
+    },
+    {
+      "title": "Face inférieure et reproduction",
+      "text": "La face inférieure est noire et porte de nombreuses rhizines noires qui ancrent le thalle au support ; elles sont simples à fourchues, certaines pouvant être ramifiées en petits pinceaux. La reproduction observée est surtout végétative, par les soralies qui dispersent des soredies contenant à la fois le champignon et son algue partenaire. Les apothécies sont rares : lorsqu’elles sont présentes, elles sont en forme de disque, à disque brun et marge souvent sorédiée."
+    },
+    {
+      "title": "Habitat et répartition",
+      "text": "Espèce épiphyte fréquente sur l’écorce de nombreux arbres, elle pousse aussi sur le bois et parfois sur la roche. Elle tolère des milieux assez variés et se rencontre en plaines comme en altitude selon la région ; les sources signalent aussi des substrats acides ou subacides. Son aire est très large, présente sur plusieurs continents. Parmi les espèces proches, Parmelia saxatilis se distingue notamment par des isidies plutôt que par les soralies linéaires de P. sulcata."
+    }
+  ],
+  "traits": [
+    "Lichen foliacé gris à gris blanchâtre, en rosette généralement de 4–10 cm, parfois jusqu’à 20 cm ; lobes aplatis de 2–5 mm.",
+    "Réseau saillant de pseudocyphelles allongées sur la face supérieure ; soralies poudreuses alignées le long des crêtes et pouvant couvrir le centre.",
+    "Face inférieure noire, munie de nombreuses rhizines noires simples, fourchues ou parfois en petits pinceaux.",
+    "Reproduction surtout par soredies dans les soralies ; apothécies brunes à marge souvent sorédiée rares.",
+    "Lichen épiphyte courant sur l’écorce, également observé sur le bois et parfois la roche ; répartition très large."
+  ],
+  "safetyNote": "Cette fiche décrit un lichen et ses caractères écologiques ; elle ne constitue ni une identification garantie ni une recommandation alimentaire.",
+  "sources": [
+    {
+      "title": "Index Fungorum (Royal Botanic Gardens, Kew). Parmelia sulcata Taylor, nom accepté, autorité et publication originale (1836).",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=123425"
+    },
+    {
+      "title": "Nimis, P. L. et al. ITALIC — The Information System on Italian Lichens, fiche Parmelia sulcata : morphologie, reproduction, substrat et écologie.",
+      "url": "https://italic.units.it/index.php?num=1585&procedure=taxonpage"
+    },
+    {
+      "title": "Australian Biological Resources Study (ABRS), Checklist of the Lichens of Australia and its Island Territories : description, rhizines, apothécies, chimie et substrats de Parmelia sulcata.",
+      "url": "https://www.anbg.gov.au/abrs/lichenlist/PARMELIACEAE/Parmelia_sulcata.html"
+    },
+    {
+      "title": "Consortium of Lichen Herbaria, taxon profile Parmelia sulcata : description détaillée du thalle, pseudocyphelles, soralies, rhizines et apothécies.",
+      "url": "https://lichenportal.org/portal/taxa/index.php?clid=110&taxauthid=1&tid=54529"
+    },
+    {
+      "title": "British Lichen Society (2021). Parmelia sulcata : caractères d’identification, habitat, soralies et face inférieure à rhizines.",
+      "url": "https://britishlichensociety.org.uk/sites/default/files/Parmelia%20sulcata.pdf"
     }
   ],
   "related": []

@@ -1,33 +1,64 @@
 {
   "id": "nebularis",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Grey to grey-brown cap, 5 to 25 cm, often with a white bloom when young, rolled margin",
-    "Pale, close gills, often forked, up to slightly decurrent",
-    "Light grey stem, stout, swollen at the base",
-    "White, very thick flesh · strong smell, from floury to rancid",
-    "Pale yellow spores",
-    "Under broadleaves and conifers · autumn"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Name and identification",
+      "text": "Species Fungorum accepts Clitocybe nebularis (Batsch) P. Kumm.; Lepista nebularis is a taxonomic synonym. The clouded funnel forms large ash-grey to grey-brown caps, sometimes covered by a whitish bloom, especially when young. The cap begins convex, then flattens or becomes slightly depressed; its margin remains inrolled for a long time."
+    },
+    {
+      "title": "Gills, stem and flesh",
+      "text": "The gills are very crowded, whitish to cream and sometimes slightly yellowish at maturity; they are adnate at first, then slightly to distinctly decurrent, and often forked. The stout whitish to greyish stem often widens toward the base, which may be bulbous and bear white mycelium. The flesh is thick and white. The odor is strong and variable, often unpleasant and farinaceous-rancid, though it may be milder in some collections. The spore print is pale buff to yellowish."
+    },
+    {
+      "title": "Habitat and season",
+      "text": "This saprotrophic species grows on the ground in leaf litter beneath broadleaf or conifer trees, often in groups or arcs and rings. It fruits mainly in autumn, sometimes late in the season. Size and color vary considerably with age and conditions."
+    },
+    {
+      "title": "Lookalikes and toxicology",
+      "text": "The Belgian Poison Centre warns of possible confusion with the livid pinkgill (Entoloma sinuatum). Its gills are typically notched and its spore print turns pink at maturity, whereas C. nebularis has pale, decurrent gills; these features alone are not enough to identify a specimen. VAPKO now classifies C. nebularis as inedible. Japan’s Ministry of Health reports gastrointestinal poisonings but says the responsible toxic principle remains uncertain. Nebularine has been detected and motivates a precautionary long-term concern, although mutagenicity has not been demonstrated in humans."
+    }
   ],
-  "safetyNote": "Not recommended: even a small portion can upset the digestion of some people. It is mistaken for the livid pinkgill, which is toxic, and whose gills turn pink.",
+  "traits": [
+    "Large cap, 5–25 cm, ash-grey to grey-brown, often whitish-pruinose when young; convex then flat to slightly depressed, margin long inrolled",
+    "Very crowded, whitish to cream gills, sometimes yellowing, adnate then decurrent and often forked",
+    "Stout, whitish to greyish stem, often widened or bulbous at the base, sometimes covered in white mycelium",
+    "Thick white flesh; odor strong and often unpleasant, farinaceous or rancid, but variable",
+    "Pale buff to yellowish spore print",
+    "On the ground in leaf litter under broadleaf or conifer trees, often in groups or rings, mainly in autumn"
+  ],
+  "safetyNote": "Do not eat Clitocybe nebularis: VAPKO classifies it as inedible, and Japan’s Ministry of Health advises against eating it. Vomiting, abdominal pain and diarrhea have been reported; the principle responsible for acute symptoms has not been established. Nebularine has been detected, and VAPKO advises against consumption as a precaution, but the sources do not demonstrate cancer or mutation risk in humans. Confusion with the poisonous livid pinkgill is also reported. If ingested, contact poison control or emergency services promptly.",
   "sources": [
     {
-      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
-      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+      "title": "Species Fungorum / Index Fungorum (Royal Botanic Gardens, Kew) — Clitocybe nebularis: accepted/current name; Lepista nebularis treated as a synonym.",
+      "url": "https://www.indexfungorum.org/names/namesrecord.asp?RecordID=316554"
     },
     {
-      "title": "Tox Info Suisse (2025). Edible mushrooms: unpleasant gastrointestinal symptoms. Dernière mise à jour : mai 2025.",
-      "url": "https://toxinfo.ch/edible_mushrooms_unpleasant_gastrointestinal_symptoms"
+      "title": "E-Flora BC, University of British Columbia — Clitocybe nebularis: morphology, odor, spore print, habitat and similar species (Ian Gibson species account, from Matchmaker: Mushrooms of the Pacific Northwest).",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?NoTransfer=1&sciname=Clitocybe+nebularis"
     },
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "title": "Ministry of Health, Labour and Welfare (Japan) — Natural toxin risk profile: Clitocybe nebularis; gastrointestinal symptoms and uncertain toxic principle.",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000143411.html"
+    },
+    {
+      "title": "Zoller, B., Zoller, O. & Neuhäusler, M. (2023). Clitocybe nebularis: change in edibility status, rationale and practical implications. VAPKO.",
+      "url": "https://vapko.ch/phocadownload/Membres/FR/2023/Clitocybe_nebularis_fr.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Poisonous mushroom list by taxon: Clitocybe nebularis, inconsistently assessed, suspected carcinogenicity or mutagenicity.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
     },
     {
-      "title": "Wikipedia (en): Clitocybe nebularis",
-      "url": "https://en.wikipedia.org/wiki/Clitocybe_nebularis"
+      "title": "Belgian Poison Centre. Mushroom information brochure — risk of confusion between Entoloma sinuatum and Clitocybe nebularis; livid pinkgill symptoms.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+    },
+    {
+      "title": "Tox Info Suisse (2025). Edible mushrooms: unpleasant gastrointestinal symptoms. Updated May 2025; includes Clitocybe nebularis among species associated with digestive symptoms.",
+      "url": "https://toxinfo.ch/edible_mushrooms_unpleasant_gastrointestinal_symptoms"
     }
   ],
-  "related": []
+  "related": [
+    "sinuatum"
+  ]
 }

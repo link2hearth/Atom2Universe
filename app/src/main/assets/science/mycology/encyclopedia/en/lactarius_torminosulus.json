@@ -1,11 +1,32 @@
 {
   "id": "lactarius_torminosulus",
-  "reviewStatus": "pending",
-  "sections": [],
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Appearance and cap",
+      "text": "Lactarius torminosulus is a small northern milkcap. Its cap is about 1.5–5 cm wide, convex at first, then expanded and centrally depressed. The margin is initially inrolled and fringed with short hairs, up to about 5 mm long, which often disappear with age. The dry surface is pink to brick-coloured and may be zoned; the flesh is pink to brick."
+    },
+    {
+      "title": "Gills, stem and milk",
+      "text": "The crowded gills are pale pinkish buff, adnate to shortly decurrent. The smooth, dry, cylindrical stem is about 2.5–5.5 cm long and 6–15 mm broad, pale salmon to pinkish buff. A cut releases white milk; taxonomic descriptions report an acidulous-fruity smell and very acrid-tasting milk. Spores are broadly ellipsoid, about 7.5–10 × 5.5–7.5 μm, with warts and ridges about 0.5 μm high that sometimes form closed meshes."
+    },
+    {
+      "title": "Habitat and range",
+      "text": "This northern ectomycorrhizal species is associated especially with dwarf birch Betula nana in mountain heaths, Arctic habitats, and damp or boggy places; some floras also mention B. glandulosa and, more rarely, B. pubescens. It fruits in summer to early autumn. Specialists preparing the French fungal catalogue state that French reports appear to result from confusion with L. torminosus and that no French collection was confirmed in their review."
+    },
+    {
+      "title": "Taxonomy and limits",
+      "text": "The name Lactarius torminosulus Knudsen & T. Borgen is retained by the consulted taxonomic references; it was published as a replacement name in 1996. It is close to L. torminosus, but smaller, with shorter marginal hairs that disappear with age. This entry summarizes published characters and cannot securely identify a collection. Food status is not assessed here."
+    }
+  ],
   "traits": [
-    "General form: small milkcap with a hairy margin, associated with birch.",
-    "Ecological context: small milkcap with a hairy margin, associated with birch. Details vary with taxon and habitat.",
-    "Food status not assessed."
+    "Cap 1.5–5 cm wide, pink to brick-coloured, initially with a short-hairy margin that often becomes smooth; centre sometimes depressed.",
+    "Crowded, pale pinkish-buff gills, adnate to shortly decurrent; white milk released when cut.",
+    "Smooth, dry, cylindrical stem, pale salmon to pinkish buff; taxonomic descriptions report an acidulous-fruity smell and very acrid milk.",
+    "Ectomycorrhizal, especially with Betula nana; mountain heaths and damp or boggy habitats, fruiting in summer to early autumn.",
+    "A northern species close to L. torminosus; French reports have been considered likely misidentifications and remain unconfirmed.",
+    "Food status not assessed.",
+    " Broadly ellipsoid spores, about 7.5–10 × 5.5–7.5 μm, with partly reticulate warts and ridges."
   ],
   "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
   "sources": [
@@ -16,6 +37,26 @@
     {
       "title": "Index Fungorum, name record 436327: Lactarius torminosulus.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=436327"
+    },
+    {
+      "title": "Knudsen & Hansen (1996), Nordic Journal of Botany 16(2), nomenclatural notes: publication of Lactarius torminosulus as a replacement name.",
+      "url": "https://doi.org/10.1111/j.1756-1051.1996.tb00960.x"
+    },
+    {
+      "title": "Heilmann-Clausen, Verbeken & Vesterholt (1998), The Genus Lactarius, Fungi of Northern Europe 2, pp. 158–159: description and northern ecology.",
+      "url": "https://books.google.com/books?id=kvtEAAAAYAAJ"
+    },
+    {
+      "title": "Knudsen & Vesterholt (eds., 2008), Funga Nordica, Lactarius, p. 94: macroscopic characters, milk, spores, hosts and habitat.",
+      "url": "https://mykoweb.com/CAF/PDF/FungaNordica/FungaNordica-Lactarius.pdf"
+    },
+    {
+      "title": "Artsdatabanken, Artsnavnebase: scientific name Lactarius torminosulus Knudsen & T. Borgen and Norwegian taxonomy.",
+      "url": "https://artsdatabanken.no/arter/takson/40463"
+    },
+    {
+      "title": "Van Vooren et al. (2023), Updated Catalogue of French Mycota, Bulletin ADONIF 4: French records likely confused with L. torminosus, no confirmed collection.",
+      "url": "https://inpn.mnhn.fr/docs-web/docs/download/431501"
     }
   ],
   "related": []

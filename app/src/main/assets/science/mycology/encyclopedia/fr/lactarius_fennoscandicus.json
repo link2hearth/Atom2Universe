@@ -1,22 +1,60 @@
 {
   "id": "lactarius_fennoscandicus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : lactaire boréal associé aux conifères.",
-    "Repère écologique : lactaire boréal associé aux conifères. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Reconnaissance",
+      "text": "Lactaire de 3 à 8 cm, d’abord convexe et légèrement déprimé au centre, puis plus creusé. Le chapeau lisse, un peu visqueux par temps humide, est nettement zoné : brun orangé à gris rosé ou lilas-gris, avec des zones plus foncées et parfois des marques verdâtres. Les lames orange pâle, moyennement serrées et légèrement décurrentes, peuvent verdir au froissement. Le pied cylindrique, de 4 à 8 cm (parfois 11) sur 1 à 2,5 cm, est rose-beige à brun orangé terne, généralement sans fossettes nettes ; il peut verdir lorsqu’il est meurtri. La chair est claire au centre, orange sous la cuticule et au-dessus des lames ; le pied devient creux avec l’âge. Le latex, peu abondant et orange, rougit lentement puis peut verdir et griser en séchant sur la chair."
+    },
+    {
+      "title": "Habitat et répartition",
+      "text": "Espèce ectomycorhizienne liée surtout à l’épicéa (Picea), en forêts boréales et mélangées. Elle est documentée en Suède et en Finlande, avec des observations estivales à automnales ; en Estonie, les données restent difficiles à séparer de Lactarius deterrimus. Des signalements alpins existent, mais certaines récoltes ressemblant à L. fennoscandicus ont été réattribuées à L. deterrimus après examen moléculaire. L’écologie et la provenance aident à interpréter une récolte, sans suffire à l’identifier."
+    },
+    {
+      "title": "Espèces proches et statut alimentaire",
+      "text": "Lactarius deterrimus est un proche sosie associé lui aussi à Picea : il tend à avoir un chapeau plus orange vif et moins nettement zoné, ainsi qu’un pied orange plus uniforme. Chez L. fennoscandicus, le chapeau brun-orangé à lilas-gris est généralement plus sombre et fortement zoné, et le pied plus terne. Les formes intermédiaires sont fréquentes ; une détermination fiable peut demander un spécimen frais, l’hôte, le comportement du latex et des caractères microscopiques. L’autorité alimentaire finlandaise inclut L. fennoscandicus dans sa liste de champignons recommandés comme aliments. Cette indication ne valide pas une récolte photographiée : ne consommer qu’une identification certaine et suivre les recommandations locales de préparation."
+    }
   ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "traits": [
+    "Chapeau brun-orangé à gris rosé ou lilas-gris, nettement zoné, de 3 à 8 cm, devenant plus déprimé au centre",
+    "Lames orange pâle, moyennement serrées et légèrement décurrentes, pouvant verdir au froissement",
+    "Pied terne rose-beige à brun orangé, généralement sans fossettes visibles ; latex peu abondant, orange puis lentement rougeâtre",
+    "Ectomycorhizien avec l’épicéa, surtout en forêts boréales de Suède et de Finlande",
+    "Proche de Lactarius deterrimus ; des formes intermédiaires compliquent la détermination"
+  ],
+  "safetyNote": "L. fennoscandicus figure dans la liste finlandaise des champignons recommandés comme aliments. Les lactaires de la section Deliciosi sont proches et peuvent être confondus ; cette image et cette fiche ne permettent pas de valider une récolte. Ne consommer qu’un spécimen identifié avec certitude et respecter les conseils locaux de préparation.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Lactarius fennoscandicus.",
+      "title": "Nuytinck & Verbeken (2005), Morphology and taxonomy of the European species in Lactarius sect. Deliciosi, Mycotaxon 92:125–168",
+      "url": "https://doi.org/10.5962/p.414542"
+    },
+    {
+      "title": "Nuytinck, Verbeken & Miller (2007), Species delimitation and phylogenetic relationships in Lactarius section Deliciosi in Europe, Mycological Research 111:1285–1297",
+      "url": "https://doi.org/10.1016/j.mycres.2007.08.003"
+    },
+    {
+      "title": "Kalamees (2008), Checklist of the species of the genus Lactarius in Estonia, Folia Cryptogamica Estonica 44:63–74 — écologie et répartition",
+      "url": "https://eseis.ut.ee/ial5/fce/fce44pdf/fce44_kalamees.pdf"
+    },
+    {
+      "title": "Russulales News — clé des espèces européennes de Lactarius sect. Deliciosi, par Jorinde Nuytinck et Annemieke Verbeken",
+      "url": "https://www2.muse.it/russulales-news/id_deliciosi.asp"
+    },
+    {
+      "title": "Ruokavirasto, autorité alimentaire finlandaise — liste des champignons recommandés, incluant Lactarius fennoscandicus (mise à jour 2023)",
+      "url": "https://www.ruokavirasto.fi/elintarvikkeet/ohjeita-kuluttajille/turvallisen-kayton-ohjeet/ruokasienet/suositeltavat-ruokasienet/"
+    },
+    {
+      "title": "GBIF Backbone Taxonomy — Lactarius fennoscandicus",
       "url": "https://www.gbif.org/species/5463476"
     },
     {
-      "title": "Index Fungorum, name record 445020: Lactarius fennoscandicus.",
+      "title": "Index Fungorum — name record 445020: Lactarius fennoscandicus",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=445020"
     }
   ],
-  "related": []
+  "related": [
+    "lactarius_deterrimus",
+    "lactarius_deliciosus"
+  ]
 }

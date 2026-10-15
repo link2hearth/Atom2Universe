@@ -1,11 +1,32 @@
 {
   "id": "lactarius_torminosulus",
-  "reviewStatus": "pending",
-  "sections": [],
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Aspect et chapeau",
+      "text": "Lactarius torminosulus est un lactaire nordique de petite taille. Son chapeau mesure environ 1,5 à 5 cm ; d’abord convexe, il s’étale et se creuse au centre. Le bord est initialement enroulé et garni de poils courts, jusqu’à environ 5 mm, qui s’effacent souvent avec l’âge. La surface sèche est rosée à couleur brique, parfois zonée, avec une chair rose à brique."
+    },
+    {
+      "title": "Lames, pied et lait",
+      "text": "Les lames sont serrées, pâle rosé-beige, attachées au pied ou brièvement décurrentes. Le pied cylindrique, lisse et sec, mesure environ 2,5 à 5,5 cm de long pour 6 à 15 mm de large ; il est saumon pâle à rosé-beige. La cassure libère un lait blanc ; l’odeur est acidulée-fruitée et la saveur du lait est très âcre selon les descriptions taxonomiques. Les spores sont largement ellipsoïdes, environ 7,5–10 × 5,5–7,5 µm, avec des verrues et des crêtes d’environ 0,5 µm formant parfois des mailles fermées."
+    },
+    {
+      "title": "Habitat et répartition",
+      "text": "Espèce ectomycorhizienne nordique, surtout associée au bouleau nain Betula nana dans les landes montagnardes, les zones arctiques et les lieux humides ou tourbeux ; certaines flores mentionnent aussi Betula glandulosa et, plus rarement, B. pubescens. Elle fructifie en été et au début de l’automne. Des spécialistes du catalogue des Mycota français signalent que des mentions françaises semblent résulter de confusions avec L. torminosus et qu’aucune récolte française n’est confirmée dans leur revue."
+    },
+    {
+      "title": "Taxonomie et limites",
+      "text": "Le nom Lactarius torminosulus Knudsen & T. Borgen est retenu par les référentiels consultés ; il a été publié comme nom de remplacement en 1996. Il est proche de L. torminosus, mais plus petit, avec des poils marginaux plus courts qui disparaissent avec l’âge. La fiche décrit des caractères publiés et ne permet pas d’identifier sûrement une récolte. Le statut alimentaire n’est pas évalué ici."
+    }
+  ],
   "traits": [
-    "Forme générale : petit lactaire à marge velue, associé aux bouleaux.",
-    "Repère écologique : petit lactaire à marge velue, associé aux bouleaux. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+    "Chapeau de 1,5 à 5 cm, rosé à couleur brique, à marge d’abord brièvement poilue puis souvent dénudée ; centre parfois déprimé.",
+    "Lames serrées, pâle rosé-beige, adnées à brièvement décurrentes ; lait blanc à la cassure.",
+    "Pied cylindrique, lisse et sec, saumon pâle à rosé-beige ; odeur acidulée-fruitée et lait très âcre dans les descriptions taxonomiques.",
+    "Ectomycorhizien, surtout lié à Betula nana ; landes montagnardes et habitats humides ou tourbeux, en été et au début de l’automne.",
+    "Espèce nordique proche de L. torminosus ; des mentions françaises sont considérées comme probablement confondues et non confirmées.",
+    "Statut alimentaire non évalué.",
+    " Spores largement ellipsoïdes, environ 7,5–10 × 5,5–7,5 µm, à verrues et crêtes partiellement réticulées."
   ],
   "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
   "sources": [
@@ -16,6 +37,26 @@
     {
       "title": "Index Fungorum, name record 436327: Lactarius torminosulus.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=436327"
+    },
+    {
+      "title": "Knudsen & Hansen (1996), Nordic Journal of Botany 16(2), nomenclatural notes : publication de Lactarius torminosulus comme nom de remplacement.",
+      "url": "https://doi.org/10.1111/j.1756-1051.1996.tb00960.x"
+    },
+    {
+      "title": "Heilmann-Clausen, Verbeken & Vesterholt (1998), The Genus Lactarius, Fungi of Northern Europe 2, pp. 158–159 : description et écologie nordique.",
+      "url": "https://books.google.com/books?id=kvtEAAAAYAAJ"
+    },
+    {
+      "title": "Knudsen & Vesterholt (eds., 2008), Funga Nordica, Lactarius, p. 94 : caractères macroscopiques, lait, spores, hôtes et habitat.",
+      "url": "https://mykoweb.com/CAF/PDF/FungaNordica/FungaNordica-Lactarius.pdf"
+    },
+    {
+      "title": "Artsdatabanken, Artsnavnebase : nom scientifique Lactarius torminosulus Knudsen & T. Borgen et taxonomie norvégienne.",
+      "url": "https://artsdatabanken.no/arter/takson/40463"
+    },
+    {
+      "title": "Van Vooren et al. (2023), Catalogue actualisé des Mycota français, Bulletin ADONIF 4 : mentions françaises probablement confondues avec L. torminosus, sans récolte confirmée.",
+      "url": "https://inpn.mnhn.fr/docs-web/docs/download/431501"
     }
   ],
   "related": []

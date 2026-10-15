@@ -1,32 +1,61 @@
 {
   "id": "integra",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau de 6 à 15 cm, luisant, généralement brun à reflets violets, pourpres, jaunes ou verts, presque sphérique puis plan ou déprimé",
-    "Lames minces, espacées, friables, blanches puis jaune vif",
-    "Pied de 5 à 12 cm, épais et blanc, taché de jaune ou de rouille avec l’âge",
-    "Chair blanche très ferme, saveur douce et sucrée, croquante",
-    "Isolée sous les conifères, souvent dans les forêts de montagne d’épicéas et de sapins"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Reconnaître l’espèce",
+      "text": "Russula integra (L.) Fr., la russule des épicéas, forme un chapeau charnu de 4 à 15 cm, d’abord convexe puis étalé, parfois légèrement déprimé. Sa surface est lisse et brillante, un peu visqueuse par temps humide ; sa couleur est très variable, le plus souvent brune à brun-jaune, mais aussi rouge purpurin, grisâtre ou plus rarement verdâtre."
+    },
+    {
+      "title": "Lames, pied et chair",
+      "text": "Les lames sont épaisses, fragiles et plus ou moins espacées ; elles peuvent se ramifier près du pied. D’abord blanchâtres, elles jaunissent avec la maturation, tandis que leur arête reste plus pâle. Le pied est blanc, parfois taché de brunâtre, sans anneau ni volve. La chair ferme et blanche peut être brun vineux juste sous la cuticule ; son odeur est faible et fruitée et sa saveur douce, rappelant la noisette. La sporée est jaune à jaune-ocre. Une description publiée donne des spores subglobuleuses à ellipsoïdes d’environ 7,5–10 × 7–9 µm, portant des verrues basses parfois reliées par des crêtes ; l’examen microscopique apporte des caractères complémentaires pour l’identification."
+    },
+    {
+      "title": "Habitat et espèces proches",
+      "text": "Elle pousse au sol dans les forêts montagnardes de conifères, surtout sous sapins et épicéas, parfois sur terrain calcaire ; la période indiquée en France est d’août à octobre. Les couleurs variables et la sporée jaune ne suffisent pas à identifier l’espèce. Russula olivacea peut partager des tons olivâtres ou vineux et une sporée ocre, mais présente souvent un chapeau mat, ridulé ou craquelé près du bord, des lames plus serrées et un pied fréquemment lavé de rose ; elle pousse surtout sous hêtre, mais aussi parfois sous épicéa. Ces différences sont des indices, pas un diagnostic isolé : les russules proches demandent l’examen de plusieurs caractères, parfois microscopiques."
+    },
+    {
+      "title": "Comestibilité et prudence",
+      "text": "Russula integra figure dans la liste positive de la DGfM ; le guide de terrain VAPKO classe le complexe Russula integra agg. en catégorie C. Cela ne permet pas d’identifier un exemplaire trouvé : les russules sont difficiles à déterminer et des espèces proches peuvent avoir une comestibilité différente. Ne consommez jamais un champignon sauvage sur la seule base d’une photo ou de cette fiche ; faites confirmer l’identification par un spécialiste."
+    }
   ],
-  "safetyNote": "Non recommandée : la DGfM et la VAPKO la listent, et elle est très mangée en Europe du Nord, bonne jeune (Wikipédia). Mais Wikipédia (en) la range parmi les non recommandées, et les deux pages citent une étude de 1878 selon laquelle les intoxications étaient autrefois fréquentes : une longue cuisson en retire les propriétés toxiques, pas les méthodes rapides comme le grill. Le statut le plus prudent est retenu. Des espèces proches de comestibilité inconnue lui ressemblent ; Wikipédia (en) cite Russula mustelina.",
+  "traits": [
+    "Chapeau charnu de 4 à 15 cm, convexe puis étalé, parfois légèrement déprimé, lisse et brillant, un peu visqueux à l’humidité",
+    "Coloration variable : surtout brun ou brun-jaune, parfois rouge purpurin ou grisâtre, plus rarement verdâtre",
+    "Lames épaisses, fragiles, plus ou moins espacées et parfois fourchues près du pied ; blanches puis jaunes, à arête plus pâle",
+    "Pied blanc, parfois taché de brunâtre, sans anneau ni volve ; chair ferme, blanche, à faible odeur fruitée et saveur douce de noisette",
+    "Sporée jaune à jaune-ocre ; spores subglobuleuses à ellipsoïdes, environ 7,5–10 × 7–9 µm, ornées de verrues basses selon une description publiée",
+    "Au sol dans les forêts montagnardes de conifères, surtout sous épicéas et sapins ; période française indiquée : août à octobre"
+  ],
+  "safetyNote": "La DGfM inscrit Russula integra sur sa liste positive ; le guide VAPKO classe le complexe Russula integra agg. en catégorie C. L’identification des russules peut être délicate et la couleur d’un chapeau ne suffit pas à distinguer les espèces proches. Ne consommez pas un champignon sauvage à partir d’une photo ou de cette fiche ; demandez confirmation à un spécialiste.",
   "sources": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Université Claude Bernard Lyon 1, base Champignons — Russula integra : description, habitat, saison, sporée et comestibilité.",
+      "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/russula-integra/"
+    },
+    {
+      "title": "VAPKO, Champignons : Guide de terrain, 2e édition (extrait), p. 111 — Russula integra agg. : caractères et habitat ; catégorie C.",
+      "url": "https://www.vapko.ch/images/articles/guide_terrain_GS2_extraits.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Positivliste der Speisepilze, version du 1 mai 2026 — Russula integra.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+      "title": "Index Fungorum (Royal Botanic Gardens, Kew) — nom Russula integra (L.) Fr. et basionyme Agaricus integer L.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=182048"
     },
     {
-      "title": "Wikipédia (fr) : Russula integra",
-      "url": "https://fr.wikipedia.org/wiki/Russula_integra"
+      "title": "Mushroom World — Russula integra : morphologie, dimensions, habitat, sporée et spores.",
+      "url": "https://www.mushroom.world/show?n=Russula-integra"
     },
     {
-      "title": "Wikipedia (en): Russula integra",
-      "url": "https://en.wikipedia.org/wiki/Russula_integra"
+      "title": "Société Mycologique du Nord de la France — Russula olivacea : critères comparatifs, habitat et limites de l’identification.",
+      "url": "https://www.smnf.fr/wp-content/Photos_SMNF/Photos_SMNF_R/Textes_R2/Russula_olivacea.htm"
     }
   ],
-  "related": []
+  "related": [
+    "olivacea",
+    "badia"
+  ]
 }

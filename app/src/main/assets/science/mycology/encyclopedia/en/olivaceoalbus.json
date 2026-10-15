@@ -1,23 +1,53 @@
 {
   "id": "olivaceoalbus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 3 to 12 cm, olive-brown to grey or sooty-brown, slimy, with dark streaks and a persistent dark boss",
-    "Gills thick, widely spaced, white, waxy",
-    "Stem 3 to 12 cm, slimy when wet, white above a ring-like zone, with ragged dark scaly bands below",
-    "Thin white flesh, no distinct smell, bland taste",
-    "Under conifers, in mountain woods, on acid ground · late summer to early winter"
-  ],
-  "safetyNote": "Edible, with divided opinions on taste: the DGfM lists it; Wikipedia (en) says some remove the cap skin, advises caution, and that it is eaten more in Europe than in North America. The page says there is no risk of confusion with toxic fungi, and lists other waxy caps as look-alikes (Hygrophorus latitabundus, H. pustulatus, H. persoonii under oaks). It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+      "title": "Taxonomy",
+      "text": "Species Fungorum accepts Hygrophorus olivaceoalbus (Fr.) Fr. in the family Hygrophoraceae. Its basionym is Agaricus olivaceoalbus Fr. (1815); the combination in Hygrophorus dates to 1838. Bellanger et al. (2021) typified the name and stabilized its use for the European concept, while showing that several North American lineages formerly identified under this name belong to other close species."
     },
     {
-      "title": "Wikipedia (en): Hygrophorus olivaceoalbus",
-      "url": "https://en.wikipedia.org/wiki/Hygrophorus_olivaceoalbus"
+      "title": "Cap and gills",
+      "text": "The cap is about 3–12 cm across. It starts convex, then expands and may flatten or become slightly depressed; a low, dark umbo often remains at the centre. The cuticle is viscid to glutinous when damp, bistre, grey-brown, sooty or olive, usually darkest at the disc, with dark radial fibrils streaking the surface. The gills are thick, waxy, distant and white, sometimes greyish; they are adnate, then arcuate to subdecurrent, and may become decurrent. The spore print is white."
+    },
+    {
+      "title": "Stem and flesh",
+      "text": "The stem is about 3–12 cm tall and 1–3 cm wide, often slender, solid, sometimes bent and slightly narrowed toward the top or base. Above the annular zone it is white, dry and floccose. Below it, the inner veil fibrils tear into irregular olive-brown to dark grey bands or patches, often covered by the outer slimy layer; the annular zone can be indistinct or fleeting. The flesh is white, thin in the cap and firmer in the stem; smell and taste are mild or indistinct."
+    },
+    {
+      "title": "Habitat and season",
+      "text": "This ectomycorrhizal species associates with conifers, especially spruce (Picea), in cool, often mossy forests. It fruits mainly from late summer through autumn, sometimes later depending on climate. Sources indicate a strong conifer association; host and distribution records outside Europe should be interpreted cautiously because the name has been applied to several distinct lineages."
+    }
+  ],
+  "traits": [
+    "Cap 3–12 cm across, bistre to grey-brown or olive, darker at the centre, viscid in damp weather and streaked with dark radial fibrils; a low umbo often remains.",
+    "Thick, waxy, distant white gills, adnate to subdecurrent and sometimes decurrent; white spore print.",
+    "Solid, often slender stem, viscid when damp; white and floccose above the annular zone, with ragged olive-brown to dark grey veil-fibril bands below it.",
+    "White flesh, thin in the cap; smell faint or absent and taste mild.",
+    "Ectomycorrhizal mainly with spruce, in cool and often mossy conifer forests.",
+    "Fruits mainly from late summer through autumn; cold tolerance and exact season vary by region."
+  ],
+  "safetyNote": "The DGfM includes Hygrophorus olivaceoalbus in its positive list of species regarded as edible; this does not verify a specimen's identity. Several slimy Hygrophorus species look similar, and recent taxonomic work notes that North American collections formerly called H. olivaceoalbus belong to other close species. Do not use this page alone to decide whether to eat a mushroom.",
+  "sources": [
+    {
+      "title": "Species Fungorum / Index Fungorum, nomenclatural record: Hygrophorus olivaceoalbus (Fr.) Fr., accepted name and nomenclatural synonyms.",
+      "url": "https://www.speciesfungorum.org/names/NamesRecord.asp?RecordId=493002"
+    },
+    {
+      "title": "Bellanger, J.-M. et al. (2021). Hygrophorus sect. Olivaceoumbrini: new boundaries, extended biogeography and unexpected diversity unravelled by transatlantic studies. Persoonia 46: 272–312. Typification and taxonomic delimitation; section characters distinguished from species characters.",
+      "url": "https://repository.naturalis.nl/pub/800162/PERS2021046001010.pdf"
+    },
+    {
+      "title": "Burke Herbarium Image Collection, University of Washington. Hygrophorus olivaceoalbus: identification characters and note on use of the name in Europe and North America.",
+      "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Hygrophorus+olivaceoalbus"
+    },
+    {
+      "title": "MushroomExpert.com, Michael Kuo. Hygrophorus olivaceoalbus: detailed description, ecology, dimensions and veil/stem features.",
+      "url": "https://www.mushroomexpert.com/hygrophorus_olivaceoalbus.html"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, entry Hygrophorus olivaceoalbus.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     }
   ],
   "related": []

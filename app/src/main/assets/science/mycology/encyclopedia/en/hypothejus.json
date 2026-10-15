@@ -1,24 +1,28 @@
 {
   "id": "hypothejus",
-  "reviewStatus": "pending",
-  "sections": [],
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Identification", "text": "Hygrophorus hypothejus is a small to medium-sized mushroom with a cap 2–6 cm across, initially convex then flattening and sometimes becoming depressed at the centre. The surface is very viscid in wet weather, yellow to olive-yellow or olive-brown, often darkest at the disc and paler toward the margin. Yellow-gold to orange stains may develop as the fruitbody ages."},
+    {"title": "Gills, stem and flesh", "text": "The gills are thick, waxy and rather widely spaced, pale at first then yellowish to orange, and run down the stem. The stem is pale to yellow and viscid, especially toward the base; a slimy veil may leave a fleeting ring zone that is not always apparent. The flesh is pale, sometimes yellow beneath the cap skin. Sources describe yellow-orange staining with age, but do not substantiate the previous entry’s claim that the flesh turns orange-red when bruised."},
+    {"title": "Habitat and season", "text": "This species is ectomycorrhizal mainly with pines, especially Scots pine. It fruits on the ground in conifer woods, often among needle litter and on poor sandy soils. Fruiting is late in the year: autumn to early winter, usually October to January in Dutch records, sometimes after the first frosts."},
+    {"title": "Edibility and caution", "text": "The German and Austrian mycological societies list the species as edible. This does not identify a specimen: never eat a wild mushroom based only on an image or this profile."}
+  ],
   "traits": [
-    "Cap 3 to 6 cm, yellowish to olive-brown with a dark centre, slimy, funnel-shaped with age",
-    "Gills yellow, running down the stem",
-    "Stem 4 to 7 cm, slender, bare",
-    "Pale yellow flesh turning orange-red when bruised",
-    "In pine woods, often in large groups · October and November, with the first frosts"
+    "Cap 2–6 cm across, convex then flattening and sometimes depressed, very viscid, olive-yellow to olive-brown with an often darker centre",
+    "Thick, waxy, rather widely spaced gills, pale at first then yellow to orange, decurrent",
+    "Pale to yellow stem, viscid especially toward the base; a fleeting slimy ring zone may occur",
+    "Pale flesh, sometimes yellow beneath the cap skin; yellow-orange staining may appear with age",
+    "Ectomycorrhizal mainly with pines, especially Pinus sylvestris",
+    "On the ground in conifer woods; late autumn to early winter, sometimes after the first frosts"
   ],
-  "safetyNote": "Edible, of variable quality because some are slimy: the DGfM lists it and Wikipedia (en) says so. Wikipedia (en) names the slimy spike-cap as a look-alike: its gills separate easily from the cap, unlike the waxy gills of this species. It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM.",
+  "safetyNote": "The German and Austrian mycological societies list Hygrophorus hypothejus as edible. An edibility list does not confirm a specimen’s identity: do not eat a wild mushroom based only on a photo. If symptoms occur after ingestion, contact a poison centre or emergency services immediately.",
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
-    },
-    {
-      "title": "Wikipedia (en): Hygrophorus hypothejus",
-      "url": "https://en.wikipedia.org/wiki/Hygrophorus_hypothejus"
-    }
+    {"title": "Burke Museum Herbarium, University of Washington — Hygrophorus hypothejus: diagnostic characters, habitat, age-related colour and accepted name.", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Hygrophorus+hypothejus"},
+    {"title": "NDFF Verspreidingsatlas, Nederlandse Mycologische Vereniging — Hygrophorus hypothejus: ecology, Pinus host, habitat and fruiting period (October–January).", "url": "https://www.verspreidingsatlas.nl/0061069"},
+    {"title": "Larsson, E. et al. (2014). Molecular phylogeny, morphology, pigment chemistry and ecology in Hygrophoraceae (Agaricales). Fungal Diversity 64: 1–99. Morphology of Hygrophorus section Aurei, including H. hypothejus: viscid cap, pale to yellow-orange gills, veil sometimes forming a ring.", "url": "https://link.springer.com/article/10.1007/s13225-013-0259-0"},
+    {"title": "Sociedad Micológica Extremeña (MICOEX) — Hygrophorus hypothejus: cap dimensions, decurrent gills, stem, pine habitat and regional edibility description.", "url": "https://micoex.org/2016/09/17/hygrophorus-hypothejus/"},
+    {"title": "Österreichische Mykologische Gesellschaft — Speisewert von Pilzen: Hygrophorus hypothejus listed as edible (essbar).", "url": "https://myk.univie.ac.at/services/speisewert/"},
+    {"title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, status 1 May 2026.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"}
   ],
-  "related": []
+  "related": ["glutinosus"]
 }

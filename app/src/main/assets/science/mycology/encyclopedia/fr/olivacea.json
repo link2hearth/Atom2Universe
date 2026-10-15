@@ -1,40 +1,65 @@
 {
   "id": "olivacea",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau mat, ridulé, jusqu’à 20 cm, de couleur variable, souvent panaché de vert et de rouge",
-    "Lames crème, puis jaune ocracé à reflets glauques, puis orangés ; arête soulignée de rouge vers la marge",
-    "Pied d’environ 12 × 4 cm, pointillé, rosé lilas au moins sous les lames, plus ou moins jaunissant",
-    "Chair douce · odeur un peu fruitée",
-    "Sporée jaune",
-    "Sous les feuillus, surtout les hêtres, en plaine mais surtout en montagne, jusqu’à 1 800 m · juillet à novembre"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Nom et identification",
+      "text": "La fiche suit le nom Russula olivacea Pers. (1796), de la famille des Russulaceae. La littérature européenne cite aussi parfois « R. olivacea (Schaeff.) Fr. » ; Species Fungorum signale que cette combinaison est illégitime et renvoie à Russula roseola, tandis que le nom de Persoon reste enregistré séparément. Comme pour d’autres russules, une photo et la couleur du chapeau ne suffisent pas à une identification sûre : l’étude peut nécessiter sporée, réactifs et microscopie."
+    },
+    {
+      "title": "Chapeau et silhouette",
+      "text": "C’est une russule robuste et charnue, dont le chapeau peut atteindre environ 20 cm. D’abord convexe, il s’étale et peut se déprimer au centre. La cuticule est mate, souvent ridulée ou fissurée en lignes concentriques. Les couleurs varient beaucoup : pourpre, rouge vineux ou brun rouge mêlé d’olivâtre, parfois presque entièrement vert. Le pied est épais, blanc et souvent teinté de rose à lilas, au moins dans sa partie supérieure ; il peut jaunir avec l’âge."
+    },
+    {
+      "title": "Lames, chair et spores",
+      "text": "Les lames sont pâles à crème au début, puis jaune ocré avec parfois des reflets orangés ; leur arête peut être soulignée de rouge vers la marge du chapeau. La chair est ferme, blanche, de saveur douce et d’odeur faible, parfois décrite comme légèrement fruitée. La sporée est jaune ocré. Les spores mesurent environ 9–11 × 8–9 µm dans la description de la Société Mycologique du Nord de la France et portent des épines isolées."
+    },
+    {
+      "title": "Habitat et prudence alimentaire",
+      "text": "Russula olivacea est ectomycorhizienne ; elle est surtout observée sous les hêtres et aussi parfois sous les épicéas. Les observations françaises rapportent une fructification de l’été à l’automne ; altitude et fréquence varient selon les régions. Elle a provoqué des intoxications digestives. Les avis ANSES de 2015 ne sont pas formulés de façon identique : l’évaluation des cas décrit principalement des consommations crues ou insuffisamment cuites, tandis que l’avis sur le projet de liste des espèces comestibles indique que des intoxications ont aussi été rapportées après cuisson et qu’aucun traitement particulier n’est démontré comme supprimant le risque. En France, l’arrêté du 5 août 2016 prévoyait, pour un an, la suspension de la vente au consommateur de champignons frais sans information claire exigeant une cuisson complète ; cette mesure temporaire ne prouve pas une interdiction générale actuelle. La VAPKO suisse (liste 2023) signale encore des troubles possibles et recommande au moins 20 minutes de cuisson : c’est une recommandation suisse, pas une règle française ni une garantie d’innocuité."
+    }
   ],
-  "safetyNote": "Des intoxications digestives sont signalées surtout quand elle est mangée crue ou peu cuite, au barbecue notamment : en Italie, quelques dizaines de cas par an ; au Pays basque, plus de 40 cas en vingt ans ; en France, 3 cas groupés en 2012, avec des vomissements 2 heures après. L’ANSES juge en 2015 que le risque ne peut être exclu, même après cuisson ; Tox Info Suisse demande au moins 20 minutes de cuisson.",
+  "traits": [
+    "Grande russule charnue, chapeau pouvant approcher 20 cm, mat et ridulé ou fissuré concentriquement",
+    "Couleur très variable : rouge vineux, pourpre ou brun rouge mêlé d’olivâtre, parfois presque entièrement verte",
+    "Lames crème devenant jaune ocré, parfois orangées, à arête pouvant rougir près de la marge",
+    "Pied épais blanc, fréquemment lavé de rose à lilas sous les lames ou dans sa partie supérieure ; chair ferme et pâle",
+    "Sporée jaune ocré ; spores ornées d’épines isolées",
+    "Ectomycorhizienne, surtout sous hêtre, parfois sous épicéa ; observée en été et en automne"
+  ],
+  "safetyNote": "Des intoxications digestives sont rapportées avec Russula olivacea. Les avis ANSES de 2015 nuancent différemment le rôle de la cuisson et l’un d’eux indique qu’aucun traitement particulier n’a été démontré comme éliminant le risque. L’arrêté français du 5 août 2016 prévoyait une mesure de commercialisation temporaire d’un an, pas une interdiction générale actuelle. La VAPKO suisse recommande au moins 20 minutes de cuisson, sans que cela constitue une règle française ou une garantie de sécurité. Ne la consommez pas sur la base d’une photo ou de cette fiche.",
   "sources": [
     {
-      "title": "ANSES (2015). Avis relatif à l’évaluation des risques liés à la consommation des champignons dénommés Suillus granulatus, Russula olivacea et Armillaria mellea. Saisine n° 2014-SA-0256, 29 juillet 2015.",
+      "title": "Index Fungorum (Royal Botanic Gardens, Kew) — Russula olivacea Pers., Observ. mycol. 1: 103 (1796), nom retenu ici.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=497429"
+    },
+    {
+      "title": "Species Fungorum — notice nomenclaturale de Russula olivacea (Schaeff.) Fr., signalée comme illégitime et renvoyée à Russula roseola.",
+      "url": "https://www.speciesfungorum.org/names/NamesRecord.asp?RecordId=211734"
+    },
+    {
+      "title": "Société Mycologique du Nord de la France, Didier Huart (2015) — caractères, spores, sporée, habitat et note d’identification de Russula olivacea.",
+      "url": "https://www.smnf.fr/wp-content/Photos_SMNF/Photos_SMNF_R/Textes_R2/Russula_olivacea.htm"
+    },
+    {
+      "title": "ANSES (2015), Avis relatif à l’évaluation des risques liés à la consommation de Suillus granulatus, Russula olivacea et Armillaria mellea, saisine 2014-SA-0256 — cas rapportés et rôle de la cuisson crue/insuffisante.",
       "url": "https://www.anses.fr/fr/system/files/ERCA2014sa0256.pdf"
     },
     {
-      "title": "Arrêté du 5 août 2016 relatif à la suspension de la mise sur le marché des champignons des espèces Suillus granulatus, Russula olivacea, Armillaria mellea et Lentinula edodes (JORF n° 0191 du 18 août 2016, NOR EINC1622686A).",
-      "url": "https://nouvelle-aquitaine.dreets.gouv.fr/sites/nouvelle-aquitaine.dreets.gouv.fr/IMG/pdf/arrete_du_5_aout_2016suspensionchampignons.pdf"
+      "title": "ANSES (2015), Avis sur un projet d’arrêté relatif aux variétés comestibles de champignons, saisine 2015-SA-0180 — intoxications signalées après cuisson et absence de traitement démontré supprimant le risque.",
+      "url": "https://www.anses.fr/system/files/ERCA2015SA0180.pdf"
     },
     {
-      "title": "Tox Info Suisse (2025). Edible mushrooms: unpleasant gastrointestinal symptoms. Dernière mise à jour : mai 2025.",
-      "url": "https://toxinfo.ch/edible_mushrooms_unpleasant_gastrointestinal_symptoms"
+      "title": "Légifrance — arrêté du 5 août 2016, article 1 : suspension d’un an de la vente au consommateur de champignons frais sans information claire sur la cuisson complète.",
+      "url": "https://www.legifrance.gouv.fr/eli/arrete/2016/8/5/EINC1622686A/jo/texte"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "VAPKO (Association suisse des organes officiels de contrôle des champignons), Empfehlungsliste 09.2023 — Russula olivacea : troubles possibles et cuisson d’au moins 20 minutes (recommandation suisse).",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Russula olivacea",
-      "url": "https://fr.wikipedia.org/wiki/Russula_olivacea"
-    },
-    {
-      "title": "Wikipedia (en): Russula olivacea",
-      "url": "https://en.wikipedia.org/wiki/Russula_olivacea"
+      "title": "Česká mykologická společnost, Myko atlas — description, mesures, caractères microscopiques, habitat et espèces proches de Russula olivacea Pers. 1796.",
+      "url": "https://www.myko.cz/myko-atlas/Russula-olivacea/"
     }
   ],
   "related": []

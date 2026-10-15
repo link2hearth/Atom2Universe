@@ -1,31 +1,64 @@
 {
   "id": "odora",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 3 to 8 cm, bluish to grey-green, fading, frosted, inrolled margin",
-    "Gills thin, widely spaced, slightly running down the stem, whitish",
-    "Stem fibrous, bent, pale bluish-green, thicker at the base, no ring",
-    "Strong sweet smell of aniseed, which stays when dried",
-    "Mostly broadleaf woods, sometimes conifers · midsummer to late autumn"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Identification",
+      "text": "Clitocybe odora remains widely used in field guides; a 2023 phylogenomic study proposed the combination Collybia odora. The cap, usually 3–8 cm across, is initially convex, then flattens and may become depressed at the centre. Its matte surface is blue-green to grey-green, often fading towards grey or cream with age or in dry weather. The young margin is incurved and may become wavy."
+    },
+    {
+      "title": "Gills and stem",
+      "text": "The gills are pale, cream to faintly greenish, fairly broad and moderately spaced; they are adnate to slightly decurrent. The stem is fibrous, often somewhat curved, usually paler than the cap and sometimes widened towards the base; it may become hollow with age. The base often bears white mycelial felt. There is no ring or volva."
+    },
+    {
+      "title": "Odour, habitat and season",
+      "text": "The anise-like odour is strong and characteristic, especially in fresh specimens. It grows on the ground among forest litter, mostly in broadleaf woodland, but also in mixed woods and sometimes under conifers. It is mainly recorded in summer and autumn; the precise season varies with climate and region."
+    },
+    {
+      "title": "Taxonomy and safety",
+      "text": "Collybia odora (Bull.) Z.M. He & Zhu L. Yang is the combination proposed in 2023; Clitocybe odora (Bull.) P. Kumm. is the historical name and remains common in the literature. The DGfM and VAPKO lists classify it as edible, though its powerful anise flavour is not liked by everyone. A 2023 study did not detect muscarine in the basidiomes it analysed; this limited result does not guarantee every collection or identify a mushroom from a photo. Pale clitocybes can be difficult to distinguish: do not eat any wild mushroom without secure expert identification."
+    }
   ],
-  "safetyNote": "Not recommended: the sources disagree. The DGfM and the VAPKO list it, Wikipedia (fr) calls it a good edible used mostly as a seasoning, while Wikipedia (en) says edible but not recommended, some guides advising against it, and warns that young ones may be mistaken for the verdigris agaric and other poisonous species. The most prudent status is kept.",
+  "traits": [
+    "Matte blue-green to grey-green cap, often fading to grey or cream; margin initially incurved, sometimes becoming wavy",
+    "Pale, fairly broad and moderately spaced gills, adnate to slightly decurrent",
+    "Fibrous, pale stem, often curved or broadened at the base, sometimes hollow with age; no ring or volva",
+    "Strong anise-like odour in fresh specimens",
+    "On woodland litter, mostly under broadleaf trees, sometimes in mixed woods or under conifers; mainly summer and autumn"
+  ],
+  "safetyNote": "Listed as edible by DGfM and VAPKO, but its powerful anise aroma is a culinary preference, not an identification test. A study reported no muscarine in the specimens it analysed; do not extrapolate that result to every collection. Never eat a wild mushroom identified only from an image.",
   "sources": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "He, Z.M. et al. (2023). Systematic arrangement within the family Clitocybaceae: phylogenetic and phylogenomic evidence, morphological data and muscarine-producing innovation. Fungal Diversity 123, 1–47.",
+      "url": "https://doi.org/10.1007/s13225-023-00527-2"
+    },
+    {
+      "title": "Index Fungorum, Royal Botanic Gardens, Kew — Collybia odora, recombination (MycoBank MB 847233).",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=190577"
+    },
+    {
+      "title": "E-Flora BC, University of British Columbia — Clitocybe odora, descriptive account and mycological references.",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Clitocybe+odora"
+    },
+    {
+      "title": "Naturalis Biodiversity Center — Interactive Guide to Mushrooms and other fungi: Clitocybe odora.",
+      "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=100317"
+    },
+    {
+      "title": "Université Lyon 1, Champignons database — Clitocybe odora, morphology, habitat and possible confusions.",
+      "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/clitocybe-odora/"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, 1 May 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+      "title": "VAPKO — Champignons comestibles présentés, recommended edible mushrooms list.",
+      "url": "https://prestations.vapko.ch/wp-content/uploads/2021/09/Champignons-comestibles-presentes.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Clitocybe odora",
-      "url": "https://fr.wikipedia.org/wiki/Clitocybe_odora"
-    },
-    {
-      "title": "Wikipedia (en): Clitocybe odora",
-      "url": "https://en.wikipedia.org/wiki/Clitocybe_odora"
+      "title": "O’Reilly, P. (First Nature) — Clitocybe odora: description, ecology and culinary notes; references include Rapior et al. (2002).",
+      "url": "https://www.first-nature.com/fungi/clitocybe-odora.php"
     }
   ],
   "related": []

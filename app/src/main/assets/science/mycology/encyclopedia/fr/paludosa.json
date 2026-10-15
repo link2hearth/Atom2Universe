@@ -1,27 +1,61 @@
 {
   "id": "paludosa",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau de 6 à 20 cm, convexe à déprimé, surtout rouge sang, rose, cramoisi ou pourpre, parfois à centre jaunâtre ou orangé",
-    "Lames serrées, crème puis jaunes, parfois rougeâtres à l’arête",
-    "Pied de 5 à 15 cm, blanc, parfois teinté de rose, un peu en massue",
-    "Chair blanche, saveur douce, sans odeur, vite molle et grisâtre",
-    "Bois de conifères et tourbières, surtout sous les pins ; très commune par endroits"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Reconnaître l’espèce",
+      "text": "Russula paludosa Britzelm. (russule des marais) est une russule robuste, à chapeau généralement de 6 à 15 cm et pouvant dépasser 20 cm. D’abord convexe, le chapeau s’étale puis se creuse au centre. Sa couleur varie du rouge fraise ou carmin à l’orange-rouge; le centre devient souvent plus pâle, jaunâtre ou ochracé, et la pluie peut décolorer la surface. Le chapeau est luisant et un peu visqueux lorsqu’il est humide."
+    },
+    {
+      "title": "Lames, pied et chair",
+      "text": "Les lames sont serrées, fragiles, d’abord blanchâtres puis crème à jaune pâle ou ochracé; leur arête peut rougir près du bord du chapeau. Le pied est robuste, blanc, parfois teinté de rose ou de rouge, sans anneau ni volve. La chair blanche et cassante ne change pas à la coupe; elle peut être rosée juste sous la cuticule. La sporée est crème à jaune pâle/ochracé."
+    },
+    {
+      "title": "Habitat et espèces proches",
+      "text": "Cette espèce mycorhizienne pousse au sol dans des forêts de conifères ou mixtes, notamment avec épicéas et pins, sur des sols acides, humides, moussus ou tourbeux; elle peut aussi être associée au sapin, au mélèze ou au bouleau. La fructification est surtout estivale et automnale (en Finlande, de juillet à septembre; d’autres atlas indiquent juillet à octobre). Russula emetica peut partager les milieux humides et les couleurs rouges, mais ses lames et sa sporée restent blanches; plusieurs caractères doivent être vérifiés, car une photo ou la couleur du chapeau ne suffisent pas pour déterminer une russule."
+    },
+    {
+      "title": "Comestibilité et prudence",
+      "text": "Russula paludosa figure dans la liste positive de la DGfM et la liste VAPKO la recommande comme champignon comestible. Ces classements ne permettent pas d’identifier un spécimen trouvé. La russule émétique (Russula emetica), qui peut lui ressembler et provoquer des troubles digestifs, est un sosie important. Ne consommez aucun champignon sauvage sur la base de cette fiche ou d’une photo; faites confirmer l’identification par un spécialiste local."
+    }
   ],
-  "safetyNote": "Comestible : la DGfM et la VAPKO la listent, et Wikipédia (en) dit qu’on la voit souvent sur les marchés finlandais. Wikipédia (en) prévient qu’on peut facilement la prendre pour la russule émétique, vénéneuse : voir le groupe. Il n’existe ni page Wikipédia française ni nom anglais courant : le texte vient de Wikipédia (en) et de la DGfM.",
+  "traits": [
+    "Chapeau robuste de 6 à 15 cm, parfois plus de 20 cm, convexe puis étalé et déprimé au centre; rouge fraise à carmin ou orange-rouge, centre souvent plus pâle",
+    "Surface luisante et légèrement visqueuse par temps humide; coloration parfois délavée par la pluie",
+    "Lames serrées et fragiles, blanches puis crème à jaune pâle ou ochracé, parfois à arête rougeâtre",
+    "Pied robuste et blanc, parfois teinté de rose ou de rouge, sans anneau ni volve; chair blanche, cassante, immuable à la coupe",
+    "Sporée crème à jaune pâle/ochracé; mycorhizienne des conifères et parfois du bouleau",
+    "Forêts de conifères ou mixtes, sols acides et humides, mousses et tourbières; fructification surtout de juillet à octobre selon la région"
+  ],
+  "safetyNote": "Classée comestible dans les listes DGfM et VAPKO consultées. Une russule rouge ressemblante, Russula emetica, peut provoquer des troubles digestifs. Ces listes ne remplacent pas l’identification : ne consommez pas un champignon sauvage sur la base d’une photo ou de cette fiche et demandez l’avis d’un spécialiste.",
   "sources": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Index Fungorum via EU-Nomen (PESI) — Russula paludosa Britzelm., nom accepté et classification taxonomique.",
+      "url": "https://www.eu-nomen.eu/portal/taxon.php?GUID=urn%3Alsid%3Aindexfungorum.org%3Anames%3A206457"
+    },
+    {
+      "title": "Finnish Biodiversity Information Facility (Laji.fi), portail des espèces finlandaises — biologie, morphologie, habitat et période de Russula paludosa; source indiquée : Pinkka, Université d’Helsinki.",
+      "url": "https://laji.fi/taxon/MX.72321/biology"
+    },
+    {
+      "title": "Finnish Food Authority (Ruokavirasto) — Isohapero (Russula paludosa) : caractères, habitat, risques de confusion et statut alimentaire.",
+      "url": "https://www.ruokavirasto.fi/elintarvikkeet/ohjeita-kuluttajille/turvallisen-kayton-ohjeet/ruokasienet/suositeltavat-ruokasienet/isohapero/"
+    },
+    {
+      "title": "Naturalis Biodiversity Center, Interactive Guide to Mushrooms and other fungi — morphologie, sporée, mycorhizes et espèces proches de Russula paludosa.",
+      "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?epi=137&id=100499"
+    },
+    {
+      "title": "Mushroom atlas, Czechia — Russula paludosa : description détaillée, habitat, saison et comparaison avec Russula emetica.",
+      "url": "https://kderostouhouby.cz/en/atlas/holubinka-jahodova"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), liste positive des champignons comestibles, version du 1 mai 2026 — Russula paludosa.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "VAPKO, liste des champignons recommandés, version 09.2023 — Russula paludosa.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipedia (en): Russula paludosa",
-      "url": "https://en.wikipedia.org/wiki/Russula_paludosa"
     }
   ],
   "related": []

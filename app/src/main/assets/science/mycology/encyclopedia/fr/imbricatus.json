@@ -1,29 +1,29 @@
 {
   "id": "imbricatus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau jusqu’à 15 cm, brunâtre à chamois, en entonnoir, à grosses écailles sombres qui se relèvent avec l’âge",
-    "Des aiguillons à la place des lames : mous et gris pâle, de 0,5 à 1,5 cm, plus bruns avec l’âge",
-    "Pied gris pâle ou brun, jusqu’à 10 cm, parfois excentré",
-    "Chair molle, blanchâtre à fauve ; peut être amère, surtout chez les vieux",
-    "Sporée brune",
-    "Avec l’épicéa et le sapin, souvent en collines et en montagne, parfois en ronds · août à octobre"
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaître l’espèce", "text": "Sarcodon imbricatus (L.) P. Karst. est un champignon terrestre à aiguillons. Son chapeau, généralement de 6 à 22 cm dans la description récente, est d’abord convexe puis s’aplatit et se creuse souvent au centre. La surface brun jaunâtre porte de grosses écailles relevées, d’abord proches de la couleur du fond puis brun foncé avec l’âge. Le nom ancien Hydnum imbricatum L. est son basionyme."},
+    {"title": "Aiguillons, pied et chair", "text": "Sous le chapeau se trouvent des aiguillons serrés et décurrents, jamais des lames ni des pores : ils sont gris blanchâtre quand ils sont jeunes, gris pâle à maturité et peuvent brunir au toucher ; ils atteignent environ 9 mm dans une étude récente. Le pied pâle, généralement excentré, mesure environ 2,5 à 6 cm et peut brunir ou verdir au toucher. La chair est gris blanchâtre. Les descriptions de la saveur divergent : douce dans l’étude taxonomique récente, légèrement amère après quelques minutes dans une synthèse régionale. Le goût n’est donc pas un caractère constant. L’odeur devient plus marquée au séchage et la sporée est brunâtre."},
+    {"title": "Habitat et espèces proches", "text": "Il pousse au sol en association mycorhizienne avec des conifères, surtout l’épicéa (Picea) ; des spécimens ont aussi été rapportés dans des forêts mêlant sapins et épicéas. L’espèce fructifie en fin d’été et en automne. Les anciennes mentions sous pin peuvent concerner Sarcodon squamosus : une étude moléculaire et morphologique a séparé cette espèce, associée au pin, de S. imbricatus associé à l’épicéa. La couleur et les écailles seules ne suffisent pas toujours à identifier un spécimen."},
+    {"title": "Comestibilité et prudence", "text": "La liste de champignons comestibles présentés par la VAPKO inclut S. imbricatus. Cela ne constitue pas un conseil de cueillette ni une identification : les espèces à aiguillons peuvent se ressembler et les caractères varient. Ne consommez jamais un champignon sauvage sur la seule base d’une image."}
   ],
-  "safetyNote": "Non recommandé : les contrôleurs suisses (VAPKO) ne le citent que comme condiment, et Wikipédia (en) le dit comestible mais non recommandé : amer quand il est vieux, il peut irriter le tube digestif. D’autres champignons à aiguillons lui ressemblent : Sarcodon amarascens (amer, avec une bande noir bleuâtre) et Hydnellum scabrosum (amer, base teintée de turquoise).",
+  "traits": [
+    "Chapeau de 6 à 22 cm, convexe puis aplati, souvent déprimé au centre, brun jaunâtre à grosses écailles relevées qui foncent avec l’âge",
+    "Aiguillons serrés et décurrents, gris blanchâtre puis gris pâle, brunissant parfois au toucher, jusqu’à environ 9 mm ; ni lames ni pores",
+    "Pied pâle, généralement excentré, d’environ 2,5 à 6 cm, parfois brunissant ou verdissant au toucher",
+    "Chair gris blanchâtre ; saveur décrite comme douce ou devenant légèrement amère selon les sources ; odeur plus forte au séchage",
+    "Sporée brunâtre",
+    "Au sol sous les conifères, particulièrement l’épicéa ; fin d’été et automne"
+  ],
+  "safetyNote": "La VAPKO inclut Sarcodon imbricatus dans sa liste de champignons comestibles présentés. La saveur varie selon les sources et la consommation suppose une identification certaine ; ne consommez jamais un champignon sauvage sur la seule base d’une photo. En cas de symptômes après ingestion, contactez immédiatement un centre antipoison ou les urgences.",
   "sources": [
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Sarcodon imbricatus",
-      "url": "https://fr.wikipedia.org/wiki/Sarcodon_imbricatus"
-    },
-    {
-      "title": "Wikipedia (en): Sarcodon imbricatus",
-      "url": "https://en.wikipedia.org/wiki/Sarcodon_imbricatus"
-    }
+    {"title": "Wang, D. et al. (2024). New insights into the stipitate hydnoid fungi Sarcodon, Hydnellum, and the formerly informally defined Neosarcodon. IMA Fungus 15:8. Description basée sur 132 spécimens, morphologie, goût et habitat de S. imbricatus.", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10964585/"},
+    {"title": "Johannesson, H., Ryman, S., Lundmark, H. & Danell, E. (1999). Sarcodon imbricatus and S. squamosus — two confused species. Mycological Research 103(11): 1447–1452. DOI: 10.1017/S0953756299008709.", "url": "https://doi.org/10.1017/S0953756299008709"},
+    {"title": "NCBI Taxonomy Browser — Sarcodon imbricatus (L.) P. Karst.; nom courant et basionyme Hydnum imbricatum L.", "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=57136"},
+    {"title": "VAPKO (2022). Champignons comestibles présentés — liste officielle des espèces présentées comme comestibles, dont Sarcodon imbricatus.", "url": "https://prestations.vapko.ch/wp-content/uploads/2022/09/Champignons-comestibles-presentes.pdf"},
+    {"title": "E-Flora BC, University of British Columbia — Sarcodon imbricatus : caractères comparatifs, hôtes et distinction avec S. squamosus.", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=1&sciname=Sarcodon+imbricatus"},
+    {"title": "University of Lyon 1 — Sarcodon imbricatus : fiche de terrain et photographies des caractères, dont les aiguillons et la coupe.", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/sarcodon-imbricatus/"},
+    {"title": "Ethnobiology of fungi and lichens of Georgia — Sarcodon imbricatus : morphologie, saveur parfois amère, habitat et saison (synthèse bibliographique régionale).", "url": "https://fungi.biodiversity-georgia.iliauni.edu.ge/sarcodon-imbricatus-l-p-karst/"}
   ],
   "related": []
 }

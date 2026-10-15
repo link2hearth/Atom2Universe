@@ -1,32 +1,57 @@
 {
   "id": "nuda",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau bleu violet à gris violet, souvent brunâtre au centre, 4 à 15 cm, lisse et humide ; marge enroulée",
-    "Lames violet foncé, serrées, qui passent au brun terne avec l’âge",
-    "Pied trapu, 2 à 10 cm, lilas à gris violet, un peu renflé à la base, strié de fibrilles argentées",
-    "Chair blanche teintée de violet en haut du pied · odeur agréable, fruitée, un peu anisée",
-    "Sporée rose pâle",
-    "Feuillus et conifères, sur litière, souvent en rond · arrière-saison, après les premières gelées"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Taxonomie et noms",
+      "text": "Le nom actuellement retenu par Species Fungorum, via Index Fungorum, est Collybia nuda (Bull.) Z.M. He & Zhu L. Yang, combinaison publiée en 2023. Le basionyme est Agaricus nudus Bull. (1790). Lepista nuda et Clitocybe nuda sont des combinaisons historiques encore très utilisées dans les guides et les listes de comestibilité ; Tricholoma nudum est un autre synonyme. Le nom français courant est pied bleu."
+    },
+    {
+      "title": "Chapeau et lames",
+      "text": "Le chapeau mesure généralement 4 à 14 cm, parfois jusqu’à 18 cm. D’abord convexe, à marge enroulée, il s’étale et peut devenir irrégulier, ondulé ou légèrement mamelonné. Sa surface lisse est violette à bleu-violet quand le champignon est jeune et frais, puis pâlit vers le brunâtre, le fauve ou le beige ; elle est lubrifiante par temps humide, mais pas franchement visqueuse. Les lames sont serrées à très serrées, assez larges, lilas à violet pâle puis beige rosé ou brunâtres avec l’âge ; elles sont adnées à échancrées, parfois un peu décurrentes. La sporée est rose terne à rose-beige."
+    },
+    {
+      "title": "Pied, chair et odeur",
+      "text": "Le pied robuste mesure environ 2,5 à 10 cm de haut et 1 à 3 cm de large. Il est plein, égal ou élargi en massue à la base, lilas à violet pâle puis souvent brunissant ; des fibrilles blanchâtres peuvent le strier, et du mycélium lilas peut entourer sa base. Il n’a ni anneau ni cortine. La chair épaisse et souple est lilas à beige-lilas puis blanchâtre. L’odeur est faible, agréablement fruitée ou légèrement parfumée ; une odeur anisée marquée n’est pas un critère fiable."
+    },
+    {
+      "title": "Habitat et saison",
+      "text": "Saprotrophe, l’espèce décompose la litière et d’autres débris végétaux. Elle pousse seule, en groupes ou en arcs et ronds, dans les bois de feuillus ou de conifères, mais aussi dans les jardins, le compost et les zones riches en matière organique. La fructification est surtout automnale, parfois de la fin de l’été au début de l’hiver selon le climat ; le froid et les gelées peuvent être tolérés, mais les premières gelées ne constituent pas un caractère d’identification."
+    }
   ],
-  "safetyNote": "Certains cortinaires violets lui ressemblent et sont très toxiques : leur sporée est brun rouille (la sienne est rose pâle), ils gardent souvent des restes de cortine et leur odeur est désagréable. On se méfie de tous les cortinaires rouges, pourpres ou orangés.",
+  "traits": [
+    "Chapeau lisse de 4 à 14 cm, parfois 18 cm, violet à bleu-violet jeune puis souvent fauve ou brunâtre ; marge d’abord enroulée.",
+    "Lames serrées à très serrées, lilas puis beige rosé à brunâtres, attachées au pied ou échancrées ; sporée rose terne à rose-beige.",
+    "Pied robuste, plein, lilas puis brunissant, souvent élargi à la base et strié de fibrilles blanchâtres ; sans anneau ni cortine.",
+    "Chair épaisse, souple, lilas puis pâlissante ; odeur faible et fruitée, sans parfum anisé constant.",
+    "Saprotrophe de litière et débris végétaux, en bois de feuillus ou conifères, jardins et compost ; parfois en arcs ou ronds.",
+    "Fructifie principalement en automne, parfois jusqu’au début de l’hiver ; la résistance au froid varie selon les conditions et ne suffit pas à l’identifier."
+  ],
+  "safetyNote": "Les listes DGfM (Allemagne) et VAPKO (Suisse) mentionnent Lepista nuda parmi les espèces recommandées ou considérées comestibles ; ces listes emploient l’ancien nom et ne valident pas l’identification d’un spécimen. Les blewits doivent être bien cuits et peuvent provoquer une intolérance chez certaines personnes. Des cortinaires violets peuvent lui ressembler : cortine et sporée brun rouille sont des indices utiles, mais aucun caractère isolé ne suffit à garantir l’identification. Cette fiche ne permet pas de décider de consommer une récolte sauvage.",
   "sources": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, entrée Lepista nuda (Violetter Rötelritterling).",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste, entrée Lepista nuda / Pied bleu, version 09.2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Pied bleu",
-      "url": "https://fr.wikipedia.org/wiki/Pied_bleu"
+      "title": "Index Fungorum / Species Fungorum (Royal Botanic Gardens, Kew), fiche du nom Lepista nuda indiquant le nom retenu Collybia nuda.",
+      "url": "https://www.indexfungorum.org/names/namesrecord.asp?RecordID=356735"
     },
     {
-      "title": "Wikipedia (en): Lepista nuda",
-      "url": "https://en.wikipedia.org/wiki/Lepista_nuda"
+      "title": "He, Z.-M., Chen, Z.-H., Bau, T., Wang, G.-S. & Yang, Z.-L. (2023). Systematic arrangement within the family Clitocybaceae: phylogenetic and phylogenomic evidence, morphological data and muscarine-producing innovation. Fungal Diversity 123: 1–47. Publication de la combinaison Collybia nuda, p. 35.",
+      "url": "https://doi.org/10.1007/s13225-023-00527-2"
+    },
+    {
+      "title": "E-Flora BC, University of British Columbia. Lepista nuda : description morphologique compilée (chapeau, chair, lames, pied, sporée, habitat et saison).",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Lepista+nuda"
+    },
+    {
+      "title": "Missouri Department of Conservation. Blewit : morphologie, sporée, habitat, ressemblance avec Cortinarius et conseils de cuisson.",
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/blewit"
     }
   ],
   "related": []
