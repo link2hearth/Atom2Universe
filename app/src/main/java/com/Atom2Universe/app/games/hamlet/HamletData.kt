@@ -130,46 +130,45 @@ object Hamlet {
      * l'expérience viennent de [HamletEconomy] ; le niveau décide seulement de l'ouverture.
      */
     val crops: List<Crop> = listOf(
-        // Le tout début : un seul champ et du blé, deux minutes. Le maïs vient avec le niveau 2 (les poulaillers s'en nourrissent).
+        // Du blé d'abord, puis une ou deux plantes par niveau. Aucune durée sous deux minutes, et deux plantes n'ont jamais la même durée.
         crop("wheat", 1, 2 * MIN, "grain", 0xC9B04A, 0xE8CF5A),
-        crop("corn", 2, 45, "stalk", 0x6FB83A, 0xF2D12E),
-        crop("radish", 2, 3 * MIN, "root", 0x4F9D37, 0xD8334A),
-        crop("carrots", 2, 15 * MIN, "root", 0x4F9D37, 0xF08A1C),
-        crop("turnips", 2, 2 * HOUR, "root", 0x6C9C45, 0xD5B9D6),
-        // Une plantation viable pour revenir le lendemain, dès que le village a pris forme.
-        crop("oats", 3, 6 * HOUR, "grain", 0xA9B45D, 0xDED496),
-        crop("lettuce", 3, 20 * MIN, "head", 0x7CC545, 0xA6DC5A),
-        crop("strawberries", 3, 30 * MIN, "bush", 0x3F8F3A, 0xE0263A),
-        crop("beans", 3, 24 * HOUR, "tall", 0x4F9D37, 0x5AB83C),
-        crop("wildflowers", 3, 10 * MIN, "flower", 0x5AA03C, 0xE05A8A),
-        crop("herbs", 3, 12 * MIN, "bush", 0x3F8F3A, 0x8BC878),
-        crop("onions", 4, HOUR, "root", 0x5AA03C, 0xE9D8A0),
-        crop("potatoes", 5, 2 * HOUR, "bush", 0x3F8F3A, 0xB98A52),
-        crop("peas", 5, 90 * MIN, "tall", 0x5AA83C, 0x8AD25A),
-        crop("tomatoes", 6, 3 * HOUR, "bush", 0x3F8F3A, 0xE0382A),
-        crop("leeks", 6, 4 * HOUR, "grain", 0x5AA83C, 0xDFF0C8),
-        crop("lavender", 7, 6 * HOUR, "flower", 0x6A8F4A, 0x9A6AD8),
-        crop("squash", 7, 5 * HOUR, "vine", 0x3F8F3A, 0xE8B02A),
-        crop("cabbage", 8, 6 * HOUR, "head", 0x6FB84A, 0x9AD66A),
-        crop("peppers", 9, 8 * HOUR, "bush", 0x3F8F3A, 0xE8402A),
-        crop("glowcabbage", 10, 2 * HOUR, "head", 0x6A5AD8, 0xC8A0FF, magic = true),
-        crop("garlic", 10, 9 * HOUR, "root", 0x5AA03C, 0xF3EEDD),
-        crop("beets", 11, 10 * HOUR, "root", 0x4F8D37, 0x9A1F52),
+        crop("corn", 2, 4 * MIN, "stalk", 0x6FB83A, 0xF2D12E),
+        crop("radish", 3, 3 * MIN, "root", 0x4F9D37, 0xD8334A),
+        crop("carrots", 3, 8 * MIN, "root", 0x4F9D37, 0xF08A1C),
+        crop("herbs", 4, 10 * MIN, "bush", 0x3F8F3A, 0x8BC878),
+        crop("lettuce", 4, 12 * MIN, "head", 0x7CC545, 0xA6DC5A),
+        crop("wildflowers", 5, 15 * MIN, "flower", 0x5AA03C, 0xE05A8A),
+        crop("potatoes", 5, 40 * MIN, "bush", 0x3F8F3A, 0xB98A52),
+        crop("strawberries", 6, 25 * MIN, "bush", 0x3F8F3A, 0xE0263A),
+        crop("turnips", 6, HOUR, "root", 0x6C9C45, 0xD5B9D6),
+        crop("peas", 7, 90 * MIN, "tall", 0x5AA83C, 0x8AD25A),
+        crop("lavender", 7, 150 * MIN, "flower", 0x6A8F4A, 0x9A6AD8),
+        crop("onions", 8, 75 * MIN, "root", 0x5AA03C, 0xE9D8A0),
+        crop("tomatoes", 8, 2 * HOUR, "bush", 0x3F8F3A, 0xE0382A),
+        crop("squash", 9, 3 * HOUR, "vine", 0x3F8F3A, 0xE8B02A),
+        crop("cabbage", 9, 4 * HOUR, "head", 0x6FB84A, 0x9AD66A),
+        crop("peppers", 10, 5 * HOUR, "bush", 0x3F8F3A, 0xE8402A),
+        crop("glowcabbage", 10, 105 * MIN, "head", 0x6A5AD8, 0xC8A0FF, magic = true),
+        crop("oats", 10, 6 * HOUR, "grain", 0xA9B45D, 0xDED496),
+        crop("garlic", 11, 8 * HOUR, "root", 0x5AA03C, 0xF3EEDD),
+        crop("beets", 11, 9 * HOUR, "root", 0x4F8D37, 0x9A1F52),
         crop("blueberries", 12, 11 * HOUR, "bush", 0x3F8F3A, 0x3A4FC8),
+        crop("beans", 12, 24 * HOUR, "tall", 0x4F9D37, 0x5AB83C),
         crop("pumpkins", 13, 12 * HOUR, "vine", 0x3F8F3A, 0xF08A1C),
+        crop("leeks", 13, 13 * HOUR, "grain", 0x5AA83C, 0xDFF0C8),
         crop("broccoli", 14, 14 * HOUR, "head", 0x4F9D37, 0x2F8A3A),
-        crop("starfruit", 15, 3 * HOUR, "bush", 0x4F9D5A, 0xFFE24A, magic = true),
+        crop("starfruit", 15, 210 * MIN, "bush", 0x4F9D5A, 0xFFE24A, magic = true),
         crop("watermelon", 15, 16 * HOUR, "vine", 0x3F8F3A, 0x2F8F4A),
         crop("cotton", 16, 18 * HOUR, "bush", 0x4F8D37, 0xFFFFFF),
         crop("eggplant", 17, 20 * HOUR, "bush", 0x3F8F3A, 0x6A2A8A),
         crop("hops", 18, 22 * HOUR, "tall", 0x5AA83C, 0xB8D65A),
         crop("tea", 19, 28 * HOUR, "bush", 0x2F7A3A, 0x8FD05A),
-        crop("starasparagus", 20, 4 * HOUR, "grain", 0x6FB83A, 0xB8FFD8, magic = true),
+        crop("starasparagus", 20, 270 * MIN, "grain", 0x6FB83A, 0xB8FFD8, magic = true),
         crop("sunflower", 21, 30 * HOUR, "flower", 0x4F8D37, 0xF2C21A),
         crop("grapes", 22, 36 * HOUR, "tall", 0x4F8D37, 0x7A2A8A),
         crop("saffron", 24, 40 * HOUR, "flower", 0x4F8D37, 0xA84AD8),
-        crop("sunpineapple", 26, 8 * HOUR, "bush", 0x4FA83A, 0xF2B01A, magic = true),
-        crop("moonmelon", 30, 12 * HOUR, "vine", 0x3F8F6A, 0x9AD8F2, magic = true),
+        crop("sunpineapple", 26, 7 * HOUR, "bush", 0x4FA83A, 0xF2B01A, magic = true),
+        crop("moonmelon", 30, 10 * HOUR, "vine", 0x3F8F6A, 0x9AD8F2, magic = true),
     )
     val cropById: Map<String, Crop> = crops.associateBy { it.id }
 
@@ -286,10 +285,10 @@ object Hamlet {
 
         // ---- ateliers : les visiteurs commandent, l'atelier prépare, ils paient
         shop("bakery", 2, 600, 5, 45, "bread", L("s_shop", 0xEBD2A0, 0xB8452E, 0xE8A83A), build = MIN)
-        shop("florist", 3, 900, 10, 70, "flower", L("s_shop", 0xF3D8E4, 0x7A9A4A, 0xE05A8A), build = 2 * MIN)
+        shop("florist", 5, 900, 10, 70, "flower", L("s_shop", 0xF3D8E4, 0x7A9A4A, 0xE05A8A), build = 2 * MIN)
         shop("cheesemaker", 5, 1300, 15, 95, "cheese", L("s_shop", 0xF0E2A8, 0x8A5A3A, 0xE8B82A))
         shop("tailor", 6, 1500, 20, 110, "cloth", L("s_shop", 0xC8B8E0, 0x5A4A8A, 0xB84AC8), build = 3 * MIN)
-        shop("herbalist", 3, 1000, 15, 80, "leaf", L("s_shop", 0xCFE0B0, 0x3F7A3A, 0x6AB83A))
+        shop("herbalist", 4, 1000, 15, 80, "leaf", L("s_shop", 0xCFE0B0, 0x3F7A3A, 0x6AB83A))
         shop("weaver", 5, 2200, 45, 180, "cloth", L("s_shop", 0xE0C8A0, 0x8A3A3A, 0xE0903A), build = 4 * MIN)
         shop("chandler", 5, 2000, 36, 150, "candle", L("s_shop", 0xF4E8C0, 0xA8683A, 0xF4C23A))
         shop("school", 6, 3000, 60, 210, "book", L("s_shop", 0xE8DCC0, 0x3A5A8A, 0xC8392E), build = 5 * MIN)

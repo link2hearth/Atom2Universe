@@ -36,6 +36,16 @@ class HamletLadderTest {
         assertEquals(eggs.pay, wine.pay); assertEquals(eggs.payXp, wine.payXp); assertEquals(eggs.build, wine.build)
     }
 
+    @Test fun noCropGrowsInUnderTwoMinutesAndNoTwoShareADuration() {
+        for (c in Hamlet.crops) assertTrue("${c.id} : ${c.time} s", c.time >= 120)
+        assertEquals(Hamlet.crops.size, Hamlet.crops.map { it.time }.distinct().size)
+    }
+
+    @Test fun cropsOpenGraduallyAndInLevelOrder() {
+        assertEquals(Hamlet.crops.sortedBy { it.lvl }.map { it.id }, Hamlet.crops.map { it.id })
+        for (level in 1..14) assertTrue("niveau $level", Hamlet.crops.count { it.lvl == level && !it.magic } <= 2)
+    }
+
     @Test fun everyOrdinaryCropIsAskedByAWorkshopOrALegend() {
         val inWorkshops = Hamlet.defs.filter { it.cat == Cat.SHOP }.flatMap { HamletIndustry.recipe(it.id, 1).cost.crops.keys }.toSet()
         val inLegends = HamletLegends.defs.flatMap { l -> l.phases.flatMap { p -> p.needs.map { it.crop } } }.toSet()

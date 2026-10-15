@@ -28,7 +28,7 @@ class HamletBuilderTest {
         val g = game(); val coins = g.coins; val xp = g.xp
         val purchased = buy(g, "gnome")
         val field = g.objs.values.first { it.t == "field" }
-        assertTrue(g.plant(field, "corn")); time += 46_000; assertTrue(g.harvest(field))
+        assertTrue(g.plant(field, "corn")); time += (Hamlet.cropById.getValue("corn").time + 1) * 1000L; assertTrue(g.harvest(field))
         val earned = g.coins + Hamlet.byId.getValue("gnome").cost
         val work = g.workSeconds; val harvestedXp = g.xp - Hamlet.byId.getValue("gnome").xp
         assertTrue(g.buildHistory.undo())
@@ -89,7 +89,7 @@ class HamletBuilderTest {
         val g = game(); val obj = g.objs.values.first { it.t == "field" }
         val x = obj.x; val y = obj.y; val (toX, toY) = spot(g, obj.t)
         assertTrue(g.move(obj, toX, toY, true)); assertTrue(g.plant(obj, "corn"))
-        time += 46_000; assertTrue(g.harvest(obj)); val coins = g.coins; val xp = g.xp
+        time += (Hamlet.cropById.getValue("corn").time + 1) * 1000L; assertTrue(g.harvest(obj)); val coins = g.coins; val xp = g.xp
         assertTrue(g.buildHistory.undo())
         assertEquals(x, obj.x); assertEquals(y, obj.y); assertFalse(obj.flip); assertNull(obj.crop)
         assertEquals(coins, g.coins); assertEquals(xp, g.xp)

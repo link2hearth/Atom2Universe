@@ -46,9 +46,9 @@ object HamletTrades {
                 else HamletIndustry.originalRecipe(id, rank)
 
             // Food, orchards and livestock: fresh produce becomes supplies for heroes.
-            "greengrocer" -> food(mapOf("carrots" to 2, "lettuce" to 2))
+            "greengrocer" -> food(mapOf("carrots" to 2, "radish" to 2))
             // Chaque culture ordinaire a au moins un atelier qui la demande (garde-fou : HamletLadderTest).
-            "farmmarket" -> food(mapOf("carrots" to 2, "radish" to 2), mapOf(FRUIT to 2, EGGS to 2))
+            "farmmarket" -> food(mapOf("carrots" to 2, "lettuce" to 2), mapOf(FRUIT to 2, EGGS to 2))
             "jamkitchen" -> food(mapOf("strawberries" to 2), mapOf(FRUIT to 4, TIMBER to 2))
             "cheesemaker" -> food(mapOf("potatoes" to 2), mapOf(MILK to 6, TIMBER to 2))
             "dairy" -> make(mapOf(WATER to 6), mapOf("corn" to 3), mapOf(MILK to 8))

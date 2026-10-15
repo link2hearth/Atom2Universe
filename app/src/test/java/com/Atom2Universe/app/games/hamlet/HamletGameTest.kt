@@ -65,7 +65,7 @@ class HamletGameTest {
         assertTrue(g.plant(f, "corn"))
         assertEquals(before - Hamlet.cropById.getValue("corn").cost, g.coins)
         assertFalse("pas encore mur", g.harvest(f))
-        t += 46_000
+        t += (Hamlet.cropById.getValue("corn").time + 1) * 1000L
         assertEquals(Status.RIPE, g.status(f))
         assertTrue(g.harvest(f))
         val corn = Hamlet.cropById.getValue("corn")
@@ -80,7 +80,7 @@ class HamletGameTest {
         val g = game()
         val f = g.objs.values.first { it.t == "field" }
         g.plant(f, "corn")
-        t += (45L * 2 + 3600 + 5) * 1000
+        t += (Hamlet.cropById.getValue("corn").time * 2L + 3600 + 5) * 1000
         assertEquals(Status.WITHERED, g.status(f))
         val c = g.coins
         assertTrue(g.harvest(f))

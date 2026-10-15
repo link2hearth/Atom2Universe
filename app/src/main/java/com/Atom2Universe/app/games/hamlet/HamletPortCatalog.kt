@@ -144,7 +144,7 @@ object HamletPortCatalog {
         Def("lighthouseStone", Cat.SHOP, 2, 2, 22000, 15, 1120, Look("coastal", 0xB8B6A7, 0x779964, 0xC4A16A, 0), pop = 1, job = 7200, pay = 244, payXp = 76, glyph = "lantern", build = 2700),
         Def("lighthouseGrand", Cat.SHOP, 3, 3, 70000, 22, 3520, Look("coastal", 0xB8B6A7, 0x779964, 0xC4A16A, 0), pop = 1, job = 7200, pay = 343, payXp = 107, glyph = "lantern", build = 3960),
         Def("harbor", Cat.SHOP, 2, 2, 16000, 13, 820, Look("coastal", 0xB8B6A7, 0x779964, 0xC4A16A, 0), pop = 1, job = 7200, pay = 267, payXp = 83, glyph = "crate", build = 2340),
-        Def("fishmarket", Cat.SHOP, 2, 2, 1700, 5, 105, Look("coastal", 0xB8B6A7, 0x779964, 0xC4A16A, 0), pop = 1, job = 7200, pay = 280, payXp = 87, glyph = "fish", build = 1620),
+        Def("fishmarket", Cat.SHOP, 2, 2, 1700, 7, 105, Look("coastal", 0xB8B6A7, 0x779964, 0xC4A16A, 0), pop = 1, job = 7200, pay = 280, payXp = 87, glyph = "fish", build = 1620),
         Def("boathouse", Cat.SHOP, 2, 2, 5200, 8, 280, Look("coastal", 0xB8B6A7, 0x779964, 0xC4A16A, 0), pop = 1, job = 7200, pay = 288, payXp = 90, glyph = "ship", build = 1440),
         Def("anchor", Cat.DECOR, 1, 1, 400, 4, 13, Look("coastal", 0xB8B6A7, 0x779964, 0xC4A16A, 0), charm = 3),
         Def("netrack", Cat.DECOR, 1, 1, 250, 3, 8, Look("coastal", 0xB8B6A7, 0x779964, 0xC4A16A, 0), charm = 2),

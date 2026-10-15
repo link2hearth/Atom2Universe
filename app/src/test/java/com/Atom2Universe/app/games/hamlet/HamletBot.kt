@@ -196,9 +196,9 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
             val short = options.filter { it.time * 1000L <= inSession }
             // une culture dont on a besoin se plante même si elle ne sera mûre qu'après quelques visites
             val needed = if (neededRoom <= 0) null else options.filter { it.id in wanted && it.time <= 72 * 3600 }.maxByOrNull { wanted.getValue(it.id) - g.stock(it.id) }
-            // Keep the bread and medicine chains running while other plots grow long quest crops.
+            // Keep the bread, feed (corn), medicine and craft chains running while other plots grow long quest crops.
             val production = if (!farming) null else options.firstOrNull { c ->
-                c.id in listOf("wheat", "herbs", "wildflowers") && c.id in wanted &&
+                c.id in listOf("wheat", "corn", "herbs", "wildflowers") && c.id in wanted &&
                     fields.none { it.crop == c.id }
             }
             val crop = production ?: needed

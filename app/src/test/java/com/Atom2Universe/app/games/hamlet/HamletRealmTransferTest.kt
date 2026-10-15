@@ -46,7 +46,7 @@ class HamletRealmTransferTest {
         assertEquals(0, g.expand)
         g.realms.rename(8, "Ateliers")
         val lastIds = g.objs.keys.toSet()
-        time += 46_000
+        time += (Hamlet.cropById.getValue("corn").time + 1) * 1000L
         assertTrue(g.realms.switchTo(1))
         assertEquals("Verger", g.realms.name())
         assertEquals(4, g.hall); assertEquals(2, g.expand)

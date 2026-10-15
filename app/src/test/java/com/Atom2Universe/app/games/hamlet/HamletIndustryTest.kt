@@ -210,7 +210,7 @@ class HamletIndustryTest {
 
     @Test fun aFreshVillageCanReachBreadAndRawMaterialProducersWithoutInjectedCurrency() {
         val g = game(); val field = g.objs.values.first { it.t == "field" }
-        repeat(3) { assertTrue(g.plant(field, "corn")); time += 45_000; g.tick(); assertTrue(g.harvest(field)) }
+        repeat(3) { assertTrue(g.plant(field, "corn")); time += Hamlet.cropById.getValue("corn").time * 1000L; g.tick(); assertTrue(g.harvest(field)) }
         assertTrue(g.claimQuest()); assertTrue(g.claimQuest()); assertTrue(g.adventure.summon().isNotEmpty())
         // Neighbor work is the existing repeatable source of coins when the purse is low.
         assertTrue(g.neighbors.visit(0))
