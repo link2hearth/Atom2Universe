@@ -102,9 +102,10 @@ class BookReaderActivity : ThemedActivity() {
     }
 
     // A checkout may contain no local font assets at all.
-    private val availableFonts by lazy {
+    private val availableFonts get(): List<Pair<String, String>> {
         val files = runCatching { assets.list("fonts").orEmpty().toSet() }.getOrDefault(emptySet())
-        AVAILABLE_FONTS.filter { it.first in files }
+        return AVAILABLE_FONTS.filter { it.first in files } +
+            com.Atom2Universe.app.fonts.PersonalFonts.list(this).map { it.id to it.label }
     }
 
     private data class OpfData(val spineIds: List<String>, val manifest: Map<String, String>, val author: String, val coverItemId: String?)
@@ -271,6 +272,7 @@ class BookReaderActivity : ThemedActivity() {
     private var currentFontSize = DEFAULT_FONT_SIZE
     private var currentTypeface: Typeface = Typeface.DEFAULT
     private val typefaceCache = mutableMapOf<String, Typeface>()
+    private var fontRevision = com.Atom2Universe.app.fonts.PersonalFonts.revision
 
     // ── Bookmarks ─────────────────────────────────────────────────────────────
     private val bookmarkData = mutableMapOf<Int, String>() // itemIndex → text snippet
@@ -347,6 +349,16 @@ class BookReaderActivity : ThemedActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (fontRevision != com.Atom2Universe.app.fonts.PersonalFonts.revision) {
+            fontRevision = com.Atom2Universe.app.fonts.PersonalFonts.revision
+            typefaceCache.clear()
+            if (currentFontName != "default" && availableFonts.none { it.first == currentFontName }) {
+                currentFontName = "default"
+                prefs.edit().putString(KEY_FONT_NAME, currentFontName).apply()
+            }
+            currentTypeface = loadTypeface(currentFontName)
+            paragraphAdapter?.updateFont(currentTypeface, currentFontSize)
+        }
         if (barsActive) showBarsTemporarily()
         // Reprend le suivi du temps de lecture après un retour en avant-plan (le livre est déjà ouvert)
         toolbar.title?.toString()?.takeIf { it.isNotEmpty() }?.let {
@@ -551,6 +563,9 @@ class BookReaderActivity : ThemedActivity() {
 
     private fun loadTypeface(name: String): Typeface {
         if (name == "default") return Typeface.DEFAULT
+        if (com.Atom2Universe.app.fonts.PersonalFonts.isPersonal(name)) {
+            return com.Atom2Universe.app.fonts.PersonalFonts.loadTypeface(this, name) ?: Typeface.DEFAULT
+        }
         return typefaceCache.getOrPut(name) {
             runCatching {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -567,6 +582,7 @@ class BookReaderActivity : ThemedActivity() {
     }
 
     private fun showFontPicker() {
+        val availableFonts = availableFonts
         var tempFontName = currentFontName
         var tempSize = currentFontSize
         var tempTypeface = currentTypeface

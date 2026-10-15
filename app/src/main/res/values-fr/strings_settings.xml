@@ -196,4 +196,19 @@
     <string name="about_font_close">Fermer</string>
     <string name="about_fonts_system_only">Cette version utilise les polices système. Aucune police supplémentaire n’est incluse.</string>
     <string name="about_font_license_unavailable">La licence de cette police est indisponible.</string>
+    <string name="personal_fonts_title">Polices personnelles</string>
+    <string name="personal_fonts_description">Ajoute des polices TTF ou OTF pour le lecteur de livres et la Toile infinie.</string>
+    <plurals name="personal_fonts_count">
+        <item quantity="one">%d police importée</item>
+        <item quantity="other">%d polices importées</item>
+    </plurals>
+    <string name="personal_fonts_import_folder">Importer un dossier de polices</string>
+    <string name="personal_fonts_import_files">Ajouter des fichiers de polices</string>
+    <string name="personal_fonts_importing">Mise à jour de ta bibliothèque de polices…</string>
+    <string name="personal_fonts_import_result">Ajoutées : %1$d · Déjà présentes : %2$d · Invalides ou non prises en charge : %3$d</string>
+    <string name="personal_fonts_empty_folder">Aucune police TTF ou OTF trouvée dans ce dossier.</string>
+    <string name="personal_fonts_error">Impossible d’importer les polices. Vérifie l’accès aux fichiers ou au dossier choisi.</string>
+    <string name="personal_fonts_remove">Retirer les polices importées</string>
+    <string name="personal_fonts_remove_message">Retirer les copies importées dans l’application ? Tes fichiers d’origine sont conservés. Les textes utilisant ces polices prendront une police système.</string>
+    <string name="personal_fonts_removed">Polices importées retirées.</string>
 </resources>

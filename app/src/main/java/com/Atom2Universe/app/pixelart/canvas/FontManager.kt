@@ -3,10 +3,11 @@ package com.Atom2Universe.app.pixelart.canvas
 import android.content.Context
 import android.graphics.Typeface
 import android.util.Log
+import com.Atom2Universe.app.fonts.PersonalFonts
 
 /**
  * Gestionnaire de polices personnalisées.
- * Charge les polices depuis le dossier assets/fonts/.
+ * Polices système, pack assets/fonts/ optionnel et polices personnelles importées.
  */
 object FontManager {
     private const val TAG = "FontManager"
@@ -17,6 +18,7 @@ object FontManager {
 
     // Liste des polices disponibles (nom affiché -> nom de fichier)
     private val availableFonts = mutableMapOf<String, String>()
+    private var personalRevision = -1L
 
     // Polices système
     private val systemFonts = listOf(
@@ -28,8 +30,10 @@ object FontManager {
     /**
      * Initialise le gestionnaire en scannant les polices disponibles.
      */
-    fun init(context: Context) {
+    @Synchronized fun init(context: Context) {
         availableFonts.clear()
+        fontCache.clear()
+        personalRevision = PersonalFonts.revision
 
         // Ajouter les polices système
         for ((displayName, _) in systemFonts) {
@@ -58,24 +62,32 @@ object FontManager {
             Log.e(TAG, "Error scanning fonts directory", e)
         }
 
+        for (font in PersonalFonts.list(context)) availableFonts[font.label] = font.id
+
         Log.d(TAG, "Initialized with ${availableFonts.size} fonts")
     }
 
     /**
      * Retourne la liste des noms de polices disponibles (pour affichage).
      */
-    fun getAvailableFontNames(): List<String> {
+    @Synchronized fun getAvailableFontNames(): List<String> {
         return availableFonts.keys.sorted()
     }
+
+    /** Imported fonts use a stable ID in drawings, even when their display names collide later. */
+    @Synchronized fun getAvailableFonts(): List<Pair<String, String>> = availableFonts.entries
+        .map { (label, source) -> (if (PersonalFonts.isPersonal(source)) source else label) to label }
+        .sortedBy { it.second }
 
     /**
      * Charge et retourne une police par son nom d'affichage.
      */
-    fun getTypeface(context: Context, displayName: String): Typeface {
+    @Synchronized fun getTypeface(context: Context, displayName: String): Typeface {
+        if (availableFonts.isEmpty() || personalRevision != PersonalFonts.revision) init(context)
         // Vérifier le cache
         fontCache[displayName]?.let { return it }
 
-        val fileName = availableFonts[displayName]
+        val fileName = if (PersonalFonts.isPersonal(displayName)) displayName else availableFonts[displayName]
 
         val typeface = when {
             fileName == null -> Typeface.DEFAULT
@@ -84,6 +96,7 @@ object FontManager {
                 val systemName = systemFonts.find { it.first == displayName }?.second ?: "sans-serif"
                 Typeface.create(systemName, Typeface.NORMAL)
             }
+            PersonalFonts.isPersonal(fileName) -> PersonalFonts.loadTypeface(context, fileName) ?: Typeface.DEFAULT
             else -> {
                 // Police personnalisée
                 try {

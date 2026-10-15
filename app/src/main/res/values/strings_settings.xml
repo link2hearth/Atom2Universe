@@ -196,4 +196,19 @@
     <string name="about_font_close">Close</string>
     <string name="about_fonts_system_only">This version uses system fonts. No additional font is included.</string>
     <string name="about_font_license_unavailable">This font license is unavailable.</string>
+    <string name="personal_fonts_title">Personal fonts</string>
+    <string name="personal_fonts_description">Add TTF or OTF fonts for the book reader and Infinite Canvas.</string>
+    <plurals name="personal_fonts_count">
+        <item quantity="one">%d imported font</item>
+        <item quantity="other">%d imported fonts</item>
+    </plurals>
+    <string name="personal_fonts_import_folder">Import a font folder</string>
+    <string name="personal_fonts_import_files">Add font files</string>
+    <string name="personal_fonts_importing">Updating your font library…</string>
+    <string name="personal_fonts_import_result">Added: %1$d · Already present: %2$d · Invalid or unsupported: %3$d</string>
+    <string name="personal_fonts_empty_folder">No TTF or OTF fonts were found in this folder.</string>
+    <string name="personal_fonts_error">The fonts could not be imported. Check access to the selected files or folder.</string>
+    <string name="personal_fonts_remove">Remove imported fonts</string>
+    <string name="personal_fonts_remove_message">Remove the imported copies from the app? Your original files are kept. Text using these fonts will use a system font instead.</string>
+    <string name="personal_fonts_removed">Imported fonts removed.</string>
 </resources>

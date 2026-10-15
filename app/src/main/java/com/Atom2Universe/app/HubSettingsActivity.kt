@@ -30,6 +30,10 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.core.content.edit
+import androidx.activity.result.contract.ActivityResultContracts
+import com.Atom2Universe.app.fonts.PersonalFonts
+import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 
 /**
  * Écran de paramètres du Hub.
@@ -55,6 +59,15 @@ class HubSettingsActivity : com.Atom2Universe.app.audio.AudioThemedActivity() {
     private lateinit var cloudSetting: LinearLayout
     private lateinit var cloudSettingIcon: ImageView
     private lateinit var cloudSettingSummary: TextView
+    private lateinit var personalFontsSetting: LinearLayout
+    private lateinit var personalFontsSummary: TextView
+    private var fontsProgress: AlertDialog? = null
+    private val chooseFontsFolder = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        if (uri != null) runFontOperation { fontImportMessage(PersonalFonts.importFolder(this, uri)) }
+    }
+    private val chooseFontFiles = registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
+        if (uris.isNotEmpty()) runFontOperation { fontImportMessage(PersonalFonts.importFiles(this, uris)) }
+    }
 
     private val activityScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
@@ -178,6 +191,60 @@ class HubSettingsActivity : com.Atom2Universe.app.audio.AudioThemedActivity() {
     override fun onResume() {
         super.onResume()
         updateCloudSummary()
+        updatePersonalFontsSummary()
+    }
+
+    private fun updatePersonalFontsSummary() {
+        val count = PersonalFonts.list(this).size
+        personalFontsSummary.text = resources.getQuantityString(R.plurals.personal_fonts_count, count, count)
+    }
+
+    private fun showPersonalFontsOptions() {
+        val choices = mutableListOf(R.string.personal_fonts_import_folder, R.string.personal_fonts_import_files)
+        if (PersonalFonts.list(this).isNotEmpty()) choices.add(R.string.personal_fonts_remove)
+        ImmersiveAlertDialogBuilder(this).setTitle(R.string.personal_fonts_title)
+            .setItems(choices.map { getString(it) }.toTypedArray()) { _, which ->
+                when (choices[which]) {
+                    R.string.personal_fonts_import_folder -> chooseFontsFolder.launch(null)
+                    R.string.personal_fonts_import_files -> chooseFontFiles.launch(arrayOf("*/*"))
+                    R.string.personal_fonts_remove -> ImmersiveAlertDialogBuilder(this)
+                        .setTitle(R.string.personal_fonts_remove)
+                        .setMessage(R.string.personal_fonts_remove_message)
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(R.string.personal_fonts_remove) { _, _ ->
+                            runFontOperation {
+                                PersonalFonts.clear(this)
+                                getString(R.string.personal_fonts_removed)
+                            }
+                        }.show()
+                }
+            }.show()
+    }
+
+    private fun fontImportMessage(result: PersonalFonts.ImportResult): String =
+        if (result.added + result.existing + result.skipped == 0) getString(R.string.personal_fonts_empty_folder)
+        else getString(R.string.personal_fonts_import_result, result.added, result.existing, result.skipped)
+
+    private fun runFontOperation(work: suspend () -> String) {
+        if (!personalFontsSetting.isEnabled) return
+        personalFontsSetting.isEnabled = false
+        fontsProgress = ImmersiveAlertDialogBuilder(this).setTitle(R.string.personal_fonts_title)
+            .setMessage(R.string.personal_fonts_importing).setCancelable(false).show()
+        activityScope.launch {
+            try {
+                Toast.makeText(this@HubSettingsActivity, work(), Toast.LENGTH_LONG).show()
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                Log.w("PersonalFonts", "Cannot update personal fonts", error)
+                Toast.makeText(this@HubSettingsActivity, R.string.personal_fonts_error, Toast.LENGTH_LONG).show()
+            } finally {
+                fontsProgress?.dismiss()
+                fontsProgress = null
+                personalFontsSetting.isEnabled = true
+                updatePersonalFontsSummary()
+            }
+        }
     }
 
     /**
@@ -211,6 +278,9 @@ class HubSettingsActivity : com.Atom2Universe.app.audio.AudioThemedActivity() {
         cloudSetting = findViewById(R.id.cloud_setting)
         cloudSettingIcon = findViewById(R.id.cloud_setting_icon)
         cloudSettingSummary = findViewById(R.id.cloud_setting_summary)
+        personalFontsSetting = findViewById(R.id.personal_fonts_setting)
+        personalFontsSummary = findViewById(R.id.personal_fonts_summary)
+        personalFontsSetting.setOnClickListener { showPersonalFontsOptions() }
 
         backButton.setOnClickListener {
             navigateBackToHub()
@@ -357,6 +427,7 @@ class HubSettingsActivity : com.Atom2Universe.app.audio.AudioThemedActivity() {
     }
 
     override fun onDestroy() {
+        fontsProgress?.dismiss()
         super.onDestroy()
         activityScope.cancel()
     }

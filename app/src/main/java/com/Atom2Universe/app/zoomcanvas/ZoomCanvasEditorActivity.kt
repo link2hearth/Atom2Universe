@@ -143,6 +143,7 @@ class ZoomCanvasEditorActivity : ThemedActivity() {
     private var textStyle = 0
     private var textFont = ""
     private val typefaces = HashMap<String, Typeface>()
+    private var fontRevision = com.Atom2Universe.app.fonts.PersonalFonts.revision
     private val measurePaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG).apply { isLinearText = true }
     private var linkedIndex = -1
     private var lastPaletteId = ""
@@ -652,6 +653,10 @@ class ZoomCanvasEditorActivity : ThemedActivity() {
 
     /** Appelée aussi par les fils qui cuisent un cache raster : d'où le verrou (le gestionnaire de polices n'en a pas). */
     private fun typefaceFor(font: String, style: Int): Typeface = synchronized(typefaces) {
+        if (fontRevision != com.Atom2Universe.app.fonts.PersonalFonts.revision) {
+            fontRevision = com.Atom2Universe.app.fonts.PersonalFonts.revision
+            typefaces.clear()
+        }
         typefaces.getOrPut("$font|$style") {
             val base = if (font.isEmpty()) Typeface.DEFAULT else FontManager.getTypeface(this, font)
             val bold = style and TextItem.BOLD != 0
@@ -803,10 +808,11 @@ class ZoomCanvasEditorActivity : ThemedActivity() {
     }
 
     private fun showFontSheet(current: String, onPick: (String) -> Unit) {
+        FontManager.init(this)
         val items = ArrayList<SheetItem>()
         items.add(SheetItem(R.drawable.ic_zc_text, getString(R.string.zc_font_default), checked = current.isEmpty()) { onPick("") })
-        for (name in FontManager.getAvailableFontNames()) {
-            items.add(SheetItem(R.drawable.ic_zc_text, name, checked = name == current) { onPick(name) })
+        for ((id, name) in FontManager.getAvailableFonts()) {
+            items.add(SheetItem(R.drawable.ic_zc_text, name, checked = id == current) { onPick(id) })
         }
         actionSheet(getString(R.string.zc_font), items).show()
     }
