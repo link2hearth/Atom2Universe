@@ -147,17 +147,24 @@ class AboutActivity : ThemedActivity() {
                 }
             }
         }
+        val biologyFiles = runCatching { assets.list("science/biology").orEmpty().toSet() }
+            .getOrDefault(emptySet())
         mapOf(
             R.id.about_filament_license to ("FILAMENT-LICENSE.txt" to R.string.bio_license_offline),
             R.id.about_facial_license_offline to ("Z-ANATOMY-LICENSE.txt" to R.string.bio_facial_license_offline),
             R.id.about_detail_license_offline to ("DETAIL-ATLASES-LICENSE.txt" to R.string.bio_detail_license_offline),
         ).forEach { (id, document) ->
-            findViewById<View>(id).setOnClickListener { showBiologyLicense(document.first, document.second) }
+            findViewById<View>(id).apply {
+                visibility = if (document.first in biologyFiles) View.VISIBLE else View.GONE
+                setOnClickListener { showBiologyLicense(document.first, document.second) }
+            }
         }
     }
 
     private fun showBiologyLicense(file: String, title: Int) {
-        val license = assets.open("science/biology/$file").bufferedReader().use { it.readText() }
+        val license = runCatching {
+            assets.open("science/biology/$file").bufferedReader().use { it.readText() }
+        }.getOrNull() ?: return
         val padding = (20 * resources.displayMetrics.density).toInt()
         val content = TextView(this).apply {
             text = license

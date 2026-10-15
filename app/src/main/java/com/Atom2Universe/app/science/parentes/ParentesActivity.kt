@@ -448,6 +448,7 @@ class ParentesActivity : ThemedActivity() {
     }
 
     private fun bestiaryButton(id: String): View? {
+        if (!com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "bestiary")) return null
         val species = bestiaryIndex?.forNode(id) ?: return null
         return button(getString(R.string.be_open_profile)) {
             startActivity(Intent(this, BestiaryActivity::class.java)
@@ -458,6 +459,7 @@ class ParentesActivity : ThemedActivity() {
     }
 
     private fun mycologyButton(id: String): View? {
+        if (!com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "mycology")) return null
         val species = mycologyIndex?.forNode(id) ?: return null
         return button(getString(R.string.myco_open_profile)) {
             startActivity(Intent(this, MycologyActivity::class.java)
@@ -468,6 +470,7 @@ class ParentesActivity : ThemedActivity() {
     }
 
     private fun botanyButton(id:String):View? {
+        if (!com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "botany")) return null
         if(repo.tree.nodes[id]?.species!=true || BotanyLifeIndex.GREEN_ROOT !in repo.tree.ancestors(id))return null
         return button(getString(R.string.bot_life_open_atlas)) {
             startActivity(Intent(this,BotanyActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE,true)

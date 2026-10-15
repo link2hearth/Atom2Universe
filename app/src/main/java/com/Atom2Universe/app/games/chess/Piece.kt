@@ -37,22 +37,6 @@ data class Piece(
         type.notation.lowercase()
     }
 
-    /**
-     * Chemin du sprite pour cette pièce
-     */
-    fun getSpritePath(): String {
-        val pieceName = when (type) {
-            PieceType.PAWN -> "pawn"
-            PieceType.KNIGHT -> "knight"
-            PieceType.BISHOP -> "bishop"
-            PieceType.ROOK -> "rook"
-            PieceType.QUEEN -> "queen"
-            PieceType.KING -> "king"
-        }
-        // Pièces noires ont "1" à la fin (pawn1.png, knight1.png, etc.)
-        val suffix = if (color == PieceColor.BLACK) "1" else ""
-        return "Assets/sprites/$pieceName$suffix.png"
-    }
 }
 
 /**

@@ -5,12 +5,12 @@ enum class RouletteSymbol(
     val assetPath: String?,
     val weight: Float
 ) {
-    STAR    ("★",  "Assets/Image/terre.png",          1f),
-    EARTH   ("🌍", "Assets/Image/jupiter.png",         1f),
+    STAR    ("★",  "textures/terre.png",          1f),
+    EARTH   ("🌍", "textures/jupiter.png",         1f),
     SUN     ("☀",  null,             1f),
-    MOON    ("🌕", "Assets/Image/FullMoon2010.png",    1f),
-    SATURN  ("🪐", "Assets/Image/saturn.png",          1f),
-    BLACKHOLE("⚫","Assets/sprites/blackhole.jpg",     1f),
+    MOON    ("🌕", "textures/FullMoon2010.png",    1f),
+    SATURN  ("🪐", "textures/saturn.png",          1f),
+    BLACKHOLE("⚫","textures/blackhole.jpg",     1f),
     JOKER   ("🃏", null,    0.5f);
 
     val isJoker: Boolean get() = this == JOKER

@@ -1,17 +1,17 @@
 package com.Atom2Universe.app.crypto.clicker
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.RectF
+import android.graphics.Path
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.Choreographer
 import android.view.View
 import kotlin.math.exp
 import kotlin.math.ln
+import kotlin.math.sin
+import kotlin.random.Random
 
 /**
  * Port fidèle de l'animation JS du lapin (updateHeaderRabbitAnimation).
@@ -22,7 +22,7 @@ class RabbitSpriteView @JvmOverloads constructor(
 ) : View(context, attrs) {
 
     companion object {
-        private const val FRAME_W = 16
+        const val WIDTH_TO_HEIGHT = 1.8f
         private const val FRAME_H = 16
         private const val FRAME_COUNT = 4
         private const val MIN_CPS = 2f
@@ -31,6 +31,8 @@ class RabbitSpriteView @JvmOverloads constructor(
         private const val MIN_FRAME_MS = 67L   // ~15 fps au rythme max
         private const val MAX_FRAME_MS = 1000L // 1 fps au rythme min
         private const val CLICK_WINDOW_MS = 500L
+        private const val DUST_LIFETIME_MS = 900L
+        private const val DUST_INTERVAL_MS = 90L
 
         // Avancée vers le centre en mode 2 lignes
         private const val FAST_CPS_THRESHOLD = 10f      // seuil pour démarrer l'avancée
@@ -49,13 +51,24 @@ class RabbitSpriteView @JvmOverloads constructor(
     private var returnStartTime = 0L
     private var currentProgress = 0f
 
-    private val bitmap: Bitmap? = try {
-        context.assets.open("Assets/sprites/Lapin.png").use { BitmapFactory.decodeStream(it) }
-    } catch (_: Exception) { null }
-
-    private val paint = Paint(Paint.FILTER_BITMAP_FLAG)
-    private val src = Rect()
-    private val dst = RectF()
+    private val paint = Paint().apply { isAntiAlias = false }
+    private val rabbitArt = RabbitCoat.entries.random().animation()
+    private val dustPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFE2DCD0.toInt() }
+    private val curl = Path()
+    private class Dust {
+        var bornAt = -DUST_LIFETIME_MS
+        var x = 0f
+        var drift = 0f
+        var rise = 0f
+        var size = 0f
+        var phase = 0f
+    }
+    private val dust = Array(40) { Dust() }
+    private var nextDust = 0
+    private var lastDustAt = -DUST_INTERVAL_MS
+    private var bounce = 0f
+    private var bounceVelocity = 0f
+    private var lastEffectsAt = 0L
 
     private val clickHistory = ArrayDeque<Long>()
     private var frameIndex = 0
@@ -65,7 +78,9 @@ class RabbitSpriteView @JvmOverloads constructor(
     private val tick = object : Choreographer.FrameCallback {
         override fun doFrame(frameTimeNanos: Long) {
             // Même horloge que registerClick() pour que les comparaisons soient cohérentes
-            updateFrame(System.currentTimeMillis())
+            val now = SystemClock.uptimeMillis()
+            updateFrame(now)
+            updateEffects(now)
             invalidate()
             choreographer.postFrameCallback(this)
         }
@@ -73,9 +88,74 @@ class RabbitSpriteView @JvmOverloads constructor(
 
     /** Appelé à chaque clic enregistré depuis l'activité. */
     fun registerClick() {
-        val now = System.currentTimeMillis()
+        val now = SystemClock.uptimeMillis()
         clickHistory.addLast(now)
         purgeOldClicks(now)
+        bounceVelocity = (bounceVelocity + 5f).coerceAtMost(9f)
+        emitDust(now)
+    }
+
+    private fun emitDust(now: Long) {
+        if (now - lastDustAt < DUST_INTERVAL_MS) return
+        lastDustAt = now
+        repeat(if (currentProgress > 0f && !isReturning) 4 else 3) {
+            val particle = dust[nextDust]
+            nextDust = (nextDust + 1) % dust.size
+            particle.bornAt = now
+            particle.x = .04f + Random.nextFloat() * .08f
+            particle.drift = .45f + Random.nextFloat() * .22f
+            particle.rise = .22f + Random.nextFloat() * .22f
+            particle.size = .07f + Random.nextFloat() * .04f
+            particle.phase = Random.nextFloat() * 6.28f
+        }
+    }
+
+    private fun updateEffects(now: Long) {
+        val dt = if (lastEffectsAt == 0L) 0f else ((now - lastEffectsAt) / 1000f).coerceIn(0f, .05f)
+        lastEffectsAt = now
+        if (frameIndex != 0 && clickHistory.lastOrNull()?.let { now - it < MAX_CLICK_GAP_MS } == true) {
+            emitDust(now)
+        }
+        // Damped spring: repeated taps add energy without restarting the jump abruptly.
+        bounceVelocity += (-85f * bounce - 16f * bounceVelocity) * dt
+        bounce = (bounce + bounceVelocity * dt).coerceAtMost(.8f)
+        if (bounce < 0f) {
+            bounce = 0f
+            bounceVelocity = 0f
+        }
+        if (bounce < .001f && kotlin.math.abs(bounceVelocity) < .01f) {
+            bounce = 0f
+            bounceVelocity = 0f
+        }
+    }
+
+    private fun drawDust(canvas: Canvas, now: Long) {
+        val spriteSize = minOf(width, height).toFloat()
+        val rabbitLeft = width - spriteSize
+        val rabbitTop = (height - spriteSize) / 2f
+        for (particle in dust) {
+            val age = now - particle.bornAt
+            if (age < 0L || age >= DUST_LIFETIME_MS) continue
+            val progress = age.toFloat() / DUST_LIFETIME_MS
+            val x = rabbitLeft + (particle.x - particle.drift * progress) * spriteSize
+            val wave = sin(progress * 6.28f + particle.phase) * .045f * progress
+            val y = rabbitTop + (.86f - particle.rise * progress + wave) * spriteSize
+            val radius = particle.size * spriteSize * (.65f + 1.5f * progress)
+            val fade = 1f - progress
+            dustPaint.style = Paint.Style.FILL
+            dustPaint.alpha = (fade * fade * 135).toInt()
+            canvas.drawCircle(x, y, radius, dustPaint)
+            // A bright open curl remains legible against the clicker's black background.
+            curl.reset()
+            curl.moveTo(x - radius, y)
+            curl.cubicTo(x - radius, y - radius, x + radius, y - radius, x + radius, y)
+            curl.cubicTo(x + radius, y + radius * .7f, x, y + radius * .7f, x, y)
+            dustPaint.style = Paint.Style.STROKE
+            dustPaint.strokeWidth = (spriteSize * .025f).coerceAtLeast(1f)
+            dustPaint.strokeCap = Paint.Cap.ROUND
+            dustPaint.alpha = (fade * 190).toInt()
+            canvas.drawPath(curl, dustPaint)
+        }
     }
 
     private fun purgeOldClicks(now: Long) {
@@ -160,26 +240,36 @@ class RabbitSpriteView @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        lastEffectsAt = 0L
         choreographer.postFrameCallback(tick)
     }
 
     override fun onDetachedFromWindow() {
         choreographer.removeFrameCallback(tick)
+        bounce = 0f
+        bounceVelocity = 0f
+        dust.forEach { it.bornAt = -DUST_LIFETIME_MS }
         super.onDetachedFromWindow()
     }
 
     override fun onDraw(canvas: Canvas) {
-        val bmp = bitmap ?: return
-        src.set(frameIndex * FRAME_W, 0, (frameIndex + 1) * FRAME_W, FRAME_H)
-        dst.set(0f, 0f, width.toFloat(), height.toFloat())
-        canvas.drawBitmap(bmp, src, dst, paint)
+        drawDust(canvas, SystemClock.uptimeMillis())
+        val saved = canvas.save()
+        val spriteSize = minOf(width, height)
+        canvas.translate((width - spriteSize).toFloat(), (height - spriteSize) / 2f)
+        // Keep the ears inside the view even at the highest point of the jump.
+        canvas.translate(0f, -spriteSize * .09f * bounce)
+        val scale = 1f - .12f * bounce
+        canvas.scale(scale, scale, spriteSize / 2f, spriteSize.toFloat())
+        rabbitArt.draw(canvas, paint, frameIndex, spriteSize, spriteSize)
+        canvas.restoreToCount(saved)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val h = MeasureSpec.getSize(heightMeasureSpec).coerceAtLeast(
             (FRAME_H * resources.displayMetrics.density * 2).toInt()
         )
-        val w = h // sprite carré 16×16
+        val w = (h * WIDTH_TO_HEIGHT).toInt() // sprite carré + place pour la fumée derrière lui
         setMeasuredDimension(resolveSize(w, widthMeasureSpec), resolveSize(h, heightMeasureSpec))
     }
 }

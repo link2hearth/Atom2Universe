@@ -20,7 +20,7 @@ import java.security.MessageDigest
 @Config(sdk = [34], manifest = Config.NONE)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class BestiaryIllustrationTest {
-    private val assets = File("src/main/assets/bestiary")
+    private val assets = File("src/main/assets/science/bestiary")
     private val output = File("build/reports/bestiary-illustrations").apply { mkdirs() }
     private fun file(animal: AnimalSpecies) = File(assets, "${animal.id}.webp")
 

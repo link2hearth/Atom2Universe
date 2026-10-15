@@ -13,7 +13,7 @@ internal data class EncyclopediaProfile(
 internal object AnimalEncyclopediaRepository {
     fun load(context: Context, id: String, language: String): EncyclopediaProfile {
         val locale = if (language == "fr") "fr" else "en"
-        val json = context.assets.open("bestiary/encyclopedia/$locale/$id.json")
+        val json = context.assets.open("science/bestiary/encyclopedia/$locale/$id.json")
             .bufferedReader(Charsets.UTF_8).use { it.readText() }
         val root = JSONObject(json)
         val sectionJson = root.getJSONObject("sections")

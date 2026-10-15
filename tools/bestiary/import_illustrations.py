@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "tools/bestiary/illustrated_species.json"
-ASSETS = ROOT / "app/src/main/assets/bestiary"
+ASSETS = ROOT / "app/src/main/assets/science/bestiary"
 GROUPS = {"mammals", "birds", "reptiles", "amphibians", "fish", "invertebrates"}
 ID_RE = re.compile(r"[a-z][a-z0-9_]*\Z")
 

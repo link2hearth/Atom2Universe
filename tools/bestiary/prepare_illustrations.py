@@ -101,7 +101,7 @@ def main():
             raise ValueError("Unsafe animal ID")
         if row["id"] in used_ids or row["scientific"] in used_scientific:
             raise ValueError(f"Already published, generated, or reserved: {row['scientific']}")
-        if (ROOT / "app/src/main/assets/bestiary" / f"{row['id']}.webp").exists():
+        if (ROOT / "app/src/main/assets/science/bestiary" / f"{row['id']}.webp").exists():
             raise ValueError("An asset with this ID already exists")
         if row["scientific"] not in inventory or inventory[row["scientific"]]["group"] != row["group"]:
             raise ValueError("Species identity/group does not match the tree inventory")

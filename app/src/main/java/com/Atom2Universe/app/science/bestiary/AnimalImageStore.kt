@@ -73,7 +73,7 @@ class AnimalImageStore internal constructor(
         peek(id)?.let { return it }
         if (!id.matches(Regex("[a-z0-9_]+"))) return null
         return try {
-            val path = "bestiary/$id.webp"
+            val path = "science/bestiary/$id.webp"
             val dimensions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
             openAsset(path).use { BitmapFactory.decodeStream(it, null, dimensions) }
             if (dimensions.outWidth <= 0 || dimensions.outHeight <= 0) return null

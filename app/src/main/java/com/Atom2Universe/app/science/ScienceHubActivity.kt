@@ -153,9 +153,10 @@ class ScienceHubActivity : BaseHubActivity() {
             defaultColorRes = R.color.science_tile_cosmic,
             activityClass = CosmicScaleActivity::class.java
         )
-    )
+    ).filter { ScienceAssets.isAvailable(this, it.id) }
 
     override fun onTileClicked(tile: HubTile) {
+        if (!ScienceAssets.isAvailable(this, tile.id)) return
         when (tile.id) {
             "periodic_table" -> startActivity(
                 Intent(this, PeriodicTableActivity::class.java)

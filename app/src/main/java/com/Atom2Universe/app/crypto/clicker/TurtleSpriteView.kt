@@ -1,12 +1,8 @@
 package com.Atom2Universe.app.crypto.clicker
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.Choreographer
 import android.view.View
@@ -22,13 +18,7 @@ class TurtleSpriteView @JvmOverloads constructor(
         private const val FRAME_DURATION_MS = 500L
     }
 
-    private val bitmap: Bitmap? = try {
-        context.assets.open("Assets/sprites/Tortue.png").use { BitmapFactory.decodeStream(it) }
-    } catch (_: Exception) { null }
-
-    private val paint = Paint(Paint.FILTER_BITMAP_FLAG)
-    private val src = Rect()
-    private val dst = RectF()
+    private val paint = Paint().apply { isAntiAlias = false }
 
     private var frameIndex = 0
     private var lastFrameAt = 0L
@@ -58,10 +48,7 @@ class TurtleSpriteView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        val bmp = bitmap ?: return
-        src.set(frameIndex * FRAME_W, 0, (frameIndex + 1) * FRAME_W, FRAME_H)
-        dst.set(0f, 0f, width.toFloat(), height.toFloat())
-        canvas.drawBitmap(bmp, src, dst, paint)
+        ClickerAnimalArt.turtle.draw(canvas, paint, frameIndex, width, height)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

@@ -14,7 +14,7 @@ import java.io.File
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class PlantHerbariumTest {
     @Test fun toutesLesPlanchesSontLisiblesCompletesEtAssocieesAuBonCatalogue() {
-        val directory = File("src/main/assets/botany/herbarium")
+        val directory = File("src/main/assets/science/botany/herbarium")
         assertEquals(552, PlantHerbarium.speciesIds.size)
         assertEquals(PlantHerbarium.speciesIds.map { "$it.webp" }.toSet(), directory.list()!!.toSet())
         for (id in PlantHerbarium.speciesIds) {

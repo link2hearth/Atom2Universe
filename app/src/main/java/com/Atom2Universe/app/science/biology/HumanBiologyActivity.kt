@@ -76,6 +76,10 @@ class HumanBiologyActivity : ThemedActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "human_biology")) {
+            finish()
+            return
+        }
         journey = AnatomyJourneys.find(savedInstanceState?.getString("bio_journey"))
         journeyStep = savedInstanceState?.getInt("bio_journey_step", 0) ?: 0
         beforeJourney = savedInstanceState?.getBundle("bio_before_journey")

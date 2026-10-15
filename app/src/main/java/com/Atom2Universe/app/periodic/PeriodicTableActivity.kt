@@ -78,6 +78,10 @@ class PeriodicTableActivity : ThemedActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    if (!com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "periodic_table")) {
+      finish()
+      return
+    }
     setContentView(R.layout.activity_periodic_table)
     enableImmersiveMode()
     // Le studio montre toutes les cartes sans passer par le gacha : un outil de test, pas pour les joueurs.

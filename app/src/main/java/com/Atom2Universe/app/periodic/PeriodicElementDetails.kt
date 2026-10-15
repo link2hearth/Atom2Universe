@@ -75,10 +75,10 @@ class PeriodicElementDescriptionProvider(private val context: Context) {
     private val missing = mutableSetOf<String>()
 
     fun loadRoot(context: Context, lang: String): JSONObject? =
-      loadAsset(context, "Elements/periodic_descriptions_$lang.json")
+      loadAsset(context, "science/Elements/periodic_descriptions_$lang.json")
 
     private fun loadProperties(context: Context, lang: String): JSONObject? =
-      loadAsset(context, "Elements/periodic_properties_$lang.json")
+      loadAsset(context, "science/Elements/periodic_properties_$lang.json")
 
     @Synchronized
     private fun loadAsset(context: Context, path: String): JSONObject? {

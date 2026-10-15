@@ -15,7 +15,7 @@ internal data class BotanyArticle(
 internal object BotanyEncyclopediaRepository {
     fun load(context: Context, id: String, language: String): BotanyArticle {
         val locale = if (language == "fr") "fr" else "en"
-        val path = "botany/encyclopedia/$locale/$id.json"
+        val path = "science/botany/encyclopedia/$locale/$id.json"
         val root = context.assets.open(path).bufferedReader(Charsets.UTF_8).use { JSONObject(it.readText()) }
         val sectionJson = root.getJSONArray("sections")
         val sections = (0 until sectionJson.length()).map { index ->

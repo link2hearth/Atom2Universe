@@ -161,7 +161,9 @@ class GachaActivity : ThemedActivity() {
         }
 
         findViewById<ImageButton>(R.id.gacha_back).setOnClickListener { finish() }
-        findViewById<ImageButton>(R.id.gacha_open_periodic).setOnClickListener {
+        findViewById<ImageButton>(R.id.gacha_open_periodic).apply {
+            visibility = if (com.Atom2Universe.app.science.ScienceAssets.isAvailable(this@GachaActivity, "periodic_table")) View.VISIBLE else View.GONE
+        }.setOnClickListener {
             val intent = Intent(this, PeriodicTableActivity::class.java).apply {
                 putExtra(PeriodicTableActivity.EXTRA_SOURCE, PeriodicTableActivity.SOURCE_GACHA)
             }

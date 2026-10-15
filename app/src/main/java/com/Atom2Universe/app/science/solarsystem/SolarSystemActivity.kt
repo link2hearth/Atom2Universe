@@ -1,7 +1,6 @@
 package com.Atom2Universe.app.science.solarsystem
 
 import com.Atom2Universe.app.util.ImmersiveDatePickerDialog as DatePickerDialog
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -44,7 +43,7 @@ class SolarSystemActivity : ThemedActivity() {
     private lateinit var tvPlanetTilt: TextView
     private lateinit var tvDate: TextView
     private lateinit var btnBodySelector: TextView
-    private lateinit var btnSystemSwitch: ImageButton
+    private lateinit var btnSystemSwitch: TextView
 
     // Époque fixe J2000.0 — elapsedSimDays est le nombre de jours depuis cette date.
     // Les initialAngleDeg dans PlanetData correspondent aux longitudes héliocentrique à J2000.
@@ -146,12 +145,14 @@ class SolarSystemActivity : ThemedActivity() {
             contentDescription = getString(R.string.solar_change_date)
             setOnClickListener { showDatePicker() }
         }
-        // Bouton bascule vers la vue Terre-Lune — icône du mode courant (système solaire)
-        btnSystemSwitch = ImageButton(this).apply {
-            setImageBitmap(loadAssetBitmap("Assets/sprites/ministar.png"))
-            scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
-            background = null
-            setPadding(dp(3), dp(3), dp(3), dp(3))
+        // Bouton bascule vers la vue Terre-Lune
+        btnSystemSwitch = TextView(this).apply {
+            setText(R.string.solar_switch_earth_moon)
+            textSize = 12f
+            setTextColor(palette.accent)
+            gravity = Gravity.CENTER
+            setPadding(dp(8), dp(4), dp(8), dp(4))
+            setBackgroundColor(palette.raised)
             contentDescription = getString(R.string.solar_open_earth_moon)
             setOnClickListener {
                 val intent = android.content.Intent(this@SolarSystemActivity, EarthMoonActivity::class.java)
@@ -175,7 +176,7 @@ class SolarSystemActivity : ThemedActivity() {
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply { leftMargin = dp(6); rightMargin = dp(6) })
         topBar.addView(View(this), LinearLayout.LayoutParams(0, dp(1), 1f))  // spacer flexible
-        topBar.addView(btnSystemSwitch, LinearLayout.LayoutParams(dp(36), dp(36))
+        topBar.addView(btnSystemSwitch, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp(32))
             .apply { rightMargin = dp(6) })
         topBar.addView(btnBodySelector, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, dp(32)
@@ -479,10 +480,6 @@ class SolarSystemActivity : ThemedActivity() {
     }
 
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
-
-    private fun loadAssetBitmap(path: String) =
-        try { assets.open(path).use { BitmapFactory.decodeStream(it) } }
-        catch (_: java.io.IOException) { null }
 
     override fun onResume() {
         super.onResume()

@@ -18,7 +18,7 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
     private val land = RectF()
     private val sprites = FarmSprites(context)
     private val scenery by lazy { FarmScenery(sprites) }
-    private val atlas = context.assets.open("generated/garden/field_vehicles.png").use { BitmapFactory.decodeStream(it) }
+    private val atlas = context.assets.open("garden/field_vehicles.png").use { BitmapFactory.decodeStream(it) }
     // Measured alpha bounds, including the combine's header which extends across an atlas third.
     private val sources = listOf(Rect(125, 96, 461, 791), Rect(644, 96, 1120, 802), Rect(1161, 80, 1754, 809))
     private val field get() = state.largeFields.fields[state.largeFields.selected]

@@ -62,7 +62,7 @@ def profiles():
         if record.get("source_audit_version") == 1:
             errors, _, _ = audit(record)
             assert not errors, f"Source sentence accounting failed: {file}: {errors}"
-        assert (ROOT / f"app/src/main/assets/bestiary/{animal_id}.webp").is_file(), f"Missing illustration: {file}"
+        assert (ROOT / f"app/src/main/assets/science/bestiary/{animal_id}.webp").is_file(), f"Missing illustration: {file}"
         sources = record["sources"]
         assert len(sources) >= 2 and len({s["url"] for s in sources}) == len(sources), file
         assert len({urlparse(s["url"]).hostname for s in sources}) >= 2, file
@@ -94,7 +94,7 @@ def android_text(text):
 def generate(records):
     # Long encyclopedia prose lives in localized assets so R$string stays within
     # Android's class-file size limit as the catalog grows.
-    assets = ROOT / "app/src/main/assets/bestiary/encyclopedia"
+    assets = ROOT / "app/src/main/assets/science/bestiary/encyclopedia"
     for locale in ("en", "fr"):
         directory = assets / locale
         directory.mkdir(parents=True, exist_ok=True)

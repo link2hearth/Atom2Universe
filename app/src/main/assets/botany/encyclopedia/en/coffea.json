@@ -1,9 +1,0 @@
-{
-  "id": "coffea",
-  "sections": [
-    {"title": "Species and habit", "text": "The catalogue entry Coffea refers here to Coffea arabica, Arabica coffee, rather than the whole genus. In the wild it is an evergreen shrub or small tree about 2–8 m tall, native to humid forests of Ethiopia and neighbouring parts of eastern Africa. In cultivation it is often pruned shorter."},
-    {"title": "Fruits and coffee", "text": "The fruits are bright red drupes, sometimes yellow or purple, usually with two seeds. The pulp is eaten in some uses; dried, processed and roasted seeds are brewed as coffee and contain caffeine. The plate matches the branches, berries and cut seeds."}
-  ],
-  "sources": [{"title": "Coffea arabica — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:747038-1/general-information"}],
-  "related": ["coffea_canephora", "coffea_liberica"]
-}

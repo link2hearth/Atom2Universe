@@ -68,7 +68,7 @@ def main():
             raise ValueError("Refusing to replace a different existing species identity")
         if any(r["scientific_name"] == item["scientific_name"] and r["id"] != item["id"] for r in by_id.values()):
             raise ValueError("A scientific species already has another illustration ID")
-        target = ROOT / "app/src/main/assets/bestiary" / plate.name
+        target = ROOT / "app/src/main/assets/science/bestiary" / plate.name
         if target.exists() and hashlib.sha256(target.read_bytes()).digest() != hashlib.sha256(plate.read_bytes()).digest():
             if not args.authorized_retry:
                 raise ValueError("Refusing to overwrite a different existing illustration")

@@ -168,7 +168,7 @@
     <string name="solar_mode_close">Close</string>
     <string name="solar_mode_log">Log.</string>
     <string name="solar_mode_real">Semi-realistic</string>
-    <string name="solar_switch_earth_moon">E-M</string>
+    <string name="solar_switch_earth_moon">Earth–Moon</string>
     <string name="solar_switch_coming_soon">Earth-Moon view coming soon</string>
     <string name="solar_play_pause">Play / Pause</string>
     <string name="solar_info_radius">Diameter</string>

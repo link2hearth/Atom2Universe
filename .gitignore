@@ -51,11 +51,6 @@ play-billing*.json
 # Polices et licences optionnelles, conservées uniquement sur cette machine
 /app/src/main/assets/fonts/
 
-# Images de puzzle optionnelles, conservées uniquement sur cette machine
-/app/src/main/assets/Assets/Puzzle/
-
-# Collections de cartes optionnelles, conservées uniquement sur cette machine
-/app/src/main/assets/Assets/Cartes/**/*.jpg
-/app/src/main/assets/Assets/Cartes/**/*.jpeg
-/app/src/main/assets/Assets/Cartes/**/*.png
-/app/src/main/assets/Assets/Cartes/**/*.webp
+# Packs de données et d'images optionnels, conservés uniquement sur cette machine
+/app/src/main/assets/science/
+/app/src/main/assets/Assets/

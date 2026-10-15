@@ -4115,7 +4115,7 @@ internal class CaveRenderer(
             bUMask  = it.uniform("u_mask")
         }
         sunTex  = uploadSkyTexture(com.Atom2Universe.app.graphics.SunArtwork.createBitmap())
-        moonTex = loadSkyTexture("Assets/Image/FullMoon2010.png")
+        moonTex = loadSkyTexture("textures/FullMoon2010.png")
         val ids = IntArray(1); GLES30.glGenBuffers(1, ids, 0); billboardVbo = ids[0]
     }
 

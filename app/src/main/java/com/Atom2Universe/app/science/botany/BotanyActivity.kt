@@ -91,6 +91,10 @@ class BotanyActivity : ThemedActivity() {
 
     override fun onCreate(savedInstanceState:Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "botany")) {
+            finish()
+            return
+        }
         tab=Tab.entries.firstOrNull{it.name==(savedInstanceState?.getString("tab") ?: prefs.getString("tab",null))} ?: Tab.EXPLORE
         search=savedInstanceState?.getString("search") ?: prefs.getString("search","").orEmpty()
         sort=PlantSort.entries.firstOrNull{it.name==(savedInstanceState?.getString("sort") ?: prefs.getString("sort",null))} ?: PlantSort.NAME

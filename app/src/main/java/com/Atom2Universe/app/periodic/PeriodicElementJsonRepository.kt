@@ -31,7 +31,7 @@ object PeriodicElementJsonRepository {
     @Synchronized
     fun load(context: Context) {
         if (data != null) return
-        val json = context.assets.open("Elements/periodic_table.json").bufferedReader().use { it.readText() }
+        val json = context.assets.open("science/Elements/periodic_table.json").bufferedReader().use { it.readText() }
         val elements = JSONObject(json).getJSONArray("elements")
         val map = mutableMapOf<Int, ElementJsonData>()
         for (i in 0 until elements.length()) {

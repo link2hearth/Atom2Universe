@@ -1,7 +1,6 @@
 package com.Atom2Universe.app.science.solarsystem
 
 import com.Atom2Universe.app.util.ImmersiveDatePickerDialog as DatePickerDialog
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -111,12 +110,14 @@ class EarthMoonActivity : ThemedActivity() {
             contentDescription = getString(R.string.solar_change_date)
             setOnClickListener { showDatePicker() }
         }
-        // Bouton bascule vers la vue Système solaire — icône du mode courant (Terre-Lune)
-        val btnSwitchSS = ImageButton(this).apply {
-            setImageBitmap(loadAssetBitmap("Assets/sprites/Planet_Terre.png"))
-            scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
-            background = null
-            setPadding(dp(3), dp(3), dp(3), dp(3))
+        // Bouton bascule vers la vue Système solaire
+        val btnSwitchSS = TextView(this).apply {
+            setText(R.string.hub_solar_title)
+            textSize = 12f
+            setTextColor(palette.accent)
+            gravity = Gravity.CENTER
+            setPadding(dp(8), dp(4), dp(8), dp(4))
+            setBackgroundColor(palette.raised)
             contentDescription = getString(R.string.solar_open_solar_system)
             setOnClickListener { finish() }
         }
@@ -131,7 +132,7 @@ class EarthMoonActivity : ThemedActivity() {
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply { leftMargin = dp(6); rightMargin = dp(6) })
         topBar.addView(View(this), LinearLayout.LayoutParams(0, dp(1), 1f))  // spacer flexible
-        topBar.addView(btnSwitchSS, LinearLayout.LayoutParams(dp(36), dp(36))
+        topBar.addView(btnSwitchSS, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp(32))
             .apply { rightMargin = dp(6) })
         topBar.addView(btnBodySelector, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, dp(32)))
@@ -359,7 +360,4 @@ class EarthMoonActivity : ThemedActivity() {
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
-    private fun loadAssetBitmap(path: String) =
-        try { assets.open(path).use { BitmapFactory.decodeStream(it) } }
-        catch (_: java.io.IOException) { null }
 }

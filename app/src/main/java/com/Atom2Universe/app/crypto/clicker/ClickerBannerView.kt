@@ -341,7 +341,7 @@ class ClickerBannerView @JvmOverloads constructor(
 
         val spritePx = (baseSpriteHeightDp * scale * density).toInt()
         rabbitView.layoutParams = (rabbitView.layoutParams as LayoutParams).also {
-            it.height = spritePx; it.width = spritePx
+            it.height = spritePx; it.width = (spritePx * RabbitSpriteView.WIDTH_TO_HEIGHT).toInt()
         }
         turtleView.layoutParams = (turtleView.layoutParams as LayoutParams).also {
             it.height = spritePx; it.width = spritePx * 3

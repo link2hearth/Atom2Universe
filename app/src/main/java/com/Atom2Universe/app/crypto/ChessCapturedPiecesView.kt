@@ -3,7 +3,6 @@ package com.Atom2Universe.app.crypto
 import com.Atom2Universe.app.R
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -11,6 +10,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.Atom2Universe.app.games.chess.Piece
 import com.Atom2Universe.app.games.chess.PieceColor
+import com.Atom2Universe.app.games.chess.ChessPieceImages
 import com.Atom2Universe.app.games.chess.PieceType
 
 /**
@@ -51,15 +51,7 @@ class ChessCapturedPiecesView @JvmOverloads constructor(
         for (color in PieceColor.values()) {
             for (type in PieceType.values()) {
                 val piece = Piece(type, color)
-                val path = piece.getSpritePath()
-                runCatching {
-                    context.assets.open(path).use { stream ->
-                        val full = BitmapFactory.decodeStream(stream) ?: return@use
-                        bitmaps[piece.notation] =
-                            Bitmap.createScaledBitmap(full, targetSize, targetSize, true)
-                        if (full !== bitmaps[piece.notation]) full.recycle()
-                    }
-                }
+                bitmaps[piece.notation] = ChessPieceImages.load(context.assets, piece, targetSize)
             }
         }
     }

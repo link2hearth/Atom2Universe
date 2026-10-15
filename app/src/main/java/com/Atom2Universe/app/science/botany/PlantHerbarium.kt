@@ -100,7 +100,7 @@ internal object PlantHerbarium {
 
     fun decode(key: PlantImageKey): Bitmap {
         val assets = A2UApplication.appContext.assets
-        val path = "botany/herbarium/${key.id}.webp"
+        val path = "science/botany/herbarium/${key.id}.webp"
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         assets.open(path).use { BitmapFactory.decodeStream(it, null, bounds) }
         require(bounds.outWidth > 0 && bounds.outHeight > 0) { "Invalid herbarium plate: ${key.id}" }

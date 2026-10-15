@@ -80,6 +80,10 @@ class MycologyActivity : ThemedActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "mycology")) {
+            finish()
+            return
+        }
         tab = Tab.entries.firstOrNull { it.name == (savedInstanceState?.getString("tab") ?: prefs.getString("tab", null)) } ?: Tab.LOOKALIKES
         prefs.getStringSet("statuses", null)?.forEach { name -> FungusStatus.entries.firstOrNull { it.name == name }?.let { statuses.add(it) } }
         criteria.addAll(FungusCriteria.known(prefs.getStringSet("criteria", null) ?: emptySet()))

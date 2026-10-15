@@ -128,7 +128,7 @@ def main():
                 and attempt.get("status", "accepted") == "accepted"):
             final_art[attempt["id"]] = attempt
     for animal_id, record in final_art.items():
-        file = ROOT / f"app/src/main/assets/bestiary/{animal_id}.webp"
+        file = ROOT / f"app/src/main/assets/science/bestiary/{animal_id}.webp"
         record.update(asset=str(file), sha256=hashlib.sha256(file.read_bytes()).hexdigest(), bytes=file.stat().st_size)
     (destination / "ILLUSTRATIONS_EXTENSION.json").write_text(json.dumps(
         {"tool": "built-in ImageGen", "attempts": attempts, "final": list(final_art.values())}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -151,7 +151,7 @@ def main():
     write_illustration_wave_tracking(
         destination, ROOT, original_scientific, extended, pending,
         published_ids, illustrated_ids, catalog_ids)
-    total_bytes = sum((ROOT / f"app/src/main/assets/bestiary/{animal_id}.webp").stat().st_size for animal_id in catalog_ids)
+    total_bytes = sum((ROOT / f"app/src/main/assets/science/bestiary/{animal_id}.webp").stat().st_size for animal_id in catalog_ids)
     lines = ["## Extension encyclopédique — en cours", "",
              f"Inventaire : {len(inventory)} espèces animales. Catalogue natif : {len(catalog_ids)} identités uniques ({len(original)} notices initiales, {len(reviewed)} articles encyclopédiques enrichis et {len(illustrated_ids)} fiches avec illustration seule, dédoublonnés). "
              f"{counts['integrated_brief']} notices initiales restent à enrichir ; {counts['research_and_review']} recherches sont en cours de contrôle et {counts['queued']} espèces restent en file.", "",
@@ -167,7 +167,7 @@ def main():
     for record in sorted(reviewed, key=lambda r: r["name"]["fr"]):
         words = [sum(len(v[lang].split()) for v in record["sections"].values()) for lang in ("en", "fr")]
         links = "; ".join(f"[{s['title']['fr']}]({s['url']})" for s in record["sources"])
-        size = (ROOT / f"app/src/main/assets/bestiary/{record['id']}.webp").stat().st_size
+        size = (ROOT / f"app/src/main/assets/science/bestiary/{record['id']}.webp").stat().st_size
         lines.append(f"| {record['name']['fr']} | {record['scientific']} | {words[0]} / {words[1]} | {links} | {size:,} octets |")
     verification = ROOT / "app/build/bestiary_expansion/verification_state.json"
     if verification.exists():
@@ -277,7 +277,7 @@ def write_illustration_wave_tracking(destination, root, initial_by_scientific, e
             else:
                 control = "À contrôler" if path else "En attente du PNG"
 
-            asset_file = root / f"app/src/main/assets/bestiary/{animal_id}.webp"
+            asset_file = root / f"app/src/main/assets/science/bestiary/{animal_id}.webp"
             is_native = animal_id in native_ids
             if (is_native and asset_file.is_file() and path and attempt.get("path")
                     and path != attempt["path"]):

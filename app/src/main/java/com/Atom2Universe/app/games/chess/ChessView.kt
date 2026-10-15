@@ -5,7 +5,6 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import java.io.IOException
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -314,72 +313,14 @@ class ChessView @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Charge les sprites des pièces depuis les assets
-     */
+    /** Charge le pack optionnel, sinon génère les pièces Kotlin, une fois pour le cache. */
     private fun loadPieceBitmaps() {
-        for (color in PieceColor.values()) {
-            for (type in PieceType.values()) {
+        for (color in PieceColor.entries) {
+            for (type in PieceType.entries) {
                 val piece = Piece(type, color)
-                val path = piece.getSpritePath()
-                try {
-                    context.assets.open(path).use { stream ->
-                        val bitmap = BitmapFactory.decodeStream(stream)
-                        if (bitmap != null) {
-                            pieceBitmaps[piece.notation] = bitmap
-                        } else {
-                            pieceBitmaps[piece.notation] = createFallbackBitmap(piece)
-                        }
-                    }
-                } catch (e: IOException) {
-                    pieceBitmaps[piece.notation] = createFallbackBitmap(piece)
-                }
+                pieceBitmaps[piece.notation] = ChessPieceImages.load(context.assets, piece, 160)
             }
         }
-    }
-
-    /**
-     * Crée un bitmap de fallback avec le symbole de la pièce
-     */
-    private fun createFallbackBitmap(piece: Piece): Bitmap {
-        val size = 100
-        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-
-        // Fond de la pièce
-        val bgPaint = Paint().apply {
-            color = if (piece.color == PieceColor.WHITE) Color.WHITE else Color.BLACK
-            style = Paint.Style.FILL
-        }
-        canvas.drawCircle(size / 2f, size / 2f, size / 2.5f, bgPaint)
-
-        // Bordure
-        val borderPaint = Paint().apply {
-            color = if (piece.color == PieceColor.WHITE) Color.BLACK else Color.WHITE
-            style = Paint.Style.STROKE
-            strokeWidth = 3f
-        }
-        canvas.drawCircle(size / 2f, size / 2f, size / 2.5f, borderPaint)
-
-        // Texte de la pièce
-        val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = if (piece.color == PieceColor.WHITE) Color.BLACK else Color.WHITE
-            textSize = size / 2f
-            textAlign = Paint.Align.CENTER
-            typeface = Typeface.DEFAULT_BOLD
-        }
-        val symbol = when (piece.type) {
-            PieceType.KING -> "K"
-            PieceType.QUEEN -> "Q"
-            PieceType.ROOK -> "R"
-            PieceType.BISHOP -> "B"
-            PieceType.KNIGHT -> "N"
-            PieceType.PAWN -> "P"
-        }
-        val textY = size / 2f - (textPaint.descent() + textPaint.ascent()) / 2
-        canvas.drawText(symbol, size / 2f, textY, textPaint)
-
-        return bitmap
     }
 
     /**

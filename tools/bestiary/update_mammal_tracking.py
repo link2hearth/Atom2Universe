@@ -57,7 +57,7 @@ def main():
         inventory_path = args.documents / "Bestiaire/MAMMIFERES_INVENTAIRE.json"
     inventory = read_json(inventory_path)
     catalog_ids_by_scientific = mammal_catalog_ids_by_scientific()
-    asset_dir = ROOT / "app/src/main/assets/bestiary"
+    asset_dir = ROOT / "app/src/main/assets/science/bestiary"
     native_scientific = {
         scientific for scientific, animal_ids in catalog_ids_by_scientific.items()
         if any((asset_dir / f"{animal_id}.{ext}").is_file()
@@ -137,7 +137,7 @@ def main():
         f"Familles complètes : {sum(all(row['tracking_status'] == 'illustrée' for row in group) for group in families.values())}/{len(families)}.",
         "",
         f"Inventaire source : `app/build/bestiary_expansion/mammals_inventory.json` ({len(rows)} espèces).",
-        "Les images générées, acceptées en revue ou présentes dans une file ne sont pas comptées comme intégrées : seule une correspondance scientifique exacte dans un catalogue natif, avec son asset présent dans `app/src/main/assets/bestiary`, vaut « illustrée ». « En attente » est le nombre total de taxons non illustrés ; les colonnes source_gap et à revoir en détaillent des sous-ensembles. Les gaps et différés sont lus dans les prompts et fichiers `reviews.json`, pas déduits des tentatives d’image.",
+        "Les images générées, acceptées en revue ou présentes dans une file ne sont pas comptées comme intégrées : seule une correspondance scientifique exacte dans un catalogue natif, avec son asset présent dans `app/src/main/assets/science/bestiary`, vaut « illustrée ». « En attente » est le nombre total de taxons non illustrés ; les colonnes source_gap et à revoir en détaillent des sous-ensembles. Les gaps et différés sont lus dans les prompts et fichiers `reviews.json`, pas déduits des tentatives d’image.",
         "",
         "| Famille | Total | Illustrées (natif) | En attente | Source gap | À revoir |",
         "|---|---:|---:|---:|---:|---:|",

@@ -1,7 +1,6 @@
 package com.Atom2Universe.app.games.chess
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.LinearGradient
 import android.graphics.Paint
@@ -25,11 +24,9 @@ class ChessHubTileDrawable(context: Context) : CachedHubArtworkDrawable() {
                 left + (col + 1) * cell, top + (row + 1) * cell, paint)
         }
         fun piece(type: PieceType, color: PieceColor, col: Int, row: Int) {
-            val bitmap = assets.open(Piece(type, color).getSpritePath()).use { BitmapFactory.decodeStream(it) }
-                ?: return
             val x = left + col * cell
             val y = top + row * cell
-            // Pas de lissage : conserver les pixels des pièces originales.
+            val bitmap = ChessPieceImages.load(assets, Piece(type, color), cell.toInt())
             canvas.drawBitmap(bitmap, null, RectF(x, y, x + cell, y + cell), paint)
             bitmap.recycle()
         }

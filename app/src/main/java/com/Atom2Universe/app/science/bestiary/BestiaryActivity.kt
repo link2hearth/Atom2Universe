@@ -47,6 +47,10 @@ class BestiaryActivity : ThemedActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!com.Atom2Universe.app.science.ScienceAssets.isAvailable(this, "bestiary")) {
+            finish()
+            return
+        }
         query = savedInstanceState?.getString("query").orEmpty()
         group = savedInstanceState?.getString("group").orEmpty()
         selected = if (savedInstanceState != null) savedInstanceState.getString("species") else intent.getStringExtra(EXTRA_SPECIES_ID)
