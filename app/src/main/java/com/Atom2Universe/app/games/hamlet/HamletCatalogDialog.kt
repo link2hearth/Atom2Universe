@@ -112,6 +112,10 @@ internal class HamletCatalogDialog(private val a: HamletActivity) {
             textSize = 11.5f; gravity = Gravity.CENTER; setTextColor(if (affordable) HamletUi.MUTED else HamletUi.BAD)
         }, LinearLayout.LayoutParams(-1, -2))
         box.contentDescription = a.getString(R.string.hamlet_catalog_item, a.itemName(d.id), tag.text, d.lvl)
+        if (d.cat == Cat.SHOP) box.addView(HamletUi.info(a, a.getString(R.string.hamlet_industry_recipe_details),
+            HamletUi.recipeText(a, d.id, 1, a.game)), LinearLayout.LayoutParams(-1, dp(40)))
+        else if (d.id in HamletLife.produce) box.addView(HamletUi.info(a, a.getString(R.string.hamlet_industry_produce_details),
+            HamletUi.costText(a, VillageCost(resources = HamletIndustry.products(d.id, 1)))), LinearLayout.LayoutParams(-1, dp(40)))
         HamletMotion.press(box)
         box.setOnClickListener {
             if (unlocked && affordable) { sheet.dismiss(); a.village.startPlacing(d) } else if (unlocked) HamletSheet.message(a, a.itemName(d.id),

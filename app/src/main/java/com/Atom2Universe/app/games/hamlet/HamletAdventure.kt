@@ -3,7 +3,8 @@ package com.Atom2Universe.app.games.hamlet
 import kotlin.math.max
 import kotlin.random.Random
 
-enum class AdventureResource { FOOD, TIMBER, STONE, ORE, BOOKS, CRYSTAL, RUNES, TICKETS, BREAD, TOOLS }
+enum class AdventureResource { FOOD, TIMBER, STONE, ORE, BOOKS, CRYSTAL, RUNES, TICKETS, BREAD, TOOLS,
+    FRUIT, MILK, EGGS, WOOL, HONEY, WAX, CLOTH, FISH, MEDICINE, CRAFTS, WATER }
 /** [TREASURE] : un combat ordinaire qui offre un appel la première fois. */
 enum class AdventureNode { BATTLE, GATHER, SHRINE, TREASURE, BOSS }
 data class HeroRecruitment(val hero: Int, val newHero: Boolean, val shards: Long, val guaranteed: Boolean,

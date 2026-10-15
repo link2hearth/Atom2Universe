@@ -5,7 +5,7 @@ import kotlin.math.min
 import kotlin.random.Random
 
 /** Une commande passée par un visiteur à un atelier. [t0] vaut 0 tant que l'atelier ne l'a pas acceptée. */
-class Order(val from: String, var t0: Long = 0L, var recipeRank: Int = 0)
+class Order(val from: String, var t0: Long = 0L, var recipeRank: Int = 0, var recipeVersion: Int = 1)
 
 /** Un objet posé dans le village. Les horloges sont en millisecondes d'horloge murale : le village vit hors ligne. */
 class Obj(val id: Int, val t: String, var x: Int, var y: Int, var flip: Boolean = false) {
@@ -431,7 +431,7 @@ class HamletGame(
         // Conserver la fraction de croissance, mais jeter le surplus au-delà du stockage.
         o.t0 = if (p.feed > 0) 0 else now() - (now() - o.t0) % (p.seconds * 1000L)
         o.economicRevision++
-        adventure.add(AdventureResource.FOOD, HamletIndustry.productFood(o) * count)
+        HamletIndustry.products(o.t, o.tier).forEach { (r, n) -> adventure.add(r, n * count) }
         stat("products", count.toLong())
         reward(o, yieldCoins(o, p.coins) * count, p.xp * count)
         touch(); changed()
@@ -558,6 +558,7 @@ class HamletGame(
         if (ord.t0 != 0L) return false
         if (!HamletIndustry.recipe(o.t, o.tier).cost.pay(this)) { listener?.onMessage("industry_missing"); return false }
         ord.recipeRank = o.tier
+        ord.recipeVersion = HamletIndustry.RECIPE_VERSION
         ord.t0 = now()
         o.economicRevision++
         stat("accepted")
@@ -580,7 +581,7 @@ class HamletGame(
         if (ord.t0 == 0L || jobLeft(o) > 0) return false
         val bonus = charmBonus(o)
         val from = ord.from
-        if (ord.recipeRank > 0) HamletIndustry.recipe(o.t, ord.recipeRank).output.forEach { (r, n) -> adventure.add(r, n) }
+        if (ord.recipeRank > 0) HamletIndustry.recipe(o.t, ord.recipeRank, ord.recipeVersion).output.forEach { (r, n) -> adventure.add(r, n) }
         o.order = null
         o.economicRevision++
         o.next = now() + rng.nextLong(25_000, 110_000)

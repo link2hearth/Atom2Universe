@@ -140,6 +140,8 @@ object Hamlet {
         crop("lettuce", 3, 20 * MIN, "head", 0x7CC545, 0xA6DC5A),
         crop("strawberries", 3, 30 * MIN, "bush", 0x3F8F3A, 0xE0263A),
         crop("beans", 3, 24 * HOUR, "tall", 0x4F9D37, 0x5AB83C),
+        crop("wildflowers", 3, 10 * MIN, "flower", 0x5AA03C, 0xE05A8A),
+        crop("herbs", 3, 12 * MIN, "bush", 0x3F8F3A, 0x8BC878),
         crop("onions", 4, HOUR, "root", 0x5AA03C, 0xE9D8A0),
         crop("potatoes", 5, 2 * HOUR, "bush", 0x3F8F3A, 0xB98A52),
         crop("peas", 5, 90 * MIN, "tall", 0x5AA83C, 0x8AD25A),
@@ -284,8 +286,8 @@ object Hamlet {
         // ---- ateliers : les visiteurs commandent, l'atelier prépare, ils paient
         shop("bakery", 2, 600, 5, 45, "bread", L("s_shop", 0xEBD2A0, 0xB8452E, 0xE8A83A), build = MIN)
         shop("florist", 3, 900, 10, 70, "flower", L("s_shop", 0xF3D8E4, 0x7A9A4A, 0xE05A8A), build = 2 * MIN)
-        shop("cheesemaker", 4, 1300, 15, 95, "cheese", L("s_shop", 0xF0E2A8, 0x8A5A3A, 0xE8B82A))
-        shop("tailor", 4, 1500, 20, 110, "cloth", L("s_shop", 0xC8B8E0, 0x5A4A8A, 0xB84AC8), build = 3 * MIN)
+        shop("cheesemaker", 5, 1300, 15, 95, "cheese", L("s_shop", 0xF0E2A8, 0x8A5A3A, 0xE8B82A))
+        shop("tailor", 6, 1500, 20, 110, "cloth", L("s_shop", 0xC8B8E0, 0x5A4A8A, 0xB84AC8), build = 3 * MIN)
         shop("herbalist", 3, 1000, 15, 80, "leaf", L("s_shop", 0xCFE0B0, 0x3F7A3A, 0x6AB83A))
         shop("weaver", 5, 2200, 45, 180, "cloth", L("s_shop", 0xE0C8A0, 0x8A3A3A, 0xE0903A), build = 4 * MIN)
         shop("chandler", 5, 2000, 36, 150, "candle", L("s_shop", 0xF4E8C0, 0xA8683A, 0xF4C23A))
@@ -299,7 +301,7 @@ object Hamlet {
         shop("bookshop", 8, 5200, 150, 380, "book", L("s_shop", 0xD8C8B0, 0x4A3A5A, 0x7A3A8A))
         shop("blacksmith", 8, 6000, 180, 440, "shoe", L("s_smith", 0xB0A89A, 0x4A4A52, 0xE8602A), build = 15 * MIN)
         shop("tavern", 11, 11000, 30, 160, "mug", L("s_shop", 0xD8B888, 0x7A3A2A, 0xE8A82A), pop = 2, build = 20 * MIN)
-        shop("painter", 10, 8000, 240, 520, "brush", L("s_shop", 0xEFE8DC, 0x3A6A8A, 0xE8603A))
+        shop("painter", 11, 8000, 240, 520, "brush", L("s_shop", 0xEFE8DC, 0x3A6A8A, 0xE8603A))
         shop("hatter", 9, 6600, 180, 430, "hat", L("s_shop", 0xD8C0D8, 0x6A3A6A, 0xE8B82A))
         shop("butcher", 9, 7000, 150, 390, "meat", L("s_shop", 0xE8C8B8, 0x8A3A32, 0xC8392E), build = 15 * MIN)
         shop("greenhouse", 10, 8500, 210, 500, "orchid", L("s_glass", 0xCDEAD8, 0x6AA88A, 0xE05AA8), build = 20 * MIN)
@@ -326,7 +328,7 @@ object Hamlet {
         shop("wizard", 16, 30000, 720, 1500, "potion", L("s_tower", 0x7A68B8, 0x3A2A7A, 0xE8D84A, 4), build = HOUR)
         shop("foundry", 21, 62000, 1320, 2800, "bell", L("s_smith", 0x8A8680, 0x3A3A42, 0xFF7A2A), w = 3, d = 2)
         shop("musichall", 17, 38000, 900, 1900, "note", L("s_hall", 0xE8D0B0, 0x7A3A5A, 0xE8B82A), w = 3, d = 2)
-        shop("vineyard", 18, 40000, 1080, 2300, "grape", L("s_vine", 0xD8B880, 0x8A4A32, 0x7A2A8A), w = 3, d = 2, build = 90 * MIN)
+        shop("vineyard", 22, 40000, 1080, 2300, "grape", L("s_vine", 0xD8B880, 0x8A4A32, 0x7A2A8A), w = 3, d = 2, build = 90 * MIN)
         shop("teahouse", 19, 48000, 1020, 2200, "cup", L("s_pagoda", 0xF0E4D0, 0x2F7A5A, 0xC8392E))
         shop("bank", 19, 52000, 1140, 2450, "coins", L("s_hall", 0xE8E0D0, 0x4A5A4A, 0xE8B82A), w = 3, d = 2)
         shop("spicemarket", 20, 58000, 1260, 2700, "sack", L("s_hall", 0xE8B878, 0xC8602A, 0xE8302A), build = 90 * MIN)

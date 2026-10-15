@@ -51,6 +51,7 @@ class HamletCollectionTest {
         val shop = buy(g, "bakery"); val tree = buy(g, "treeApple")
         time += 60_000; g.tick()
         g.coins = 10000
+        g.pantry["wheat"] = 2
         assertTrue(g.acceptOrder(shop))
         time += maxOf(shop.def.job, HamletLife.produce.getValue(tree.t).seconds) * 1000L + 1
         assertTrue(g.collectReady(shop)); assertFalse(g.collectReady(shop))

@@ -56,7 +56,12 @@ object HamletIndustry {
     }
 
     /** Rank is captured when accepting the order: upgrading a busy shop cannot create free goods. */
-    fun recipe(id: String, rank: Int): Recipe {
+    const val RECIPE_VERSION = 2
+    fun recipe(id: String, rank: Int, version: Int = RECIPE_VERSION): Recipe =
+        if (version <= 1) originalRecipe(id, rank) else HamletTrades.recipe(id, rank)
+
+    // Keep the first paid contracts intact when loading a village from the first resource pass.
+    internal fun originalRecipe(id: String, rank: Int): Recipe {
         val n = rank.coerceIn(1, HamletEconomy.MAX_TIER).toLong()
         fun recipe(inputs: Map<AdventureResource, Long> = emptyMap(), crops: Map<String, Int> = emptyMap(),
             outputs: Map<AdventureResource, Long> = emptyMap()) = Recipe(
@@ -81,11 +86,46 @@ object HamletIndustry {
     }
 
     fun feed(o: Obj) = VillageCost(crops = mapOf("corn" to (1 + (HamletLife.produce[o.t]?.feed ?: 0) / 20)))
-    fun productFood(o: Obj) = if (o.def.cat == Cat.RANCH) 12L * o.tier else 4L * o.tier
+    fun products(id: String, rank: Int): Map<AdventureResource, Long> {
+        val goods = when (id) {
+            "well" -> mapOf(WATER to 12L)
+            "henyard", "duckpond" -> mapOf(EGGS to 4L)
+            "sheepmeadow" -> mapOf(WOOL to 6L)
+            "dairyfarm", "goathill" -> mapOf(MILK to 6L)
+            "beehive" -> mapOf(HONEY to 4L, WAX to 2L)
+            "treeOrange", "treeApple", "lemon", "pear", "plum" -> mapOf(FRUIT to 4L)
+            else -> emptyMap()
+        }.toMutableMap()
+        if (id != "well") goods[FOOD] = if (Hamlet.byId[id]?.cat == Cat.RANCH) 12 else 4
+        return goods.mapValues { it.value * rank.coerceIn(1, HamletEconomy.MAX_TIER) }
+    }
+
+    private val sourceIndex by lazy {
+        val outputs = Hamlet.defs.associateWith { d -> when {
+            d.cat == Cat.SHOP -> recipe(d.id, 1).output.keys
+            d.id in HamletLife.produce -> products(d.id, 1).keys
+            else -> emptySet()
+        } }
+        AdventureResource.entries.associateWith { r -> outputs.filterValues { r in it }.keys.sortedBy { it.lvl } }
+    }
+    fun sources(resource: AdventureResource): List<Def> = sourceIndex.getValue(resource)
 
     val rations = VillageCost(resources = mapOf(BREAD to 2))
     val builders = VillageCost(resources = mapOf(BREAD to 8, TIMBER to 120, STONE to 120, TOOLS to 2))
     val caravan = VillageCost(resources = mapOf(BREAD to 80, TIMBER to 600, STONE to 600, BOOKS to 150, TOOLS to 20), supplies = 40)
+    val expeditionOutfit = VillageCost(resources = mapOf(CLOTH to 8, MEDICINE to 4, BREAD to 16, TOOLS to 8))
+    val artisanCaravan = VillageCost(resources = mapOf(CRAFTS to 60, CLOTH to 20, MEDICINE to 12,
+        BREAD to 80, BOOKS to 150, TOOLS to 20), supplies = 40)
+
+    fun outfitExpedition(g: HamletGame): Boolean {
+        if (!g.sandbox && g.adventure.facility("waypost") == 0 || g.journey.supplies > Int.MAX_VALUE - 20 || !expeditionOutfit.pay(g)) return false
+        g.journey.supplies += 20; g.stat("supply_crafted"); g.listener?.onChanged(); return true
+    }
+
+    fun tradeCrafts(g: HamletGame): Boolean {
+        if (!g.sandbox && g.adventure.facility("adventureInn") == 0 || !artisanCaravan.pay(g)) return false
+        g.adventure.add(TICKETS, 1); g.stat("supply_crafted"); g.listener?.onChanged(); return true
+    }
 
     fun prepareRations(g: HamletGame): Boolean {
         if (!rations.pay(g)) return false

@@ -620,6 +620,14 @@ internal class HamletAdventurePage(private val context: Context, private val gam
         action(industry, raw("hamlet_industry_builders"), game.workSeconds <= 3600 && HamletIndustry.builders.canPay(game), glyph = "hammer") { HamletIndustry.supplyBuilders(game) }
         text(industry, HamletUi.costText(context, HamletIndustry.caravan, game), small = true)
         action(industry, raw("hamlet_industry_caravan"), (game.sandbox || a.facility("adventureInn") > 0) && HamletIndustry.caravan.canPay(game), glyph = "ticket") { HamletIndustry.welcomeCaravan(game) }
+        text(industry, HamletUi.costText(context, HamletIndustry.expeditionOutfit, game), small = true)
+        action(industry, raw("hamlet_industry_outfit"), (game.sandbox || a.facility("waypost") > 0) && HamletIndustry.expeditionOutfit.canPay(game), glyph = "map") { HamletIndustry.outfitExpedition(game) }
+        text(industry, HamletUi.costText(context, HamletIndustry.artisanCaravan, game), small = true)
+        action(industry, raw("hamlet_industry_artisan_caravan"), (game.sandbox || a.facility("adventureInn") > 0) && HamletIndustry.artisanCaravan.canPay(game), glyph = "ticket") { HamletIndustry.tradeCrafts(game) }
+        val stock = card(raw("hamlet_industry_stock_title"), raw("hamlet_industry_trade_links"), glyph = "crate")
+        for (r in AdventureResource.entries.filter { it.ordinal >= AdventureResource.FRUIT.ordinal }) {
+            text(stock, raw("hamlet_industry_amount", s("resource_${r.name.lowercase()}"), a[r]), small = true)
+        }
         val workshop = card(raw("hamlet_progression_supply_workshop"), raw("hamlet_progression_supply_help"), glyph = "crate")
         action(workshop, raw("hamlet_progression_supply_ore"), game.sandbox || a.facility("adventureStore") > 0, glyph = "ore") { a.workshopSupplies(false) }
         action(workshop, raw("hamlet_progression_supply_books"), game.sandbox || a.facility("adventureAcademy") > 0, glyph = "book") { a.workshopSupplies(true) }

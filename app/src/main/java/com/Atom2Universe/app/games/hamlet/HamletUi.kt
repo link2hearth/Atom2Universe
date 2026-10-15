@@ -46,11 +46,21 @@ internal object HamletUi {
         amount(named("hamlet_industry_supplies"), cost.supplies.toLong(), game?.journey?.supplies?.toLong())
         return parts.joinToString(context.getString(R.string.hamlet_ui_dot)).ifEmpty { context.getString(R.string.hamlet_price_free) }
     }
-    fun recipeText(context: Context, id: String, tier: Int, game: HamletGame? = null): String {
-        val recipe = HamletIndustry.recipe(id, tier)
-        return context.getString(R.string.hamlet_industry_recipe, costText(context, recipe.cost, game),
+    fun recipeText(context: Context, id: String, tier: Int, game: HamletGame? = null, version: Int = HamletIndustry.RECIPE_VERSION): String {
+        val recipe = HamletIndustry.recipe(id, tier, version)
+        val description = context.getString(R.string.hamlet_industry_recipe, costText(context, recipe.cost, game),
             if (recipe.output.isEmpty()) context.getString(R.string.hamlet_industry_trade)
-            else costText(context, VillageCost(resources = recipe.output)))
+            else costText(context, VillageCost(resources = recipe.output)) + "\n" + context.getString(R.string.hamlet_industry_trade))
+        val sources = recipe.cost.resources.keys.mapNotNull { r ->
+            val buildings = HamletIndustry.sources(r).take(3)
+            if (buildings.isEmpty()) return@mapNotNull null
+            fun named(key: String) = context.getString(context.resources.getIdentifier(key, "string", context.packageName))
+            context.getString(R.string.hamlet_industry_source_row, named("hamlet_a_resource_${r.name.lowercase()}"),
+                buildings.joinToString(context.getString(R.string.hamlet_list_separator)) {
+                    context.getString(R.string.hamlet_industry_source_building, named("hamlet_n_${it.id}"), it.lvl)
+                })
+        }
+        return description + if (sources.isEmpty()) "" else "\n\n" + sources.joinToString("\n")
     }
 
     const val FOREST = 0xFF213D38.toInt()

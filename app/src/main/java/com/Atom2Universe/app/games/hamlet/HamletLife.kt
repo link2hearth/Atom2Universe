@@ -6,6 +6,7 @@ data class Produce(val seconds: Int, val coins: Int, val xp: Int, val feed: Int 
 object HamletLife {
     // Les vergers conservent trois récoltes hors ligne. Un élevage attend son prochain repas.
     val produce = mapOf(
+        "well" to Produce(300, 0, 0, glyph = "drop"),
         "henyard" to Produce(180, 30, 7, 8, "egg"),
         "rabbitgarden" to Produce(600, 70, 14, 18, "paw"),
         "sheepmeadow" to Produce(1200, 140, 28, 30, "cloth"),

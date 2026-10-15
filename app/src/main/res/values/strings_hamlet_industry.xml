@@ -22,4 +22,25 @@
     <string name="hamlet_industry_domain">Your islands share these bonuses. Only the highest completed rank of each facility counts; extra copies keep their workshop orders.</string>
     <string name="hamlet_a_resource_tools">Tools</string>
     <string name="hamlet_industry_legacy_order">Existing contract: the usual income is preserved. Manufactured goods start with the next order.</string>
+    <string name="hamlet_a_resource_fruit">Fruit</string>
+    <string name="hamlet_a_resource_milk">Milk</string>
+    <string name="hamlet_a_resource_eggs">Eggs</string>
+    <string name="hamlet_a_resource_wool">Wool</string>
+    <string name="hamlet_a_resource_honey">Honey</string>
+    <string name="hamlet_a_resource_wax">Wax</string>
+    <string name="hamlet_a_resource_cloth">Cloth</string>
+    <string name="hamlet_a_resource_fish">Fish</string>
+    <string name="hamlet_a_resource_medicine">Remedies</string>
+    <string name="hamlet_a_resource_crafts">Craft goods</string>
+    <string name="hamlet_a_resource_water">Water</string>
+    <string name="hamlet_n_c_wildflowers">Wildflowers</string>
+    <string name="hamlet_n_c_herbs">Medicinal herbs</string>
+    <string name="hamlet_industry_source_row">%1$s: %2$s</string>
+    <string name="hamlet_industry_source_building">%1$s (level %2$d)</string>
+    <string name="hamlet_industry_outfit">Outfit an expedition → 20 supplies (waypost required)</string>
+    <string name="hamlet_industry_artisan_caravan">Artisan caravan → 1 invitation (inn required)</string>
+    <string name="hamlet_industry_stock_title">Trade stores</string>
+    <string name="hamlet_industry_trade_links">Wells provide water. Orchards yield fruit, hens lay eggs, goats and cows give milk, sheep produce wool, and beehives yield honey and wax. Weavers turn wool into cloth; gardens and herbalists prepare remedies. Workshops make craft goods. Outfit expeditions with cloth and remedies, or trade these goods with caravans. Shops and entertainment venues also consume these products for coins and experience. All these production chains are repeatable.</string>
+    <string name="hamlet_industry_recipe_details">Recipe and ingredients</string>
+    <string name="hamlet_industry_produce_details">Production and supplies</string>
 </resources>

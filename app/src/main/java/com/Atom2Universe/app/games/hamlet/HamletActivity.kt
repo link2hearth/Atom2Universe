@@ -562,9 +562,10 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         if (d.cat == Cat.SHOP) {
             val paidRank = o.order?.takeIf { it.t0 > 0 }?.recipeRank
             message += "\n\n" + if (paidRank == 0) getString(R.string.hamlet_industry_legacy_order)
-                else HamletUi.recipeText(this, o.t, paidRank ?: o.tier, game)
+                else HamletUi.recipeText(this, o.t, paidRank ?: o.tier, game,
+                    o.order?.takeIf { it.t0 > 0 }?.recipeVersion ?: HamletIndustry.RECIPE_VERSION)
         }
-        if (o.t in HamletLife.produce) message += "\n" + HamletUi.costText(this, VillageCost(resources = mapOf(AdventureResource.FOOD to HamletIndustry.productFood(o))))
+        if (o.t in HamletLife.produce) message += "\n" + HamletUi.costText(this, VillageCost(resources = HamletIndustry.products(o.t, o.tier)))
         if (d.shore) message += getString(R.string.hamlet_shore_help)
         if (game.stewardship.villageBonus(d.cat) > 0) message += getString(R.string.hamlet_s_village_bonus, game.stewardship.villageBonus(d.cat))
         HamletSheet.message(this, itemName(o.t), message)

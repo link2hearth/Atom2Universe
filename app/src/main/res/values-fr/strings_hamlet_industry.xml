@@ -22,4 +22,25 @@
     <string name="hamlet_industry_domain">Tes îles partagent ces bonus. Seul le meilleur rang terminé de chaque installation compte ; les exemplaires supplémentaires conservent leurs commandes d’atelier.</string>
     <string name="hamlet_a_resource_tools">Outils</string>
     <string name="hamlet_industry_legacy_order">Ancien contrat : les revenus habituels sont conservés. Les produits fabriqués commencent à la prochaine commande.</string>
+    <string name="hamlet_a_resource_fruit">Fruits</string>
+    <string name="hamlet_a_resource_milk">Lait</string>
+    <string name="hamlet_a_resource_eggs">Œufs</string>
+    <string name="hamlet_a_resource_wool">Laine</string>
+    <string name="hamlet_a_resource_honey">Miel</string>
+    <string name="hamlet_a_resource_wax">Cire</string>
+    <string name="hamlet_a_resource_cloth">Tissu</string>
+    <string name="hamlet_a_resource_fish">Poisson</string>
+    <string name="hamlet_a_resource_medicine">Remèdes</string>
+    <string name="hamlet_a_resource_crafts">Artisanat</string>
+    <string name="hamlet_a_resource_water">Eau</string>
+    <string name="hamlet_n_c_wildflowers">Fleurs des champs</string>
+    <string name="hamlet_n_c_herbs">Herbes médicinales</string>
+    <string name="hamlet_industry_source_row">%1$s : %2$s</string>
+    <string name="hamlet_industry_source_building">%1$s (niveau %2$d)</string>
+    <string name="hamlet_industry_outfit">Équiper une expédition → 20 provisions (relais requis)</string>
+    <string name="hamlet_industry_artisan_caravan">Caravane artisanale → 1 invitation (auberge requise)</string>
+    <string name="hamlet_industry_stock_title">Réserve des métiers</string>
+    <string name="hamlet_industry_trade_links">Le puits fournit l’eau. Les vergers donnent des fruits, les poules des œufs, les chèvres et vaches du lait, les moutons de la laine et les ruches du miel et de la cire. Les tisserands transforment la laine en tissu ; les jardins et herboristes préparent les remèdes. Les ateliers fabriquent des marchandises artisanales. Équipe des expéditions avec tissus et remèdes, ou échange ces marchandises auprès des caravanes. Les boutiques et les lieux de fête consomment aussi ces produits contre des pièces et de l’expérience. Toutes ces chaînes sont répétables.</string>
+    <string name="hamlet_industry_recipe_details">Recette et approvisionnement</string>
+    <string name="hamlet_industry_produce_details">Production et approvisionnement</string>
 </resources>

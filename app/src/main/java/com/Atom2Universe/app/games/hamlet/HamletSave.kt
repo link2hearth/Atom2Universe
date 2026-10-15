@@ -61,7 +61,7 @@ object HamletSave {
             if (o.t0 != 0L) j.put("t0", o.t0)
             if (o.b0 != 0L) j.put("b0", o.b0)
             if (o.next != 0L) j.put("n", o.next)
-            o.order?.let { j.put("o", JSONObject().put("from", it.from).put("t0", it.t0).put("recipeRank", it.recipeRank)) }
+            o.order?.let { j.put("o", JSONObject().put("from", it.from).put("t0", it.t0).put("recipeRank", it.recipeRank).put("recipeVersion", it.recipeVersion)) }
             objs.put(j)
         }
         return JSONObject().put("hall", hall).put("expand", expand).put("paths", paths).put("objs", objs)
@@ -163,7 +163,7 @@ object HamletSave {
             o.t0 = j.optLong("t0"); o.b0 = j.optLong("b0"); o.next = j.optLong("n")
             o.tier = j.optInt("tier", 1).coerceIn(1, HamletEconomy.MAX_TIER); o.tended = j.optBoolean("tended") && o.crop != null
             if (t in HamletLife.produce && def.cat != Cat.RANCH && o.t0 == 0L) o.t0 = g.now()
-            if (def.cat == Cat.SHOP) j.optJSONObject("o")?.let { o.order = Order(it.optString("from", Hamlet.visitors[0]), it.optLong("t0"), it.optInt("recipeRank").coerceIn(0, HamletEconomy.MAX_TIER)) }
+            if (def.cat == Cat.SHOP) j.optJSONObject("o")?.let { o.order = Order(it.optString("from", Hamlet.visitors[0]), it.optLong("t0"), it.optInt("recipeRank").coerceIn(0, HamletEconomy.MAX_TIER), it.optInt("recipeVersion", 1).coerceIn(1, HamletIndustry.RECIPE_VERSION)) }
             if (def.cat == Cat.HALL) hasHall = true
             g.objs[o.id] = o
             for (y in o.y until o.y + o.d) for (x in o.x until o.x + o.w) g.occ[g.idx(x, y)] = o.id

@@ -114,7 +114,7 @@ class HamletRealms(private val game: HamletGame) {
     companion object {
         internal fun clone(o: Obj, id: Int = o.id) = Obj(id, o.t, o.x, o.y, o.flip).also {
             it.crop = o.crop; it.t0 = o.t0; it.b0 = o.b0; it.next = o.next
-            it.order = o.order?.let { order -> Order(order.from, order.t0, order.recipeRank) }
+            it.order = o.order?.let { order -> Order(order.from, order.t0, order.recipeRank, order.recipeVersion) }
             it.tier = o.tier; it.tended = o.tended
         }
     }
