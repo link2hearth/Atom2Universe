@@ -129,7 +129,7 @@
       ]
     }
   ],
-  "illustration_notes": "The existing validated app image, app/src/main/assets/bestiary/bison.webp, shows an adult male American bison with the characteristic shoulder hump, dark shaggy forequarters, shorter hindquarter coat, beard and curved horns on a pure white background. It is suitable for this entry.",
+  "illustration_notes": "The existing validated app image, app/src/main/assets/science/bestiary/bison.webp, shows an adult male American bison with the characteristic shoulder hump, dark shaggy forequarters, shorter hindquarter coat, beard and curved horns on a pure white background. It is suitable for this entry.",
   "uncertainties": [
     "The IUCN Near Threatened category cited here comes from the global assessment dated 1 September 2016 and published in 2017; it is not presented as a new 2026 assessment.",
     "The IUCN Red List page returned a 403 error when opened directly; its assessment details were available in the indexed IUCN record.",
