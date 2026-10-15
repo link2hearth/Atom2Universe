@@ -1,0 +1,22 @@
+{
+  "id": "erubescens",
+  "reviewStatus": "verified",
+  "safetyNote": "Potentially fatal: Inosperma erubescens contains muscarine. Sweating, excess saliva and tears, breathing difficulty and cardiovascular symptoms can begin rapidly after ingestion. Never taste or eat it; call emergency services or a poison centre immediately after suspected ingestion.",
+  "sections": [
+    {"title": "Red-staining fibrecap", "text": "Inosperma erubescens, formerly Inocybe erubescens or I. patouillardii, is a relatively stout fibrecap. Its 3–7 cm cap is initially conical or bell-shaped, expanding while retaining a central point or umbo. The dry pale ivory to straw-coloured cap has fine radial fibres. Its margin may split radially, especially when dry. Red to brick-red patches develop with age, bruising or damage, but their extent varies; a young specimen may remain mostly pale."},
+    {"title": "Gills, stem and colour change", "text": "The crowded gills are narrowly attached to the stem, not broadly free. They start whitish, then become pinkish-brown or dull brown and can redden where bruised; the spore print is dull brown. The pale solid stem bears lengthwise fibres, lacks a ring and usually has a slightly swollen base. Its outer surface often stains red. Reddening of cut inner flesh is reported inconsistently and should not be relied on as a single identification test."},
+    {"title": "Habitat and lookalikes", "text": "This ectomycorrhizal species grows with broadleaf trees, notably beech and hornbeam, on neutral to alkaline soil. It may fruit in spring or early summer on the European continent; timing varies by region. Pale young specimens can be mistaken for edible spring mushrooms such as Calocybe gambosa. That species has a different cap and white spore print, but colour, season and smell alone do not establish a safe identification."},
+    {"title": "Muscarine poisoning", "text": "The muscarinic syndrome usually begins within minutes to a few hours. Sweating, salivation, tears, abdominal symptoms, slow pulse, low blood pressure and breathing difficulty may occur. Published poisoning cases involving mushrooms identified as the older name I. patouillardii required supportive care and sometimes atropine. A fixed recovery time cannot be promised. Seek urgent professional advice even if the mushroom was cooked."},
+    {"title": "About the plate", "text": "The plate shows a whole fibrecap, a longitudinal section, its radially fibrous cap from above and crowded brownish gills from below. Local red patches indicate bruising; they do not imply that every specimen reddens uniformly."}
+  ],
+  "sources": [
+    {"title": "Species Fungorum, Royal Botanic Gardens Kew — Inosperma erubescens and synonyms", "url": "https://www.speciesfungorum.org/names/Synonymy.asp?RecordID=830361"},
+    {"title": "Ditte Bandini, Inocybe.org — DNA-verified Inosperma erubescens collections", "url": "https://www.inocybe.org/genus-inosperma/erubescens/"},
+    {"title": "First Nature — Inocybe erubescens morphology and toxicity", "url": "https://www.first-nature.com/fungi/inocybe-erubescens.php"},
+    {"title": "Belgian Poison Centre — mushroom poisoning brochure", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "German Society for Mycology — 2026 poisonous mushroom list", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Lurie et al., Clinical Toxicology 2009 — identified Inocybe patouillardii in a muscarine poisoning series", "url": "https://pubmed.ncbi.nlm.nih.gov/19566380/"},
+    {"title": "MSD Manual Professional — muscarinic mushroom poisoning and treatment", "url": "https://www.msdmanuals.com/professional/injuries-poisoning/poisoning/mushroom-poisoning"}
+  ],
+  "related": ["gambosa", "geophylla", "rivulosa"]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "orellanus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Cortinarius orellanus porte un chapeau sec, finement feutré ou un peu écailleux, roux à orange rougeâtre, d'abord convexe puis plus étalé, souvent avec un petit mamelon central et une marge enroulée. Ses lames adnées relativement espacées passent du jaune pâle ou de l'ocre au brun rouille rougeâtre. Le pied fibrilleux est ocre à brun orangé, souvent un peu courbé et rétréci à la base. Un jeune sujet peut montrer une cortine jaunâtre, fin voile en toile d'araignée entre la marge et le pied ; elle disparaît souvent. La sporée est brun rouille. L'odeur parfois raphanoïde n'est pas un critère fiable."},
+    {"title": "Habitat et saison", "text": "C'est un champignon ectomycorhizien des bois, surtout associé à des feuillus comme le chêne, mais présent aussi sous conifères et sur sols acides ou alcalins. En Grande-Bretagne, il fructifie surtout de la fin de l'été à l'automne. Sa présence et sa saison varient selon les régions. La couleur, la saison et l'arbre voisin ne suffisent pas à identifier un cortinaire brun ou orangé."},
+    {"title": "Espèces proches", "text": "De nombreux Cortinarius se ressemblent, dont Cortinarius rubellus, tout aussi dangereux. Une cortine discrète ou absente chez l'adulte n'exclut pas un cortinaire. Les lames espacées ocre à rouille et le chapeau finement feutré orientent l'examen, mais un exemplaire incertain doit être soumis à un spécialiste."},
+    {"title": "Intoxication à l'orellanine", "text": "L'orellanine peut léser les tubules rénaux après une longue phase sans symptômes. Des troubles digestifs peuvent survenir 24 à 36 heures après le repas ou manquer ; soif, bouche sèche, douleurs lombaires et modification des urines apparaissent parfois plusieurs jours plus tard. Le Centre Antipoisons belge situe les signes rénaux le plus souvent vers 8 à 10 jours, parfois jusqu'à 17 jours ; des observations décrivent une plage plus large. Certains patients ont besoin d'une dialyse et une partie garde une insuffisance rénale définitive ou reçoit une greffe. L'évolution varie : dans une série française de douze personnes suivies 13 ans, sept ont retrouvé une fonction rénale normale, quatre ont été greffées et une est restée dialysée. Une ingestion suspecte exige un avis médical urgent avant même les symptômes."}
+  ],
+  "traits": [
+    "Chapeau sec finement feutré, roux à brun orangé, souvent avec un petit mamelon",
+    "Lames adnées assez espacées, jaune ocre puis brun rouille",
+    "Pied fibrilleux ocre à brun orangé, souvent rétréci à la base",
+    "Cortine en toile d'araignée chez le jeune sujet, vite disparue ; pas d'anneau persistant",
+    "Sporée brun rouille ; surtout avec des feuillus en fin d'été et en automne"
+  ],
+  "safetyNote": "Poison rénal potentiellement mortel : ne mangez jamais Cortinarius orellanus. L'atteinte par l'orellanine peut rester silencieuse plusieurs jours avant soif intense, douleurs lombaires et insuffisance rénale ; l'absence de symptôme précoce ne rassure pas. Après ingestion suspecte, contactez sans délai un centre antipoison ou les secours.",
+  "sources": [
+    {"title": "Centre Antipoisons belge — Brochure champignons, cortinaires et syndrome oréllanien", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "Société allemande de mycologie (DGfM) — Espèces toxiques et syndromes (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Horn et al. — Insuffisance rénale terminale après Cortinarius orellanus : quatre cas (1997)", "url": "https://pubmed.ncbi.nlm.nih.gov/9261043/"},
+    {"title": "Duvic et al. — Douze intoxications par Cortinarius orellanus suivies treize ans (2003)", "url": "https://pubmed.ncbi.nlm.nih.gov/12610452/"},
+    {"title": "First Nature — Identification de Cortinarius orellanus", "url": "https://www.first-nature.com/fungi/cortinarius-orellanus.php"}
+  ],
+  "related": ["rubellus"]
+}

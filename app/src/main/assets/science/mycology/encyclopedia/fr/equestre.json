@@ -1,0 +1,28 @@
+{
+  "id": "equestre",
+  "reviewStatus": "verified",
+  "safetyNote": "Éviter de consommer Tricholoma equestre et ses sosies. Une destruction musculaire retardée (rhabdomyolyse), parfois mortelle, a été rapportée après plusieurs repas copieux de tricholomes jaunes sur des jours consécutifs ; l'espèce responsable exacte et le mécanisme restent discutés. Une faiblesse, des douleurs musculaires ou des urines foncées survenant 24 à 72 heures plus tard exigent une évaluation médicale urgente. En France, la vente et la distribution de T. equestre, T. auratum et T. flavovirens sont interdites par le décret 2005-1184.",
+  "sections": [
+    {"title": "Chapeau jaune", "text": "Le chapeau charnu, généralement large de 5 à 10 cm, est d'abord convexe puis s'étale, parfois avec une marge irrégulière ou ondulée et un petit mamelon central. Jaune à jaune olivâtre, il est souvent plus sombre au centre, où de fines fibrilles brun à brun rouge appliquées ou de petites écailles marquent la surface. Il devient visqueux par temps humide et peut retenir sable ou aiguilles de pin."},
+    {"title": "Lames, pied et chair", "text": "Les lames serrées, jaune citron à jaune soufre vif, sont attachées au pied par une échancrure ou une insertion étroite ; elles ne sont ni libres ni décurrentes. Le pied ferme, jaune pâle à jaune, est cylindrique ou un peu élargi vers la base, parfois parcouru de fines fibrilles brunes longitudinales, sans anneau ni volve. La chair ferme est blanche à jaune très pâle, plus jaune juste sous la peau du chapeau. La sporée est blanche."},
+    {"title": "Milieu et espèces proches", "text": "Le groupe du tricholome équestre est ectomycorhizien, surtout associé aux pins sur sols sableux pauvres. Il fructifie principalement en automne, parfois jusqu'au début de l'hiver. Des tricholomes jaunes voisins et l'emploi variable des noms T. equestre, T. auratum et T. flavovirens compliquent l'identification. T. sulphureum possède souvent un chapeau sec et une forte odeur de gaz, tandis que l'odeur du tricholome équestre est absente, faible ou parfois farineuse ; l'odeur seule n'est pas fiable."},
+    {"title": "Cas rapportés, incertitude et réglementation", "text": "Une publication clinique de 2001 a décrit douze rhabdomyolyses retardées en France, dont trois décès, après plusieurs repas copieux attribués à T. equestre. Des revues discutent l'identification de tous les spécimens et le risque associé à une portion ordinaire d'une espèce définie précisément. La substance responsable est inconnue. Compte tenu des cas graves rapportés et des limites taxonomiques difficiles, ce guide déconseille sa consommation. Un décret français en vigueur depuis 2005 interdit l'importation, l'exportation, la vente et la distribution gratuite de T. equestre, T. auratum et T. flavovirens, frais ou transformés."}
+  ],
+  "traits": [
+    "Chapeau charnu jaune à jaune olivâtre, généralement 5–10 cm ; fibrilles brunes appliquées ou petites écailles au centre",
+    "Chapeau souvent visqueux par temps humide, convexe puis plus plat ou irrégulier",
+    "Lames serrées jaune citron à soufre, échancrées ou étroitement attachées au pied, jamais franchement libres",
+    "Pied ferme jaune pâle sans anneau ni volve, parfois orné de fines fibrilles brunes longitudinales",
+    "Chair blanche à jaune pâle, plus jaune sous la cuticule ; sporée blanche",
+    "Surtout pinèdes sableuses en automne et début d'hiver ; espèces voisines difficiles à distinguer"
+  ],
+  "sources": [
+    {"title": "First Nature — guide de reconnaissance de Tricholoma equestre", "url": "https://www.first-nature.com/fungi/tricholoma-equestre.php"},
+    {"title": "E-Flora BC, université de Colombie-Britannique — groupe Tricholoma equestre", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Tricholoma+equestre+group"},
+    {"title": "Bedry et al. (2001), New England Journal of Medicine 345:798–802 — intoxications et rhabdomyolyse", "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa010581"},
+    {"title": "Société allemande de mycologie — syndrome équestre et délai de 24–72 heures", "url": "https://www.dgfm-ev.de/de/beschreibung-symptome-und-karenzzeiten"},
+    {"title": "Décret français 2005-1184 du 19 septembre 2005 — interdiction de mise sur le marché", "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000604247/"},
+    {"title": "Rzymski et Klimaszyk (2018), Comprehensive Reviews in Food Science and Food Safety — revue systématique critique", "url": "https://pubmed.ncbi.nlm.nih.gov/33350153/"}
+  ],
+  "related": ["sulphureum", "terreum"]
+}

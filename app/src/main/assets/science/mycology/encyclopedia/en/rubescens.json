@@ -1,0 +1,28 @@
+{
+  "id": "rubescens",
+  "reviewStatus": "verified",
+  "safetyNote": "Conditionally edible only after thorough cooking: raw or undercooked Amanita rubescens is hazardous because it contains a heat-labile haemolysin. It can be confused with the poisonous Amanita pantherina. Never decide whether to eat a wild mushroom from this plate alone.",
+  "sections": [
+    {"title": "Cap and gills", "text": "The cap starts rounded, then becomes convex to nearly flat, commonly about 5–15 cm across. Its colour varies widely from pale grey-pink to pinkish or reddish brown. Irregular flat grey, off-white or pink-grey veil fragments may remain on the surface, but rain can wash them away. The crowded gills are pale and may develop pink or rusty-red marks when handled."},
+    {"title": "Stem, ring and base", "text": "The whitish stem becomes pinkish to wine-red where bruised. A high, fragile, hanging ring has conspicuous fine grooves on its upper surface. The base is bulbous; remnants of the universal veil may form fragile flocculent patches or scales there, but there is no persistent membranous cup."},
+    {"title": "Bruising, spores and habitat", "text": "White flesh in the cap and stem slowly stains pink to dull wine-red when cut or bruised, particularly around damaged areas and the bulb. The spore deposit is white; the smooth microscopic spores are broadly ellipsoid and amyloid. It forms mycorrhizae with broad-leaved and coniferous trees and fruits on woodland soil, mainly from summer to autumn in temperate Europe."},
+    {"title": "Confusion and cooking", "text": "The reddish bruising, grooved ring and lack of a sac-like basal volva together help separate it from the poisonous panther cap, Amanita pantherina; no one feature is enough for safe identification. Swiss official mushroom-control guidance lists A. rubescens only with the instruction to peel the cap skin and cook it well because it contains a heat-labile haemolysin. The plate shows typical features, not every colour form."}
+  ],
+  "traits": [
+    "Very variable pale grey-pink to wine-brown cap with irregular flattened grey veil patches",
+    "Cap and stem flesh blush pink to wine-red after injury; gills may stain too",
+    "High, fragile hanging ring with grooves on its upper face",
+    "Bulbous base with fragile veil remnants, without a persistent membranous cup",
+    "Crowded pale gills and a white spore deposit"
+  ],
+  "sources": [
+    {"title": "University of Évora, Mitra-Nature — Amanita rubescens", "url": "https://www.mitra-nature.uevora.pt/Especies-e-habitats/Fungos/Cogumelos/Basidiomycota/Amanitaceae/Amanita-rubescens"},
+    {"title": "NatureSpot — Blusher (Amanita rubescens)", "url": "https://www.naturespot.org/species/blusher"},
+    {"title": "First Nature — Amanita rubescens", "url": "https://www.first-nature.com/fungi/amanita-rubescens.php"},
+    {"title": "VAPKO Swiss mushroom inspection association — 2023 recommended list", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "German Society for Mycology — 2026 list of edible mushrooms", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "Belgian Poison Centre — Mushroom information brochure", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "Seeger et al. (1981) — Toxic effects of rubescenslysin, Toxicon", "url": "https://doi.org/10.1016/0041-0101(81)90045-3"}
+  ],
+  "related": ["pantherina"]
+}

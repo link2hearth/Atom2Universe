@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="myco_sources_taxonomy">Référentiels taxonomiques</string>
     <!-- Hub et écran principal -->
     <string name="myco_title">Atlas des champignons</string>
     <string name="myco_hub">Comestibles, toxiques et leurs sosies, côte à côte</string>
@@ -105,6 +106,7 @@
     <string name="myco_about_lookalikes">Les sosies sont choisis surtout d’après les confusions réellement observées en France par les centres antipoison (ANSES), pas d’après l’intuition. Pour les comestibles, on a aussi ajouté des espèces que les cueilleurs apportent souvent au contrôle (laboratoire cantonal de Bâle-Ville, rapports de 2022, 2024 et 2025).</string>
     <string name="myco_about_method">Chaque statut est recoupé entre autorités sanitaires, textes officiels, revues médicales et encyclopédies. Quand les sources divergent, le statut le plus prudent l’emporte. Dernière vérification : octobre 2026.</string>
     <string name="myco_about_drawings">Les dessins sont des schémas originaux, faits d’après les descriptions publiées. Couleurs et proportions sont typiques ; dans la nature, elles varient beaucoup. Les mesures sont approximatives.</string>
+    <string name="myco_about_supplement">Les fiches de référence taxonomique couvrent aussi des champignons hors atlas de cueillette, comme les levures, moisissures, rouilles et lichens. Leurs dessins de groupe sont schématiques et ne servent pas à identifier une espèce.</string>
     <string name="myco_about_rules_title">Rappels de l’ANSES</string>
     <string name="myco_about_rules">• Ne cueillir que des champignons parfaitement connus, entiers, ni trop jeunes ni trop vieux.\n• Photographier la récolte avant de la cuire.\n• Ne jamais les manger crus : 20 à 30 minutes à la poêle, ou 15 minutes à l’eau bouillante (eau jetée).\n• Les garder au frais et les manger dans les deux jours.\n• Un panier plutôt qu’un sac plastique.\n• Ne pas en donner aux jeunes enfants.\n• Symptômes après un repas : appeler un centre antipoison en précisant le repas, parfois plus de 12 heures après.</string>
     <string name="myco_about_sources">Sources</string>
@@ -398,6 +400,7 @@
     <string name="myco_l_flakes">Flocons gris</string>
     <string name="myco_l_ring_striate">Anneau strié</string>
     <string name="myco_l_bulb_no_volva">Base sans volve</string>
+    <string name="myco_l_bulb_no_sac_volva">Bulbe sans volve en sac persistante</string>
     <string name="myco_l_turns_red">Rougit</string>
     <string name="myco_l_pores_white_yellow">Pores blancs, puis jaunes</string>
     <string name="myco_l_net_white">Réseau blanc</string>
@@ -631,12 +634,12 @@
         <item>Chapeau vert olive à jaunâtre, 5 à 15 cm, plus pâle vers les bords</item>
         <item>Lames blanches, qui restent blanches</item>
         <item>Anneau en jupe sous le chapeau</item>
-        <item>Volve blanche en sac à la base, cachée dans le sol : elle peut manquer si des limaces l’ont mangée</item>
+        <item>Volve blanche en sac à la base, souvent enfouie dans le sol et parfois endommagée</item>
         <item>Pied blanc, finement chiné d’olive</item>
-        <item>Odeur douce au début, puis écœurante · sporée blanche</item>
+        <item>Odeur variable selon l’âge et l’état · sporée blanche</item>
         <item>Sous chênes, hêtres, châtaigniers… de la fin de l’été à l’automne</item>
     </string-array>
-    <string name="myco_phalloides_note">Mortelle. Les signes arrivent tard, plus de 6 heures après le repas, quand le foie est déjà touché. Ni la cuisson, ni le séchage, ni la congélation ne détruisent la toxine, et un jeune exemplaire est déjà toxique. Une trentaine de grammes, soit la moitié d’un chapeau, peut suffire.</string>
+    <string name="myco_phalloides_note">Mortelle. Les symptômes peuvent apparaître après plus de 6 heures, puis de graves lésions du foie peuvent survenir. La cuisson, le séchage ou la congélation ne la rendent pas comestible. Un seul exemplaire peut causer une intoxication grave ; demander immédiatement un avis médical en cas d’ingestion suspectée.</string>
 
     <!-- Amanite vireuse -->
     <string name="myco_virosa_name">Amanite vireuse</string>
@@ -649,7 +652,7 @@
         <item>Volve en sac à la base</item>
         <item>Surtout sous conifères, parfois sous bouleaux · été à fin d’automne</item>
     </string-array>
-    <string name="myco_virosa_note">Mortelle : même toxine que l’amanite phalloïde. Un seul exemplaire de taille moyenne peut suffire. Un champignon blanc n’est jamais « sûr ».</string>
+    <string name="myco_virosa_note">Mortelle : contient des amatoxines capables de provoquer de graves lésions du foie. Même une petite quantité peut causer une intoxication sévère. La couleur blanche ne prouve jamais qu’un champignon est sûr.</string>
 
     <!-- Amanite tue-mouches -->
     <string name="myco_muscaria_name">Amanite tue-mouches</string>
@@ -662,7 +665,7 @@
         <item>Base bulbeuse ornée d’un ou deux anneaux de bourrelets, sans volve en sac</item>
         <item>Sous bouleaux et conifères · automne</item>
     </string-array>
-    <string name="myco_muscaria_note">Toxique : confusion, hallucinations, nausées, 30 à 90 minutes après le repas, parfois convulsions. Rarement mortelle, mais une hospitalisation peut être nécessaire. Lavée par la pluie, elle ressemble à l’oronge (amanite des Césars), dont les lames et le pied sont jaunes.</string>
+    <string name="myco_muscaria_note">Toxique : des symptômes digestifs et neurologiques peuvent apparaître environ 30 minutes à 3 heures après l’ingestion. Des cas graves et des décès ont été documentés. La pluie peut effacer les verrues blanches du chapeau ; l’oronge possède des lames et un pied jaunes.</string>
 
     <!-- Amanite panthère -->
     <string name="myco_pantherina_name">Amanite panthère</string>
@@ -676,7 +679,7 @@
         <item>Chair blanche qui ne change pas de couleur</item>
         <item>Sous hêtres et autres feuillus, ou conifères · fin d’été à automne</item>
     </string-array>
-    <string name="myco_pantherina_note">Toxique, plus que la tue-mouches : mêmes toxines, plus concentrées. Troubles digestifs violents, confusion, convulsions surtout chez l’enfant. En 2022, ce type d’intoxication représentait 21,6 % des cas graves en France (ANSES). Elle est parfois prise pour la coulemelle ou pour l’amanite rougissante.</string>
+    <string name="myco_pantherina_note">Toxique : l’acide iboténique et le muscimol peuvent provoquer confusion, agitation, somnolence et parfois des troubles neurologiques graves. La puissance varie selon les exemplaires. Elle peut être confondue avec la coulemelle ou l’amanite rougissante ; demander rapidement conseil à un centre antipoison en cas d’ingestion suspectée.</string>
 
     <!-- Amanite rougissante -->
     <string name="myco_rubescens_name">Amanite rougissante</string>
@@ -685,7 +688,7 @@
         <item>Chapeau brun rosé à vineux, 4 à 15 cm, couvert de flocons gris sales</item>
         <item>Chair et lames rougissent à la blessure (parfois peu par temps sec)</item>
         <item>Anneau blanc, strié sur le dessus</item>
-        <item>Base renflée sans volve, souvent rongée par les larves</item>
+        <item>Base renflée sans volve en sac persistante, parfois abîmée par les larves</item>
         <item>Lames blanches · sporée blanche</item>
     </string-array>
     <string name="myco_rubescens_note">Comestible seulement bien cuite : crue, elle est toxique (une hémolysine détruite par la chaleur). Facile à confondre avec l’amanite panthère, toxique.</string>
@@ -714,7 +717,7 @@
         <item>Sporée rose brun</item>
         <item>Surtout sous chênes et hêtres</item>
     </string-array>
-    <string name="myco_felleus_note">Immangeable : l’amertume, renforcée par la cuisson, gâche un plat entier. Peut provoquer des vomissements. Il contient un peu de muscarine, à des doses jugées trop faibles pour être dangereuses.</string>
+    <string name="myco_felleus_note">Immangeable à cause de son intense amertume, qui peut gâcher un plat entier. Ses pores pâles deviennent rosés avec l’âge et son pied porte un réseau foncé en relief ; ne pas le confondre avec le cèpe.</string>
 
     <!-- Bolet de Satan -->
     <string name="myco_satanas_name">Bolet de Satan</string>
@@ -727,7 +730,7 @@
         <item>Odeur faible chez les jeunes, de viande avariée chez les vieux</item>
         <item>Chênes, hêtres, sols calcaires, régions chaudes · été</item>
     </string-array>
-    <string name="myco_satanas_note">Toxique : vomissements, diarrhée parfois sanglante, surtout cru ou mal cuit. Rarement mortel chez l’adulte en bonne santé, mais violent. En 2022, c’était la deuxième espèce toxique la plus souvent retrouvée dans les cueillettes en France (ANSES).</string>
+    <string name="myco_satanas_note">Toxique : peut provoquer de forts vomissements et une diarrhée importante. La cuisson ne rend pas sûre une récolte de champignons mal identifiée. Demander rapidement conseil à un centre antipoison en cas d’ingestion suspectée.</string>
 
     <!-- Girolle -->
     <string name="myco_cibarius_name">Girolle</string>
@@ -740,20 +743,20 @@
         <item>Pousse au sol, sous feuillus ou résineux, jamais sur le bois</item>
         <item>Sporée jaune pâle · été à fin d’automne</item>
     </string-array>
-    <string name="myco_cibarius_note">Plusieurs espèces voisines, comme la girolle pruineuse, sont aussi comestibles. Confusion fréquente avec le clitocybe de l’olivier, toxique : c’était l’une des plus courantes en 2024 (ANSES).</string>
+    <string name="myco_cibarius_note">Comestible après identification certaine. Le toxique clitocybe de l’olivier porte de vraies lames et pousse sur du bois ou des racines enfouies. Examiner le champignon entier ; la couleur seule ne suffit pas.</string>
 
     <!-- Clitocybe de l'olivier -->
     <string name="myco_olearius_name">Clitocybe de l’olivier</string>
     <string name="myco_olearius_alt">Jack-o’-lantern</string>
     <string-array name="myco_olearius_traits">
         <item>Orange vif à cuivré, 6 à 14 cm, en entonnoir</item>
-        <item>Dessous à vraies lames fines et serrées, décurrentes, non fourchues</item>
+        <item>Dessous à vraies lames fines et serrées, nettement décurrentes</item>
         <item>Pousse en touffes sur le bois, les souches ou les racines de feuillus</item>
         <item>Chair orange, même à l’intérieur du pied</item>
-        <item>Odeur d’huile · lames faiblement lumineuses dans le noir</item>
+        <item>La luminescence des lames est variable et ne permet pas une identification sûre</item>
         <item>Midi de la France et pourtour méditerranéen, il remonte vers le nord</item>
     </string-array>
-    <string name="myco_olearius_note">Toxique : nausées, vomissements, diarrhées importantes, crampes, risque de déshydratation. Parmi les cueillettes toxiques identifiées en 2022, 8,5 % en contenaient (ANSES).</string>
+    <string name="myco_olearius_note">Toxique : nausées, vomissements, diarrhées et crampes, avec risque de déshydratation. Ne pas le confondre avec une girolle : examiner ses vraies lames et son substrat ligneux.</string>
 
     <!-- Fausse girolle -->
     <string name="myco_aurantiaca_name">Fausse girolle</string>
@@ -765,8 +768,8 @@
         <item>Chair molle, jaune orangé, sans odeur d’abricot</item>
         <item>Sous conifères, sur bois pourri ou humus</item>
     </string-array>
-    <string name="myco_aurantiaca_note">Sans intérêt à table : chair molle, parfois mal tolérée. Les intoxications qu’on lui prêtait venaient le plus souvent de confusions, notamment avec le clitocybe de l’olivier.</string>
-    <string name="myco_aurantiaca_history">Le mycologue suédois Elias Fries la disait « vénéneuse » en 1821 ; avant 1999, des guides la donnaient parfois pour comestible. Aujourd’hui, on la juge sans intérêt plutôt que dangereuse.</string>
+    <string name="myco_aurantiaca_note">De faible intérêt alimentaire et parfois mal tolérée. Ses vraies lames fines et fourchues la distinguent des plis émoussés de la girolle ; ne pas se fier à la seule couleur orange.</string>
+    <string name="myco_aurantiaca_history">Son intérêt alimentaire a été apprécié différemment selon les guides. Les sources récentes la décrivent généralement comme peu intéressante à table.</string>
 
     <!-- Coulemelle -->
     <string name="myco_procera_name">Coulemelle</string>
@@ -779,19 +782,19 @@
         <item>Pas de volve · lames blanches libres · sporée blanche</item>
         <item>Prairies, clairières, bois clairs · juillet à octobre</item>
     </string-array>
-    <string name="myco_procera_note">Seul le chapeau se mange : le pied est coriace. Jamais de lépiote de moins de 10 cm. En France, elle est confondue avec l’amanite phalloïde, l’amanite panthère, l’entolome livide et des lépiotes vénéneuses (ANSES).</string>
+    <string name="myco_procera_note">Le chapeau est la partie le plus souvent cuisinée ; le pied est coriace. Un petit chapeau, même ouvert, impose une grande prudence face aux petites lépiotes mortelles. La taille seule ne permet jamais de confirmer une coulemelle.</string>
 
     <!-- Lépiote brun-incarnat -->
     <string name="myco_brunneoincarnata_name">Lépiote brun-incarnat</string>
     <string name="myco_brunneoincarnata_alt">Deadly parasol</string>
     <string-array name="myco_brunneoincarnata_traits">
-        <item>Petite : chapeau de 3 à 4 cm seulement, écailles brun rosé sur fond clair</item>
+        <item>Petite : chapeau d’environ 2,5 à 6 cm, écailles brun rosé sur fond clair</item>
         <item>Une grande écaille centrale, plus foncée</item>
-        <item>Pied de 2 à 3,5 cm : haut rosé, bas couvert d’écailles brunes, séparés par une zone annulaire sombre</item>
-        <item>Lames blanches, libres · chair qui rougit à la coupe</item>
+        <item>Pied d’environ 2,5 à 5,5 cm : haut pâle, bas couvert d’écailles brunes ; zone annulaire fragile, parfois disparue</item>
+        <item>Lames blanches, libres · chair blanche du chapeau ; le pied peut rosir ou rougir à la coupe</item>
         <item>Pelouses, parcs, jardins · régions chaudes</item>
     </string-array>
-    <string name="myco_brunneoincarnata_note">Mortelle : mêmes toxines que l’amanite phalloïde. Environ 100 g peuvent atteindre gravement le foie. Elle pousse dans les pelouses, où on la prend pour un petit parasol ; les signes arrivent tard, plus de 6 heures après le repas.</string>
+    <string name="myco_brunneoincarnata_note">Mortelle : contient des amatoxines capables de provoquer une atteinte grave du foie, même après une petite quantité. Les premiers signes peuvent être retardés de plusieurs heures. Toute ingestion suspectée exige un avis médical urgent, même sans symptôme.</string>
 
     <!-- Rosé des prés -->
     <string name="myco_campestris_name">Rosé des prés</string>
@@ -804,7 +807,7 @@
         <item>Chair blanche qui rosit à peine, sans jaunir · odeur agréable de champignon de Paris</item>
         <item>Prairies et pâtures · fin d’été à automne</item>
     </string-array>
-    <string name="myco_campestris_note">Comestible, à condition de ne pas se tromper : en 2022, deux personnes sont mortes après avoir pris une amanite mortelle pour un rosé des prés ou un agaric des jachères (ANSES). Les lames de chaque exemplaire doivent être roses ou brunes, jamais blanches.</string>
+    <string name="myco_campestris_note">Comestible seulement après identification certaine de chaque exemplaire. Lames blanches, volve, jaunissement vif ou odeur chimique sont des signaux d’alerte. Ne pas consommer des boutons fermés dont les caractères ne sont pas visibles.</string>
 
     <!-- Agaric jaunissant -->
     <string name="myco_xanthodermus_name">Agaric jaunissant</string>
@@ -818,7 +821,7 @@
         <item>Lames roses puis brun noirâtre, comme le rosé des prés</item>
         <item>Prairies, lisières, parcs, jardins · juillet à novembre</item>
     </string-array>
-    <string name="myco_xanthodermus_note">Toxique : vomissements et troubles digestifs. En 2022, c’était l’espèce toxique la plus souvent retrouvée dans les cueillettes en France (25,7 %, ANSES). Le jaunissement peut être faible ou absent.</string>
+    <string name="myco_xanthodermus_note">Toxique : peut provoquer vomissements et autres troubles digestifs. Dans la surveillance ANSES de 2022, il figurait dans 45 des 175 repas avec au moins une espèce toxique identifiée par un mycologue ; ce chiffre ne représente pas toutes les cueillettes.</string>
 
     <!-- Morille -->
     <string name="myco_morchella_name">Morille jaune</string>
@@ -830,7 +833,7 @@
         <item>Pied blanchâtre, creux, granuleux, parfois évasé</item>
         <item>Printemps (mars à mai) : vergers, frênes, lisières</item>
     </string-array>
-    <string name="myco_morchella_note">Toxique crue ou mal cuite : toujours bien la cuire. Coupée en deux dans la longueur, elle est creuse d’une seule cavité ; sinon, c’est peut-être un gyromitre.</string>
+    <string name="myco_morchella_note">Les morilles crues ou insuffisamment cuites peuvent provoquer une intoxication : les cuire complètement. Une coupe longitudinale aide à examiner la cavité et le raccord du chapeau, mais elle ne suffit pas à elle seule pour identifier l’espèce. Des troubles ont aussi été signalés après consommation de vraies morilles.</string>
 
     <!-- Gyromitre -->
     <string name="myco_gyromitra_name">Gyromitre</string>
@@ -839,11 +842,11 @@
         <item>Chapeau en lobes plissés comme un cerveau, brun rouge à châtain, 3 à 11 cm</item>
         <item>Coupe en long : intérieur chambré, chapeau soudé au pied en plusieurs points</item>
         <item>Pied court et trapu, blanc à crème, sillonné</item>
-        <item>Chair cassante, odeur forte</item>
+        <item>Chair cassante ; odeur variable, peu utile pour l’identification</item>
         <item>Sous conifères, sols acides ou sableux · mars à juin</item>
     </string-array>
     <string name="myco_gyromitra_note">Mortel : la gyromitrine se transforme en méthylhydrazine, qui attaque le foie et le système nerveux. Vente interdite en France depuis 1991. Les vapeurs de cuisson sont aussi dangereuses, et l’ébouillantage n’enlève pas tout.</string>
-    <string name="myco_gyromitra_history">Longtemps mangé après ébouillantage (son nom, esculenta, veut dire « comestible »). Des intoxications imprévisibles, plus d’une centaine de cas mortels dans la littérature, puis une toxicité cumulative suspectée l’ont fait classer comme mortel. Sa vente est interdite en France depuis 1991, ainsi qu’en Allemagne et en Suisse ; elle reste permise en Finlande, avec avertissements.</string>
+    <string name="myco_gyromitra_history">Longtemps consommé après ébouillantage, ce champignon a causé des intoxications graves et parfois mortelles. Sa vente est interdite en France. La Finlande autorise encore sa vente sous conditions, mais son autorité alimentaire déconseille désormais sa consommation : une part de la toxine peut subsister après la préparation recommandée.</string>
 
     <!-- Paxille enroulé -->
     <string name="myco_paxillus_name">Paxille enroulé</string>
@@ -856,8 +859,8 @@
         <item>Chair jaunâtre, sans lait (à la différence des lactaires)</item>
         <item>Sous bouleaux, pelouses, terrains humides · fin d’été à automne · sporée brune</item>
     </string-array>
-    <string name="myco_paxillus_note">Mortel, sans prévenir : après des repas répétés, parfois pendant des années sans le moindre problème, le corps fabrique des anticorps qui détruisent ses propres globules rouges. Anémie, insuffisance rénale, parfois décès. Aucun antidote. En France, on le cueille par erreur à la place du faux mousseron (ANSES).</string>
-    <string name="myco_paxillus_history">On le mangeait couramment en Europe centrale et orientale jusqu’à la Seconde Guerre mondiale. En 1944, le mycologue allemand Julius Schäffer meurt d’en avoir mangé. En 1985, le médecin suisse René Flammer en décrit le mécanisme immunitaire. Les guides n’ont clairement déconseillé de le manger que vers 1990 ; on en mange encore en Pologne, en Russie et en Ukraine, où des gens en meurent chaque année.</string>
+    <string name="myco_paxillus_note">Peut provoquer un syndrome hémolytique rare mais potentiellement mortel, avec destruction des globules rouges et atteinte rénale. Avoir déjà consommé ce champignon sans problème ne garantit pas la sécurité d’un nouveau repas. En cas d’ingestion ou de symptômes, demander rapidement un avis médical.</string>
+    <string name="myco_paxillus_history">Autrefois consommé dans plusieurs régions d’Europe, il est aujourd’hui déconseillé en raison de cas graves d’hémolyse, dont certains mortels. Le mécanisme exact reste étudié.</string>
 
     <!-- Tricholome équestre -->
     <string name="myco_equestre_name">Tricholome équestre</string>
@@ -896,7 +899,7 @@
         <item>Sporée rose</item>
         <item>Lisières et bois clairs de feuillus, surtout sur sol calcaire · milieu de l’été à fin d’automne</item>
     </string-array>
-    <string name="myco_sinuatum_note">Toxique : nausées, vomissements et diarrhée importante, avec une atteinte modérée du foie. Le centre antipoisons belge donne 3 à 8 heures après le repas, d’autres sources dès 30 minutes ; la guérison prend 5 à 6 jours et l’hôpital est parfois nécessaire. La toxine n’est pas identifiée. Les premiers signes ressemblent à ceux de l’amanite phalloïde : sans reste de champignon, le diagnostic est difficile. En 2022, 8,5 % des cueillettes toxiques en France en contenaient (ANSES).</string>
+    <string name="myco_sinuatum_note">Toxique : peut provoquer de fortes nausées, des vomissements, une diarrhée et une déshydratation, parfois avec hospitalisation. Les symptômes peuvent commencer en quelques heures ; leur délai ne permet ni d’identifier le champignon ni d’écarter une autre intoxication. Demander rapidement un avis médical après une ingestion suspecte.</string>
 
     <!-- Clitocybe nébuleux -->
     <string name="myco_nebularis_name">Clitocybe nébuleux</string>
@@ -935,20 +938,20 @@
         <item>Sporée brun tabac</item>
         <item>Sous feuillus, surtout hêtres · printemps et été</item>
     </string-array>
-    <string name="myco_erubescens_note">Toxique : il contient de la muscarine, qui donne en quelques minutes à 2 heures sueurs, salivation, larmoiement, nez qui coule, gêne respiratoire et ralentissement du cœur. La guérison vient en général en moins de 24 heures ; de l’atropine est parfois nécessaire (centre antipoisons belge). Sorti au printemps, on le prend pour le tricholome de la Saint-Georges : lui rougit, l’autre non.</string>
+    <string name="myco_erubescens_note">Potentiellement mortel : sa muscarine peut provoquer sueurs, forte salivation, gêne respiratoire et ralentissement du cœur, souvent rapidement après le repas. Il peut être confondu avec le tricholome de la Saint-Georges ; le rougissement varie et ne tranche pas l’identification. Toute ingestion suspecte exige un avis médical urgent.</string>
 
     <!-- Faux mousseron -->
     <string name="myco_oreades_name">Faux mousseron</string>
     <string name="myco_oreades_alt">Fairy ring champignon</string>
     <string-array name="myco_oreades_traits">
-        <item>Chapeau 2 à 6 cm, chamois à brun roux, qui pâlit en séchant ; d’abord en cloche, puis étalé, avec un mamelon qui dure ; marge sillonnée</item>
+        <item>Chapeau d’environ 2 à 5 cm, chamois à brun roux, qui pâlit en séchant ; d’abord en cloche, puis étalé, avec un mamelon persistant ; marge parfois faiblement sillonnée</item>
         <item>Lames blanc crème, épaisses, très espacées</item>
-        <item>Pied grêle, plus pâle que le chapeau, creux, élastique et très coriace : il se tord en séchant</item>
-        <item>Chair mince · odeur de foin coupé, parfois légèrement de cyanure</item>
+        <item>Pied grêle, plus pâle que le chapeau, souple et très coriace ; texture intérieure variable</item>
+        <item>Chair mince · odeur variable, non fiable pour l’identification</item>
         <item>Sporée blanche</item>
         <item>Pelouses, prés, bords de chemins, en arcs ou en ronds de sorcières · printemps à automne</item>
     </string-array>
-    <string name="myco_oreades_note">Comestible apprécié ; le pied coriace se jette (le centre antipoisons belge le conseille aussi). Sur les mêmes pelouses poussent des clitocybes blancs toxiques, parfois en ronds eux aussi : leurs lames sont serrées, celles du faux mousseron très espacées. Le paxille enroulé, mortel, est lui aussi cueilli par erreur à sa place en France (ANSES).</string>
+    <string name="myco_oreades_note">Comestible seulement après identification fiable de chaque exemplaire. Des clitocybes blancs toxiques poussent dans les mêmes pelouses et forment aussi des ronds ; leurs lames tendent à être serrées et décurrentes, celles du faux mousseron espacées et non décurrentes. Un rond de sorcière et une sporée blanche ne prouvent rien à eux seuls.</string>
 
     <!-- Clitocybe blanchi -->
     <string name="myco_rivulosa_name">Clitocybe blanchi</string>
@@ -960,7 +963,7 @@
         <item>Odeur farineuse</item>
         <item>Prés, pelouses, parcs, bords de chemins, parfois en ronds de sorcières · été à automne</item>
     </string-array>
-    <string name="myco_rivulosa_note">Toxique : la muscarine donne sueurs, salivation, larmoiement, vomissements et ralentissement du cœur, de quelques minutes à 2 heures après le repas. La guérison vient en général en moins de 24 heures ; l’atropine est parfois nécessaire. Il peut être mortel pour une personne fragile. Il pousse dans les gazons, où jouent enfants et animaux.</string>
+    <string name="myco_rivulosa_note">Toxique : la muscarine peut provoquer sueurs, salivation, vomissements et ralentissement du cœur, souvent entre 30 minutes et 2 heures. Des symptômes importants exigent une prise en charge urgente. Il peut pousser dans la même herbe que le faux mousseron comestible ; ni le rond de sorcière ni la couleur du chapeau ne suffisent à l’identifier.</string>
 
     <!-- Coprin noir d’encre -->
     <string name="myco_atramentaria_name">Coprin noir d’encre</string>
@@ -996,8 +999,8 @@
         <item>Lames brunâtres, puis fauves · sporée brun rouille</item>
         <item>Pied de 2 à 6 cm avec un petit anneau fragile, net chez le jeune, souvent disparu ensuite</item>
         <item>Pied blanc poudré au-dessus de l’anneau, brun et soyeux au-dessous</item>
-        <item>Odeur farineuse</item>
-        <item>Sur bois pourri, surtout de conifères, seule ou en petits groupes · été à automne</item>
+        <item>Odeur variable, non fiable pour l’identification</item>
+        <item>Sur bois pourri de conifères ou de feuillus, seule ou en groupes ; saison variable selon la région</item>
     </string-array>
     <string name="myco_galerina_note">Mortelle : mêmes amatoxines que l’amanite phalloïde. Les premiers signes arrivent en moyenne une douzaine d’heures après le repas, jusqu’à 48 heures, comme une gastro-entérite ; puis le foie est atteint. Réanimation, parfois greffe du foie. Elle ressemble à la pholiote changeante et à l’hypholome en touffe (centre antipoisons belge).</string>
 
@@ -1169,7 +1172,7 @@
         <item>Sporée brun rouille</item>
         <item>Bois de feuillus, des plaines à la montagne, assez rare · juillet à décembre</item>
     </string-array>
-    <string name="myco_orellanus_note">Mortel pour le rein, sans signe immédiat. Des troubles digestifs peuvent apparaître 24 à 36 heures après le repas, ou manquer ; la soif intense, les vomissements, les douleurs lombaires et la rareté des urines viennent 2 à 20 jours plus tard. Il faut une dialyse ; la guérison survient dans 50 à 70 % des cas, et l’atteinte du rein est parfois définitive. Il ressemble à de nombreux cortinaires bruns de petite taille : on se méfie de tous les cortinaires rouges, pourpres ou orangés.</string>
+    <string name="myco_orellanus_note">Mortel : l’orellanine peut provoquer une insuffisance rénale après une longue phase sans symptômes. Soif, douleurs lombaires ou diminution des urines peuvent apparaître plusieurs jours après le repas. Certains patients nécessitent une dialyse ou une greffe, d’autres récupèrent sans elles. Toute ingestion suspecte demande un avis médical urgent, même sans symptôme.</string>
 
     <!-- Russule verdoyante -->
     <string name="myco_virescens_name">Russule verdoyante</string>
@@ -1258,7 +1261,7 @@
         <item>Sporée blanche</item>
         <item>Sol calcaire, souvent près de hêtres ou de sapins, en altitude, souvent seul · été et automne</item>
     </string-array>
-    <string name="myco_pardinum_note">Toxique, même en petite quantité : nausées, vomissements violents et diarrhée dans les trois heures, qui durent 24 à 48 heures, avec parfois une bouche amère, de la salivation ou une bouche sèche (syndrome résinoïdien grave, d’après le centre antipoison belge). Le tricholome terreux, plus petit, plus sombre et sans écailles, lui ressemble.</string>
+    <string name="myco_pardinum_note">Toxique : peut provoquer de fortes nausées, des vomissements et une diarrhée, parfois plusieurs heures après le repas. D’autres tricholomes gris lui ressemblent et peuvent aussi présenter de fines écailles. Demander un avis médical après une ingestion suspecte plutôt que de se fier à un seul caractère du chapeau.</string>
 
     <!-- Tricholome terreux -->
     <string name="myco_terreum_name">Tricholome terreux</string>
@@ -1617,7 +1620,7 @@
         <item>Grande volve en sac, ocre roux : c’est ce qui la distingue de l’amanite ovoïde, dont la volve est peu ou pas colorée</item>
         <item>Dans les bois et les lisières, surtout sous les chênes sur sol calcaire ; en automne ; surtout autour de la Méditerranée</item>
     </string-array>
-    <string name="myco_proxima_note">Toxique : la société allemande de mycologie (2026) la range parmi les amanites qui abîment les reins (« syndrome de proxima ») ; elle note que la toxine supposée, l’allénylnorleucine, n’y a pas encore été trouvée. Elle ressemble beaucoup à l’amanite ovoïde, qu’on a parfois mangée : voir la fiche de celle-ci.</string>
+    <string name="myco_proxima_note">Toxique : peut provoquer une grave atteinte des reins, parfois avec dialyse. Elle ressemble beaucoup à l’amanite ovoïde ; la couleur de la volve ne permet pas, seule, de les séparer sûrement. Toute ingestion suspecte exige un avis médical urgent. La toxine exacte de cette espèce n’est pas établie.</string>
     <string name="myco_open_profile">Ouvrir la fiche du champignon</string>
     <string name="myco_open_tree">Retrouver dans l’arbre du vivant</string>
     <string name="myco_sec_classification">Classification</string>
@@ -1707,29 +1710,29 @@
         <item>Chair jaune pâle à safran, odeur de rave</item>
         <item>Bois humides de conifères (épicéas), mousses, sols acides · fin d’été à automne</item>
     </string-array>
-    <string name="myco_rubellus_note">Mortel : l’orellanine détruit les reins. Des troubles digestifs peuvent apparaître 24 à 36 heures après le repas, ou manquer ; l’atteinte des reins suit 2 à 20 jours plus tard, ce qui rend le diagnostic très difficile (centre antipoison belge). L’insuffisance rénale est souvent irréversible, et des greffes ont été nécessaires dans plusieurs séries (Wikipédia, en). Les victimes l’avaient pris pour une girolle ou un cèpe. Le traitement est l’hémodialyse.</string>
+    <string name="myco_rubellus_note">Mortel : l’orellanine peut gravement endommager les reins après une longue phase sans symptômes, parfois de plusieurs jours. Soif, douleurs lombaires et diminution des urines peuvent suivre. Certains cas nécessitent dialyse ou greffe, mais les suites varient. Toute ingestion suspecte est une urgence médicale, même sans symptôme.</string>
     <string name="myco_verna_name">Amanite printanière</string>
     <string name="myco_verna_alt">Fool’s mushroom</string>
     <string-array name="myco_verna_traits">
         <item>Chapeau tout blanc, de 4 à 10 cm, convexe à plan, parfois ivoire ou ocre au centre</item>
         <item>Lames libres, serrées, blanches</item>
         <item>Pied de 7 à 13 cm, blanc et soyeux, avec un bulbe arrondi</item>
-        <item>Anneau membraneux et persistant</item>
+        <item>Anneau membraneux haut et mince, parfois déchiré ou peu visible</item>
         <item>Volve en sac, blanchâtre, de 2 à 3 cm</item>
-        <item>Bois clairs, surtout chênes et châtaigniers, sols acides et sableux · printemps à été ; rare, méditerranéenne</item>
+        <item>Bois de feuillus ou mixtes en Europe, surtout au printemps ; les amanites blanches voisines exigent une expertise</item>
     </string-array>
-    <string name="myco_verna_note">Mortelle : mêmes toxines et même maladie que l’amanite phalloïde (alpha-amanitine : foie, puis reins). Les symptômes viennent tard : 6 à 24 heures après le repas (Wikipédia, en), une douzaine d’heures en moyenne et jusqu’à 48 (centre antipoison belge). Quelques grammes suffisent (Wikipédia, fr). On l’a prise pour le rosé des prés (Bulliard, 1780), pour des agarics et des volvaires blancs, et pour la forme blanche de la phalloïde. Les sources lues ne donnent aucun critère de terrain qui la sépare de l’amanite vireuse : l’atlas n’essaie pas.</string>
+    <string name="myco_verna_note">Amanite mortelle à amatoxines. Les symptômes peuvent commencer plusieurs heures après le repas, puis une grave atteinte du foie peut suivre. Dégager la base entière du pied pour voir la volve en sac, mais la planche ne permet pas de distinguer sûrement les amanites blanches mortelles. En cas d’ingestion suspecte, demander un avis médical urgent.</string>
     <string name="myco_subincarnata_name">Lépiote de Josserand</string>
     <string name="myco_subincarnata_alt">Fatal dapperling</string>
     <string-array name="myco_subincarnata_traits">
-        <item>Chapeau de 5 à 6 cm, feutré à finement écailleux, brun rosé pâle à rose vineux, mamelon central plus foncé</item>
+        <item>Petit chapeau d’environ 1,5 à 6 cm, feutré à finement écailleux, brun rosé pâle à rose vineux, centre plus foncé</item>
         <item>Lames libres, assez serrées, crème pâle</item>
-        <item>Pied d’environ 5 cm et de moins de 1 cm d’épaisseur, avec un anneau laineux bien distinct</item>
+        <item>Pied d’environ 5 cm et de moins de 1 cm d’épaisseur, avec une zone annulaire laineuse discrète et fugace</item>
         <item>Blanchâtre au-dessus de l’anneau, écailleux en dessous, de la couleur du chapeau</item>
-        <item>Odeur fruitée typique de mandarine sur les lames</item>
+        <item>Odeur variable, non fiable pour l’identification</item>
         <item>Haies, jardins, litière, sol riche</item>
     </string-array>
-    <string name="myco_subincarnata_note">Mortelle : amatoxines, comme l’amanite phalloïde. Les symptômes viennent tard : une douzaine d’heures en moyenne et jusqu’à 48 (centre antipoison belge, qui la nomme Lepiota josserandii). Le même centre déconseille de manger toute lépiote de moins de 10 cm. Wikipédia (fr) met en garde contre une confusion avec le faux mousseron.</string>
+    <string name="myco_subincarnata_note">Mortelle : contient des amatoxines pouvant provoquer une insuffisance hépatique retardée. Elle peut être confondue avec de petits champignons comestibles des pelouses, dont le faux mousseron. Une zone annulaire faible ou absente ne la rend pas sûre. Toute ingestion suspecte exige un avis médical urgent avant même les symptômes.</string>
     <string name="myco_geophylla_name">Inocybe à lames couleur de terre</string>
     <string name="myco_geophylla_alt">Common white inocybe</string>
     <string-array name="myco_geophylla_traits">
@@ -1966,13 +1969,13 @@
     <string name="myco_nobilis_name">Russula nobilis</string>
     <string name="myco_nobilis_alt">Beechwood sickener, Russula mairei</string>
     <string-array name="myco_nobilis_traits">
-        <item>Chapeau de 3 à 6 cm, rouge ou rosé, convexe puis plan, peu visqueux, la peau se retirant sur le tiers environ</item>
+        <item>Chapeau d’environ 3 à 9 cm, rouge ou rosé, convexe puis plan, parfois visqueux par temps humide ; peau se retirant sur le tiers environ</item>
         <item>Lames blanches, serrées</item>
         <item>Pied de 2 à 5 cm, blanc, plus ferme que celui de la russule émétique</item>
-        <item>Chair blanche et ferme ; odeur de noix de coco, saveur poivrée</item>
+        <item>Chair blanche et lames cassantes comme de la craie ; odeur variable, non diagnostique</item>
         <item>Sous les hêtres · répandue en Europe</item>
     </string-array>
-    <string name="myco_nobilis_note">Toxique : la DGfM la liste sous son ancien nom, Russula mairei, pour un syndrome gastro-intestinal, et Wikipédia (en) la dit immangeable, probablement vénéneuse en quantité mais pas mortelle : crues, les russules rouges au goût poivré donnent diarrhée, vomissements et crampes, la toxine restant inconnue. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.</string>
+    <string name="myco_nobilis_note">Non comestible et signalée comme pouvant provoquer des troubles digestifs. La société allemande de mycologie la répertorie sous son ancien nom Russula mairei. La couleur du chapeau ou une éventuelle odeur de coco ne la distingue pas sûrement des autres russules rouges. Ne pas consommer une récolte incertaine.</string>
     <string name="myco_aurea_name">Russule dorée</string>
     <string name="myco_aurea_alt">Gilded brittlegill</string>
     <string-array name="myco_aurea_traits">
@@ -2464,4 +2467,197 @@
         <item>Wikipédia (fr) dit que les pieds-bleus avec lesquels on le confond sont tous comestibles, mais cite un cortinaire violet parmi les sosies : la couleur violette seule ne suffit pas.</item>
         <item>Les deux sont dans la liste DGfM des champignons comestibles.</item>
     </string-array>
+
+    <!-- Fiches ajoutées pour la parité avec l’arbre du vivant. -->
+    <string name="myco_status_reference_only">Référence taxonomique</string>
+    <string name="myco_supplement_illustration">Schéma de groupe ; ce n’est pas une illustration d’identification</string>
+    <string name="myco_puccinia_recondita_name">Puccinia recondita</string>
+    <string name="myco_puccinia_recondita_alt">Nom commun non stabilisé</string>
+    <string name="myco_puccinia_recondita_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_puccinia_recondita_traits"><item>Forme générale : rouille foliaire du blé.</item><item>Repère écologique : rouille foliaire du blé. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_puccinia_poarum_name">Puccinia poarum</string>
+    <string name="myco_puccinia_poarum_alt">Nom commun non stabilisé</string>
+    <string name="myco_puccinia_poarum_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_puccinia_poarum_traits"><item>Forme générale : rouille foliaire du tussilage.</item><item>Repère écologique : rouille foliaire du tussilage. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_puccinia_emaculata_name">Puccinia emaculata</string>
+    <string name="myco_puccinia_emaculata_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_puccinia_emaculata_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_puccinia_emaculata_traits"><item>Forme générale : rouille de graminées.</item><item>Repère écologique : rouille de graminées. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_tremella_mesenterica_name">trémelle mésentérique</string>
+    <string name="myco_tremella_mesenterica_alt">Nom commun non stabilisé</string>
+    <string name="myco_tremella_mesenterica_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_tremella_mesenterica_traits"><item>Forme générale : gelée jaune lobée sur le bois mort.</item><item>Repère écologique : gelée jaune lobée sur le bois mort. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_tulostoma_kotlabae_name">Tulostoma kotlabae</string>
+    <string name="myco_tulostoma_kotlabae_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_tulostoma_kotlabae_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_tulostoma_kotlabae_traits"><item>Forme générale : petite vesse pédicellée des milieux secs.</item><item>Repère écologique : petite vesse pédicellée des milieux secs. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_spongiforma_squarepantsii_name">Spongiforma squarepantsii</string>
+    <string name="myco_spongiforma_squarepantsii_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_spongiforma_squarepantsii_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_spongiforma_squarepantsii_traits"><item>Forme générale : corps fructifère spongieux et poreux.</item><item>Repère écologique : corps fructifère spongieux et poreux. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_russula_rhodopus_name">Russula rhodopus</string>
+    <string name="myco_russula_rhodopus_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_russula_rhodopus_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_russula_rhodopus_traits"><item>Forme générale : russule forestière à chair cassante.</item><item>Repère écologique : russule forestière à chair cassante. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_russula_pseudodelica_name">Russula pseudodelica</string>
+    <string name="myco_russula_pseudodelica_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_russula_pseudodelica_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_russula_pseudodelica_traits"><item>Forme générale : russule à silhouette en entonnoir.</item><item>Repère écologique : russule à silhouette en entonnoir. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_russula_pallidospora_name">Russula pallidospora</string>
+    <string name="myco_russula_pallidospora_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_russula_pallidospora_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_russula_pallidospora_traits"><item>Forme générale : russule à sporée pâle.</item><item>Repère écologique : russule à sporée pâle. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_russula_nitida_name">Russula nitida</string>
+    <string name="myco_russula_nitida_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_russula_nitida_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_russula_nitida_traits"><item>Forme générale : russule associée aux bois humides.</item><item>Repère écologique : russule associée aux bois humides. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_russula_maculata_name">Russula maculata</string>
+    <string name="myco_russula_maculata_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_russula_maculata_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_russula_maculata_traits"><item>Forme générale : russule à chapeau parfois taché.</item><item>Repère écologique : russule à chapeau parfois taché. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_russula_atroglauca_name">Russula atroglauca</string>
+    <string name="myco_russula_atroglauca_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_russula_atroglauca_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_russula_atroglauca_traits"><item>Forme générale : russule aux tons vert sombre.</item><item>Repère écologique : russule aux tons vert sombre. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_russula_adulterina_name">Russula adulterina</string>
+    <string name="myco_russula_adulterina_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_russula_adulterina_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_russula_adulterina_traits"><item>Forme générale : russule de conifères montagnards.</item><item>Repère écologique : russule de conifères montagnards. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_phaeocollybia_christinae_name">Phaeocollybia christinae</string>
+    <string name="myco_phaeocollybia_christinae_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_phaeocollybia_christinae_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_phaeocollybia_christinae_traits"><item>Forme générale : petit champignon forestier à longue base souterraine.</item><item>Repère écologique : petit champignon forestier à longue base souterraine. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_exidia_nigricans_name">exidie noire</string>
+    <string name="myco_exidia_nigricans_alt">Nom commun non stabilisé</string>
+    <string name="myco_exidia_nigricans_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_exidia_nigricans_traits"><item>Forme générale : masse gélatineuse sombre sur le bois mort.</item><item>Repère écologique : masse gélatineuse sombre sur le bois mort. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_agaricus_pilatianus_name">Agaricus pilatianus</string>
+    <string name="myco_agaricus_pilatianus_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_agaricus_pilatianus_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_agaricus_pilatianus_traits"><item>Forme générale : agaric à lames libres et sporée brun chocolat à maturité.</item><item>Repère écologique : agaric à lames libres et sporée brun chocolat à maturité. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_thanatephorus_cucumeris_name">Thanatephorus cucumeris</string>
+    <string name="myco_thanatephorus_cucumeris_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_thanatephorus_cucumeris_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_thanatephorus_cucumeris_traits"><item>Forme générale : champignon microscopique responsable de la maladie du rhizoctone.</item><item>Repère écologique : champignon microscopique responsable de la maladie du rhizoctone. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_botryobasidium_simile_name">Botryobasidium simile</string>
+    <string name="myco_botryobasidium_simile_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_botryobasidium_simile_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_botryobasidium_simile_traits"><item>Forme générale : champignon corticioïde formant une couche sur le bois.</item><item>Repère écologique : champignon corticioïde formant une couche sur le bois. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_athelia_rolfsii_name">Athelia rolfsii</string>
+    <string name="myco_athelia_rolfsii_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_athelia_rolfsii_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_athelia_rolfsii_traits"><item>Forme générale : champignon du sol pathogène de nombreuses plantes.</item><item>Repère écologique : champignon du sol pathogène de nombreuses plantes. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_lactarius_zonarioides_name">Lactarius zonarioides</string>
+    <string name="myco_lactarius_zonarioides_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_lactarius_zonarioides_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_lactarius_zonarioides_traits"><item>Forme générale : lactaire à zones concentriques et lait à la cassure.</item><item>Repère écologique : lactaire à zones concentriques et lait à la cassure. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_lactarius_torminosulus_name">Lactarius torminosulus</string>
+    <string name="myco_lactarius_torminosulus_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_lactarius_torminosulus_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_lactarius_torminosulus_traits"><item>Forme générale : petit lactaire à marge velue, associé aux bouleaux.</item><item>Repère écologique : petit lactaire à marge velue, associé aux bouleaux. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_lactarius_sphagneti_name">Lactarius sphagneti</string>
+    <string name="myco_lactarius_sphagneti_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_lactarius_sphagneti_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_lactarius_sphagneti_traits"><item>Forme générale : lactaire des tourbières et des sphaignes.</item><item>Repère écologique : lactaire des tourbières et des sphaignes. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_lactarius_picinus_name">Lactarius picinus</string>
+    <string name="myco_lactarius_picinus_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_lactarius_picinus_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_lactarius_picinus_traits"><item>Forme générale : lactaire sombre des pessières.</item><item>Repère écologique : lactaire sombre des pessières. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_lactarius_fennoscandicus_name">Lactarius fennoscandicus</string>
+    <string name="myco_lactarius_fennoscandicus_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_lactarius_fennoscandicus_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_lactarius_fennoscandicus_traits"><item>Forme générale : lactaire boréal associé aux conifères.</item><item>Repère écologique : lactaire boréal associé aux conifères. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_russula_laricina_name">Russula laricina</string>
+    <string name="myco_russula_laricina_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_russula_laricina_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_russula_laricina_traits"><item>Forme générale : russule associée au mélèze.</item><item>Repère écologique : russule associée au mélèze. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_hygrophorus_pustulatus_name">Hygrophorus pustulatus</string>
+    <string name="myco_hygrophorus_pustulatus_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_hygrophorus_pustulatus_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_hygrophorus_pustulatus_traits"><item>Forme générale : hygrophore visqueux à pied ponctué.</item><item>Repère écologique : hygrophore visqueux à pied ponctué. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_hygrophorus_purpurascens_name">Hygrophorus purpurascens</string>
+    <string name="myco_hygrophorus_purpurascens_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_hygrophorus_purpurascens_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_hygrophorus_purpurascens_traits"><item>Forme générale : hygrophore à teintes pourpres.</item><item>Repère écologique : hygrophore à teintes pourpres. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_hygrophorus_penarioides_name">Hygrophorus penarioides</string>
+    <string name="myco_hygrophorus_penarioides_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_hygrophorus_penarioides_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_hygrophorus_penarioides_traits"><item>Forme générale : hygrophore forestier du groupe des espèces blanchâtres.</item><item>Repère écologique : hygrophore forestier du groupe des espèces blanchâtres. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_amanita_beckeri_name">Amanita beckeri</string>
+    <string name="myco_amanita_beckeri_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_amanita_beckeri_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_amanita_beckeri_traits"><item>Forme générale : amanite à lames libres et sporée blanche.</item><item>Repère écologique : amanite à lames libres et sporée blanche. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_inocybe_tricolor_name">Inocybe tricolor</string>
+    <string name="myco_inocybe_tricolor_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_inocybe_tricolor_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_inocybe_tricolor_traits"><item>Forme générale : inocybe à chapeau fibrilleux et sporée brune.</item><item>Repère écologique : inocybe à chapeau fibrilleux et sporée brune. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_inocybe_aeruginascens_name">Inocybe aeruginascens</string>
+    <string name="myco_inocybe_aeruginascens_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_inocybe_aeruginascens_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_inocybe_aeruginascens_traits"><item>Forme générale : inocybe à coloration verdissante caractéristique.</item><item>Repère écologique : inocybe à coloration verdissante caractéristique. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_psilocybe_silvatica_name">Psilocybe silvatica</string>
+    <string name="myco_psilocybe_silvatica_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_psilocybe_silvatica_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_psilocybe_silvatica_traits"><item>Forme générale : petit psilocybe saprotrophe de milieux boisés.</item><item>Repère écologique : petit psilocybe saprotrophe de milieux boisés. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_psilocybe_puberula_name">Psilocybe puberula</string>
+    <string name="myco_psilocybe_puberula_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_psilocybe_puberula_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_psilocybe_puberula_traits"><item>Forme générale : petit psilocybe à caractères microscopiques utiles.</item><item>Repère écologique : petit psilocybe à caractères microscopiques utiles. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_gymnopilus_pseudofulgens_name">Gymnopilus pseudofulgens</string>
+    <string name="myco_gymnopilus_pseudofulgens_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_gymnopilus_pseudofulgens_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_gymnopilus_pseudofulgens_traits"><item>Forme générale : gymnopile à sporée rouille, lié au bois.</item><item>Repère écologique : gymnopile à sporée rouille, lié au bois. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_gymnopilus_josserandii_name">Gymnopilus josserandii</string>
+    <string name="myco_gymnopilus_josserandii_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_gymnopilus_josserandii_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_gymnopilus_josserandii_traits"><item>Forme générale : gymnopile forestier à sporée rouille.</item><item>Repère écologique : gymnopile forestier à sporée rouille. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_schizosaccharomyces_pombe_name">Schizosaccharomyces pombe</string>
+    <string name="myco_schizosaccharomyces_pombe_alt">Nom commun non stabilisé</string>
+    <string name="myco_schizosaccharomyces_pombe_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_schizosaccharomyces_pombe_traits"><item>Forme générale : levure unicellulaire qui se divise par scissiparité.</item><item>Repère écologique : levure unicellulaire qui se divise par scissiparité. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_parmelia_sulcata_name">parmelie sillonnée</string>
+    <string name="myco_parmelia_sulcata_alt">Nom commun non stabilisé</string>
+    <string name="myco_parmelia_sulcata_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_parmelia_sulcata_traits"><item>Forme générale : lichen foliacé gris, formé par une symbiose.</item><item>Repère écologique : lichen foliacé gris, formé par une symbiose. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_fusarium_oxysporum_name">Fusarium oxysporum</string>
+    <string name="myco_fusarium_oxysporum_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_fusarium_oxysporum_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_fusarium_oxysporum_traits"><item>Forme générale : moisissure du sol comprenant des lignées pathogènes de plantes.</item><item>Repère écologique : moisissure du sol comprenant des lignées pathogènes de plantes. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_tuber_mesentericum_name">Tuber mesentericum</string>
+    <string name="myco_tuber_mesentericum_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_tuber_mesentericum_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_tuber_mesentericum_traits"><item>Forme générale : truffe souterraine à surface verruqueuse.</item><item>Repère écologique : truffe souterraine à surface verruqueuse. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_pleomassaria_siparia_name">Pleomassaria siparia</string>
+    <string name="myco_pleomassaria_siparia_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_pleomassaria_siparia_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_pleomassaria_siparia_traits"><item>Forme générale : champignon microscopique formant des fructifications noires sur le bois.</item><item>Repère écologique : champignon microscopique formant des fructifications noires sur le bois. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_pestalotiopsis_microspora_name">Pestalotiopsis microspora</string>
+    <string name="myco_pestalotiopsis_microspora_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_pestalotiopsis_microspora_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_pestalotiopsis_microspora_traits"><item>Forme générale : moisissure à spores cloisonnées, parfois associée à des plantes.</item><item>Repère écologique : moisissure à spores cloisonnées, parfois associée à des plantes. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_histoplasma_capsulatum_name">Histoplasma capsulatum</string>
+    <string name="myco_histoplasma_capsulatum_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_histoplasma_capsulatum_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_histoplasma_capsulatum_traits"><item>Forme générale : champignon dimorphe présent dans l’environnement, étudié en microbiologie.</item><item>Repère écologique : champignon dimorphe présent dans l’environnement, étudié en microbiologie. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_neurospora_crassa_name">Neurospora crassa</string>
+    <string name="myco_neurospora_crassa_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_neurospora_crassa_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_neurospora_crassa_traits"><item>Forme générale : moisissure orange, organisme modèle de la génétique.</item><item>Repère écologique : moisissure orange, organisme modèle de la génétique. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_candida_parapsilosis_name">Candida parapsilosis</string>
+    <string name="myco_candida_parapsilosis_alt">Nom commun stable non retenu faute de source concordante</string>
+    <string name="myco_candida_parapsilosis_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_candida_parapsilosis_traits"><item>Forme générale : levure unicellulaire étudiée en microbiologie clinique.</item><item>Repère écologique : levure unicellulaire étudiée en microbiologie clinique. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_saccharomyces_cerevisiae_name">Saccharomyces cerevisiae</string>
+    <string name="myco_saccharomyces_cerevisiae_alt">Nom commun non stabilisé</string>
+    <string name="myco_saccharomyces_cerevisiae_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
+    <string-array name="myco_saccharomyces_cerevisiae_traits"><item>Forme générale : levure unicellulaire utilisée en fermentation et en recherche.</item><item>Repère écologique : levure unicellulaire utilisée en fermentation et en recherche. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_penicillium_roqueforti_name">moisissure du roquefort</string>
+    <string name="myco_penicillium_roqueforti_alt">moisissure des fromages persillés</string>
+    <string name="myco_penicillium_roqueforti_note">Certaines souches sélectionnées sont utilisées dans la fabrication maîtrisée de fromages persillés. Les souches et les conditions de production diffèrent ; voir une moisissure bleu-vert ailleurs ne permet ni de l’identifier ni d’établir qu’elle est sans danger. Cette fiche décrit le champignon et ne constitue pas une évaluation de sécurité alimentaire.</string>
+    <string-array name="myco_penicillium_roqueforti_traits"><item>Moisissure filamenteuse ascomycète ; elle ne forme pas un champignon à chapeau et à pied.</item><item>Utilisée comme culture d’affinage de fromages persillés, dont le roquefort.</item><item>Les souches peuvent différer par la couleur, l’arôme et les métabolites secondaires, dont des mycotoxines.</item></string-array>
+    <string name="myco_article_pending">Cette fiche n’a pas encore été revue indépendamment. Les sources indiquées restent à vérifier.</string>
+    <string name="myco_herbarium_accessibility">Planche d’herbier de %1$s</string>
+    <string name="myco_show_drawing">Afficher le dessin de reconnaissance</string>
+    <string name="myco_show_herbarium">Afficher la planche d’herbier</string>
+    <string name="myco_sec_references">Sources de cette espèce</string>
 </resources>

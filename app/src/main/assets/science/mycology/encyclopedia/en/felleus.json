@@ -1,0 +1,25 @@
+{
+  "id": "felleus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Identification", "text": "Tylopilus felleus is a bolete with a convex tan to brown cap, often somewhat velvety when young. Beneath it are tiny round pores, not gills: cream to whitish at first, becoming pink to clay-pink with age and browning where rubbed. The pale tan stem widens toward the base and carries a coarse, dark-brown raised net, at least high on the stem. The thick white flesh usually does not change colour when cut; the spore print is clay-pink to pinkish brown."},
+    {"title": "Habitat and season", "text": "An ectomycorrhizal fungus appearing on soil in woodland, usually singly or in small groups. European descriptions place it mainly with oak, beech and other broadleaved trees, sometimes with conifers. In Britain and Ireland it is found chiefly from late summer through autumn; locality affects season and tree partners."},
+    {"title": "Similar species", "text": "It can resemble a young cep (Boletus edulis) and related porcini. A cep's pores develop yellow to olive tones rather than the mature bitter bolete's pink flush; its stem net is usually finer and paler. Check the pore surface, raised dark reticulation and cut flesh together. A young specimen may not yet show pink pores, and an image alone cannot confirm an edible identification."},
+    {"title": "Food value", "text": "Generally regarded as inedible because its intense bitterness persists or becomes more apparent after cooking and can spoil a mixed mushroom dish. This classification is based on unpalatability. Do not use a taste test as the sole identification method or eat an uncertain bolete."}
+  ],
+  "traits": [
+    "Tan to brown convex cap, sometimes velvety when young",
+    "Tiny pores cream-white when young, later pink to clay-pink, browning when rubbed",
+    "Pale stem with coarse raised dark-brown net, at least above",
+    "Thick whitish flesh normally without blue staining",
+    "Clay-pink spore print; usually near oak or beech in European woodland"
+  ],
+  "safetyNote": "Inedible because of its strong bitterness, which can spoil a cooked mushroom dish. Do not eat a bolete whose identity is uncertain; if a wild mushroom was eaten and symptoms occur, seek poison-centre or medical advice.",
+  "sources": [
+    {"title": "First Nature — Tylopilus felleus, identification and ecology", "url": "https://www.first-nature.com/fungi/tylopilus-felleus.php"},
+    {"title": "Missouri Department of Conservation — Bitter bolete field guide", "url": "https://mdc.mo.gov/discover-nature/field-guide/bitter-bolete"},
+    {"title": "Fondation Miron-Royer — Bolet amer identification profile", "url": "https://www.fondationmironroyer.com/fr/identification/fiche/bolet-amer"},
+    {"title": "Woodland Trust — Penny bun and its bitter bolete lookalike", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/penny-bun/"}
+  ],
+  "related": ["edulis", "reticulatus", "pinophilus"]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "pantherina",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Identification", "text": "Amanita pantherina has a brown, ochre-brown or grey-brown cap, initially domed then flatter, with a finely striate margin. Small pure-white fragments of the universal veil are usually scattered over its surface, but rain can remove them. The crowded white gills are free from the white stem; the spore print is white. A hanging white ring is smooth on its upper face. The slightly swollen, sharply marginate stem base bears one or more woolly volval belts above a narrow groove rather than a deep sack. The white flesh does not redden when cut."},
+    {"title": "Habitat and season", "text": "An ectomycorrhizal fungus growing on soil, most often with broadleaved trees such as oak and beech, and sometimes among conifers. In Britain and Ireland it fruits chiefly from late summer into autumn; timing and abundance differ elsewhere in Europe."},
+    {"title": "Similar species", "text": "The blusher (Amanita rubescens) can have a brown cap, but its flesh and stem pinken or redden when damaged. The grey-spotted amanita (Amanita excelsa) generally has greyer veil patches, a grooved upper ring and lacks the panther cap's distinct basal volval gutter. These traits vary or may be obscured by weather; no single cap colour or image is sufficient for identification."},
+    {"title": "Toxicity", "text": "Poisonous: ibotenic acid and muscimol cause the pantherina syndrome. ANSES gives an onset of about 30 minutes to 3 hours, with agitation, confusion, hallucinations or drowsiness; nausea and vomiting can occur but are not constant. Severe poisoning may cause coma or seizures. A poison-centre study found greater symptom frequency after A. pantherina than after A. muscaria in its small case series; toxicity varies between specimens. Seek urgent poison-centre or emergency advice after suspected ingestion."}
+  ],
+  "traits": [
+    "Variable ochre- to grey-brown cap, finely striate at the margin, usually with pure-white veil warts",
+    "Crowded free white gills; white spore print",
+    "White stem with a hanging ring smooth on its upper face",
+    "Slightly swollen, sharply marginate base with woolly volval belts and a narrow groove",
+    "White flesh without reddish staining; usually near oak or beech"
+  ],
+  "safetyNote": "Poisonous: ibotenic acid and muscimol can cause confusion, agitation or drowsiness about 30 minutes to 3 hours after ingestion; severe cases may involve coma or seizures. Do not eat. If ingestion is suspected, contact a poison centre or emergency service immediately.",
+  "sources": [
+    {"title": "ANSES — Mushroom poisoning surveillance report for 2022 (2023)", "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"},
+    {"title": "ANSES — Opinion on edible and poisonous mushrooms, syndrome table (2015)", "url": "https://www.anses.fr/system/files/ERCA2015SA0180.pdf"},
+    {"title": "German Mycological Society (DGfM) — Poisonous fungi and syndromes (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "First Nature — Amanita pantherina, identification and ecology", "url": "https://www.first-nature.com/fungi/amanita-pantherina.php"},
+    {"title": "Moss and Hendrickson — Toxicity of muscimol and ibotenic acid containing mushrooms, Clinical Toxicology (2018)", "url": "https://ohsu.elsevierpure.com/en/publications/toxicity-of-muscimol-and-ibotenic-acid-containing-mushrooms-repor/"}
+  ],
+  "related": ["rubescens", "muscaria", "regalis"]
+}

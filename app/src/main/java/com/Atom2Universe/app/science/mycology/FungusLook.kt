@@ -10,8 +10,12 @@ enum class FungusStatus(@param:StringRes val label: Int, val color: Int) {
     COOKED(R.string.myco_status_cooked, 0xFFB26A00.toInt()),
     INEDIBLE(R.string.myco_status_inedible, 0xFF6B6B6B.toInt()),
     TOXIC(R.string.myco_status_toxic, 0xFFD84315.toInt()),
-    DEADLY(R.string.myco_status_deadly, 0xFF8E0F24.toInt())
+    DEADLY(R.string.myco_status_deadly, 0xFF8E0F24.toInt()),
+    REFERENCE_ONLY(R.string.myco_status_reference_only, 0xFF526477.toInt())
 }
+
+/** Type de schéma pour les taxons fongiques qui ne produisent pas un champignon à chapeau. */
+enum class FungusDiagramKind { MUSHROOM, GENERIC_MUSHROOM, JELLY, TRUFFLE, YEAST, MOLD, RUST, LICHEN, CORTICIOID }
 
 /** Les trois vues d'une planche. */
 enum class PlateMode(@param:StringRes val label: Int) {
@@ -213,7 +217,9 @@ class FungusSpecies(
     @param:ArrayRes val traits: Int,
     @param:StringRes val note: Int,
     /** Histoire du classement (0 = rien à raconter). */
-    @param:StringRes val history: Int = 0
+    @param:StringRes val history: Int = 0,
+    /** Un schéma conceptuel remplace la planche à chapeau pour les formes non agaricoïdes. */
+    val diagram: FungusDiagramKind = FungusDiagramKind.MUSHROOM
 )
 
 /** Un groupe de sosies. */

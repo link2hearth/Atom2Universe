@@ -1,0 +1,25 @@
+{
+  "id": "xanthodermus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Identification", "text": "Agaricus xanthodermus has a white to off-white cap, often rather square in profile when young and broadly convex to flat with age. Scratching the cap edge or cutting and rubbing the swollen stem base produces a rapid chrome-yellow stain, especially in fresh specimens; the yellow may later turn brown. Its crowded free gills are pale at first, then pink and finally dark chocolate to purplish brown. The white stem has a broad persistent hanging ring, often with a ridge beneath it, and no basal cup. A chemical odour of phenol, ink or disinfectant is usually noticeable, especially when cut or heated. The spore print is very dark brown."},
+    {"title": "Habitat and season", "text": "A saprotrophic mushroom growing on soil in lawns, gardens, parks, hedgerows and other disturbed or grassy places, often in groups. In Britain and Ireland it fruits mainly from summer through autumn; the season varies with climate and rainfall."},
+    {"title": "Similar species", "text": "The edible field mushroom (Agaricus campestris) also has pink gills that darken but lacks the immediate strong chrome-yellow staining and phenolic smell. Some other Agaricus can yellow slightly, so inspect several features together, especially a freshly cut stem base, gill colour and odour. A closed white button is particularly hard to identify and must not be judged by cap colour alone."},
+    {"title": "Toxicity and surveillance", "text": "Poisonous: ingestion may cause nausea, abdominal cramps, vomiting and diarrhoea. In the ANSES review of French poison-centre cases for the 2022 picking season, yellow stainers appeared in 25.7% of the 175 meals whose harvest contained at least one toxic species identified by a mycologist; this is not a percentage of all mushroom harvests or of severe poisonings. After suspected ingestion, seek poison-centre or emergency advice and keep any remaining specimens."}
+  ],
+  "traits": [
+    "White to off-white cap, often somewhat square in profile when young",
+    "Cap edge and cut swollen stem base stain rapidly chrome yellow",
+    "Free crowded gills pale, then pink, then dark chocolate brown",
+    "Broad hanging ring; no volva; dark-brown spore print",
+    "Unpleasant phenol, ink or disinfectant odour, especially when cut or heated"
+  ],
+  "safetyNote": "Poisonous: can cause nausea, abdominal cramps, vomiting and diarrhoea. A rapid chrome-yellow stain at the cut stem base and a chemical smell are important warning signs. Do not eat; seek poison-centre advice after suspected ingestion.",
+  "sources": [
+    {"title": "ANSES — Mushroom poisoning surveillance report for the 2022 picking season (2023)", "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"},
+    {"title": "German Mycological Society (DGfM) — Poisonous fungi and syndromes (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Royal Botanic Gardens Victoria — Yellow-staining Mushroom", "url": "https://rbgv-prod.azurewebsites.net/science/herbarium/yellow-staining-mushroom/"},
+    {"title": "First Nature — Agaricus xanthodermus identification and toxicity", "url": "https://www.first-nature.com/fungi/agaricus-xanthodermus.php"}
+  ],
+  "related": ["campestris", "bisporus", "moelleri"]
+}

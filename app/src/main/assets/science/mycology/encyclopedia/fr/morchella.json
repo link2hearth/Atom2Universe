@@ -1,0 +1,22 @@
+{
+  "id": "morchella",
+  "reviewStatus": "verified",
+  "safetyNote": "Les morilles véritables doivent être identifiées avec certitude et bien cuites avant consommation. Des morilles crues ou insuffisamment cuites ont provoqué des intoxications graves ; même des morilles correctement identifiées peuvent entraîner des troubles digestifs ou neurologiques. Consulter rapidement si des symptômes suivent un repas de morilles.",
+  "sections": [
+    {"title": "Morille jaune", "text": "Morchella esculenta est une morille printanière à chapeau ovoïde à arrondi. Sa surface porte des alvéoles profonds, irréguliers et bien délimités, séparés par des crêtes reliées entre elles ; la couleur va du crème ou jaune ocre au brun miel. Le bord inférieur du chapeau est soudé au pied, sans pendre librement. Il n'y a ni lames ni tubes sous le chapeau : la surface fertile tapisse les alvéoles."},
+    {"title": "Une seule cavité continue", "text": "Une coupe longitudinale de l'ensemble du champignon montre une cavité ouverte se prolongeant du chapeau dans le pied. Le pied blanchâtre à crème est creux, souvent un peu ridé ou granuleux, et peut s'élargir et se plisser vers sa base. Il n'a ni anneau ni volve. L'intérieur creux et la soudure du chapeau au pied sont utiles, mais aucun de ces caractères pris isolément ne garantit l'identification."},
+    {"title": "Milieux et confusions", "text": "En Europe, les morilles jaunes apparaissent surtout au printemps, souvent de mars à mai selon les conditions locales. Elles poussent aux lisières, dans les bois humides de feuillus et parfois dans des lieux remaniés comme les chemins ou jardins. Les gyromitres ont un chapeau plus lobé ou cérébriforme et peuvent être très toxiques ; certains sosies sont creux ou irrégulièrement cloisonnés, donc une seule coupe ne les exclut pas tous. Le nom de « morille jaune » sert aussi à désigner des espèces voisines de Morchella selon la région."},
+    {"title": "Sécurité alimentaire", "text": "Ne jamais manger de morilles crues ou à peine cuites ; bien cuire les exemplaires identifiés. Une enquête américaine portant sur une autre morille véritable, M. sextelata, a associé plus fortement la maladie à des morilles servies crues qu'à des morilles chauffées, sans démontrer qu'une cuisson protège toujours. Des études des centres antipoison français rapportent aussi des troubles digestifs et neurologiques après consommation de morilles, parfois associés à de grandes portions. Éviter les quantités excessives et faire vérifier toute identification incertaine par un mycologue qualifié."},
+    {"title": "À propos de la planche", "text": "La planche sur fond blanc montre une morille entière, une coupe longitudinale nette, une seconde vue entière et un gros plan des alvéoles du chapeau. La coupe met en évidence la cavité continue et le bord du chapeau soudé au pied."}
+  ],
+  "sources": [
+    {"title": "Université Claude Bernard Lyon 1 — Morchella esculenta", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/morchella-esculenta/"},
+    {"title": "Jardins botaniques royaux de Kew — Common morel", "url": "https://growwild.kew.org/plants/common-morel"},
+    {"title": "Société allemande de mycologie — liste 2026 des champignons comestibles", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO — liste 2023 des champignons recommandés", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "CDC MMWR — enquête 2024 sur une intoxication par morilles véritables au Montana", "url": "https://www.cdc.gov/mmwr/volumes/73/wr/mm7310a1.htm"},
+    {"title": "Saviuc et coll., Clinical Toxicology 2010 — syndrome neurologique après consommation de morilles", "url": "https://pubmed.ncbi.nlm.nih.gov/20507248/"},
+    {"title": "Étude des centres antipoison français — intoxications graves par les morilles, 2010–2020", "url": "https://pubmed.ncbi.nlm.nih.gov/38912890/"}
+  ],
+  "related": ["gyromitra"]
+}

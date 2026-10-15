@@ -1,0 +1,21 @@
+{
+  "id": "subincarnata",
+  "reviewStatus": "verified",
+  "safetyNote": "Deadly poisonous: Lepiota subincarnata contains amatoxins. Serious vomiting and diarrhoea may start only after a symptom-free delay, followed by potentially fatal liver damage. Never taste or eat it. Seek emergency medical advice immediately after suspected ingestion, even if you feel well.",
+  "sections": [
+    {"title": "Fatal dapperling", "text": "Lepiota subincarnata is a small pinkish dapperling. The cap is usually about 1.5–6 cm across, initially convex and later flatter with a low central bump. A pink-brown velvety layer breaks into small, sometimes concentric, scales over a paler cream or flesh-coloured background; the centre stays darker and more felted. Colour, cap size and scale pattern vary substantially between specimens."},
+    {"title": "Gills, stem and veil", "text": "The white to pale-cream gills are free from the stem and relatively close; the spore print is white. The slender pale stem is commonly about 1.5–5.5 cm long. Pink-brown fleecy bands or scales mark its lower part, while the upper part is smoother. The upper veil remnant is usually a faint, fragile woolly ring zone rather than a prominent persistent skirt and may be absent. A sweet or fruity smell is possible but can be indistinct, so it is not a dependable test."},
+    {"title": "Habitat, names and confusion", "text": "This saprotrophic mushroom grows in gardens, lawns, parks, woodland clearings and leaf litter, usually in summer and autumn. Some taxonomic authorities treat Lepiota josserandii as a synonym of L. subincarnata, although other authors distinguish similar forms. It has been fatally mistaken for the fairy ring mushroom, Marasmius oreades, in a lawn. The edible species usually has a smooth tan cap and tough stem, but field identification must never rest on one feature."},
+    {"title": "Amatoxin poisoning", "text": "Like the death cap, this species can cause the phalloid syndrome. A symptom-free period of at least several hours is followed by abdominal pain, vomiting and watery diarrhoea; liver injury can then develop even if symptoms briefly ease. A documented British Columbia case began after about 13 hours and was fatal. Do not wait for symptoms or use any supposed safe quantity threshold: suspected ingestion requires immediate emergency or poison-centre advice."},
+    {"title": "About the plate", "text": "The white-background plate shows a whole mushroom, a longitudinal section, the scaled cap from above and the free-gilled underside. The narrow fleecy ring zone and pink-brown lower-stem bands are visible without suggesting that the veil is always prominent."}
+  ],
+  "sources": [
+    {"title": "UBC Beaty Biodiversity Museum — Lepiota subincarnata", "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/L_subincarnata.html"},
+    {"title": "Associazione Micologica Bresadola — Lepiota subincarnata", "url": "https://ambbresadola.it/funghi_tossici/lepiota-subincarnata/"},
+    {"title": "Species Fungorum, Royal Botanic Gardens Kew — Lepiota subincarnata synonyms", "url": "https://www.speciesfungorum.org/names/Synonymy.asp?RecordId=299506"},
+    {"title": "ANSES — 2015 phalloid syndrome fact sheet", "url": "https://www.anses.fr/system/files/BIORISK2014sa0232Fi.pdf"},
+    {"title": "Belgian Poison Centre — mushroom poisoning brochure", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "German Society for Mycology — 2026 poisonous mushroom list", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"}
+  ],
+  "related": ["brunneoincarnata", "oreades", "procera"]
+}

@@ -282,6 +282,17 @@ internal class SpecimenPainter(
             Hymenium.TEETH -> facePores(rx)
             Hymenium.NONE -> {}
         }
+        look.stains.filter { it.zone == StainZone.HYMENIUM }.forEach { stain ->
+            val random = Random(look.seed + 197)
+            stroke(withAlpha(stain.color, (stain.strength * 300).roundToInt()), hair * 2f)
+            repeat(9) {
+                val angle = 2f * PI.toFloat() * random.nextFloat()
+                val inner = rx * (0.35f + 0.3f * random.nextFloat())
+                val outer = min(rx * 0.9f, inner + rx * (0.08f + 0.13f * random.nextFloat()))
+                c.drawLine(px(cx + inner * cos(angle)), py(y0 + inner * look.tilt * sin(angle)),
+                    px(cx + outer * cos(angle)), py(y0 + outer * look.tilt * sin(angle)), p)
+            }
+        }
         c.restore()
         stroke(withAlpha(darken(base, 0.6f), 200), hair)
         c.drawOval(oval, p)
@@ -1897,6 +1908,17 @@ internal class SpecimenPainter(
                 c.drawCircle(ucx, ucy, hwPx * 1.2f, p)
             }
             Hymenium.NONE -> {}
+        }
+        look.stains.filter { it.zone == StainZone.HYMENIUM }.forEach { stain ->
+            val random = Random(look.seed + 197)
+            stroke(withAlpha(stain.color, (stain.strength * 300).roundToInt()), max(hair * 2f, ur * 0.014f))
+            repeat(9) {
+                val angle = 2f * PI.toFloat() * random.nextFloat()
+                val inner = ur * (0.35f + 0.3f * random.nextFloat())
+                val outer = min(ur * 0.9f, inner + ur * (0.08f + 0.13f * random.nextFloat()))
+                c.drawLine(ucx + inner * cos(angle), ucy + inner * sin(angle),
+                    ucx + outer * cos(angle), ucy + outer * sin(angle), p)
+            }
         }
         if (look.latex != 0) {
             val g = Random(look.seed + 67)

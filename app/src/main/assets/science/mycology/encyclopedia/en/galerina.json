@@ -1,0 +1,26 @@
+{
+  "id": "galerina",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Identification", "text": "Galerina marginata is a small wood-rotting mushroom with a smooth, moist-looking brown to tawny cap that pales as it dries, often leaving a darker centre and paler, sometimes faintly striate edge. Its close, attached gills begin pale yellowish to ochre and become rusty brown; the spore print is rusty brown. The slender stem is pale above and brown, fibrous or shaggy below. A small fragile pale ring may be present in young specimens but often disappears. The stem can be hollow; smell may be mealy but is not diagnostic."},
+    {"title": "Habitat and season", "text": "It grows singly, scattered or in groups on decaying conifer and broadleaf wood, including buried wood that may make it appear to grow on soil. In Europe it is often recorded in summer and autumn; in Missouri it is seen year-round, especially in autumn. Season and substrate alone cannot establish an identification."},
+    {"title": "Similar species", "text": "The edible sheathed woodtuft (Kuehneromyces mutabilis) can look very similar and may share woody habitats. The poisonous sulphur tuft (Hypholoma fasciculare) is another lookalike named by the Belgian Poison Centre. Velvet foot (Flammulina velutipes) has no ring and a white spore print, but an absent ring does not exclude an older Galerina. Check every individual mushroom in a mixed cluster."},
+    {"title": "Toxicity", "text": "This species contains amatoxins and can cause the same delayed, life-threatening phalloides syndrome as the death cap. The Belgian Poison Centre reports first symptoms on average around twelve hours after eating, occasionally as late as 48 hours: severe vomiting and diarrhoea may be followed by apparent improvement while liver injury develops; kidney injury can also occur. Urgent medical assessment is needed after any suspected ingestion, even without early symptoms."}
+  ],
+  "traits": [
+    "Small smooth hygrophanous tawny-brown cap, often darker centrally and paler at the edge",
+    "Attached pale ochre gills becoming rusty brown; rusty-brown spore print",
+    "Slender pale upper stem, darker fibrous lower stem; sometimes hollow",
+    "Fragile small ring in young specimens, often lost with age",
+    "On dead conifer or broadleaf wood, sometimes buried; often summer to autumn"
+  ],
+  "safetyNote": "Deadly: Galerina marginata contains amatoxins. Symptoms may be delayed for many hours, then progress from severe gastrointestinal illness to liver and sometimes kidney failure. Never eat an uncertain small brown wood-growing mushroom; seek urgent poison-centre or emergency advice after suspected ingestion.",
+  "sources": [
+    {"title": "Belgian Poison Centre — Mushroom information booklet, Galerina marginata and phalloides syndrome", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "German Mycological Society (DGfM) — Poisonous fungi and syndromes (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Missouri Department of Conservation — Deadly Galerina field guide", "url": "https://mdc.mo.gov/discover-nature/field-guide/deadly-galerina"},
+    {"title": "First Nature — Galerina marginata identification and lookalikes", "url": "https://mail.first-nature.com/fungi/galerina-marginata.php"},
+    {"title": "Landry et al. — Phylogenetic distribution of amatoxins in Galerina (2021)", "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0246575"}
+  ],
+  "related": ["mutabilis", "fasciculare", "flammulina", "phalloides"]
+}

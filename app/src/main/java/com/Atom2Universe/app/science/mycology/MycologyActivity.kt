@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -270,7 +271,10 @@ class MycologyActivity : ThemedActivity() {
 
     private fun fillResults(results: LinearLayout) {
         results.removeAllViews()
-        val list = sortedSpecies().filter { (statuses.isEmpty() || it.status in statuses) && FungusCriteria.matches(it.look, criteria) }
+        val list = sortedSpecies().filter {
+            (statuses.isEmpty() || it.status in statuses) &&
+                (criteria.isEmpty() || (it.diagram == FungusDiagramKind.MUSHROOM && FungusCriteria.matches(it.look, criteria)))
+        }
         results.addView(label(resources.getQuantityString(R.plurals.myco_species_count, list.size, list.size), 12f).apply { setTextColor(palette.secondary) }, full())
         list.forEach { sp ->
             val rowView = row().apply {
@@ -279,7 +283,9 @@ class MycologyActivity : ThemedActivity() {
                 isClickable = true; isFocusable = true
                 setOnClickListener { open(Sheet.Species(sp.id)) }
             }
-            rowView.addView(plate(sp.look, PlateMode.SIDE, compact = true), LinearLayout.LayoutParams(dp(68), dp(88)))
+            val thumb: View = if (sp.diagram == FungusDiagramKind.MUSHROOM) plate(sp.look, PlateMode.SIDE, compact = true)
+                else FungusDiagramView(this, sp.diagram)
+            rowView.addView(thumb, LinearLayout.LayoutParams(dp(68), dp(88)))
             val col = column()
             col.addView(label(getString(sp.name), 16f, true))
             col.addView(label(getString(sp.latin), 12.5f).apply { setTypeface(typeface, Typeface.ITALIC); setTextColor(palette.secondary) })
@@ -362,6 +368,9 @@ class MycologyActivity : ThemedActivity() {
      * a toute la hauteur à gauche et ne bouge pas ; sinon les trois se suivent dans une colonne qui défile.
      */
     private fun showSpecies(sp: FungusSpecies, onBack: (() -> Unit)?) {
+        val article = runCatching {
+            MycologyArticleRepository.load(this, sp.id, resources.configuration.locales[0].language)
+        }.getOrNull()
         val top = column()
         top.addView(label(getString(sp.latin), 14.5f).apply { setTypeface(typeface, Typeface.ITALIC); setTextColor(palette.secondary) })
         top.addView(label(getString(sp.altNames), 13f).apply { setTextColor(palette.secondary) })
@@ -370,23 +379,70 @@ class MycologyActivity : ThemedActivity() {
         if (sp.saleBanned) badges.addView(pill(getString(R.string.myco_sale_banned), 0xFF5B5B5B.toInt()), LinearLayout.LayoutParams(-2, -2).apply { marginStart = dp(8) })
         top.addView(badges)
 
-        val plateView = plate(sp.look, mode, compact = false)
-        plateView.showMarks = marks
         val media = column()
-        media.addView(modeBar(listOf(plateView), if (topView(sp.look)) R.string.myco_view_top else R.string.myco_view_under), full(0))
-        val frame = FitFrame(this, 1.1f, dp(480)).apply { addView(plateView, FrameLayout.LayoutParams(-2, -2, Gravity.CENTER)) }
-        media.addView(frame, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = dp(8) }
+        val drawing = column()
+        val frame = if (sp.diagram == FungusDiagramKind.MUSHROOM) {
+            val plateView = plate(sp.look, mode, compact = false)
+            plateView.showMarks = marks
+            drawing.addView(modeBar(listOf(plateView), if (topView(sp.look)) R.string.myco_view_top else R.string.myco_view_under), full(0))
+            FitFrame(this, 1.1f, dp(480)).apply { addView(plateView, FrameLayout.LayoutParams(-2, -2, Gravity.CENTER)) }
+        } else {
+            drawing.addView(label(getString(R.string.myco_supplement_illustration), 12f).apply { setTextColor(palette.secondary) }, full(4))
+            FitFrame(this, 1.1f, dp(480)).apply {
+                addView(FungusDiagramView(this@MycologyActivity, sp.diagram), FrameLayout.LayoutParams(-1, -1, Gravity.CENTER))
+            }
+        }
+        drawing.addView(frame, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = dp(8) }
             else LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
+        if (FungusHerbarium.hasPlate(this, sp.id)) {
+            val image = ImageView(this).apply {
+                scaleType = ImageView.ScaleType.FIT_CENTER
+                contentDescription = getString(R.string.myco_herbarium_accessibility, getString(sp.name))
+                setBackgroundColor(0xFFFFFFFF.toInt())
+            }
+            val toggle = button(R.string.myco_show_drawing) {}
+            var showingDrawing = false
+            toggle.setOnClickListener {
+                showingDrawing = !showingDrawing
+                image.visibility = if (showingDrawing) View.GONE else View.VISIBLE
+                drawing.visibility = if (showingDrawing) View.VISIBLE else View.GONE
+                toggle.setText(if (showingDrawing) R.string.myco_show_herbarium else R.string.myco_show_drawing)
+            }
+            media.addView(toggle, full(0))
+            media.addView(image, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f)
+                else LinearLayout.LayoutParams(-1, dp(380)))
+            drawing.visibility = View.GONE
+            media.addView(drawing, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f)
+                else LinearLayout.LayoutParams(-1, -2))
+            lifecycleScope.launch {
+                runCatching { withContext(Dispatchers.IO) { FungusHerbarium.decode(applicationContext, sp.id) } }
+                    .onSuccess { image.setImageBitmap(it) }
+            }
+        } else {
+            media.addView(drawing, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f)
+                else LinearLayout.LayoutParams(-1, -2))
+        }
 
         val body = column()
-        body.addView(label(getString(R.string.myco_sec_traits), 16f, true), full(8))
-        resources.getStringArray(sp.traits).forEach { body.addView(bullet(it), full(4)) }
+        if (article?.verified == false) {
+            body.addView(label(getString(R.string.myco_article_pending), 12.5f).apply { setTextColor(palette.secondary) }, full(8))
+        }
+        if (article != null && article.sections.isNotEmpty()) {
+            article.sections.forEach { section ->
+                body.addView(label(section.title, 16f, true), full(12))
+                body.addView(label(section.text, 15f), full(4))
+            }
+        } else {
+            body.addView(label(getString(R.string.myco_sec_traits), 16f, true), full(8))
+            (article?.traits?.takeIf { it.isNotEmpty() } ?: resources.getStringArray(sp.traits).toList())
+                .forEach { body.addView(bullet(it), full(4)) }
+        }
 
         val note = row().apply { setPadding(0, dp(2), 0, dp(2)) }
         note.addView(View(this).apply { setBackgroundColor(sp.status.color) }, LinearLayout.LayoutParams(dp(4), -1))
         val noteBody = column().apply { setPadding(dp(12), dp(6), 0, dp(6)) }
         noteBody.addView(label(getString(R.string.myco_sec_danger), 13f, true).apply { setTextColor(palette.ink(sp.status.color)) })
-        noteBody.addView(label(getString(sp.note), 15f))
+        noteBody.addView(label(article?.safetyNote?.takeIf { it.isNotBlank() } ?: getString(sp.note), 15f))
         note.addView(noteBody, LinearLayout.LayoutParams(0, -2, 1f))
         body.addView(note, full(16))
 
@@ -428,6 +484,26 @@ class MycologyActivity : ThemedActivity() {
                     .putExtra(ParentesActivity.EXTRA_NODE_ID, node))
             }, full(8))
         }
+        if (article != null && article.sources.isNotEmpty()) {
+            body.addView(label(getString(R.string.myco_sec_references), 16f, true), full(20))
+            article.sources.forEach { source ->
+                body.addView(label(source.title, 13.5f).apply {
+                    setTextColor(palette.accent)
+                    paintFlags = paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                    isClickable = true
+                    isFocusable = true
+                    setOnClickListener { openUrl(source.url) }
+                }, full(6))
+            }
+        }
+        article?.related?.filter { FungusCatalog.get(it) != null }?.takeIf { it.isNotEmpty() }?.let { ids ->
+            body.addView(label(getString(R.string.myco_sec_lookalikes), 16f, true), full(20))
+            ids.forEach { id ->
+                FungusCatalog.get(id)?.let { related ->
+                    body.addView(button(related.name) { open(Sheet.Species(id)) }, full(4))
+                }
+            }
+        }
         fiche.show(getString(sp.name), top, media, body, onBack)
     }
 
@@ -463,7 +539,8 @@ class MycologyActivity : ThemedActivity() {
 
     private fun aboutBody(): LinearLayout {
         val body = column()
-        listOf(R.string.myco_about_intro, R.string.myco_about_lookalikes, R.string.myco_about_method, R.string.myco_about_drawings)
+        listOf(R.string.myco_about_intro, R.string.myco_about_lookalikes, R.string.myco_about_method,
+            R.string.myco_about_drawings, R.string.myco_about_supplement)
             .forEachIndexed { index, text -> body.addView(label(getString(text), 15f), full(if (index == 0) 0 else 10)) }
         body.addView(label(getString(R.string.myco_about_rules_title), 16f, true), full(16))
         body.addView(label(getString(R.string.myco_about_rules), 14.5f), full(6))
@@ -478,7 +555,8 @@ class MycologyActivity : ThemedActivity() {
                 MycologySources.Kind.OFFICIAL to R.string.myco_sources_official,
                 MycologySources.Kind.JOURNAL to R.string.myco_sources_journals,
                 MycologySources.Kind.SOCIETY to R.string.myco_sources_society,
-                MycologySources.Kind.ENCYCLOPEDIA to R.string.myco_sources_encyclopedia
+                MycologySources.Kind.ENCYCLOPEDIA to R.string.myco_sources_encyclopedia,
+                MycologySources.Kind.TAXONOMY to R.string.myco_sources_taxonomy
             ).forEach { (kind, title) ->
                 body.addView(label(getString(title), 15f, true).apply { setTextColor(palette.ink(palette.accent)) }, full(14))
                 sources.filter { it.kind == kind }.forEach { body.addView(sourceLink(it), full(6)) }

@@ -5,7 +5,7 @@ import org.json.JSONObject
 
 /** Les sources de l'atlas, lues dans `assets/science/mycology/sources.json` : elles ne vivent que dans « À propos ». */
 object MycologySources {
-    enum class Kind { OFFICIAL, JOURNAL, SOCIETY, ENCYCLOPEDIA }
+    enum class Kind { OFFICIAL, JOURNAL, SOCIETY, ENCYCLOPEDIA, TAXONOMY }
 
     class Source(val id: String, val kind: Kind, val citation: String, val url: String, val species: Set<String>) {
         val general: Boolean get() = "*" in species

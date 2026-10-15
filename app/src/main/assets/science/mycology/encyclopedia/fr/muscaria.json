@@ -1,0 +1,26 @@
+{
+  "id": "muscaria",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Amanita muscaria porte un chapeau rouge écarlate à rouge orangé, d’abord bombé puis étalé, parsemé de verrues irrégulières blanches à crème issues du voile universel. La pluie peut faire disparaître ces verrues et pâlir le chapeau. Les lames serrées, blanches à crème, sont libres du pied ; la sporée est blanche. Le pied blanc porte un large anneau pendant en jupe et s’élargit en bulbe entouré de bourrelets concentriques floconneux, sans volve profonde en sac persistante."},
+    {"title": "Habitat et saison", "text": "Champignon ectomycorhizien poussant au sol près d’arbres partenaires, surtout bouleaux, pins et épicéas. En Europe, ses fructifications paraissent principalement de la fin de l’été à l’automne ; période et taille varient selon le lieu et la météo."},
+    {"title": "Espèces ressemblantes", "text": "Après une pluie, l’amanite tue-mouches peut perdre ses verrues blanches. L’oronge ou amanite des Césars (Amanita caesarea) peut aussi avoir un chapeau rouge orangé, mais possède des lames et un pied jaunes ainsi qu’une volve en sac. L’amanite rougissante (Amanita rubescens) rosit ou rougit aux blessures. Ne jamais identifier un champignon sur la seule couleur du chapeau ou une image : examiner les lames, toute la base du pied et les arbres voisins."},
+    {"title": "Toxicité", "text": "Espèce toxique. Ses principaux composés neuroactifs sont l’acide iboténique et le muscimol ; l’intoxication relève du syndrome panthérinien, distinct du syndrome phalloïdien à amatoxines. Les signes peuvent débuter environ 30 minutes à 3 heures après ingestion : nausées, vomissements, agitation, confusion, hallucinations ou somnolence. Les cas graves peuvent comporter convulsions, coma ou complications respiratoires ; des décès ont été décrits. En cas d’ingestion suspectée, contacter sans délai un centre antipoison ou les secours."}
+  ],
+  "traits": [
+    "Chapeau rouge à rouge orangé, jusqu’à environ 20 cm, portant des verrues pâles détachables",
+    "Lames libres et serrées, blanches à crème ; sporée blanche",
+    "Pied blanc à large anneau pendant",
+    "Base bulbeuse à bourrelets concentriques floconneux, sans volve profonde en sac",
+    "Mycorhizien près des bouleaux, pins ou épicéas ; surtout de la fin de l’été à l’automne"
+  ],
+  "safetyNote": "Toxique : l’acide iboténique et le muscimol peuvent provoquer des troubles digestifs et neuropsychiques environ 30 minutes à 3 heures après ingestion ; une intoxication grave est possible. Ne pas consommer. En cas d’ingestion suspectée, contacter rapidement un centre antipoison ou les secours.",
+  "sources": [
+    {"title": "ANSES — Avis relatif aux champignons comestibles et toxiques, tableau des syndromes (2015)", "url": "https://www.anses.fr/system/files/ERCA2015SA0180.pdf"},
+    {"title": "Société allemande de mycologie (DGfM) — Champignons toxiques et syndromes (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Woodland Trust — Amanite tue-mouches (Amanita muscaria)", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/fly-agaric/"},
+    {"title": "First Nature — Amanita muscaria, identification et écologie", "url": "https://www.first-nature.com/fungi/amanita-muscaria.php"},
+    {"title": "Wilderness & Environmental Medicine — Deux intoxications graves dont un décès (2022)", "url": "https://pubmed.ncbi.nlm.nih.gov/36210279/"}
+  ],
+  "related": ["caesarea", "rubescens", "pantherina"]
+}

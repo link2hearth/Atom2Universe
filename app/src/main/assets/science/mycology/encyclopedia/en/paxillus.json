@@ -1,0 +1,28 @@
+{
+  "id": "paxillus",
+  "reviewStatus": "verified",
+  "safetyNote": "Poisonous: do not eat. Paxillus involutus can cause gastrointestinal illness and, rarely, a rapid, life-threatening immune haemolysis syndrome, sometimes after earlier meals caused no apparent harm. Blood-cell destruction may lead to shock and kidney or other organ failure. Cooking does not make it safe. Seek urgent medical advice or contact a poison centre after suspected ingestion, and retain a sample for identification.",
+  "sections": [
+    {"title": "Cap and rolled edge", "text": "The cap is usually about 5–12 cm across, sometimes larger. It starts convex with a conspicuously inrolled edge; later the centre flattens or sinks while the margin may remain rolled and slightly furrowed. Its dry surface is finely felted, ochre to olive-brown or rusty brown, and can become tacky in wet weather."},
+    {"title": "Gills, stem and flesh", "text": "The crowded, pale ochre to olive-yellow gills run down the stem. Some are forked or joined by cross-veins, and they can be peeled from the cap flesh. Touching or bruising them produces rusty to reddish-brown marks. The solid stem is short to medium length, central or slightly off-centre, without ring or volva; it also browns where handled. The flesh is yellowish-white and may brown when cut or bruised. No milky latex is released."},
+    {"title": "Habitat and spore deposit", "text": "This ectomycorrhizal fungus grows on soil with living broadleaf or conifer trees, especially birch, in woodland, parks and grassy places with nearby tree roots. It fruits mainly from summer into autumn. The spore deposit is brown. Similar Paxillus species exist, so a photograph or one field mark is not enough for certain species identification."},
+    {"title": "Poisoning and identification", "text": "It was formerly eaten, but both digestive poisoning and the uncommon Paxillus syndrome are documented. The latter follows sensitisation, often after repeated consumption, and can cause rapid destruction of red blood cells, dark urine, jaundice, circulatory collapse and organ failure. Its exact trigger and individual susceptibility are not fully resolved. Previously tolerated meals do not establish safety. The combination of a long-inrolled brown cap margin, decurrent bruising gills and brown spore deposit helps recognise the group, but no wild specimen should be eaten on this basis alone."}
+  ],
+  "traits": [
+    "Felted ochre to olive-brown cap, usually 5–12 cm; strongly inrolled margin when young",
+    "Centre becomes flattened or depressed with age; margin can remain rolled",
+    "Crowded decurrent ochre gills, often forked or cross-veined; bruising rusty brown",
+    "Gills can peel from cap flesh; yellowish flesh may also brown on damage",
+    "Solid stem without ring or volva, often shorter than cap width and bruising brown",
+    "Ectomycorrhizal with broadleaf and conifer trees; brown spore deposit"
+  ],
+  "sources": [
+    {"title": "Beaty Biodiversity Museum, University of British Columbia — Paxillus involutus", "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/P_involutus.html"},
+    {"title": "Naturalis Biodiversity Center — Interactive Guide to Mushrooms: Paxillus involutus", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?cat=TAB_DESCRIPTION&id=100553"},
+    {"title": "First Nature — Paxillus involutus", "url": "https://www.first-nature.com/fungi/paxillus-involutus.php"},
+    {"title": "Stöver et al. (2019), Diagnostics 9:130 — two fatal Paxillus syndrome cases", "url": "https://www.mdpi.com/2075-4418/9/4/130"},
+    {"title": "German Society for Mycology — Paxillus syndrome (immune haemolysis)", "url": "https://www.dgfm-ev.de/de/beschreibung-symptome-und-karenzzeiten"},
+    {"title": "German Society for Mycology (2026) — poisonous mushroom taxa and syndromes", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"}
+  ],
+  "related": ["oreades", "torminosus"]
+}

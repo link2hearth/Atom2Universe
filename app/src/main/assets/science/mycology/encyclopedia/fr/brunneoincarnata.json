@@ -1,0 +1,21 @@
+{
+  "id": "brunneoincarnata",
+  "reviewStatus": "verified",
+  "safetyNote": "Espèce mortelle : Lepiota brunneoincarnata contient des amatoxines pouvant provoquer des troubles digestifs retardés puis une grave atteinte du foie. Ne pas la consommer ni la goûter. En cas d'ingestion suspectée, appeler immédiatement les urgences ou un centre antipoison, même en l'absence de symptômes.",
+  "sections": [
+    {"title": "Lépiote brun-rouge", "text": "Lepiota brunneoincarnata est une petite lépiote brun rosé. Son chapeau est d'abord hémisphérique, puis convexe à presque étalé, souvent avec un mamelon bas. Le chapeau de 2,5 à 6 cm a un centre brun à brun pourpré plus sombre ; vers la marge, sa surface se fragmente en petites squames brun rosé sur fond crème ou couleur chair. La couleur et les squames varient selon les exemplaires."},
+    {"title": "Lames, pied et anneau", "text": "Les lames serrées sont libres et blanchâtres à crème ; la sporée est blanche. Le pied mince mesure environ 2,5 à 5,5 cm, plus pâle et lisse en haut, avec des squames fibreuses brun rosé dans sa partie inférieure. Un petit anneau supérieur ou une zone annulaire fragile peut disparaître. La chair du chapeau reste blanche, tandis que celle du pied ou sa base peut rosir à vineux après une blessure ; ce changement est variable et ne suffit pas à identifier l'espèce."},
+    {"title": "Milieux et confusions", "text": "On la trouve dans les bois de feuillus, parcs, jardins, pelouses, bords de chemins et autres lieux herbeux, surtout en été et en automne en Europe. Les petites lépiotes se ressemblent et cette espèce peut pousser près de champignons de pelouse comestibles. La taille du chapeau, un anneau discret ou l'absence de rougissement visible ne prouvent pas qu'une récolte soit sûre."},
+    {"title": "Intoxication par les amatoxines", "text": "Cette espèce provoque le syndrome phalloïdien. Après une période sans symptômes, souvent d'environ 6 à 24 heures, de forts vomissements et diarrhées peuvent apparaître ; une atteinte hépatique grave peut suivre, parfois accompagnée d'une atteinte rénale. Des cas publiés montrent une intoxication sévère avec nettement moins de 100 g : aucun seuil de quantité rassurant ne doit en être déduit. Une ingestion suspectée est une urgence médicale même si la personne se sent encore bien."},
+    {"title": "À propos de la planche", "text": "La planche sur fond blanc présente un champignon entier, une coupe longitudinale, le dessus du chapeau et le dessous à lames libres. Ces vues montrent le centre sombre et squameux, la zone annulaire fragile, les squames du bas du pied et la légère teinte rosée de la coupe du pied."}
+  ],
+  "sources": [
+    {"title": "Université de Rouen Normandie — Lepiota brunneoincarnata", "url": "https://smartchampi.univ-rouen.fr/champignons/lepiota-brunneoincarnata.html"},
+    {"title": "Associazione Micologica Bresadola — Lepiota brunneoincarnata", "url": "https://www.ambbresadola.it/lepiota-brunneoincarnata/"},
+    {"title": "First Nature — Lepiota brunneoincarnata", "url": "https://www.first-nature.com/fungi/lepiota-brunneoincarnata.php"},
+    {"title": "ANSES — Bilan 2024 des intoxications par champignons, publié en 2025", "url": "https://www.anses.fr/system/files/Toxicovigilance-2025-VIG-0015-RA.pdf"},
+    {"title": "Sun et coll., Toxicon 2019 — intoxication par amatoxines confirmée", "url": "https://pubmed.ncbi.nlm.nih.gov/30831147/"},
+    {"title": "Kose et coll., Case Reports in Emergency Medicine 2015 — intoxication après environ 30 g", "url": "https://pubmed.ncbi.nlm.nih.gov/25771029/"}
+  ],
+  "related": ["procera", "phalloides", "galerina"]
+}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="myco_sources_taxonomy">Taxonomic databases</string>
     <!-- Hub and main screen -->
     <string name="myco_title">Mushroom atlas</string>
     <string name="myco_hub">Edible, toxic and their look-alikes, side by side</string>
@@ -110,6 +111,7 @@
     <string name="myco_about_lookalikes">Look-alikes are chosen mostly from the confusions actually seen in France by poison centres (ANSES), not from intuition. Among the edible species, some were added because pickers often bring them to be checked (Basel-Stadt cantonal laboratory, reports for 2022, 2024 and 2025).</string>
     <string name="myco_about_method">Each status is cross-checked between health authorities, official texts, medical journals and encyclopedias. When sources disagree, the most cautious status wins. Last check: October 2026.</string>
     <string name="myco_about_drawings">Drawings are original diagrams made from published descriptions. Colours and proportions are typical; in nature they vary a lot. Sizes are approximate.</string>
+    <string name="myco_about_supplement">Taxonomic reference profiles also cover fungi outside the foraging atlas, such as yeasts, moulds, rusts and lichens. Their group diagrams are schematic and are not for species identification.</string>
     <string name="myco_about_rules_title">Reminders from ANSES</string>
     <string name="myco_about_rules">• Pick only mushrooms you know perfectly, whole, neither too young nor too old.\n• Photograph the harvest before cooking it.\n• Never eat them raw: 20 to 30 minutes in a pan, or 15 minutes in boiling water (water discarded).\n• Keep them cold and eat them within two days.\n• Use a basket rather than a plastic bag.\n• Do not give them to young children.\n• Symptoms after a meal: call a poison centre and mention the meal, even after more than 12 hours.</string>
     <string name="myco_about_sources">Sources</string>
@@ -403,6 +405,7 @@
     <string name="myco_l_flakes">Grey flakes</string>
     <string name="myco_l_ring_striate">Striate ring</string>
     <string name="myco_l_bulb_no_volva">No volva</string>
+    <string name="myco_l_bulb_no_sac_volva">Bulb without persistent sac-like volva</string>
     <string name="myco_l_turns_red">Turns red</string>
     <string name="myco_l_pores_white_yellow">Pores white, then yellow</string>
     <string name="myco_l_net_white">White net</string>
@@ -637,12 +640,12 @@
         <item>Olive-green to yellowish cap, 5 to 15 cm, paler toward the edge</item>
         <item>White gills that stay white</item>
         <item>Skirt-like ring under the cap</item>
-        <item>White sac-like volva at the base, hidden in the soil: it can be missing if slugs ate it</item>
+        <item>White sac-like volva at the base, often buried in soil and sometimes damaged</item>
         <item>White stem, finely streaked with olive</item>
-        <item>Smell sweet at first, then sickly · white spores</item>
+        <item>Odour varies with age and condition · white spore print</item>
         <item>Under oaks, beeches, chestnuts… from late summer to autumn</item>
     </string-array>
-    <string name="myco_phalloides_note">Deadly. Signs come late, more than 6 hours after the meal, when the liver is already hit. Neither cooking, drying nor freezing destroys the toxin, and a young one is already toxic. About 30 g, half a cap, can be enough.</string>
+    <string name="myco_phalloides_note">Deadly. Symptoms can be delayed for more than 6 hours, then severe liver damage may develop. Cooking, drying or freezing does not make it safe. Even one specimen can cause serious poisoning; seek urgent medical advice after suspected ingestion.</string>
 
     <!-- Destroying angel -->
     <string name="myco_virosa_name">Destroying angel</string>
@@ -656,7 +659,7 @@
         <item>Sac-like volva at the base</item>
         <item>Mostly under conifers, sometimes birches · summer to late autumn</item>
     </string-array>
-    <string name="myco_virosa_note">Deadly: same toxin as the death cap. A single medium specimen can be enough. A white mushroom is never “safe”.</string>
+    <string name="myco_virosa_note">Deadly: contains amatoxins that can cause severe liver damage. Even a small amount can cause serious poisoning. Never regard a white mushroom as safe by colour alone.</string>
 
     <!-- Fly agaric -->
     <string name="myco_muscaria_name">Fly agaric</string>
@@ -670,7 +673,7 @@
         <item>Bulbous base with one or two rings of rims, no sac-like volva</item>
         <item>Under birches and conifers · autumn</item>
     </string-array>
-    <string name="myco_muscaria_note">Toxic: confusion, hallucinations, nausea, 30 to 90 minutes after the meal, sometimes convulsions. Rarely fatal, but hospital care may be needed. Washed by rain, it resembles the Caesar’s mushroom, whose gills and stem are yellow.</string>
+    <string name="myco_muscaria_note">Poisonous: digestive and neurological symptoms can begin about 30 minutes to 3 hours after ingestion. Severe cases and fatalities have been documented. Rain can remove the white cap warts; Caesar’s mushroom differs in its yellow gills and stem.</string>
 
     <!-- Panther cap -->
     <string name="myco_pantherina_name">Panther cap</string>
@@ -685,7 +688,7 @@
         <item>White flesh that does not change colour</item>
         <item>Under beeches and other broadleaves, or conifers · late summer to autumn</item>
     </string-array>
-    <string name="myco_pantherina_note">Toxic, more than the fly agaric: same toxins, more concentrated. Violent digestive upset, confusion, convulsions especially in children. In 2022 this kind of poisoning made up 21.6% of severe cases in France (ANSES). It is sometimes taken for the parasol or the blusher.</string>
+    <string name="myco_pantherina_note">Poisonous: ibotenic acid and muscimol can cause confusion, agitation, drowsiness and sometimes severe neurological symptoms. Potency varies between specimens. It can be confused with the parasol or blusher; seek urgent poison-centre advice after suspected ingestion.</string>
 
     <!-- Blusher -->
     <string name="myco_rubescens_name">Blusher</string>
@@ -695,7 +698,7 @@
         <item>Pinkish-brown to wine-coloured cap, 4 to 15 cm, covered with dirty grey flakes</item>
         <item>Flesh and gills turn red when damaged (sometimes little in dry weather)</item>
         <item>White ring, striate on top</item>
-        <item>Swollen base without a volva, often eaten by larvae</item>
+        <item>Swollen base without a persistent sac-like volva, sometimes damaged by larvae</item>
         <item>White gills · white spores</item>
     </string-array>
     <string name="myco_rubescens_note">Edible only when well cooked: raw, it is toxic (a haemolysin destroyed by heat). Easily confused with the panther cap, which is toxic.</string>
@@ -726,7 +729,7 @@
         <item>Pink-brown spores</item>
         <item>Mostly under oaks and beeches</item>
     </string-array>
-    <string name="myco_felleus_note">Inedible: the bitterness, made worse by cooking, ruins a whole dish. May cause vomiting. It contains a little muscarine, at doses judged too low to be dangerous.</string>
+    <string name="myco_felleus_note">Inedible because of its intense bitterness, which can spoil a whole dish. Its pale pores become pinkish with age and its stem has a dark raised net; do not confuse it with the porcini.</string>
 
     <!-- Satan's bolete -->
     <string name="myco_satanas_name">Satan’s bolete</string>
@@ -740,7 +743,7 @@
         <item>Weak smell when young, rotten meat in old ones</item>
         <item>Oaks, beeches, chalky soils, warm regions · summer</item>
     </string-array>
-    <string name="myco_satanas_note">Toxic: vomiting, sometimes bloody diarrhoea, especially raw or undercooked. Rarely fatal in a healthy adult, but violent. In 2022 it was the second most frequent toxic species found in French harvests (ANSES).</string>
+    <string name="myco_satanas_note">Poisonous: can cause severe vomiting and diarrhoea. Cooking is not a reliable way to make a misidentified wild mushroom safe. Seek prompt poison-centre advice after suspected ingestion.</string>
 
     <!-- Chanterelle -->
     <string name="myco_cibarius_name">Chanterelle</string>
@@ -754,7 +757,7 @@
         <item>Grows from the ground under broadleaves or conifers, never on wood</item>
         <item>Pale yellow spores · summer to late autumn</item>
     </string-array>
-    <string name="myco_cibarius_note">Several close species, such as the pale chanterelle, are also edible. Frequent confusion with the toxic jack-o’-lantern: it was one of the most common in 2024 (ANSES).</string>
+    <string name="myco_cibarius_note">Edible after reliable identification. The toxic jack-o’-lantern has true gills and grows on wood or buried roots. Check the entire specimen; colour alone is not enough.</string>
 
     <!-- Jack-o'-lantern -->
     <string name="myco_olearius_name">Jack-o’-lantern</string>
@@ -762,13 +765,13 @@
     <string name="myco_olearius_latin" translatable="false">Omphalotus olearius</string>
     <string-array name="myco_olearius_traits">
         <item>Bright orange to coppery, 6 to 14 cm, funnel-shaped</item>
-        <item>Underside with real, thin, crowded, decurrent, unforked gills</item>
+        <item>Underside with thin, crowded, clearly decurrent true gills</item>
         <item>Grows in clumps on wood, stumps or roots of broadleaves</item>
         <item>Orange flesh, even inside the stem</item>
-        <item>Oily smell · gills faintly glow in the dark</item>
+        <item>Gill luminescence varies and is not a reliable identification test</item>
         <item>Southern France and the Mediterranean, moving north</item>
     </string-array>
-    <string name="myco_olearius_note">Toxic: nausea, vomiting, heavy diarrhoea, cramps, risk of dehydration. Among toxic harvests identified in 2022, 8.5% contained it (ANSES).</string>
+    <string name="myco_olearius_note">Toxic: nausea, vomiting, diarrhoea and cramps, with a risk of dehydration. To distinguish it from chanterelles, examine its true gills and its woody substrate.</string>
 
     <!-- False chanterelle -->
     <string name="myco_aurantiaca_name">False chanterelle</string>
@@ -781,8 +784,8 @@
         <item>Soft, orange-yellow flesh, no apricot smell</item>
         <item>Under conifers, on rotting wood or humus</item>
     </string-array>
-    <string name="myco_aurantiaca_note">Not worth eating: soft flesh, sometimes poorly tolerated. The poisonings once blamed on it mostly came from confusion, notably with the jack-o’-lantern.</string>
-    <string name="myco_aurantiaca_history">The Swedish mycologist Elias Fries called it “poisonous” in 1821; before 1999, guides sometimes gave it as edible. Today it is judged not worth eating rather than dangerous.</string>
+    <string name="myco_aurantiaca_note">Of little culinary interest and sometimes poorly tolerated. Its thin, forked true gills differ from the chanterelle’s blunt ridges; orange colour alone is not enough.</string>
+    <string name="myco_aurantiaca_history">Guides have differed in their assessment of its food value. Recent sources generally describe it as of little culinary interest.</string>
 
     <!-- Parasol -->
     <string name="myco_procera_name">Parasol</string>
@@ -796,20 +799,20 @@
         <item>No volva · white free gills · white spores</item>
         <item>Meadows, clearings, open woods · July to October</item>
     </string-array>
-    <string name="myco_procera_note">Only the cap is eaten: the stem is tough. Never a lepiota under 10 cm. In France it is confused with the death cap, the panther cap, the livid entoloma and poisonous lepiotas (ANSES).</string>
+    <string name="myco_procera_note">The cap is most often cooked; the stem is tough. A small cap, even when expanded, calls for great caution because some small dapperlings are deadly. Size alone never confirms a parasol mushroom.</string>
 
     <!-- Deadly parasol -->
     <string name="myco_brunneoincarnata_name">Deadly parasol</string>
     <string name="myco_brunneoincarnata_alt">Lépiote brun-incarnat</string>
     <string name="myco_brunneoincarnata_latin" translatable="false">Lepiota brunneoincarnata</string>
     <string-array name="myco_brunneoincarnata_traits">
-        <item>Small: cap only 3 to 4 cm, pinkish-brown scales on a pale ground</item>
+        <item>Small: cap about 2.5 to 6 cm, pinkish-brown scales on a pale ground</item>
         <item>One large, darker scale at the centre</item>
-        <item>Stem 2 to 3.5 cm: pink above, covered with brown scales below, split by a dark ring zone</item>
-        <item>White free gills · flesh reddens when cut</item>
+        <item>Stem about 2.5 to 5.5 cm: pale above, brown-scaled below; a fragile ring zone may disappear</item>
+        <item>White free gills · cap flesh white; stem flesh may flush pink or red when cut</item>
         <item>Lawns, parks, gardens · warm regions</item>
     </string-array>
-    <string name="myco_brunneoincarnata_note">Deadly: same toxins as the death cap. About 100 g can severely damage the liver. It grows on lawns, where it is taken for a small parasol; signs come late, more than 6 hours after the meal.</string>
+    <string name="myco_brunneoincarnata_note">Deadly: it contains amatoxins that can cause severe liver injury even after a small amount. First symptoms may be delayed for several hours. Suspected ingestion needs urgent medical advice even before symptoms appear.</string>
 
     <!-- Field mushroom -->
     <string name="myco_campestris_name">Field mushroom</string>
@@ -823,7 +826,7 @@
         <item>White flesh that barely pinkens, does not yellow · pleasant button-mushroom smell</item>
         <item>Meadows and pastures · late summer to autumn</item>
     </string-array>
-    <string name="myco_campestris_note">Edible, provided you do not make a mistake: in 2022 two people died after taking a deadly amanita for a field mushroom or a fallow-field agaric (ANSES). The gills of every specimen must be pink or brown, never white.</string>
+    <string name="myco_campestris_note">Edible only after certain identification of each specimen. White gills, a volva, bright yellow staining or a chemical odour are warning signs. Do not eat closed buttons whose diagnostic features cannot be seen.</string>
 
     <!-- Yellow stainer -->
     <string name="myco_xanthodermus_name">Yellow stainer</string>
@@ -838,7 +841,7 @@
         <item>Gills pink then blackish brown, like the field mushroom</item>
         <item>Meadows, edges, parks, gardens · July to November</item>
     </string-array>
-    <string name="myco_xanthodermus_note">Toxic: vomiting and digestive upset. In 2022 it was the toxic species most often found in French harvests (25.7%, ANSES). The yellowing can be weak or absent.</string>
+    <string name="myco_xanthodermus_note">Toxic: it can cause vomiting and other digestive upset. In ANSES surveillance for 2022, it appeared in 45 of 175 meals with at least one toxic species identified by a mycologist; this does not describe all mushroom harvests.</string>
 
     <!-- Morel -->
     <string name="myco_morchella_name">Yellow morel</string>
@@ -851,7 +854,7 @@
         <item>Whitish, hollow, granular stem, sometimes flared</item>
         <item>Spring (March to May): orchards, ash trees, woodland edges</item>
     </string-array>
-    <string name="myco_morchella_note">Toxic raw or undercooked: always cook it well. Cut in half lengthwise, it is hollow in a single cavity; if not, it may be a false morel.</string>
+    <string name="myco_morchella_note">Raw or undercooked morels can cause poisoning: cook them thoroughly. A lengthwise cut helps examine the cavity and cap attachment, but that alone cannot establish the species. Illness has also been reported after eating true morels.</string>
 
     <!-- False morel -->
     <string name="myco_gyromitra_name">False morel</string>
@@ -861,11 +864,11 @@
         <item>Cap in folded lobes like a brain, reddish brown to chestnut, 3 to 11 cm</item>
         <item>Cut lengthwise: chambered inside, cap joined to the stem at several points</item>
         <item>Short, stocky stem, white to cream, furrowed</item>
-        <item>Brittle flesh, strong smell</item>
+        <item>Brittle flesh; odour varies and is of little identification value</item>
         <item>Under conifers, acid or sandy soils · March to June</item>
     </string-array>
     <string name="myco_gyromitra_note">Deadly: gyromitrin turns into methylhydrazine, which attacks the liver and the nervous system. Sale banned in France since 1991. Cooking fumes are also dangerous, and boiling does not remove everything.</string>
-    <string name="myco_gyromitra_history">Long eaten after boiling (its name, esculenta, means “edible”). Unpredictable poisonings, over a hundred fatal cases in the literature, then a suspected cumulative toxicity got it ranked as deadly. Its sale has been banned in France since 1991, as well as in Germany and Switzerland; it is still allowed in Finland, with warnings.</string>
+    <string name="myco_gyromitra_history">Long eaten after boiling, this mushroom has caused severe and sometimes fatal poisonings. Its sale is banned in France. Finland still permits sale under conditions, but its food authority now advises against eating it because some toxin can remain after recommended preparation.</string>
 
     <!-- Brown roll-rim -->
     <string name="myco_paxillus_name">Brown roll-rim</string>
@@ -879,8 +882,8 @@
         <item>Yellowish flesh, no milk (unlike milk caps)</item>
         <item>Under birches, lawns, damp ground · late summer to autumn · brown spores</item>
     </string-array>
-    <string name="myco_paxillus_note">Deadly, without warning: after repeated meals, sometimes over years with no problem at all, the body makes antibodies that destroy its own red blood cells. Anaemia, kidney failure, sometimes death. No antidote. In France it is picked by mistake instead of the fairy-ring mushroom (ANSES).</string>
-    <string name="myco_paxillus_history">It was commonly eaten in central and eastern Europe until the Second World War. In 1944 the German mycologist Julius Schäffer died after eating it. In 1985 the Swiss physician René Flammer described the immune mechanism. Guides only clearly warned against eating it around 1990; it is still eaten in Poland, Russia and Ukraine, where people die of it every year.</string>
+    <string name="myco_paxillus_note">It can cause a rare but potentially fatal haemolytic syndrome that destroys red blood cells and can damage the kidneys. Having eaten it before without a problem does not make another meal safe. Seek prompt medical advice after suspected ingestion or symptoms.</string>
+    <string name="myco_paxillus_history">Once eaten in several parts of Europe, it is now discouraged because of severe cases of haemolysis, some fatal. Its exact mechanism is still being studied.</string>
 
     <!-- Man on horseback -->
     <string name="myco_equestre_name">Man on horseback</string>
@@ -922,7 +925,7 @@
         <item>Pink spores</item>
         <item>Edges and open deciduous woods, mostly on chalky soil · mid-summer to late autumn</item>
     </string-array>
-    <string name="myco_sinuatum_note">Toxic: nausea, vomiting and heavy diarrhoea, with moderate liver damage. The Belgian poison centre gives 3 to 8 hours after the meal, other sources as early as 30 minutes; recovery takes 5 to 6 days and hospital is sometimes needed. The toxin is unidentified. The first signs look like death cap poisoning: without leftovers, diagnosis is difficult. In 2022, 8.5% of toxic pickings in France contained it (ANSES).</string>
+    <string name="myco_sinuatum_note">Toxic: it can cause severe nausea, vomiting, diarrhoea and dehydration, sometimes requiring hospital care. Symptoms can start within hours; do not use their timing to identify the mushroom or rule out another poisoning. Seek prompt medical advice after suspected ingestion.</string>
 
     <!-- Clouded agaric -->
     <string name="myco_nebularis_name">Clouded agaric</string>
@@ -964,21 +967,21 @@
         <item>Tobacco-brown spores</item>
         <item>Under broadleaves, mostly beeches · spring and summer</item>
     </string-array>
-    <string name="myco_erubescens_note">Toxic: it contains muscarine, which causes, within minutes to 2 hours, sweating, salivation, tears, runny nose, breathing difficulty and a slow heart. Recovery usually comes in under 24 hours; atropine is sometimes needed (Belgian poison centre). Out in spring, it is mistaken for St George’s mushroom: this one turns red, the other does not.</string>
+    <string name="myco_erubescens_note">Potentially deadly: its muscarine can cause sweating, heavy salivation, breathing difficulty and a slow heart, often soon after eating. It may be confused with St George’s mushroom; reddening is variable and cannot settle the identification. Suspected ingestion requires urgent medical advice.</string>
 
     <!-- Fairy ring champignon -->
     <string name="myco_oreades_name">Fairy ring champignon</string>
     <string name="myco_oreades_alt">Faux mousseron</string>
     <string name="myco_oreades_latin" translatable="false">Marasmius oreades</string>
     <string-array name="myco_oreades_traits">
-        <item>Cap 2 to 6 cm, buff to reddish tan, paling as it dries; bell-shaped at first, then flat with a lasting umbo; grooved margin</item>
+        <item>Cap about 2 to 5 cm, buff to reddish tan, paling as it dries; bell-shaped at first, then flat with a lasting umbo; margin sometimes faintly grooved</item>
         <item>Cream-white gills, thick, widely spaced</item>
-        <item>Slender stem, paler than the cap, hollow, elastic and very tough: it twists as it dries</item>
-        <item>Thin flesh · smell of cut hay, sometimes faintly of cyanide</item>
+        <item>Slender stem, paler than the cap, pliable and very tough; internal texture varies</item>
+        <item>Thin flesh · odour variable and not a reliable identification test</item>
         <item>White spores</item>
         <item>Lawns, meadows, path edges, in arcs or fairy rings · spring to autumn</item>
     </string-array>
-    <string name="myco_oreades_note">A well-liked edible; the tough stem is thrown away (the Belgian poison centre advises it too). Toxic white clitocybes grow on the same lawns, sometimes in rings too: their gills are close, those of the fairy ring champignon widely spaced. The deadly brown roll-rim is also picked by mistake in its place in France (ANSES).</string>
+    <string name="myco_oreades_note">Edible only after reliable identification of each specimen. Poisonous white funnels can grow in the same lawns and also form rings; their gills tend to be crowded and decurrent, while this mushroom’s are distant and non-decurrent. A fairy ring and white spore print alone prove nothing.</string>
 
     <!-- Fool’s funnel -->
     <string name="myco_rivulosa_name">Fool’s funnel</string>
@@ -991,7 +994,7 @@
         <item>Floury smell</item>
         <item>Meadows, lawns, parks, path edges, sometimes in fairy rings · summer to autumn</item>
     </string-array>
-    <string name="myco_rivulosa_note">Toxic: muscarine causes sweating, salivation, tears, vomiting and a slow heart, from a few minutes to 2 hours after the meal. Recovery usually comes in under 24 hours; atropine is sometimes needed. It can be fatal for a frail person. It grows on lawns, where children and pets play.</string>
+    <string name="myco_rivulosa_note">Poisonous: muscarine can cause sweating, salivation, vomiting and a slow heart, often within 30 minutes to 2 hours. Severe symptoms need urgent medical care. It may grow in the same grass as the edible fairy ring champignon; do not rely on a ring of mushrooms or cap colour to identify it.</string>
 
     <!-- Common ink cap -->
     <string name="myco_atramentaria_name">Common ink cap</string>
@@ -1030,8 +1033,8 @@
         <item>Brownish gills, then tawny · rusty-brown spores</item>
         <item>Stem 2 to 6 cm with a small fragile ring, clear on young ones, often gone later</item>
         <item>Stem white and powdery above the ring, brown and silky below</item>
-        <item>Floury smell</item>
-        <item>On rotting wood, mostly conifer, alone or in small groups · summer to autumn</item>
+        <item>Odour varies and is not a reliable identification test</item>
+        <item>On rotting conifer or broadleaf wood, alone or in groups; season varies with region</item>
     </string-array>
     <string name="myco_galerina_note">Deadly: the same amatoxins as the death cap. The first signs come about twelve hours after the meal on average, up to 48 hours, like gastroenteritis; then the liver is hit. Intensive care, sometimes a liver transplant. It looks like the sheathed woodtuft and the sulphur tuft (Belgian poison centre).</string>
 
@@ -1216,7 +1219,7 @@
         <item>Rusty brown spores</item>
         <item>Broadleaf woods, from lowlands to mountains, fairly rare · July to December</item>
     </string-array>
-    <string name="myco_orellanus_note">Deadly for the kidney, with no early warning. Digestive upset may appear 24 to 36 hours after the meal, or be missing; intense thirst, vomiting, back pain and scant urine come 2 to 20 days later. Dialysis is needed; recovery happens in 50 to 70% of cases, and kidney damage is sometimes permanent. It looks like many small brown webcaps: all red, purple or orange webcaps are to be distrusted.</string>
+    <string name="myco_orellanus_note">Deadly: orellanine can cause kidney failure after a long symptom-free interval. Thirst, back pain or reduced urine may appear days after ingestion. Some patients require dialysis or transplantation, while others recover without it. Suspected ingestion needs urgent medical advice even before symptoms appear.</string>
 
     <!-- Green-cracking russula -->
     <string name="myco_virescens_name">Green-cracking russula</string>
@@ -1312,7 +1315,7 @@
         <item>White spores</item>
         <item>Chalky soil, often near beeches or firs, at altitude, often alone · summer and autumn</item>
     </string-array>
-    <string name="myco_pardinum_note">Toxic, even in small amounts: nausea, violent vomiting and diarrhoea within three hours, lasting 24 to 48 hours, sometimes with a bitter mouth, salivation or a dry mouth (severe resinoid syndrome, per the Belgian poison centre). The grey knight, smaller, darker and without scales, looks like it.</string>
+    <string name="myco_pardinum_note">Poisonous: it can cause severe nausea, vomiting and diarrhoea, sometimes several hours after a meal. Grey Tricholoma species can resemble it; fine scales may occur on lookalikes too. Seek medical advice after suspected ingestion rather than relying on one cap character.</string>
 
     <!-- Grey knight -->
     <string name="myco_terreum_name">Grey knight</string>
@@ -1699,7 +1702,7 @@
         <item>Large sac-like volva, rusty ochre: this is what sets it apart from the bearded amanita, whose volva is little or not coloured</item>
         <item>In woods and at their edges, mostly under oaks on limy soil; in autumn; mostly around the Mediterranean</item>
     </string-array>
-    <string name="myco_proxima_note">Toxic: the German mycological society (2026) lists it among the amanitas that damage the kidneys (« proxima syndrome »); it notes that the suspected toxin, allenic norleucine, has not been found in it yet. It looks very much like the bearded amanita, which has sometimes been eaten: see that entry.</string>
+    <string name="myco_proxima_note">Poisonous: it can cause serious kidney injury, sometimes requiring dialysis. It closely resembles Amanita ovoidea; volva colour alone cannot separate them safely. Suspected ingestion needs urgent medical advice. The exact toxin has not been established for this species.</string>
     <string name="myco_open_profile">Open mushroom profile</string>
     <string name="myco_open_tree">Locate in the living tree</string>
     <string name="myco_sec_classification">Classification</string>
@@ -1796,7 +1799,7 @@
         <item>Pale yellow to saffron flesh, smell of radish</item>
         <item>Wet conifer woods (spruce), moss, acid soils · late summer to autumn</item>
     </string-array>
-    <string name="myco_rubellus_note">Deadly: orellanine destroys the kidneys. Digestive troubles may come 24 to 36 hours after the meal, or be missing; the kidney attack follows 2 to 20 days later, which makes the diagnosis very hard (Belgian poison centre). The kidney failure is often irreversible, and transplants were needed in several series (Wikipedia, en). Victims took it for a chanterelle or a porcini. Treatment is dialysis.</string>
+    <string name="myco_rubellus_note">Deadly: orellanine can severely damage the kidneys after a long symptom-free interval, sometimes lasting days. Thirst, back pain and reduced urine may follow. Dialysis or transplantation is needed in some cases, but outcomes vary. Suspected ingestion is a medical emergency even before symptoms appear.</string>
     <string name="myco_verna_name">Fool’s mushroom</string>
     <string name="myco_verna_alt">Amanite printanière</string>
     <string name="myco_verna_latin" translatable="false">Amanita verna</string>
@@ -1804,23 +1807,23 @@
         <item>Pure white cap, 4 to 10 cm, convex to flat, sometimes ivory or ochre at the centre</item>
         <item>Gills free, crowded, white</item>
         <item>Stem 7 to 13 cm, white and silky, with a rounded bulb</item>
-        <item>Persistent, membranous ring</item>
+        <item>Thin, high membranous ring, sometimes torn or hard to see</item>
         <item>Whitish, sac-like volva, 2 to 3 cm</item>
-        <item>Light woods, mostly oak and chestnut, acid sandy soil · spring to summer; rare, Mediterranean</item>
+        <item>Deciduous or mixed woodland in Europe, mainly spring; similar white amanitas need expert separation</item>
     </string-array>
-    <string name="myco_verna_note">Deadly: same toxins and same illness as the death cap (alpha-amanitin: liver, then kidney failure). Symptoms come late: 6 to 24 hours after the meal (Wikipedia, en), about 12 hours on average and up to 48 (Belgian poison centre). A few grams are enough (Wikipedia, fr). It has been taken for the field mushroom (Bulliard, 1780), for white agarics and volvarias, and for the white form of the death cap. The sources read give no field feature that separates it from the destroying angel: the atlas does not try.</string>
+    <string name="myco_verna_note">Deadly amatoxin-producing amanita. Symptoms may begin many hours after a meal and severe liver injury can follow. Expose the whole stem base to check for the sac-like volva, but the white deadly amanitas cannot be reliably separated by this plate. Seek urgent medical advice after any suspected ingestion.</string>
     <string name="myco_subincarnata_name">Fatal dapperling</string>
     <string name="myco_subincarnata_alt">Lépiote de Josserand</string>
     <string name="myco_subincarnata_latin" translatable="false">Lepiota subincarnata</string>
     <string-array name="myco_subincarnata_traits">
-        <item>Cap 5 to 6 cm, felted to finely scaly, pale rosy-brown to wine pink, darker boss in the centre</item>
+        <item>Small cap about 1.5 to 6 cm, felted to finely scaly, pale rosy-brown to wine pink, darker at the centre</item>
         <item>Gills free, fairly crowded, pale cream</item>
-        <item>Stem about 5 cm and under 1 cm thick, with a distinct woolly ring</item>
+        <item>Stem about 5 cm and under 1 cm thick, with a faint, fleeting woolly ring zone</item>
         <item>Whitish above the ring, scaly below it in the colour of the cap</item>
-        <item>Typical fruity smell of tangerine on the gills</item>
+        <item>Odour variable and not a reliable identification test</item>
         <item>Hedges, gardens, leaf litter, rich soil</item>
     </string-array>
-    <string name="myco_subincarnata_note">Deadly: amatoxins, as in the death cap. Symptoms come late: about 12 hours on average and up to 48 (Belgian poison centre, which names it Lepiota josserandii). The same centre advises against eating any lepiota smaller than 10 cm. Wikipedia (fr) warns of a mix-up with the fairy ring champignon.</string>
+    <string name="myco_subincarnata_note">Deadly: contains amatoxins that can cause delayed liver failure. It can be confused with small edible grassland mushrooms, including the fairy ring champignon. A faint or missing ring does not make it safe. Suspected ingestion requires urgent medical advice before symptoms appear.</string>
     <string name="myco_geophylla_name">Common white inocybe</string>
     <string name="myco_geophylla_alt">Inocybe à lames couleur de terre</string>
     <string name="myco_geophylla_latin" translatable="false">Inocybe geophylla</string>
@@ -2075,13 +2078,13 @@
     <string name="myco_nobilis_alt">Russula mairei</string>
     <string name="myco_nobilis_latin" translatable="false">Russula nobilis</string>
     <string-array name="myco_nobilis_traits">
-        <item>Cap 3 to 6 cm, red or rosy, convex then flat, weakly sticky, the skin peeling about a third of the way in</item>
+        <item>Cap about 3 to 9 cm, red or rosy, convex then flat, sometimes sticky when wet; the skin peels about a third of the way in</item>
         <item>Gills white, crowded</item>
         <item>Stem 2 to 5 cm, white, firmer than that of the sickener</item>
-        <item>Firm white flesh; smell of coconut, peppery taste</item>
+        <item>White flesh and brittle, chalk-like gills; odour varies and is not diagnostic</item>
         <item>Under beech · widespread in Europe</item>
     </string-array>
-    <string name="myco_nobilis_note">Toxic: the DGfM lists it under its former name, Russula mairei, for a gastrointestinal syndrome, and Wikipedia (en) calls it inedible, probably poisonous in quantity but not deadly: raw, red-capped peppery russulas cause diarrhoea, vomiting and cramps, the toxin being unidentified. There is no French Wikipedia page for it: the text comes from Wikipedia (en) and the DGfM.</string>
+    <string name="myco_nobilis_note">Inedible and reported to cause gastrointestinal upset. The German mycological society lists it under its former name Russula mairei. Cap colour or a possible coconut-like odour does not distinguish it reliably from other red brittlegills. Do not eat an uncertain collection.</string>
     <string name="myco_aurea_name">Gilded brittlegill</string>
     <string name="myco_aurea_alt">Russule dorée</string>
     <string name="myco_aurea_latin" translatable="false">Russula aurea</string>
@@ -2610,4 +2613,243 @@
         <item>Wikipedia (fr) says the blewits it is mistaken for are all edible, but names a violet Cortinarius among the look-alikes: a violet colour alone is not enough.</item>
         <item>Both are in the DGfM list of edible mushrooms.</item>
     </string-array>
+
+    <!-- Fiches ajoutées pour la parité avec l’arbre du vivant. -->
+    <string name="myco_status_reference_only">Taxonomic reference</string>
+    <string name="myco_supplement_illustration">Group schematic; not an identification illustration</string>
+    <string name="myco_puccinia_recondita_name">Puccinia recondita</string>
+    <string name="myco_puccinia_recondita_alt">No stable common name</string>
+    <string name="myco_puccinia_recondita_latin" translatable="false">Puccinia recondita</string>
+    <string name="myco_puccinia_recondita_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_puccinia_recondita_traits"><item>General form: wheat leaf rust.</item><item>Ecological context: wheat leaf rust. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_puccinia_poarum_name">Puccinia poarum</string>
+    <string name="myco_puccinia_poarum_alt">No stable common name</string>
+    <string name="myco_puccinia_poarum_latin" translatable="false">Puccinia poarum</string>
+    <string name="myco_puccinia_poarum_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_puccinia_poarum_traits"><item>General form: coltsfoot leaf rust.</item><item>Ecological context: coltsfoot leaf rust. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_puccinia_emaculata_name">Puccinia emaculata</string>
+    <string name="myco_puccinia_emaculata_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_puccinia_emaculata_latin" translatable="false">Puccinia emaculata</string>
+    <string name="myco_puccinia_emaculata_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_puccinia_emaculata_traits"><item>General form: grass rust.</item><item>Ecological context: grass rust. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_tremella_mesenterica_name">witch’s butter</string>
+    <string name="myco_tremella_mesenterica_alt">No stable common name</string>
+    <string name="myco_tremella_mesenterica_latin" translatable="false">Tremella mesenterica</string>
+    <string name="myco_tremella_mesenterica_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_tremella_mesenterica_traits"><item>General form: yellow lobed jelly on dead wood.</item><item>Ecological context: yellow lobed jelly on dead wood. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_tulostoma_kotlabae_name">Tulostoma kotlabae</string>
+    <string name="myco_tulostoma_kotlabae_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_tulostoma_kotlabae_latin" translatable="false">Tulostoma kotlabae</string>
+    <string name="myco_tulostoma_kotlabae_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_tulostoma_kotlabae_traits"><item>General form: small stalked puffball of dry habitats.</item><item>Ecological context: small stalked puffball of dry habitats. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_spongiforma_squarepantsii_name">Spongiforma squarepantsii</string>
+    <string name="myco_spongiforma_squarepantsii_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_spongiforma_squarepantsii_latin" translatable="false">Spongiforma squarepantsii</string>
+    <string name="myco_spongiforma_squarepantsii_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_spongiforma_squarepantsii_traits"><item>General form: spongy, porous fruiting body.</item><item>Ecological context: spongy, porous fruiting body. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_russula_rhodopus_name">Russula rhodopus</string>
+    <string name="myco_russula_rhodopus_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_russula_rhodopus_latin" translatable="false">Russula rhodopus</string>
+    <string name="myco_russula_rhodopus_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_russula_rhodopus_traits"><item>General form: forest russula with brittle flesh.</item><item>Ecological context: forest russula with brittle flesh. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_russula_pseudodelica_name">Russula pseudodelica</string>
+    <string name="myco_russula_pseudodelica_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_russula_pseudodelica_latin" translatable="false">Russula pseudodelica</string>
+    <string name="myco_russula_pseudodelica_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_russula_pseudodelica_traits"><item>General form: funnel-shaped russula.</item><item>Ecological context: funnel-shaped russula. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_russula_pallidospora_name">Russula pallidospora</string>
+    <string name="myco_russula_pallidospora_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_russula_pallidospora_latin" translatable="false">Russula pallidospora</string>
+    <string name="myco_russula_pallidospora_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_russula_pallidospora_traits"><item>General form: russula with pale spore print.</item><item>Ecological context: russula with pale spore print. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_russula_nitida_name">Russula nitida</string>
+    <string name="myco_russula_nitida_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_russula_nitida_latin" translatable="false">Russula nitida</string>
+    <string name="myco_russula_nitida_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_russula_nitida_traits"><item>General form: russula associated with damp woodland.</item><item>Ecological context: russula associated with damp woodland. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_russula_maculata_name">Russula maculata</string>
+    <string name="myco_russula_maculata_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_russula_maculata_latin" translatable="false">Russula maculata</string>
+    <string name="myco_russula_maculata_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_russula_maculata_traits"><item>General form: russula with a sometimes spotted cap.</item><item>Ecological context: russula with a sometimes spotted cap. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_russula_atroglauca_name">Russula atroglauca</string>
+    <string name="myco_russula_atroglauca_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_russula_atroglauca_latin" translatable="false">Russula atroglauca</string>
+    <string name="myco_russula_atroglauca_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_russula_atroglauca_traits"><item>General form: russula with dark green tones.</item><item>Ecological context: russula with dark green tones. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_russula_adulterina_name">Russula adulterina</string>
+    <string name="myco_russula_adulterina_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_russula_adulterina_latin" translatable="false">Russula adulterina</string>
+    <string name="myco_russula_adulterina_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_russula_adulterina_traits"><item>General form: russula of montane conifer woods.</item><item>Ecological context: russula of montane conifer woods. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_phaeocollybia_christinae_name">Phaeocollybia christinae</string>
+    <string name="myco_phaeocollybia_christinae_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_phaeocollybia_christinae_latin" translatable="false">Phaeocollybia christinae</string>
+    <string name="myco_phaeocollybia_christinae_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_phaeocollybia_christinae_traits"><item>General form: small woodland mushroom with a long rooting base.</item><item>Ecological context: small woodland mushroom with a long rooting base. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_exidia_nigricans_name">black witch’s butter</string>
+    <string name="myco_exidia_nigricans_alt">No stable common name</string>
+    <string name="myco_exidia_nigricans_latin" translatable="false">Exidia nigricans</string>
+    <string name="myco_exidia_nigricans_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_exidia_nigricans_traits"><item>General form: dark gelatinous mass on dead wood.</item><item>Ecological context: dark gelatinous mass on dead wood. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_agaricus_pilatianus_name">Agaricus pilatianus</string>
+    <string name="myco_agaricus_pilatianus_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_agaricus_pilatianus_latin" translatable="false">Agaricus pilatianus</string>
+    <string name="myco_agaricus_pilatianus_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_agaricus_pilatianus_traits"><item>General form: Agaricus with free gills and chocolate-brown mature spores.</item><item>Ecological context: Agaricus with free gills and chocolate-brown mature spores. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_thanatephorus_cucumeris_name">Thanatephorus cucumeris</string>
+    <string name="myco_thanatephorus_cucumeris_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_thanatephorus_cucumeris_latin" translatable="false">Thanatephorus cucumeris</string>
+    <string name="myco_thanatephorus_cucumeris_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_thanatephorus_cucumeris_traits"><item>General form: microscopic fungus associated with rhizoctonia disease.</item><item>Ecological context: microscopic fungus associated with rhizoctonia disease. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_botryobasidium_simile_name">Botryobasidium simile</string>
+    <string name="myco_botryobasidium_simile_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_botryobasidium_simile_latin" translatable="false">Botryobasidium simile</string>
+    <string name="myco_botryobasidium_simile_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_botryobasidium_simile_traits"><item>General form: corticioid fungus forming a layer on wood.</item><item>Ecological context: corticioid fungus forming a layer on wood. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_athelia_rolfsii_name">Athelia rolfsii</string>
+    <string name="myco_athelia_rolfsii_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_athelia_rolfsii_latin" translatable="false">Athelia rolfsii</string>
+    <string name="myco_athelia_rolfsii_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_athelia_rolfsii_traits"><item>General form: soil fungus pathogenic to many plants.</item><item>Ecological context: soil fungus pathogenic to many plants. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_lactarius_zonarioides_name">Lactarius zonarioides</string>
+    <string name="myco_lactarius_zonarioides_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_lactarius_zonarioides_latin" translatable="false">Lactarius zonarioides</string>
+    <string name="myco_lactarius_zonarioides_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_lactarius_zonarioides_traits"><item>General form: milkcap with concentric zones and latex when cut.</item><item>Ecological context: milkcap with concentric zones and latex when cut. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_lactarius_torminosulus_name">Lactarius torminosulus</string>
+    <string name="myco_lactarius_torminosulus_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_lactarius_torminosulus_latin" translatable="false">Lactarius torminosulus</string>
+    <string name="myco_lactarius_torminosulus_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_lactarius_torminosulus_traits"><item>General form: small milkcap with a hairy margin, associated with birch.</item><item>Ecological context: small milkcap with a hairy margin, associated with birch. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_lactarius_sphagneti_name">Lactarius sphagneti</string>
+    <string name="myco_lactarius_sphagneti_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_lactarius_sphagneti_latin" translatable="false">Lactarius sphagneti</string>
+    <string name="myco_lactarius_sphagneti_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_lactarius_sphagneti_traits"><item>General form: milkcap of bogs and sphagnum habitats.</item><item>Ecological context: milkcap of bogs and sphagnum habitats. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_lactarius_picinus_name">Lactarius picinus</string>
+    <string name="myco_lactarius_picinus_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_lactarius_picinus_latin" translatable="false">Lactarius picinus</string>
+    <string name="myco_lactarius_picinus_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_lactarius_picinus_traits"><item>General form: dark milkcap of spruce forests.</item><item>Ecological context: dark milkcap of spruce forests. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_lactarius_fennoscandicus_name">Lactarius fennoscandicus</string>
+    <string name="myco_lactarius_fennoscandicus_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_lactarius_fennoscandicus_latin" translatable="false">Lactarius fennoscandicus</string>
+    <string name="myco_lactarius_fennoscandicus_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_lactarius_fennoscandicus_traits"><item>General form: boreal milkcap associated with conifers.</item><item>Ecological context: boreal milkcap associated with conifers. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_russula_laricina_name">Russula laricina</string>
+    <string name="myco_russula_laricina_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_russula_laricina_latin" translatable="false">Russula laricina</string>
+    <string name="myco_russula_laricina_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_russula_laricina_traits"><item>General form: russula associated with larch.</item><item>Ecological context: russula associated with larch. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_hygrophorus_pustulatus_name">Hygrophorus pustulatus</string>
+    <string name="myco_hygrophorus_pustulatus_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_hygrophorus_pustulatus_latin" translatable="false">Hygrophorus pustulatus</string>
+    <string name="myco_hygrophorus_pustulatus_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_hygrophorus_pustulatus_traits"><item>General form: waxy cap with a sticky surface and dotted stem.</item><item>Ecological context: waxy cap with a sticky surface and dotted stem. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_hygrophorus_purpurascens_name">Hygrophorus purpurascens</string>
+    <string name="myco_hygrophorus_purpurascens_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_hygrophorus_purpurascens_latin" translatable="false">Hygrophorus purpurascens</string>
+    <string name="myco_hygrophorus_purpurascens_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_hygrophorus_purpurascens_traits"><item>General form: waxy cap with purple tones.</item><item>Ecological context: waxy cap with purple tones. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_hygrophorus_penarioides_name">Hygrophorus penarioides</string>
+    <string name="myco_hygrophorus_penarioides_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_hygrophorus_penarioides_latin" translatable="false">Hygrophorus penarioides</string>
+    <string name="myco_hygrophorus_penarioides_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_hygrophorus_penarioides_traits"><item>General form: woodland waxcap in a group of pale species.</item><item>Ecological context: woodland waxcap in a group of pale species. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_amanita_beckeri_name">Amanita beckeri</string>
+    <string name="myco_amanita_beckeri_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_amanita_beckeri_latin" translatable="false">Amanita beckeri</string>
+    <string name="myco_amanita_beckeri_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_amanita_beckeri_traits"><item>General form: Amanita with free gills and a white spore print.</item><item>Ecological context: Amanita with free gills and a white spore print. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_inocybe_tricolor_name">Inocybe tricolor</string>
+    <string name="myco_inocybe_tricolor_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_inocybe_tricolor_latin" translatable="false">Inocybe tricolor</string>
+    <string name="myco_inocybe_tricolor_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_inocybe_tricolor_traits"><item>General form: Inocybe with a fibrillose cap and brown spores.</item><item>Ecological context: Inocybe with a fibrillose cap and brown spores. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_inocybe_aeruginascens_name">Inocybe aeruginascens</string>
+    <string name="myco_inocybe_aeruginascens_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_inocybe_aeruginascens_latin" translatable="false">Inocybe aeruginascens</string>
+    <string name="myco_inocybe_aeruginascens_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_inocybe_aeruginascens_traits"><item>General form: Inocybe with characteristic greenish coloration.</item><item>Ecological context: Inocybe with characteristic greenish coloration. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_psilocybe_silvatica_name">Psilocybe silvatica</string>
+    <string name="myco_psilocybe_silvatica_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_psilocybe_silvatica_latin" translatable="false">Psilocybe silvatica</string>
+    <string name="myco_psilocybe_silvatica_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_psilocybe_silvatica_traits"><item>General form: small saprotrophic Psilocybe of wooded habitats.</item><item>Ecological context: small saprotrophic Psilocybe of wooded habitats. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_psilocybe_puberula_name">Psilocybe puberula</string>
+    <string name="myco_psilocybe_puberula_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_psilocybe_puberula_latin" translatable="false">Psilocybe puberula</string>
+    <string name="myco_psilocybe_puberula_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_psilocybe_puberula_traits"><item>General form: small Psilocybe with useful microscopic characters.</item><item>Ecological context: small Psilocybe with useful microscopic characters. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_gymnopilus_pseudofulgens_name">Gymnopilus pseudofulgens</string>
+    <string name="myco_gymnopilus_pseudofulgens_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_gymnopilus_pseudofulgens_latin" translatable="false">Gymnopilus pseudofulgens</string>
+    <string name="myco_gymnopilus_pseudofulgens_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_gymnopilus_pseudofulgens_traits"><item>General form: rust-spored Gymnopilus associated with wood.</item><item>Ecological context: rust-spored Gymnopilus associated with wood. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_gymnopilus_josserandii_name">Gymnopilus josserandii</string>
+    <string name="myco_gymnopilus_josserandii_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_gymnopilus_josserandii_latin" translatable="false">Gymnopilus josserandii</string>
+    <string name="myco_gymnopilus_josserandii_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_gymnopilus_josserandii_traits"><item>General form: woodland Gymnopilus with rusty spores.</item><item>Ecological context: woodland Gymnopilus with rusty spores. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_schizosaccharomyces_pombe_name">fission yeast</string>
+    <string name="myco_schizosaccharomyces_pombe_alt">No stable common name</string>
+    <string name="myco_schizosaccharomyces_pombe_latin" translatable="false">Schizosaccharomyces pombe</string>
+    <string name="myco_schizosaccharomyces_pombe_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_schizosaccharomyces_pombe_traits"><item>General form: unicellular yeast that divides by fission.</item><item>Ecological context: unicellular yeast that divides by fission. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_parmelia_sulcata_name">hammered shield lichen</string>
+    <string name="myco_parmelia_sulcata_alt">No stable common name</string>
+    <string name="myco_parmelia_sulcata_latin" translatable="false">Parmelia sulcata</string>
+    <string name="myco_parmelia_sulcata_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_parmelia_sulcata_traits"><item>General form: grey foliose lichen formed by a symbiosis.</item><item>Ecological context: grey foliose lichen formed by a symbiosis. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_fusarium_oxysporum_name">Fusarium oxysporum</string>
+    <string name="myco_fusarium_oxysporum_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_fusarium_oxysporum_latin" translatable="false">Fusarium oxysporum</string>
+    <string name="myco_fusarium_oxysporum_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_fusarium_oxysporum_traits"><item>General form: soil mould including plant-pathogenic lineages.</item><item>Ecological context: soil mould including plant-pathogenic lineages. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_tuber_mesentericum_name">Tuber mesentericum</string>
+    <string name="myco_tuber_mesentericum_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_tuber_mesentericum_latin" translatable="false">Tuber mesentericum</string>
+    <string name="myco_tuber_mesentericum_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_tuber_mesentericum_traits"><item>General form: underground truffle with a warty surface.</item><item>Ecological context: underground truffle with a warty surface. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_pleomassaria_siparia_name">Pleomassaria siparia</string>
+    <string name="myco_pleomassaria_siparia_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_pleomassaria_siparia_latin" translatable="false">Pleomassaria siparia</string>
+    <string name="myco_pleomassaria_siparia_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_pleomassaria_siparia_traits"><item>General form: microscopic fungus forming dark fruiting bodies on wood.</item><item>Ecological context: microscopic fungus forming dark fruiting bodies on wood. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_pestalotiopsis_microspora_name">Pestalotiopsis microspora</string>
+    <string name="myco_pestalotiopsis_microspora_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_pestalotiopsis_microspora_latin" translatable="false">Pestalotiopsis microspora</string>
+    <string name="myco_pestalotiopsis_microspora_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_pestalotiopsis_microspora_traits"><item>General form: mould with septate spores, sometimes associated with plants.</item><item>Ecological context: mould with septate spores, sometimes associated with plants. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_histoplasma_capsulatum_name">Histoplasma capsulatum</string>
+    <string name="myco_histoplasma_capsulatum_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_histoplasma_capsulatum_latin" translatable="false">Histoplasma capsulatum</string>
+    <string name="myco_histoplasma_capsulatum_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_histoplasma_capsulatum_traits"><item>General form: dimorphic fungus in the environment, studied in microbiology.</item><item>Ecological context: dimorphic fungus in the environment, studied in microbiology. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_neurospora_crassa_name">Neurospora crassa</string>
+    <string name="myco_neurospora_crassa_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_neurospora_crassa_latin" translatable="false">Neurospora crassa</string>
+    <string name="myco_neurospora_crassa_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_neurospora_crassa_traits"><item>General form: orange mould, a model organism in genetics.</item><item>Ecological context: orange mould, a model organism in genetics. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_candida_parapsilosis_name">Candida parapsilosis</string>
+    <string name="myco_candida_parapsilosis_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_candida_parapsilosis_latin" translatable="false">Candida parapsilosis</string>
+    <string name="myco_candida_parapsilosis_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_candida_parapsilosis_traits"><item>General form: unicellular yeast studied in clinical microbiology.</item><item>Ecological context: unicellular yeast studied in clinical microbiology. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_saccharomyces_cerevisiae_name">baker’s yeast</string>
+    <string name="myco_saccharomyces_cerevisiae_alt">No stable common name</string>
+    <string name="myco_saccharomyces_cerevisiae_latin" translatable="false">Saccharomyces cerevisiae</string>
+    <string name="myco_saccharomyces_cerevisiae_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
+    <string-array name="myco_saccharomyces_cerevisiae_traits"><item>General form: unicellular yeast used in fermentation and research.</item><item>Ecological context: unicellular yeast used in fermentation and research. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_penicillium_roqueforti_name">Roquefort cheese mould</string>
+    <string name="myco_penicillium_roqueforti_alt">Blue-cheese mould</string>
+    <string name="myco_penicillium_roqueforti_latin" translatable="false">Penicillium roqueforti</string>
+    <string name="myco_penicillium_roqueforti_note">Selected strains are used in controlled production of blue-veined cheeses. Strains and production conditions differ; seeing blue-green mould elsewhere does not identify it or establish that it is safe. This profile describes the fungus and is not a food-safety assessment.</string>
+    <string-array name="myco_penicillium_roqueforti_traits"><item>Filamentous ascomycete mould; it does not form a cap-and-stem mushroom.</item><item>Used as a ripening culture in blue-veined cheeses, including Roquefort.</item><item>Strains can differ in colour, aroma and secondary metabolites, including mycotoxins.</item></string-array>
+    <string name="myco_article_pending">This species article has not yet been independently reviewed. Its listed sources still need to be checked.</string>
+    <string name="myco_herbarium_accessibility">Herbarium plate of %1$s</string>
+    <string name="myco_show_drawing">Show diagnostic drawing</string>
+    <string name="myco_show_herbarium">Show herbarium plate</string>
+    <string name="myco_sec_references">Sources for this species</string>
 </resources>

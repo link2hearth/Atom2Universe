@@ -1,0 +1,19 @@
+{
+  "id": "verna",
+  "reviewStatus": "verified",
+  "safetyNote": "Mortelle. Amanita verna appartient aux amanites blanches à amatoxines et peut provoquer une atteinte du foie retardée et mortelle. Ne jamais consommer ni goûter un spécimen suspect. En cas d’ingestion possible, contacter immédiatement les urgences ou un centre antipoison, même sans symptôme.",
+  "sections": [
+    {"title": "Aspect", "text": "L’amanite printanière est une amanite blanche européenne. Son chapeau adulte est lisse, généralement blanc, parfois légèrement ivoire ou ocre au centre, avec une marge non striée. Ses lames serrées et blanches sont libres du pied. Le pied blanc et élancé porte un anneau membraneux haut et mince, qui peut se déchirer ou devenir peu visible. Sa base élargie est entourée d’une volve blanche, membraneuse, en sac ; il faut dégager le pied entier pour l’observer. La sporée est blanche."},
+    {"title": "Milieu et saison", "text": "Elle fructifie surtout au printemps, isolée ou en petits groupes, dans les bois de feuillus ou mixtes d’Europe. La saison, le milieu et la couleur blanche apportent un contexte, mais ne suffisent pas à identifier l’espèce. Les jeunes exemplaires fermés peuvent masquer les lames, l’anneau et la volve."},
+    {"title": "Amanites blanches voisines et noms révisés", "text": "La forme blanche de l’amanite phalloïde, l’amanite vireuse et d’autres espèces de la section Phalloideae peuvent lui ressembler beaucoup. Une révision morphologique et moléculaire de 2022 a séparé sous le nom A. vidua un taxon méditerranéen négatif au KOH que certains auteurs appelaient auparavant A. verna. Les anciennes mentions et photographies sous ce nom demandent donc de la prudence. La planche représente des caractères typiques d’une amanite blanche, mais ne permet pas de trancher l’espèce exacte dans ce groupe. Une amanite à lames blanches et volve en sac ne doit jamais être prise pour un agaric comestible."},
+    {"title": "Intoxication", "text": "Une intoxication aux amatoxines débute souvent après une phase sans symptômes d’environ 6 à 24 heures, par vomissements et diarrhée. Une grave atteinte du foie peut suivre une amélioration trompeuse ; les reins peuvent aussi être touchés. Une quantité incertaine ou l’absence de signes précoces ne rassure pas. Demander un avis médical urgent après toute ingestion suspecte."},
+    {"title": "Lecture de la planche", "text": "La planche sur fond blanc montre un adulte entier avec sa volve dégagée, une coupe longitudinale, le chapeau lisse vu de dessus et les lames blanches libres vues de dessous. L’anneau est représenté sur un exemplaire typique, mais peut être fragile dans la nature."}
+  ],
+  "sources": [
+    {"title": "Alvarado et coll. (2022), révision des Amanita section Phalloideae du bassin méditerranéen, Biology", "url": "https://www.mdpi.com/2079-7737/11/5/770"},
+    {"title": "Gruppo Micologico Tonino Pocorobba, description d’Amanita verna", "url": "https://www.mykotrapani.it/approfondimenti-sui-funghi/132-amanita-verna"},
+    {"title": "Centre Antipoisons belge, brochure d’information sur les champignons", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "Deutsche Gesellschaft für Mykologie, champignons toxiques par taxon (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"}
+  ],
+  "related": ["virosa", "phalloides", "campestris", "ovoidea"]
+}

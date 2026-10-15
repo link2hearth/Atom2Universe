@@ -6,7 +6,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
+import com.Atom2Universe.app.science.parentes.LifeArchive
+import com.Atom2Universe.app.science.parentes.LifeTree
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -79,8 +82,10 @@ class MycologyCatalogTest {
             for (id in group.members) assertTrue("$id absent du catalogue (groupe ${group.id})", FungusCatalog.get(id) != null)
         }
         for (change in FungusCatalog.changes) assertTrue(FungusCatalog.get(change.speciesId) != null)
-        // Un statut mortel ou toxique doit dire pourquoi : une note et au moins quatre caractères d'identification.
-        for (sp in FungusCatalog.species) assertTrue("${sp.id} sans repère", sp.look.marksSide.isNotEmpty() && sp.look.marksUnder.isNotEmpty())
+        // Les fiches de cueillette ont des repères sur la planche; les références taxonomiques ont un schéma de groupe.
+        for (sp in FungusCatalog.species) if (sp.diagram == FungusDiagramKind.MUSHROOM) {
+            assertTrue("${sp.id} sans repère", sp.look.marksSide.isNotEmpty() && sp.look.marksUnder.isNotEmpty())
+        }
     }
 
     @Test
@@ -88,6 +93,7 @@ class MycologyCatalogTest {
         val json = JSONObject(File("src/main/assets/science/mycology/sources.json").readText())
         val sources = json.getJSONArray("sources")
         val covered = HashSet<String>()
+        val speciesSourceCount = HashMap<String, Int>()
         var general = 0
         for (i in 0 until sources.length()) {
             val o = sources.getJSONObject(i)
@@ -99,11 +105,29 @@ class MycologyCatalogTest {
                 if (id == "*") general++ else {
                     assertTrue("espèce inconnue « $id » dans les sources", FungusCatalog.get(id) != null)
                     covered += id
+                    speciesSourceCount[id] = (speciesSourceCount[id] ?: 0) + 1
                 }
             }
         }
         assertTrue(general > 0)
         val missing = FungusCatalog.species.map { it.id }.filter { it !in covered }
         assertTrue("espèces sans source propre : $missing", missing.isEmpty())
+        val weaklySourced = FungusSupplementCatalog.species.map { it.id }.filter { (speciesSourceCount[it] ?: 0) < 2 }
+        assertTrue("nouvelles fiches avec moins de deux sources propres : $weaklySourced", weaklySourced.isEmpty())
+    }
+
+    @Test
+    fun pariteAvecLarbreDuVivant() {
+        val archive = LifeArchive.read(File("src/main/assets/parentes/runtime.bin").inputStream())
+        val tree = LifeTree(archive.nodes, archive.root, emptySet())
+        val context = RuntimeEnvironment.getApplication()
+        val index = MycologyLifeIndex(tree, FungusCatalog.species.associate { it.id to context.getString(it.latin) })
+        val fungalLeaves = tree.species.filter { leaf ->
+            tree.ancestors(leaf.id).any { tree.nodes[it]?.scientific == "Fungi" }
+        }
+        val unlinkedTreeSpecies = fungalLeaves.filter { index.forNode(it.id) == null }.map { it.scientific }.toSet()
+        assertTrue("taxons de l’arbre sans fiche : $unlinkedTreeSpecies", unlinkedTreeSpecies.isEmpty())
+        val unlinkedProfiles = FungusCatalog.species.filter { index.forSpecies(it.id) == null }.map { it.id }.toSet()
+        assertTrue("fiches sans taxon : $unlinkedProfiles", unlinkedProfiles.isEmpty())
     }
 }

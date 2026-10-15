@@ -1,0 +1,26 @@
+{
+  "id": "galerina",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Galerina marginata est un petit champignon lignicole au chapeau lisse, brun à fauve et d'aspect humide, qui pâlit en séchant : le centre reste souvent plus sombre que la marge, parfois finement striée. Ses lames serrées et adnées passent du jaune pâle ou ocre au brun rouille ; la sporée est brun rouille. Le pied grêle est clair en haut, brun et fibrilleux ou pelucheux en bas. Un petit anneau pâle et fragile peut se voir chez les jeunes exemplaires puis disparaître. Le pied peut être creux ; l'odeur parfois farineuse n'est pas déterminante."},
+    {"title": "Habitat et saison", "text": "Elle pousse seule, disséminée ou en groupes sur le bois mort de conifères et de feuillus, y compris du bois enterré qui la fait paraître terrestre. En Europe, elle est surtout observée en été et en automne ; au Missouri, elle est signalée toute l'année, notamment en automne. Ni la saison ni le support ne suffisent à l'identifier."},
+    {"title": "Espèces proches", "text": "La pholiote changeante comestible (Kuehneromyces mutabilis) peut lui ressembler fortement et partager des supports ligneux. L'hypholome en touffe (Hypholoma fasciculare), également toxique, est aussi cité comme confusion possible par le Centre Antipoisons belge. La flammuline (Flammulina velutipes) n'a pas d'anneau et sa sporée est blanche, mais l'absence d'anneau n'exclut pas une vieille galère. Dans une touffe mêlée, chaque exemplaire doit être examiné."},
+    {"title": "Toxicité", "text": "Cette espèce contient des amatoxines et peut provoquer le même syndrome phalloïdien mortel que l'amanite phalloïde. Le Centre Antipoisons belge situe les premiers symptômes en moyenne vers douze heures après le repas, parfois jusqu'à 48 heures : vomissements et diarrhée sévères peuvent être suivis d'une amélioration apparente alors que le foie est atteint ; les reins peuvent également souffrir. Toute ingestion suspecte impose une évaluation médicale urgente, même sans symptôme précoce."}
+  ],
+  "traits": [
+    "Petit chapeau lisse brun fauve, plus sombre au centre et pâlissant en séchant",
+    "Lames adnées ocre pâle puis brun rouille ; sporée brun rouille",
+    "Pied grêle clair en haut, brun fibrilleux en bas, parfois creux",
+    "Petit anneau fragile chez les jeunes sujets, souvent perdu ensuite",
+    "Sur bois mort de conifères ou feuillus, parfois enterré ; souvent été-automne"
+  ],
+  "safetyNote": "Mortelle : Galerina marginata contient des amatoxines. Les symptômes peuvent être retardés de nombreuses heures, puis évoluer de troubles digestifs graves vers une défaillance du foie et parfois des reins. Ne consommez jamais un petit champignon brun lignicole incertain ; après ingestion suspecte, contactez sans délai un centre antipoison ou les secours.",
+  "sources": [
+    {"title": "Centre Antipoisons belge — Brochure champignons, Galerina marginata et syndrome phalloïdien", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "Société allemande de mycologie (DGfM) — Espèces toxiques et syndromes (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Missouri Department of Conservation — Guide Galerina marginata", "url": "https://mdc.mo.gov/discover-nature/field-guide/deadly-galerina"},
+    {"title": "First Nature — Identification de Galerina marginata et confusions", "url": "https://mail.first-nature.com/fungi/galerina-marginata.php"},
+    {"title": "Landry et al. — Répartition phylogénétique des amatoxines chez Galerina (2021)", "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0246575"}
+  ],
+  "related": ["mutabilis", "fasciculare", "flammulina", "phalloides"]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "olearius",
+  "reviewStatus": "verified",
+  "safetyNote": "Toxique. Omphalotus olearius peut provoquer des nausées, crampes abdominales, vomissements et diarrhées sévères, avec un risque de déshydratation. Il est parfois cueilli par erreur à la place de girolles. En cas d’ingestion suspectée, contacte rapidement un centre antipoison ou un service médical et conserve un échantillon pour l’identification.",
+  "sections": [
+    {"title": "Chapeau et vraies lames", "text": "Le chapeau, lisse à légèrement fibrilleux, est orange vif à cuivré ou brun orangé, souvent plus sombre au centre. D’abord convexe avec une marge enroulée, il s’étale puis se déprime au centre et présente une marge ondulée ; les diamètres décrits vont approximativement de 6 à 20 cm. Le dessous porte de nombreuses vraies lames orangées, fines, serrées et à bord aigu, qui descendent longuement sur le pied. Certaines peuvent se bifurquer près du bord : l’absence absolue de fourches n’est donc pas un test fiable."},
+    {"title": "Pied, chair et croissance", "text": "Le pied orange et ferme peut être légèrement excentré ; il s’amincit généralement vers la base et peut y brunir. La chair reste orangée dans le chapeau et à l’intérieur du pied. Les fructifications forment souvent des touffes serrées dont les pieds convergent sur du bois de feuillu en décomposition, des racines enterrées ou une souche, surtout d’olivier ou de chêne ; une racine enfouie peut faire croire qu’elles poussent directement du sol. Il n’y a ni anneau ni volve."},
+    {"title": "Saison, spores et lumière", "text": "Ce décomposeur du bois vit surtout dans le sud et le centre de l’Europe, notamment en région méditerranéenne. Il fructifie principalement de la fin de l’été à l’automne, parfois jusqu’en hiver lorsque le climat est doux. Sa sporée est blanc crème ; les spores microscopiques lisses sont arrondies à ellipsoïdes. Les lames fraîches peuvent émettre une faible lumière verdâtre dans l’obscurité totale, mais ce phénomène varie et ne permet pas d’identifier un exemplaire."},
+    {"title": "Confusion avec les girolles", "text": "Les girolles comme Cantharellus cibarius portent des plis épais, émoussés, souvent ramifiés et soudés à la chair du chapeau, plutôt que de fines lames séparables. Elles fructifient normalement au sol en association avec des arbres vivants, pas en touffe sur du bois en décomposition. La fausse girolle, Hygrophoropsis aurantiaca, présente elle aussi des lames, mais beaucoup plus ramifiées. Plusieurs caractères doivent être vérifiés ensemble : la couleur ou l’absence de luminescence ne suffisent pas."}
+  ],
+  "traits": [
+    "Chapeau orange à cuivré, d’abord convexe puis déprimé ou en entonnoir, à bord ondulé",
+    "Vraies lames orangées fines et serrées, longuement décurrentes ; quelques bifurcations possibles",
+    "Généralement en touffes sur bois, souche ou racines enterrées de feuillus",
+    "Chair orangée dans le chapeau et le pied ; pied aminci et plus sombre à la base",
+    "Sporée blanc crème ; faible luminescence des lames variable et non diagnostique",
+    "Surtout dans le sud et le centre de l’Europe, notamment méditerranéenne"
+  ],
+  "sources": [
+    {"title": "Université d’Évora, Mitra-Nature — Omphalotus olearius", "url": "https://www.mitra-nature.uevora.pt/Especies-e-habitats/Fungos/Cogumelos/Basidiomycota/Omphalotaceae/Omphalotus-olearius"},
+    {"title": "Association Nuova Micologia — Omphalotus olearius", "url": "https://www.nuovamicologia.eu/omphalotus-olearius/"},
+    {"title": "First Nature — Omphalotus olearius", "url": "https://www.first-nature.com/fungi/omphalotus-olearius.php"},
+    {"title": "Société allemande de mycologie — syndrome d’intoxication aux omphalotes", "url": "https://www.dgfm-ev.de/de/beschreibung-symptome-und-karenzzeiten"},
+    {"title": "Centre Antipoisons belge — incubation et syndromes des intoxications aux champignons", "url": "https://www.antigifcentrum.be/Toxinfos/incubatietijd-en-syndromen/"},
+    {"title": "ANSES (2023) — Surveillance des intoxications par champignons, saison 2022", "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"}
+  ],
+  "related": ["cibarius", "aurantiaca"]
+}

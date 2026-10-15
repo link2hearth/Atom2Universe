@@ -1,0 +1,28 @@
+{
+  "id": "rubescens",
+  "reviewStatus": "verified",
+  "safetyNote": "Comestible sous condition, uniquement après une cuisson complète : Amanita rubescens crue ou insuffisamment cuite est dangereuse car elle contient une hémolysine thermolabile. La confusion avec l’amanite panthère, toxique, est possible. Ne décide jamais de consommer un champignon sauvage à partir de cette planche seule.",
+  "sections": [
+    {"title": "Chapeau et lames", "text": "D’abord arrondi, le chapeau devient convexe puis presque plat ; il mesure couramment environ 5 à 15 cm. Sa couleur varie beaucoup, du gris rosé pâle au brun rosé ou brun rougeâtre. Des fragments plats et irréguliers du voile, gris, blanchâtres ou gris rosé, peuvent rester à sa surface, mais la pluie peut les effacer. Les lames serrées sont claires et peuvent se tacher de rose ou de rouge rouille au toucher."},
+    {"title": "Pied, anneau et base", "text": "Le pied blanchâtre prend des teintes roses à rouge vineux aux endroits meurtris. Un anneau pendant, haut et fragile, présente de fines stries bien visibles sur sa face supérieure. La base est bulbeuse ; le voile général peut y laisser des plages ou écailles floconneuses fragiles, mais pas de coupe membraneuse persistante."},
+    {"title": "Rougissement, spores et habitat", "text": "La chair blanche du chapeau et du pied rosit puis devient rouge vineux terne lorsqu’on la coupe ou la blesse, surtout près des zones abîmées et du bulbe. La sporée est blanche ; les spores microscopiques lisses sont largement ellipsoïdes et amyloïdes. Cette espèce forme des mycorhizes avec des feuillus et des conifères et fructifie au sol en forêt, principalement de l’été à l’automne en Europe tempérée."},
+    {"title": "Confusion et cuisson", "text": "Le rougissement, l’anneau strié et l’absence de volve en sac à la base aident ensemble à la distinguer de l’amanite panthère toxique, Amanita pantherina ; aucun caractère isolé ne suffit pour une identification sûre. La liste de l’association suisse des contrôleurs officiels de champignons indique d’enlever la peau du chapeau et de bien cuire A. rubescens, qui contient une hémolysine thermolabile. La planche montre des caractères typiques, pas toutes les variations de couleur."}
+  ],
+  "traits": [
+    "Chapeau très variable, du gris rosé au brun vineux, avec fragments gris aplatis du voile",
+    "Chair du chapeau et du pied rougissant à la blessure ; lames parfois tachées aussi",
+    "Anneau haut, pendant et fragile, strié sur sa face supérieure",
+    "Base bulbeuse avec résidus fragiles du voile, sans coupe membraneuse persistante",
+    "Lames claires et serrées ; sporée blanche"
+  ],
+  "sources": [
+    {"title": "Université d’Évora, Mitra-Nature — Amanita rubescens", "url": "https://www.mitra-nature.uevora.pt/Especies-e-habitats/Fungos/Cogumelos/Basidiomycota/Amanitaceae/Amanita-rubescens"},
+    {"title": "NatureSpot — Blusher (Amanita rubescens)", "url": "https://www.naturespot.org/species/blusher"},
+    {"title": "First Nature — Amanita rubescens", "url": "https://www.first-nature.com/fungi/amanita-rubescens.php"},
+    {"title": "VAPKO, association suisse des organes officiels de contrôle des champignons — liste 2023", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "Société allemande de mycologie — liste 2026 des champignons comestibles", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "Centre Antipoisons belge — Brochure champignons", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "Seeger et coll. (1981) — Toxic effects of rubescenslysin, Toxicon", "url": "https://doi.org/10.1016/0041-0101(81)90045-3"}
+  ],
+  "related": ["pantherina"]
+}

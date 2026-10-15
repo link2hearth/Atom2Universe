@@ -1,0 +1,26 @@
+{
+  "id": "rubellus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Cortinarius rubellus porte un chapeau sec et mat, finement fibrilleux, brun orangé à brun rouille, généralement large de 3 à 8 cm, en cloche puis convexe et souvent terminé par un mamelon central pointu. La marge est incurvée chez le jeune sujet. Les lames assez espacées, échancrées ou étroitement adnées, virent au brun rougeâtre ou rouille. Le pied grêle ocre brun, parfois un peu élargi vers le bas, montre des bandes jaunâtres discontinues de voile, surtout sous le milieu ; une cortine pâle et délicate n'est parfois visible que sur les jeunes sujets. La chair est jaune pâle. L'odeur peut rappeler légèrement le radis ou être peu marquée. La sporée est brun rouille."},
+    {"title": "Habitat et saison", "text": "Ce champignon ectomycorhizien pousse souvent parmi les mousses, dans l'humus des pessières, parfois sous pins ou feuillus. Les relevés norvégiens culminent en août et septembre, mais la saison varie localement. Un bois de conifères humide et acide est un habitat fréquent, pas un test d'identification exclusif."},
+    {"title": "Espèces proches", "text": "Cortinarius orellanus, tout aussi dangereux, est en général moins fortement mamelonné et plus souvent lié aux feuillus. D'autres cortinaires brun orangé ressemblent aux deux. La girolle porte des plis épais et émoussés, pas de vraies lames ; cette différence aide mais ne permet pas, à elle seule, de valider une cueillette. Les bandes jaunes de voile et la cortine fragile peuvent être discrètes ou disparaître avec l'âge."},
+    {"title": "Intoxication à l'orellanine", "text": "L'orellanine peut provoquer une atteinte rénale grave après une longue phase silencieuse. Les premiers troubles digestifs peuvent manquer ; soif, nausées, fatigue, douleurs lombaires et modification des urines apparaissent parfois plusieurs jours après le repas. Le Centre Antipoisons belge signale des troubles rénaux environ deux à vingt jours après ingestion de cortinaires à orellanine. Dans une série suédoise de 28 patients intoxiqués par C. rubellus, 22 ont d'abord nécessité une dialyse et beaucoup ont ensuite reçu une greffe rénale ; ces chiffres décrivent cette série, pas le risque de chaque ingestion. Toute exposition suspecte impose un avis médical urgent avant les symptômes."}
+  ],
+  "traits": [
+    "Chapeau sec brun orangé rouille et fibrilleux, en cloche puis convexe, à mamelon pointu",
+    "Lames assez espacées, échancrées à étroitement adnées, brun rougeâtre",
+    "Pied grêle ocre brun à bandes jaunes de voile discontinues ; cortine fugace chez le jeune",
+    "Chair jaune pâle ; odeur de radis possible mais inconstante",
+    "Souvent dans les pessières moussues, surtout de la fin d'été à l'automne"
+  ],
+  "safetyNote": "Poison rénal potentiellement mortel : ne mangez jamais Cortinarius rubellus. L'orellanine peut provoquer une insuffisance rénale après plusieurs jours sans symptôme ; l'absence de trouble précoce ne rassure pas. Après ingestion suspecte, contactez sans délai un centre antipoison ou les secours.",
+  "sources": [
+    {"title": "Centre Antipoisons belge — Brochure champignons, syndrome oréllanien", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "Société allemande de mycologie (DGfM) — Espèces toxiques et syndromes (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Muséum d'histoire naturelle de l'Université d'Oslo — Fiche Cortinarius rubellus", "url": "https://www.nhm2.uio.no/botanisk/bot-mus/sopp/fakta/fakt-9.htm"},
+    {"title": "Université de Colombie-Britannique, E-Flora BC — Cortinarius rubellus", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Cortinarius+rubellus"},
+    {"title": "Hedman et al. — Évolution à long terme après intoxication par le cortinaire (2017)", "url": "https://link.springer.com/article/10.1186/s12882-017-0533-6"}
+  ],
+  "related": ["orellanus", "cibarius"]
+}

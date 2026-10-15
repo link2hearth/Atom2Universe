@@ -1,0 +1,28 @@
+{
+  "id": "equestre",
+  "reviewStatus": "verified",
+  "safetyNote": "Avoid eating Tricholoma equestre and lookalikes. Severe delayed muscle breakdown (rhabdomyolysis), including fatal cases, was reported after several large meals of yellow knight mushrooms on consecutive days; the precise causal species and mechanism remain debated. Weakness, muscle pain and dark urine can appear 24–72 hours later and need urgent medical assessment. In France, the sale and distribution of T. equestre, T. auratum and T. flavovirens are prohibited by decree 2005-1184.",
+  "sections": [
+    {"title": "Yellow cap", "text": "A fleshy cap, commonly 5–10 cm across, starts convex and later spreads out, sometimes with an uneven or wavy edge and low central bump. It is yellow to olive-yellow, often darker at the centre where fine brown to reddish-brown pressed-down fibres or small scales lie on the surface. It becomes sticky when wet and can catch sand or pine needles."},
+    {"title": "Gills, stem and flesh", "text": "The close, bright lemon- to sulphur-yellow gills are attached to the stem with a notch or only narrowly attached; they are not free or decurrent. The pale yellow to yellow, firm stem is cylindrical or a little broader near the base, sometimes with fine lengthwise brown fibres, and has no ring or volva. Firm flesh is white to very pale yellow, more yellow immediately under the cap skin. The spore deposit is white."},
+    {"title": "Habitat and similar species", "text": "The yellow knight group is ectomycorrhizal, especially with pines on sandy, nutrient-poor ground. Fruiting is mainly in autumn and can continue into early winter. Similar yellow Tricholoma species and shifting uses of the names T. equestre, T. auratum and T. flavovirens make identification difficult. T. sulphureum often has a dry cap and a strong gas-like smell, while the yellow knight's smell is absent, weak or occasionally mealy; smell alone is unreliable."},
+    {"title": "Reports, uncertainty and French rules", "text": "A 2001 clinical report described twelve cases of delayed rhabdomyolysis in France, including three deaths, after repeated large meals reported as T. equestre. Reviews dispute whether all implicated specimens were correctly identified and whether ordinary portions of a precisely defined species carry the same risk. The responsible compound is unknown. Because severe outcomes are documented and taxonomic boundaries remain difficult, this guide advises against consumption. A French decree in force since 2005 prohibits import, export, sale and free distribution of T. equestre, T. auratum and T. flavovirens, fresh or processed."}
+  ],
+  "traits": [
+    "Fleshy yellow to olive-yellow cap, usually 5–10 cm; brown appressed fibres or fine scales around the centre",
+    "Cap often sticky when wet; convex becoming flatter or irregular with age",
+    "Close bright lemon- to sulphur-yellow gills, notched or narrowly attached to the stem, never genuinely free",
+    "Pale yellow firm stem without ring or volva, sometimes with fine brown lengthwise fibres",
+    "White to pale yellow flesh, yellower beneath cap skin; white spore deposit",
+    "Mostly sandy pine woodland in autumn to early winter; close relatives complicate identification"
+  ],
+  "sources": [
+    {"title": "First Nature — Tricholoma equestre identification guide", "url": "https://www.first-nature.com/fungi/tricholoma-equestre.php"},
+    {"title": "E-Flora BC, University of British Columbia — Tricholoma equestre group", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Tricholoma+equestre+group"},
+    {"title": "Bedry et al. (2001), New England Journal of Medicine 345:798–802 — Wild-mushroom intoxication as a cause of rhabdomyolysis", "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa010581"},
+    {"title": "German Society for Mycology — Equestre syndrome and 24–72 hour latency", "url": "https://www.dgfm-ev.de/de/beschreibung-symptome-und-karenzzeiten"},
+    {"title": "French Decree 2005-1184 of 19 September 2005 — prohibition of market distribution", "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000604247/"},
+    {"title": "Rzymski and Klimaszyk (2018), Comprehensive Reviews in Food Science and Food Safety — systematic review and critical viewpoints", "url": "https://pubmed.ncbi.nlm.nih.gov/33350153/"}
+  ],
+  "related": ["sulphureum", "terreum"]
+}

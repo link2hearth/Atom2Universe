@@ -1,0 +1,25 @@
+{
+  "id": "felleus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Tylopilus felleus est un bolet au chapeau bombé beige à brun, parfois un peu velouté dans sa jeunesse. Sous le chapeau se trouvent de petits pores ronds, et non des lames : d’abord crème à blanchâtres, ils deviennent roses à rose argile avec l’âge et brunissent au frottement. Le pied beige clair, élargi vers la base, porte un réseau grossier brun foncé et saillant, au moins dans sa partie supérieure. La chair épaisse et blanche change généralement peu de couleur à la coupe ; la sporée est rose argile à brun rosé."},
+    {"title": "Habitat et saison", "text": "Champignon ectomycorhizien apparaissant au sol en forêt, généralement isolé ou en petits groupes. Les descriptions européennes le placent surtout auprès des chênes, hêtres et autres feuillus, parfois aussi sous conifères. En Grande-Bretagne et en Irlande, on l’observe surtout de la fin de l’été à l’automne ; la saison et les arbres associés varient selon la région."},
+    {"title": "Espèces ressemblantes", "text": "Il peut ressembler à un jeune cèpe de Bordeaux (Boletus edulis) et à d’autres cèpes. Les pores du cèpe deviennent jaunes puis olivâtres, tandis que ceux du bolet amer mûr rosissent ; son réseau sur le pied est généralement plus fin et plus clair. Comparer ensemble pores, réseau brun saillant et chair coupée. Un jeune sujet peut ne pas encore montrer de rose ; une image ne confirme jamais à elle seule qu’un bolet est comestible."},
+    {"title": "Valeur alimentaire", "text": "Généralement classé immangeable à cause de son amertume intense, qui persiste ou ressort davantage à la cuisson et peut gâcher un plat de champignons mélangés. Ce classement tient à sa saveur. Ne pas faire du goût le seul critère d’identification et ne pas consommer un bolet incertain."}
+  ],
+  "traits": [
+    "Chapeau beige à brun, bombé, parfois velouté chez les jeunes sujets",
+    "Petits pores crème blanchâtre puis roses à rose argile, brunissant au frottement",
+    "Pied clair à gros réseau brun foncé saillant, au moins vers le haut",
+    "Chair blanchâtre épaisse ne bleuissant normalement pas",
+    "Sporée rose argile ; surtout près des chênes ou hêtres en Europe"
+  ],
+  "safetyNote": "Immangeable à cause de sa forte amertume, qui peut gâcher tout un plat cuisiné. Ne consomme pas un bolet dont l’identification est incertaine ; si un champignon sauvage a été ingéré et que des symptômes apparaissent, contacte un centre antipoison ou un médecin.",
+  "sources": [
+    {"title": "First Nature — Tylopilus felleus, identification et écologie", "url": "https://www.first-nature.com/fungi/tylopilus-felleus.php"},
+    {"title": "Missouri Department of Conservation — Fiche du bolet amer", "url": "https://mdc.mo.gov/discover-nature/field-guide/bitter-bolete"},
+    {"title": "Fondation Miron-Royer — Fiche d’identification du bolet amer", "url": "https://www.fondationmironroyer.com/fr/identification/fiche/bolet-amer"},
+    {"title": "Woodland Trust — Cèpe de Bordeaux et confusion avec le bolet amer", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/penny-bun/"}
+  ],
+  "related": ["edulis", "reticulatus", "pinophilus"]
+}

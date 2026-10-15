@@ -1,0 +1,20 @@
+{
+  "id": "procera",
+  "reviewStatus": "verified",
+  "safetyNote": "Espèce comestible seulement après identification certaine : des champignons mortels ou toxiques ont été pris pour des coulemelles. Ne décide jamais à partir de cette planche ou d’une application seule. Fais vérifier une récolte douteuse par un mycologue qualifié et cuis suffisamment les champignons sauvages correctement identifiés.",
+  "sections": [
+    {"title": "Coulemelle", "text": "Macrolepiota procera est une grande lépiote élancée. Son chapeau d’abord ovale, en baguette de tambour, s’ouvre en un large parasol d’environ 10 à 25 cm, avec un petit mamelon central brun foncé et lisse. Des squames brunes irrégulières et persistantes couvrent un fond crème. La chair blanche ne rougit normalement pas à la coupe ni au grattage."},
+    {"title": "Lames, pied et anneau", "text": "Les lames larges et serrées sont blanches à crème et libres ; la sporée est blanche à crème très pâle. Le grand pied porte des bandes brunes interrompues sur fond clair, formant un motif de peau de serpent. Il s’élargit en bulbe à la base, sans volve en sac. Un anneau épais à double bord peut coulisser le long du pied. Le pied est fibreux, parfois creux ou faiblement rempli."},
+    {"title": "Milieu et variations", "text": "Ce champignon saprophyte pousse dans les prairies, en lisière et dans les bois clairs, souvent dans les clairières herbeuses. En Europe, il fructifie surtout en été et en automne, mais les mois exacts varient selon le climat. La planche montre un exemplaire bien ouvert ; les jeunes ont un chapeau encore fermé et l’anneau n’est pas toujours libre."},
+    {"title": "Confusions et usage", "text": "Les petites Lepiota toxiques et d’autres grands champignons en parasol posent un risque sérieux de confusion. En France, l’ANSES a documenté des récoltes recherchées comme coulemelles contenant notamment des amanites phalloïdes et panthères, des entolomes livides et des Chlorophyllum toxiques. Écarter les chapeaux bien déployés de moins de 10 cm est une précaution de cueillette, pas la preuve qu’un grand spécimen est sûr : la taille seule n’identifie pas un champignon. Le chapeau est généralement utilisé en cuisine car le pied est coriace, sans être intrinsèquement immangeable."},
+    {"title": "Lecture de la planche", "text": "La planche montre un exemplaire adulte entier, une coupe longitudinale, le dessus du chapeau et le dessous à lames blanches. Ces vues soulignent le mamelon sombre, les squames claires et brunes, le motif en peau de serpent du pied, l’anneau double mobile et le bulbe dépourvu de volve."}
+  ],
+  "sources": [
+    {"title": "MycoCharentes — Macrolepiota procera, fiche de Patrice Tanchaud (2026)", "url": "https://www.mycocharentes.fr/pdf1/2554.pdf"},
+    {"title": "First Nature — Macrolepiota procera", "url": "https://www.first-nature.com/fungi/macrolepiota-procera.php"},
+    {"title": "Deutsche Gesellschaft für Mykologie — liste positive des champignons comestibles 2026", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO — liste recommandée des champignons 2023", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "ANSES — surveillance des intoxications par champignons en 2022, publié en 2023", "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"}
+  ],
+  "related": ["phalloides", "pantherina", "brunneoincarnata", "rhacodes", "brunneum"]
+}

@@ -1,0 +1,52 @@
+{
+  "id": "edulis",
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Reconnaître l’espèce",
+      "text": "Boletus edulis est un bolet trapu au chapeau brun en forme de petit pain, souvent plus clair à la marge. Le dessous porte de minuscules pores, jamais des lames : blancs chez les jeunes sujets, ils jaunissent puis deviennent olivâtres. Le pied massif et pâle montre généralement un fin réseau blanc en relief, surtout dans sa partie haute. Il n’a ni anneau ni volve."
+    },
+    {
+      "title": "Coupe et spores",
+      "text": "La chair ferme reste blanche à la coupe ou à la blessure ; les pores et les tubes ne bleuissent pas. La sporée est brun olive. Les spores sont allongées au microscope."
+    },
+    {
+      "title": "Écologie et saison",
+      "text": "Ce champignon ectomycorhizien pousse au sol près des arbres, notamment hêtres, bouleaux, chênes, pins et épicéas. En Europe, les fructifications apparaissent surtout de l’été à l’automne selon le milieu et la météo."
+    },
+    {
+      "title": "Confusions et sécurité",
+      "text": "Tylopilus felleus peut présenter des pores rosés et un réseau plus sombre sur le pied ; il est très amer. Des pores rouges ou orangés, un bleuissement net ou des lames écartent B. edulis. Aucun caractère isolé ni dessin ne suffit à établir la comestibilité. Ne consommer que des spécimens identifiés avec certitude, frais et bien cuits ; certaines personnes peuvent malgré tout avoir des troubles digestifs."
+    }
+  ],
+  "traits": [
+    "Chapeau brun bombé, souvent plus clair à la marge",
+    "Pores blancs puis jaunes et olivâtres, sans lames",
+    "Pied pâle massif à fin réseau blanc surtout en haut",
+    "Chair et pores sans bleuissement",
+    "Sporée brun olive"
+  ],
+  "safetyNote": "Comestible seulement après identification certaine. Examiner les pores, le pied entier et la chair coupée ; une image ne confirme pas une récolte. Choisir des exemplaires frais et bien les cuire. En cas de malaise après consommation, demander conseil à un centre antipoison.",
+  "sources": [
+    {
+      "title": "Beaty Biodiversity Museum, University of British Columbia — Boletus edulis",
+      "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/B_edulis.html"
+    },
+    {
+      "title": "Catcheside & Catcheside (2011), Boletus edulis in Australia, Journal of the Adelaide Botanic Gardens 25",
+      "url": "https://data.environment.sa.gov.au/Content/publications/JABG25P005_Catcheside.pdf"
+    },
+    {
+      "title": "First Nature — Boletus edulis identification guide",
+      "url": "https://www.first-nature.com/fungi/boletus-edulis.php"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie — Positivliste der Speisepilze (2026)",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    }
+  ],
+  "related": [
+    "felleus",
+    "satanas"
+  ]
+}

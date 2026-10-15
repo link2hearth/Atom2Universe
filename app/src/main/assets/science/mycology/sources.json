@@ -96,7 +96,7 @@
       "id": "bs2022", "kind": "official",
       "citation": "Kanton Basel-Stadt, Kantonales Laboratorium (2022). Pilzkontrolle findet immer wieder Giftpilze. Communiqué du 21 décembre 2022.",
       "url": "https://www.bs.ch/news/2022-pilzkontrolle-findet-immer-wieder-giftpilze",
-      "species": ["edulis", "badia", "erythropus", "phalloides", "virosa", "orellanus"]
+      "species": ["edulis", "badia", "erythropus", "phalloides", "orellanus"]
     },
     {
       "id": "bs2024", "kind": "official",
@@ -114,7 +114,7 @@
       "id": "zh2023", "kind": "official",
       "citation": "Kanton Zürich, Kantonales Labor (2024). Pilzkontrollen im Kanton Zürich 2023.",
       "url": "https://www.zh.ch/de/news-uebersicht/mitteilungen/2024/gesundheit/lebensmittel/pilzkontrollen-im-kanton-zuerich-2023.html",
-      "species": ["satanas", "felleus", "calopus"]
+      "species": ["satanas", "calopus"]
     },
     {
       "id": "horn1997", "kind": "journal",
@@ -184,7 +184,7 @@
     { "id": "wp-fr-rubescens", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite rougissante", "url": "https://fr.wikipedia.org/wiki/Amanite_rougissante", "species": ["rubescens"] },
     { "id": "wp-en-rubescens", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita rubescens", "url": "https://en.wikipedia.org/wiki/Amanita_rubescens", "species": ["rubescens"] },
     { "id": "wp-fr-edulis", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Cèpe de Bordeaux", "url": "https://fr.wikipedia.org/wiki/C%C3%A8pe_de_Bordeaux", "species": ["edulis"] },
-    { "id": "wp-fr-felleus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Bolet amer", "url": "https://fr.wikipedia.org/wiki/Bolet_amer", "species": ["felleus"] },
+    { "id": "wp-fr-felleus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Tylopilus felleus", "url": "https://fr.wikipedia.org/wiki/Tylopilus_felleus", "species": ["felleus"] },
     { "id": "wp-fr-satanas", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Bolet de Satan", "url": "https://fr.wikipedia.org/wiki/Bolet_de_Satan", "species": ["satanas"] },
     { "id": "wp-en-satanas", "kind": "encyclopedia", "citation": "Wikipedia (en): Rubroboletus satanas", "url": "https://en.wikipedia.org/wiki/Rubroboletus_satanas", "species": ["satanas"] },
     { "id": "wp-fr-cibarius", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Cantharellus cibarius", "url": "https://fr.wikipedia.org/wiki/Cantharellus_cibarius", "species": ["cibarius"] },
@@ -418,6 +418,576 @@
     { "id": "wp-fr-pulmonarius", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Pleurotus pulmonarius", "url": "https://fr.wikipedia.org/wiki/Pleurotus_pulmonarius", "species": ["pulmonarius"] },
     { "id": "wp-en-pulmonarius", "kind": "encyclopedia", "citation": "Wikipedia (en): Pleurotus pulmonarius", "url": "https://en.wikipedia.org/wiki/Pleurotus_pulmonarius", "species": ["pulmonarius"] },
     { "id": "wp-fr-sublateritium", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hypholoma sublateritium", "url": "https://fr.wikipedia.org/wiki/Hypholoma_sublateritium", "species": ["sublateritium"] },
-    { "id": "wp-en-sublateritium", "kind": "encyclopedia", "citation": "Wikipedia (en): Hypholoma lateritium", "url": "https://en.wikipedia.org/wiki/Hypholoma_lateritium", "species": ["sublateritium"] }
+    { "id": "wp-en-sublateritium", "kind": "encyclopedia", "citation": "Wikipedia (en): Hypholoma lateritium", "url": "https://en.wikipedia.org/wiki/Hypholoma_lateritium", "species": ["sublateritium"] },
+    {
+      "id": "gbif_puccinia_recondita", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Puccinia recondita.",
+      "url": "https://www.gbif.org/species/2514697",
+      "species": ["puccinia_recondita"]
+    },
+    {
+      "id": "indexfungorum_puccinia_recondita", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 145187: Puccinia recondita.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=145187",
+      "species": ["puccinia_recondita"]
+    },
+    {
+      "id": "gbif_puccinia_poarum", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Puccinia poarum.",
+      "url": "https://www.gbif.org/species/2514368",
+      "species": ["puccinia_poarum"]
+    },
+    {
+      "id": "indexfungorum_puccinia_poarum", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 194454: Puccinia poarum.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=194454",
+      "species": ["puccinia_poarum"]
+    },
+    {
+      "id": "gbif_puccinia_emaculata", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Puccinia emaculata.",
+      "url": "https://www.gbif.org/species/2515498",
+      "species": ["puccinia_emaculata"]
+    },
+    {
+      "id": "indexfungorum_puccinia_emaculata", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 202871: Puccinia emaculata.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=202871",
+      "species": ["puccinia_emaculata"]
+    },
+    {
+      "id": "gbif_tremella_mesenterica", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Tremella mesenterica.",
+      "url": "https://www.gbif.org/species/7577590",
+      "species": ["tremella_mesenterica"]
+    },
+    {
+      "id": "indexfungorum_tremella_mesenterica", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 154470: Tremella mesenterica.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=154470",
+      "species": ["tremella_mesenterica"]
+    },
+    {
+      "id": "gbif_tulostoma_kotlabae", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Tulostoma kotlabae.",
+      "url": "https://www.gbif.org/species/5454064",
+      "species": ["tulostoma_kotlabae"]
+    },
+    {
+      "id": "indexfungorum_tulostoma_kotlabae", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 307217: Tulostoma kotlabae.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=307217",
+      "species": ["tulostoma_kotlabae"]
+    },
+    {
+      "id": "gbif_spongiforma_squarepantsii", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Spongiforma squarepantsii.",
+      "url": "https://www.gbif.org/species/7397659",
+      "species": ["spongiforma_squarepantsii"]
+    },
+    {
+      "id": "indexfungorum_spongiforma_squarepantsii", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 519524: Spongiforma squarepantsii.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=519524",
+      "species": ["spongiforma_squarepantsii"]
+    },
+    {
+      "id": "gbif_russula_rhodopus", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Russula rhodopus.",
+      "url": "https://www.gbif.org/species/7239976",
+      "species": ["russula_rhodopus"]
+    },
+    {
+      "id": "indexfungorum_russula_rhodopus", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 447527: Russula rhodopus.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=447527",
+      "species": ["russula_rhodopus"]
+    },
+    {
+      "id": "gbif_russula_pseudodelica", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Russula pseudodelica.",
+      "url": "https://www.gbif.org/species/3360222",
+      "species": ["russula_pseudodelica"]
+    },
+    {
+      "id": "indexfungorum_russula_pseudodelica", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 275416: Russula pseudodelica.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=275416",
+      "species": ["russula_pseudodelica"]
+    },
+    {
+      "id": "gbif_russula_pallidospora", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Russula pallidospora.",
+      "url": "https://www.gbif.org/species/3360492",
+      "species": ["russula_pallidospora"]
+    },
+    {
+      "id": "indexfungorum_russula_pallidospora", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 338709: Russula pallidospora.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=338709",
+      "species": ["russula_pallidospora"]
+    },
+    {
+      "id": "gbif_russula_nitida", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Russula nitida.",
+      "url": "https://www.gbif.org/species/9089269",
+      "species": ["russula_nitida"]
+    },
+    {
+      "id": "indexfungorum_russula_nitida", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 211457: Russula nitida.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=211457",
+      "species": ["russula_nitida"]
+    },
+    {
+      "id": "gbif_russula_maculata", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Russula maculata.",
+      "url": "https://www.gbif.org/species/2551519",
+      "species": ["russula_maculata"]
+    },
+    {
+      "id": "indexfungorum_russula_maculata", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 214247: Russula maculata.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=214247",
+      "species": ["russula_maculata"]
+    },
+    {
+      "id": "gbif_russula_atroglauca", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Russula atroglauca.",
+      "url": "https://www.gbif.org/species/3359578",
+      "species": ["russula_atroglauca"]
+    },
+    {
+      "id": "indexfungorum_russula_atroglauca", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 111919: Russula atroglauca.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=111919",
+      "species": ["russula_atroglauca"]
+    },
+    {
+      "id": "ncbi_russula_adulterina", "kind": "taxonomy",
+      "citation": "NCBI Taxonomy Browser: Russula adulterina.",
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=36059",
+      "species": ["russula_adulterina"]
+    },
+    {
+      "id": "indexfungorum_russula_adulterina", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 168833: Russula adulterina.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=168833",
+      "species": ["russula_adulterina"]
+    },
+    {
+      "id": "gbif_phaeocollybia_christinae", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Phaeocollybia christinae.",
+      "url": "https://www.gbif.org/species/3351252",
+      "species": ["phaeocollybia_christinae"]
+    },
+    {
+      "id": "indexfungorum_phaeocollybia_christinae", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 251405: Phaeocollybia christinae.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=251405",
+      "species": ["phaeocollybia_christinae"]
+    },
+    {
+      "id": "gbif_exidia_nigricans", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy name search: Exidia nigricans.",
+      "url": "https://www.gbif.org/species/search?q=Exidia%20nigricans",
+      "species": ["exidia_nigricans"]
+    },
+    {
+      "id": "indexfungorum_exidia_nigricans", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 512661: Exidia nigricans.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=512661",
+      "species": ["exidia_nigricans"]
+    },
+    {
+      "id": "gbif_agaricus_pilatianus", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Agaricus pilatianus.",
+      "url": "https://www.gbif.org/species/6014790",
+      "species": ["agaricus_pilatianus"]
+    },
+    {
+      "id": "indexfungorum_agaricus_pilatianus", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 308361: Agaricus pilatianus.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=308361",
+      "species": ["agaricus_pilatianus"]
+    },
+    {
+      "id": "gbif_thanatephorus_cucumeris", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Thanatephorus cucumeris.",
+      "url": "https://www.gbif.org/species/2555173",
+      "species": ["thanatephorus_cucumeris"]
+    },
+    {
+      "id": "indexfungorum_thanatephorus_cucumeris", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 306777: Thanatephorus cucumeris.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=306777",
+      "species": ["thanatephorus_cucumeris"]
+    },
+    {
+      "id": "gbif_botryobasidium_simile", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Botryobasidium simile.",
+      "url": "https://www.gbif.org/species/3367506",
+      "species": ["botryobasidium_simile"]
+    },
+    {
+      "id": "indexfungorum_botryobasidium_simile", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 327097: Botryobasidium simile.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=327097",
+      "species": ["botryobasidium_simile"]
+    },
+    {
+      "id": "gbif_athelia_rolfsii", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Athelia rolfsii.",
+      "url": "https://www.gbif.org/species/2554082",
+      "species": ["athelia_rolfsii"]
+    },
+    {
+      "id": "indexfungorum_athelia_rolfsii", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 309351: Athelia rolfsii.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=309351",
+      "species": ["athelia_rolfsii"]
+    },
+    {
+      "id": "gbif_lactarius_zonarioides", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Lactarius zonarioides.",
+      "url": "https://www.gbif.org/species/5462820",
+      "species": ["lactarius_zonarioides"]
+    },
+    {
+      "id": "indexfungorum_lactarius_zonarioides", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 299335: Lactarius zonarioides.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=299335",
+      "species": ["lactarius_zonarioides"]
+    },
+    {
+      "id": "gbif_lactarius_torminosulus", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Lactarius torminosulus.",
+      "url": "https://www.gbif.org/species/5463362",
+      "species": ["lactarius_torminosulus"]
+    },
+    {
+      "id": "indexfungorum_lactarius_torminosulus", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 436327: Lactarius torminosulus.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=436327",
+      "species": ["lactarius_torminosulus"]
+    },
+    {
+      "id": "gbif_lactarius_sphagneti", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Lactarius sphagneti.",
+      "url": "https://www.gbif.org/species/8346076",
+      "species": ["lactarius_sphagneti"]
+    },
+    {
+      "id": "indexfungorum_lactarius_sphagneti", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 461563: Lactarius sphagneti.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=461563",
+      "species": ["lactarius_sphagneti"]
+    },
+    {
+      "id": "gbif_lactarius_picinus", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Lactarius picinus.",
+      "url": "https://www.gbif.org/species/9476870",
+      "species": ["lactarius_picinus"]
+    },
+    {
+      "id": "indexfungorum_lactarius_picinus", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 175312: Lactarius picinus.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=175312",
+      "species": ["lactarius_picinus"]
+    },
+    {
+      "id": "gbif_lactarius_fennoscandicus", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Lactarius fennoscandicus.",
+      "url": "https://www.gbif.org/species/5463476",
+      "species": ["lactarius_fennoscandicus"]
+    },
+    {
+      "id": "indexfungorum_lactarius_fennoscandicus", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 445020: Lactarius fennoscandicus.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=445020",
+      "species": ["lactarius_fennoscandicus"]
+    },
+    {
+      "id": "gbif_russula_laricina", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Russula laricina.",
+      "url": "https://www.gbif.org/species/6016725",
+      "species": ["russula_laricina"]
+    },
+    {
+      "id": "indexfungorum_russula_laricina", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 268996: Russula laricina.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=268996",
+      "species": ["russula_laricina"]
+    },
+    {
+      "id": "gbif_hygrophorus_pustulatus", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Hygrophorus pustulatus.",
+      "url": "https://www.gbif.org/species/9210249",
+      "species": ["hygrophorus_pustulatus"]
+    },
+    {
+      "id": "indexfungorum_hygrophorus_pustulatus", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 187146: Hygrophorus pustulatus.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=187146",
+      "species": ["hygrophorus_pustulatus"]
+    },
+    {
+      "id": "gbif_hygrophorus_purpurascens", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Hygrophorus purpurascens.",
+      "url": "https://www.gbif.org/species/3344741",
+      "species": ["hygrophorus_purpurascens"]
+    },
+    {
+      "id": "indexfungorum_hygrophorus_purpurascens", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 182721: Hygrophorus purpurascens.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=182721",
+      "species": ["hygrophorus_purpurascens"]
+    },
+    {
+      "id": "gbif_hygrophorus_penarioides", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Hygrophorus penarioides.",
+      "url": "https://www.gbif.org/species/3344835",
+      "species": ["hygrophorus_penarioides"]
+    },
+    {
+      "id": "indexfungorum_hygrophorus_penarioides", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 510527: Hygrophorus penarioides.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=510527",
+      "species": ["hygrophorus_penarioides"]
+    },
+    {
+      "id": "gbif_amanita_beckeri", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Amanita beckeri.",
+      "url": "https://www.gbif.org/species/5451688",
+      "species": ["amanita_beckeri"]
+    },
+    {
+      "id": "indexfungorum_amanita_beckeri", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 282978: Amanita beckeri.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=282978",
+      "species": ["amanita_beckeri"]
+    },
+    {
+      "id": "gbif_inocybe_tricolor", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Inocybe tricolor.",
+      "url": "https://www.gbif.org/species/7449828",
+      "species": ["inocybe_tricolor"]
+    },
+    {
+      "id": "indexfungorum_inocybe_tricolor", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 298984: Inocybe tricolor.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=298984",
+      "species": ["inocybe_tricolor"]
+    },
+    {
+      "id": "gbif_inocybe_aeruginascens", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Inocybe aeruginascens.",
+      "url": "https://www.gbif.org/species/3331845",
+      "species": ["inocybe_aeruginascens"]
+    },
+    {
+      "id": "indexfungorum_inocybe_aeruginascens", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 315818: Inocybe aeruginascens.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=315818",
+      "species": ["inocybe_aeruginascens"]
+    },
+    {
+      "id": "gbif_psilocybe_silvatica", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Psilocybe silvatica.",
+      "url": "https://www.gbif.org/species/5459328",
+      "species": ["psilocybe_silvatica"]
+    },
+    {
+      "id": "indexfungorum_psilocybe_silvatica", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 304494: Psilocybe silvatica.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=304494",
+      "species": ["psilocybe_silvatica"]
+    },
+    {
+      "id": "gbif_psilocybe_puberula", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Psilocybe puberula.",
+      "url": "https://www.gbif.org/species/5459375",
+      "species": ["psilocybe_puberula"]
+    },
+    {
+      "id": "indexfungorum_psilocybe_puberula", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 415212: Psilocybe puberula.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=415212",
+      "species": ["psilocybe_puberula"]
+    },
+    {
+      "id": "gbif_gymnopilus_pseudofulgens", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Gymnopilus pseudofulgens.",
+      "url": "https://www.gbif.org/species/3343066",
+      "species": ["gymnopilus_pseudofulgens"]
+    },
+    {
+      "id": "indexfungorum_gymnopilus_pseudofulgens", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 314801: Gymnopilus pseudofulgens.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=314801",
+      "species": ["gymnopilus_pseudofulgens"]
+    },
+    {
+      "id": "gbif_gymnopilus_josserandii", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Gymnopilus josserandii.",
+      "url": "https://www.gbif.org/species/3343024",
+      "species": ["gymnopilus_josserandii"]
+    },
+    {
+      "id": "indexfungorum_gymnopilus_josserandii", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 482824: Gymnopilus josserandii.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=482824",
+      "species": ["gymnopilus_josserandii"]
+    },
+    {
+      "id": "gbif_schizosaccharomyces_pombe", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Schizosaccharomyces pombe.",
+      "url": "https://www.gbif.org/species/2586935",
+      "species": ["schizosaccharomyces_pombe"]
+    },
+    {
+      "id": "indexfungorum_schizosaccharomyces_pombe", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 212377: Schizosaccharomyces pombe.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=212377",
+      "species": ["schizosaccharomyces_pombe"]
+    },
+    {
+      "id": "gbif_parmelia_sulcata", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Parmelia sulcata.",
+      "url": "https://www.gbif.org/species/7248320",
+      "species": ["parmelia_sulcata"]
+    },
+    {
+      "id": "indexfungorum_parmelia_sulcata", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 123425: Parmelia sulcata.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=123425",
+      "species": ["parmelia_sulcata"]
+    },
+    {
+      "id": "gbif_fusarium_oxysporum", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Fusarium oxysporum.",
+      "url": "https://www.gbif.org/species/5251961",
+      "species": ["fusarium_oxysporum"]
+    },
+    {
+      "id": "indexfungorum_fusarium_oxysporum", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 218372: Fusarium oxysporum.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=218372",
+      "species": ["fusarium_oxysporum"]
+    },
+    {
+      "id": "gbif_tuber_mesentericum", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Tuber mesentericum.",
+      "url": "https://www.gbif.org/species/5258471",
+      "species": ["tuber_mesentericum"]
+    },
+    {
+      "id": "indexfungorum_tuber_mesentericum", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 180551: Tuber mesentericum.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=180551",
+      "species": ["tuber_mesentericum"]
+    },
+    {
+      "id": "gbif_pleomassaria_siparia", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Pleomassaria siparia.",
+      "url": "https://www.gbif.org/species/3535813",
+      "species": ["pleomassaria_siparia"]
+    },
+    {
+      "id": "indexfungorum_pleomassaria_siparia", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 238646: Pleomassaria siparia.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=238646",
+      "species": ["pleomassaria_siparia"]
+    },
+    {
+      "id": "gbif_pestalotiopsis_microspora", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Pestalotiopsis microspora.",
+      "url": "https://www.gbif.org/species/2574966",
+      "species": ["pestalotiopsis_microspora"]
+    },
+    {
+      "id": "indexfungorum_pestalotiopsis_microspora", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 437946: Pestalotiopsis microspora.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=437946",
+      "species": ["pestalotiopsis_microspora"]
+    },
+    {
+      "id": "gbif_histoplasma_capsulatum", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Histoplasma capsulatum.",
+      "url": "https://www.gbif.org/species/3469218",
+      "species": ["histoplasma_capsulatum"]
+    },
+    {
+      "id": "indexfungorum_histoplasma_capsulatum", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 102749: Histoplasma capsulatum.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=102749",
+      "species": ["histoplasma_capsulatum"]
+    },
+    {
+      "id": "gbif_neurospora_crassa", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Neurospora crassa.",
+      "url": "https://www.gbif.org/species/5253986",
+      "species": ["neurospora_crassa"]
+    },
+    {
+      "id": "indexfungorum_neurospora_crassa", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 262212: Neurospora crassa.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=262212",
+      "species": ["neurospora_crassa"]
+    },
+    {
+      "id": "gbif_candida_parapsilosis", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Candida parapsilosis.",
+      "url": "https://www.gbif.org/species/2599539",
+      "species": ["candida_parapsilosis"]
+    },
+    {
+      "id": "ncbi_candida_parapsilosis", "kind": "taxonomy",
+      "citation": "NCBI Taxonomy Browser: Candida parapsilosis.",
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=5480",
+      "species": ["candida_parapsilosis"]
+    },
+    {
+      "id": "gbif_saccharomyces_cerevisiae", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Saccharomyces cerevisiae.",
+      "url": "https://www.gbif.org/species/2599166",
+      "species": ["saccharomyces_cerevisiae"]
+    },
+    {
+      "id": "ncbi_saccharomyces_cerevisiae", "kind": "taxonomy",
+      "citation": "NCBI Taxonomy Browser: Saccharomyces cerevisiae.",
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=4932",
+      "species": ["saccharomyces_cerevisiae"]
+    },
+    {
+      "id": "gbif_penicillium_roqueforti", "kind": "taxonomy",
+      "citation": "GBIF Backbone Taxonomy: Penicillium roqueforti.",
+      "url": "https://www.gbif.org/species/2597774",
+      "species": ["penicillium_roqueforti"]
+    },
+    {
+      "id": "indexfungorum_penicillium_roqueforti", "kind": "taxonomy",
+      "citation": "Index Fungorum, name record 213525: Penicillium roqueforti.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=213525",
+      "species": ["penicillium_roqueforti"]
+    },
+    {
+      "id": "usda2014_roqueforti", "kind": "official",
+      "citation": "USDA Agricultural Marketing Service (2014). Microorganisms & Microbial-Derived Ingredients Used in Food Production: Technical Evaluation Report.",
+      "url": "https://www.ams.usda.gov/sites/default/files/media/MicroorgTechnical%20Evaluation%20Report%20%282014%29.pdf",
+      "species": ["penicillium_roqueforti"]
+    },
+    {
+      "id": "cleere2024_roqueforti", "kind": "journal",
+      "citation": "Cleere M. et al. (2024). New colours for old in the blue-cheese fungus Penicillium roqueforti. npj Science of Food 8, 3.",
+      "url": "https://www.nature.com/articles/s41538-023-00244-9",
+      "species": ["penicillium_roqueforti"]
+    },
+    {
+      "id": "salo2016_roqueforti", "kind": "journal",
+      "citation": "Salo O. et al. (2016). Secondary Metabolites from Penicillium roqueforti, a Starter for the Production of Gorgonzola Cheese. Toxins 8(11), 336.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5076727/",
+      "species": ["penicillium_roqueforti"]
+    }
   ]
 }

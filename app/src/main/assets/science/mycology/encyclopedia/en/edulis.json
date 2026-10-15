@@ -1,0 +1,52 @@
+{
+  "id": "edulis",
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Recognition",
+      "text": "Boletus edulis is a stout bolete with a smooth bun-shaped brown cap, often paler at the margin. The underside has tiny pores, never gills: they are white when young, then yellow to olive with age. Its pale, thick stem usually carries a fine raised whitish net, especially near the top. There is no ring or volva."
+    },
+    {
+      "title": "Cut surface and spores",
+      "text": "The firm flesh remains white when cut or bruised; the pores and tubes do not turn blue. The spore print is olive brown. Individual spores are elongated under a microscope."
+    },
+    {
+      "title": "Ecology and season",
+      "text": "This ectomycorrhizal fungus fruits on soil near trees, including beech, birch, oak, pine and spruce. In Europe it is found mainly from summer into autumn, depending on weather and site."
+    },
+    {
+      "title": "Comparison and food safety",
+      "text": "Tylopilus felleus may have pinkish pores and a darker stem net and is intensely bitter. Red or orange pores, obvious blue staining, or gills point away from B. edulis. A single feature or drawing cannot establish edibility. Eat only specimens identified with certainty, fresh and properly cooked; some people still develop digestive symptoms."
+    }
+  ],
+  "traits": [
+    "Brown bun-shaped cap with a paler margin",
+    "White pores when young, turning yellow then olive; no gills",
+    "Pale stout stem with whitish reticulation, most visible near the top",
+    "White flesh and pores do not stain blue",
+    "Olive-brown spore print"
+  ],
+  "safetyNote": "Edible only after reliable identification. Examine the pore surface, whole stem and cut flesh; a picture alone cannot confirm a wild mushroom. Use fresh specimens and cook thoroughly. Seek poison-centre advice if illness follows consumption.",
+  "sources": [
+    {
+      "title": "Beaty Biodiversity Museum, University of British Columbia — Boletus edulis",
+      "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/B_edulis.html"
+    },
+    {
+      "title": "Catcheside & Catcheside (2011), Boletus edulis in Australia, Journal of the Adelaide Botanic Gardens 25",
+      "url": "https://data.environment.sa.gov.au/Content/publications/JABG25P005_Catcheside.pdf"
+    },
+    {
+      "title": "First Nature — Boletus edulis identification guide",
+      "url": "https://www.first-nature.com/fungi/boletus-edulis.php"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie — Positivliste der Speisepilze (2026)",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    }
+  ],
+  "related": [
+    "felleus",
+    "satanas"
+  ]
+}

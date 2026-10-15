@@ -1,0 +1,28 @@
+{
+  "id": "pardinum",
+  "reviewStatus": "verified",
+  "safetyNote": "Poisonous: do not eat. Tricholoma pardinum can cause severe nausea, abdominal cramps, repeated vomiting and diarrhoea, with dehydration sometimes requiring hospital care. Symptoms may appear within a few hours, and specialist sources allow up to about eight hours for severe gastrointestinal syndromes involving this species. Seek prompt advice from a poison centre or medical service after suspected ingestion and keep a specimen or meal remains for identification.",
+  "sections": [
+    {"title": "Scaly grey cap", "text": "The robust cap is commonly 5–15 cm wide, occasionally larger. It begins convex with an inrolled margin, then spreads and may keep a low broad central bump and a wavy edge. A pale silvery-grey to whitish background carries darker grey or grey-brown flat to slightly raised scales, often in concentric zones and denser toward the centre. The cap is dry rather than sticky; the scaly pattern can be subtle in some collections."},
+    {"title": "Gills, stem and flesh", "text": "The thick, fairly close gills are white to cream and can become pale yellowish or greenish with age. Their attachment varies in descriptions: usually notched or narrowly attached, sometimes looking nearly free. The solid pale stem is stout, often swollen at the base, with no ring or volva; its lower part may darken or yellow-brown where handled. Firm white to pale grey flesh may smell mealy, but the odour can be weak or absent. The spore deposit is white."},
+    {"title": "Habitat and similar grey knights", "text": "This ectomycorrhizal mushroom fruits on soil in woodland in late summer and autumn. European descriptions particularly associate it with beech or fir on lime-rich upland ground, while other regional accounts also report conifers or mixed woodland. It can grow singly or in small groups. The smaller grey knight Tricholoma terreum and other grey Tricholoma species can look similar. Large fleshy stature, a pale cap with dark contrasting scales, stout stem and pale gills together support recognition; no one character is decisive."},
+    {"title": "Poisoning", "text": "T. pardinum is included among causes of the severe gastrointestinal or resinoid syndrome. Nausea, cramps, vomiting and diarrhoea can be intense and prolonged, with dehydration the main immediate danger. A French emergency-medicine reference describes severe cases lasting 24–48 hours and a possible onset one to eight hours after ingestion; the Belgian Poison Centre also lists this species among mushrooms that can produce serious intestinal symptoms up to eight hours later. The responsible toxin is generally not identified."}
+  ],
+  "traits": [
+    "Large dry silvery-grey cap, usually 5–15 cm, with contrasting darker concentric scales",
+    "Cap convex with an inrolled margin when young, later flatter and sometimes wavy",
+    "Thick white to cream gills, sometimes yellowish or greenish; usually notched or narrowly attached, sometimes appearing nearly free",
+    "Robust solid white to pale grey stem, often broader at base, no ring or volva",
+    "Firm pale flesh; mealy odour variable; white spore deposit",
+    "Woodland soil with beech, fir or other trees, often on calcareous upland ground in Europe, late summer to autumn"
+  ],
+  "sources": [
+    {"title": "Associazione Nuova Micologia — Tricholoma pardinum field account", "url": "https://www.nuovamicologia.eu/tricholoma-pardinum/"},
+    {"title": "E-Flora BC, University of British Columbia — Tricholoma pardinum group", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Tricholoma+pardinum"},
+    {"title": "Belgian Poison Centre — incubation periods and severe gastrointestinal mushroom syndromes", "url": "https://www.antigifcentrum.be/Toxinfos/incubatietijd-en-syndromen/"},
+    {"title": "Société Française de Médecine d'Urgence — severe resinoid syndrome", "url": "https://www.sfmu.org/toxin/CHAMPIGN/CHPGSYND/RESIN/RESIN3.HTM"},
+    {"title": "German Society for Mycology — poisoning syndromes", "url": "https://www.dgfm-ev.de/de/beschreibung-symptome-und-karenzzeiten"},
+    {"title": "German Society for Mycology (2026) — poisonous mushroom taxa and syndromes", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"}
+  ],
+  "related": ["terreum"]
+}

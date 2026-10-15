@@ -1,0 +1,19 @@
+{
+  "id": "virosa",
+  "reviewStatus": "verified",
+  "safetyNote": "Deadly poisonous. Amanita virosa contains amatoxins that can cause severe liver damage; symptoms commonly begin 6–24 hours after ingestion. Even a small amount can cause serious poisoning. If ingestion is suspected, seek urgent medical or poison-centre advice and keep a sample for identification.",
+  "sections": [
+    {"title": "Appearance", "text": "The cap is usually white, sometimes becoming cream-tinted at the centre with age. It starts rounded and becomes conical to bell-shaped, often with a broad central point and an irregular outline; its margin is not striate. The cap is typically about 3–12 cm across. The crowded gills are white to cream and free from the stem."},
+    {"title": "Stem, ring and base", "text": "The slender white stem bears conspicuous white shaggy scales below a high, white, membranous ring. The ring is fragile and may collapse or disappear. An enlarged basal bulb is enclosed by a white membranous volva; the whole base needs to be visible to assess this feature. The cut flesh is white and does not change colour."},
+    {"title": "Habitat and spores", "text": "This ectomycorrhizal species fruits on soil in summer and autumn in coniferous and broad-leaved woodland, including spruce, pine and beech habitats. Its spore deposit is white; under a microscope the smooth spores are roughly spherical to slightly elongated and amyloid. Microscopic spore characters are not visible in the illustration and are not a field identification test."},
+    {"title": "Recognition and confusion", "text": "The combination of white free gills, an upper ring and a membranous volva around the bulb is important. Young specimens can resemble white Agaricus mushrooms, and other white Amanita species, including A. verna and white forms of A. phalloides, may look similar. No illustration or single visible feature can establish that a wild mushroom is safe to eat."}
+  ],
+  "sources": [
+    {"title": "Amanitaceae.org — Amanita virosa, taxonomy and morphology", "url": "https://dikarya.us/amanitaceae/pages/amanita-virosa/"},
+    {"title": "Zhou et al. (2023), Diversity and taxonomy of Amanita in the Yanshan Mountains, section 3.2.11", "url": "https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2023.1226794/full"},
+    {"title": "HUS Poison Information Center — The most poisonous mushrooms in Finland", "url": "https://www.hus.fi/en/patient/how-get-help/poison-information-center/most-poisonous-mushrooms-finland"},
+    {"title": "Norwegian Poison Information Centre — Amanita virosa", "url": "https://www.helsenorge.no/en/poison-information/sopp/hvit-fluesopp-er-en-svart-giftig-sopp/"},
+    {"title": "Belgian Poison Centre — Mushroom information brochure", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"}
+  ],
+  "related": ["phalloides", "verna", "campestris"]
+}

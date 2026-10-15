@@ -1,0 +1,19 @@
+{
+  "id": "verna",
+  "reviewStatus": "verified",
+  "safetyNote": "Deadly poisonous. Amanita verna belongs to the amatoxin-producing destroying angels and can cause delayed, life-threatening liver injury. Never eat or taste a suspected specimen. If ingestion is possible, contact an emergency service or poison centre immediately, even before symptoms appear.",
+  "sections": [
+    {"title": "Appearance", "text": "Amanita verna is a white European destroying angel. Its mature cap is smooth, usually white and sometimes faintly ivory or ochre at the centre, with an unstriated margin. The close white gills are free of the stem. The slender white stem carries a high, thin membranous ring that may tear or become hard to see. Its enlarged base sits inside a white, membranous, sac-like volva; the whole base must be exposed to observe it. The spore print is white."},
+    {"title": "Habitat and season", "text": "It fruits mainly in spring, singly or in small numbers in deciduous or mixed woodland in Europe. Season, habitat and an all-white appearance are useful context, but none establishes a species identification. Young, closed specimens can conceal the gills, ring and volva."},
+    {"title": "Similar white mushrooms and revised names", "text": "White Amanita phalloides, A. virosa and other members of section Phalloideae can look very similar. A 2022 morphological and molecular revision separated the Mediterranean KOH-negative taxon formerly called A. verna by some authors as A. vidua. Older reports and photographs under the name A. verna therefore need care. This plate shows characteristic white amanita structures; it cannot establish the exact species in this group. A white-gilled Amanita with a sac-like volva must never be treated as an edible agaric."},
+    {"title": "Poisoning", "text": "Amatoxin poisoning often begins only after a symptom-free interval of about 6–24 hours, with vomiting and diarrhoea. Severe liver injury can follow after an apparent improvement; kidney damage is also possible. An uncertain amount or a lack of early symptoms is not reassuring. Obtain urgent medical advice after any suspected ingestion."},
+    {"title": "About the plate", "text": "The white-background plate shows a complete adult with its basal sac uncovered, a lengthwise section, the smooth cap from above and the free white gills from below. The ring is depicted on a representative specimen, although it can be fragile in life."}
+  ],
+  "sources": [
+    {"title": "Alvarado et al. (2022), Amanita section Phalloideae in the Mediterranean basin, Biology", "url": "https://www.mdpi.com/2079-7737/11/5/770"},
+    {"title": "Gruppo Micologico Tonino Pocorobba, Amanita verna species description", "url": "https://www.mykotrapani.it/approfondimenti-sui-funghi/132-amanita-verna"},
+    {"title": "Belgian Poison Centre, mushroom poisoning information brochure", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "Deutsche Gesellschaft für Mykologie, poisonous fungi by taxon (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"}
+  ],
+  "related": ["virosa", "phalloides", "campestris", "ovoidea"]
+}

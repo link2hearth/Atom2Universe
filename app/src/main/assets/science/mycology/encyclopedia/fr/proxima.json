@@ -1,0 +1,20 @@
+{
+  "id": "proxima",
+  "reviewStatus": "verified",
+  "safetyNote": "Toxique. Amanita proxima peut provoquer des troubles digestifs retardés suivis d'une atteinte rénale aiguë grave. En cas d'ingestion suspectée, contactez sans délai un centre antipoison ou les urgences, même en l'absence de symptômes. La couleur de la volve ne suffit jamais à déclarer une amanite comestible.",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Grande amanite presque entièrement blanche à ivoire. Le chapeau lisse peut être légèrement ocré au centre. Les lames blanches et serrées sont libres. Le pied blanc est souvent finement floconneux et porte un large anneau membraneux persistant. La base est enveloppée d'une grande volve en sac, généralement ocre à brun roux. Il faut conserver le pied entier pour observer cette base."},
+    {"title": "Milieu et saison", "text": "Espèce méditerranéenne des bois et lisières, associée surtout aux chênes et également signalée sous les pins. Elle fructifie principalement en automne, souvent sur sol calcaire."},
+    {"title": "Espèces voisines", "text": "Amanita ovoidea est une autre grande amanite pâle ; sa volve est en général blanchâtre et son anneau plus fragile et crémeux. Ces caractères varient avec l'âge et les intempéries : la couleur seule ne permet pas une identification sûre. D'autres amanites blanches sont dangereusement toxiques."},
+    {"title": "Intoxication", "text": "Cette espèce est liée au syndrome de proxima : des symptômes digestifs peuvent être suivis d'une insuffisance rénale aiguë. Dans une série clinique publiée en 2024, les 13 cas attribués à cette espèce ont nécessité une épuration extrarénale. La DGfM la classe parmi les amanites néphrotoxiques et précise que l'allénylnorleucine n'y a pas encore été détectée ; le mécanisme toxique exact ne doit donc pas être présenté comme établi."},
+    {"title": "Lecture de la planche", "text": "La planche sur fond blanc montre le champignon entier avec sa volve ocre-rousse intacte, une coupe longitudinale, le dessus du chapeau et les lames blanches libres vues de dessous. Ces vues illustrent les caractères, sans remplacer une détermination par un spécialiste."}
+  ],
+  "sources": [
+    {"title": "MycoCharentes, P. Tanchaud (2024). Fiche Amanita proxima.", "url": "https://www.mycocharentes.fr/pdf1/235.pdf"},
+    {"title": "Université de Rouen, SmartChampi. Description d'Amanita proxima.", "url": "https://smartchampi.univ-rouen.fr/champignons/amanita-proxima.html"},
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Liste des champignons toxiques par taxon et syndrome.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Adibelli et al. (2024). Série clinique d'insuffisance rénale aiguë après intoxication par Amanita proxima. PubMed.", "url": "https://pubmed.ncbi.nlm.nih.gov/39586578/"},
+    {"title": "ANSES (2023). Bilan des intoxications accidentelles par les champignons enregistrées en France en 2022.", "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"}
+  ],
+  "related": ["ovoidea", "verna", "virosa"]
+}

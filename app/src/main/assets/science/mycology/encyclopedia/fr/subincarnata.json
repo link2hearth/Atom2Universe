@@ -1,0 +1,21 @@
+{
+  "id": "subincarnata",
+  "reviewStatus": "verified",
+  "safetyNote": "Espèce mortelle : Lepiota subincarnata contient des amatoxines. De forts vomissements et diarrhées peuvent débuter seulement après une période sans symptôme, puis une atteinte hépatique potentiellement fatale peut suivre. Ne jamais la goûter ni la consommer. Demander immédiatement un avis médical urgent en cas d'ingestion suspectée, même si l'on se sent bien.",
+  "sections": [
+    {"title": "Lépiote de Josserand", "text": "Lepiota subincarnata est une petite lépiote rosâtre. Son chapeau mesure généralement environ 1,5 à 6 cm ; d'abord convexe, il s'aplatit ensuite avec un mamelon central bas. Une couche veloutée brun rosé se fragmente en petites squames, parfois concentriques, sur un fond crème ou couleur chair plus pâle ; le centre demeure plus sombre et feutré. La couleur, la taille et la disposition des squames varient beaucoup selon les exemplaires."},
+    {"title": "Lames, pied et voile", "text": "Les lames blanches à crème pâle sont libres et assez serrées ; la sporée est blanche. Le pied mince et clair mesure souvent environ 1,5 à 5,5 cm. Des bandes ou squames laineuses brun rosé marquent sa partie basse, tandis que la partie haute est plus lisse. Le reste de voile supérieur est souvent une zone annulaire laineuse discrète et fragile plutôt qu'une jupe persistante nette ; il peut manquer. Une odeur douce ou fruitée est possible mais parfois indistincte et ne constitue donc pas un test fiable."},
+    {"title": "Milieux, noms et confusions", "text": "Ce champignon saprotrophe pousse dans les jardins, pelouses, parcs, clairières et litières de feuilles, surtout en été et en automne. Certains référentiels considèrent Lepiota josserandii comme un synonyme de L. subincarnata, alors que d'autres auteurs distinguent des formes voisines. Il a été mortellement confondu dans une pelouse avec le marasme des Oréades, Marasmius oreades. Ce dernier possède généralement un chapeau fauve lisse et un pied coriace, mais aucun caractère pris isolément ne suffit à une identification sûre."},
+    {"title": "Intoxication par les amatoxines", "text": "Comme l'amanite phalloïde, cette espèce peut provoquer le syndrome phalloïdien. Une période sans symptôme d'au moins plusieurs heures précède douleurs abdominales, vomissements et diarrhée aqueuse ; une atteinte du foie peut ensuite se développer même si les symptômes s'atténuent brièvement. Un cas documenté en Colombie-Britannique a commencé après environ 13 heures et s'est terminé par un décès. Il ne faut attendre ni les symptômes ni se fier à un prétendu seuil de quantité sans danger : une ingestion suspectée exige immédiatement l'avis des urgences ou d'un centre antipoison."},
+    {"title": "À propos de la planche", "text": "La planche sur fond blanc montre un champignon entier, une coupe longitudinale, le chapeau squameux vu de dessus et le dessous à lames libres. La zone annulaire laineuse étroite et les bandes brun rosé du bas du pied sont visibles sans suggérer que le voile est toujours marqué."}
+  ],
+  "sources": [
+    {"title": "Musée Beaty de l'Université de Colombie-Britannique — Lepiota subincarnata", "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/L_subincarnata.html"},
+    {"title": "Associazione Micologica Bresadola — Lepiota subincarnata", "url": "https://ambbresadola.it/funghi_tossici/lepiota-subincarnata/"},
+    {"title": "Species Fungorum, jardins botaniques royaux de Kew — synonymes de Lepiota subincarnata", "url": "https://www.speciesfungorum.org/names/Synonymy.asp?RecordId=299506"},
+    {"title": "ANSES — fiche 2015 sur le syndrome phalloïdien", "url": "https://www.anses.fr/system/files/BIORISK2014sa0232Fi.pdf"},
+    {"title": "Centre Antipoisons belge — brochure champignons", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "Société allemande de mycologie — liste 2026 des champignons toxiques", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"}
+  ],
+  "related": ["brunneoincarnata", "oreades", "procera"]
+}

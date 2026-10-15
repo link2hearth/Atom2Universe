@@ -1,0 +1,52 @@
+{
+  "id": "cibarius",
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Reconnaître l’espèce",
+      "text": "La girolle européenne possède un chapeau jaune à jaune orangé d’environ 3 à 12 cm, dont la marge devient ondulée et le centre parfois déprimé. Le dessous montre des plis épais, émoussés et fourchus qui descendent sur le pied : ce sont des replis de la surface, pas de fines lames véritables. Le pied plein et lisse est proche du chapeau par la couleur. La chair est pâle et le champignon frais a souvent une odeur fruitée rappelant l’abricot."
+    },
+    {
+      "title": "Milieu et saison",
+      "text": "Ce champignon mycorhizien fructifie au sol sous les feuillus ou les conifères, parfois en groupes. Dans les forêts européennes, il apparaît surtout de l’été à la fin de l’automne ; la météo locale décale la saison. Sa sporée est crème pâle à jaunâtre."
+    },
+    {
+      "title": "Confusions",
+      "text": "Hygrophoropsis aurantiaca porte des lames véritables fines et serrées, à la différence des plis épais et émoussés de la girolle. Le toxique Omphalotus olearius possède de vraies lames et pousse souvent en touffes sur le bois ou les racines enterrées. Un pied semblant sortir de terre n’exclut pas du bois enfoui : il faut vérifier son insertion et tous les caractères du dessous."
+    },
+    {
+      "title": "Sécurité alimentaire",
+      "text": "Cantharellus cibarius est considéré comme comestible, mais aucun dessin ni caractère isolé ne confirme une récolte. N’utiliser que des exemplaires identifiés avec certitude et les cuire correctement. Demander un avis spécialisé si les plis, le milieu ou le champignon entier ne peuvent être examinés."
+    }
+  ],
+  "traits": [
+    "Chapeau jaune à jaune orangé, marge ondulée, parfois en entonnoir",
+    "Plis épais, émoussés et fourchus descendant sur le pied ; pas de vraies lames",
+    "Pied plein et lisse, d’une couleur proche de celle du chapeau",
+    "Chair pâle et odeur souvent fruitée",
+    "Au sol près des arbres ; sporée crème à jaunâtre"
+  ],
+  "safetyNote": "Comestible seulement après identification certaine. Le toxique Omphalotus olearius porte de vraies lames et pousse sur le bois ou des racines enfouies ; la couleur seule ne suffit pas. Bien cuire les exemplaires identifiés et demander un avis spécialisé en cas de doute.",
+  "sources": [
+    {
+      "title": "Société Mycologique du Nord de la France — Cantharellus cibarius",
+      "url": "https://www.smnf.fr/wp-content/Photos_SMNF/Photos_SMNF_C/Textes_C3/Cantharellus_cibarius.htm"
+    },
+    {
+      "title": "Woodland Trust — Chanterelle (Cantharellus cibarius)",
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/chanterelle/"
+    },
+    {
+      "title": "Azienda USL di Bologna — collection, consumption and confusion with Omphalotus olearius",
+      "url": "https://www.ausl.bologna.it/servt/dipt/dsp/uo/ian/ia/funghi/consigli-per-la-raccolta-il-consumo-e-la"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie — Positivliste der Speisepilze (2026)",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+    }
+  ],
+  "related": [
+    "olearius",
+    "aurantiaca"
+  ]
+}

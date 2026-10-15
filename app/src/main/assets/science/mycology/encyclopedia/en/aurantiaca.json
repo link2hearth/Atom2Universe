@@ -1,0 +1,24 @@
+{
+  "id": "aurantiaca",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Identification", "text": "Hygrophoropsis aurantiaca has a small orange to orange-yellow cap, often darker or brownish at the centre. The finely felted surface becomes shallowly funnel-shaped; the margin may remain slightly inrolled and wavy. Underneath are thin, crowded, bright-orange gill-like plates that run well down the stem and repeatedly fork. The slender orange stem may darken to brown or nearly black near its base. Flesh is thin and soft, and the spore print is white. Colour and darkness of the stem base vary between specimens."},
+    {"title": "Habitat and season", "text": "A saprotrophic fungus of conifer woodland, growing among woody debris, decayed stumps or logs and raw humus; it can also occur on wood chips and acidic heathland. In Britain and Ireland the fruiting season is mainly late summer to autumn. It does not form the ectomycorrhizal relationship characteristic of true chanterelles."},
+    {"title": "Similar species", "text": "True chanterelles such as Cantharellus cibarius have shallow, blunt, often cross-connected ridges that form part of the cap flesh, rather than the false chanterelle's distinct, closely spaced, repeatedly forked plates. Chanterelles are firmer and often have a fruity scent. The poisonous jack-o’-lantern (Omphalotus olearius) also has orange true gills but commonly grows in clusters on hardwood, with a much more robust orange fruiting body. Check several characters together, not the orange colour alone."},
+    {"title": "Food value and uncertainty", "text": "Consumption is not recommended. Published field guides differ on whether this fungus is edible, and the Beaty Biodiversity Museum notes that reliable evidence for adverse reactions is sparse. First Nature advises treating it as inedible. The available accounts do not justify saying that most reported poisonings were actually caused by confusion with another species. If illness follows eating a wild mushroom, seek poison-centre advice and keep any leftovers for identification."}
+  ],
+  "traits": [
+    "Small orange to yellow-orange felted cap, often darker at the depressed centre",
+    "Thin crowded bright-orange gill-like plates, deeply decurrent and repeatedly forked",
+    "Slender orange stem, sometimes dark brown to blackish near the base",
+    "Thin soft flesh; white spore print",
+    "Saprotrophic among conifer woody debris or raw humus, mainly late summer to autumn"
+  ],
+  "safetyNote": "Not recommended for eating: assessments of edibility differ and evidence for reported adverse reactions is limited. It can be confused with edible chanterelles and poisonous orange-gilled mushrooms. Never eat an uncertain identification; seek poison-centre advice if symptoms occur after ingestion.",
+  "sources": [
+    {"title": "Beaty Biodiversity Museum, University of British Columbia — Hygrophoropsis aurantiaca", "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/H_aurantiaca.html"},
+    {"title": "First Nature — Hygrophoropsis aurantiaca, identification and food value", "url": "https://www.first-nature.com/fungi/hygrophoropsis-aurantiaca.php"},
+    {"title": "US Forest Service — Field Guide to Common Macrofungi in Eastern Forests and Their Ecosystem Functions", "url": "https://research.fs.usda.gov/download/treesearch/38089.pdf"}
+  ],
+  "related": ["cibarius", "olearius", "tubaeformis"]
+}
