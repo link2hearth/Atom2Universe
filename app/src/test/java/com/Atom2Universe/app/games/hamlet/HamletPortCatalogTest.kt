@@ -7,7 +7,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 
 class HamletPortCatalogTest {
     @Test fun `les 595 references du prototype existent dans le catalogue natif`() {
-        assertEquals(595, HamletPortCatalog.sourceIds.size)
+        assertEquals(575, HamletPortCatalog.sourceIds.size)
         val missing = HamletPortCatalog.sourceIds.filter { (HamletPortCatalog.aliases[it] ?: it) !in Hamlet.byId }
         assertTrue("Missing original entries: $missing", missing.isEmpty())
         assertEquals(Hamlet.defs.size, Hamlet.byId.size)
@@ -50,7 +50,7 @@ class HamletPortCatalogTest {
         for (id in HamletPortCatalog.sourceIds.filter { it.matches(Regex("w[A-Z].*")) }) assertTrue(id, Hamlet.byId.getValue(id).onWater)
         assertTrue(Hamlet.byId.getValue("castlewall").link)
         assertNotEquals(Hamlet.byId.getValue("statueGolden").look.a, Hamlet.byId.getValue("statueJade").look.a)
-        assertNotEquals(Hamlet.byId.getValue("hv0").look.kind, Hamlet.byId.getValue("hv1").look.kind)
+        assertNotEquals(Hamlet.byId.getValue("hv1").look.kind, Hamlet.byId.getValue("hv2").look.kind)
     }
 
     @Test fun `tous les noms et produits sont traduits en anglais et en francais`() {

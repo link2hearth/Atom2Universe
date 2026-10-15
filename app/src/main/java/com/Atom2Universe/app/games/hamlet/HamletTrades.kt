@@ -86,7 +86,7 @@ object HamletTrades {
             "lanternmaker" -> craft(mapOf(ORE to 4 * lots, WAX to 2 * lots))
             "jeweler", "gemcutter" -> craft(mapOf(ORE to 6 * lots, CRYSTAL to lots))
             "foundry", "bellfoundry", "locksmith", "weaponsmith", "shieldmaker", "fletcher" ->
-                make(mapOf(ORE to 4 * lots, TIMBER to 8 * lots), outputs = mapOf(TOOLS to 2 * lots))
+                make(mapOf(ORE to 4 * lots, TIMBER to 8 * lots), outputs = mapOf(TOOLS to 8 * lots))
             "clockmaker" -> craft(mapOf(TOOLS to 2 * lots, ORE to 4 * lots))
             "prismforge" -> make(mapOf(ORE to 24, CRYSTAL to 4, TIMBER to 32), outputs = mapOf(TOOLS to 16))
             "boathouse", "shipyard" -> craft(mapOf(TIMBER to 16 * lots, CLOTH to 2 * lots, TOOLS to lots))
@@ -109,7 +109,7 @@ object HamletTrades {
             "marketHall" -> make(mapOf(FOOD to 8 * lots, CRAFTS to lots))
             "bank", "mint" -> make(mapOf(ORE to 4 * lots, BOOKS to lots))
             "bookshop" -> make(mapOf(BOOKS to 8 * lots))
-            "school", "scribe", "cartographer" -> make(mapOf(TIMBER to 10 * lots, FOOD to 4 * lots), outputs = mapOf(BOOKS to 16 * lots))
+            "school", "scribe", "cartographer" -> make(mapOf(TIMBER to 10 * lots, FOOD to 4 * lots), outputs = mapOf(BOOKS to 24 * lots))
             "courthouse", "postoffice" -> make(mapOf(BOOKS to 4 * lots, BREAD to lots))
             "prison" -> make(mapOf(BREAD to 2 * lots, MEDICINE to lots))
             "chapel" -> make(mapOf(WAX to lots, BREAD to lots))

@@ -73,15 +73,17 @@ object HamletIndustry {
             "lumbermill" -> recipe(outputs = mapOf(TIMBER to 45))
             "quarry", "stonemason" -> recipe(outputs = mapOf(STONE to 45 * batches))
             "mine" -> recipe(mapOf(TIMBER to 60, FOOD to 80), outputs = mapOf(ORE to 1200, STONE to 600))
-            "blacksmith", "armory" -> recipe(mapOf(TIMBER to 8 * batches, ORE to 4 * batches), outputs = mapOf(TOOLS to 2 * batches))
+            "blacksmith", "armory" -> recipe(mapOf(TIMBER to 8 * batches, ORE to 4 * batches), outputs = mapOf(TOOLS to 8 * batches))
             // La forge d'aventure est la seule source d'outils des premiers jours : six par commande, pour les mêmes matières.
             "adventureForge" -> recipe(mapOf(TIMBER to 8 * batches, ORE to 4 * batches), outputs = mapOf(TOOLS to 6 * batches))
             "library", "academy", "adventureAcademy", "grandacademy", "cartographers" ->
-                recipe(mapOf(TIMBER to 10 * batches, FOOD to 4 * batches), outputs = mapOf(BOOKS to 16 * batches))
+                recipe(mapOf(TIMBER to 10 * batches, FOOD to 4 * batches), outputs = mapOf(BOOKS to 24 * batches))
             "adventureInn" -> recipe(mapOf(BREAD to 2), outputs = mapOf(FOOD to 35))
             "adventureStore" -> recipe(mapOf(TIMBER to 12, STONE to 12), outputs = mapOf(ORE to 12))
             "adventureYard", "barracks" -> recipe(mapOf(BREAD to 2, TIMBER to 6), outputs = mapOf(FOOD to 40))
-            "adventureGate", "waypost" -> recipe(mapOf(BREAD to 2, TIMBER to 8), outputs = mapOf(BOOKS to 12))
+            "waypost" -> recipe(mapOf(BREAD to 2, TIMBER to 8), outputs = mapOf(BOOKS to 12))
+            // Sa commande dure 1 500 s mais ne compte que pour un lot de 900 s : quarante livres lui donnent le débit des autres bâtiments à livres.
+            "adventureGate" -> recipe(mapOf(BREAD to 2, TIMBER to 8), outputs = mapOf(BOOKS to 40))
             // Other trades consume provisions; they no longer magically manufacture books.
             else -> recipe(mapOf(FOOD to 2))
         }
