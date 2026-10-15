@@ -11,7 +11,7 @@
     <string name="hamlet_industry_feed">Feed the animals with crops from the barn:\n%1$s</string>
     <string name="hamlet_industry_title">Village provisions</string>
     <string name="hamlet_industry_sources">Wood: sawmill, camp workers, adventures or the free workshop. Stone: quarry, camp workers, adventures or workshop. Bread: wheat and wood at the bakery. Corn feeds the animals. Tools: timber and ore at the forge or blacksmith. Books: academy or library. Expedition supplies: exploration. Harvests are stored in the barn. These trades can be repeated without a daily limit.</string>
-    <string name="hamlet_industry_rations">Prepare rations → 40 food</string>
+    <string name="hamlet_industry_rations">Prepare rations → %1$d food</string>
     <string name="hamlet_industry_builders">Supply builders → 1 hour of work</string>
     <string name="hamlet_industry_caravan">Welcome a caravan → 1 invitation (Inn required)</string>
     <string name="hamlet_industry_resting">Some assigned workers are resting until enough housing is available. Their assignments are kept.</string>

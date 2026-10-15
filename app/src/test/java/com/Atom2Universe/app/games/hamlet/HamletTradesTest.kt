@@ -118,7 +118,7 @@ class HamletTradesTest {
         val g = game(); val herbalist = install(g, "herbalist"); fund(g, HamletIndustry.recipe(herbalist.t, 1).cost)
         herbalist.order = Order("Ada"); assertTrue(g.acceptOrder(herbalist)); herbalist.tier = 5
         assertTrue(HamletSave.fromJson(g, HamletSave.toJson(g)))
-        val loaded = g.objs.getValue(herbalist.id); assertEquals(2, loaded.order!!.recipeVersion)
+        val loaded = g.objs.getValue(herbalist.id); assertEquals(HamletIndustry.RECIPE_VERSION, loaded.order!!.recipeVersion)
         time += loaded.def.job * 1000L; assertTrue(g.deliver(loaded)); assertEquals(2, g.adventure[MEDICINE])
     }
 

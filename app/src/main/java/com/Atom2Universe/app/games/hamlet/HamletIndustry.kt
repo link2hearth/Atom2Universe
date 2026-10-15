@@ -56,9 +56,9 @@ object HamletIndustry {
     }
 
     /** Rank is captured when accepting the order: upgrading a busy shop cannot create free goods. */
-    const val RECIPE_VERSION = 2
+    const val RECIPE_VERSION = 3
     fun recipe(id: String, rank: Int, version: Int = RECIPE_VERSION): Recipe =
-        if (version <= 1) originalRecipe(id, rank) else HamletTrades.recipe(id, rank)
+        if (version <= 1) originalRecipe(id, rank) else HamletTrades.recipe(id, rank, balanced = version >= 3)
 
     // Keep the first paid contracts intact when loading a village from the first resource pass.
     internal fun originalRecipe(id: String, rank: Int): Recipe {
@@ -111,11 +111,12 @@ object HamletIndustry {
     fun sources(resource: AdventureResource): List<Def> = sourceIndex.getValue(resource)
 
     val rations = VillageCost(resources = mapOf(BREAD to 2))
+    const val RATION_FOOD = 24L
     val builders = VillageCost(resources = mapOf(BREAD to 8, TIMBER to 120, STONE to 120, TOOLS to 2))
     val caravan = VillageCost(resources = mapOf(BREAD to 80, TIMBER to 600, STONE to 600, BOOKS to 150, TOOLS to 20), supplies = 40)
     val expeditionOutfit = VillageCost(resources = mapOf(CLOTH to 8, MEDICINE to 4, BREAD to 16, TOOLS to 8))
     val artisanCaravan = VillageCost(resources = mapOf(CRAFTS to 60, CLOTH to 20, MEDICINE to 12,
-        BREAD to 80, BOOKS to 150, TOOLS to 20), supplies = 40)
+        BREAD to 40, BOOKS to 75, TOOLS to 10), supplies = 20)
 
     fun outfitExpedition(g: HamletGame): Boolean {
         if (!g.sandbox && g.adventure.facility("waypost") == 0 || g.journey.supplies > Int.MAX_VALUE - 20 || !expeditionOutfit.pay(g)) return false
@@ -129,7 +130,7 @@ object HamletIndustry {
 
     fun prepareRations(g: HamletGame): Boolean {
         if (!rations.pay(g)) return false
-        g.adventure.add(FOOD, 40); g.stat("supply_crafted"); g.listener?.onChanged(); return true
+        g.adventure.add(FOOD, RATION_FOOD); g.stat("supply_crafted"); g.listener?.onChanged(); return true
     }
     fun supplyBuilders(g: HamletGame): Boolean {
         // Storage capacity is not a quota: spend the work and provision another crew immediately.

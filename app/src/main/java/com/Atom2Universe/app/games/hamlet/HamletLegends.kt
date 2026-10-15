@@ -3,7 +3,7 @@ package com.Atom2Universe.app.games.hamlet
 import org.json.JSONArray
 import org.json.JSONObject
 
-/** Une nuit de veillée : ce qu'il faut offrir, puis une attente réelle que rien ne raccourcit. */
+/** Une nuit de veillée : des offrandes puis une attente que le travail du village peut réduire. */
 class VigilPhase(val coins: Long, val crystal: Long, val needs: List<HamletEconomy.Need>, val hours: Int)
 
 /** Une légende : le héros qui arrive à la fin, le chapitre qui ouvre la veillée, les trois nuits. */
@@ -16,7 +16,7 @@ class VigilStep(val legend: Int, val night: Int, val recruit: HeroRecruitment?)
  * Les légendes ne sortent jamais d'un tirage : elles se méritent par des veillées, sur un cercle de pierres
  * construit au village. Chaque légende s'annonce par une rumeur, un chapitre avant de s'ouvrir. Trois nuits ;
  * chacune demande des pièces, des cristaux et des récoltes de la réserve, puis une attente de plusieurs
- * heures. On peut tout préparer à l'avance, mais on ne peut pas aller plus vite que le temps.
+ * heures. Le travail gagné en jouant peut être consacré à la veillée, comme à une expédition.
  */
 class HamletLegends(private val g: HamletGame) {
     /** Nuits terminées, par légende (0 à 3). */
@@ -60,6 +60,14 @@ class HamletLegends(private val g: HamletGame) {
         return true
     }
     fun canFinish(legend: Int) = legend in defs.indices && running(legend) && timeLeft(legend) == 0L
+
+    /** No quota or paid shortcut: spend up to five minutes from the shared earned work reserve. */
+    fun applyWork(legend: Int): Boolean {
+        if (legend !in defs.indices || !running(legend) || timeLeft(legend) <= 0 || g.workSeconds <= 0) return false
+        val used = minOf(g.workSeconds, 300, ((timeLeft(legend) + 999) / 1000).coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
+        until[legend] = maxOf(g.now(), until[legend] - used * 1000L)
+        g.workSeconds -= used; g.stat("work_used", used.toLong()); g.listener?.onChanged(); return true
+    }
 
     /** Termine la nuit. À la troisième, le héros arrive. */
     fun finish(legend: Int): VigilStep? {

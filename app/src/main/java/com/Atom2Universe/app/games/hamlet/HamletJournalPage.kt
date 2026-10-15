@@ -286,6 +286,7 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
             if (legends.running(i)) {
                 vigils[i] = text(box, s(R.string.hamlet_legend_burning, duration(legends.timeLeft(i))))
                 if (legends.canFinish(i)) action(box, s(R.string.hamlet_legend_dawn), weight = Weight.MAIN, glyph = "star") { finishVigil(i) }
+                else action(box, s(R.string.hamlet_work_apply), g.workSeconds > 0, glyph = "hammer") { legends.applyWork(i) }
                 continue
             }
             need(box, itemName(HamletLegends.CIRCLE), legends.circleBuilt())

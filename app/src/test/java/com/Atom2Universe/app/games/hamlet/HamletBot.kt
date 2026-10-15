@@ -30,7 +30,8 @@ class Rhythm(val name: String, val sessions: List<Pair<Int, Int>>) {
  * Le joueur simulé. Il joue avec les vraies règles publiques de [HamletGame] : jamais d'argent injecté, jamais
  * de ressource inventée. Chaque geste coûte du temps actif, les combats durent leur vraie durée à vitesse ×2.
  */
-class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_000_000L / DAY) * DAY + 6 * 3_600_000L) {
+class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_000_000L / DAY) * DAY + 6 * 3_600_000L,
+    val farming: Boolean = false, val actionSeconds: Double = 1.4) {
     val clock = SimClock(startMs)
     val rng = Random(seed)
     val g = HamletGame(clock::now, Random(seed)).apply { startNew(false) }
@@ -38,6 +39,7 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
     private val startMs = startMs
     var activeSeconds = 0.0
     var battles = 0; var defeats = 0
+    var outfits = 0; var craftTrades = 0; var bulkWorkTrades = 0
     /** Jour (depuis le début) où chaque événement s'est produit. */
     val milestones = LinkedHashMap<String, Double>()
     val timeline = StringBuilder("day,active_min,level,coins,hall,chapter,frontier,heroes,commons,rares,epics,legends,avg_level,avg_stars,shards,tickets,food,crystal,quest,upgrades,pantry_total,pulls\n")
@@ -53,7 +55,7 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
         clock.t += (seconds * 1000).toLong(); activeSeconds += seconds
         g.tick()
     }
-    private fun action(count: Int = 1) = spend(1.4 * count)
+    private fun action(count: Int = 1) = spend(actionSeconds * count)
 
     // ------------------------------------------------------------------ boucle principale
 
@@ -83,8 +85,10 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
             managePower()
             // sans héros, le village occupe : on y revient toutes les minutes tant que la séance dure
             if (a.fielded() == 0) { spend(60.0); villageChores(); continue }
-            val until = min(sessionEnd, clock.t + 300_000L)
-            while (clock.t < until) fight()
+            val until = min(sessionEnd, clock.t + if (farming) 90_000L else 300_000L)
+            while (clock.t < until) {
+                if (farming && farmLeft > 0) { farmLeft--; farmResources() } else fight()
+            }
             if (clock.t < sessionEnd) villageChores()
         }
     }
@@ -104,9 +108,14 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
         if (g.journey.collectExpedition()) action()
         while (g.journey.canClaim()) { g.journey.claim(); action() }
         plantFields()
+        if (farming) {
+            if (HamletIndustry.tradeCrafts(g)) { craftTrades++; action() }
+            if ((outfits == 0 || g.journey.supplies < 200) && HamletIndustry.outfitExpedition(g)) { outfits++; action() }
+        }
         feedAndOrders()
-        if (a[AdventureResource.FOOD] < 1000 && HamletIndustry.prepareRations(g)) action()
-        if (g.journey.expedition >= 0 && g.workSeconds < 3600 && HamletIndustry.supplyBuilders(g)) action()
+        val breadSurplus = !farming || a[AdventureResource.BREAD] > 120
+        if (breadSurplus && a[AdventureResource.FOOD] < 1000 && HamletIndustry.prepareRations(g)) action()
+        if (breadSurplus && g.journey.expedition >= 0 && g.workSeconds < 3600 && HamletIndustry.supplyBuilders(g)) action()
         if (HamletIndustry.welcomeCaravan(g)) action()
         developJourney()
         spendWork()
@@ -123,6 +132,12 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
 
     private fun feedAndOrders() {
         for (o in g.objs.values.toList()) {
+            if (farming && g.journey.chapter >= 2 && o.def.cat == Cat.SHOP) {
+                val reserved = mapOf(AdventureResource.BREAD to 80L, AdventureResource.CLOTH to 20L,
+                    AdventureResource.MEDICINE to 12L, AdventureResource.CRAFTS to 60L, AdventureResource.TOOLS to 20L)
+                if (HamletIndustry.recipe(o.t, o.tier).cost.resources.any { (r, amount) ->
+                    r in reserved && a[r] - amount < reserved.getValue(r) }) continue
+            }
             if (g.status(o) == Status.ORDER_NEW && g.acceptOrder(o)) action()
             if (g.status(o) == Status.FEED && g.coins > 60 && g.feed(o)) action()
         }
@@ -178,7 +193,12 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
             val short = options.filter { it.time * 1000L <= inSession }
             // une culture dont on a besoin se plante même si elle ne sera mûre qu'après quelques visites
             val needed = if (neededRoom <= 0) null else options.filter { it.id in wanted && it.time <= 72 * 3600 }.maxByOrNull { wanted.getValue(it.id) - g.stock(it.id) }
-            val crop = needed
+            // Keep the bread and medicine chains running while other plots grow long quest crops.
+            val production = if (!farming) null else options.firstOrNull { c ->
+                c.id in listOf("wheat", "herbs", "wildflowers") && c.id in wanted &&
+                    fields.none { it.crop == c.id }
+            }
+            val crop = production ?: needed
                 ?: if (short.isNotEmpty() && inSession > 120_000L) short.maxByOrNull { (it.earn - it.cost).toDouble() / it.time }
                 else fitsReturn.maxByOrNull { it.earn - it.cost } ?: options.minByOrNull { it.time }
             if (crop != null && g.plant(o, crop.id)) { action(); if (crop.time * 1000L > inSession) g.tend(o); if (crop.id in wanted) neededRoom-- }
@@ -200,6 +220,32 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
 
     private fun spendWork() {
         if (g.workSeconds <= 0) return
+        if (farming) {
+            // Spend a full reserve, not just five minutes every five minutes of play.
+            repeat(48) {
+                if (clock.t >= sessionEnd) return
+                if (g.workSeconds < 300 && g.journey.expeditionLeft() > 0) {
+                    val reserve = HamletIndustry.hall(g).resources
+                    if (a[AdventureResource.TIMBER] > (reserve[AdventureResource.TIMBER] ?: 0) + 600 &&
+                        a[AdventureResource.STONE] > (reserve[AdventureResource.STONE] ?: 0) + 600 && a.supplyBuilders()) {
+                        bulkWorkTrades++; action()
+                    }
+                }
+                if (g.workSeconds <= 0) return
+                val building = g.objs.values.firstOrNull { g.buildLeft(it) > 0 }
+                if (building != null && g.applyWork(building)) action()
+                else if (g.legends.until.indices.any { g.legends.running(it) && g.legends.timeLeft(it) > 0 }) {
+                    val legend = g.legends.until.indices.first { g.legends.running(it) && g.legends.timeLeft(it) > 0 }
+                    if (g.legends.applyWork(legend)) action()
+                }
+                else if (g.journey.expedition >= 0 && g.journey.expeditionLeft() > 0 && g.workOnExpedition()) action()
+                else {
+                    val target = g.objs.values.filter { g.workLeft(it) > 0 && (it.def.cat == Cat.SHOP || it.crop != null) }.minByOrNull { g.workLeft(it) }
+                    if (target != null && g.applyWork(target)) action() else return
+                }
+            }
+            return
+        }
         if (g.journey.expedition >= 0 && g.journey.expeditionLeft() > 0 && g.workOnExpedition()) { action(); return }
         g.objs.values.filter { g.buildLeft(it) > 0 }.firstOrNull()?.let { if (g.applyWork(it)) action() }
     }
@@ -231,7 +277,14 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
         if (count("field") < 4 && buy("field")) return true
         if (count("cottage") < 3 && buy("cottage")) return true
         for (id in listOf("bakery", "lumbermill", "quarry")) if (count(id) == 0 && buy(id, 100)) return true
+        if (farming) for (id in listOf("well", "sheepmeadow", "weaver", "herbalist", "florist"))
+            if (count(id) == 0 && buy(id, 100)) return true
         for (id in HamletAdventure.FACILITIES) if (count(id) == 0 && buy(id, 100)) return true
+        if (farming) {
+            // Grow the bottleneck chains instead of buying dozens of unrelated consumers first.
+            for ((id, copies) in mapOf("bakery" to 4, "adventureForge" to 2, "sheepmeadow" to 2, "weaver" to 2, "herbalist" to 2))
+                if (g.level() >= 8 && count(id) < copies && buy(id, 500)) return true
+        }
         // les bâtiments de l'aventure montent en rang dès que possible : l'équipement et le camp en dépendent
         for (id in HamletAdventure.FACILITIES) {
             val o = g.objs.values.filter { it.t == id }.maxByOrNull { it.tier } ?: continue
@@ -263,6 +316,18 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
         for (d in candidates) if (g.coins > d.cost + 400 && buy(d.id, 400)) return true
         if (g.canExpand() && g.coins > g.expandCost() * 3 / 2) { if (g.expandLand()) { action(); return true } }
         return false
+    }
+
+    private fun farmResources() {
+        // A gathering requires eight targets and navigation; a sweep requires selection and confirmation.
+        val boss = (0 until a.frontier).reversed().firstOrNull { a.node(it) == AdventureNode.BOSS && a.canSweep(it) }
+        if (boss != null && a[AdventureResource.FOOD] > a.sweepCost(boss) + 1000 && a.sweep(boss)) action(3)
+        else {
+            val gather = (0 until a.frontier).reversed().firstOrNull { a.node(it) in listOf(AdventureNode.GATHER, AdventureNode.SHRINE) }
+            if (gather != null && a.gather(gather)) action(10)
+            else { g.beginWork(); repeat(12) { g.answerWork(g.workTool); action() } }
+        }
+        if (g.workSeconds >= 3600) spendWork()
     }
 
     private fun legends() {
@@ -361,7 +426,7 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
     private fun fight() {
         if (a.teams[a.selectedTeam].take(a.slotCount()).none { it >= 0 }) { spend(10.0); return }
         var stage = a.frontier
-        if (a.node(stage) in listOf(AdventureNode.GATHER, AdventureNode.SHRINE)) { a.gather(stage); spend(16.0); return }
+        if (a.node(stage) in listOf(AdventureNode.GATHER, AdventureNode.SHRINE)) { a.gather(stage); action(10); return }
         if (farmLeft > 0) {
             farmLeft--
             // une étape récente et maîtrisée, d'où tombent encore les fragments
@@ -375,7 +440,7 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
         spend(b.time / 2.0 + 4.0)
         if (b.outcome == BattleOutcome.DEFEAT) {
             defeats++
-            if (stage >= before) { frontierFails++; if (frontierFails >= 2) farmLeft = 8 }
+            if (stage >= before) { frontierFails++; if (frontierFails >= 2) farmLeft = if (farming) 40 else 8 }
         } else if (a.frontier > before) frontierFails = 0
         // à chaque série de combats, un coup d'œil à la progression des héros
         if (battles % 3 == 0) managePower()

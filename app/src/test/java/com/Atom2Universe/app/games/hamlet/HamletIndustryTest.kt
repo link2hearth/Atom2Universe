@@ -109,7 +109,7 @@ class HamletIndustryTest {
 
     @Test fun breadFeedsAdventuresAndBuildersWithNoPartialPaymentAtCapacity() {
         val g = game(); g.adventure.bag[TOOLS.ordinal] = 2; g.adventure.bag[BREAD.ordinal] = 10; g.adventure.bag[TIMBER.ordinal] = 120; g.adventure.bag[STONE.ordinal] = 120
-        val food = g.adventure[FOOD]; assertTrue(HamletIndustry.prepareRations(g)); assertEquals(food + 40, g.adventure[FOOD])
+        val food = g.adventure[FOOD]; assertTrue(HamletIndustry.prepareRations(g)); assertEquals(food + 24, g.adventure[FOOD])
         g.workSeconds = 3601; val before = g.adventure.bag.clone()
         assertFalse(HamletIndustry.supplyBuilders(g)); assertArrayEquals(before, g.adventure.bag)
         g.workSeconds = 0; assertTrue(HamletIndustry.supplyBuilders(g)); assertEquals(3600, g.workSeconds)

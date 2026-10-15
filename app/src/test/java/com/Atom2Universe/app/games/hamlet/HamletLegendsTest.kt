@@ -4,7 +4,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import kotlin.random.Random
 
-/** Les légendes ne sortent jamais d'un appel : une rumeur, un cercle de pierres, trois nuits d'attente réelle. */
+/** Les légendes ne sortent jamais d'un appel : une rumeur, un cercle de pierres et trois veillées. */
 class HamletLegendsTest {
     private var time = 1_800_000_000_000L
     private fun game() = HamletGame({ time }, Random(5)).apply { startNew(false) }
@@ -51,7 +51,7 @@ class HamletLegendsTest {
             assertTrue(l.begin(0)); assertFalse("une veillee a la fois", l.begin(0))
             assertFalse(l.canFinish(0)); assertNull(l.finish(0))
             time += (l.phase(0)?.hours ?: HamletLegends.defs[0].phases[night - 1].hours) * 3_600_000L - 1_000L
-            assertFalse("rien ne raccourcit l'attente", l.canFinish(0))
+            assertFalse("sans travail investi, la durée de base reste entière", l.canFinish(0))
             time += 2_000L
             val step = l.finish(0)!!
             assertEquals(night, step.night)

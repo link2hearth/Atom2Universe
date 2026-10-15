@@ -15,7 +15,7 @@
     <string name="hamlet_reveal_legend">UNE LÉGENDE ARRIVE</string>
     <string name="hamlet_reveal_continue">Continuer</string>
     <string name="hamlet_legends">Légendes</string>
-    <string name="hamlet_legends_help">Les héros légendaires ne répondent jamais à un appel. Une rumeur annonce chacun d’eux un chapitre à l’avance. Construis alors le Cercle de pierres au village et veille trois nuits : chaque nuit demande des pièces, des cristaux et des récoltes tardives de ta grange, puis une vraie attente que rien ne raccourcit. Tu peux tout préparer à l’avance. La dernière légende ne vient que lorsque les trois autres sont à tes côtés.</string>
+    <string name="hamlet_legends_help">Les héros légendaires ne répondent jamais à un appel. Une rumeur annonce chacun d’eux un chapitre à l’avance. Construis alors le Cercle de pierres au village et veille trois nuits : chaque nuit demande des pièces, des cristaux et des récoltes tardives de ta grange. Tu peux préparer les offrandes à l’avance et réduire l’attente avec le travail gagné en jouant, sans limite quotidienne. La dernière légende ne vient que lorsque les trois autres sont à tes côtés.</string>
     <string name="hamlet_legends_none">Le village est silencieux.</string>
     <string name="hamlet_legend_done">La légende s’est accomplie.</string>
     <string name="hamlet_legend_soon">La voie n’est pas encore ouverte.</string>
@@ -23,7 +23,7 @@
     <string name="hamlet_legend_night">Nuit %1$d sur %2$d</string>
     <string name="hamlet_legend_burning">Le feu brûle · %1$s</string>
     <string name="hamlet_legend_dawn">Saluer l’aube</string>
-    <string name="hamlet_legend_hours">La veillée dure %1$d h</string>
+    <string name="hamlet_legend_hours">Durée de base : %1$d h, réductible avec le travail du village</string>
     <string name="hamlet_legend_light">Allumer la veillée</string>
     <string name="hamlet_legend_rumor_0">Une lueur sur la colline</string>
     <string name="hamlet_legend_rumor_story_0">Des voyageurs parlent d’une femme qui marche dans la lumière à la tombée du soir. Les blessures se ferment sur son passage.</string>

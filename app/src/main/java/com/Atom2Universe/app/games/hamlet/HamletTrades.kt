@@ -6,22 +6,44 @@ import com.Atom2Universe.app.games.hamlet.AdventureResource.*
  * Crop quantities stay below pantry capacity even at rank five. Long jobs use larger material lots,
  * never hundreds of a crop that cannot fit in the granary. Rare rewards still require adventure. */
 object HamletTrades {
-    fun recipe(id: String, rank: Int): HamletIndustry.Recipe {
+    fun recipe(id: String, rank: Int, balanced: Boolean = false): HamletIndustry.Recipe {
         val n = rank.coerceIn(1, HamletEconomy.MAX_TIER).toLong()
-        val lots = ((Hamlet.byId[id]?.job ?: 900) / 900).coerceIn(1, 16).toLong()
+        // Long offline contracts retain their hourly output instead of stopping at four hours' worth.
+        // Version two is retained for ingredients already paid in older saves.
+        val lots = ((Hamlet.byId[id]?.job ?: 900) / 900).coerceIn(1, if (balanced) Int.MAX_VALUE else 16).toLong()
+        val adjustedOutput = if (!balanced) null else when (id) {
+            "dairy" -> mapOf(MILK to 20L)
+            "barn" -> mapOf(MILK to 72L, EGGS to 72L)
+            "eggfarm" -> mapOf(EGGS to 160L)
+            "fishing" -> mapOf(FISH to 64L)
+            "apothecary" -> mapOf(MEDICINE to 96L)
+            "greenhouse" -> mapOf(MEDICINE to 28L)
+            "conservatory" -> mapOf(MEDICINE to 36L)
+            "skygarden" -> mapOf(MEDICINE to 96L)
+            "prismforge" -> mapOf(TOOLS to 32L)
+            "lighthouse", "lighthouseBlue", "lighthouseStone", "lighthouseGrand", "clocktower" -> mapOf(BOOKS to 24 * lots)
+            "stables", "ridingschool" -> mapOf(BOOKS to 16 * lots)
+            else -> null
+        }
         fun make(inputs: Map<AdventureResource, Long> = emptyMap(), crops: Map<String, Int> = emptyMap(),
             outputs: Map<AdventureResource, Long> = emptyMap(), coins: Long = 0) = HamletIndustry.Recipe(
             VillageCost(coins = coins * n, resources = inputs.mapValues { it.value * n },
-                crops = crops.mapValues { it.value * n.toInt() }), outputs.mapValues { it.value * n })
-        fun food(crops: Map<String, Int> = emptyMap(), inputs: Map<AdventureResource, Long> = emptyMap(), amount: Long = 24 * lots) =
+                crops = crops.mapValues { it.value * n.toInt() }), (adjustedOutput ?: outputs).mapValues { it.value * n })
+        fun food(crops: Map<String, Int> = emptyMap(), inputs: Map<AdventureResource, Long> = emptyMap(), amount: Long = (if (balanced) 80 else 24) * lots) =
             make(inputs + (WATER to 4 * lots), crops, mapOf(FOOD to amount))
+        val craftValue = if (!balanced) 2 else when (id) {
+            "jeweler", "gemcutter", "clockmaker", "shipyard", "balloon" -> 8
+            "potter", "stonemason", "glassworks", "painter", "lanternmaker", "boathouse", "perfumer" -> 4
+            else -> 2
+        }
         fun craft(inputs: Map<AdventureResource, Long>, crops: Map<String, Int> = emptyMap()) =
-            make(inputs, crops, mapOf(CRAFTS to 2 * lots))
+            make(inputs, crops, mapOf(CRAFTS to craftValue * lots))
         return when (id) {
             "bakery", "lumbermill", "quarry", "mine", "blacksmith", "adventureForge", "armory",
             "library", "academy", "adventureAcademy", "grandacademy", "cartographers",
             "adventureInn", "adventureStore", "adventureYard", "barracks", "adventureGate", "waypost" ->
-                HamletIndustry.originalRecipe(id, rank)
+                if (balanced && id == "barracks") make(mapOf(BREAD to 2 * lots, TIMBER to 6 * lots), outputs = mapOf(FOOD to 80 * lots))
+                else HamletIndustry.originalRecipe(id, rank)
 
             // Food, orchards and livestock: fresh produce becomes supplies for heroes.
             "greengrocer" -> food(mapOf("carrots" to 2, "lettuce" to 2))
@@ -31,7 +53,7 @@ object HamletTrades {
             "dairy" -> make(mapOf(WATER to 6), mapOf("corn" to 3), mapOf(MILK to 8))
             "barn" -> make(mapOf(WATER to 12), mapOf("oats" to 3), mapOf(MILK to 12, EGGS to 8))
             "eggfarm" -> make(mapOf(WATER to 8), mapOf("corn" to 4), mapOf(EGGS to 16))
-            "butcher" -> food(inputs = mapOf(FOOD to 40, TIMBER to 10), amount = 80)
+            "butcher" -> food(inputs = mapOf(FOOD to 40, TIMBER to 10), amount = if (balanced) 640 else 80)
             "honeyshop" -> food(inputs = mapOf(HONEY to 8, FRUIT to 8))
             "cider" -> food(inputs = mapOf(FRUIT to 12, TIMBER to 8))
             "brewery" -> food(mapOf("wheat" to 4), mapOf(TIMBER to 12))
@@ -46,7 +68,7 @@ object HamletTrades {
             "fishmonger" -> make(outputs = mapOf(FISH to 8), coins = 40)
             "fishing" -> make(mapOf(TIMBER to 12, CLOTH to 2), mapOf("corn" to 2), mapOf(FISH to 32))
             "fishmarket" -> food(inputs = mapOf(FISH to 12, TIMBER to 8))
-            "windmill", "watermill" -> food(mapOf("wheat" to 6), mapOf(TIMBER to 8), amount = 144)
+            "windmill", "watermill" -> food(mapOf("wheat" to 6), mapOf(TIMBER to 8), amount = if (balanced) 80 * lots else 144)
             "cornmill" -> food(mapOf("corn" to 8), mapOf(TIMBER to 12))
 
             // Wool unlocks weaving at level five; cotton also supplies late-game balloon makers.
@@ -68,7 +90,8 @@ object HamletTrades {
             "clockmaker" -> craft(mapOf(TOOLS to 2 * lots, ORE to 4 * lots))
             "prismforge" -> make(mapOf(ORE to 24, CRYSTAL to 4, TIMBER to 32), outputs = mapOf(TOOLS to 16))
             "boathouse", "shipyard" -> craft(mapOf(TIMBER to 16 * lots, CLOTH to 2 * lots, TOOLS to lots))
-            "balloon" -> craft(mapOf(TIMBER to 16, CLOTH to 20, TOOLS to 4), mapOf("cotton" to 6))
+            "balloon" -> craft(mapOf(TIMBER to (if (balanced) 16 * lots else 16),
+                CLOTH to (if (balanced) 2 * lots else 20), TOOLS to (if (balanced) lots else 4)), mapOf("cotton" to 6))
 
             // Healing gardens support repeatable expedition equipment, never a daily energy refill.
             "herbalist" -> make(mapOf(WATER to 4), mapOf("herbs" to 2), mapOf(MEDICINE to 2))

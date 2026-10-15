@@ -15,7 +15,7 @@
     <string name="hamlet_reveal_legend">A LEGEND ARRIVES</string>
     <string name="hamlet_reveal_continue">Continue</string>
     <string name="hamlet_legends">Legends</string>
-    <string name="hamlet_legends_help">Legendary heroes never answer a call. A rumor announces each one a chapter ahead. Then build the Stone Circle in the village and keep three vigils: each night asks for coins, crystals and late crops from your barn, then a real wait that nothing can shorten. You can prepare everything in advance. The last legend only comes once the other three stand with you.</string>
+    <string name="hamlet_legends_help">Legendary heroes never answer a call. A rumor announces each one a chapter ahead. Then build the Stone Circle in the village and keep three vigils: each night asks for coins, crystals and late crops from your barn. Prepare the offerings in advance and shorten the wait with work earned by playing, without a daily limit. The last legend only comes once the other three stand with you.</string>
     <string name="hamlet_legends_none">The village is quiet.</string>
     <string name="hamlet_legend_done">The legend has come true.</string>
     <string name="hamlet_legend_soon">The way is not open yet.</string>
@@ -23,7 +23,7 @@
     <string name="hamlet_legend_night">Night %1$d of %2$d</string>
     <string name="hamlet_legend_burning">The fire burns · %1$s</string>
     <string name="hamlet_legend_dawn">Greet the dawn</string>
-    <string name="hamlet_legend_hours">The vigil lasts %1$d h</string>
+    <string name="hamlet_legend_hours">Base duration: %1$d h, reducible with village work</string>
     <string name="hamlet_legend_light">Light the vigil</string>
     <string name="hamlet_legend_rumor_0">A light on the hill</string>
     <string name="hamlet_legend_rumor_story_0">Travellers speak of a woman who walks in sunlight at dusk. Wounds close where she passes.</string>

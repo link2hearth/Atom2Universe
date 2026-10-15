@@ -615,7 +615,7 @@ internal class HamletAdventurePage(private val context: Context, private val gam
         action(builders, s("builders_cost")) { a.supplyBuilders() }
         val industry = card(raw("hamlet_industry_title"), raw("hamlet_industry_sources"), glyph = "bread")
         text(industry, HamletUi.costText(context, HamletIndustry.rations, game), small = true)
-        action(industry, raw("hamlet_industry_rations"), HamletIndustry.rations.canPay(game), glyph = "bread") { HamletIndustry.prepareRations(game) }
+        action(industry, raw("hamlet_industry_rations", HamletIndustry.RATION_FOOD), HamletIndustry.rations.canPay(game), glyph = "bread") { HamletIndustry.prepareRations(game) }
         text(industry, HamletUi.costText(context, HamletIndustry.builders, game), small = true)
         action(industry, raw("hamlet_industry_builders"), game.workSeconds <= 3600 && HamletIndustry.builders.canPay(game), glyph = "hammer") { HamletIndustry.supplyBuilders(game) }
         text(industry, HamletUi.costText(context, HamletIndustry.caravan, game), small = true)

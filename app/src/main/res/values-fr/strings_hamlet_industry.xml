@@ -11,7 +11,7 @@
     <string name="hamlet_industry_feed">Nourrir les animaux avec les récoltes de la grange :\n%1$s</string>
     <string name="hamlet_industry_title">Ravitaillement du village</string>
     <string name="hamlet_industry_sources">Bois : scierie, ouvriers du camp, aventure ou atelier gratuit. Pierre : carrière, ouvriers du camp, aventure ou atelier. Pain : blé et bois à la boulangerie. Le maïs nourrit les animaux. Outils : bois et minerai à la forge ou chez le forgeron. Livres : académie ou bibliothèque. Provisions d’expédition : exploration. Les récoltes sont stockées dans la grange. Ces échanges sont répétables sans limite quotidienne.</string>
-    <string name="hamlet_industry_rations">Préparer des rations → 40 vivres</string>
+    <string name="hamlet_industry_rations">Préparer des rations → %1$d vivres</string>
     <string name="hamlet_industry_builders">Ravitailler les bâtisseurs → 1 heure de travail</string>
     <string name="hamlet_industry_caravan">Accueillir une caravane → 1 invitation (auberge requise)</string>
     <string name="hamlet_industry_resting">Certains ouvriers affectés se reposent jusqu’à disposer de suffisamment de logements. Leurs affectations sont conservées.</string>
