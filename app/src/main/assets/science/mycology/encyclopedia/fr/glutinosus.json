@@ -1,32 +1,26 @@
 {
   "id": "glutinosus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau de 3 à 12 cm, convexe puis plan, brun foncé à gris pourpre, couvert d’un épais mucilage",
-    "Lames espacées, décurrentes, blanches puis grises, noircies par les spores",
-    "Pied de 4 à 10 cm, blanc en haut, jaune à la base ; le voile ne laisse qu’une zone annulaire floue, noircie par les spores",
-    "Chair blanchâtre, odeur faible, saveur douce ou un peu acide",
-    "Sous les conifères, souvent l’épicéa · juillet à novembre"
+  "reviewStatus": "verified",
+  "safetyNote": "La DGfM et la VAPKO le classent parmi les champignons comestibles, mais les appréciations culinaires varient et sa couche visqueuse est souvent retirée. Une fiche ou une image ne permet pas d'identifier un spécimen destiné à être mangé : toute récolte doit être contrôlée par une personne compétente.",
+  "sections": [
+    {"title": "Chapeau visqueux gris violacé", "text": "Le chapeau, généralement de quelques centimètres jusqu'à environ 10 cm, est d'abord convexe puis s'étale. Sa surface lisse est fortement visqueuse, surtout par temps humide ; elle va du gris brun au gris violacé ou brun pourpré, parfois avec des marques noirâtres en vieillissant. Un voile visqueux recouvre souvent les jeunes exemplaires."},
+    {"title": "Lames épaisses et spores sombres", "text": "Sous le chapeau, les lames épaisses et assez espacées à serrées sont décurrentes, c'est-à-dire qu'elles descendent sur le pied. Elles sont pâles chez le jeune champignon, puis deviennent gris fumé à presque noir sous l'effet des spores. La sporée est gris fumé à noirâtre ; il s'agit bien de lames et non des pores d'un bolet."},
+    {"title": "Pied blanc à base jaune", "text": "Le pied, souvent autour de 4 à 10 cm, se rétrécit vers sa base. Il est blanchâtre dans sa partie supérieure et jaune vif, parfois jaune chrome, vers le bas ; les tissus peuvent se tacher de sombre avec l'âge. Le voile partiel visqueux laisse une zone annulaire peu marquée sur le pied, qui peut noircir lorsque les spores s'y déposent. La chair est pâle, parfois légèrement rosée sous la cuticule du chapeau ; l'odeur est faible et la saveur peut être un peu acidulée."},
+    {"title": "Sous les conifères", "text": "Cette espèce ectomycorhizienne pousse seule ou en petits groupes sous des conifères, souvent des épicéas ou des sapins, en été et en automne. Un chapeau brunâtre peut évoquer de loin un bolet visqueux comme Suillus luteus : regarder dessous permet de distinguer les lames décurrentes des pores."}
   ],
-  "safetyNote": "Comestible une fois le mucilage et la peau du chapeau ôtés : la DGfM et la VAPKO le disent, Wikipédia (fr) le dit honorable ou médiocre, Wikipédia (en) dit que les avis divergent et qu’il accumule des métaux lourds. Vu de dessus, un jeune ressemble à la nonnette voilée, mais il a des lames, pas des pores (Wikipédia, en) ; Wikipédia (fr) cite Gomphidius maculatus, sous les mélèzes, comme principal sosie.",
+  "traits": [
+    "Chapeau lisse et très visqueux, gris brun à gris violacé ou brun pourpré, parfois marqué de noir en vieillissant",
+    "Lames épaisses décurrentes, pâles puis gris fumé à noirâtres, sporée sombre",
+    "Pied rétréci vers la base, blanchâtre au-dessus et jaune vif à jaune chrome vers le bas",
+    "Voile partiel visqueux laissant une zone annulaire qui peut noircir sous les spores",
+    "Sous les conifères, souvent épicéas ou sapins, surtout en été et en automne"
+  ],
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
-    },
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Gomphidius glutinosus",
-      "url": "https://fr.wikipedia.org/wiki/Gomphidius_glutinosus"
-    },
-    {
-      "title": "Wikipedia (en): Gomphidius glutinosus",
-      "url": "https://en.wikipedia.org/wiki/Gomphidius_glutinosus"
-    }
+    {"title": "E-Flora BC / University of British Columbia — Gomphidius glutinosus (species account by Ian Gibson)", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Gomphidius+glutinosus"},
+    {"title": "Kuo, M. (2020). Gomphidius glutinosus. MushroomExpert.Com", "url": "https://www.mushroomexpert.com/gomphidius_glutinosus.html"},
+    {"title": "SMART Champignons, Université de Rouen — Gomphidius glutinosus", "url": "https://smartchampi.univ-rouen.fr/champignons/gomphidius-glutinosus.html"},
+    {"title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste, version 09.2023", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
   ],
   "related": []
 }

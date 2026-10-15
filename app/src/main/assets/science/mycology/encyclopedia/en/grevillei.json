@@ -1,32 +1,26 @@
 {
   "id": "grevillei",
-  "reviewStatus": "pending",
-  "sections": [],
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Identification", "text": "Suillus grevillei is a bolete with a convex cap that flattens with age, usually 3–15 cm across. Its smooth, shiny cuticle is sticky or slimy in wet weather and ranges from lemon or golden yellow to orange and golden brown; the skin separates readily from the flesh."},
+    {"title": "Pores, stem and flesh", "text": "The fertile surface consists of tubes ending in small angular pores, lemon to golden yellow, which may turn brown when damaged. The tubes are adnate to slightly decurrent. The solid stem is usually 4.5–10 cm long and usually bears a conspicuous upper ring, pale to yellowish brown, though the ring may be absent; the stem is yellow above and often more golden or brown below. The flesh is pale to lemon yellow, rather soft, and generally changes little on exposure to air; smell and taste are mild. The spore print is yellowish brown to cinnamon brown."},
+    {"title": "Habitat and similar species", "text": "This ectomycorrhizal fungus grows on the ground with larches (Larix), often in groups, from late summer into autumn. The sticky yellow-orange cap, yellow pores and ring help separate it from many boletes, but identification should consider the host tree and all features together. Suillus luteus also has a ring, but associates with pines and often has glandular dots on its stem."},
+    {"title": "Edibility and caution", "text": "The DGfM and VAPKO list this species as edible. Such lists do not establish the identity of a specimen: never eat a wild mushroom based on an image alone."}
+  ],
   "traits": [
-    "Cap 2 to 15 cm, sticky, lemon-yellow to bright orange or reddish-brown",
-    "Fine yellow pores running down the stem, olive-yellow with age",
-    "Stem 3 to 12 cm, yellow above a white then yellow ring, orange-reddish brown at the base",
-    "Soft bright yellow flesh, quickly turning cream with orange spots; mild, sweet taste",
-    "Only under larches · summer to late autumn"
+    "Cap usually 3–15 cm across, convex then flattening, smooth, shiny and sticky in wet weather, yellow to orange or golden brown",
+    "Small angular lemon-yellow to golden pores, sometimes browning when bruised; tubes adnate to slightly decurrent",
+    "Solid stem usually 4.5–10 cm long, yellow above an upper ring that is usually present but may be absent, more golden or brown below",
+    "Pale to lemon-yellow, rather soft flesh, generally little changed by exposure to air; mild smell and taste",
+    "Yellowish-brown to cinnamon-brown spore print",
+    "On the ground in ectomycorrhizal association with larches (Larix), from late summer into autumn"
   ],
-  "safetyNote": "Edible but mediocre: the DGfM and the VAPKO list it, the VAPKO adding that the cap skin must be removed. Wikipedia (fr) finds it bland and flabby and says it can be laxative for some; it advises young ones only, the stem removed, the cap peeled and a small first portion. It is hard to mix up thanks to its colours, its ringed stem and the larches (Wikipedia, fr): the other slippery boletes under larches have large pores.",
+  "safetyNote": "The DGfM and VAPKO list Suillus grevillei as edible. An edibility list cannot identify a specimen: never eat a wild mushroom based on a photo alone. If symptoms follow ingestion, contact poison control or emergency services immediately.",
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
-    },
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Suillus grevillei",
-      "url": "https://fr.wikipedia.org/wiki/Suillus_grevillei"
-    },
-    {
-      "title": "Wikipedia (en): Suillus grevillei",
-      "url": "https://en.wikipedia.org/wiki/Suillus_grevillei"
-    }
+    {"title": "Landcare Research, Biota of New Zealand — Suillus grevillei: morphological descriptions and larch associations (Gadgil et al., 2005; McNabb, 1968).", "url": "https://biotanz.landcareresearch.co.nz/scientific-names/1cb1a651-36b9-11d5-9548-00d0592d548c"},
+    {"title": "Kang, H.-J. et al. (2014). Molecular Taxonomical Re-classification of the Genus Suillus in South Korea. Mycobiology 42(3): 221–228. Morphological description and comparative characters of Suillus grevillei.", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4206787/"},
+    {"title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, as of 1 May 2026.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste, version 09.2023.", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
   ],
-  "related": []
+  "related": ["luteus"]
 }

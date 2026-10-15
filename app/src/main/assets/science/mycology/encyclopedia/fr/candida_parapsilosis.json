@@ -1,21 +1,44 @@
 {
   "id": "candida_parapsilosis",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : levure unicellulaire étudiée en microbiologie clinique.",
-    "Repère écologique : levure unicellulaire étudiée en microbiologie clinique. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Morphologie",
+      "text": "Candida parapsilosis est une levure dont les cellules peuvent être rondes, ovales ou cylindriques et se multiplier par bourgeonnement. Selon la souche et les conditions de culture, elle peut aussi former des pseudohyphes, c’est-à-dire des chaînes de cellules allongées avec des étranglements aux cloisons. Les sources décrivent des colonies blanches à crème, lisses ou parfois plissées. L’espèce ne forme pas de véritables hyphes."
+    },
+    {
+      "title": "Écologie et importance médicale",
+      "text": "La revue consacrée à C. parapsilosis la décrit comme une levure commensale de la peau humaine, dont le pouvoir pathogène est limité lorsque la barrière cutanée est intacte. Elle est également reconnue comme une cause d’infections invasives, surtout dans certains contextes de soins. Elle peut adhérer aux prothèses et aux cathéters et former des biofilms."
+    },
+    {
+      "title": "Portée et sécurité",
+      "text": "Cette fiche porte sur une levure microscopique, pas sur un champignon à récolter. Les formes, couleurs de colonies et pseudohyphes varient selon les souches et les conditions ; elles ne permettent pas à elles seules d’identifier une espèce. Le diagnostic relève d’analyses microbiologiques. Aucune comestibilité n’est évaluée ici."
+    }
   ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "traits": [
+    "Levure unicellulaire ; cellules rondes, ovales ou cylindriques, avec multiplication par bourgeonnement",
+    "Peut former des pseudohyphes composées de cellules allongées ; ne forme pas de véritables hyphes",
+    "Colonies de culture généralement blanches à crème ; aspect lisse, plissé ou autre selon la souche et les conditions",
+    "Commensale de la peau humaine ; peut aussi provoquer des infections invasives opportunistes",
+    "Associée aux prothèses et cathéters ; peut y adhérer et former des biofilms"
+  ],
+  "safetyNote": "Référence microbiologique, pas une fiche de cueillette ou de consommation. L’aspect microscopique ou celui d’une colonie ne suffit pas à identifier C. parapsilosis. Une suspicion d’infection nécessite une évaluation par un professionnel de santé et des analyses adaptées.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Candida parapsilosis.",
+      "title": "GBIF Backbone Taxonomy — Candida parapsilosis",
       "url": "https://www.gbif.org/species/2599539"
     },
     {
-      "title": "NCBI Taxonomy Browser: Candida parapsilosis.",
+      "title": "NCBI Taxonomy Browser — Candida parapsilosis, taxid 5480",
       "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=5480"
+    },
+    {
+      "title": "Trofa, Gácser & Nosanchuk — Candida parapsilosis, an Emerging Fungal Pathogen, Clinical Microbiology Reviews",
+      "url": "https://journals.asm.org/doi/10.1128/cmr.00013-08"
+    },
+    {
+      "title": "Candida parapsilosis Virulence and Antifungal Resistance Mechanisms: A Comprehensive Review of Key Determinants",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9862255/"
     }
   ],
   "related": []

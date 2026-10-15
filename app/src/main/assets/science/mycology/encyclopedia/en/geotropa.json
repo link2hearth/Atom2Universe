@@ -1,36 +1,56 @@
 {
   "id": "geotropa",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 7 to 20 cm, cream, buff to cinnamon-brown: keel-shaped when young, then domed, then spreading with a boss, finally funnel-shaped; smooth margin",
-    "Fine, deeply decurrent gills, cream to buff",
-    "Solid, fibrous stem, 10 to 20 cm, very swollen when young, the colour of the cap; no ring",
-    "White flesh, firm when young · strong, sweet smell of bitter almond or hay",
-    "White spores",
-    "On the ground in broadleaf woods, edges and clearings, often in troops or rings, from late summer until the first frosts"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Name and identification",
+      "text": "Infundibulicybe geotropa (trooping funnel, monk’s head), long known as Clitocybe geotropa, is a large mushroom with a cream, buff or pale ochre cap. The cap is often 10–15 cm across and sometimes about 20–25 cm in descriptions. It starts convex with a central boss and inrolled margin, then spreads and becomes funnel-shaped, often retaining the boss. Surface smooth and matt."
+    },
+    {
+      "title": "Gills, stem and flesh",
+      "text": "The gills are crowded, cream to pale ochre, and deeply decurrent down the stem. The stem is long (about 10–30 cm in some descriptions), sturdy, cylindrical to slightly club-shaped, fibrous, smooth and ringless; the base may be swollen. Flesh white, thick and firm, especially when young. Smell described as sweet, sometimes like bitter almonds; sources differ on its strength. Spore print white."
+    },
+    {
+      "title": "Habitat and season",
+      "text": "Grows on soil, especially in broadleaf woods, clearings and edges, hedgerows and nearby grassy places; also reported in conifer woods. Fruiting bodies often grow in rows, arcs or rings. Fruiting is mainly in autumn, sometimes from August into early winter depending on region."
+    },
+    {
+      "title": "Lookalikes and caution",
+      "text": "Its large size, persistent central boss and strongly decurrent gills are useful clues, but do not identify a collection on their own. The poisonous livid pinkgill (Entoloma sinuatum) can be mistaken for pale mushrooms: its gills are sinuate rather than decurrent and its spore print is pink. The miller (Clitopilus prunulus) also has a pink spore print. The German DGfM lists this species among edible mushrooms and the Swiss VAPKO recommends it; these lists do not verify a specimen or its safety to eat. Do not eat a collection identified from a photo; seek expert confirmation."
+    }
   ],
-  "safetyNote": "Edible of middling value, only when young: the fibrous stem becomes tough and is thrown away. It is on the German mycological society list (« Mönchskopf ») and on the Swiss controllers’ list (« tête de moine »). ANSES records livid entolomas picked instead of trooping funnels (2022): the entoloma has notched gills that turn pink, a floury smell and pink spores. The miller, also edible, has pink spores.",
+  "traits": [
+    "Cream to buff or pale ochre cap, often 10–15 cm and sometimes near 20–25 cm; convex then funnel-shaped, often retaining a central boss",
+    "Crowded, cream to pale ochre gills, deeply decurrent down the stem",
+    "Long, sturdy, cylindrical to slightly club-shaped, fibrous stem without a ring; base sometimes swollen",
+    "White, thick, firm flesh, especially when young; sweet smell sometimes like bitter almond; white spore print",
+    "On soil in woods, clearings, edges, hedgerows or grassy places; often in rows, arcs or rings; mainly in autumn"
+  ],
+  "safetyNote": "The German DGfM includes Infundibulicybe geotropa on its positive list and the Swiss VAPKO recommends it, but neither verifies an individual specimen. The poisonous livid pinkgill (Entoloma sinuatum) can be confused with pale mushrooms; the miller also has a pink spore print. Do not eat a mushroom identified only from this entry or an image; seek expert confirmation. If ingestion is uncertain or symptoms occur, contact a poison centre or medical service promptly.",
   "sources": [
     {
-      "title": "ANSES (2023). Intoxications accidentelles par des champignons en France métropolitaine : bilan des cas enregistrés par les centres antipoison du 1er juillet au 31 décembre 2022. Rapport d’étude de toxicovigilance n° 2023-VIG-0127.",
+      "title": "ANSES (2023). Toxicovigilance report no. 2023-VIG-0127: accidental mushroom poisoning cases in mainland France (1 July–31 December 2022).",
       "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"
     },
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "German Mycological Society (DGfM) (2026). Positive list of edible mushrooms, 1 May 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "VAPKO (2023). Recommendation list, version 09.2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Infundibulicybe geotropa",
-      "url": "https://fr.wikipedia.org/wiki/Infundibulicybe_geotropa"
+      "title": "First Nature. Clitocybe geotropa: description, habitat and identification.",
+      "url": "https://www.first-nature.com/fungi/clitocybe-geotropa.php"
     },
     {
-      "title": "Wikipedia (en): Infundibulicybe geotropa",
-      "url": "https://en.wikipedia.org/wiki/Infundibulicybe_geotropa"
+      "title": "Czech Mycological Society. Myko Atlas: Infundibulicybe geotropa.",
+      "url": "https://www.myko.cz/myko-atlas/Clitocybe-geotropa/"
+    },
+    {
+      "title": "Index Fungorum, Royal Botanic Gardens, Kew. Name record 487940: Infundibulicybe geotropa (Bull.) Harmaja.",
+      "url": "https://www.indexfungorum.org/names/namesrecord.asp?RecordID=487940"
     }
   ],
   "related": []

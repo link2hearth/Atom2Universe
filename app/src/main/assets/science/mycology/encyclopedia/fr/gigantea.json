@@ -1,15 +1,32 @@
 {
   "id": "gigantea",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Boule blanche sans pied, de 10 à 50 cm (jusqu’à 80), qui peut dépasser un ballon de football",
-    "Intérieur blanc pur et uniforme chez le jeune ; jaunâtre ou brun verdâtre en vieillissant",
-    "Jeune, odeur de farine fraîche",
-    "Spores blanches chez le jeune, olive à maturité",
-    "Prés riches en déjections de ruminants ou d’oiseaux, parfois en groupes, bois de feuillus · fin d’été et automne"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Une boule blanche sans pied",
+      "text": "Le sporophore de Calvatia gigantea est une grosse boule ou sphère irrégulière, parfois un peu aplatie, généralement blanche et lisse à légèrement bosselée. Il mesure souvent 10 à 80 cm de diamètre et se rattache au sol par une base ou un cordon mycélien discret. Il n’a ni pied ni chapeau différencié, ni lames ou tubes : la partie fertile occupe presque tout l’intérieur."
+    },
+    {
+      "title": "La coupe montre la maturité",
+      "text": "À la coupe longitudinale, la gleba jeune est compacte, ferme et uniformément blanche. En mûrissant, elle devient jaune verdâtre puis olive à brunâtre et poudreuse : ce sont les spores qui se forment. La peau externe, d’abord blanche, peut se fissurer ou se détacher à maturité, libérant la poudre de spores."
+    },
+    {
+      "title": "Habitat et saison",
+      "text": "Cette espèce saprotrophe pousse au sol, souvent dans les prairies, pâturages, pelouses, lisières et clairières, seule ou en petits groupes. Elle fructifie surtout de la fin de l’été à l’automne, selon le climat local."
+    },
+    {
+      "title": "Identification et prudence",
+      "text": "La taille exceptionnelle, la forme globuleuse et l’intérieur entièrement uniforme distinguent les grands sujets. Une coupe de haut en bas doit montrer une chair blanche sans ébauche de chapeau, de pied ni de lames : certains jeunes œufs d’amanites toxiques peuvent ressembler extérieurement à une boule blanche. Ne consommer aucun spécimen sans identification experte certaine."
+    }
   ],
-  "safetyNote": "Seulement jeune, quand l’intérieur est blanc pur et uniforme : jaunâtre ou brun verdâtre, il peut donner des troubles digestifs (Wikipédia EN), et elle pourrit en quelques semaines. Elle est sur la liste de la société allemande de mycologie et sur celle des contrôleurs suisses. Wikipédia FR la dit capable de fixer des métaux lourds comme le mercure : pas en grande quantité. On la coupe en deux : un jeune œuf d’amanite montre déjà le futur chapeau et le pied, on le jette et on lave le couteau.",
+  "traits": [
+    "Sporophore globuleux à irrégulier, blanc, généralement de 10 à 80 cm, sans pied ni chapeau différencié",
+    "Coupe entièrement blanche, ferme et uniforme chez le jeune ; gleba jaune verdâtre puis olive-brun et poudreuse à maturité",
+    "Pas de lames ni de tubes : la masse fertile occupe presque tout l’intérieur",
+    "Pousse au sol dans les prairies, pâturages, pelouses, lisières ou clairières, seul ou en petits groupes",
+    "Fructifie surtout de la fin de l’été à l’automne ; peau externe blanche, parfois fissurée à maturité"
+  ],
+  "safetyNote": "La comestibilité parfois rapportée concerne uniquement des sujets jeunes, frais et uniformément blancs à l’intérieur. Une coupe longitudinale complète doit exclure toute structure de chapeau, pied ou lames, car un œuf d’amanite toxique peut ressembler à une boule blanche. Une illustration ne permet pas de valider une récolte : ne consommer qu’après identification experte certaine.",
   "sources": [
     {
       "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
@@ -20,12 +37,16 @@
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Vesse-de-loup géante",
-      "url": "https://fr.wikipedia.org/wiki/Calvatia_gigantea"
+      "title": "Missouri Department of Conservation — Giant Puffball (Calvatia gigantea)",
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/giant-puffball"
     },
     {
-      "title": "Wikipedia (en): Calvatia gigantea",
-      "url": "https://en.wikipedia.org/wiki/Calvatia_gigantea"
+      "title": "Illinois Department of Natural Resources — Giant Puffball (Calvatia gigantea)",
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutfungi/a-l/wafngiantpuffball.html"
+    },
+    {
+      "title": "First Nature — Calvatia gigantea, Giant Puffball, identification",
+      "url": "https://www.first-nature.com/fungi/calvatia-gigantea.php"
     }
   ],
   "related": []

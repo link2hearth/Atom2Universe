@@ -1,32 +1,26 @@
 {
   "id": "glutinosus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 3 to 12 cm, convex then flat, dark brownish to purplish-grey, covered in thick slime",
-    "Gills widely spaced, running down the stem, white then grey, blackening with the spores",
-    "Stem 4 to 10 cm, white above, yellow at the base; the veil leaves only an indistinct ring zone, stained by the spores",
-    "Whitish flesh, faint smell, mild or slightly acidic taste",
-    "Under conifers, often spruce · July to November"
+  "reviewStatus": "verified",
+  "safetyNote": "DGfM and VAPKO list this species among edible mushrooms, although culinary opinions vary and its slimy surface layer is often removed. A page or illustration cannot identify an individual mushroom for eating; any foraged specimen should be checked by a qualified person.",
+  "sections": [
+    {"title": "Slimy purplish-grey cap", "text": "The cap is usually a few centimetres across and can reach about 10 cm; it starts convex and later spreads out. Its smooth surface is very slimy, especially in wet weather, and ranges from grey-brown to purple-grey or purplish brown, sometimes developing blackish marks with age. Young specimens are often covered by a slimy veil."},
+    {"title": "Thick gills and dark spores", "text": "The thick, moderately spaced to close gills run down the stem. They are pale when young, then become smoky grey to nearly black as spores mature. The spore deposit is smoky grey to blackish. These are true gills, not the pores found under a bolete cap."},
+    {"title": "White stem with a yellow base", "text": "The stem, often about 4–10 cm long, narrows towards its base. It is whitish above and bright yellow, sometimes chrome yellow, lower down; the tissue can darken with age. The slimy partial veil leaves a faint ring zone on the stem, which may turn dark where spores collect. The flesh is pale, sometimes faintly pinkish beneath the cap cuticle; the odour is mild and the taste can be slightly acidic."},
+    {"title": "Under conifers", "text": "This ectomycorrhizal species grows singly or in small groups beneath conifers, often spruces or firs, in summer and autumn. A brownish cap can resemble a slimy bolete such as Suillus luteus from a distance; checking the underside distinguishes the decurrent gills from pores."}
   ],
-  "safetyNote": "Edible once the slime and the skin of the cap are removed: the DGfM and the VAPKO say so, Wikipedia (fr) calls it honourable or mediocre, Wikipedia (en) says opinions differ and that it accumulates heavy metals. Seen from above a young one looks like the slippery jack, but it has gills, not pores (Wikipedia, en); Wikipedia (fr) names Gomphidius maculatus, under larches, as its main look-alike.",
+  "traits": [
+    "Smooth, very slimy cap, grey-brown to purple-grey or purplish brown, sometimes black-marked with age",
+    "Thick decurrent gills, pale at first then smoky grey to blackish; dark spore deposit",
+    "Stem narrowing toward the base, whitish above and bright to chrome yellow below",
+    "Slimy partial veil leaving a faint ring zone that may darken from deposited spores",
+    "Under conifers, often spruce or fir, mainly in summer and autumn"
+  ],
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
-    },
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Gomphidius glutinosus",
-      "url": "https://fr.wikipedia.org/wiki/Gomphidius_glutinosus"
-    },
-    {
-      "title": "Wikipedia (en): Gomphidius glutinosus",
-      "url": "https://en.wikipedia.org/wiki/Gomphidius_glutinosus"
-    }
+    {"title": "E-Flora BC / University of British Columbia — Gomphidius glutinosus (species account by Ian Gibson)", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Gomphidius+glutinosus"},
+    {"title": "Kuo, M. (2020). Gomphidius glutinosus. MushroomExpert.Com", "url": "https://www.mushroomexpert.com/gomphidius_glutinosus.html"},
+    {"title": "SMART Champignons, University of Rouen — Gomphidius glutinosus", "url": "https://smartchampi.univ-rouen.fr/champignons/gomphidius-glutinosus.html"},
+    {"title": "German Society for Mycology (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positive list of edible mushrooms, 1 May 2026", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, Association of Swiss Official Mushroom Inspectors (2023). Recommendation list, version 09.2023", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
   ],
   "related": []
 }

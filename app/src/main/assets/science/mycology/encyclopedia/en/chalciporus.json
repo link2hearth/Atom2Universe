@@ -1,27 +1,53 @@
 {
   "id": "chalciporus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 1.5 to 9 cm, dry or slightly sticky, brownish-yellow to brownish-red",
-    "Pores slightly angular, rust-brown to reddish-brown",
-    "Stem 3 to 9 cm, red-brown over yellow, with yellow mycelium at the base, no ring",
-    "Cream flesh, bright yellow at the base of the stem; distinctly peppery taste",
-    "Under broadleaf and conifer trees · July to November"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "A small brown bolete",
+      "text": "The peppery bolete (Chalciporus piperatus) has a cap usually 3–7 cm across, occasionally larger, convex at first and then expanded. Its smooth surface ranges from tawny or yellow-brown to reddish brown; it can be slightly sticky when wet and drier with age."
+    },
+    {
+      "title": "Rusty pores and a yellow-based stem",
+      "text": "Beneath the cap, the tubes run slightly down the stem. The angular pores, fairly broad for a small bolete, are yellow-brown when young and then become cinnamon, rusty or reddish brown; they turn brown when handled and do not typically stain blue. The slender stem is ringless and lacks a reticulate network, often similar in colour to the cap, with vivid yellow mycelium at its base. The flesh is cream to yellowish, more distinctly yellow at the stem base; the spore print is cinnamon brown."
+    },
+    {
+      "title": "Among trees from summer to autumn",
+      "text": "This mycorrhizal fungus occurs in woodland near broadleaf trees such as birch, beech and oak, and also with conifers, including pine. Records vary by region. It fruits mainly from summer to autumn, though dates depend on the local climate."
+    },
+    {
+      "title": "Taste and food safety",
+      "text": "Its flesh tastes strongly peppery. Culinary opinions vary, and the German Society for Mycology reports gastrointestinal symptoms after consumption in larger quantities. Some sources mention using it sparingly as a seasoning, but that is not a recommendation to eat it. Chalciporus pseudopiperatus is very similar; yellower pores that bruise blue may point to that species, but reliable identification can require molecular analysis."
+    }
   ],
-  "safetyNote": "Not recommended: the VAPKO lists it, but Wikipedia (fr) says it has no food interest because of its peppery taste, and Wikipedia (en) says it is usually considered inedible and contains toxins, advising thorough cooking to reduce the risk of stomach upset. It can serve as a condiment, finely diced or dried and powdered (Wikipedia, fr). The false peppery bolete (Chalciporus pseudopiperatus) is a cryptic species: only DNA tells them apart.",
+  "traits": [
+    "Small cap, usually 3–7 cm, convex then expanded, tawny to reddish brown",
+    "Slightly decurrent tubes; angular cinnamon to rusty-brown pores that turn brown when handled and do not typically blue",
+    "Slender brownish to yellowish stem, without a ring or reticulation; vivid yellow mycelium at the base",
+    "Cream to yellowish flesh, vivid yellow at the stem base; strongly peppery taste",
+    "Cinnamon-brown spore print; mycorrhizal with broadleaf and conifer trees, mainly fruiting from summer to autumn",
+    "Digestive symptoms have been reported after eating larger quantities; a close relative can be difficult to distinguish"
+  ],
+  "safetyNote": "Do not treat it as a routine edible mushroom: its taste is strongly peppery, and the German Society for Mycology reports gastrointestinal symptoms after consumption in larger quantities. Uses as a seasoning mentioned by some guides do not establish safety. Do not taste or eat a wild specimen without expert identification.",
   "sources": [
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+      "title": "USDA Forest Service, Pacific Northwest Research Station — Chalciporus piperatus, in Mushrooms of the Pacific Northwest (General Technical Report PNW-GTR-572)",
+      "url": "https://www.fs.usda.gov/pnw/pubs/pnw_gtr572.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Chalciporus piperatus",
-      "url": "https://fr.wikipedia.org/wiki/Chalciporus_piperatus"
+      "title": "Naturalis Biodiversity Center — Interactive Guide to Mushrooms and other fungi: Chalciporus piperatus",
+      "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100524"
     },
     {
-      "title": "Wikipedia (en): Chalciporus piperatus",
-      "url": "https://en.wikipedia.org/wiki/Chalciporus_piperatus"
+      "title": "Manaaki Whenua – Landcare Research — Virtual Mycota: Chalciporus piperatus",
+      "url": "https://virtualmycota.landcareresearch.co.nz/webforms/vM_Species_Details.aspx?pk=16711"
+    },
+    {
+      "title": "German Society for Mycology, Committee for Mushroom Use and Toxicology (2026) — List of mushrooms with disputed edibility ratings",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_pilze-uneinheitl-speisewert.pdf"
+    },
+    {
+      "title": "Friebes et al. (2025) — Funga der Steiermark 6, Natura Styriaica 1: 221–239 (description of Chalciporus pseudopiperatus and comparison)",
+      "url": "https://www.museum-joanneum.at/fileadmin/user_upload/18_Naturkundemuseum_Studienzentrum_Naturkunde/Sammlungen_und_Forschung/Publikationen/Natura_Styriaca_01_2025_web.pdf"
     }
   ],
   "related": []

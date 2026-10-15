@@ -1,28 +1,27 @@
 {
   "id": "gymnopilus",
-  "reviewStatus": "pending",
-  "sections": [],
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Nom et reconnaissance", "text": "Cette fiche concerne Gymnopilus junonius, aussi publié sous le synonyme G. spectabilis. Le chapeau mesure généralement 5 à 15 cm, parfois davantage ; d'abord convexe à marge enroulée, il s'étale et peut garder un léger mamelon. Sa surface sèche, jaune ocre à orangé ou brun rouille, porte des fibres radiales ou de petites écailles plus sombres. Les lames serrées, jaune pâle à ocre, deviennent brun rouille avec les spores ; elles sont attachées au pied, parfois un peu décurrentes. Le pied jaune à jaune brun, fibreux et souvent élargi à la base, porte un anneau plus ou moins marqué, qui peut se poudrer de spores. La chair est ferme, jaune et amère ; la sporée est rouille."},
+    {"title": "Milieu et saison", "text": "Ce champignon lignicole décompose surtout le bois mort : il pousse en touffes sur des souches, des troncs et parfois à la base d'arbres vivants, principalement des feuillus en Europe. Des observations sur conifères existent aussi. Il apparaît surtout de la fin de l'été à l'automne dans les régions tempérées ; la saison varie selon le climat local."},
+    {"title": "Espèces proches", "text": "La couleur orangée et la croissance sur bois ne suffisent pas à confirmer l'espèce. L'armillaire couleur de miel (Armillaria mellea) a une sporée blanche ; Omphalotus illudens n'a pas d'anneau et possède une sporée pâle ; d'autres gymnopiles peuvent se ressembler. Il faut examiner plusieurs caractères et le milieu, et ne pas identifier une récolte à partir d'une image seule."},
+    {"title": "Toxicité et prudence", "text": "Ne pas consommer. La DGfM classe G. junonius dans le syndrome psilocybine et indique la présence de gymnopiline. La littérature scientifique signale toutefois des résultats contradictoires sur la détection de psilocybine dans des collections historiquement nommées G. spectabilis ; ce nom recouvre un complexe taxonomique et ces résultats ne permettent pas d'affirmer que chaque spécimen de G. junonius contient cette substance. Des intoxications et effets neurologiques sont rapportés, et l'espèce est également décrite comme très amère. Cette fiche ne permet pas d'identifier une récolte ni d'en prévoir les effets."}
+  ],
   "traits": [
-    "Chapeau de 5 à 15 cm (parfois jusqu’à 30), jaune orangé vif puis brun orangé, sec, fibrilleux ou écailleux ; bombé puis étalé",
-    "Lames serrées, adnées à un peu décurrentes, jaune rouille puis brunes · sporée brun rouille",
-    "Pied de 5 à 20 cm, jaune orangé, fibreux, avec un anneau fragile poudré de spores rouille",
-    "Chair jaune, épaisse, odeur faible, saveur amère",
-    "En touffes de quelques-uns à plusieurs dizaines, sur les souches, les troncs et la base des arbres, surtout de feuillus ; été et automne"
+    "Chapeau de 5 à 15 cm en général, jaune ocre à orangé brun, sec, fibrilleux ou finement squamuleux",
+    "Lames serrées, jaune pâle puis brun rouille, attachées à légèrement décurrentes ; sporée rouille",
+    "Pied jaune à jaune brun, fibreux, souvent renflé vers la base et muni d'un anneau",
+    "Chair ferme et jaune, saveur amère",
+    "En touffes sur souches et bois mort, surtout de feuillus en Europe ; fin d'été et automne"
   ],
-  "safetyNote": "Toxique : la société allemande de mycologie (2026) le range parmi les champignons à psilocybine et note qu’il contient de la gymnopiline ; Wikipédia (fr) le dit vénéneux et hallucinogène, Wikipédia (en) dit qu’il n’a pas de psilocybine mais des neurotoxines, dont la gymnopiline. Son amertume le rend de toute façon immangeable. Wikipédia (en) le dit semblable à l’armillaire couleur de miel (sporée blanche), Wikipédia (fr) à plusieurs pholiotes ; la sporée rouille et le goût amer le distinguent.",
+  "safetyNote": "Ne pas consommer : la DGfM classe Gymnopilus junonius dans le syndrome psilocybine et mentionne la gymnopiline. La présence de psilocybine dans les collections attribuées à ce nom a été discutée et le complexe Gymnopilus junonius/spectabilis comprend des limites taxonomiques incertaines. Les effets d'un spécimen ne peuvent donc pas être prévus à partir de cette fiche. Après ingestion, contacter un centre antipoison ou un service médical.",
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Gymnopilus junonius",
-      "url": "https://fr.wikipedia.org/wiki/Gymnopilus_junonius"
-    },
-    {
-      "title": "Wikipedia (en): Gymnopilus junonius",
-      "url": "https://en.wikipedia.org/wiki/Gymnopilus_junonius"
-    }
+    {"title": "Universitetet i Oslo, Natural History Museum — Fact sheet: Gymnopilus junonius", "url": "https://www.nhm2.uio.no/botanisk/bot-mus/sopp/fakta/fakt-15.htm"},
+    {"title": "Missouri Department of Conservation — Big Laughing Gym (Gymnopilus junonius)", "url": "https://mdc.mo.gov/discover-nature/field-guide/big-laughing-gym-big-laughing-jim"},
+    {"title": "DGfM, Fachausschuss Pilzverwertung und Toxikologie (2026) — Liste der Giftpilze mit Syndromen, Gymnopilus junonius", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Thorn et al. (2020). New species in the Gymnopilus junonius group (Basidiomycota: Agaricales). Botany 98:293–315", "url": "https://doi.org/10.1139/cjb-2020-0006"},
+    {"title": "Queensland Mycological Society — Gymnopilus junonius, Queensland Fungal Record", "url": "https://qldfungi.org.au/wp-content/uploads/2024/12/Gymnopilus-junonius.pdf"},
+    {"title": "First Nature — Gymnopilus junonius, Spectacular Rustgill", "url": "https://www.first-nature.com/fungi/gymnopilus-junonius.php"}
   ],
-  "related": []
+  "related": ["gymnopilus_josserandii", "gymnopilus_pseudofulgens", "mellea"]
 }

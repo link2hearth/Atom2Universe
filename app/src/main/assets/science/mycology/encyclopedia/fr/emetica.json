@@ -1,33 +1,61 @@
 {
   "id": "emetica",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau de 3 à 10 cm, rouge cerise vif, visqueux ; convexe puis étalé et un peu creusé ; la cuticule se détache presque jusqu’au centre",
-    "Lames blanches à crème, serrées, larges, adnées",
-    "Pied blanc, 5 à 9 cm, parfois renflé à la base ; pas d’anneau",
-    "Chair blanche, rosée sous la cuticule, cassante · odeur légèrement fruitée",
-    "Sporée blanche",
-    "Sols sableux, parmi les mousses et les sphaignes, surtout sous les conifères et les pins · de juillet à octobre"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Chapeau rouge et forme",
+      "text": "Le chapeau mesure environ 3 à 10 cm. Rouge vif à rouge cerise chez les sujets typiques, il peut pâlir vers le rose ou le blanchâtre avec l’âge ou les intempéries. D’abord convexe, il s’étale puis se creuse légèrement au centre. Sa surface lisse est visqueuse par temps humide ; la cuticule se détache facilement, souvent sur une bonne partie du rayon. Ces caractères varient et ne suffisent pas seuls à identifier l’espèce."
+    },
+    {
+      "title": "Lames, pied et chair",
+      "text": "Les lames blanches à crème pâle sont serrées, assez larges et attachées au pied ; elles sont fragiles. Le pied blanc, cassant, mesure généralement 4 à 10 cm et peut s’élargir légèrement vers la base. Il n’a ni anneau ni volve. La chair est blanche ; une nuance rose peut apparaître juste sous la cuticule du chapeau, sans teinter toute la chair. La sporée est blanche. Une odeur légèrement fruitée est parfois signalée."
+    },
+    {
+      "title": "Habitat et saison",
+      "text": "Russula emetica est une espèce ectomycorhizienne associée surtout aux conifères, notamment aux pins. Elle pousse au sol parmi les mousses, parfois dans la sphaigne ou les milieux tourbeux, ainsi que dans des bois mixtes. Elle fructifie en été et en automne, souvent de juillet à octobre selon le climat. Les habitats et limites d’espèces rapportés varient selon les régions et les concepts taxonomiques employés."
+    },
+    {
+      "title": "Toxicité et identification prudente",
+      "text": "Cette russule est toxique et peut provoquer des troubles digestifs, notamment nausées, vomissements, crampes abdominales et diarrhée. Les russules rouges se ressemblent beaucoup ; l’identification à l’espèce ne peut pas reposer sur la seule couleur du chapeau et peut demander l’examen de plusieurs caractères, voire une microscopie. Ne pas consommer un spécimen identifié sur une photo ou une illustration. Après une ingestion suspecte, contacter rapidement un centre antipoison ou un service médical."
+    }
   ],
-  "safetyNote": "Toxique : troubles digestifs, vomissements surtout, entre une demi-heure et trois heures après le repas ; ils passent en général d’eux-mêmes (Wikipédia EN). La société allemande de mycologie range le groupe Russula emetica parmi les champignons à syndrome gastro-intestinal, et le centre antipoison belge cite la russule émétique parmi les causes du syndrome résinoïdien léger (moins de 12 heures). Beaucoup de russules rouges se ressemblent et certaines ne se distinguent qu’au microscope : le chapeau ne suffit pas.",
+  "traits": [
+    "Chapeau rouge vif à cerise, lisse et visqueux par temps humide, de 3 à 10 cm ; convexe puis étalé et parfois déprimé",
+    "Cuticule généralement facile à détacher ; couleur pouvant pâlir vers le rose ou le blanc",
+    "Lames blanches à crème pâle, serrées, assez larges et attachées au pied",
+    "Pied blanc et cassant, souvent légèrement élargi à la base ; sans anneau ni volve",
+    "Chair blanche, parfois rosée uniquement juste sous la cuticule ; sporée blanche",
+    "Mycorhizienne surtout avec les conifères ; parmi les mousses et parfois la sphaigne ; été et automne",
+    "Toxique : troubles digestifs possibles ; les russules rouges sont difficiles à distinguer"
+  ],
+  "safetyNote": "Toxique : Russula emetica peut provoquer nausées, vomissements, crampes abdominales et diarrhée. Les russules rouges se ressemblent et une photo ou la couleur du chapeau ne permet pas une identification sûre. Ne pas consommer un spécimen incertain. En cas d’ingestion suspecte, contacter sans attendre un centre antipoison ou un service médical.",
   "sources": [
     {
-      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "title": "Centre Antipoisons (Belgique) — Champignons : brochure d’information",
       "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
     },
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM, 2026) — liste des champignons toxiques classés par syndrome",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Russule émétique",
-      "url": "https://fr.wikipedia.org/wiki/Russule_%C3%A9m%C3%A9tique"
+      "title": "Missouri Department of Conservation — Emetic Russula",
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/emetic-russula"
     },
     {
-      "title": "Wikipedia (en): Russula emetica",
-      "url": "https://en.wikipedia.org/wiki/Russula_emetica"
+      "title": "USDA Forest Service — Field Guide to Common Macrofungi in Eastern Forests (Russula emetica)",
+      "url": "https://www.fs.usda.gov/nrs/pubs/gtr/gtr_nrs79.pdf"
+    },
+    {
+      "title": "E-Flora BC, University of British Columbia — Russula emetica",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?NoTransfer=1&sciname=Russula+emetica"
+    },
+    {
+      "title": "MushroomExpert.com — The Genus Russula (difficultés d’identification)",
+      "url": "https://www.mushroomexpert.com/russula.html"
     }
   ],
-  "related": []
+  "related": [
+    "nobilis"
+  ]
 }

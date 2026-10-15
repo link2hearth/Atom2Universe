@@ -1,27 +1,53 @@
 {
   "id": "chalciporus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau de 1,5 à 9 cm, sec ou peu visqueux, jaune brunâtre à brun rougeâtre",
-    "Pores un peu anguleux, brun rouille à brun rougeâtre",
-    "Pied de 3 à 9 cm, brun rouge sur fond jaune, à mycélium jaune à la base, sans anneau",
-    "Chair crème, jaune vif à la base du pied ; saveur nettement poivrée",
-    "Sous les feuillus et les conifères · juillet à novembre"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Un petit bolet brun",
+      "text": "Le Bolet poivré (Chalciporus piperatus) a un chapeau généralement de 3 à 7 cm, parfois plus large, d’abord convexe puis étalé. Sa surface lisse varie du fauve ou brun jaunâtre au brun roux; elle peut être un peu collante par temps humide et plus sèche avec l’âge."
+    },
+    {
+      "title": "Pores roux et pied jaune à la base",
+      "text": "Sous le chapeau, les tubes descendent légèrement sur le pied. Les pores anguleux, assez larges pour un petit bolet, sont jaune brunâtre chez les jeunes exemplaires puis deviennent cannelle, rouille ou brun rouge; ils brunissent au toucher et ne bleuissent pas typiquement. Le pied est mince, sans anneau ni réticulation, souvent de couleur proche du chapeau, avec du mycélium jaune vif à la base. La chair est crème à jaunâtre, plus franchement jaune dans la base du pied; la sporée est brun cannelle."
+    },
+    {
+      "title": "Sous les arbres, de l’été à l’automne",
+      "text": "Cette espèce mycorhizienne se rencontre dans les bois, près de feuillus comme le bouleau, le hêtre et le chêne, ainsi qu’avec des conifères, notamment le pin. Les observations varient selon la région. Elle fructifie surtout de l’été à l’automne, mais les dates dépendent du climat local."
+    },
+    {
+      "title": "Saveur et prudence alimentaire",
+      "text": "Sa chair a une saveur très poivrée. Les avis culinaires varient, et la Société allemande de mycologie signale des troubles gastro-intestinaux en cas de consommation en quantité. Certaines sources mentionnent son emploi parcimonieux comme condiment, mais cela ne constitue pas une recommandation de consommation. Chalciporus pseudopiperatus lui ressemble beaucoup; des pores plus jaunes qui bleuissent à la pression peuvent orienter vers cette espèce, mais une détermination fiable peut nécessiter des analyses moléculaires."
+    }
   ],
-  "safetyNote": "Non recommandé : la VAPKO le liste, mais Wikipédia (fr) dit qu’il est sans intérêt alimentaire à cause de sa saveur poivrée, et Wikipédia (en) qu’il est généralement tenu pour immangeable et contient des toxines, en conseillant une cuisson soignée contre les troubles d’estomac. Il peut servir de condiment, en petits dés ou séché et réduit en poudre (Wikipédia, fr). Le bolet faux-poivré (Chalciporus pseudopiperatus) est une espèce cryptique : seul l’ADN les sépare.",
+  "traits": [
+    "Petit chapeau convexe puis étalé, le plus souvent 3 à 7 cm, fauve à brun roux",
+    "Tubes légèrement décurrentes ; pores anguleux cannelle à brun rouille, brunissant au toucher sans bleuissement typique",
+    "Pied mince, brunâtre à jaunâtre, sans anneau ni réticulation ; mycélium jaune vif à la base",
+    "Chair crème à jaunâtre, jaune vif dans la base du pied ; saveur très poivrée",
+    "Sporée brun cannelle ; mycorhizien sous feuillus et conifères, surtout de l’été à l’automne",
+    "Des troubles digestifs sont rapportés après consommation en quantité ; une espèce proche peut être difficile à distinguer"
+  ],
+  "safetyNote": "Ne le considère pas comme un champignon de consommation courante : sa saveur est très poivrée et la DGfM rapporte des troubles gastro-intestinaux en cas de consommation en quantité. Les usages comme condiment cités par certains guides ne garantissent pas l’innocuité. Ne goûte ni ne consomme un spécimen sauvage sans identification experte.",
   "sources": [
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
+      "title": "USDA Forest Service, Pacific Northwest Research Station — Chalciporus piperatus, in Mushrooms of the Pacific Northwest (General Technical Report PNW-GTR-572)",
+      "url": "https://www.fs.usda.gov/pnw/pubs/pnw_gtr572.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Chalciporus piperatus",
-      "url": "https://fr.wikipedia.org/wiki/Chalciporus_piperatus"
+      "title": "Naturalis Biodiversity Center — Interactive Guide to Mushrooms and other fungi: Chalciporus piperatus",
+      "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100524"
     },
     {
-      "title": "Wikipedia (en): Chalciporus piperatus",
-      "url": "https://en.wikipedia.org/wiki/Chalciporus_piperatus"
+      "title": "Manaaki Whenua – Landcare Research — Virtual Mycota: Chalciporus piperatus",
+      "url": "https://virtualmycota.landcareresearch.co.nz/webforms/vM_Species_Details.aspx?pk=16711"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie, Fachausschuss Pilzverwertung und Toxikologie (2026) — Liste der Pilze mit uneinheitlich beurteiltem Speisewert",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_pilze-uneinheitl-speisewert.pdf"
+    },
+    {
+      "title": "Friebes et al. (2025) — Funga der Steiermark 6, Natura Styriaica 1: 221–239 (description of Chalciporus pseudopiperatus and comparison)",
+      "url": "https://www.museum-joanneum.at/fileadmin/user_upload/18_Naturkundemuseum_Studienzentrum_Naturkunde/Sammlungen_und_Forschung/Publikationen/Natura_Styriaca_01_2025_web.pdf"
     }
   ],
   "related": []

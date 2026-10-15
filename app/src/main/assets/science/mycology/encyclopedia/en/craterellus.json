@@ -1,37 +1,60 @@
 {
   "id": "craterellus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Entirely hollow, very thin trumpet, rarely over 10 cm, with a widely wavy, scalloped margin",
-    "Inside covered in scales, grey-black to dark brown depending on moisture",
-    "Outer face almost smooth, light to dark grey: no gills, no pores",
-    "Hollow stem, the colour of the cap, tapering to the base",
-    "Pleasant fruity smell (mirabelle plum) · white spores",
-    "Broadleaf woods (beech, oak, chestnut), in groups, heavy damp soils · August to November"
-  ],
-  "safetyNote": "The outer face is smooth: no gills. A very old, blackened russula has a convex cap and broad gills; the worthless charcoal-burner’s false chanterelle has forked gills and grows only on burnt ground. Wild mushrooms are prepared within 24 hours.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+      "title": "Name and identification",
+      "text": "Craterellus cornucopioides (horn of plenty, or black trumpet) forms a thin trumpet- or deep funnel-shaped fruiting body, usually dark gray to blackish, sometimes browner or grayer when dry. The cap is not distinct from the stem: the trumpet continues seamlessly and remains hollow to the base. Its thin margin is irregular, wavy, and often scalloped. The dark inner surface may be finely scaly or fibrillose. The lighter ash-gray outer fertile surface is smooth to slightly wrinkled or veined; it has neither true gills nor pores. Flesh is very thin and grayish to blackish; the odor is described as pleasant and fruity. The spore print is whitish."
     },
     {
-      "title": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2024 durch das Kantonale Laboratorium Basel-Stadt. 16 janvier 2025.",
-      "url": "https://media.bs.ch/original_file/51e1d6b315312707b136dffb8f09d5688c27447f/2024-pilze-0.pdf"
+      "title": "Habitat and season",
+      "text": "This mycorrhizal species grows on soil and leaf litter in woods, especially with broadleaf trees such as beech and oaks. It often appears in groups or troops from late summer through autumn; timing varies with local climate and rainfall. Habitat descriptions do not justify restricting it to heavy, wet soils or to a single tree species."
     },
     {
-      "title": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2025 durch das Kantonale Laboratorium Basel-Stadt. 11 décembre 2025.",
-      "url": "https://media.bs.ch/original_file/3b21f43ba564dd2745141309ffd3df6fd3027319/2025-pilze.pdf"
+      "title": "Similar species",
+      "text": "Craterellus cinereus may look similar and grow in the same habitat, but it has thick, branched folds that are clearly visible beneath the cap; the fertile surface of C. cornucopioides is smooth or only faintly wrinkled. Check the fertile surface, the continuous hollow trumpet, and the habitat: color alone is not enough to identify a mushroom."
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Trompette de la mort",
-      "url": "https://fr.wikipedia.org/wiki/Trompette_de_la_mort"
+      "title": "Caution",
+      "text": "These features support recognition but cannot confirm an individual specimen. Do not eat a mushroom identified only from this entry or an image; have any collection checked by a qualified person and follow local rules. If ingestion is uncertain or symptoms develop, contact a poison centre or medical service promptly."
     }
   ],
-  "related": []
+  "traits": [
+    "Thin trumpet- or deep funnel-shaped fruiting body, dark gray to blackish, sometimes brown or gray when dry",
+    "Continuous trumpet, hollow all the way to the base, with no clear division between cap and stem",
+    "Thin, irregular, wavy and often scalloped margin; dark inner surface finely scaly or fibrillose",
+    "Ash-gray outer fertile surface, smooth to slightly wrinkled or veined, without true gills or pores",
+    "Very thin flesh; pleasant fruity odor; whitish spore print",
+    "On soil and leaf litter in woods, especially beneath beech and oaks, often in groups; late summer and autumn"
+  ],
+  "safetyNote": "The fertile surface of Craterellus cornucopioides is smooth or only faintly wrinkled, without true gills or pores. The similar C. cinereus has much more obvious branched folds. Do not eat a mushroom identified only from this entry or an image; have any collection checked by a qualified person.",
+  "sources": [
+    {
+      "title": "Université Lyon 1, Champignons database — Craterellus cornucopioides: morphology, habitat, season, and photographs.",
+      "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/craterellus-cornucopioides/"
+    },
+    {
+      "title": "Naturalis Biodiversity Center, Interactive Guide to Mushrooms and other fungi — description, habitat, and ecology of Craterellus cornucopioides.",
+      "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=100586"
+    },
+    {
+      "title": "GBIF, Catalogue of Life taxonomy — accepted species Craterellus cornucopioides (L.) Pers.",
+      "url": "https://www.gbif.org/taxon/Z8S9"
+    },
+    {
+      "title": "Kuo, M. (MushroomExpert.com). Craterellus cornucopioides — characteristics and habitat.",
+      "url": "https://www.mushroomexpert.com/craterellus_cornucopioides.html"
+    },
+    {
+      "title": "Société mycologique de la Côte-d’Or, Val Suzon, entry 122 — Craterellus cornucopioides.",
+      "url": "https://societe-mycologique-de-la-cote-dor.org/fiches_pdf/Val%20Suzon%20-%20Fiche%20n%C2%B0%20122%20-%20Craterellus%20cornucopioides.pdf"
+    },
+    {
+      "title": "Kuo, M. (MushroomExpert.com, 2022). Craterellus cinereus — branched folds and comparison with black trumpets.",
+      "url": "https://www.mushroomexpert.com/craterellus_cinereus.html"
+    }
+  ],
+  "related": [
+    "cinereus"
+  ]
 }

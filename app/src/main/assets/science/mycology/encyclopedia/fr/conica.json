@@ -1,23 +1,49 @@
 {
   "id": "conica",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau jusqu’à 10 cm, étroitement conique puis mamelonné et souvent lobé, jaune à orangé ou écarlate, visqueux quand il est jeune",
-    "Lames cireuses, blanches à jaune pâle ou grisâtres",
-    "Pied jusqu’à 20 cm, fibrilleux, jaune à rouge orangé, blanchâtre à la base, sans anneau",
-    "Chair jaunâtre ; toutes les parties grisonnent avec l’âge et finissent par noircir",
-    "Prairies à hygrophores, dunes, bords de routes · été et automne"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Reconnaître l’espèce",
+      "text": "Ce petit à moyen hygrophore porte un chapeau généralement conique, parfois élargi avec un mamelon central, jaune, orange ou rouge. Les lames cireuses sont pâles à jaune citron et montent souvent vers le pied, auquel elles sont libres ou étroitement attachées. Le pied élancé, jaune à orangé et plus pâle à la base, n’a pas d’anneau. Le chapeau et les autres parties grisent puis noircissent avec l’âge ou après une blessure ; la sporée est blanche."
+    },
+    {
+      "title": "Milieu et saison",
+      "text": "Il pousse au sol dans les pelouses et prairies peu fertilisées, mais aussi sur les dunes fixées, les talus et les bords de chemin. La fructification est surtout estivale et automnale en Europe du Nord-Ouest ; la période varie selon le climat local."
+    },
+    {
+      "title": "Espèces proches et complexe",
+      "text": "Hygrocybe conica est un complexe de taxons proches dont les limites ne sont pas entièrement résolues. H. conicoides, associé aux dunes, peut avoir des lames plus orangées et noircir plus lentement ; H. punicea lui ressemble par sa couleur mais ne noircit pas. La couleur seule ne suffit donc pas à identifier un exemplaire, et certains cas demandent un examen mycologique approfondi."
+    },
+    {
+      "title": "Prudence alimentaire",
+      "text": "Ne pas consommer. La DGfM classe H. conica parmi les espèces associées à un syndrome gastro-intestinal. Les signalements attribués à cette espèce semblent rares et leur attribution peut être incertaine, mais cette réserve ne permet pas de la considérer comme comestible. Une illustration ou une identification à distance ne suffit pas pour décider qu’un champignon est sans danger."
+    }
   ],
-  "safetyNote": "Toxique : la DGfM le liste pour un syndrome gastro-intestinal. Wikipédia (en) dit que sa comestibilité est inconnue et qu’il peut être vénéneux, en citant Arora : les intoxications signalées viennent peut-être d’autres espèces, et il peut causer des effets légers comme des étourdissements. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM. Le statut le plus prudent est retenu.",
+  "traits": [
+    "Chapeau généralement de 1,5 à 7 cm, conique puis parfois étalé avec un mamelon central ; jaune, orange ou rouge, visqueux par temps humide, il noircit avec l’âge ou après blessure",
+    "Lames cireuses, d’abord pâles à jaune citron, puis parfois orangées ; elles noircissent et sont libres ou très étroitement attachées au pied",
+    "Pied de 4 à 10 cm, jaune à orangé avec une base plus pâle, sans anneau ; d’abord plein, il noircit progressivement",
+    "Chair blanchâtre à jaunâtre qui noircit rapidement à la coupe ; sporée blanche",
+    "Pelouses peu fertilisées, prairies, dunes fixées et talus herbeux · surtout été et automne",
+    "Le nom Hygrocybe conica est employé pour un groupe taxonomique complexe ; les limites entre taxons proches restent discutées"
+  ],
+  "safetyNote": "À ne pas consommer : la DGfM classe Hygrocybe conica parmi les espèces associées à un syndrome gastro-intestinal. Les cas publiés semblent rares et l’attribution peut être incertaine ; la prudence reste nécessaire, d’autant que le nom recouvre un groupe d’espèces proches.",
   "sources": [
     {
       "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
     },
     {
-      "title": "Wikipedia (en): Hygrocybe conica",
-      "url": "https://en.wikipedia.org/wiki/Hygrocybe_conica"
+      "title": "O’Reilly, P. (First Nature): Hygrocybe conica, Blackening Waxcap — identification, habitat and season.",
+      "url": "https://www.first-nature.com/fungi/hygrocybe-conica.php"
+    },
+    {
+      "title": "Plantlife: Blackening Waxcap (Hygrocybe conica) — identification, habitat and season.",
+      "url": "https://www.plantlife.org.uk/plants-and-fungi/blackening-waxcap/"
+    },
+    {
+      "title": "Lodge, D. J. et al. (2013). Molecular phylogeny, morphology, pigment chemistry and ecology in Hygrophoraceae (Agaricales). Fungal Diversity 64, 1–99.",
+      "url": "https://link.springer.com/article/10.1007/s13225-013-0259-0"
     }
   ],
   "related": []

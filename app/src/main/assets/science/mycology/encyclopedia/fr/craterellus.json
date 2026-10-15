@@ -1,37 +1,60 @@
 {
   "id": "craterellus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cornet entièrement creux, très mince, rarement plus de 10 cm, au bord largement ondulé et festonné",
-    "Intérieur couvert d’écailles, gris noir à brun foncé selon l’humidité",
-    "Face externe presque lisse, gris clair à gris foncé : ni lames ni pores",
-    "Pied creux, de la couleur du chapeau, qui s’effile vers la base",
-    "Odeur agréable, fruitée (mirabelle) · sporée blanche",
-    "Feuillus (hêtre, chêne, châtaignier), en groupes, sols lourds et humides · août à novembre"
-  ],
-  "safetyNote": "La face externe est lisse : pas de lames. Une très vieille russule noircie a un chapeau convexe et de larges lames ; la fausse chanterelle des charbonnières, sans valeur, a des lames fourchues et ne pousse que sur sol brûlé. Les champignons sauvages se préparent dans les 24 heures.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+      "title": "Nom et reconnaissance",
+      "text": "Craterellus cornucopioides (trompette des morts, ou corne d’abondance) forme un sporophore mince en trompette ou en entonnoir profond, généralement gris sombre à noirâtre, parfois plus brun ou gris à l’état sec. Le chapeau n’est pas séparé du pied : le cornet se prolonge sans rupture et reste creux jusqu’à la base. Sa marge fine est irrégulière, ondulée et souvent festonnée. La face interne, sombre, peut être finement squameuse ou fibrilleuse. La face externe fertile est plus claire, gris cendré, lisse à légèrement ridée ou veinée ; elle ne porte ni vraies lames ni pores. La chair est très mince et grisâtre à noirâtre ; l’odeur est décrite comme agréable et fruitée. La sporée est blanchâtre."
     },
     {
-      "title": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2024 durch das Kantonale Laboratorium Basel-Stadt. 16 janvier 2025.",
-      "url": "https://media.bs.ch/original_file/51e1d6b315312707b136dffb8f09d5688c27447f/2024-pilze-0.pdf"
+      "title": "Milieu et saison",
+      "text": "Cette espèce mycorhizienne pousse sur le sol et la litière des bois, surtout avec des feuillus tels que le hêtre et les chênes. Elle apparaît souvent en groupes ou en troupes, de la fin de l’été à l’automne ; la période varie selon le climat et les pluies locales. Les descriptions d’habitat ne justifient pas de limiter sa présence aux seuls sols lourds et humides ni à une seule essence d’arbre."
     },
     {
-      "title": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2025 durch das Kantonale Laboratorium Basel-Stadt. 11 décembre 2025.",
-      "url": "https://media.bs.ch/original_file/3b21f43ba564dd2745141309ffd3df6fd3027319/2025-pilze.pdf"
+      "title": "Espèces proches",
+      "text": "Craterellus cinereus peut lui ressembler et pousser dans le même milieu, mais présente des plis épais, ramifiés et nettement visibles sous le chapeau ; la face fertile de C. cornucopioides est lisse ou seulement faiblement ridée. Examine la face fertile, la continuité creuse du cornet et l’habitat : la couleur seule ne suffit pas à identifier un champignon."
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
-      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Trompette de la mort",
-      "url": "https://fr.wikipedia.org/wiki/Trompette_de_la_mort"
+      "title": "Prudence",
+      "text": "Les caractères décrits ici servent à la reconnaissance et ne permettent pas de valider un spécimen individuel. Ne consomme aucun champignon identifié uniquement à partir de cette fiche ou d’une image ; fais confirmer toute récolte par une personne compétente et respecte les règles locales. En cas d’ingestion incertaine ou de symptômes, contacte rapidement un centre antipoison ou un service médical."
     }
   ],
-  "related": []
+  "traits": [
+    "Sporophore mince, en trompette ou entonnoir profond, gris sombre à noirâtre, parfois brun ou gris à l’état sec",
+    "Cornet continu et entièrement creux jusqu’à la base, sans séparation nette entre chapeau et pied",
+    "Marge fine, irrégulière, ondulée et souvent festonnée ; face interne sombre, finement squameuse ou fibrilleuse",
+    "Face externe fertile gris cendré, lisse à légèrement ridée ou veinée, sans vraies lames ni pores",
+    "Chair très mince ; odeur agréable et fruitée ; sporée blanchâtre",
+    "Sur sol et litière en bois, surtout sous hêtre et chênes, souvent en groupes ; fin d’été et automne"
+  ],
+  "safetyNote": "La face fertile de Craterellus cornucopioides est lisse ou faiblement ridée, sans vraies lames ni pores. C. cinereus, qui lui ressemble, présente des plis ramifiés beaucoup plus nets. Ne consomme pas un champignon identifié seulement à partir de cette fiche ou d’une image ; fais confirmer toute récolte par une personne compétente.",
+  "sources": [
+    {
+      "title": "Université Lyon 1, base Champignons — Craterellus cornucopioides : morphologie, habitat, saison et photographies.",
+      "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/craterellus-cornucopioides/"
+    },
+    {
+      "title": "Naturalis Biodiversity Center, Interactive Guide to Mushrooms and other fungi — description, habitat et écologie de Craterellus cornucopioides.",
+      "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=100586"
+    },
+    {
+      "title": "GBIF, taxonomie Catalogue of Life — Craterellus cornucopioides (L.) Pers., espèce acceptée.",
+      "url": "https://www.gbif.org/taxon/Z8S9"
+    },
+    {
+      "title": "Kuo, M. (MushroomExpert.com). Craterellus cornucopioides — caractères et habitat.",
+      "url": "https://www.mushroomexpert.com/craterellus_cornucopioides.html"
+    },
+    {
+      "title": "Société mycologique de la Côte-d’Or, Val Suzon, fiche 122 — Craterellus cornucopioides.",
+      "url": "https://societe-mycologique-de-la-cote-dor.org/fiches_pdf/Val%20Suzon%20-%20Fiche%20n%C2%B0%20122%20-%20Craterellus%20cornucopioides.pdf"
+    },
+    {
+      "title": "Kuo, M. (MushroomExpert.com, 2022). Craterellus cinereus — plis ramifiés et comparaison avec les trompettes noires.",
+      "url": "https://www.mushroomexpert.com/craterellus_cinereus.html"
+    }
+  ],
+  "related": [
+    "cinereus"
+  ]
 }

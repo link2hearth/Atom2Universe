@@ -1,33 +1,61 @@
 {
   "id": "emetica",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 3 to 10 cm, bright cherry red, sticky; convex then spreading and slightly dished; the skin peels almost to the centre",
-    "White to cream, close, broad, adnate gills",
-    "White stem, 5 to 9 cm, sometimes swollen at the base; no ring",
-    "White flesh, pinkish under the skin, brittle · faintly fruity smell",
-    "White spores",
-    "Sandy soils, among mosses and sphagnum, mostly under conifers and pines · July to October"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Red cap and shape",
+      "text": "The cap is about 3–10 cm across. It is typically vivid to cherry red, but may fade toward pink or whitish with age or weather. It starts convex, spreads out, and becomes slightly depressed in the centre. The smooth surface is viscid when wet; the cap skin separates readily, often over much of the radius. These features vary and cannot identify the species on their own."
+    },
+    {
+      "title": "Gills, stem and flesh",
+      "text": "The white to pale cream gills are crowded, fairly broad, attached to the stem, and fragile. The brittle white stem is usually 4–10 cm long and may widen slightly toward the base. There is no ring or volva. The flesh is white; it may show a pink tint immediately beneath the cap cuticle, without the whole flesh being pink. The spore print is white. A faintly fruity odour is sometimes reported."
+    },
+    {
+      "title": "Habitat and season",
+      "text": "Russula emetica is ectomycorrhizal, associated mainly with conifers, especially pines. It grows on the ground among mosses, sometimes in sphagnum or peaty places, as well as in mixed woods. It fruits in summer and autumn, often from July to October depending on climate. Reported habitats and species boundaries vary with region and taxonomic concept."
+    },
+    {
+      "title": "Toxicity and cautious identification",
+      "text": "This brittlegill is poisonous and may cause digestive upset, including nausea, vomiting, abdominal cramps and diarrhoea. Red-capped russulas look very similar; identification to species cannot rely on cap colour alone and may require several characters or microscopy. Do not eat a specimen identified from a photo or illustration. After a suspected ingestion, contact a poison centre or medical service promptly."
+    }
   ],
-  "safetyNote": "Toxic: digestive upset, mostly vomiting, between half an hour and three hours after the meal; it usually passes by itself (Wikipedia EN). The German mycological society lists the Russula emetica group among the gastrointestinal-syndrome mushrooms, and the Belgian poison centre cites the sickener among the causes of the mild resinoid syndrome (under 12 hours). Many red russulas look alike and some can only be told apart under a microscope: the cap is not enough.",
+  "traits": [
+    "Vivid to cherry-red cap, smooth and viscid when wet, 3–10 cm across; convex then spreading and sometimes depressed",
+    "Cap skin usually separates readily; colour may fade toward pink or white",
+    "White to pale cream gills, crowded, fairly broad and attached to the stem",
+    "White brittle stem, often slightly wider toward the base; no ring or volva",
+    "White flesh, sometimes pink only immediately beneath the cap cuticle; white spore print",
+    "Mycorrhizal mainly with conifers; among mosses and sometimes sphagnum; summer and autumn",
+    "Poisonous: may cause digestive upset; red russulas are difficult to distinguish"
+  ],
+  "safetyNote": "Poisonous: Russula emetica may cause nausea, vomiting, abdominal cramps and diarrhoea. Red-capped russulas look alike, and a photo or cap colour cannot provide a safe identification. Do not eat an uncertain specimen. After a suspected ingestion, promptly contact a poison centre or medical service.",
   "sources": [
     {
-      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "title": "Belgian Poison Centre — Mushrooms: information brochure",
       "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
     },
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "title": "German Mycological Society (DGfM, 2026) — Poisonous mushroom list by syndrome",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Russule émétique",
-      "url": "https://fr.wikipedia.org/wiki/Russule_%C3%A9m%C3%A9tique"
+      "title": "Missouri Department of Conservation — Emetic Russula",
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/emetic-russula"
     },
     {
-      "title": "Wikipedia (en): Russula emetica",
-      "url": "https://en.wikipedia.org/wiki/Russula_emetica"
+      "title": "USDA Forest Service — Field Guide to Common Macrofungi in Eastern Forests (Russula emetica)",
+      "url": "https://www.fs.usda.gov/nrs/pubs/gtr/gtr_nrs79.pdf"
+    },
+    {
+      "title": "E-Flora BC, University of British Columbia — Russula emetica",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?NoTransfer=1&sciname=Russula+emetica"
+    },
+    {
+      "title": "MushroomExpert.com — The Genus Russula (identification difficulty)",
+      "url": "https://www.mushroomexpert.com/russula.html"
     }
   ],
-  "related": []
+  "related": [
+    "nobilis"
+  ]
 }

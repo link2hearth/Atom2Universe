@@ -1,28 +1,27 @@
 {
   "id": "gymnopilus",
-  "reviewStatus": "pending",
-  "sections": [],
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and recognition", "text": "This entry covers Gymnopilus junonius, also published under the synonym G. spectabilis. The cap is usually 5–15 cm across, sometimes larger; it begins convex with an inrolled margin, then spreads and may retain a low central bump. Its dry surface is ochre-yellow to orange or rusty brown, with radial fibres or small darker scales. The crowded gills are pale yellow to ochre, turning rusty brown as the spores mature; they are attached to the stem and may run slightly down it. The yellow to yellow-brown stem is fibrous, often swollen toward the base, and bears a more or less distinct ring that can become dusted with spores. The flesh is firm and yellow, the taste bitter, and the spore print rusty brown."},
+    {"title": "Habitat and season", "text": "This wood-decaying fungus grows in clusters on dead wood: stumps, logs, and sometimes the bases of living trees, mainly broadleaved trees in Europe. It has also been recorded on conifers. In temperate regions it appears mainly from late summer through autumn; timing varies with local climate."},
+    {"title": "Similar species", "text": "Orange colour and growth on wood are not enough to confirm this species. Honey fungus (Armillaria mellea) has a white spore print; Omphalotus illudens lacks a ring and has a pale spore print; other Gymnopilus species can look similar. Several characters and the habitat must be considered, and a wild collection should not be identified from an image alone."},
+    {"title": "Toxicity and caution", "text": "Do not eat it. The DGfM places G. junonius under psilocybin syndrome and notes gymnopilin. Scientific literature nevertheless reports conflicting results on detecting psilocybin in collections historically identified as G. spectabilis; that name has covered a taxonomic complex, so those results do not establish that every G. junonius specimen contains the compound. Poisonings and neurological effects have been reported, and the species is also described as very bitter. This entry cannot identify a collection or predict its effects."}
+  ],
   "traits": [
-    "Cap 5 to 15 cm (sometimes up to 30), bright yellow-orange then orange-brown, dry, fibrous or scaly; bun-shaped then spreading",
-    "Close gills, adnate to slightly decurrent, rusty yellow then brown · rusty-brown spores",
-    "Stem 5 to 20 cm, yellow-orange, fibrous, with a frail ring dusted with rusty spores",
-    "Thick yellow flesh, faint smell, bitter taste",
-    "In clumps of a few to several dozen, on stumps, logs and tree bases, mostly of broadleaves; summer and autumn"
+    "Cap usually 5–15 cm across, ochre-yellow to orange-brown, dry, fibrous or finely scaly",
+    "Crowded gills, pale yellow then rusty brown, attached to slightly decurrent; rusty spore print",
+    "Yellow to yellow-brown fibrous stem, often swollen toward the base and bearing a ring",
+    "Flesh firm and yellow, with a bitter taste",
+    "Clusters on stumps and dead wood, mainly broadleaved trees in Europe; late summer and autumn"
   ],
-  "safetyNote": "Toxic: the German mycological society (2026) lists it among the psilocybin mushrooms and notes that it contains gymnopilin; Wikipedia (fr) calls it poisonous and hallucinogenic, Wikipedia (en) says it has no psilocybin but neurotoxins, among them gymnopilin. Its bitterness makes it inedible anyway. Wikipedia (en) says it resembles the honey fungus (white spores), Wikipedia (fr) several scalycaps; the rusty spores and the bitter taste tell it apart.",
+  "safetyNote": "Do not eat it: the DGfM places Gymnopilus junonius under psilocybin syndrome and notes gymnopilin. Psilocybin findings in collections identified under this name have been disputed, and the Gymnopilus junonius/spectabilis complex has unresolved taxonomic limits. The effects of a specimen therefore cannot be predicted from this entry. After ingestion, contact a poison centre or medical service.",
   "sources": [
-    {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Gymnopilus junonius",
-      "url": "https://fr.wikipedia.org/wiki/Gymnopilus_junonius"
-    },
-    {
-      "title": "Wikipedia (en): Gymnopilus junonius",
-      "url": "https://en.wikipedia.org/wiki/Gymnopilus_junonius"
-    }
+    {"title": "University of Oslo, Natural History Museum — Fact sheet: Gymnopilus junonius", "url": "https://www.nhm2.uio.no/botanisk/bot-mus/sopp/fakta/fakt-15.htm"},
+    {"title": "Missouri Department of Conservation — Big Laughing Gym (Gymnopilus junonius)", "url": "https://mdc.mo.gov/discover-nature/field-guide/big-laughing-gym-big-laughing-jim"},
+    {"title": "DGfM, Fachausschuss Pilzverwertung und Toxikologie (2026) — Liste der Giftpilze mit Syndromen, Gymnopilus junonius", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Thorn et al. (2020). New species in the Gymnopilus junonius group (Basidiomycota: Agaricales). Botany 98:293–315", "url": "https://doi.org/10.1139/cjb-2020-0006"},
+    {"title": "Queensland Mycological Society — Gymnopilus junonius, Queensland Fungal Record", "url": "https://qldfungi.org.au/wp-content/uploads/2024/12/Gymnopilus-junonius.pdf"},
+    {"title": "First Nature — Gymnopilus junonius, Spectacular Rustgill", "url": "https://www.first-nature.com/fungi/gymnopilus-junonius.php"}
   ],
-  "related": []
+  "related": ["gymnopilus_josserandii", "gymnopilus_pseudofulgens", "mellea"]
 }

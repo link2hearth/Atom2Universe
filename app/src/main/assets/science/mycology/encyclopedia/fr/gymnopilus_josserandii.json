@@ -1,21 +1,52 @@
 {
   "id": "gymnopilus_josserandii",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : gymnopile forestier à sporée rouille.",
-    "Repère écologique : gymnopile forestier à sporée rouille. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Aspect et caractères",
+      "text": "Petit gymnopile à sporophore brun ocre à brun rouille, mat et sec. Dans les récoltes décrites par Holec, le chapeau mesure 0,5 à 1,2 cm (jusqu'à environ 2,4–3 cm dans d'autres descriptions) ; d'abord hémisphérique ou conique-convexe, il devient convexe à presque plat. Sa surface est finement feutrée, non hygrophane et non striée par transparence. Les lames ventrues et attachées au pied sont dites plutôt espacées par Holec, plus serrées dans la récolte pyrénéenne décrite par Corriol ; elles passent du roux ocré au brun rouille sombre à maturité. Le pied mince, cylindrique et fibrilleux mesure environ 1,5 à 3 cm de haut, avec une base portant un tomentum blanc."
+    },
+    {
+      "title": "Habitat et écologie",
+      "text": "Ce champignon lignicole est signalé surtout sur des souches très décomposées de conifères, notamment épicéa (Picea) et sapin (Abies), dans des forêts montagnardes naturelles ou semi-naturelles. Des fructifications peuvent apparaître en petits groupes, parfois dans les cavités du bois pourri. Les observations publiées couvrent notamment l'été et l'automne ; elles ne définissent pas à elles seules une période universelle."
+    },
+    {
+      "title": "Taxonomie et identification",
+      "text": "Gymnopilus josserandii est le nom actuellement retenu par les références taxonomiques consultées. Les noms historiques Naucoria subsphaerospora et Gymnopilus subsphaerosporus sont invalidement publiés selon Holec. Les spores sont petites, subglobuleuses à largement ellipsoïdes, d'environ 4,5–6 × 3,5–4,8 µm, et finement verruculeuses ; les cystides des lames ont une forme particulière en bouteille à long col et tête arrondie. L'identification spécifique peut demander l'examen microscopique : la couleur et le bois hôte ne suffisent pas, et des gymnopiles proches peuvent se ressembler."
+    },
+    {
+      "title": "Alimentation et prudence",
+      "text": "Le statut alimentaire de cette espèce n'est pas évalué dans cette fiche. Ne pas consommer un champignon sur la base d'une photographie ou de ces seuls caractères descriptifs ; une détermination erronée parmi les champignons lignicoles peut avoir des conséquences."
+    }
   ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "traits": [
+    "Chapeau brun ocré à brun rouille, sec, mat et finement feutré ; généralement petit, mais sa taille varie selon les descriptions",
+    "Lames ventrues attachées, plutôt espacées à plus serrées selon les récoltes, rousses puis brun rouille sombre à maturité",
+    "Pied mince, cylindrique et fibrilleux, à base souvent couverte d'un tomentum blanc",
+    "Croît surtout sur souches fortement décomposées de conifères, notamment épicéa et sapin",
+    "Spores presque globuleuses à largement ellipsoïdes, finement verruculeuses ; caractères microscopiques utiles à la détermination"
+  ],
+  "safetyNote": "Statut alimentaire non évalué. Cette description ne permet pas de valider une récolte ni d'en recommander la consommation ; demander une détermination spécialisée.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Gymnopilus josserandii.",
+      "title": "GBIF Backbone Taxonomy — Gymnopilus josserandii",
       "url": "https://www.gbif.org/species/3343024"
     },
     {
-      "title": "Index Fungorum, name record 482824: Gymnopilus josserandii.",
+      "title": "Index Fungorum — Gymnopilus josserandii, fiche nomenclaturale 482824",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=482824"
+    },
+    {
+      "title": "Holec, J. (2001). Remarques taxonomiques sur Gymnopilus josserandii d'après des récoltes de Bohême. Czech Mycology 53(2): 133–139",
+      "url": "https://www.czechmycology.org/_cm/CM532.pdf"
+    },
+    {
+      "title": "Corriol, G. (2005). Un Gymnopilus remarquable des vieilles sapinières pyrénéennes. Revista Catalana de Micologia 27: 49–54",
+      "url": "https://www.micocat.org/UNCINULA09/rcmPdf/RCM27_2005/49-54_Un_Gymnopilus_remarquable_vieilles_sapinieres_pyreneenenes.pdf"
+    },
+    {
+      "title": "Mykologie.net — Gymnopilus josserandii, notice et photographies d'observations",
+      "url": "https://mykologie.net/index.php/houby/item/723-gymnopilus_josserandii"
     }
   ],
   "related": []

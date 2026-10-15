@@ -1,15 +1,33 @@
 {
   "id": "decolorans",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap up to 15 cm, red to orange, sticky when moist, convex to flat or depressed",
-    "Gills pale, turning yellowish, sometimes staining greyish",
-    "Stem up to 12 cm, bare",
-    "White flesh that blackens when bruised; mild taste and smell",
-    "Mixed woods and under conifers, alone or in groups"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Recognition",
+      "text": "The 4–11 cm cap is hemispherical at first, then flattens and becomes slightly depressed in the centre. Its color ranges from coppery orange to brick red, sometimes yellow-orange, and fades with age or rain. It may be slightly sticky when young in damp weather, then becomes dry. The fairly close gills change from pale cream to cream-yellow and may turn grey or black along their edges after damage. The white, firm, cylindrical to slightly club-shaped stem greys with age, especially toward the base. The white, brittle flesh first turns reddish when cut, then grey to grey-black; the odor is faint and the taste mild."
+    },
+    {
+      "title": "Habitat and season",
+      "text": "This mycorrhizal russula grows on the ground in conifer forests, especially with pines. It is reported from damp sites with acidic, nutrient-poor or chalk-free soils, as well as upland moors. It fruits in summer and autumn."
+    },
+    {
+      "title": "Confusion with the marsh russula",
+      "text": "Russula paludosa can resemble it in cap color, especially when young. In R. decolorans, the flesh turns grey-black quickly after cutting, particularly in the stem; this reaction helps tell them apart. Reliable identification still depends on the full set of features, not cap color alone."
+    },
+    {
+      "title": "Food safety",
+      "text": "The DGfM and VAPKO include this species on their edible or recommended mushroom lists. That does not identify a wild specimen: red-capped russulas can resemble one another. Eat a mushroom only when its identity is certain and confirmed by a qualified person."
+    }
   ],
-  "safetyNote": "Edible: the DGfM and the VAPKO list it. Wikipedia (en) advises against eating wild ones because of look-alikes of unknown edibility, without naming them; its flesh blackens when bruised. The red cap and the blackening are what the page gives. It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM; the page is short.",
+  "traits": [
+    "Cap usually 4–11 cm wide, hemispherical at first, then convex, flattening and becoming slightly depressed; coppery orange to brick red, sometimes yellow-orange, fading with age or rain; slightly sticky when young in damp weather, then dry",
+    "Gills fairly close, pale cream then cream-yellow to yellow; their edges may turn grey or black after damage",
+    "Stem white, firm, cylindrical to slightly club-shaped, up to about 12 cm; it greys as it ages, especially toward the base",
+    "Flesh white and brittle, first turning reddish when cut, then grey to grey-black; odor faint and taste mild",
+    "A mycorrhizal russula of conifer forests, especially with pines, including damp sites with acidic or poor soils; fruits in summer and autumn",
+    "The coppery cap can resemble the marsh russula (Russula paludosa); in R. decolorans, the flesh turns grey and then black quickly after cutting, especially in the stem, which helps distinguish the two"
+  ],
+  "safetyNote": "Edible according to the DGfM and VAPKO lists. Red-capped russulas can be difficult to distinguish, and cap color alone is not enough for a safe identification. Never eat a wild mushroom unless it has been positively identified by a qualified person.",
   "sources": [
     {
       "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
@@ -20,8 +38,12 @@
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipedia (en): Russula decolorans",
-      "url": "https://en.wikipedia.org/wiki/Russula_decolorans"
+      "title": "E-Flora BC, Electronic Atlas of the Flora of British Columbia. Russula decolorans (species account from Matchmaker: Mushrooms of the Pacific Northwest).",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Russula+decolorans"
+    },
+    {
+      "title": "Işık, H. & Türkekul, İ. (2017). A new record for Turkish mycota from Akdağmadeni (Yozgat) province: Russula decolorans (Fr.) Fr. Epicr. Anatolian Journal of Botany, 1(1), 1–3.",
+      "url": "https://dergipark.org.tr/tr/download/article-file/352319"
     }
   ],
   "related": []

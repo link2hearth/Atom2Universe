@@ -1,23 +1,49 @@
 {
   "id": "fragrans",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau de 1 à 5 cm, blanc et plat",
-    "Lames assez serrées, décurrentes, blanchâtres",
-    "Pied de 2 à 6 cm, mince, nu",
-    "Odeur parfumée d’anis",
-    "Bois de feuillus en Europe · août à décembre"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Petit chapeau hygrophane",
+      "text": "Le chapeau mesure généralement 1,5 à 4 cm. D’abord convexe, il s’étale et peut se creuser légèrement au centre. Sa surface lisse et mate change avec l’humidité : gris brun, beige ou ocre pâle lorsqu’elle est humide, elle devient crème à blanchâtre en séchant. Le bord mince peut montrer de fines stries translucides quand le chapeau est mouillé."
+    },
+    {
+      "title": "Lames et pied pâles",
+      "text": "Les lames sont modérément serrées, blanchâtres à crème, parfois teintées de rose pâle; elles sont adnées ou légèrement décurrentes. Le pied est mince, cylindrique, crème à beige pâle, lisse ou finement fibreux, sans anneau; une base un peu cotonneuse peut être présente. La sporée est blanche à crème très pâle."
+    },
+    {
+      "title": "Odeur d’anis et habitat",
+      "text": "L’odeur est nettement anisée, caractère qui a inspiré le nom fragrans. L’espèce pousse seule ou en petits groupes, surtout dans la litière des bois de feuillus et des bois mixtes; elle peut aussi apparaître dans des endroits herbeux proches des bois. Elle fructifie principalement à la fin de l’été et en automne. Plusieurs petits clitocybes pâles se ressemblent : l’odeur ne suffit pas à identifier un exemplaire."
+    },
+    {
+      "title": "Prudence toxicologique",
+      "text": "La DGfM classe Clitocybe fragrans parmi les espèces associées au syndrome muscarinien. Des sources mycologiques conseillent de la rejeter ou de ne pas la consommer. Comme les petits clitocybes pâles peuvent être difficiles à distinguer, cette fiche ne constitue pas une identification de terrain ni un conseil de cueillette."
+    }
   ],
-  "safetyNote": "Toxique : la DGfM la liste pour le syndrome muscarinien. Wikipédia (en) la donne comestible mais non recommandée, certains guides la déconseillant parce qu’on peut la prendre pour des espèces mortelles, et cite Clitocybe dealbata (mortel, sans odeur d’anis) et le clitocybe odorant comme sosies. Le statut le plus prudent est retenu. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.",
+  "traits": [
+    "Chapeau de 1,5 à 4 cm, convexe puis étalé, parfois un peu déprimé au centre",
+    "Surface hygrophane : beige, gris brun ou ocre pâle humide, crème à blanchâtre sèche; marge parfois translucide-striée",
+    "Lames pâles modérément serrées, adnées à légèrement décurrentes; sporée blanche à crème pâle",
+    "Pied mince, pâle, sans anneau, lisse à finement fibreux; odeur nettement anisée",
+    "Litière des bois de feuillus ou mixtes, parfois herbe près des bois; fin d’été et automne",
+    "Classé par la DGfM dans le syndrome muscarinien : ne pas consommer"
+  ],
+  "safetyNote": "La DGfM classe Clitocybe fragrans dans le syndrome muscarinien et des sociétés mycologiques déconseillent sa consommation. Les mentions de comestibilité de certaines sources ne sont pas retenues ici. Ne consomme pas un champignon identifié à partir d’une image ou d’une seule odeur.",
   "sources": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026) — Liste des champignons toxiques par taxon (PDF du 1er juin 2026; état au 1er mai 2026)",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
     },
     {
-      "title": "Wikipedia (en): Clitocybe fragrans",
-      "url": "https://en.wikipedia.org/wiki/Clitocybe_fragrans"
+      "title": "First Nature — Clitocybe fragrans, description and identification",
+      "url": "https://www.first-nature.com/fungi/clitocybe-fragrans.php"
+    },
+    {
+      "title": "E-Flora BC — Clitocybe fragrans, slim anise mushroom",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Clitocybe+fragrans"
+    },
+    {
+      "title": "Sociedad Micológica Extremeña — Clitocybe fragrans",
+      "url": "https://micoex.org/2016/09/17/clitocybe-fragans/"
     }
   ],
   "related": []

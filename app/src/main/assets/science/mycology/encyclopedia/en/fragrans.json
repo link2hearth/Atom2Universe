@@ -1,23 +1,49 @@
 {
   "id": "fragrans",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 1 to 5 cm, white and flat",
-    "Gills somewhat close, running down the stem, whitish",
-    "Stem 2 to 6 cm, thin, bare",
-    "Fragrant smell of aniseed",
-    "Broadleaf woods in Europe · August to December"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Small hygrophanous cap",
+      "text": "The cap is usually 1.5–4 cm wide. It starts convex, then expands and may become slightly depressed at the centre. Its smooth, matte surface changes with moisture: grey-brown, beige or pale ochre when wet, becoming cream to whitish as it dries. The thin margin may show faint translucent striations when wet."
+    },
+    {
+      "title": "Pale gills and stem",
+      "text": "The gills are moderately crowded, whitish to cream and sometimes tinged pale pink; they are adnate or slightly decurrent. The stem is slender, cylindrical, cream to pale buff, smooth or finely fibrous, and has no ring; its base may be slightly cottony. The spore print is white to very pale cream."
+    },
+    {
+      "title": "Anise odour and habitat",
+      "text": "The odour is distinctly anise-like, inspiring the epithet fragrans. It grows singly or in small groups, mainly in leaf litter in deciduous and mixed woodland; it may also occur in grassy places near woods. Fruiting is chiefly in late summer and autumn. Several small pale funnel mushrooms look alike, so odour alone is not enough to identify a specimen."
+    },
+    {
+      "title": "Toxicological caution",
+      "text": "DGfM places Clitocybe fragrans among species associated with muscarine syndrome. Mycological sources advise rejecting it or avoiding consumption. Because small pale funnel mushrooms can be difficult to distinguish, this page is not a field identification or foraging advice."
+    }
   ],
-  "safetyNote": "Toxic: the DGfM lists it for the muscarine syndrome. Wikipedia (en) gives it as edible but not recommended, some guides advising against it because it can be mistaken for deadly poisonous species, and names Clitocybe dealbata (the ivory funnel, deadly, with no aniseed smell) and the blue-green anise mushroom as look-alikes. The most prudent status is kept. It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM.",
+  "traits": [
+    "Cap 1.5–4 cm, convex then expanded, sometimes slightly depressed at the centre",
+    "Hygrophanous surface: beige, grey-brown or pale ochre when wet, cream to whitish when dry; margin sometimes translucently striate",
+    "Moderately crowded pale gills, adnate to slightly decurrent; white to very pale cream spore print",
+    "Slender pale stem without a ring, smooth to finely fibrous; distinctly anise-like odour",
+    "Leaf litter in deciduous or mixed woodland, sometimes nearby grass; late summer and autumn",
+    "Listed by DGfM under muscarine syndrome: do not eat"
+  ],
+  "safetyNote": "DGfM lists Clitocybe fragrans under muscarine syndrome, and mycological societies advise against eating it. Reports of edibility in some sources are not followed here. Do not eat a mushroom identified from an image or a single odour.",
   "sources": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026) — List of poisonous mushrooms by taxon (PDF dated 1 June 2026; list status as of 1 May 2026)",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
     },
     {
-      "title": "Wikipedia (en): Clitocybe fragrans",
-      "url": "https://en.wikipedia.org/wiki/Clitocybe_fragrans"
+      "title": "First Nature — Clitocybe fragrans, description and identification",
+      "url": "https://www.first-nature.com/fungi/clitocybe-fragrans.php"
+    },
+    {
+      "title": "E-Flora BC — Clitocybe fragrans, slim anise mushroom",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Clitocybe+fragrans"
+    },
+    {
+      "title": "Sociedad Micológica Extremeña — Clitocybe fragrans",
+      "url": "https://micoex.org/2016/09/17/clitocybe-fragans/"
     }
   ],
   "related": []
