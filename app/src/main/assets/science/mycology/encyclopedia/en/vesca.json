@@ -1,16 +1,26 @@
 {
   "id": "vesca",
   "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 5 to 10 cm, pale then pink-ochre, wine-pink or purple-brown, often marbled with olive or rust patches",
-    "The skin stops short of the margin, so the gills \"show their teeth\"",
-    "Gills white to cream, close, forked near the stem, rust-spotted with age",
-    "Stem 2 to 10 cm, firm, white, sometimes tinged pink, browning at the base",
-    "Firm white flesh, mild taste with a nutty note",
-    "Under broadleaf trees, especially oaks, on light acid soil · July to October, sometimes from May"
+  "sections": [
+    {
+      "title": "Identification",
+      "text": "Russula vesca has a variable cap colour, from wine-pink to buff, sometimes brownish or olive. In mature specimens the cap skin often stops short of the margin, leaving the pale gill tips visible as a fine line. The gills are white to very pale cream, fairly close, narrow and often forked near the stem. The stem is firm and white; the flesh is white with a mild, slightly nutty taste. Gills and stem may turn salmon to rusty pink when touched with iron salts."
+    },
+    {
+      "title": "Habitat and caution",
+      "text": "This ectomycorrhizal species is common with beech and oak; on mainland Europe it is also reported under spruce on neutral to acidic soils. Fruiting season varies by region. It appears on recommended edible-mushroom lists, but cap colour alone is not enough for identification; any collection intended for eating must be identified with certainty."
+    }
   ],
-  "safetyNote": "Good edible (Wikipedia, fr); the DGfM and the VAPKO list it. Rubbing the stem with ferrous sulfate turns it salmon (Wikipedia, en). Wikipedia (fr) names among its look-alikes the charcoal burner and the olive brittlegill (see their cards). The Belgian poison centre names the sickener among the russulas that cause a mild gastrointestinal illness.",
+  "traits": [
+    "Cap 5 to 10 cm, initially globose then convex, sometimes with a shallow central depression; colour variable from wine-pink to buff, sometimes with brown, olive or green tints",
+    "The skin stops short of the margin, so the gills \"show their teeth\"",
+    "Gills white to very pale cream, fairly close and narrow, forked near the stem",
+    "Firm white stem, 3 to 10 cm tall and 1.5 to 2.5 cm wide",
+    "Firm white flesh, mild taste with a nutty note",
+    "Mycorrhizal, especially with beech and oak; also reported with spruce in mainland Europe, on neutral to acidic soils · July to October (season varies by region)",
+    "The gills and stem react to ferrous sulfate, turning salmon to rusty pink"
+  ],
+  "safetyNote": "Edible and included in the DGfM and VAPKO recommended mushroom lists. As with any russula, eat only after certain identification; cap colour is highly variable and is not sufficient on its own to identify this species.",
   "sources": [
     {
       "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
@@ -31,6 +41,18 @@
     {
       "title": "Wikipedia (en): Russula vesca",
       "url": "https://en.wikipedia.org/wiki/Russula_vesca"
+    },
+    {
+      "title": "First Nature: Russula vesca (description, identification, habitat and season)",
+      "url": "https://www.first-nature.com/fungi/russula-vesca.php"
+    },
+    {
+      "title": "Læssøe et al., Keys to the Fungi of Temperate Europe: key to Russula (2025)",
+      "url": "https://www.mycokey.com/keys/FTE-russulas.pdf"
+    },
+    {
+      "title": "Wikimedia Commons: Russula vesca (photographic reference gallery)",
+      "url": "https://commons.wikimedia.org/wiki/Category:Russula_vesca"
     }
   ],
   "related": []

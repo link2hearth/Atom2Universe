@@ -1,21 +1,48 @@
 {
   "id": "tulostoma_kotlabae",
   "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: small stalked puffball of dry habitats.",
-    "Ecological context: small stalked puffball of dry habitats. Details vary with taxon and habitat.",
-    "Food status not assessed."
-  ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
-  "sources": [
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Tulostoma kotlabae.",
-      "url": "https://www.gbif.org/species/5454064"
+      "title": "Form and visible characters",
+      "text": "Tulostoma kotlabae Pouzar produces a nearly globose to slightly flattened spore sac about 10–15 mm across, chalk-white to pale grey. It is borne on a narrow white to straw-coloured stalk, often longitudinally striate and clothed in long, ragged white scales. The apical mouth (ostiole) is short-tubular, with an entire rim similar in colour to the peridium and no contrasting dark ring. At maturity, spores and capillitium form a clay-brown to rusty-brown powdery gleba."
     },
     {
-      "title": "Index Fungorum, name record 307217: Tulostoma kotlabae.",
+      "title": "Peridia and habitat",
+      "text": "The inner peridium is thin and papery. The outer, hyphal peridium may be inconspicuous; it persists mainly around the lower sides and base of the spore sac, often retaining sand grains. The species is reported from dry, exposed calcareous sandy substrates, including grey dunes, sandy steppe and rocky grassland, among mosses and lichens. European phylogenetic studies also reveal closely related, sometimes cryptic lineages, so some specimens cannot be reliably separated by appearance alone."
+    },
+    {
+      "title": "Scope and caution",
+      "text": "This plate illustrates general characters and cannot identify a specimen with certainty. Closely related Tulostoma species can look alike; microscopic examination of spores and capillitium, and sometimes molecular data, is needed. Edibility is not assessed here."
+    }
+  ],
+  "traits": [
+    "Spore sac nearly globose to slightly flattened, white to pale grey, commonly about 10–15 mm",
+    "Stalk slender and pale, longitudinally striate, often bearing long ragged white scales",
+    "Apical ostiole short-tubular with an entire rim and no contrasting dark ring",
+    "Outer hyphal peridium often inconspicuous, remaining at the base and sometimes holding sand; mature gleba clay-brown to rusty brown",
+    "Found on dry, sandy, often calcareous ground; closely related lineages can complicate identification"
+  ],
+  "safetyNote": "Taxonomic and morphological reference only. Similar Tulostoma species may require microscopic or molecular confirmation. This entry and its image are not sufficient to identify a collection; edibility is not assessed.",
+  "sources": [
+    {
+      "title": "Index Fungorum — Tulostoma kotlabae, nomenclatural record 307217.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=307217"
+    },
+    {
+      "title": "Jeppson, M. et al. (2017). Unexpected high species diversity among European stalked puffballs: a contribution to the phylogeny and taxonomy of Tulostoma. MycoKeys 21: 33–88.",
+      "url": "https://doi.org/10.3897/mycokeys.21.12115"
+    },
+    {
+      "title": "Dutch Mycological Society — field guide to Tulostoma kotlabae: morphology, habitat and field distinctions.",
+      "url": "https://www.mycologen.nl/onderzoek/meetnet/zeereep-concept/veldgids-zeereepsoorten/ascomyceten-2/stuifballen/"
+    },
+    {
+      "title": "AMINT, Funghi in Italia — Tulostoma kotlabae: macroscopic and microscopic description, sections and photographs.",
+      "url": "https://www.funghiitaliani.it/topic/99152-tulostoma-kotlabae-pouzar-1958/"
+    },
+    {
+      "title": "Irene Andersson (2008), photograph of Tulostoma kotlabae from Gotland, via Wikimedia Commons (CC BY-SA 3.0).",
+      "url": "https://commons.wikimedia.org/wiki/File:Tulostoma_kotlabae.jpg"
     }
   ],
   "related": []

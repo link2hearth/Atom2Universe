@@ -1,16 +1,26 @@
 {
   "id": "vesca",
   "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau de 5 à 10 cm, pâle puis rose ocracé, rose vineux ou brun pourpre, souvent marbré de taches olivâtres ou rouille",
-    "La peau n’atteint pas la marge, et les lames « montrent les dents »",
-    "Lames blanches à crème, serrées, fourchues près du pied, tachées de rouille avec l’âge",
-    "Pied de 2 à 10 cm, ferme, blanc, parfois teinté de rose, brunissant à la base",
-    "Chair blanche et ferme, saveur douce à note de noisette",
-    "Sous les feuillus, surtout les chênes, sur sols légers et acides · juillet à octobre, parfois dès mai"
+  "sections": [
+    {
+      "title": "Reconnaissance",
+      "text": "Russula vesca porte un chapeau de teinte variable, rose vineux à beige, parfois brunâtre ou olivâtre. Chez les exemplaires mûrs, la cuticule n’atteint souvent pas le bord : les extrémités pâles des lames restent visibles comme une fine ligne. Les lames sont blanches à crème très pâle, assez serrées, étroites et souvent fourchues près du pied. Le pied est blanc et ferme; la chair est blanche, de saveur douce à note de noisette. Les lames et le pied peuvent virer au saumon ou au rose rouille au contact de sels de fer."
+    },
+    {
+      "title": "Milieu et prudence",
+      "text": "Cette espèce ectomycorhizienne est fréquente avec les hêtres et les chênes; en Europe continentale, elle est aussi signalée sous épicéas sur sols neutres à acides. La période de fructification varie selon la région. Elle figure dans des listes de champignons recommandés, mais la couleur seule ne suffit pas pour l’identifier; toute récolte destinée à la consommation doit être identifiée avec certitude."
+    }
   ],
-  "safetyNote": "Bon comestible (Wikipédia, fr) ; la DGfM et la VAPKO le listent. Frotté au sulfate de fer, le pied vire au saumon (Wikipédia, en). Wikipédia (fr) cite parmi ses sosies la russule charbonnière et la russule olivacée (voir leurs fiches). Le centre antipoison belge range la russule émétique parmi les russules qui donnent une gastro-entérite légère.",
+  "traits": [
+    "Chapeau de 5 à 10 cm, d’abord globuleux puis convexe, parfois légèrement déprimé au centre ; teintes variables du vieux rose vineux au beige, avec parfois des tons bruns, olive ou verdâtres",
+    "La peau n’atteint pas la marge, et les lames « montrent les dents »",
+    "Lames blanches à crème très pâle, assez serrées et étroites, fourchues près du pied",
+    "Pied ferme, blanc, de 3 à 10 cm de haut et 1,5 à 2,5 cm de diamètre",
+    "Chair blanche et ferme, saveur douce à note de noisette",
+    "Mycorhizienne, surtout sous les hêtres et les chênes ; également signalée sous épicéas en Europe continentale, sur sols neutres à acides · juillet à octobre (saison dépendant de la région)",
+    "Les lames et le pied réagissent au sulfate de fer en prenant une teinte saumon à rose rouille"
+  ],
+  "safetyNote": "Comestible et inscrite sur les listes de champignons recommandés de la DGfM et de la VAPKO. Comme pour toute russule, ne consommer qu’après une identification certaine ; la couleur du chapeau est très variable et ne suffit pas à elle seule pour identifier l’espèce.",
   "sources": [
     {
       "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
@@ -31,6 +41,18 @@
     {
       "title": "Wikipedia (en): Russula vesca",
       "url": "https://en.wikipedia.org/wiki/Russula_vesca"
+    },
+    {
+      "title": "First Nature: Russula vesca (description, identification, habitat and season)",
+      "url": "https://www.first-nature.com/fungi/russula-vesca.php"
+    },
+    {
+      "title": "Læssøe et al., Keys to the Fungi of Temperate Europe: key to Russula (2025)",
+      "url": "https://www.mycokey.com/keys/FTE-russulas.pdf"
+    },
+    {
+      "title": "Wikimedia Commons: Russula vesca (photographic reference gallery)",
+      "url": "https://commons.wikimedia.org/wiki/Category:Russula_vesca"
     }
   ],
   "related": []

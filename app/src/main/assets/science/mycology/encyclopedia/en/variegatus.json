@@ -1,15 +1,24 @@
 {
   "id": "variegatus",
   "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 5 to 15 cm, dull yellow to ochre or rusty, felted and speckled with small scales, barely sticky",
-    "Fairly large pores, ochre then olive-brown",
-    "Stem 4 to 12 cm, nearly smooth, the colour of the cap or paler, no ring",
-    "Cream to yellowish flesh, which may turn slightly blue near the tubes; chlorine-like smell and taste",
-    "Only under pines, on sandy soil poor in lime"
+  "sections": [
+    {
+      "title": "Identification",
+      "text": "Suillus variegatus is a bolete with a yellow-brown to olive cap, finely felted at first and later mottled with small darker scales. The tubes are short; pores are very small and crowded when young, then enlarge slightly and become olive to olive-brown. The stout yellowish to brownish stem has no ring. Lemon-yellow to orange-yellow flesh may blue weakly when cut; the smell is often acidic and sometimes described as chlorine-like."
+    },
+    {
+      "title": "Habitat and caution",
+      "text": "This ectomycorrhizal species is associated mainly with pines, especially Pinus sylvestris and P. nigra. It grows in pinewoods, often on dry, poor sandy soils with variable pH. DGfM and VAPKO lists include it among recommended edible mushrooms, though culinary opinions are mixed. Caesium-137 levels depend strongly on location; follow local advisories. An entry cannot identify a collection reliably."
+    }
   ],
-  "safetyNote": "Edible but mediocre: the DGfM and the VAPKO list it. Wikipedia (fr) finds the flesh flabby, the chlorine smell passing into the dish, and says it can be laxative; it advises young firm ones, the stem removed, the cap peeled and a small first portion. It strongly accumulates caesium-137 and metals (Wikipedia, fr). The bovine bolete has a plain, paler cap and a slimmer stem (Wikipedia, fr). Wikipedia (en) calls its smell and taste unpleasant.",
+  "traits": [
+    "Cap 5–15 cm across, yellow-brown to olive, finely felted at first then mottled with small darker scales; dry, sometimes slightly sticky in wet weather",
+    "Short tubes; pores very small, crowded and angular, yellow-olive to olive-brown with age, sometimes faintly blueing when bruised",
+    "Stout stem 4–12 cm tall, ochre-yellow to brownish, nearly smooth at maturity, without a ring or glandular dots",
+    "Lemon-yellow to orange-yellow flesh, sometimes weakly blueing when cut; acidic smell, sometimes described as chlorine-like",
+    "Ectomycorrhizal with pines, especially Pinus sylvestris and P. nigra; found in dry pinewoods and often on poor sandy soils, which may be acidic to basic"
+  ],
+  "safetyNote": "The DGfM and VAPKO list it among edible/recommended mushrooms, though its culinary value is often considered poor and its acidic or chlorine-like smell may be unpleasant. Like other wild mushrooms, it can accumulate caesium-137 in contaminated areas; levels depend strongly on the site. Consume mushrooms only after certain identification by a qualified person and follow local foraging advisories.",
   "sources": [
     {
       "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
@@ -20,12 +29,24 @@
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Suillus variegatus",
-      "url": "https://fr.wikipedia.org/wiki/Suillus_variegatus"
+      "title": "Nederlandse Mycologische Vereniging / NDFF Verspreidingsatlas (Noordeloos, 2017). Suillus variegatus: morphology, ecology and photographs.",
+      "url": "https://www.verspreidingsatlas.nl/0135100"
     },
     {
-      "title": "Wikipedia (en): Suillus variegatus",
-      "url": "https://en.wikipedia.org/wiki/Suillus_variegatus"
+      "title": "Xunta de Galicia (2023). Cogomelos de Galicia, p. 595: description, spores, habitat and photograph of Suillus variegatus.",
+      "url": "https://mediorural.xunta.gal/sites/default/files/publicacions/2024-02/cogomelos-galicia/libro-cogomelos/files/basic-html/page595.html"
+    },
+    {
+      "title": "Université Claude Bernard Lyon 1. Champignons: Suillus variegatus, reference photographs.",
+      "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/suillus-variegatus/"
+    },
+    {
+      "title": "Kalač, P. (2001). A review of edible mushroom radioactivity. Food Chemistry, 75(1), 29–35.",
+      "url": "https://doi.org/10.1016/S0308-8146(01)00171-6"
+    },
+    {
+      "title": "GBIF Backbone Taxonomy. Suillus variegatus (Sw.) Richon & Roze: taxonomy and synonyms.",
+      "url": "https://www.gbif.org/taxon/53F9K"
     }
   ],
   "related": []

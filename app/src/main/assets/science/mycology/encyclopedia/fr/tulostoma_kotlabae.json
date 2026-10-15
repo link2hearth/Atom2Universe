@@ -1,21 +1,48 @@
 {
   "id": "tulostoma_kotlabae",
   "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : petite vesse pédicellée des milieux secs.",
-    "Repère écologique : petite vesse pédicellée des milieux secs. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
-  ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
-  "sources": [
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Tulostoma kotlabae.",
-      "url": "https://www.gbif.org/species/5454064"
+      "title": "Forme et caractères visibles",
+      "text": "Tulostoma kotlabae Pouzar forme un petit sac sporifère presque sphérique à légèrement aplati, d’environ 10 à 15 mm, blanc crayeux à gris pâle. Il est porté par un pied étroit, blanc à couleur de paille, souvent strié dans la longueur et orné de longues écailles blanches déchirées. Au sommet, l’ostiole est courtement tubulaire, à bord entier et de couleur semblable au péridium, sans anneau sombre contrasté. À maturité, les spores et le capillitium forment une gleba poudreuse brun argile à brun rouille."
     },
     {
-      "title": "Index Fungorum, name record 307217: Tulostoma kotlabae.",
+      "title": "Péridies et milieu",
+      "text": "Le péridium interne est mince et papyracé. Le péridium externe, formé d’hyphes, peut être peu visible; il persiste surtout sur les côtés inférieurs et à la base du sac, où il retient souvent des grains de sable. L’espèce est signalée sur substrats sableux calcaires secs et exposés, notamment dans les dunes grises, les steppes sableuses et les pelouses rupicoles, parmi mousses et lichens. Les traitements phylogénétiques européens montrent toutefois des lignées proches et parfois cryptiques; certains spécimens ne peuvent pas être séparés sûrement par leur seule apparence."
+    },
+    {
+      "title": "Portée et prudence",
+      "text": "Cette planche illustre des caractères généraux et ne permet pas d’identifier avec certitude un spécimen. Des espèces de Tulostoma proches se ressemblent; l’examen microscopique des spores et du capillitium, et parfois les données moléculaires, sont nécessaires. La comestibilité n’est pas évaluée ici."
+    }
+  ],
+  "traits": [
+    "Sac sporifère subglobuleux à un peu aplati, blanc à gris pâle, généralement autour de 10–15 mm",
+    "Pied fin, pâle, strié dans la longueur, souvent muni de longues écailles blanches effilochées",
+    "Ostiole apical courtement tubulaire, à bord entier et sans anneau sombre contrasté",
+    "Péridium externe hyphal souvent discret, conservé en coupe à la base et pouvant retenir du sable; gleba mûre brun argile à rouille",
+    "Fréquente les substrats secs, sableux et souvent calcaires; des lignées proches rendent certaines identifications difficiles"
+  ],
+  "safetyNote": "Référence taxonomique et morphologique seulement. La ressemblance entre espèces de Tulostoma peut nécessiter une vérification microscopique ou moléculaire. Cette fiche et son image ne suffisent pas à identifier une récolte; la comestibilité n’est pas évaluée.",
+  "sources": [
+    {
+      "title": "Index Fungorum — Tulostoma kotlabae, record nomenclatural 307217.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=307217"
+    },
+    {
+      "title": "Jeppson, M. et al. (2017). Unexpected high species diversity among European stalked puffballs: a contribution to the phylogeny and taxonomy of Tulostoma. MycoKeys 21: 33–88.",
+      "url": "https://doi.org/10.3897/mycokeys.21.12115"
+    },
+    {
+      "title": "Nederlandse Mycologische Vereniging — veldgids van Tulostoma kotlabae: morfologie, habitat et distinctions de terrain.",
+      "url": "https://www.mycologen.nl/onderzoek/meetnet/zeereep-concept/veldgids-zeereepsoorten/ascomyceten-2/stuifballen/"
+    },
+    {
+      "title": "AMINT, Funghi in Italia — Tulostoma kotlabae: description macroscopique et microscopique, sections et photographies.",
+      "url": "https://www.funghiitaliani.it/topic/99152-tulostoma-kotlabae-pouzar-1958/"
+    },
+    {
+      "title": "Irene Andersson (2008), photographie de Tulostoma kotlabae à Gotland, via Wikimedia Commons (CC BY-SA 3.0).",
+      "url": "https://commons.wikimedia.org/wiki/File:Tulostoma_kotlabae.jpg"
     }
   ],
   "related": []
