@@ -1,32 +1,63 @@
 {
   "id": "pura",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 3 to 7 cm, convex without being pointed, then spreading with a slight boss; from pure pink to violet or grey, it whitens in dry weather; very thin margin, striate from the gills",
-    "Unequal, fairly distant gills, whitish to pinkish",
-    "Stem 4 to 9 cm, the colour of the cap or more violet, slightly striate, fragile, hollow",
-    "White flesh · clear smell and taste of radish",
-    "White spores",
-    "Common from spring to autumn, under broadleaves and conifers"
-  ],
-  "safetyNote": "Toxic: it contains muscarine, which causes the sweating syndrome: heavy sweating, tears and salivation, short breath, nausea and vomiting, within minutes to 2 hours (Belgian poison centre). The German mycological society lists Mycena pura and Mycena rosea among muscarine mushrooms; M. rosea is often only a variety of M. pura. In 2022, pickers looking for amethyst deceivers picked mycenas (ANSES). The deceiver has more distant gills, a hard stem and no smell of radish.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "ANSES (2023). Intoxications accidentelles par des champignons en France métropolitaine : bilan des cas enregistrés par les centres antipoison du 1er juillet au 31 décembre 2022. Rapport d’étude de toxicovigilance n° 2023-VIG-0127.",
-      "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"
+      "title": "Identification",
+      "text": "Mycena pura (Pers.) P. Kumm., the Lilac Mycena, is a small species with a 2–5 cm cap (occasionally to 6.5 cm), initially convex or shallowly conical, then spreading, sometimes with a low blunt umbo or a central depression. The cap is hygrophanous and translucently striate when wet; its color varies widely from lilac, pink and violet to grey, and it may fade or become whitish. The whitish to pink-lilac gills are attached to the stem, sometimes sinuate or with a short decurrent tooth; they are moderately close to rather distant and may become interveined with age. A three-gene phylogeny resolved 11 concordant phylogenetic species in the M. pura complex, most of them cryptic; these phylogenetic units are not automatically formally named species and cannot always be distinguished by macroscopic morphology alone."
     },
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "title": "Stem, flesh and habitat",
+      "text": "The hollow stem is about 4–9 cm by 2–7 mm; it is fragile, whitish to lilac or cap-colored, often paler near the top, with whitish fibrils at the base. The flesh is thin, soft and pale, with a characteristic radish-like odor. This saprotroph grows in humus, leaf litter and needle litter, especially in deciduous or coniferous woodland. Northern European sources report it mainly in summer and autumn, with fruiting season varying by region."
+    },
+    {
+      "title": "Toxicity and caution",
+      "text": "The DGfM and the Norwegian Poison Information Centre classify M. pura among species associated with muscarinic poisoning. A 1976 chemical study detected low concentrations of muscarine stereoisomers in fruit bodies (up to 2 mg/100 g dry weight); however, the French Society of Emergency Medicine notes that the presence of pharmacologically active muscarine and the species-specific clinical role of M. pura are debated. These sources do not support assigning this species a precise onset time or symptom profile. Anses reports confusions involving Mycena during searches for Laccaria, including one report identified as M. rosea; this alone does not prove a particular toxic mechanism in M. pura. Do not eat it; contact a poison centre if ingested."
+    }
+  ],
+  "traits": [
+    "Hygrophanous cap, translucently striate when wet, highly variable from lilac/pink/violet to grey or whitish; often with a blunt low umbo",
+    "Whitish to pink or lilac gills, attached to the stem, moderately close to rather distant, sometimes becoming interveined; spore print white",
+    "Hollow, pale to lilac stem, often with white basal fibrils; thin flesh with radish-like odor",
+    "Saprotroph of woodland litter; difficult to identify from a single image because colors vary widely"
+  ],
+  "safetyNote": "Do not eat. Toxicology references often classify this species as muscarinic, but the clinical significance and role of active muscarine in M. pura are debated. No species-specific onset time or symptom profile is asserted here. Contact a poison centre after ingestion.",
+  "sources": [
+    {
+      "title": "Index Fungorum — Mycena pura (Pers.) P. Kumm., record 188082; accepted name.",
+      "url": "https://www.indexfungorum.org/Names/namesrecord.asp?RecordID=188082"
+    },
+    {
+      "title": "Maas Geesteranus — Mycena pura, specialist description and habitat data, Mycena of Northern Europe.",
+      "url": "https://mycena.no/pura.htm"
+    },
+    {
+      "title": "University of British Columbia, E-Flora BC — Mycena pura, macroscopic characters, spores and variability of the complex.",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?NoTransfer=1&sciname=Mycena+pura"
+    },
+    {
+      "title": "Harder, C.B. et al. (2013). A three-gene phylogeny of the Mycena pura complex reveals 11 phylogenetic species and shows ITS to be unreliable for species identification. Fungal Biology 117(11–12): 764–775.",
+      "url": "https://doi.org/10.1016/j.funbio.2013.09.004"
+    },
+    {
+      "title": "DGfM, Fachausschuss Pilzverwertung und Toxikologie (2026). List of poisonous mushrooms with syndromes, 1 May 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Mycène pur",
-      "url": "https://fr.wikipedia.org/wiki/Mycena_pura"
+      "title": "Stadelmann, R.J., Müller, E. & Eugster, C.H. (1976). Über die Verbreitung der stereomeren Muscarine innerhalb der Ordnung der Agaricales. Helvetica Chimica Acta 59: 2432–2436.",
+      "url": "https://doi.org/10.1002/hlca.19760590718"
     },
     {
-      "title": "Wikipedia (en): Mycena pura",
-      "url": "https://en.wikipedia.org/wiki/Mycena_pura"
+      "title": "French Society of Emergency Medicine, fungal toxins — cholinergic syndrome; active muscarine implication of Mycena pura is debated.",
+      "url": "https://www.sfmu.org/toxin/CHAMPIGN/CHPGSYND/CHOLIN/CHOLIN2.HTM"
+    },
+    {
+      "title": "Helsenorge / Giftinformasjonen (2025). Muscarinic mushrooms — toxicology guidance listing Mycena pura.",
+      "url": "https://www.helsebiblioteket.no/forgiftninger/sopp/muskarinerge-sopper-behandlingsanbefaling-ved-forgiftning"
+    },
+    {
+      "title": "Anses (2023). Seasonal surveillance of accidental mushroom poisoning; cases and misidentifications reported in 2022.",
+      "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"
     }
   ],
   "related": []

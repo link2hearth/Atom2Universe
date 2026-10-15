@@ -1,40 +1,65 @@
 {
   "id": "prunulus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Chapeau blanc à gris pâle, mat, comme givré, 3 à 13 cm, creusé au centre avec l’âge ; marge enroulée et ondulée",
-    "Lames décurrentes, blanches puis roses à maturité",
-    "Pied court, 2 à 5 cm, souvent excentré et évasé en haut",
-    "Chair blanche et molle, à forte odeur de farine fraîche qui disparaît à la cuisson",
-    "Sporée rose à rose saumon",
-    "Herbe et lisières, sous feuillus ou conifères · été à automne, quelques semaines avant les cèpes"
-  ],
-  "safetyNote": "Les clitocybes blancs toxiques (muscarine) sont parfois pris pour lui : leurs lames restent blanches ou crème et leur sporée est blanche, la sienne est rose. L’odeur de farine ne suffit pas : l’entolome livide l’a aussi.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
-      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+      "title": "Chapeau et silhouette",
+      "text": "Clitopilus prunulus (Scop.) P. Kumm., de la famille des Entolomataceae, est le Meunier ou Clitopile petite-prune. Son chapeau charnu, fragile, blanc à gris pâle et mat-pruineux mesure généralement 3 à 12 cm. D’abord convexe, il s’aplatit puis se déprime au centre; la marge reste souvent enroulée au début et devient ondulée ou irrégulière."
     },
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Lames, pied et caractères",
+      "text": "Les lames sont serrées, minces et nettement décurrentes : elles descendent sur le pied. Elles sont d’abord blanches, puis prennent une teinte rose à rose saumon lorsque les spores mûrissent. Le pied blanc est court, souvent excentré, parfois courbé; il n’a ni anneau ni volve. La chair blanche et tendre est fragile et dégage une forte odeur de farine fraîche. La sporée est rose à rose brunâtre; les spores portent des crêtes longitudinales."
+    },
+    {
+      "title": "Habitat et saison",
+      "text": "Il pousse sur le sol dans les clairières, les lisières et les endroits herbeux, parmi les mousses, en forêt feuillue ou de conifères; des observations existent aussi dans les pâturages et au bord des chemins. En Europe occidentale, il se rencontre surtout en été et en automne. Son mode de nutrition est discuté dans la littérature : saprotrophe ou éventuellement mycorhizien; il vaut donc mieux ne pas le présenter comme associé à un arbre précis."
+    },
+    {
+      "title": "Ressemblances et prudence",
+      "text": "Des clitocybes blancs toxiques peuvent avoir un chapeau pâle et des lames décurrentes, mais leur sporée est blanche. Une confusion plus trompeuse concerne l’Entolome livide (Entoloma sinuatum), responsable d’intoxications après avoir été pris pour le Meunier en France : il peut aussi sentir la farine et produire une sporée rosée, mais il est généralement plus robuste et ses lames sont échancrées près du pied plutôt que franchement décurrentes. Une seule couleur de sporée ou une odeur ne suffit pas à identifier un champignon."
+    }
+  ],
+  "traits": [
+    "Chapeau charnu, fragile, blanc à gris pâle et mat-pruineux, généralement 3 à 12 cm; convexe puis aplati et déprimé au centre, marge souvent ondulée",
+    "Lames serrées, minces et nettement décurrentes, blanches puis roses à maturité",
+    "Pied blanc, court, parfois courbé ou excentré; sans anneau ni volve",
+    "Chair blanche et tendre, fragile, à forte odeur de farine fraîche",
+    "Sporée rose à rose brunâtre; spores ornées de crêtes longitudinales",
+    "Sur sol dans les clairières, lisières et lieux herbeux de forêts feuillues ou de conifères; surtout été et automne en Europe occidentale"
+  ],
+  "safetyNote": "Certaines listes mycologiques le classent comme comestible, mais des clitocybes blancs toxiques et surtout l’Entolome livide (Entoloma sinuatum) peuvent être confondus avec lui. Ce dernier peut aussi avoir une odeur farineuse et une sporée rosée : la couleur de la sporée seule n’est donc pas un critère de sécurité. Ne consommez aucun champignon sauvage sur la base de cette fiche ou d’une image; faites confirmer une récolte par un mycologue compétent.",
+  "sources": [
+    {
+      "title": "Index Fungorum (Royal Botanic Gardens, Kew) — nom accepté, auteur, basionyme et classification de Clitopilus prunulus.",
+      "url": "https://www.indexfungorum.org/names/namesrecord.asp?RecordID=237006"
+    },
+    {
+      "title": "Université Claude Bernard Lyon 1, Champignons Lyon 1 — caractères, dimensions, sporée, habitat et saison de Clitopilus prunulus.",
+      "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/clitopilus-prunulus/"
+    },
+    {
+      "title": "Université de Rouen Normandie, Smart-Champi — description, écologie et confusions avec les clitocybes blancs; références bibliographiques mycologiques.",
+      "url": "https://smartchampi.univ-rouen.fr/champignons/clitopilus-prunulus.html"
+    },
+    {
+      "title": "Gulden, G. — Mapping of Macrofungi in Norway, University of Oslo Natural History Museum, fact sheet Clitopilus prunulus: morphologie, habitat, phénologie et incertitude saprotrophe/mycorhizien.",
+      "url": "https://www.nhm2.uio.no/botanisk/bot-mus/sopp/fakta/fakt-7.htm"
+    },
+    {
+      "title": "ANSES (2023). Intoxications accidentelles par des champignons en France métropolitaine, rapport de toxicovigilance 2023-VIG-0127 — confusions documentées entre Meunier et Entolome livide.",
+      "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"
+    },
+    {
+      "title": "Centre Antipoisons (Belgique), Champignons : brochure d’information — clitocybes blancs toxiques et confusion possible avec Clitopilus prunulus.",
+      "url": "https://www.centreantipoisons.be/sites/default/files/imce/Brochure%20CAP%20champignons%20web.pdf"
+    },
+    {
+      "title": "Deutsche Gesellschaft für Mykologie, Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, état au 1er mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2024 durch das Kantonale Laboratorium Basel-Stadt. 16 janvier 2025.",
-      "url": "https://media.bs.ch/original_file/51e1d6b315312707b136dffb8f09d5688c27447f/2024-pilze-0.pdf"
-    },
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste, version 09.2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Clitopilus prunulus",
-      "url": "https://fr.wikipedia.org/wiki/Clitopilus_prunulus"
-    },
-    {
-      "title": "Wikipedia (en): Clitopilus prunulus",
-      "url": "https://en.wikipedia.org/wiki/Clitopilus_prunulus"
     }
   ],
   "related": []

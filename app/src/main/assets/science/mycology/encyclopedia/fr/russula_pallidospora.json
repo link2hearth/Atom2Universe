@@ -1,21 +1,58 @@
 {
   "id": "russula_pallidospora",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : russule à sporée pâle.",
-    "Repère écologique : russule à sporée pâle. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Taxonomie et chapeau",
+      "text": "Russula pallidospora J. Blum ex Romagn. est une russule de la famille des Russulaceae (Basidiomycota), publiée en 1967 et reconnue comme nom actuel par Index Fungorum. Le chapeau, généralement large de 6 à 15 cm, est charnu et déjà déprimé au centre chez les jeunes sujets; il devient largement puis profondément infundibuliforme. Sa marge épaisse reste enroulée et non striée. La cuticule mate, finement feutrée et difficile à séparer est d’abord blanchâtre à ivoire, puis souvent teintée de jaune, jaune-orangé ou d’ocre rougeâtre, surtout avec l’âge ou après blessure."
+    },
+    {
+      "title": "Lamelles, pied et sporée",
+      "text": "Les lamelles sont épaisses et assez serrées, avec de nombreuses lamellules et quelques fourches; d’abord blanchâtres, elles deviennent crème à jaunâtres ou orangées. Le pied est très court, épais, ferme et plein, blanc puis parfois jaune ou brun-ocre, souvent cylindrique ou un peu rétréci vers la base. La chair est blanche et ferme, pouvant jaunir, particulièrement dans le pied; l’odeur est nettement fruitée, évoquant la compote de pomme, et la saveur décrite comme douce au début puis parfois amère ou âcre dans les lamelles. La sporée est crème soutenu à crème foncé (teinte 2d dans le Myko Atlas tchèque; crème moyen IIC dans Russula-Micro), donc plus sombre que celle de Russula delica et R. chloroides. Les spores largement ellipsoïdes mesurent environ 6,5–9 × 6–7 µm selon le Myko Atlas; les verrues basses sont reliées par des crêtes, formant un réseau incomplet à presque complet."
+    },
+    {
+      "title": "Écologie et espèces proches",
+      "text": "Cette russule rare fructifie surtout de juillet à octobre dans les forêts de feuillus, généralement sous les chênes et les hêtres; des observations sous pin sont également rapportées. Les descriptions la signalent particulièrement sur sol calcaire, ainsi qu’en forêt mixte. Comme les autres russules, elle est associée aux racines des arbres et forme des ectomycorhizes. Elle peut être confondue avec Russula delica ou R. chloroides, mais sa sporée plus foncée, sa chair ferme, son odeur fruitée et l’absence de teintes bleu-vert aux lamelles aident à les distinguer. Le nom R. pallidospora désigne un taxon distinct de R. subpallidospora, espèce européenne nouvellement décrite et délimitée par une étude taxonomique publiée en 2025; l’identification au niveau de l’espèce peut demander des caractères microscopiques ou des données moléculaires."
+    },
+    {
+      "title": "Prudence",
+      "text": "Le Myko Atlas de la Česká mykologická společnost classe cette espèce comme non comestible; une autre description spécialisée la juge impropre à la consommation en raison de son amertume. Ne goûtez pas un champignon pour l’identifier et ne le consommez pas sur la base d’une photographie ou de cette fiche."
+    }
   ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "traits": [
+    "Russulaceae; Russula pallidospora J. Blum ex Romagn., nom publié en 1967 et reconnu par Index Fungorum",
+    "Chapeau charnu de 6–15 cm, déprimé dès le jeune âge puis largement en entonnoir; cuticule mate, finement feutrée, blanchâtre à crème avec des tons jaunes ou ocre en vieillissant",
+    "Lamelles épaisses, assez serrées, avec nombreuses lamellules et quelques fourches, blanchâtres puis crème à jaunâtres/orangées",
+    "Pied très court, épais, ferme et plein, blanc puis parfois jaune ou brun-ocre; chair blanche ferme, parfois jaunissante",
+    "Odeur fruitée de compote de pomme; lamelles parfois amères ou âcres; sporée crème soutenu à crème foncé, plus sombre que chez R. delica et R. chloroides",
+    "Espèce rare des forêts de feuillus, surtout sous chênes et hêtres, également signalée sous pin; surtout sur sol calcaire, de juillet à octobre",
+    "Espèce classée non comestible par le Myko Atlas tchèque; l’identification ne peut reposer sur une photo seule"
+  ],
+  "safetyNote": "Le Myko Atlas de la Česká mykologická společnost classe Russula pallidospora comme non comestible. Ne goûtez et ne consommez jamais une russule identifiée à partir de cette fiche ou d’une photo; une détermination fiable peut nécessiter des caractères microscopiques ou moléculaires.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Russula pallidospora.",
+      "title": "Index Fungorum — Russula pallidospora J. Blum ex Romagn., nom actuel, auteur et publication originale (1967), enregistrement 338709.",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=338709"
+    },
+    {
+      "title": "GBIF Backbone Taxonomy — Russula pallidospora, classification et identifiant de taxon 3360492.",
       "url": "https://www.gbif.org/species/3360492"
     },
     {
-      "title": "Index Fungorum, name record 338709: Russula pallidospora.",
-      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=338709"
+      "title": "Česká mykologická společnost — Myko Atlas, Russula pallidospora : description, mesures, spores, habitat, confusions et statut non comestible.",
+      "url": "https://www.myko.cz/myko-atlas/Russula-pallidospora/"
+    },
+    {
+      "title": "Russula-Micro — Russula pallidospora : description macroscopique et microscopique, hôtes, sporée et distinction moléculaire de R. delica–R. chloroides.",
+      "url": "https://russula-micro.com/russula-funde-2019/pallidospora/"
+    },
+    {
+      "title": "Marxmüller H. et al. (2025), Russula subpallidospora sp. nov. : étude taxonomique et moléculaire distinguant cette espèce de R. pallidospora, Zeitschrift für Mykologie 92(2), 295–318.",
+      "url": "https://biblio.ugent.be/publication/01K47N1FWC96PZWS42MWVKVWXJ"
+    },
+    {
+      "title": "Wikimedia Commons — photographie de terrain identifiée Russula pallidospora, Telti, observation importée d’iNaturalist.",
+      "url": "https://commons.wikimedia.org/wiki/Category:Russula_pallidospora"
     }
   ],
   "related": []

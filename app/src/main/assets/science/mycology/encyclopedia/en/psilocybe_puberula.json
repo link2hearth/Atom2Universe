@@ -1,21 +1,61 @@
 {
   "id": "psilocybe_puberula",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: small Psilocybe with useful microscopic characters.",
-    "Ecological context: small Psilocybe with useful microscopic characters. Details vary with taxon and habitat.",
-    "Food status not assessed."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Taxonomy and distinction",
+      "text": "Psilocybe puberula Bas & Noordel. was described in 1996 from collections in the Netherlands. Index Fungorum and Species Fungorum retain it in Psilocybe; phylogenetic studies place Psilocybe sensu stricto in the Hymenogastraceae, but P. puberula itself is not explicitly included in the cited analysis. It can resemble P. semilanceata, but its dry, non-gelatinized cap cuticle and pileocystidia distinguish it; the protologue also states that it is unrelated to P. cyanescens, which shows strong bluing. In P. puberula, the reported bluing is rare and slight and does not establish psilocybin content. Do not confuse it with Clitocybe puberula Kuyper, an unrelated species transferred to Trichocybe."
+    },
+    {
+      "title": "Cap, gills and stem",
+      "text": "The cap is about 4–5 cm wide, initially conical with an inrolled margin, then expanding to convex or nearly flat with a weak umbo. It is hygrophanous: very dark grey-brown to nearly black when moist, paling to ochre-buff with a darker centre as it dries; the margin may be translucently striate. The moderately crowded, fairly broad, ventricose gills are free to narrowly adnate. They start dull straw-buff, then become dark grey-brown with a violaceous tinge and retain a pale edge. The slender, cylindrical stem (20–70 × 1.2–3.5 mm) is paler at the apex and dark brown at the base, pruinose above and fibrillose below. It has no veil or ring. The flesh is thin and brownish, paling as it dries."
+    },
+    {
+      "title": "Microscopic characters",
+      "text": "Microscopy is important for identification. The spores are brownish-violet, rather thick-walled, with a large germ pore, usually 10–11.5 (up to 12) × 6–7 × 7–8 µm; they are ellipsoid to oblong in profile and may appear flattened or sublentiform face-on. The gills bear both cheilocystidia and numerous lageniform pleurocystidia. The dry cap cuticle is not gelatinized and has many differentiated terminal cells (pileocystidia), a key distinction from P. semilanceata."
+    },
+    {
+      "title": "Ecology and limits of the evidence",
+      "text": "The protologue describes a saprotroph growing in groups in grass along a poor, rather dry, sandy roadside; the type collections came from Leusderheide, Netherlands, in October 1990. The Dutch national atlas treats it as very rare and notes that microscopy is needed for reliable identification. Its standardized ecological coding also lists it as a coprophilous saprotroph of heath and nutrient-poor grassland, on dung; the available records are too sparse to treat either description as an exclusive habitat. Reliable edibility data have not been established."
+    }
   ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "traits": [
+    "Hygrophanous 4–5 cm cap, conical then convex to nearly flat, with a weak umbo; dark when moist and more ochre-buff as it dries.",
+    "Moderately crowded, fairly broad, ventricose gills, dull straw-buff then violaceous grey-brown, with a pale edge.",
+    "Slender 20–70 × 1.2–3.5 mm stem, pale at the apex and dark brown at the base, pruinose above and fibrillose below; no veil or ring.",
+    "Brownish-violet, rather thick-walled spores with a large germ pore; dry, non-gelatinized cap cuticle with differentiated pileocystidia.",
+    "Saprotroph recorded in grass on poor sandy soil; very rare in Dutch records. Substrate and habitat are documented from few collections.",
+    "Slight bluing was noted only on a few young specimens; it does not establish a particular chemical composition."
+  ],
+  "safetyNote": "The edibility and chemical composition of this species are not established here. This entry is not a field identification guide and gives no consumption advice.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Psilocybe puberula.",
+      "title": "Bas, C. & Noordeloos, M.E. (1996). Notulae ad Floram agaricinam neerlandicam XXIX: Two new species of Psilocybe. Persoonia 16(2): 239–244 — protologue, description, measurements and plates 1–2.",
+      "url": "https://repository.naturalis.nl/pub/531913/PERS1996016002007.pdf"
+    },
+    {
+      "title": "GBIF Backbone Taxonomy: Psilocybe puberula Bas & Noordel.",
       "url": "https://www.gbif.org/species/5459375"
     },
     {
-      "title": "Index Fungorum, name record 415212: Psilocybe puberula.",
+      "title": "NMV / NDFF Verspreidingsatlas Paddenstoelen — rarity, habitat, substrate, ecology and need for microscopy.",
+      "url": "https://www.verspreidingsatlas.nl/0119190"
+    },
+    {
+      "title": "Index Fungorum, nomenclatural record 415212: Psilocybe puberula Bas & Noordel.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=415212"
+    },
+    {
+      "title": "Species Fungorum, record 415212: Psilocybe puberula Bas & Noordel. (1996), retained in this genus.",
+      "url": "https://www.speciesfungorum.org/Names/GSDSpecies.asp?RecordID=415212"
+    },
+    {
+      "title": "Vizzini, A., Musumeci, E. & Murat, C. (2010). Trichocybe, a new genus for Clitocybe puberula. Fungal Diversity 42: 97–105 — an unrelated species sharing the epithet puberula.",
+      "url": "https://doi.org/10.1007/s13225-010-0030-8"
+    },
+    {
+      "title": "Ramírez-Cruz, V. et al. (2013). Phylogenetic inference and trait evolution of the psychedelic mushroom genus Psilocybe sensu lato. Botany 91: 573–591 — phylogenetic placement of Psilocybe sensu stricto in Hymenogastraceae.",
+      "url": "https://doi.org/10.1139/cjb-2013-0079"
     }
   ],
   "related": []

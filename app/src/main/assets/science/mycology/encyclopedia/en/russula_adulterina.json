@@ -1,21 +1,56 @@
 {
   "id": "russula_adulterina",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: russula of montane conifer woods.",
-    "Ecological context: russula of montane conifer woods. Details vary with taxon and habitat.",
-    "Food status not assessed."
-  ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "NCBI Taxonomy Browser: Russula adulterina.",
-      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=36059"
+      "title": "Identification",
+      "text": "Russula adulterina Fr. (in the modern European sense) is a robust brittlegill, usually 7–12 cm across. The cap starts convex, then flattens and often becomes depressed in the centre; colours range from dark brown to purplish brown, sometimes olive or yellow-brown. Its cuticle can be shiny and partly peelable. The fairly broad gills turn from cream to yellow or ochre, may fork, and are broadly attached to the stem. The thick, often wrinkled white stem may grey with age. The white flesh slowly greys; the smell is described as fruity, sometimes like apple compote, and the initially mild taste becomes strongly acrid after a few seconds. The spore print is yellow to deep orange-yellow. Spores are broadly oval with prominent isolated warts; Ribes et al. report 7.5–12 × 7–9.5 µm, while other descriptions give larger dimensions."
     },
     {
-      "title": "Index Fungorum, name record 168833: Russula adulterina.",
+      "title": "Microscopy, habitat and similar species",
+      "text": "The spores with isolated ornamentation are a useful microscopic character; the plate by Ribes et al. also illustrates dermatocystidia. The species is reported as mycorrhizal in montane conifer woods, especially subalpine forests on calcareous soil, with Picea and Abies often cited; a Pyrenean collection came from fir forest with some pine and beech. Several regional European sources describe it as rare, but these observations are not a complete range map. Identification is difficult: the name has been applied in different senses. This entry follows the European concept associated with Romagnesi’s 1967 neotype, while noting that the German Red List still regards the taxonomic concept as insufficiently clarified. R. firmula shares the habitat and acrid taste but generally has smaller fruitbodies and smaller spores; R. integra has mild flesh, and R. badia differs in having reticulate rather than isolated-spiny spore ornamentation."
+    },
+    {
+      "title": "Edibility and caution",
+      "text": "The sources reviewed disagree: the Czech Mycological Society describes it as inedible and a French mycological list classifies it as toxic, whereas the Latvian encyclopedia calls it edible after boiling. These conflicting reports do not establish food safety; this entry does not recommend eating it. Acrid taste is a descriptive character, not an edibility test."
+    }
+  ],
+  "traits": [
+    "Robust brown to purplish-brown cap, sometimes olive, soon flattening and then depressed centrally; margin may become briefly striate",
+    "Broad cream gills turning yellow-ochre, sometimes forked; thick, often wrinkled white stem that greys with age",
+    "White flesh that slowly greys; fruity or apple-compote smell; taste initially mild, then strongly acrid",
+    "Yellow to orange-yellow spore print; broadly oval spores with prominent isolated warts",
+    "Mycorrhizal with montane conifers, especially on calcareous soils; difficult to distinguish from R. firmula and other brown brittlegills"
+  ],
+  "safetyNote": "Food-status reports conflict; do not eat. Acrid taste does not establish food safety. This entry is not a foraging identification tool.",
+  "sources": [
+    {
+      "title": "Index Fungorum — Russula adulterina, record 168833.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=168833"
+    },
+    {
+      "title": "Ribes, M.A. et al. (2016). Contribución al conocimiento de la biodiversidad fúngica del Parque Nacional de Ordesa y Monte Perdido I. Pirineos 171, e021. Description and morphological plate; modern species concept discussed with reference to Romagnesi (1967).",
+      "url": "https://doi.org/10.3989/Pirineos.2016.171005"
+    },
+    {
+      "title": "Læssøe, T., Petersen, J.H., Frøslev, T.G. & Heilmann-Clausen, J. (2025). Keys to the fungi of Temperate Europe: Russulas. Comparative characters and ecology.",
+      "url": "https://www.mycokey.com/keys/FTE-russulas.pdf"
+    },
+    {
+      "title": "Česká mykologická společnost — Myko atlas: Russula adulterina. Description, habitat, comparisons and field photograph.",
+      "url": "https://www.myko.cz/myko-atlas/Russula-adulterina/"
+    },
+    {
+      "title": "Rote-Liste-Zentrum, Germany — Russula adulterina; regional status and caveat about the unresolved taxonomic concept (Dämmrich et al., 2016).",
+      "url": "https://www.rote-liste-zentrum.de/en/detailseite/?species_uuid=d869b284-9184-454e-9b13-eb8185d5f80b"
+    },
+    {
+      "title": "Latvijas Daba — Russula adulterina. Morphology, spores, habitat, season and regional edibility assessment.",
+      "url": "https://www.latvijasdaba.lv/senes/russula-adulterina-fr/"
+    },
+    {
+      "title": "MycoFrance — edibility list derived from the French Mycological Society exhibition file; Russula adulterina listed as toxic.",
+      "url": "https://www.mycofrance.fr/champignons-toxiques-comestibles/"
     }
   ],
   "related": []

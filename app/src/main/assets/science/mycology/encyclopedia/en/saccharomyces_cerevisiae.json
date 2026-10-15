@@ -1,21 +1,61 @@
 {
   "id": "saccharomyces_cerevisiae",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: unicellular yeast used in fermentation and research.",
-    "Ecological context: unicellular yeast used in fermentation and research. Details vary with taxon and habitat.",
-    "Food status not assessed."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Taxonomy and general form",
+      "text": "Saccharomyces cerevisiae (Desm.) Meyen ex E.C. Hansen is a yeast, a microscopic unicellular fungus in the phylum Ascomycota. Individual cells are generally round to ovoid, and their size varies with strain, ploidy and culture conditions; a commonly reported order of magnitude is about 5–10 µm. It forms no cap-and-stem fruiting body."
+    },
+    {
+      "title": "Cells and budding",
+      "text": "Vegetative multiplication is mainly by multilateral budding: a bud emerges from a mother cell, grows and eventually separates, leaving a bud scar. The cell wall is rich in glucans and mannoproteins, with a small amount of chitin, notably at the separation septum and bud scars. An ovoid shape or the appearance of a bud alone is not enough to identify the species without suitable examination."
+    },
+    {
+      "title": "Life cycle and ecology",
+      "text": "Haploid and diploid forms can grow by budding; compatible haploid mating types can mate. Under certain nutrient-starvation conditions, diploid cells undergo meiosis and form an ascus that usually contains four haploid ascospores. The species is best known from sugar-rich fermentations and domesticated cultures, but its wild ecology is less thoroughly characterized than its human uses; strains have also been found in natural habitats and microbial communities."
+    },
+    {
+      "title": "Fermentation and limits of identification",
+      "text": "In sugar-rich conditions, S. cerevisiae can ferment sugars to ethanol and carbon dioxide even when oxygen is present (the Crabtree effect), which underlies its use in baking and various fermented beverages. Physiological and morphological traits differ among strains and media. This entry is a taxonomic and biological reference, not a method for identifying an unknown yeast or an assessment of food safety."
+    }
   ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
+  "traits": [
+    "Microscopic unicellular yeast in the phylum Ascomycota; no cap-and-stem fruiting body",
+    "Cells generally round to ovoid, often on the order of 5–10 µm, with size varying by strain and conditions",
+    "Vegetative multilateral budding; a bud grows on the mother cell before separating",
+    "Cell wall based on glucans and mannoproteins, with chitin concentrated especially at septa and bud scars",
+    "During sporulation, formation of an ascus usually containing four haploid ascospores",
+    "Fermentative yeast studied and used in baking and fermented beverages; strains vary"
+  ],
+  "safetyNote": "Microscopic morphology alone cannot reliably identify an unknown yeast. This entry is not food-safety or medical advice.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Saccharomyces cerevisiae.",
+      "title": "NCBI Taxonomy Browser — Saccharomyces cerevisiae, taxon 4932, current name and taxonomic lineage.",
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=4932&mode=Info"
+    },
+    {
+      "title": "GBIF Backbone Taxonomy — Saccharomyces cerevisiae.",
       "url": "https://www.gbif.org/species/2599166"
     },
     {
-      "title": "NCBI Taxonomy Browser: Saccharomyces cerevisiae.",
-      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=4932"
+      "title": "Saccharomyces Genome Database — reference resource for the budding yeast S. cerevisiae.",
+      "url": "https://www.yeastgenome.org/"
+    },
+    {
+      "title": "Lesage, G. & Bussey, H. (2006). Cell Wall Assembly in Saccharomyces cerevisiae. Microbiology and Molecular Biology Reviews, 70(2), 317–343.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1489534/"
+    },
+    {
+      "title": "Orlean, P. (2012). Architecture and Biosynthesis of the Saccharomyces cerevisiae Cell Wall. Genetics, 192(3), 775–818.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3522159/"
+    },
+    {
+      "title": "Bai, F.-Y. et al. (2022). The Ecology and Evolution of S. cerevisiae. Genes, 13(2), 230.",
+      "url": "https://www.mdpi.com/2073-4425/13/2/230"
+    },
+    {
+      "title": "Embrapa Uva e Vinho — optical-microscopy photograph of a Saccharomyces cerevisiae strain (visual reference for cell appearance).",
+      "url": "https://www.embrapa.br/busca-de-imagens/-/midia/6566006/microscopia-otica-da-levedura-saccharomyces-cerevisiae-embrapa-20b84-brm-025640"
     }
   ],
   "related": []

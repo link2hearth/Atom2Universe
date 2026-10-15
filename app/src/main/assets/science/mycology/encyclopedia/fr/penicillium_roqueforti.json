@@ -1,32 +1,59 @@
 {
   "id": "penicillium_roqueforti",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Moisissure filamenteuse ascomycète ; elle ne forme pas un champignon à chapeau et à pied.",
-    "Utilisée comme culture d’affinage de fromages persillés, dont le roquefort.",
-    "Les souches peuvent différer par la couleur, l’arôme et les métabolites secondaires, dont des mycotoxines."
-  ],
-  "safetyNote": "Certaines souches sélectionnées sont utilisées dans la fabrication maîtrisée de fromages persillés. Les souches et les conditions de production diffèrent ; voir une moisissure bleu-vert ailleurs ne permet ni de l’identifier ni d’établir qu’elle est sans danger. Cette fiche décrit le champignon et ne constitue pas une évaluation de sécurité alimentaire.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Penicillium roqueforti.",
-      "url": "https://www.gbif.org/species/2597774"
+      "title": "Taxonomie et forme générale",
+      "text": "Penicillium roqueforti Thom est un champignon microscopique filamenteux du phylum des Ascomycota (Eurotiales, Aspergillaceae). Il ne forme ni chapeau ni pied. En culture de laboratoire, ses colonies peuvent être veloutées ou plus fasciculées, souvent bleu-vert à vert grisâtre, mais la teinte et la texture varient selon la souche et le milieu."
     },
     {
-      "title": "Index Fungorum, name record 213525: Penicillium roqueforti.",
+      "title": "Morphologie microscopique",
+      "text": "Le mycélium est constitué d’hyphes septées. Des conidiophores dressés, dont les stipes ont des parois rugueuses, se terminent généralement par des ramifications en pinceau à plusieurs niveaux (souvent terverticillées, parfois avec d’autres architectures). Les phialides produisent des chaînes lâches de conidies asexuées sphériques, lisses et vert foncé, d’environ 3–4,5 µm. L’identification d’un isolat ne se déduit pas de la seule couleur : elle repose notamment sur la microscopie et des méthodes taxonomiques adaptées."
+    },
+    {
+      "title": "Écologie et rôle alimentaire",
+      "text": "Cette moisissure est surtout connue comme culture d’affinage qui participe aux veines bleues et aux arômes de fromages persillés tels que le roquefort, le gorgonzola et le stilton. Elle existe aussi hors des fromageries, notamment dans le sol, le bois, les fourrages ensilés et des aliments où elle peut provoquer une altération. Les populations et les morphologies diffèrent selon les souches et les milieux."
+    },
+    {
+      "title": "Métabolites et prudence",
+      "text": "Des souches de P. roqueforti peuvent produire différents métabolites secondaires; certains, dont la roquefortine C et la PR-toxine, sont étudiés pour leurs effets toxicologiques. La production dépend de la souche et des conditions et ne permet pas de conclure que chaque fromage persillé contient une quantité dangereuse, ni que toute moisissure bleue inconnue est une souche alimentaire. Cette fiche ne constitue pas une évaluation de sécurité d’un aliment."
+    }
+  ],
+  "traits": [
+    "Moisissure filamenteuse microscopique d’Ascomycota; aucun sporophore à chapeau et à pied",
+    "Colonies de culture souvent bleu-vert à vert grisâtre, veloutées à fasciculées; aspect variable selon souche et milieu",
+    "Hyphes septées; conidiophores dressés à stipes rugueux, terminés par des pinceaux ramifiés",
+    "Phialides produisant des chaînes de conidies asexuées sphériques, lisses et vert foncé (environ 3–4,5 µm)",
+    "Culture d’affinage de fromages persillés, mais aussi moisissure d’altération dans divers aliments et fourrages"
+  ],
+  "safetyNote": "Des souches sélectionnées sont employées dans une fabrication alimentaire maîtrisée. La capacité de produire certains métabolites varie selon la souche et les conditions; l’aspect bleu-vert seul ne permet ni d’identifier P. roqueforti ni de juger un aliment sûr. Ne consommez pas un aliment moisi sur la base de cette fiche.",
+  "sources": [
+    {
+      "title": "Index Fungorum, Royal Botanic Gardens, Kew — Penicillium roqueforti Thom, nom actuel, enregistrement 213525.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=213525"
     },
     {
-      "title": "USDA Agricultural Marketing Service (2014). Microorganisms & Microbial-Derived Ingredients Used in Food Production: Technical Evaluation Report.",
-      "url": "https://www.ams.usda.gov/sites/default/files/media/MicroorgTechnical%20Evaluation%20Report%20%282014%29.pdf"
+      "title": "GBIF Backbone Taxonomy / Catalogue of Life — Penicillium roqueforti Thom, espèce acceptée.",
+      "url": "https://www.gbif.org/taxon/76JD3"
     },
     {
-      "title": "Cleere M. et al. (2024). New colours for old in the blue-cheese fungus Penicillium roqueforti. npj Science of Food 8, 3.",
+      "title": "Coton, E. et al. (2020). Penicillium roqueforti: an overview of its genetics, physiology, metabolism and biotechnological applications. Fungal Biology Reviews 34(2), 59–73.",
+      "url": "https://doi.org/10.1016/j.fbr.2020.03.001"
+    },
+    {
+      "title": "Visagie, C.M. et al. (2014). Identification and nomenclature of the genus Penicillium. Studies in Mycology 78, 343–371.",
+      "url": "https://doi.org/10.1016/j.simyco.2014.09.001"
+    },
+    {
+      "title": "Cleere, M. et al. (2024). New colours for old in the blue-cheese fungus Penicillium roqueforti. npj Science of Food 8, 3.",
       "url": "https://www.nature.com/articles/s41538-023-00244-9"
     },
     {
-      "title": "Salo O. et al. (2016). Secondary Metabolites from Penicillium roqueforti, a Starter for the Production of Gorgonzola Cheese. Toxins 8(11), 336.",
+      "title": "Gillot, G. et al. (2015). Insights into Penicillium roqueforti Morphological and Genetic Diversity. PLOS ONE 10(6), e0129849.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4475020/"
+    },
+    {
+      "title": "Salo, O. et al. (2016). Secondary Metabolites from Penicillium roqueforti, a Starter for the Production of Gorgonzola Cheese. Toxins 8(11), 336.",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5076727/"
     }
   ],

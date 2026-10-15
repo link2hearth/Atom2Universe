@@ -1,35 +1,60 @@
 {
   "id": "perlatum",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Pear-shaped, whitish body: a ball up to 6 cm wide on a sterile conical stem that makes up two thirds of the height",
-    "Surface covered in small spines and large conical warts that fall off gradually, leaving small round scars",
-    "Pure white, even, soft inside when young; yellowish, then olive-brown and powdery with age",
-    "When ripe, a round pore opens at the top to release the brown spores",
-    "Under conifers and in mixed woods, alone or in groups · summer and autumn"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Recognizing the species",
+      "text": "Lycoperdon perlatum Pers. (common puffball) forms a whitish, inverted pear-shaped fruit body, usually only a few centimetres tall. Its surface is covered with firm conical spines mixed with smaller granules; when these fall away, they leave round scars, sometimes in a reticulate pattern. At maturity the outer peridium opens at the top through a pore, releasing spores as a powder."
+    },
+    {
+      "title": "Section and maturation",
+      "text": "A longitudinal section shows a fertile gleba that is initially white, firm and homogeneous, then turns yellow and finally olive-brown and powdery as it matures. Beneath it, the sterile subgleba is pale, spongy and chambered; it extends into the narrowed base, which may attach to fine mycelial cords. A thin, smooth inner wall surrounds the gleba beneath the spiny outer peridium."
+    },
+    {
+      "title": "Habitat",
+      "text": "This saprotrophic species grows alone, scattered or in groups on soil and leaf litter in broadleaf or conifer woods, as well as in parks and gardens. It fruits mainly from late spring through autumn, depending on region. It differs from Lycoperdon pyriforme, which is smoother and associated with wood, by its prominent spines and usually terrestrial growth."
+    },
+    {
+      "title": "Edibility and caution",
+      "text": "The DGfM and VAPKO lists include it among edible species, but only while young and while the gleba remains white. Before identification, make a full-length cut and check that the interior is homogeneous, with no outline of a cap, gills or stem; those structures inside an ‘egg’ may indicate a young Amanita still wrapped in its veil, potentially deadly. A page or photograph is not enough to decide whether to eat a wild mushroom: ask an expert to confirm it. Also avoid inhaling spore clouds from mature puffballs; rare cases of lycoperdonosis have been reported after inhalation of large quantities of puffball spores."
+    }
   ],
-  "safetyNote": "Only when young, with pure white, even, soft flesh inside. Cut it in two lengthwise: a mushroom already formed inside gives away an amanita egg, which is deadly. Amanita eggs usually have no spines or warts. Spores breathed in can badly irritate the lungs.",
+  "traits": [
+    "Whitish, inverted pear-shaped fruit body, usually a few centimetres tall, with a narrowed sterile base",
+    "Outer peridium covered in firm conical spines and smaller granules; fallen spines leave round scars",
+    "At maturity, an apical pore opens in the wall to release olive-brown spore powder",
+    "In section, fertile gleba white and homogeneous when young, then yellow and olive-brown and powdery; lower sterile subgleba pale and spongy",
+    "Saprotrophic on soil and leaf litter in broadleaf or conifer woods, parks and gardens; fruits from spring to autumn depending on region"
+  ],
+  "safetyNote": "Only young specimens with a white, homogeneous gleba are considered edible. Cut each specimen fully lengthwise: the outline of a cap or stem beneath a wrapper may indicate a young Amanita, potentially deadly. Never eat a mushroom based on this page or a photo; have its identity confirmed. Do not inhale spore clouds from mature puffballs: rare cases of lycoperdonosis are associated with inhaling large quantities.",
   "sources": [
     {
-      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "title": "Index Fungorum via EU-Nomen (PESI) — Lycoperdon perlatum Pers., accepted name, classification and publication reference.",
+      "url": "https://www.eu-nomen.eu/portal/taxon.php?GUID=urn%3Alsid%3Aindexfungorum.org%3Anames%3A220647"
+    },
+    {
+      "title": "MushroomExpert.com, Michael Kuo — Lycoperdon perlatum: morphology, peridium, gleba, subgleba, habitat and maturation.",
+      "url": "https://www.mushroomexpert.com/lycoperdon_perlatum.html"
+    },
+    {
+      "title": "Queensland Mycological Society, Queensland Fungal Record — Lycoperdon perlatum profile: peridium, gleba, base, spores and habitat.",
+      "url": "https://qldfungi.org.au/wp-content/uploads/2014/06/Lycoperdon-perlatum.pdf"
+    },
+    {
+      "title": "Belgian Poison Centre, Mushrooms: information brochure — general identification and safety advice before consumption.",
       "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
     },
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), positive list of edible mushrooms, 1 May 2026 version — Lycoperdon perlatum.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "VAPKO, list of recommended mushrooms, version 09.2023 — Lycoperdon perlatum.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Lycoperdon perlatum",
-      "url": "https://fr.wikipedia.org/wiki/Lycoperdon_perlatum"
-    },
-    {
-      "title": "Wikipedia (en): Lycoperdon perlatum",
-      "url": "https://en.wikipedia.org/wiki/Lycoperdon_perlatum"
+      "title": "Centers for Disease Control and Prevention (CDC), Morbidity and Mortality Weekly Report — rare lycoperdonosis associated with inhaled puffball spores.",
+      "url": "https://www.cdc.gov/mmWR/PDF/wk/mm4329.pdf"
     }
   ],
   "related": []

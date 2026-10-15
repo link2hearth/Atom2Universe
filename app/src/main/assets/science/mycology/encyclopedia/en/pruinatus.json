@@ -1,27 +1,64 @@
 {
   "id": "pruinatus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Cap 4 to 12 cm, dry or velvety, brownish to blackish, often mauve near the edge, little cracked",
-    "Pores the colour of the tubes, golden-yellow then olive-yellow, bluish when pressed",
-    "Stem 3 to 10 cm, bright yellow when young, turning reddish to red, bruising blue easily",
-    "Firm bright yellow flesh, weakly bluing, slowly; mild sweet taste",
-    "Under conifers and broadleaf trees, mostly beech, on acid soils · September to November"
-  ],
-  "safetyNote": "Edible after cooking: the DGfM and the VAPKO list it; Wikipedia (fr) advises removing the stem and choosing young firm ones. Look-alikes (Wikipedia, fr): the red-cracking bolete (usually a reddish zone in the flesh and no bluing), the bay bolete (no red or mauve, brown stem), the cisalpine bolete (no food interest), Hortiboletus engelii. The English page is nearly empty: the text comes from Wikipedia (fr) and the lists.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
-      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
+      "title": "Nomenclature and classification",
+      "text": "Xerocomellus pruinatus (Fr.) Šutara is the name accepted by Index Fungorum; the combination was published in 2008. Its basionym is Boletus pruinatus Fr. (1835), and Xerocomus pruinatus (Fr.) Quél. is a historical name. It is a bolete in the family Boletaceae, order Boletales."
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "Cap, pores and flesh",
+      "text": "The cap is usually 3–10 cm wide, dark brown to chestnut or purplish, often pruinose when young and then finely velvety; it cracks little, especially compared with X. chrysenteron. The fertile surface consists of tubes and pores, never gills: pores are yellow to olive-yellow, fairly broad and often angular with age. They may turn blue when bruised, but the intensity of this reaction varies among descriptions and specimens. The firm stem is yellow, often dotted or streaked with red, especially on its lower part; it has no net-like reticulation. The flesh is yellow and firm, with bluing that is generally weak or slow and sometimes most apparent near the stem base."
+    },
+    {
+      "title": "Ecology and season",
+      "text": "This is an ectomycorrhizal species of mixed woodland, often associated with beech or oak; birch and conifers are also reported. It fruits mainly from late summer to autumn, with timing varying by region. Its known distribution is predominantly European."
+    },
+    {
+      "title": "Edibility and caution",
+      "text": "The species appears in European mycological lists of recommended or edible mushrooms when sufficiently cooked. This does not identify an individual specimen: several similar boletes can be difficult to distinguish, and colour-change reactions vary. Do not eat a mushroom identified from this entry."
+    }
+  ],
+  "traits": [
+    "Dark brown to chestnut or purplish cap, often pruinose when young and rarely cracked",
+    "Bolete with yellow to olive-yellow tubes and pores, fairly broad and often angular; no gills",
+    "Firm yellow stem, often dotted or streaked red, without reticulation",
+    "Yellow, firm flesh; bluing is usually weak or slow and varies",
+    "Ectomycorrhizal in mixed woodland, especially with beech and oak; fruits from late summer into autumn"
+  ],
+  "safetyNote": "Some lists include this species among edible mushrooms when sufficiently cooked. That depends on reliable identification; similar boletes can be hard to separate, and bluing reactions vary. Do not use this entry as a foraging or consumption guide.",
+  "sources": [
+    {
+      "title": "Index Fungorum, Royal Botanic Gardens, Kew — current name, authority and basionym, record 511898.",
+      "url": "https://www.indexfungorum.org/names/NamesRecord.asp?RecordID=511898"
+    },
+    {
+      "title": "Natural History Museum, UK Species Dictionary — accepted name and synonyms of Xerocomellus pruinatus.",
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=BMSSYS0000052616"
+    },
+    {
+      "title": "Šutara, J. (2008). Xerocomus s. l. in the light of the present state of knowledge. Czech Mycology 60(1), 29–62 — establishment of Xerocomellus and combination of X. pruinatus.",
+      "url": "https://czechmycology.org/_cm/CM60104.pdf"
+    },
+    {
+      "title": "Læssøe, T., Petersen, J.H., Frøslev, T.G. & Heilmann-Clausen, J. (2025). Keys to the fungi of Temperate Europe — bolete key, characters and comparative ecology.",
+      "url": "https://www.mycokey.com/keys/FTE-boletes.pdf"
+    },
+    {
+      "title": "Verspreidingsatlas (NDFF), Xerocomellus pruinatus account — morphology, ectomycorrhizal hosts, season and identification limits; description by M. Noordeloos.",
+      "url": "https://www.verspreidingsatlas.nl/0142070"
+    },
+    {
+      "title": "First Nature — Matt Bolete, Xerocomellus pruinatus: description of pores, stem, flesh, habitat and season.",
+      "url": "https://www.first-nature.com/fungi/xerocomellus-pruinatus.php"
+    },
+    {
+      "title": "VAPKO (2023). Empfehlungsliste — Xerocomellus pruinatus, Swiss recommended fungi list.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Xerocomellus pruinatus",
-      "url": "https://fr.wikipedia.org/wiki/Xerocomellus_pruinatus"
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM) (2024). Positivliste der Speisepilze — list context: included species are considered edible after sufficient cooking and in reasonable amounts; Xerocomellus entry includes X. pruinatus.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2024-01-21_positivliste-speisepilze.pdf"
     }
   ],
   "related": []

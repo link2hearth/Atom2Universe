@@ -1,32 +1,59 @@
 {
   "id": "penicillium_roqueforti",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Filamentous ascomycete mould; it does not form a cap-and-stem mushroom.",
-    "Used as a ripening culture in blue-veined cheeses, including Roquefort.",
-    "Strains can differ in colour, aroma and secondary metabolites, including mycotoxins."
-  ],
-  "safetyNote": "Selected strains are used in controlled production of blue-veined cheeses. Strains and production conditions differ; seeing blue-green mould elsewhere does not identify it or establish that it is safe. This profile describes the fungus and is not a food-safety assessment.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Penicillium roqueforti.",
-      "url": "https://www.gbif.org/species/2597774"
+      "title": "Taxonomy and general form",
+      "text": "Penicillium roqueforti Thom is a microscopic filamentous fungus in the phylum Ascomycota (Eurotiales, Aspergillaceae). It does not form a cap-and-stem fruiting body. In laboratory culture, colonies may be velvety or more fasciculate, often blue-green to grey-green, but colour and texture vary with strain and growth medium."
     },
     {
-      "title": "Index Fungorum, name record 213525: Penicillium roqueforti.",
+      "title": "Microscopic morphology",
+      "text": "The mycelium consists of septate hyphae. Erect conidiophores, with rough-walled stipes, usually end in brush-like branching at several levels (often terverticillate, though other architectures also occur). Phialides produce loose chains of asexual conidia that are spherical, smooth and dark green, about 3–4.5 µm in diameter. An isolate cannot be identified from colour alone; microscopy and appropriate taxonomic methods are among the evidence used."
+    },
+    {
+      "title": "Ecology and food role",
+      "text": "This mould is best known as a ripening culture that contributes to the blue veins and flavour of blue-veined cheeses such as Roquefort, Gorgonzola and Stilton. It also occurs outside dairies, including in soil, wood, silage and foods where it can cause spoilage. Populations and morphology differ among strains and environments."
+    },
+    {
+      "title": "Metabolites and caution",
+      "text": "Some P. roqueforti strains can produce different secondary metabolites; some, including roquefortine C and PR toxin, are studied for their toxicological effects. Production depends on strain and conditions. This does not mean every blue cheese contains a hazardous amount, nor that any unknown blue mould is a food strain. This profile is not an assessment of food safety."
+    }
+  ],
+  "traits": [
+    "Microscopic filamentous ascomycete mould; no cap-and-stem fruiting body",
+    "Culture colonies often blue-green to grey-green, velvety to fasciculate; appearance varies with strain and medium",
+    "Septate hyphae; erect conidiophores with rough-walled stipes ending in branched brush-like heads",
+    "Phialides producing chains of spherical, smooth, dark-green asexual conidia (about 3–4.5 µm)",
+    "Ripening culture for blue-veined cheeses, but also a spoilage mould in various foods and silage"
+  ],
+  "safetyNote": "Selected strains are used in controlled food production. The ability to produce some metabolites varies by strain and conditions; blue-green appearance alone cannot identify P. roqueforti or establish that food is safe. Do not eat mouldy food based on this profile.",
+  "sources": [
+    {
+      "title": "Index Fungorum, Royal Botanic Gardens, Kew — Penicillium roqueforti Thom, current name, record 213525.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=213525"
     },
     {
-      "title": "USDA Agricultural Marketing Service (2014). Microorganisms & Microbial-Derived Ingredients Used in Food Production: Technical Evaluation Report.",
-      "url": "https://www.ams.usda.gov/sites/default/files/media/MicroorgTechnical%20Evaluation%20Report%20%282014%29.pdf"
+      "title": "GBIF Backbone Taxonomy / Catalogue of Life — Penicillium roqueforti Thom, accepted species.",
+      "url": "https://www.gbif.org/taxon/76JD3"
     },
     {
-      "title": "Cleere M. et al. (2024). New colours for old in the blue-cheese fungus Penicillium roqueforti. npj Science of Food 8, 3.",
+      "title": "Coton, E. et al. (2020). Penicillium roqueforti: an overview of its genetics, physiology, metabolism and biotechnological applications. Fungal Biology Reviews 34(2), 59–73.",
+      "url": "https://doi.org/10.1016/j.fbr.2020.03.001"
+    },
+    {
+      "title": "Visagie, C.M. et al. (2014). Identification and nomenclature of the genus Penicillium. Studies in Mycology 78, 343–371.",
+      "url": "https://doi.org/10.1016/j.simyco.2014.09.001"
+    },
+    {
+      "title": "Cleere, M. et al. (2024). New colours for old in the blue-cheese fungus Penicillium roqueforti. npj Science of Food 8, 3.",
       "url": "https://www.nature.com/articles/s41538-023-00244-9"
     },
     {
-      "title": "Salo O. et al. (2016). Secondary Metabolites from Penicillium roqueforti, a Starter for the Production of Gorgonzola Cheese. Toxins 8(11), 336.",
+      "title": "Gillot, G. et al. (2015). Insights into Penicillium roqueforti Morphological and Genetic Diversity. PLOS ONE 10(6), e0129849.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4475020/"
+    },
+    {
+      "title": "Salo, O. et al. (2016). Secondary Metabolites from Penicillium roqueforti, a Starter for the Production of Gorgonzola Cheese. Toxins 8(11), 336.",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5076727/"
     }
   ],

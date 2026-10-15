@@ -1,21 +1,51 @@
 {
   "id": "pleomassaria_siparia",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : champignon microscopique formant des fructifications noires sur le bois.",
-    "Repère écologique : champignon microscopique formant des fructifications noires sur le bois. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
-  ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Pleomassaria siparia.",
-      "url": "https://www.gbif.org/species/3535813"
+      "title": "Forme et substrat",
+      "text": "Pleomassaria siparia est un ascomycète saprotrophe microscopique, observé sur du bois mort, notamment des rameaux de bouleau (Betula). Ses ascomes noirs sont dispersés ou en petits groupes, d’abord enfoncés dans l’écorce puis parfois visibles à travers une minuscule fente ou une petite protubérance. Ils sont déprimés-globuleux, munis d’un ostiole; ils mesurent environ 0,44–0,74 mm de diamètre dans la description du matériel type."
     },
     {
-      "title": "Index Fungorum, name record 238646: Pleomassaria siparia.",
+      "title": "Caractères microscopiques",
+      "text": "Chaque ascome contient des asques bituniqués, à déhiscence fissitunicate, et des ascospores brunes, muriformes (cloisons transversales et longitudinales), resserrées aux cloisons. Une description moléculaire et morphologique rapporte généralement 5–7 cloisons transversales et une cloison longitudinale dans plusieurs cellules; les dimensions varient selon les descriptions et le matériel. L’identification demande un examen microscopique."
+    },
+    {
+      "title": "Écologie et limites",
+      "text": "Les observations publiées concernent surtout des rameaux morts de Betula, dont B. pendula et B. pubescens, et plus rarement d’autres ligneux. Une étude a distingué deux espèces biologiques indiscernables au stade téléomorphe, toutes deux observées sur des rameaux morts de ces deux bouleaux; l’identification de terrain ne permet donc pas toujours de séparer ces lignées. Une présence sur d’autres hôtes a aussi été rapportée; le bouleau est un hôte fréquent documenté, pas un caractère exclusif. Aucune période de fructification constante n’est établie ici. Les relations phylogénétiques au sein des Pleosporales ont été discutées; la fiche conserve le nom Pleomassaria siparia retenu par les bases taxonomiques consultées."
+    }
+  ],
+  "traits": [
+    "Ascomycète saprotrophe microscopique sur bois mort, fréquemment documenté sur rameaux de bouleau",
+    "Ascomes noirs, dispersés ou en petits groupes, immergés dans l’écorce puis légèrement émergents; déprimés-globuleux et ostiolés",
+    "Asques bituniqués; ascospores brunes, muriformes et resserrées aux cloisons",
+    "Caractères déterminants microscopiques; aucune identification fiable à partir d’une seule vue macroscopique"
+  ],
+  "safetyNote": "Statut alimentaire non évalué; cette fiche ne recommande aucune consommation. L’illustration est un schéma explicatif, avec des vues microscopiques agrandies et non à l’échelle, pas une microphotographie ni une clé d’identification.",
+  "sources": [
+    {
+      "title": "Index Fungorum — Pleomassaria siparia, record 238646.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=238646"
+    },
+    {
+      "title": "Tanaka, K. et al. (2012). Pleosporales. Fungal Diversity 52: 1–225 — description du genre et du matériel type de P. siparia.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3477819/"
+    },
+    {
+      "title": "Schoch, C.L. et al. (2009). Molecular phylogenetics of Pleosporales: Melanommataceae and Lophiostomataceae re-circumscribed. Studies in Mycology 64: 103–121.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2816968/"
+    },
+    {
+      "title": "Pastirčáková, K. & Pastirčák, M. (2010). Two important ascomycetes and their anamorphs on twigs of Betula pendula in Slovakia. Polish Botanical Journal 55(2): 373–380.",
+      "url": "https://www.researchgate.net/publication/267623096_Two_important_ascomycetes_and_their_anamorphs_on_twigs_of_Betula_pendula_in_Slovakia"
+    },
+    {
+      "title": "Paavolainen, L. et al. (2000). Pleomassaria siparia is composed of two biological species, both of which occur in dead twigs of Betula pendula and B. pubescens. Mycologia 92(2): 253–258.",
+      "url": "https://doi.org/10.2307/3761558"
+    },
+    {
+      "title": "Joint Genome Institute, US Department of Energy — Pleomassaria siparia genome project; saprotrophic habit on broken birch twigs and branches.",
+      "url": "https://myco-lb.jgi.doe.gov/Plesi1/Plesi1.home.html"
     }
   ],
   "related": []

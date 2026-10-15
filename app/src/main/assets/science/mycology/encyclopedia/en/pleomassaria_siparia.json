@@ -1,21 +1,51 @@
 {
   "id": "pleomassaria_siparia",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: microscopic fungus forming dark fruiting bodies on wood.",
-    "Ecological context: microscopic fungus forming dark fruiting bodies on wood. Details vary with taxon and habitat.",
-    "Food status not assessed."
-  ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Pleomassaria siparia.",
-      "url": "https://www.gbif.org/species/3535813"
+      "title": "Form and substrate",
+      "text": "Pleomassaria siparia is a microscopic saprotrophic ascomycete recorded on dead wood, especially birch twigs (Betula). Its black ascomata occur scattered or in small groups, first immersed in the bark and sometimes showing through a minute slit or small swelling. They are depressed-globose and ostiolate; the type-material description gives a diameter of about 0.44–0.74 mm."
     },
     {
-      "title": "Index Fungorum, name record 238646: Pleomassaria siparia.",
+      "title": "Microscopic characters",
+      "text": "Each ascoma contains bitunicate, fissitunicate asci and brown, muriform ascospores (with transverse and longitudinal septa) that are constricted at the septa. A morphological and phylogenetic account reports typically 5–7 transverse septa and a longitudinal septum in several cells; measurements vary among descriptions and specimens. Microscopic examination is needed for identification."
+    },
+    {
+      "title": "Ecology and limits",
+      "text": "Published records concern mainly dead Betula twigs, including B. pendula and B. pubescens, with occasional reports from other woody hosts. One study distinguished two biological species that cannot be told apart in the teleomorph; both were found on dead twigs of these two birches, so field identification may not separate the lineages. Birch is a frequently documented host, not an exclusive character. No consistent fruiting season is established here. Its phylogenetic placement within Pleosporales has been discussed; this entry retains the name Pleomassaria siparia used by the taxonomic databases consulted."
+    }
+  ],
+  "traits": [
+    "Microscopic saprotrophic ascomycete on dead wood, frequently recorded on birch twigs",
+    "Black ascomata, scattered or in small groups, immersed in bark and later slightly exposed; depressed-globose and ostiolate",
+    "Bitunicate asci; brown, muriform ascospores constricted at the septa",
+    "Diagnostic characters are microscopic; a single general photograph is not sufficient for reliable identification"
+  ],
+  "safetyNote": "Food status has not been assessed; this entry does not recommend consumption. The illustration is explanatory, with enlarged microscopic views that are not to scale; it is not a micrograph or an identification key.",
+  "sources": [
+    {
+      "title": "Index Fungorum — Pleomassaria siparia, record 238646.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=238646"
+    },
+    {
+      "title": "Tanaka, K. et al. (2012). Pleosporales. Fungal Diversity 52: 1–225 — genus description and type material of P. siparia.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3477819/"
+    },
+    {
+      "title": "Schoch, C.L. et al. (2009). Molecular phylogenetics of Pleosporales: Melanommataceae and Lophiostomataceae re-circumscribed. Studies in Mycology 64: 103–121.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2816968/"
+    },
+    {
+      "title": "Pastirčáková, K. & Pastirčák, M. (2010). Two important ascomycetes and their anamorphs on twigs of Betula pendula in Slovakia. Polish Botanical Journal 55(2): 373–380.",
+      "url": "https://www.researchgate.net/publication/267623096_Two_important_ascomycetes_and_their_anamorphs_on_twigs_of_Betula_pendula_in_Slovakia"
+    },
+    {
+      "title": "Paavolainen, L. et al. (2000). Pleomassaria siparia is composed of two biological species, both of which occur in dead twigs of Betula pendula and B. pubescens. Mycologia 92(2): 253–258.",
+      "url": "https://doi.org/10.2307/3761558"
+    },
+    {
+      "title": "Joint Genome Institute, US Department of Energy — Pleomassaria siparia genome project; saprotrophic habit on broken birch twigs and branches.",
+      "url": "https://myco-lb.jgi.doe.gov/Plesi1/Plesi1.home.html"
     }
   ],
   "related": []

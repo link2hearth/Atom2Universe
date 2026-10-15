@@ -1,40 +1,65 @@
 {
   "id": "prunulus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "White to pale grey cap, matt, as if frosted, 3 to 13 cm, dished in the centre with age; margin rolled and wavy",
-    "Decurrent gills, white then pink when ripe",
-    "Short stem, 2 to 5 cm, often off-centre and flared at the top",
-    "Soft white flesh with a strong smell of fresh flour that disappears when cooked",
-    "Pink to salmon-pink spores",
-    "Grass and woodland edges, under broadleaves or conifers · summer to autumn, a few weeks before porcini"
-  ],
-  "safetyNote": "Toxic white clitocybes (muscarine) are sometimes mistaken for it: their gills stay white or cream and their spores are white, whereas its spores are pink. The floury smell is not enough: the livid pinkgill has it too.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
-      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
+      "title": "Cap and form",
+      "text": "Clitopilus prunulus (Scop.) P. Kumm., in the family Entolomataceae, is commonly called the Miller. Its fleshy, fragile cap is white to pale grey, matt and finely pruinose, usually 3–12 cm across. It begins convex, then flattens and becomes depressed at the centre; the margin is often inrolled when young and becomes wavy or irregular."
     },
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Gills, stem and identifying characters",
+      "text": "The gills are crowded, thin and distinctly decurrent, running down the stem. They start white and become pink to salmon-pink as the spores mature. The white stem is short and sometimes curved or off-centre; it has no ring or volva. The white, tender flesh is fragile and has a strong fresh-flour smell. The spore print is pink to pinkish-brown, and the spores have longitudinal ridges."
+    },
+    {
+      "title": "Habitat and season",
+      "text": "It grows on soil in woodland clearings, grassy places and edges, among mosses, in both broadleaf and conifer woods; it has also been recorded in pastures and along paths. In western Europe it is found mainly in summer and autumn. Its nutritional mode is discussed in the literature as saprotrophic or possibly mycorrhizal, so it should not be described as tied to a particular tree."
+    },
+    {
+      "title": "Lookalikes and caution",
+      "text": "Some toxic white Clitocybe species can also have a pale cap and decurrent gills, but their spore print is white. A more deceptive confusion is the poisonous Livid Entoloma (Entoloma sinuatum), which has caused poisonings in France after being mistaken for the Miller: it can also smell farinaceous and produce a pinkish spore print, but is generally more robust and its gills are notched near the stem rather than strongly decurrent. Spore colour or smell alone cannot identify a mushroom safely."
+    }
+  ],
+  "traits": [
+    "Fleshy, fragile, white to pale-grey matt-pruinose cap, usually 3–12 cm; convex then flattened and depressed at the centre, often with a wavy margin",
+    "Crowded, thin, strongly decurrent gills, white at first then pink when mature",
+    "Short white stem, sometimes curved or off-centre; no ring or volva",
+    "Fragile, tender white flesh with a strong fresh-flour smell",
+    "Pink to pinkish-brown spore print; spores with longitudinal ridges",
+    "On soil in clearings, grassy places and woodland edges in broadleaf or conifer woods; mainly summer and autumn in western Europe"
+  ],
+  "safetyNote": "Some mycological lists classify this species as edible, but toxic white Clitocybe species and especially the Livid Entoloma (Entoloma sinuatum) can be confused with it. The latter can also have a farinaceous smell and pinkish spore print, so spore colour alone is not a safety test. Never eat a wild mushroom based on this page or an image; have any collection checked by a competent mushroom expert.",
+  "sources": [
+    {
+      "title": "Index Fungorum (Royal Botanic Gardens, Kew) — accepted name, authorship, basionym and classification of Clitopilus prunulus.",
+      "url": "https://www.indexfungorum.org/names/namesrecord.asp?RecordID=237006"
+    },
+    {
+      "title": "Université Claude Bernard Lyon 1, Champignons Lyon 1 — morphology, dimensions, spore print, habitat and season of Clitopilus prunulus.",
+      "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/clitopilus-prunulus/"
+    },
+    {
+      "title": "University of Rouen Normandy, Smart-Champi — description, ecology and confusion with white Clitocybe species; includes specialist mycology references.",
+      "url": "https://smartchampi.univ-rouen.fr/champignons/clitopilus-prunulus.html"
+    },
+    {
+      "title": "Gulden, G. — Mapping of Macrofungi in Norway, University of Oslo Natural History Museum, Clitopilus prunulus fact sheet: morphology, habitat, season and uncertainty over saprotrophic/mycorrhizal ecology.",
+      "url": "https://www.nhm2.uio.no/botanisk/bot-mus/sopp/fakta/fakt-7.htm"
+    },
+    {
+      "title": "ANSES (2023). Accidental mushroom poisonings in mainland France, toxicovigilance report 2023-VIG-0127 — documented confusion between the Miller and Livid Entoloma.",
+      "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"
+    },
+    {
+      "title": "Belgian Poison Centre, Mushrooms: information leaflet — toxic white Clitocybe species and possible confusion with Clitopilus prunulus.",
+      "url": "https://www.centreantipoisons.be/sites/default/files/imce/Brochure%20CAP%20champignons%20web.pdf"
+    },
+    {
+      "title": "German Mycological Society (DGfM), Specialist Committee for Mushroom Use and Toxicology (2026). Positive list of edible mushrooms, as of 1 May 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2024 durch das Kantonale Laboratorium Basel-Stadt. 16 janvier 2025.",
-      "url": "https://media.bs.ch/original_file/51e1d6b315312707b136dffb8f09d5688c27447f/2024-pilze-0.pdf"
-    },
-    {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "VAPKO, Swiss Association of Official Mushroom Inspectors (2023). Recommendation list, September 2023 edition.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
-    },
-    {
-      "title": "Wikipédia (fr) : Clitopilus prunulus",
-      "url": "https://fr.wikipedia.org/wiki/Clitopilus_prunulus"
-    },
-    {
-      "title": "Wikipedia (en): Clitopilus prunulus",
-      "url": "https://en.wikipedia.org/wiki/Clitopilus_prunulus"
     }
   ],
   "related": []

@@ -1,21 +1,61 @@
 {
   "id": "psilocybe_puberula",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : petit psilocybe à caractères microscopiques utiles.",
-    "Repère écologique : petit psilocybe à caractères microscopiques utiles. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Taxonomie et distinction",
+      "text": "Psilocybe puberula Bas & Noordel. a été décrit en 1996 à partir de récoltes néerlandaises. Index Fungorum et Species Fungorum le maintiennent dans le genre Psilocybe; les phylogénies placent Psilocybe au sens strict dans les Hymenogastraceae, mais l’espèce P. puberula n’est pas explicitement incluse dans l’analyse citée. Elle peut rappeler P. semilanceata, mais sa cuticule sèche non gélifiée et ses pileocystides la distinguent; le protologue précise aussi qu’elle n’est pas apparentée à P. cyanescens, dont le bleuissement est marqué. Chez P. puberula, le bleuissement décrit est rare et léger et ne prouve pas une teneur en psilocybine. À ne pas confondre avec Clitocybe puberula Kuyper, espèce sans lien transférée dans Trichocybe."
+    },
+    {
+      "title": "Chapeau, lames et pied",
+      "text": "Le chapeau mesure environ 4 à 5 cm; d’abord conique à marge enroulée, il s’étale en forme convexe à presque plate avec un faible mamelon. Hygrophane, il est gris-brun très sombre à presque noir lorsqu’il est humide, puis pâlit en séchant vers un ton ocre-beige avec un centre plus foncé; la marge peut être translucide-striée. Les lames moyennement serrées, assez larges et ventrues, sont libres à étroitement adnées; d’abord beige paille, elles deviennent gris-brun foncé à nuance violacée et gardent un bord pâle. Le pied cylindrique, fin (20–70 × 1,2–3,5 mm), est plus clair au sommet, brun foncé à la base, pruineux en haut et fibrilleux vers le bas. Il n’a ni voile ni anneau. La chair est mince et brunâtre, plus pâle en séchant."
+    },
+    {
+      "title": "Caractères microscopiques",
+      "text": "La détermination repose notamment sur la microscopie. Les spores sont brun violacé, à paroi assez épaisse et grand pore germinatif, généralement 10–11,5 (jusqu’à 12) × 6–7 × 7–8 µm; elles sont ellipsoïdes à oblongues de profil et peuvent paraître aplaties ou sublentiformes de face. Les cystides des lames comprennent des cheilocystides et de nombreuses pleurocystides lageniformes. La cuticule sèche n’est pas gélifiée et porte de nombreuses cellules terminales différenciées, les pileocystides, caractère distinctif par rapport à P. semilanceata."
+    },
+    {
+      "title": "Écologie et limites des données",
+      "text": "Le protologue décrit une espèce saprotrophe poussant en groupes dans l’herbe d’un bord de route pauvre, plutôt sec et sablonneux; les récoltes types viennent de Leusderheide, aux Pays-Bas, en octobre 1990. Les données nationales néerlandaises la considèrent très rare et indiquent que la microscopie est nécessaire à une détermination sûre. Leur codage écologique standardisé la classe aussi parmi les saprotrophes coprophiles des landes et pelouses maigres, sur déjections: les données disponibles sont trop limitées pour transformer ces indications en habitat exclusif. Aucune donnée fiable sur sa comestibilité n’a été établie."
+    }
   ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "traits": [
+    "Chapeau hygrophane de 4–5 cm, conique puis convexe à presque plat, avec un faible mamelon; sombre humide, plus ocre-beige en séchant.",
+    "Lames moyennement serrées, assez larges et ventrues, beige paille puis gris-brun violacé, avec un bord pâle.",
+    "Pied mince de 20–70 × 1,2–3,5 mm, pâle au sommet, brun foncé à la base, pruineux au-dessus et fibrilleux vers le bas; sans voile ni anneau.",
+    "Spores brun violacé, assez épaisses et munies d’un grand pore germinatif; cuticule sèche non gélifiée à pileocystides différenciées.",
+    "Saprotrophe observé sur sol sablonneux pauvre dans l’herbe; très rare dans les données néerlandaises. Le substrat et l’habitat restent documentés par peu de récoltes.",
+    "Le léger bleuissement n’a été noté que sur quelques jeunes spécimens; il ne prouve pas une composition chimique particulière."
+  ],
+  "safetyNote": "La comestibilité et la composition chimique de cette espèce ne sont pas établies ici. Cette fiche n’est pas un guide d’identification de récolte et ne donne aucun conseil de consommation.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Psilocybe puberula.",
+      "title": "Bas, C. & Noordeloos, M.E. (1996). Notulae ad Floram agaricinam neerlandicam XXIX: Two new species of Psilocybe. Persoonia 16(2): 239–244 — protologue, description, mesures et planches 1–2.",
+      "url": "https://repository.naturalis.nl/pub/531913/PERS1996016002007.pdf"
+    },
+    {
+      "title": "GBIF Backbone Taxonomy : Psilocybe puberula Bas & Noordel.",
       "url": "https://www.gbif.org/species/5459375"
     },
     {
-      "title": "Index Fungorum, name record 415212: Psilocybe puberula.",
+      "title": "NMV / NDFF Verspreidingsatlas Paddenstoelen — statut de rareté, habitat, substrat, écologie et nécessité de la microscopie.",
+      "url": "https://www.verspreidingsatlas.nl/0119190"
+    },
+    {
+      "title": "Index Fungorum, fiche nomenclaturale 415212 : Psilocybe puberula Bas & Noordel.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=415212"
+    },
+    {
+      "title": "Species Fungorum, fiche 415212 : Psilocybe puberula Bas & Noordel. (1996), nom maintenu dans ce genre.",
+      "url": "https://www.speciesfungorum.org/Names/GSDSpecies.asp?RecordID=415212"
+    },
+    {
+      "title": "Vizzini, A., Musumeci, E. & Murat, C. (2010). Trichocybe, a new genus for Clitocybe puberula. Fungal Diversity 42: 97–105 — espèce sans lien partageant l’épithète puberula.",
+      "url": "https://doi.org/10.1007/s13225-010-0030-8"
+    },
+    {
+      "title": "Ramírez-Cruz, V. et al. (2013). Phylogenetic inference and trait evolution of the psychedelic mushroom genus Psilocybe sensu lato. Botany 91: 573–591 — placement du genre Psilocybe sensu stricto dans les Hymenogastraceae.",
+      "url": "https://doi.org/10.1139/cjb-2013-0079"
     }
   ],
   "related": []

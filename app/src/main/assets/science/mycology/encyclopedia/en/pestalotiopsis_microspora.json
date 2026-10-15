@@ -1,21 +1,60 @@
 {
   "id": "pestalotiopsis_microspora",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "General form: mould with septate spores, sometimes associated with plants.",
-    "Ecological context: mould with septate spores, sometimes associated with plants. Details vary with taxon and habitat.",
-    "Food status not assessed."
-  ],
-  "safetyNote": "Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Pestalotiopsis microspora.",
-      "url": "https://www.gbif.org/species/2574966"
+      "title": "Taxonomy and general form",
+      "text": "Pestalotiopsis microspora (Speg.) G.C. Zhao & Nan Li is a filamentous ascomycete in the order Amphisphaeriales. Index Fungorum and NCBI place it in Sporocadaceae; some earlier publications used Pestalotiopsidaceae or Amphisphaeriaceae. It does not form a cap or stalk. Its basionym is Pestalotia microspora Speg. (1880)."
     },
     {
-      "title": "Index Fungorum, name record 437946: Pestalotiopsis microspora.",
+      "title": "Conidia and identification",
+      "text": "Typical asexual conidia are fusiform, often slightly curved, and have four transverse septa dividing them into five cells. The three median cells are brown to olivaceous; the two terminal cells remain hyaline. The apical cell usually bears two to four slender filiform appendages, and the basal cell one shorter appendage. Dimensions and pigmentation vary among isolates. Closely related species share this morphology, so appearance alone, or identification from a single marker, may not securely confirm the species."
+    },
+    {
+      "title": "Colonies and substrates",
+      "text": "On nutrient media, described isolates form cottony white to grey colonies, sometimes zonate, with small dark acervular conidiomata; colonies may yellow as they age and their appearance depends on the medium. On plants, the fungus has been reported as a symptomless endophyte, a saprophyte on plant debris, and a cause of diseases such as leaf spots or blight, cankers, and rots. Its ecological role and true host range remain uncertain, partly because older reports may include closely related species."
+    },
+    {
+      "title": "Use and caution",
+      "text": "This is a microscopic plant-associated mould, not a mushroom for food. The entry summarizes documented features and cannot identify an unknown mould without specialist examination."
+    }
+  ],
+  "traits": [
+    "Filamentous ascomycete mould; no cap-and-stem fruiting body",
+    "Fusiform conidia with four septa and five cells; three brown to olivaceous median cells and hyaline end cells",
+    "Conidial appendages are usually two to four slender apical filaments and one shorter basal filament",
+    "Cultures are often cottony, white to grey, and zonate, with small dark conidiomata; appearance varies with isolate and medium",
+    "Reported as a plant endophyte, saprophyte, or opportunistic pathogen; species identification may be uncertain without molecular data"
+  ],
+  "safetyNote": "Microscopic mould not intended for consumption. Morphology alone does not guarantee a reliable species identification; do not use this entry to identify or eat an unknown organism.",
+  "sources": [
+    {
+      "title": "Index Fungorum, Royal Botanic Gardens, Kew — current name, authority, basionym and classification of Pestalotiopsis microspora, record 437946.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=437946"
+    },
+    {
+      "title": "Species Fungorum — synonymy of Pestalotiopsis microspora, record 437946.",
+      "url": "https://www.speciesfungorum.org/names/Synonymy.asp?RecordID=437946"
+    },
+    {
+      "title": "NCBI Taxonomy — Pestalotiopsis microspora, taxon 85828; authority and taxonomic lineage.",
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=85828"
+    },
+    {
+      "title": "Jeon, Y.-H. et al. (2007). First report of leaf blight of Lindera obtusiloba caused by Pestalotiopsis microspora in Korea. Plant Pathology 56(4), 718.",
+      "url": "https://doi.org/10.1111/j.1365-3059.2007.01531.x"
+    },
+    {
+      "title": "EFSA Panel on Plant Health (2023). Pest categorisation of Pestalotiopsis microspora. EFSA Journal 21(12), e8493 — morphology, culture, ecology and identification limits.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10733803/"
+    },
+    {
+      "title": "Maharachchikumbura, S.S.N. et al. (2014). Pestalotiopsis revisited. Studies in Mycology 79, 121–186 — taxonomy and genus characters.",
+      "url": "https://doi.org/10.1016/j.simyco.2014.09.005"
+    },
+    {
+      "title": "A MYST histone acetyltransferase modulates conidia development and secondary metabolism in Pestalotiopsis microspora. Scientific Reports (2018) — reference conidial micrographs.",
+      "url": "https://www.nature.com/articles/s41598-018-25983-8"
     }
   ],
   "related": []

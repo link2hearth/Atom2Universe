@@ -1,21 +1,56 @@
 {
   "id": "russula_adulterina",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : russule de conifères montagnards.",
-    "Repère écologique : russule de conifères montagnards. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
-  ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "NCBI Taxonomy Browser: Russula adulterina.",
-      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=36059"
+      "title": "Identification",
+      "text": "Russula adulterina Fr. (sensu européen moderne) est une russule robuste, généralement de 7 à 12 cm. Le chapeau, d’abord convexe puis aplati et souvent déprimé au centre, varie du brun sombre au brun violacé, parfois avec des tons olivâtres ou jaune-brun; sa cuticule peut être brillante et se détacher en partie. Les lames assez larges deviennent crème puis jaune à ocre, parfois fourchues, et sont largement attachées au pied. Le pied blanc, épais et souvent ridé peut grisonner en vieillissant. La chair blanche grisonne lentement; l’odeur est décrite comme fruitée, parfois de compote de pomme, et la saveur devient nettement âcre après quelques secondes. La sporée est jaune à jaune-orangé foncé. Les spores sont largement ovales, avec de fortes verrues isolées; Ribes et al. rapportent 7,5–12 × 7–9,5 µm, tandis que d’autres descriptions donnent des dimensions supérieures."
     },
     {
-      "title": "Index Fungorum, name record 168833: Russula adulterina.",
+      "title": "Microscopie, habitat et espèces proches",
+      "text": "Les spores à ornementation isolée sont un caractère microscopique utile; la planche de Ribes et al. illustre aussi les dermatocystides. L’espèce est rapportée comme mycorhizienne dans les forêts de conifères de montagne, notamment subalpines, sur sol calcaire, avec Picea et Abies souvent cités; une récolte pyrénéenne était dans une sapinière avec quelques pins et hêtres. Elle est rare dans plusieurs sources régionales européennes, mais ces observations ne constituent pas une carte complète de sa distribution. La détermination est délicate: le nom a reçu des interprétations différentes; cette fiche suit le concept européen associé au néotype de Romagnesi (1967), tout en signalant que la liste rouge allemande juge encore le concept taxonomique insuffisamment clarifié. R. firmula partage l’habitat et l’âcreté, mais forme généralement des sporophores plus petits et a des spores plus petites; R. integra a une chair douce, et R. badia se distingue notamment par des spores à ornementation réticulée plutôt qu’isolément épineuse."
+    },
+    {
+      "title": "Comestibilité et prudence",
+      "text": "Les sources consultées ne s’accordent pas: la Société mycologique tchèque la qualifie de non comestible et une liste mycologique française la classe toxique, tandis que l’encyclopédie lettone la dit comestible après ébullition. Aucune conclusion de sécurité alimentaire ne peut être tirée de ces mentions contradictoires; la fiche ne recommande pas sa consommation. La saveur âcre est un caractère descriptif, pas un test de comestibilité."
+    }
+  ],
+  "traits": [
+    "Chapeau robuste brun à brun violacé, parfois olivâtre, vite aplati puis déprimé au centre; marge pouvant devenir brièvement striée",
+    "Lames larges, crème puis jaune-ocre, parfois fourchues; pied blanc, épais et souvent ridé, grisonnant avec l’âge",
+    "Chair blanche grisonnant lentement, odeur fruitée ou de compote de pomme; saveur d’abord douce puis très âcre",
+    "Sporée jaune à jaune-orangé; spores largement ovales à fortes verrues isolées",
+    "Mycorhizienne de conifères montagnards, surtout sur sol calcaire; distinction délicate avec R. firmula et d’autres russules brunes"
+  ],
+  "safetyNote": "Statut alimentaire contradictoire selon les sources; ne pas consommer. La saveur âcre ne permet pas d’établir une sécurité alimentaire. Cette fiche n’est pas un outil d’identification de récolte.",
+  "sources": [
+    {
+      "title": "Index Fungorum — Russula adulterina, record 168833.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=168833"
+    },
+    {
+      "title": "Ribes, M.A. et al. (2016). Contribución al conocimiento de la biodiversidad fúngica del Parque Nacional de Ordesa y Monte Perdido I. Pirineos 171, e021. Description et planche morphologique; concept moderne rapporté à Romagnesi (1967).",
+      "url": "https://doi.org/10.3989/Pirineos.2016.171005"
+    },
+    {
+      "title": "Læssøe, T., Petersen, J.H., Frøslev, T.G. & Heilmann-Clausen, J. (2025). Keys to the fungi of Temperate Europe: Russulas. Caractères comparatifs et écologie.",
+      "url": "https://www.mycokey.com/keys/FTE-russulas.pdf"
+    },
+    {
+      "title": "Česká mykologická společnost — Myko atlas: Russula adulterina. Description, habitat, distinctions et photographie de terrain.",
+      "url": "https://www.myko.cz/myko-atlas/Russula-adulterina/"
+    },
+    {
+      "title": "Rote-Liste-Zentrum, Allemagne — Russula adulterina; statut régional et réserve sur la délimitation du concept taxonomique (Dämmrich et al., 2016).",
+      "url": "https://www.rote-liste-zentrum.de/en/detailseite/?species_uuid=d869b284-9184-454e-9b13-eb8185d5f80b"
+    },
+    {
+      "title": "Latvijas Daba — Russula adulterina. Morphologie, spores, habitat, phénologie et évaluation alimentaire régionale.",
+      "url": "https://www.latvijasdaba.lv/senes/russula-adulterina-fr/"
+    },
+    {
+      "title": "MycoFrance — liste de comestibilité extraite du fichier d’exposition de la Société mycologique de France; Russula adulterina classée toxique.",
+      "url": "https://www.mycofrance.fr/champignons-toxiques-comestibles/"
     }
   ],
   "related": []

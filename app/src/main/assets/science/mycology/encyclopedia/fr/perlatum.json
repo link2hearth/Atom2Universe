@@ -1,35 +1,60 @@
 {
   "id": "perlatum",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Corps en poire, blanchâtre : une boule jusqu’à 6 cm de large sur un pied conique stérile, qui fait les deux tiers de la hauteur",
-    "Surface couverte de petites pointes et de grosses verrues coniques, qui s’en vont peu à peu en laissant de petites cicatrices rondes",
-    "Intérieur d’un blanc pur, uniforme et mou quand elle est jeune ; jaunâtre, puis brun olive et poudreux en vieillissant",
-    "À maturité, un pore rond s’ouvre au sommet pour libérer les spores brunes",
-    "Sous les conifères et en bois mélangés, seule ou en groupes · été et automne"
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Reconnaître l’espèce",
+      "text": "Lycoperdon perlatum Pers. (vesse-de-loup perlée) forme un sporophore blanchâtre en poire renversée, généralement de quelques centimètres. La surface est couverte de pointes coniques fermes, mêlées à de plus petits granules; lorsqu’elles tombent, elles laissent des cicatrices rondes, parfois disposées en réseau. Le péridium externe s’ouvre à maturité par un pore au sommet, d’où s’échappent les spores sous forme de poudre."
+    },
+    {
+      "title": "Coupe et maturation",
+      "text": "Une coupe longitudinale montre une gleba (partie fertile) d’abord blanche, ferme et homogène, qui jaunit puis devient brun olive et poudreuse en mûrissant. Sous elle, la subgleba stérile est blanche à pâle, spongieuse et compartimentée; elle se prolonge vers une base rétrécie, parfois attachée à de fins cordons mycéliens. Une paroi interne mince et lisse entoure la gleba sous le péridium externe hérissé."
+    },
+    {
+      "title": "Habitat",
+      "text": "Cette espèce saprotrophe pousse seule, dispersée ou en groupes sur le sol et la litière, dans les bois de feuillus ou de conifères, ainsi que dans les parcs et jardins. Elle fructifie principalement de la fin du printemps à l’automne selon les régions. Elle se distingue notamment de Lycoperdon pyriforme, plus lisse et associé au bois, par ses fortes pointes et sa croissance généralement terrestre."
+    },
+    {
+      "title": "Comestibilité et prudence",
+      "text": "Les listes DGfM et VAPKO la classent parmi les espèces comestibles, mais seulement jeune, tant que la gleba est blanche. Avant toute identification, une coupe longitudinale complète doit montrer un intérieur homogène, sans silhouette de chapeau, de lames ou de pied; ces structures dans une « boule » peuvent signaler une jeune amanite encore enveloppée, potentiellement mortelle. Une fiche ou une photo ne suffit pas pour décider de consommer un champignon sauvage : demandez confirmation à un spécialiste. Évitez également d’inhaler les nuages de spores d’un exemplaire mûr; de rares cas de lycoperdonose ont été rapportés après inhalation de grandes quantités de spores de vesse-de-loup."
+    }
   ],
-  "safetyNote": "Seulement jeune, quand l’intérieur est blanc pur, uniforme et mou. On la coupe en deux dans la hauteur : un champignon déjà formé à l’intérieur trahit un œuf d’amanite, mortel. Les œufs d’amanite n’ont généralement ni pointes ni verrues. Les spores respirées peuvent irriter gravement les poumons.",
+  "traits": [
+    "Sporophore blanchâtre en poire renversée, généralement de quelques centimètres, à base rétrécie et stérile",
+    "Péridium externe hérissé de pointes coniques fermes et de petits granules; leur chute laisse des cicatrices rondes",
+    "À maturité, un pore apical s’ouvre dans la paroi pour libérer la poudre de spores brun olive",
+    "En coupe, gleba fertile blanche et homogène jeune, puis jaune et brun olive poudreux; subgleba inférieure stérile, pâle et spongieuse",
+    "Saprotrophe sur le sol et la litière, en forêts de feuillus ou de conifères, parcs et jardins; fructification du printemps à l’automne selon la région"
+  ],
+  "safetyNote": "La consommation n’est envisagée que pour de jeunes exemplaires dont la gleba reste blanche et homogène. Coupez chaque spécimen dans toute sa longueur : l’ébauche d’un chapeau ou d’un pied sous une enveloppe peut signaler une jeune amanite potentiellement mortelle. Ne consommez jamais sur la base de cette fiche ou d’une photo; faites confirmer l’identification. N’inhalez pas les nuages de spores des vesses-de-loup mûres : de rares cas de lycoperdonose sont liés à l’inhalation de grandes quantités.",
   "sources": [
     {
-      "title": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "title": "Index Fungorum via EU-Nomen (PESI) — Lycoperdon perlatum Pers., nom accepté, classification et référence de publication.",
+      "url": "https://www.eu-nomen.eu/portal/taxon.php?GUID=urn%3Alsid%3Aindexfungorum.org%3Anames%3A220647"
+    },
+    {
+      "title": "MushroomExpert.com, Michael Kuo — Lycoperdon perlatum : morphologie, péridium, gleba, subgleba, habitat et maturation.",
+      "url": "https://www.mushroomexpert.com/lycoperdon_perlatum.html"
+    },
+    {
+      "title": "Queensland Mycological Society, Queensland Fungal Record — fiche Lycoperdon perlatum : péridium, gleba, base, spores et habitat.",
+      "url": "https://qldfungi.org.au/wp-content/uploads/2014/06/Lycoperdon-perlatum.pdf"
+    },
+    {
+      "title": "Centre Antipoisons (Belgique), Champignons : brochure d’information — recommandations générales d’identification et de prudence avant consommation.",
       "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"
     },
     {
-      "title": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "title": "Deutsche Gesellschaft für Mykologie (DGfM), liste positive des champignons comestibles, version du 1 mai 2026 — Lycoperdon perlatum.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"
     },
     {
-      "title": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "title": "VAPKO, liste des champignons recommandés, version 09.2023 — Lycoperdon perlatum.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"
     },
     {
-      "title": "Wikipédia (fr) : Lycoperdon perlatum",
-      "url": "https://fr.wikipedia.org/wiki/Lycoperdon_perlatum"
-    },
-    {
-      "title": "Wikipedia (en): Lycoperdon perlatum",
-      "url": "https://en.wikipedia.org/wiki/Lycoperdon_perlatum"
+      "title": "Centers for Disease Control and Prevention (CDC), Morbidity and Mortality Weekly Report — rare lycoperdonosis associated with inhaling puffball spores.",
+      "url": "https://www.cdc.gov/mmWR/PDF/wk/mm4329.pdf"
     }
   ],
   "related": []

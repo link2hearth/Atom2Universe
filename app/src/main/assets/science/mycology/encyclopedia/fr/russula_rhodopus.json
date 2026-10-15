@@ -1,21 +1,58 @@
 {
   "id": "russula_rhodopus",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : russule forestière à chair cassante.",
-    "Repère écologique : russule forestière à chair cassante. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Taxonomie et chapeau",
+      "text": "Russula rhodopus Zvára est une russule (Russulaceae, Basidiomycota); Russula rhodopoda est un synonyme publié. Le chapeau mesure généralement 4–9 cm : d’abord convexe, il s’étale puis se déprime légèrement au centre. Il est typiquement rouge sang à rouge cerise brillant, souvent plus sombre, parfois presque noir, au disque. La surface garde un aspect lustré; elle peut devenir visqueuse par temps humide. Le bord reste longtemps lisse avant de se strier brièvement à maturité."
+    },
+    {
+      "title": "Lamelles, pied et chair",
+      "text": "Les lamelles sont moyennement serrées, assez épaisses et cassantes, parfois fourchues; elles sont blanchâtres puis crème à ocre pâle et s’insèrent près du pied, de façon étroite à presque libre. Le pied cylindrique à légèrement clavé mesure environ 4–8 × 1–2,5 cm. Il est généralement teinté de rose ou de rouge, parfois sur un seul côté, rarement entièrement blanc; il est plein au début puis spongieux, et peut jaunir à la base en vieillissant. La chair est blanche, rougeâtre sous la cuticule, cassante et peut jaunir avec l’âge ou après blessure. La sporée varie du crème à l’ocre; les spores sont largement ellipsoïdes, environ 7–10 × 6,5–8 µm, à ornementation basse formant un réseau incomplet."
+    },
+    {
+      "title": "Écologie et espèces proches",
+      "text": "Cette russule ectomycorhizienne se rencontre surtout dans les forêts de conifères humides et acides, principalement sous les épicéas, parfois parmi les sphaignes, en moyenne et haute altitude. La fructification est signalée de l’été à l’automne, souvent de juillet à octobre dans les descriptions d’Europe centrale. Sa combinaison de chapeau rouge lustré, de pied rosé et d’habitat humide aide à orienter l’identification, mais ne suffit pas à elle seule. Elle peut être confondue avec d’autres russules rouges, notamment Russula sanguinaria, R. helodes ou R. paludosa; l’habitat, les réactions chimiques et la microscopie peuvent être nécessaires pour une détermination sûre."
+    },
+    {
+      "title": "Prudence",
+      "text": "La Česká mykologická společnost classe cette espèce comme non comestible; d’autres atlas la déconseillent également, notamment en raison de son goût âcre. Ne goûtez pas un champignon pour l’identifier et ne le consommez pas sur la base d’une fiche ou d’une photographie. Les caractères résumés ici ne remplacent pas une détermination mycologique complète."
+    }
   ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "traits": [
+    "Russule de la famille des Russulaceae; Russula rhodopoda est un synonyme taxonomique rapporté",
+    "Chapeau de 4–9 cm, rouge sang à rouge cerise, lustré, généralement plus sombre au centre et légèrement déprimé à maturité",
+    "Lamelles moyennement serrées, épaisses et cassantes, blanchâtres puis crème à ocre pâle, parfois fourchues",
+    "Pied de 4–8 × 1–2,5 cm, généralement teinté de rose à rouge, parfois seulement sur un côté, rarement blanc",
+    "Chair blanche et cassante, rougeâtre sous la cuticule et susceptible de jaunir avec l’âge ou après blessure",
+    "Sporée crème à ocre; spores largement ellipsoïdes avec ornementation basse en réseau incomplet",
+    "Espèce ectomycorhizienne des conifères, surtout épicéas, dans les forêts humides et les sols acides; classée non comestible par le Myko Atlas tchèque"
+  ],
+  "safetyNote": "Ne goûtez pas et ne consommez pas une russule identifiée à partir de cette fiche ou d’une photo. Le Myko Atlas de la Česká mykologická společnost classe Russula rhodopus comme non comestible. Une identification fiable peut nécessiter l’examen des caractères microscopiques et chimiques.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Russula rhodopus.",
+      "title": "GBIF Backbone Taxonomy — Russula rhodopus Zvára, taxon accepté, auteur, synonymes et classification.",
       "url": "https://www.gbif.org/species/7239976"
     },
     {
-      "title": "Index Fungorum, name record 447527: Russula rhodopus.",
+      "title": "Index Fungorum / MycoBank — Russula rhodopus Zvára, enregistrement taxonomique 447527.",
       "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=447527"
+    },
+    {
+      "title": "NCBI Taxonomy Browser — Russula rhodopus, taxon 3115271 et lignée taxonomique.",
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=3115271&mode=Info"
+    },
+    {
+      "title": "Česká mykologická společnost — Myko Atlas, Russula rhodopus : description macroscopique et microscopique, habitat, confusions et bibliographie.",
+      "url": "https://www.myko.cz/myko-atlas/Russula-rhodopus/"
+    },
+    {
+      "title": "Mykoweb.cz — Russula rhodopus : description des caractères clés, microscopie et biotope.",
+      "url": "https://www.mykoweb.cz/houba/russula-rhodopus"
+    },
+    {
+      "title": "Russula rhodopus, observation photographique avec mesures, lamelles et sporée; fichier sous licence CC BY-SA 3.0 sur Wikimedia Commons.",
+      "url": "https://commons.wikimedia.org/wiki/File:2007-08-25_Russula_rhodopus_Zv%C3%A1ra_71534.jpg"
     }
   ],
   "related": []

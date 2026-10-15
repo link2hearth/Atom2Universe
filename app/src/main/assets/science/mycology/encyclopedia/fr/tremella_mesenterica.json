@@ -1,21 +1,61 @@
 {
   "id": "tremella_mesenterica",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : gelée jaune lobée sur le bois mort.",
-    "Repère écologique : gelée jaune lobée sur le bois mort. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
+  "reviewStatus": "verified",
+  "sections": [
+    {
+      "title": "Taxonomie",
+      "text": "Le nom retenu par Index Fungorum est Tremella mesenterica Retz. (1769), de la famille des Tremellaceae et de l’ordre des Tremellales. Le NHM britannique et plusieurs bases répertorient Tremella lutescens comme synonyme. C’est un champignon basidiomycète gélatineux, sans chapeau ni pied distincts."
+    },
+    {
+      "title": "Morphologie et hyménium",
+      "text": "Le corps fructifère sessile forme une masse irrégulière, lobée et souvent cérébriforme, généralement de quelques centimètres, parfois jusqu’à une dizaine. Sa couleur va du jaune soufre au jaune-orangé vif. Humide, il est mou, gélatineux, parfois translucide et brillant; en séchant, il se rétracte et devient plus terne et coriace, puis regonfle après réhydratation. La coupe montre une chair gélatineuse continue, sans pied, lames ni pores. L’hyménium tapisse les reliefs externes et les plis; la vue du dessous présente donc la même surface plissée, pas un jeu de lames."
+    },
+    {
+      "title": "Écologie",
+      "text": "La trémelle mésentérique apparaît sur des branches et du bois mort, souvent de feuillus. Elle est mycoparasite : le bois visible est généralement décomposé par un champignon hôte, notamment une croûte du genre Peniophora, et non directement consommé par Tremella. L’étude expérimentale de Zugmaier et al. a démontré le parasitisme in vivo de Peniophora laeta. Les fructifications peuvent apparaître toute l’année dans les climats tempérés; elles sont surtout visibles lorsqu’elles sont gorgées d’eau."
+    },
+    {
+      "title": "Identification et prudence",
+      "text": "La forme jaune-orangé en lobes gélatineux est caractéristique, mais plusieurs champignons gélatineux peuvent lui ressembler. Une photographie seule ne suffit pas toujours à confirmer l’espèce : les indices écologiques, notamment le bois feuillu et la présence possible de Peniophora, ainsi que l’examen mycologique sont utiles. Les sources de cette fiche ne servent pas à identifier ou consommer une récolte."
+    }
   ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
+  "traits": [
+    "Corps fructifère sessile, irrégulièrement lobé et souvent cérébriforme, généralement de quelques centimètres.",
+    "Jaune soufre à jaune-orangé; mou, gélatineux et parfois translucide quand il est humide, plus terne et rétracté au sec.",
+    "Chair homogène et gélatineuse en coupe; aucun chapeau, pied, lamelles ou pores.",
+    "L’hyménium fertile couvre les reliefs externes; le dessous est lui aussi plissé et sans lamelles.",
+    "Mycoparasite de champignons lignicoles, notamment Peniophora; apparaît sur le bois mort sans être elle-même un agent de pourriture du bois.",
+    "Fructifie potentiellement toute l’année; les masses sont plus visibles lorsqu’elles sont réhydratées."
+  ],
+  "safetyNote": "Fiche taxonomique et écologique. Elle ne permet pas d’identifier une récolte ni d’évaluer sa comestibilité; ne consomme pas un spécimen sur la base de cette fiche.",
   "sources": [
     {
-      "title": "GBIF Backbone Taxonomy: Tremella mesenterica.",
+      "title": "Index Fungorum, fiche 154470 : nom accepté Tremella mesenterica Retz., publication d’origine (1769) et classification.",
+      "url": "https://www.indexfungorum.org/names/NamesRecord.asp?RecordID=154470"
+    },
+    {
+      "title": "GBIF Backbone Taxonomy : Tremella mesenterica Retz., taxon et classification.",
       "url": "https://www.gbif.org/species/7577590"
     },
     {
-      "title": "Index Fungorum, name record 154470: Tremella mesenterica.",
-      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=154470"
+      "title": "Zugmaier, W., Bauer, R. & Oberwinkler, F. (1994). Mycoparasitism of some Tremella species. Mycologia 86(1): 49–56 — démonstration de T. mesenterica comme mycoparasite de Peniophora laeta.",
+      "url": "https://doi.org/10.1080/00275514.1994.12026373"
+    },
+    {
+      "title": "Missouri Department of Conservation, Field Guide: Witches’ Butter — morphologie lobée et gélatineuse, habitat sur bois feuillu et saisonnalité.",
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/witches-butter"
+    },
+    {
+      "title": "E-Flora BC Atlas, University of British Columbia : description morphologique et associations de terrain avec Peniophora, à partir de plusieurs ouvrages mycologiques.",
+      "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Tremella+mesenterica"
+    },
+    {
+      "title": "Natural History Museum, UK Species Dictionary — nom accepté, taxonomie et synonymes dont Tremella lutescens.",
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NBNSYS0000021358"
+    },
+    {
+      "title": "Woodland Trust, Yellow brain — photos de référence, surface lobée et gélatineuse, mycoparasitisme de Peniophora sur bois mort.",
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/yellow-brain"
     }
   ],
   "related": []

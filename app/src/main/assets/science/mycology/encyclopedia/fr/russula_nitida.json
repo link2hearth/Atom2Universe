@@ -1,21 +1,56 @@
 {
   "id": "russula_nitida",
-  "reviewStatus": "pending",
-  "sections": [],
-  "traits": [
-    "Forme générale : russule associée aux bois humides.",
-    "Repère écologique : russule associée aux bois humides. Les détails peuvent varier selon le taxon et le milieu.",
-    "Statut alimentaire non évalué."
-  ],
-  "safetyNote": "Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.",
-  "sources": [
+  "reviewStatus": "verified",
+  "sections": [
     {
-      "title": "GBIF Backbone Taxonomy: Russula nitida.",
-      "url": "https://www.gbif.org/species/9089269"
+      "title": "Nom et chapeau",
+      "text": "Russula nitida (Pers.) Fr. est une petite russule, généralement large de 2 à 8 cm. Le chapeau, d’abord convexe, s’étale puis se déprime souvent au centre. Sa cuticule lisse est brillante et visqueuse par temps humide, plus mate en séchant; elle se détache partiellement. Les couleurs varient du rouge vineux, rose-carmin et violet au pourpre sombre, parfois avec des décolorations olivâtres. La marge devient nettement striée à maturité."
     },
     {
-      "title": "Index Fungorum, name record 211457: Russula nitida.",
-      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=211457"
+      "title": "Lames, pied et spores",
+      "text": "Les lames sont plutôt espacées, crème pâle puis ocracées, parfois avec un bord rosé près de la marge du chapeau. Le pied blanc, fragile, peut se teinter de rose, surtout vers la base; il devient parfois spongieux ou creux en vieillissant. La chair blanche est cassante, d’odeur faible et fruitée; la saveur est décrite comme douce. La sporée est ocre à jaune ocre. Les spores sont subglobuleuses à largement ellipsoïdes et ornées de verrues saillantes, caractère à vérifier au microscope."
+    },
+    {
+      "title": "Milieu et taxonomie",
+      "text": "Cette russule ectomycorhizienne est principalement associée au bouleau (Betula). Elle pousse en été et en automne dans des bois humides, souvent parmi les sphaignes, sur sols pauvres, sableux ou tourbeux; sa présence a aussi été documentée dans des peuplements mixtes. L’aulne peut être présent dans certains sites de récolte, mais les références écologiques consultées ne le désignent pas comme hôte principal. Les bases taxonomiques ne délimitent pas toutes de la même façon Russula nitida et R. sphagnophila; cette fiche suit le concept retenu par Species Fungorum et les descriptions européennes consultées."
+    },
+    {
+      "title": "Identification et sécurité",
+      "text": "La couleur seule ne permet pas de déterminer une russule, et des espèces proches peuvent se ressembler. Une identification sûre peut demander l’examen des spores et d’autres caractères microscopiques. Le statut alimentaire n’est pas évalué ici : ne consomme pas un spécimen sur la base de cette fiche ou de l’illustration."
+    }
+  ],
+  "traits": [
+    "Chapeau lisse, brillant et visqueux par temps humide, rouge vineux à rose ou violet, souvent déprimé et strié à maturité",
+    "Lames espacées, crème pâle puis ocracées; pied blanc, fragile, parfois rosé à la base",
+    "Chair blanche et cassante; sporée ocre à jaune ocre; spores fortement verruqueuses",
+    "Russule ectomycorhizienne surtout liée au bouleau, souvent dans les bois humides et parmi les sphaignes",
+    "Concept de Russula nitida parfois traité différemment de R. sphagnophila selon les bases taxonomiques"
+  ],
+  "safetyNote": "Le statut alimentaire n’est pas évalué dans cette fiche. Les russules sont difficiles à distinguer et cette description ne permet pas de confirmer une récolte. Ne consomme pas de champignon identifié à partir de cette fiche ou de cette planche seule.",
+  "sources": [
+    {
+      "title": "Species Fungorum / Index Fungorum — Russula nitida (Pers.) Fr., record 185646",
+      "url": "https://www.speciesfungorum.org/Names/NamesRecord.asp?RecordId=185646"
+    },
+    {
+      "title": "NatureServe Explorer — Russula nitida; note sur les traitements taxonomiques divergents de MycoBank et Species Fungorum",
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.1086151/Russula_nitida"
+    },
+    {
+      "title": "Fungi of Temperate Europe — clé des Russula, caractères macroscopiques, sporée, spores et écologie",
+      "url": "https://www.mycokey.com/keys/FTE-russulas.pdf"
+    },
+    {
+      "title": "NDFF Verspreidingsatlas — Russula nitida, écologie et taxonomie (données néerlandaises)",
+      "url": "https://www.verspreidingsatlas.nl/0126710"
+    },
+    {
+      "title": "Sociedad Micológica Barakaldo — description macro- et microscopique de Russula nitida (2025)",
+      "url": "https://micologica-barakaldo.org/russula-nitida/"
+    },
+    {
+      "title": "Mykologie.net — récoltes photographiées, spores et observations de Russula nitida",
+      "url": "https://www.mykologie.net/index.php/houby/podle-morfologie/lupenate/item/2130-russula-nitida"
     }
   ],
   "related": []
