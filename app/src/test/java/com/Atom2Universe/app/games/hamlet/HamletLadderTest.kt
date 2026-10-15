@@ -36,6 +36,13 @@ class HamletLadderTest {
         assertEquals(eggs.pay, wine.pay); assertEquals(eggs.payXp, wine.payXp); assertEquals(eggs.build, wine.build)
     }
 
+    @Test fun everyOrdinaryCropIsAskedByAWorkshopOrALegend() {
+        val inWorkshops = Hamlet.defs.filter { it.cat == Cat.SHOP }.flatMap { HamletIndustry.recipe(it.id, 1).cost.crops.keys }.toSet()
+        val inLegends = HamletLegends.defs.flatMap { l -> l.phases.flatMap { p -> p.needs.map { it.crop } } }.toSet()
+        for (crop in Hamlet.crops.filter { !it.magic })
+            assertTrue("${crop.id} ne sert à aucun atelier ni aucune légende", crop.id in inWorkshops || crop.id in inLegends)
+    }
+
     @Test fun noHouseBoughtWithCoinsIsBeatenByAnotherOne() {
         val homes = Hamlet.defs.filter { it.cat == Cat.HOME && it.gems == 0 }
         for (x in homes) {
