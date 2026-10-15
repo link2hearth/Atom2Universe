@@ -1,0 +1,26 @@
+{
+  "id": "volemus",
+  "reviewStatus": "verified",
+  "safetyNote": "Le groupe Lactifluus volemus figure parmi les comestibles de la DGfM et de la VAPKO suisse. Ne consommer que des exemplaires sains, identifiés avec certitude et suffisamment cuits. Un chapeau brun orangé sec et un lait blanc abondant qui tache les lames de brun sont utiles, mais plusieurs espèces proches partagent cet aspect ; une étude européenne distingue trois espèces sous l'ancien nom large L. volemus, avec des formes intermédiaires exigeant l'analyse moléculaire. La DGfM signale une protection particulière et une catégorie de préalerte sur la liste rouge allemande : vérifier les règles locales et limiter la cueillette.",
+  "sections": [
+    {"title": "Chapeau roux et sec", "text": "Le chapeau mesure environ 5 à 16 cm ; d'abord convexe à bord replié, il s'étale et devient légèrement déprimé. Sa surface sèche est lisse, finement veloutée ou peu ridée, parfois craquelée par temps sec. Sa couleur va de l'ocre et de la cannelle au brun abricot, brun orangé ou rouge brique foncé ; le bord peut être plus clair. La chair ferme et crème pâle peut brunir lentement aux blessures. Le pied robuste est généralement de la couleur du chapeau ou un peu plus clair."},
+    {"title": "Lait blanc abondant et lames brunissantes", "text": "Les lames assez serrées, crème à jaune pâle, sont adnées à légèrement décurrentes et parfois fourchues près du pied. Une éraflure laisse sortir rapidement beaucoup de lait blanc ou blanc aqueux ; les lames et tissus blessés prennent des taches brun rougeâtre à brunes pendant le séchage. Ce lait doux diffère visiblement du lait rare ou très brûlant de plusieurs autres lactaires. Une odeur caractéristique de hareng ou de poisson peut se faire sentir, avec une intensité variable selon l'état de l'exemplaire. La sporée est blanchâtre à crème pâle."},
+    {"title": "Bois et groupe de plusieurs espèces", "text": "Ce groupe mycorhizien vit dans les bois de feuillus et de conifères, surtout pendant les mois chauds de l'été et de l'automne. Une étude européenne multilocus a séparé l'ancien concept large L. volemus en L. volemus, L. oedematopus et L. subvolemus ; la couleur du chapeau aide parfois, mais certaines formes intermédiaires ne peuvent être nommées sans ADN. Les champignons américains semblables ne doivent pas automatiquement recevoir le même nom d'espèce européen. Sur le terrain, il vaut mieux parler du groupe L. volemus."},
+    {"title": "Comestibilité et conservation", "text": "La DGfM et la VAPKO inscrivent le groupe parmi les champignons alimentaires. L'entrée DGfM porte sur L. volemus au sens large et mentionne une protection particulière allemande ainsi qu'une catégorie V de préalerte de la liste rouge ; ces statuts sont régionaux. Vérifier le champignon entier et la réaction du lait avant tout usage alimentaire, puis respecter les limites locales de récolte. La planche illustre le lait et le brunissement mais ne prouve pas un nom d'espèce moléculaire strict."}
+  ],
+  "traits": [
+    "Chapeau sec ocre à abricot ou brun roux, environ 5 à 16 cm, lisse à finement velouté, parfois craquelé",
+    "Lames crème à jaune pâle assez serrées, adnées à légèrement décurrentes, parfois fourchues",
+    "Lait blanc très abondant brunissant au séchage et tachant les lames blessées de brun rougeâtre",
+    "Pied ferme et robuste de couleur proche du chapeau ou plus pâle ; chair pâle brunissant lentement",
+    "Odeur caractéristique de hareng ou de poisson, variable selon l'état du spécimen",
+    "Le L. volemus européen au sens large comprend plusieurs espèces proches parfois séparables seulement par ADN"
+  ],
+  "sources": [
+    {"title": "Van de Putte et al. (2016) — Lactifluus volemus en Europe : trois espèces sous un nom", "url": "https://www.sciencedirect.com/science/article/pii/S187861461500152X"},
+    {"title": "Société mycologique tchèque — Lactarius volemus", "url": "https://www.myko.cz/myko-atlas/Lactarius-volemus/"},
+    {"title": "DGfM (2026) — liste positive des champignons comestibles", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023) — liste suisse des champignons recommandés", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
+  ],
+  "related": ["piperatus"]
+}

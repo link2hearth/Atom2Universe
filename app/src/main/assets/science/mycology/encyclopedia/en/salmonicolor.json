@@ -1,0 +1,27 @@
+{
+  "id": "salmonicolor",
+  "reviewStatus": "verified",
+  "safetyNote": "Listed as edible by the German Society for Mycology and Swiss VAPKO, though the latter notes a strong resinous flavour. Eat only after reliable identification and suitable cooking. This orange-milk species normally lacks the conspicuous green staining of the spruce milkcap, but an absence of green alone cannot prove its identity. Examine the fir host, gills, pitted stem and fresh orange latex together; if any feature is uncertain, obtain expert review and do not eat it.",
+  "sections": [
+    {"title": "Salmon-orange cap", "text": "The broad cap is orange to salmon-orange, typically around 5–15 cm wide. Its initially inrolled margin opens and the centre becomes depressed, sometimes approaching a shallow funnel. The surface is smooth and slippery in wet weather. Concentric zones may be clear, faint or nearly absent. Fresh specimens generally lack the prominent green blotches typical of Lactarius deterrimus; brownish or wine-coloured bruises can develop, while some guides mention rare greenish tones on old specimens."},
+    {"title": "Gills, pitted stem and milk", "text": "The salmon-orange gills are close to fairly crowded and extend a short way down the stem. Injuries may take on reddish or brownish-vinaceous tones. The orange stem is often marked with shallow darker pits, although their strength varies, and becomes hollow with maturity. Fresh cuts release orange to salmon-orange latex, sometimes plentiful, which darkens slowly toward red or wine red on the flesh; it does not immediately start blood-red. The flesh is pale centrally and orange nearer the cap surface. The spore deposit is pale ochre."},
+    {"title": "Fir association and comparison", "text": "Lactarius salmonicolor is ectomycorrhizal chiefly with firs (Abies), especially silver fir in European accounts, and fruits most often in autumn. The British Mycological Society key separates it from the spruce-associated L. deterrimus and pine-associated L. deliciosus by host tree. L. deterrimus normally greens conspicuously, while L. salmonicolor usually stays orange to vinaceous. These species overlap in cap shape and latex colour, so host, stem pits and latex development should be checked together."},
+    {"title": "Edibility and limits of a picture", "text": "Both DGfM and VAPKO include this species among edible mushrooms, while VAPKO specifically notes a pronounced resinous taste; culinary value is therefore a matter of preference. The University of Lyon mycology account describes orange latex that reddens slowly and orange gills that run down the stem. Older British field keys report more variable zoning and occasional ageing colours than simple 'never green' summaries. A picture cannot verify the tree partner or a time-dependent latex reaction, so it cannot by itself establish that a specimen is safe to eat."}
+  ],
+  "traits": [
+    "Broad orange to salmon-orange cap, typically 5–15 cm, depressed with age; zones variable",
+    "Usually no conspicuous green bruising, but old specimens may show atypical greenish tones",
+    "Salmon-orange close gills, shortly decurrent, bruising reddish to brownish-vinaceous",
+    "Orange stem often with darker shallow pits, becoming hollow with age; no ring or volva",
+    "Orange to salmon latex slowly reddening toward wine red on cut flesh; pale ochre spore deposit",
+    "European collections chiefly mycorrhizal with fir (Abies), especially silver fir"
+  ],
+  "sources": [
+    {"title": "University of Lyon 1 — Lactarius salmonicolor species account", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/lactarius-salmonicolor/"},
+    {"title": "British Mycological Society — Lactarius synoptic key by Patrick Leonard", "url": "https://www.britmycolsoc.org.uk/application/files/4215/2455/1813/Lactarius_Synoptic_Key_by_Patrick_Leonard.pdf"},
+    {"title": "German Society for Mycology (2026) — positive list of edible mushrooms", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023) — Swiss recommended mushroom list", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "Gobarsko društvo Lisička Maribor — Lactarius salmonicolor", "url": "https://www.gobe.si/Gobe/LactariusSalmonicolor"}
+  ],
+  "related": ["deterrimus", "deliciosus", "sanguifluus"]
+}

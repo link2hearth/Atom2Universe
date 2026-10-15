@@ -1,0 +1,27 @@
+{
+  "id": "mutabilis",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Kuehneromyces mutabilis pousse en touffes de petits champignons bruns. Son chapeau lisse et hygrophane mesure environ 3 à 8 cm ; convexe puis plus étalé, il garde souvent un large mamelon peu saillant. Brun cannelle à brun orangé et brillant lorsqu'il est humide, il pâlit en séchant depuis le centre, ce qui produit souvent deux zones de couleur avec un bord plus sombre. Les lames serrées et attachées sont d'abord ocre pâle, puis brun cannelle. Le pied mince, long en général de 3 à 8 cm, est pâle et assez lisse au-dessus d'un anneau fragile et déchiré ; en dessous, il devient plus foncé, fibreux et nettement écailleux. L'anneau peut disparaître avec l'âge. La sporée est ocre rougeâtre à brun cannelle. L'odeur ne permet pas de séparer sûrement les espèces proches."},
+    {"title": "Milieu et saison", "text": "Saprotrophe du bois de feuillus en décomposition, notamment les souches, troncs tombés et bois enfoui ; le bouleau est un support fréquent. Les fructifications forment souvent des touffes denses, parfois soudées. En Grande-Bretagne et en Irlande, l'espèce peut apparaître une grande partie de l'année, surtout en été et en automne. Le bois peut être caché sous la litière."},
+    {"title": "Sosie mortel", "text": "La galère marginée (Galerina marginata), mortelle, peut ressembler étroitement à la pholiote changeante et pousser sur le même type de support. Elle contient des amatoxines capables de provoquer une atteinte hépatique fatale. Les écailles sous l'anneau et le centre pâle d'un chapeau qui sèche sont des indices utiles, mais aucun caractère isolé ni aucune photographie ne permet d'exclure sûrement Galerina ; les vieux exemplaires perdent parfois leurs détails distinctifs. Les contrôleurs suisses signalent explicitement cette confusion et recommandent une confirmation microscopique dans leur tableau comparatif. Une touffe mêlée ne doit pas être présumée homogène."},
+    {"title": "Comestibilité et prudence", "text": "La Société allemande de mycologie et les contrôleurs suisses incluent K. mutabilis dans leurs listes de champignons comestibles ; le pied fibreux est généralement écarté. Ce classement ne vaut que pour un exemplaire identifié avec certitude. Étant donné les conséquences graves d'une confusion avec G. marginata, cette fiche ne permet pas d'identifier un champignon destiné à être mangé à partir de l'image, du sens de séchage du chapeau, de l'odeur ou de la saveur. Après ingestion d'un petit champignon brun lignicole et au moindre doute, demander immédiatement conseil à un centre antipoison ou à un service médical, avant même l'apparition de symptômes, et conserver des exemplaires ou restes du repas."}
+  ],
+  "traits": [
+    "Chapeau hygrophane de 3 à 8 cm, brun cannelle humide, pâlissant du centre",
+    "Lames serrées et attachées, ocre pâle puis brun cannelle",
+    "Pied pâle et lisse au-dessus d'un anneau fragile, foncé et écailleux en dessous",
+    "Sporée ocre rougeâtre à brun cannelle ; odeur non diagnostique",
+    "Touffes denses sur bois mort de feuillus, surtout en été et automne"
+  ],
+  "safetyNote": "Comestible seulement après identification certaine par un spécialiste. La galère marginée, mortelle et porteuse d'amatoxines, peut être très semblable sur le même bois ; couleur, sens de séchage, odeur et écailles du pied ne suffisent pas isolément. Après une ingestion incertaine, contacter immédiatement un centre antipoison ou un service médical, même sans symptômes.",
+  "sources": [
+    {"title": "Société allemande de mycologie (DGfM) — Liste positive des champignons comestibles (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, contrôleurs suisses — Liste des champignons recommandés (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "VAPKO — Tableau des confusions : Kuehneromyces mutabilis et Galerina marginata", "url": "https://www.vapko.ch/phocadownload/public/FR/A-Z/confusions.pdf"},
+    {"title": "Centre Antipoisons belge — Brochure champignons (2026), Galerina marginata", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "First Nature — Identification et sosies de Kuehneromyces mutabilis", "url": "https://www.first-nature.com/fungi/kuehneromyces-mutabilis.php"},
+    {"title": "E-Flora BC, université de Colombie-Britannique — Kuehneromyces mutabilis", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Pholiota+mutabilis"}
+  ],
+  "related": ["galerina", "fasciculare", "capnoides", "flammulina"]
+}

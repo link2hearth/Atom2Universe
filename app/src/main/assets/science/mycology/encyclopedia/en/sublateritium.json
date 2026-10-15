@@ -1,0 +1,25 @@
+{
+  "id": "sublateritium",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and identification", "text": "The currently accepted name is Hypholoma lateritium; Hypholoma sublateritium is a synonym retained in this app's identifier. The brick tuft grows in compact groups. Its smooth, convex cap, usually about 4–9 cm wide, flattens with age and has a brick-red centre fading towards a paler yellowish margin. Young margins can retain woolly veil fragments. The crowded attached gills start cream to pale yellow, become olive-grey or occasionally faintly greenish, then purplish brown as they mature. The fibrous stem is pale yellow or ochre above and darker reddish brown at the base. A faint fibrous ring zone may be present, without a lasting membranous ring. The spore print is purplish brown."},
+    {"title": "Habitat and season", "text": "A saprotroph of dead broadleaf wood, especially hardwood stumps and buried or exposed roots. It grows in tufts, sometimes appearing beside rather than directly on a stump when the wood is buried. In Britain and Ireland it is mainly recorded from July to October; the season varies by region and conditions."},
+    {"title": "Similar species", "text": "The poisonous sulphur tuft (H. fasciculare) is generally smaller and bright sulphur yellow, with conspicuously yellow-green to olive gills. However, a faint greenish cast can occur in brick tuft too, so the rule that its gills are 'never green' is unsafe. Conifer tuft (H. capnoides) is usually smaller and associated with conifer wood. Deadly Galerina marginata also grows on wood and must be excluded; it has a rusty-brown rather than purple-brown spore print. Colour, taste or a single photograph cannot establish an edible identification."},
+    {"title": "Edibility and caution", "text": "Edibility guidance is inconsistent across regions: British field guides commonly classify brick tuft as inedible, while some North American sources describe young fruitbodies as edible and others advise against them. Taste varies from mild to bitter and is not a reliable test. Because of this disagreement and the risk of confusion with poisonous wood-growing mushrooms, this guide does not recommend eating it. Suspected mushroom poisoning requires prompt advice from a poison centre or medical service."}
+  ],
+  "traits": [
+    "Convex 4–9 cm cap, brick red at centre and paler at margin, often with woolly veil remnants",
+    "Crowded attached gills, cream to yellow then olive-grey, finally purplish brown",
+    "Fibrous pale yellow stem darkening reddish brown towards base; faint ring zone possible",
+    "Purplish-brown spore print; mild to bitter taste is not an identification test",
+    "Tufts on dead broadleaf wood, stumps or buried roots, mainly summer to autumn"
+  ],
+  "safetyNote": "Consumption is not recommended: edibility assessments differ between regions, and confusion with poisonous sulphur tuft or deadly Galerina marginata is possible. Do not rely on cap colour, gill colour or taste alone. Seek poison-centre or medical advice after suspected ingestion or symptoms.",
+  "sources": [
+    {"title": "Index Fungorum — Hypholoma sublateritium name record and accepted name", "url": "https://www.indexfungorum.org/names/namesrecord.asp?RecordID=169034"},
+    {"title": "E-Flora BC, University of British Columbia — Hypholoma lateritium species account", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Hypholoma+sublateritium"},
+    {"title": "First Nature — Hypholoma lateritium identification and edibility", "url": "https://www.first-nature.com/fungi/hypholoma-lateritium.php"},
+    {"title": "NatureSpot — Brick Tuft species account", "url": "https://www.naturespot.org/species/Hypholoma-lateritium"}
+  ],
+  "related": ["fasciculare", "capnoides", "galerina", "mutabilis"]
+}

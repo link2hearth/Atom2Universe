@@ -1,0 +1,26 @@
+{
+  "id": "hydnum",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Nom et identification", "text": "Hydnum repandum, le pied-de-mouton, porte un chapeau et un pied, mais sa face fertile est garnie d'aiguillons mous dirigés vers le bas, sans lames ni pores. Le chapeau irrégulier mesure généralement 4 à 15 cm, blanc crème à chamois ou ocre pâle, avec une surface finement veloutée ou mate, une marge longtemps enroulée puis ondulée et parfois de petites dépressions. Les aiguillons crème et fragiles mesurent environ 2 à 6 mm et descendent sur le pied pâle, ferme et plein. La chair est blanche, ferme à cassante ; une manipulation peut la faire rosir ou orangir, mais cette réaction varie. La sporée mûre est blanche. L'odeur n'est pas constamment distinctive."},
+    {"title": "Habitat et saison", "text": "Il vit en association ectomycorhizienne avec les arbres et fructifie au sol parmi mousse et feuilles mortes, en forêt de feuillus ou de conifères. Les fructifications peuvent se réunir en petits groupes, arcs ou ronds. En Grande-Bretagne et en Irlande, la saison principale va d'août à décembre, avec des variations suivant les régions et la météo. Un champignon proche d'une souche n'est pas forcément fixé à celle-ci."},
+    {"title": "Espèces proches et limites taxonomiques", "text": "Hydnum rufescens, également présent dans cet atlas, est typiquement plus petit et plus orangé ; ses aiguillons s'arrêtent généralement au pied ou le touchent à peine au lieu d'y descendre nettement. Ces distinctions se recouvrent. Les études moléculaires ont révélé plusieurs lignées européennes proches, parfois cryptiques, dans le genre Hydnum : une photo peut appuyer l'identification du genre sans prouver H. repandum au sens strict. La girolle porte des plis émoussés et non des aiguillons individuels ; Hericium erinaceus forme une masse compacte à aiguillons sur le bois, sans chapeau et pied distincts."},
+    {"title": "Comestibilité et prudence", "text": "La Société allemande de mycologie et la VAPKO suisse classent H. repandum parmi les espèces comestibles. On préfère les exemplaires jeunes et fermes ; les vieux peuvent être amers. Retourner chaque chapeau pour examiner les aiguillons, vérifier la pousse au sol et les autres caractères, sans déduire d'une seule planche qu'une récolte est comestible. Faire confirmer tout exemplaire incertain par un spécialiste. Cuire complètement les champignons récoltés, écarter ceux qui se dégradent et consulter si des symptômes suivent l'ingestion."}
+  ],
+  "traits": [
+    "Chapeau irrégulier mat, blanc crème à chamois, généralement 4–15 cm, marge d'abord enroulée puis ondulée",
+    "Aiguillons crème mous et fragiles de 2–6 mm sous le chapeau, descendant sur le pied ; aucune lame",
+    "Pied pâle ferme et plein, chair blanche ; roussissement ou orangissement à la manipulation variable",
+    "Sporée blanche",
+    "Au sol parmi mousse et feuilles mortes en forêt de feuillus ou conifères, fin d'été à automne/début d'hiver"
+  ],
+  "safetyNote": "Espèce classée comestible, surtout jeune et ferme, mais les vieux exemplaires peuvent devenir amers et les espèces proches du genre Hydnum ne sont pas toujours faciles à séparer. Vérifier aiguillons distincts, pousse au sol et ensemble des caractères ; ne pas manger une récolte déterminée grâce à cette seule planche. Demander l'avis d'un spécialiste en cas de doute et consulter si une maladie suit l'ingestion.",
+  "sources": [
+    {"title": "Société allemande de mycologie (DGfM) — Liste positive des champignons comestibles, Hydnum repandum (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO — Liste des champignons recommandés, Hydnum repandum et H. rufescens (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "First Nature — Identification de Hydnum repandum", "url": "https://www.first-nature.com/fungi/hydnum-repandum.php"},
+    {"title": "Grebenc et al. — Diversité ITS des espèces européennes du genre Hydnum (2009)", "url": "https://rjb.revistas.csic.es/index.php/rjb/article/view/333/"},
+    {"title": "Niskanen et al. — Taxonomie mondiale du genre Hydnum incluant les taxons européens (2018)", "url": "https://biblio.ugent.be/publication/8670140"}
+  ],
+  "related": ["rufescens", "erinaceus", "cibarius"]
+}

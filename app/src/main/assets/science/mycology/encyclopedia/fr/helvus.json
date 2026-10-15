@@ -1,0 +1,27 @@
+{
+  "id": "helvus",
+  "reviewStatus": "verified",
+  "safetyNote": "Ne pas consommer Lactarius helvus. La Société allemande de mycologie le classe parmi les causes de syndrome gastro-intestinal et la Société mycologique tchèque le juge non comestible à légèrement toxique. Des sources anciennes évoquent un usage condimentaire après séchage, mais son agréable odeur épicée et le séchage ne prouvent pas l'innocuité. Ne pas se fier à une prétendue règle selon laquelle l'ébullition détruirait les toxines. En cas de symptômes après ingestion, contacter rapidement un centre antipoison.",
+  "sections": [
+    {"title": "Chapeau fauve sec et feutré", "text": "Le chapeau atteint environ 4 à 14 cm ; d'abord peu bombé et souvent déjà légèrement creusé, il devient largement déprimé ou en entonnoir. Il est sec, finement velouté à feutré, parfois presque lisse ou couvert de minuscules squames en vieillissant. Sa couleur varie du beige cannelle et brun ocre au brun grisâtre ou rouillé, souvent plus claire au bord. Les zones concentriques sont absentes ou peu marquées ; quelques taches foncées ne doivent pas être confondues avec de fortes bandes."},
+    {"title": "Lames pâles, lait aqueux et pied se creusant", "text": "Les lames moyennement serrées, souvent fourchues, sont d'abord crème puis ocre rosé ; elles sont largement attachées et parfois légèrement décurrentes. Le pied, assez ferme, pâle à ocre, est d'abord plein ou farci puis peut devenir creux. La chair est blanchâtre à légèrement rosée. Une blessure fraîche produit peu de lait fluide, presque incolore et aqueux, plutôt qu'un lait blanc épais ; les exemplaires secs ou âgés peuvent ne plus en donner. La sporée est blanchâtre à crème pâle."},
+    {"title": "Une odeur surtout marquée en vieillissant ou séchant", "text": "Les exemplaires mûrs ou en cours de séchage dégagent souvent une forte odeur comparée au fenugrec, à la livèche, au curry ou à la chicorée torréfiée. Un jeune champignon frais peut être presque inodore : l'absence d'odeur ne suffit donc pas à l'écarter. Il pousse dans les lieux humides ou tourbeux, souvent parmi les sphaignes sous les épicéas ou pins, plus rarement avec les bouleaux, surtout de l'été à l'automne. Le plus petit L. camphoratus peut rappeler cette odeur mais il est habituellement plus roussâtre et occupe d'autres milieux."},
+    {"title": "Risque digestif", "text": "La DGfM place L. helvus dans sa liste des champignons responsables d'un syndrome gastro-intestinal. La Société mycologique tchèque et l'Associazione Micologica Bresadola le décrivent comme non comestible ou légèrement toxique, avec possibles troubles gastriques. Les mentions d'un usage du champignon séché comme condiment ne justifient pas de le recommander à la consommation. Une planche ne peut transmettre ni son odeur, ni la fluidité du lait frais, ni son habitat humide."}
+  ],
+  "traits": [
+    "Chapeau sec beige cannelle à brun gris rouillé, environ 4 à 14 cm, velouté ou finement feutré, peu ou pas zoné",
+    "Lames crème devenant ocre rosé, largement attachées à légèrement décurrentes, souvent fourchues",
+    "Pied pâle à ocre, d'abord plein ou farci puis parfois creux avec l'âge",
+    "Lait rare, presque incolore et aqueux ; chair blanchâtre à légèrement rosée",
+    "Odeur de fenugrec, livèche ou chicorée torréfiée surtout chez les exemplaires âgés ou séchants",
+    "Stations humides, souvent avec sphaignes sous épicéas ou pins, parfois bouleaux"
+  ],
+  "sources": [
+    {"title": "DGfM (2026) — champignons toxiques par taxon et syndrome", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Société mycologique tchèque — Lactarius helvus", "url": "https://www.myko.cz/myko-atlas/Lactarius-helvus/"},
+    {"title": "Associazione Micologica Bresadola — Lactarius helvus", "url": "https://ambbresadola.it/lactarius-helvus-bull-ex-pers-p-kumm/"},
+    {"title": "Naturalis — guide interactif des champignons, Lactarius helvus", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100466"},
+    {"title": "Blog de mycologie de Cornell — Lactarius helvus et son odeur", "url": "https://blog.mycology.cornell.edu/2009/08/19/lactarius-helvus-the-maple-syrup-milky-cap/"}
+  ],
+  "related": ["turpis", "lignyotus"]
+}

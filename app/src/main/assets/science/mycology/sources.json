@@ -602,7 +602,7 @@
     {
       "id": "gbif_agaricus_pilatianus", "kind": "taxonomy",
       "citation": "GBIF Backbone Taxonomy: Agaricus pilatianus.",
-      "url": "https://www.gbif.org/species/6014790",
+      "url": "https://www.gbif.org/taxon/65P3Q",
       "species": ["agaricus_pilatianus"]
     },
     {

@@ -1,0 +1,20 @@
+{
+  "id": "gemmata",
+  "reviewStatus": "verified",
+  "safetyNote": "Ne pas consommer Amanita gemmata. La société allemande de mycologie la considère comme suspecte pour le syndrome panthérinien, qui peut provoquer des troubles neurologiques ; la teneur en toxines peut varier selon les récoltes. En cas d'ingestion suspectée, contactez rapidement un centre antipoison, même si l'anneau ou les plaques blanches du chapeau ont disparu.",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Amanite de taille moyenne au chapeau jaune crème, jaune jonquille ou doré, souvent large de 5 à 7 cm mais de taille variable. Il porte des plaques ou verrues blanches molles et irrégulières que la pluie peut effacer ; la marge plus claire est souvent finement striée. Les lames blanches sont rapprochées. Leur attache est décrite comme adnée, subadnée ou presque libre : ce caractère isolé n'est pas décisif. Le pied pâle porte un anneau supérieur fin et fragile, qui peut disparaître."},
+    {"title": "Base et milieu", "text": "La base du pied forme un bulbe, généralement entouré au sommet d'un petit rebord libre et blanc de la volve. Le voile peut aussi laisser des plaques ou une gaine mince. Il faut conserver la base entière pour l'examiner. Cette espèce ectomycorhizienne pousse sur sol pauvre, souvent acide, auprès des conifères ou des feuillus, notamment sapin, hêtre et chêne ; elle fructifie surtout de l'été à l'automne, avec des observations printanières selon les régions."},
+    {"title": "Espèces voisines", "text": "Amanita pantherina est généralement plus brune mais l'apparence peut se recouper, et la pluie peut enlever les plaques blanches d'A. gemmata. Des formes pâles d'Amanita muscaria et Amanita citrina demandent aussi de l'attention. L'absence d'un anneau fragile n'exclut pas A. gemmata. Considérer ensemble chapeau, lames, voiles et bulbe intact, et faire confirmer la détermination."},
+    {"title": "Données toxicologiques", "text": "La DGfM classe A. gemmata comme suspecte pour le syndrome panthérinien et souligne l'incertitude sur les populations riches ou pauvres en toxines et l'effet des quantités ingérées. Ce syndrome est associé à l'acide iboténique et au muscimol ; il peut entraîner une conscience altérée, de l'agitation ou une somnolence et, dans les cas graves, des convulsions ou un coma. On ne peut pas prédire une teneur en toxines uniforme pour chaque exemplaire."},
+    {"title": "Lecture de la planche", "text": "L'illustration montre un champignon jaune entier, une coupe longitudinale, le dessus du chapeau et les lames pâles vues de dessous. Le petit rebord blanc du bulbe et l'anneau déchiré et fugace sont visibles. Les plaques blanches du chapeau représentent des restes variables du voile."}
+  ],
+  "sources": [
+    {"title": "Naturalis Biodiversity Center. Amanita gemmata, guide interactif des champignons.", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100103"},
+    {"title": "Université de Colombie-Britannique, E-Flora BC. Fiche du groupe Amanita gemmata.", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Amanita+gemmata"},
+    {"title": "Université de Washington, herbier Burke. Notes d'identification d'Amanita gemmata.", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Amanita+gemmata"},
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Liste des champignons toxiques par taxon et syndrome.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Deutsche Gesellschaft für Mykologie. Description du syndrome panthérinien.", "url": "https://www.dgfm-ev.de/de/beschreibung-symptome-und-karenzzeiten"}
+  ],
+  "related": ["pantherina", "muscaria", "citrina"]
+}

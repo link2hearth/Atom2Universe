@@ -1,0 +1,20 @@
+{
+  "id": "agathosmus",
+  "reviewStatus": "verified",
+  "safetyNote": "Hygrophorus agathosmus figure sur les listes de champignons comestibles de la DGfM et du VAPKO, mais cette planche et l'odeur d'amande ne suffisent pas à établir l'identité ou l'innocuité d'une récolte sauvage. Des recherches distinguent plusieurs espèces proches autrefois réunies sous ce nom, et l'odeur peut être faible. Ne pas consommer un spécimen sur la seule base de l'application ; le faire contrôler par une personne qualifiée.",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Cet hygrophore gris porte un chapeau lisse et charnu d'environ 3 à 10 cm, d'abord convexe à bord enroulé et parfois faiblement mamelonné, puis étalé ou un peu déprimé. Sa couleur varie du gris beige au gris cendré ou brunâtre ; sa surface devient nettement visqueuse ou collante à l'humidité. Le bord pâle peut onduler avec l'âge. L'odeur d'amande amère ou de noyau de cerise caractérise le groupe, mais son intensité varie."},
+    {"title": "Lames, pied et chair", "text": "Les lames sont épaisses, souples et cireuses, et non fines et serrées. Blanches à crème, elles deviennent grisâtres avec l'âge ; elles sont attachées au pied et y descendent souvent légèrement chez les sujets mûrs. Le pied sec, blanchâtre à gris pâle, mesure environ 4 à 10 cm, parfois davantage ; il est plein, dépourvu d'anneau et de volve, et peut être finement pruineux ou floconneux vers le haut. La chair est tendre et blanchâtre, parfois nuancée de gris ; la sporée est blanche."},
+    {"title": "Écologie et saison", "text": "Cette espèce forme des ectomycorhizes avec les conifères et fructifie au sol, isolément ou en groupes. Les descriptions de terrain au sens large citent l'épicéa et le pin, surtout de l'été à l'automne. Une étude moléculaire situe H. agathosmus au sens strict avec les épicéas, dans les vieilles forêts humides, riches et souvent calcaires du nord-est de l'Europe ; certaines mentions sous pins concernent apparemment d'autres espèces du complexe."},
+    {"title": "Espèces proches et nom", "text": "Plusieurs hygrophores gris ou bruns se ressemblent, et une odeur d'amande ne désigne pas une seule espèce. Une étude de 2018 a séparé plusieurs taxons proches du nord de l'Europe, dont H. suaveolens sous pins et le petit H. exiguus des vieilles pessières. En Amérique du Nord, des récoltes attribuées à H. agathosmus se sont avérées être H. odoratus. La teinte du chapeau, l'arbre associé, le milieu, l'insertion des lames et parfois la microscopie ou le séquençage sont nécessaires. Il existe aussi une forme blanche d'H. agathosmus."},
+    {"title": "Lecture de la planche", "text": "La planche sur fond blanc présente un exemplaire entier gris à chapeau d'aspect humide, bord enroulé et pied blanchâtre sans anneau ; une coupe longitudinale de la chair pâle ; une vue du dessus ; et une vue du dessous montrant les lames épaisses et cireuses, attachées au pied et légèrement descendantes. Elle illustre un aspect représentatif, pas toutes les espèces proches."}
+  ],
+  "sources": [
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Liste positive des champignons comestibles, incluant Hygrophorus agathosmus.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023). Liste suisse de recommandation, incluant Hygrophorus agathosmus.", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "Université de Colombie-Britannique, E-Flora BC. Morphologie et espèces proches d'Hygrophorus agathosmus.", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?NoTransfer=1&sciname=Hygrophorus+agathosmus"},
+    {"title": "Naturalis Biodiversity Center. Guide interactif des champignons : Hygrophorus agathosmus.", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=100353"},
+    {"title": "Larsson et al. (2018). Diversité du groupe Hygrophorus agathosmus dans le nord de l'Europe. Mycological Progress.", "url": "https://doi.org/10.1007/s11557-018-1445-y"}
+  ],
+  "related": ["olivaceoalbus", "marzuolus", "hypothejus"]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "asperum",
+  "reviewStatus": "verified",
+  "safetyNote": "Ne pas consommer Echinoderma asperum. Des cas enregistrés par un centre antipoison décrivent une réaction désagréable déclenchée par l'alcool après sa consommation. La société allemande de mycologie le classe dans le syndrome de l'acétaldéhyde, mais précise que la substance responsable n'est pas la coprine et reste inconnue. Contactez un centre antipoison après une ingestion suspectée, surtout si de l'alcool a aussi été consommé.",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Champignon robuste proche des lépiotes, au chapeau beige clair densément couvert d'écailles pyramidales dressées, brun rouge foncé ; le centre est le plus sombre. Le chapeau peut atteindre environ 10 cm ou davantage. Les lames blanches à crème sont libres et serrées, parfois fourchues. Le pied pâle porte de petites écailles brunes sous un large anneau blanc à crème, cotonneux ou membraneux, parfois ponctué de brun au bord. Il n'a pas de volve basale."},
+    {"title": "Milieu et saison", "text": "Espèce saprotrophe poussant sur le sol, la litière de feuilles ou les paillis de copeaux, en forêt, dans les parcs et jardins. En Europe tempérée, elle apparaît surtout de la fin de l'été à l'automne. Les descriptions de son odeur varient, notamment autour du caoutchouc ou de la terre ; l'odeur seule n'est pas diagnostique."},
+    {"title": "Espèces voisines et taxonomie", "text": "Les écailles brunes pointues et les lames blanches peuvent faire penser à d'autres Echinoderma ou Lepiota, ou à des coulemelles comme Macrolepiota procera ; celle-ci n'a pas cette dense couverture de pointes pyramidales. Une étude moléculaire de 2025 montre que l'ancien concept large d'E. asperum comprend au moins quatre lignées génétiques : les caractères visibles ne règlent pas toutes les limites taxonomiques."},
+    {"title": "Réaction avec l'alcool", "text": "Une série du centre antipoison de Munich publiée en 2011 rapporte trois épisodes touchant cinq personnes après consommation de champignons identifiés comme Lepiota aspera, ancien nom d'Echinoderma asperum. Les symptômes ressemblaient à une réaction de type coprin avec l'alcool. Selon la DGfM, l'inhibiteur du métabolisme de l'acétaldéhyde reste inconnu chez cette espèce et n'est pas la coprine. Il faut éviter le champignon, et non seulement supprimer l'alcool du repas."},
+    {"title": "Lecture de la planche", "text": "La planche montre le champignon entier, une coupe longitudinale, le chapeau densément épineux vu de dessus et les lames blanches serrées vues de dessous. Le large anneau et le pied écailleux sont visibles. Aucune spore n'est agrandie ou détachée dans l'illustration."}
+  ],
+  "sources": [
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Champignons toxiques par taxon et syndrome.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Deutsche Gesellschaft für Mykologie. Description du syndrome de l'acétaldéhyde.", "url": "https://www.dgfm-ev.de/de/beschreibung-symptome-und-karenzzeiten"},
+    {"title": "Haberl et al. (2011). Série de cas d'intolérance à l'alcool après Lepiota aspera. Clinical Toxicology.", "url": "https://pubmed.ncbi.nlm.nih.gov/21370948/"},
+    {"title": "Sarawi, Piepenbring et Reschke (2025). Révision phylogénétique et taxonomique d'Echinoderma et Lepiota.", "url": "https://pubmed.ncbi.nlm.nih.gov/40161325/"},
+    {"title": "Mushrooms for Trees and People (2014). Description d'Echinoderma asperum, p. 46–48.", "url": "https://humidtropics.cgiar.org/wp-content/uploads/downloads/2014/04/Final_Mushroom-Field-Manual_Mar-2014_for-WEB.pdf"}
+  ],
+  "related": ["procera", "brunneoincarnata", "rhacodes"]
+}

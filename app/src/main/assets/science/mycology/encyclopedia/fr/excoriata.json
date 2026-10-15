@@ -1,0 +1,20 @@
+{
+  "id": "excoriata",
+  "reviewStatus": "verified",
+  "safetyNote": "Macrolepiota excoriata figure sur les listes d’espèces comestibles de la DGfM et de la VAPKO, mais une image ou une application ne permet pas de décider qu’un champignon peut être consommé. Plusieurs espèces ressemblantes sont dangereuses. Faites contrôler un spécimen entier et frais, surtout la base et l’anneau, par un spécialiste local avant toute consommation. Évitez les récoltes en bord de route ou sur sol pollué ; cuisez bien les champignons sauvages.",
+  "sections": [
+    {"title": "Identification", "text": "Lépiote claire de taille moyenne. Son chapeau mesure généralement 5 à 12 cm, d’abord arrondi puis largement convexe à presque plat avec un mamelon bas et brunâtre. La surface crème pâle porte de nombreuses petites écailles fibreuses ou granuleuses beige ocre, souvent plus visibles près du centre, tandis que la périphérie paraît parfois pelée ou effilochée. Les lames serrées et libres sont blanches à crème, parfois légèrement rosées avec l’âge."},
+    {"title": "Pied, anneau et chair", "text": "Le pied mince et blanchâtre mesure environ 5 à 14 cm. Il est lisse ou finement feutré, sans le motif brun en peau de serpent de M. procera, et seulement modérément élargi à la base. L’anneau pâle et membraneux est simple, généralement mobile, et peut devenir discret sur les vieux exemplaires. La chair blanche ne vire pas rapidement à l’orange ou au rouge à la coupe ; le pied adulte peut devenir creux. La sporée est blanchâtre à crème."},
+    {"title": "Milieu et saison", "text": "Espèce saprotrophe des milieux herbeux ouverts, pâturages, prairies et dunes littorales, parfois en petits groupes ou en arcs. Elle fructifie surtout en été et en automne en Europe. Sa répartition et son statut de conservation changent selon les régions ; la liste allemande de 2026 la signale en catégorie 3 de la Liste rouge."},
+    {"title": "Espèces ressemblantes", "text": "Macrolepiota procera est habituellement plus grande et possède un pied nettement tigré de brun. M. mastoidea porte un mamelon central plus pointu. Chlorophyllum rhacodes et C. brunneum sont plus grossièrement déguenillées et leur chair blessée se colore d’orange puis de rouge. Les petites Lepiota, dont certaines sont mortelles, ne doivent jamais être jugées sur une simple ressemblance de silhouette : il faut examiner la fructification entière avec un spécialiste."},
+    {"title": "Lecture de la planche", "text": "La planche sur fond blanc montre un exemplaire entier au chapeau pâle excorié, au pied mince non tigré, à l’anneau simple et à la base faiblement élargie ; une coupe longitudinale à chair blanche inchangée ; les lames libres vues de dessous ; et le dessus du chapeau."}
+  ],
+  "sources": [
+    {"title": "Société néerlandaise de mycologie. Guide des dunes côtières : fiche Macrolepiota excoriata.", "url": "https://www.mycologen.nl/onderzoek/meetnet/zeereep-concept/veldgids-zeereepsoorten/plaatjeszwammen/parasolzwammen/"},
+    {"title": "Société tchèque de mycologie. Atlas Macrolepiota excoriata par Karel Tejkal.", "url": "https://www.myko.cz/myko-atlas/Macrolepiota-excoriata/"},
+    {"title": "Irish Grassland Fungi. Fiche de terrain Macrolepiota excoriata.", "url": "https://irishgrasslandfungi.irish/macrolepiota-excoriata/"},
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Liste positive des champignons comestibles.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023). Liste suisse des champignons recommandés.", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
+  ],
+  "related": ["procera", "rhacodes", "brunneoincarnata"]
+}

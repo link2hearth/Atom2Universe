@@ -1,0 +1,33 @@
+{
+  "id": "amanita_beckeri",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and diagnostic form", "text": "Amanita beckeri Huijsman is a European ringless amanita, called Becker's ringless amanita in the specialist Amanitaceae account. Its cap reaches about 12 cm across, beginning hemispherical and becoming convex to nearly flat. The centre is golden hazel or ochre brown, generally paler toward the edge; an older, reddish-brown interpretation of the original colour description was corrected after study of the type material. The long cap margin is deeply grooved and striate, while numerous small, initially white, cottony veil patches turn brown rather than grey or black."},
+    {"title": "Gills, stem and volva", "text": "Gills are free and close, white to cream when young, sometimes developing brownish spots; accounts differ on whether they turn silvery grey with age, so colour alone is unreliable. The slender white stem is approximately 10–20 cm long and 1.2–2 cm wide, at first filled and later hollow, without a true ring. The universal veil makes a fragile small cup at the base and a separate belt of tissue a short distance above it. Both are white at first and may brown. The entire stem base is important for study."},
+    {"title": "Ecology and distinctions", "text": "The original material came from France and the specialist monograph records the species in Europe. Its protologue describes solitary to grouped fruitbodies in deciduous woods on calcareous soil, especially during very wet periods. A French herbarium-backed account includes an autumn collection in calcareous deciduous growth with hazel. The specialist account compares it with Amanita ceciliae: veil remnants of A. beckeri are reported to brown without turning charcoal grey or black, although identification requires the complete combination of characters and sometimes microscopic study."},
+    {"title": "Identification and food safety", "text": "This is a taxonomic reference, not an edible-mushroom recommendation. No reliable species-specific food-safety assessment was established from the reviewed sources. The lack of a stem ring does not by itself prove a mushroom safe: rings and other veil characters can be absent, damaged or hidden at some stages, and the genus includes deadly species. Do not eat a candidate Amanita beckeri on the basis of this plate or description; seek an expert identification for a collected specimen."}
+  ],
+  "traits": [
+    "Hazel-ochre to golden-brown cap up to about 12 cm, paler at edge, with deeply striate-grooved margin",
+    "Small cottony cap veil patches white at first, then brown rather than blackish",
+    "Free, close gills white to cream at first; slender ringless white stem about 10–20 cm long",
+    "Fragile small basal volval cup with a separate belt of veil tissue just above the base",
+    "European deciduous woodland, especially calcareous soil; original account notes very wet periods"
+  ],
+  "safetyNote": "Edibility and toxicity have not been established for this species in the reviewed sources. Do not eat it. A missing ring is not proof of safety among Amanita; confirm the complete specimen with a qualified local expert, and seek urgent poison-centre advice after any suspected dangerous Amanita ingestion.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy — Amanita beckeri Huijsman",
+      "url": "https://www.gbif.org/species/5451688"
+    },
+    {
+      "title": "Index Fungorum — Amanita beckeri, record 282978",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=282978"
+    },
+    {"title": "Amanitaceae.org, R. E. Tulloss — Amanita beckeri, protologue and type-based morphology", "url": "https://dikarya.us/amanitaceae/pages/amanita-beckeri/"},
+    {"title": "TaxinoHan — Amanita beckeri, French herbarium collections and habitat", "url": "https://taxinohan.fr/?fiche=36"},
+    {"title": "Australian National Botanic Gardens — Death cap identification and hazard context", "url": "https://www.cpbr.gov.au/fungi/deathcap.html"
+    }
+  ],
+  "related": ["phalloides"]
+}

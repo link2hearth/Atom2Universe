@@ -1,0 +1,27 @@
+{
+  "id": "mellea",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Identification", "text": "Armillaria mellea is one member of a group of similar honey fungi, so a generic honey-fungus appearance does not establish this species. It often produces dense clusters of mushrooms at the base of a tree or on woody roots and stumps. The cap is usually about 5–15 cm across, convex when young and flatter with age, honey yellow to reddish brown with a darker centre. Fine darker fibrous scales are most visible near the centre of young caps and can wear away. Crowded gills are pale cream to flesh-coloured, attached or slightly running down the stem, becoming yellowish and sometimes rusty-spotted with age. The pale stem carries a persistent cream to yellowish ring; the flesh is white and the spore print very pale cream-white. Black, bootlace-like rhizomorphs may be found under nearby bark or on roots."},
+    {"title": "Ecology and season", "text": "This fungus parasitises living trees, particularly broadleaves, where it can cause root rot; it can also persist on dead roots and stumps. Fruiting bodies may appear beside a trunk because the infected wood lies below ground. In Britain and Ireland they are mainly seen from summer to late autumn, especially in large autumn flushes. Similar Armillaria species have overlapping field characters, and specialised examination may be needed to separate them."},
+    {"title": "Similar species", "text": "Armillaria ostoyae has darker cap scales and a persistent ring with dark scales beneath; A. gallica often has a bulbous stem and only a fleeting ring zone. Other wood-growing clustered mushrooms include deadly Galerina marginata, poisonous Hypholoma fasciculare and various Pholiota species. Their brown or purplish-brown spore prints differ from the pale print of Armillaria, but the print alone cannot establish the species or safety. Every specimen in a mixed cluster needs separate examination."},
+    {"title": "Food safety", "text": "Food-use advice differs: the Swiss VAPKO list includes young Armillaria species only after specified preparation, while French ANSES assessments report gastrointestinal poisoning linked to A. mellea, including after cooking. Symptoms can include abdominal pain, vomiting and diarrhoea. Cooking, drying or preserving should not be presented as a guarantee of safety. This guide therefore does not recommend collecting A. mellea for food. If illness follows consumption, promptly contact a poison centre or medical service and keep the remaining mushrooms or meal."}
+  ],
+  "traits": [
+    "Honey-yellow to reddish-brown cap, usually 5–15 cm, with dark central fibrils or small scales",
+    "Pale crowded gills, attached to slightly decurrent, yellowing or rust-spotted with age",
+    "Pale fibrous stem with a persistent cream to yellowish ring",
+    "Very pale cream-white spore print; black cord-like rhizomorphs may occur under bark",
+    "Large clusters at tree bases, on stumps and buried woody roots, especially autumn"
+  ],
+  "safetyNote": "Consumption is not recommended. Armillaria mellea has been linked to gastrointestinal poisoning, including after cooking, and preparation does not guarantee safety. Similar wood-growing mushrooms include the deadly Galerina marginata. Seek prompt poison-centre or medical advice after symptoms or uncertain ingestion.",
+  "sources": [
+    {"title": "ANSES — Risk assessment of consuming Armillaria mellea and two other mushrooms (2015)", "url": "https://www.anses.fr/fr/system/files/ERCA2014sa0256.pdf"},
+    {"title": "ANSES — Opinion on edible wild and cultivated mushrooms (2017)", "url": "https://www.anses.fr/system/files/ERCA2015SA0180.pdf"},
+    {"title": "VAPKO, Swiss mushroom controllers — Recommended mushroom list, Armillaria species (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "First Nature — Armillaria mellea identification and toxicity", "url": "https://www.first-nature.com/fungi/armillaria-mellea.php"},
+    {"title": "Missouri Department of Conservation — Honey mushroom field guide", "url": "https://mdc.mo.gov/discover-nature/field-guide/honey-mushroom"},
+    {"title": "Royal Horticultural Society — Identifying honey fungus", "url": "https://www.rhs.org.uk/disease/honey-fungus-identifying-mushrooms"}
+  ],
+  "related": ["galerina", "fasciculare", "mutabilis", "capnoides"]
+}

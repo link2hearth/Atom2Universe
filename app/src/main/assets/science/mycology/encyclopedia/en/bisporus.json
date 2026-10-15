@@ -1,0 +1,20 @@
+{
+  "id": "bisporus",
+  "reviewStatus": "verified",
+  "safetyNote": "Agaricus bisporus is an edible, extensively cultivated species, but a wild mushroom should never be eaten on the basis of this plate or app. Several toxic Agaricus species and deadly white Amanita species can be confused with young mushrooms. Examine the complete stem base, gill development, odour and staining, and have a wild collection checked by a qualified local expert. Avoid mushrooms from contaminated ground.",
+  "sections": [
+    {"title": "Identification", "text": "The wild form usually has a 5–13 cm cap, first hemispherical with an inrolled edge, then convex to broad and flatter. It is greyish to medium brown, with appressed radial brown fibrils or flat scales over a paler ground and a pale edge. Cultivated forms range from white button mushrooms to brown cremini and mature portobello forms. The cap colour alone is therefore not diagnostic."},
+    {"title": "Gills, stem and flesh", "text": "Crowded, narrow gills are free from the stem. As the veil opens they are dull pink, then reddish or purplish brown, finally chocolate brown. A closed button may conceal their colour. The white, stout stem is about 3–8 cm tall and bears a membranous, often two-layered ring, sometimes striate above and flaky below. It has no volva. Firm white flesh may redden or pinken slightly where cut or rubbed; the spore deposit is chocolate brown."},
+    {"title": "Ecology and season", "text": "This saprobic mushroom grows on nutrient-rich humus, compost and manure, in gardens, parks, roadsides and other disturbed ground; wild populations may also occur in grassland or occasionally in rich-soil woodland. It is much less common in the wild than in cultivation. Outdoor fruiting is mainly from late spring through autumn, varying by region and weather."},
+    {"title": "Lookalikes and safe recognition", "text": "Agaricus campestris is similar but usually has a weaker ring and is commonly found in grass; the mostly two-spored basidia of A. bisporus require microscopy to confirm. Toxic yellow-staining Agaricus, including A. xanthodermus, can have a phenolic or ink-like smell and vivid yellow staining, especially at the stem base, but these signs vary. Deadly white Amanita species have a volva and retain white gills at maturity. Keep the whole stem base and never use a single character or this illustration to decide edibility."},
+    {"title": "About the plate", "text": "The white-background plate compares a whole brown wild-type fruit body, a pale cultivated button, a longitudinal section of the firm flesh and ring, and an underside view showing free gills that darken with age. These are representative forms and stages of one species."}
+  ],
+  "sources": [
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Positivliste der Speisepilze, including Agaricus bisporus.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023). Swiss recommendation list of edible fungi, including Agaricus bisporus.", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "Naturalis Biodiversity Center. Interactive Guide to Mushrooms and Other Fungi: Agaricus bisporus.", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100066"},
+    {"title": "University of British Columbia, E-Flora BC. Agaricus bisporus species account by Ian Gibson.", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=1&sciname=Agaricus+bisporus"},
+    {"title": "First Nature. Agaricus bisporus identification, habitat and similar species.", "url": "https://www.first-nature.com/fungi/agaricus-bisporus.php"}
+  ],
+  "related": ["campestris", "xanthodermus", "silvicola"]
+}

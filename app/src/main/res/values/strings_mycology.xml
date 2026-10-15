@@ -389,6 +389,9 @@
     <!-- Plate labels -->
     <string name="myco_l_olive_cap">Olive-green cap</string>
     <string name="myco_l_white_free_gills">White free gills</string>
+    <string name="myco_l_white_veil_patches">White veil patches</string>
+    <string name="myco_l_small_volval_cup">Small cup-like volva</string>
+    <string name="myco_l_low_veil_zone">Low veil belt</string>
     <string name="myco_l_ring">Ring</string>
     <string name="myco_l_volva_sac">Sac-like volva</string>
     <string name="myco_l_free_gills">Free gills</string>
@@ -454,6 +457,7 @@
     <string name="myco_l_fused_points">Joined at several points</string>
     <string name="myco_l_inrolled">Rolled margin</string>
     <string name="myco_l_decurrent_gills">Decurrent gills</string>
+    <string name="myco_l_adnate_slightly_decurrent_gills">Adnate, sometimes slightly decurrent gills</string>
     <string name="myco_l_no_ring">No ring</string>
     <string name="myco_l_flesh_yellowish">Yellowish flesh</string>
     <string name="myco_l_forked_gills">Forked gills</string>
@@ -493,6 +497,8 @@
     <string name="myco_l_cinnamon_gills">Cinnamon gills</string>
     <string name="myco_l_sulphur_cap">Sulphur-yellow cap</string>
     <string name="myco_l_gills_green_ripe">Gills greenish when ripe</string>
+    <string name="myco_l_gills_green_then_brown">Gills yellow, then olive-green, finally brown</string>
+    <string name="myco_l_on_conifer_wood">On dead conifer wood</string>
     <string name="myco_l_flesh_sulphur">Sulphur-yellow flesh</string>
     <string name="myco_l_honey_cap">Honey cap, dark fibres</string>
     <string name="myco_l_ring_white">White ring</string>
@@ -568,6 +574,7 @@
     <string name="myco_l_cream_ochre_gills">Cream to ochre gills</string>
     <string name="myco_l_dotted_pink_stem">Dotted, pinkish stem</string>
     <string name="myco_l_white_flaky_cap">White, flaky cap</string>
+    <string name="myco_l_white_fringed_cap">Smooth white cap, fringed margin</string>
     <string name="myco_l_cream_funnel_cap">Cream, dished cap</string>
     <string name="myco_l_decurrent_cream_gills">Cream, deeply decurrent gills</string>
     <string name="myco_l_solid_fibrous_stem">Solid, fibrous stem</string>
@@ -953,7 +960,7 @@
         <item>White spores</item>
         <item>Meadows, hedges, orchards, often in rings · late April to June</item>
     </string-array>
-    <string name="myco_gambosa_note">Edible, a spring mushroom. Two toxic look-alikes appear in the same season: the red-staining inocybe, with a conical cap that turns red, and sometimes the livid pinkgill, with gills yellowish at first then pink. The spore print is white; tobacco-brown for the inocybe, pink for the pinkgill. The floury smell is not enough: the pinkgill has it too.</string>
+    <string name="myco_gambosa_note">Edible after reliable identification. The deadly red-staining fibrecap can fruit in spring; livid pinkgill, mainly autumnal, also smells mealy. Check the crowded pale gills, whole stem base and, if needed, the spore print. Smell or season alone is insufficient.</string>
 
     <!-- Red-staining inocybe -->
     <string name="myco_erubescens_name">Red-staining inocybe</string>
@@ -1008,7 +1015,7 @@
         <item>Blackish spores</item>
         <item>Gardens, path edges, buried stumps, in tufts · summer to late autumn</item>
     </string-array>
-    <string name="myco_atramentaria_note">Edible, but never with alcohol: coprine blocks the breakdown of alcohol. A glass of wine or beer during the meal, or up to 72 hours after, causes flushing of the face and neck, headache, dizziness, sweating, vomiting and a drop in blood pressure. The effects pass within a few hours (Belgian poison centre).</string>
+    <string name="myco_atramentaria_note">Toxic with alcohol: the DGfM classifies it among mushrooms causing acetaldehyde syndrome. Alcohol during a meal or for up to 72 hours afterwards can trigger facial flushing, headache, dizziness, sweating, vomiting and low blood pressure. Some guides describe it as edible when properly cooked and avoided with alcohol; do not rely on this card to identify or prepare a wild specimen.</string>
 
     <!-- Shaggy ink cap -->
     <string name="myco_comatus_name">Shaggy ink cap</string>
@@ -1022,7 +1029,7 @@
         <item>Blackish spores</item>
         <item>Lawns, grassland, path edges, rich soil, in groups</item>
     </string-array>
-    <string name="myco_comatus_note">Edible when young, while the gills are still white: eat it quickly, and throw away anything turning pink or black. Unlike the common ink cap, it is safe to eat with alcohol.</string>
+    <string name="myco_comatus_note">Traditionally eaten while young and with white gills, but do not consume a specimen identified only from this card. Evidence about reactions with alcohol is mixed: a 2020 review found no coprine established in C. comatus, while China CDC later attributed some alcohol-associated cases to inkcaps without testing each specimen for coprine. Avoid alcohol around any uncertain inkcap meal and seek expert identification.</string>
 
     <!-- Funeral bell -->
     <string name="myco_galerina_name">Funeral bell</string>
@@ -1050,7 +1057,7 @@
         <item>Rusty spores · pleasant smell, mild taste</item>
         <item>In tufts of sometimes fused stems, on broadleaf stumps · late spring to autumn</item>
     </string-array>
-    <string name="myco_mutabilis_note">A good edible, except the fibrous stem. But the deadly funeral bell can fool even experienced pickers. The woodtuft dries from the centre outward, the funeral bell from the rim inward; one smells pleasant, the other floury. The scales below the ring are not enough: the funeral bell can have some too.</string>
+    <string name="myco_mutabilis_note">Edible only after reliable identification: the deadly Galerina marginata can grow on the same wood. Neither drying pattern, smell nor stem scales alone exclude it; expert examination, sometimes microscopy, may be needed.</string>
 
     <!-- Sulphur tuft -->
     <string name="myco_fasciculare_name">Sulphur tuft</string>
@@ -1064,22 +1071,22 @@
         <item>Purple-brown spores</item>
         <item>In tufts fused at the base, on stumps and wood of broadleaves or conifers · spring to autumn</item>
     </string-array>
-    <string name="myco_fasciculare_note">Toxic: nausea, vomiting, diarrhoea, sometimes only 5 to 10 hours after the meal; it usually passes in a few days. One death from fulminant hepatitis is cited, but the dish contained other mushrooms. It resembles the funeral bell and the sheathed woodtuft (Belgian poison centre).</string>
+    <string name="myco_fasciculare_note">Toxic: can cause vomiting and diarrhoea after ingestion. Seek prompt medical advice if eaten. It grows in tufts on wood and can be confused with other wood-growing species.</string>
 
     <!-- Honey fungus -->
     <string name="myco_mellea_name">Honey fungus</string>
     <string name="myco_mellea_alt">Armillaire couleur de miel</string>
     <string name="myco_mellea_latin" translatable="false">Armillaria mellea</string>
     <string-array name="myco_mellea_traits">
-        <item>Cap 1 to 15 cm, light yellow, mustard or olive-brown, with fine dark fibres mostly at the centre</item>
+        <item>Cap usually 5 to 15 cm, honey-yellow to brown, with fine darker flecks especially near the centre</item>
         <item>Gills white then yellowish, sometimes stained brown</item>
-        <item>Slender stem, striate above a white ring, flecked white below; fibrous and tough with age</item>
-        <item>White flesh, slightly bitter taste · white spores</item>
+        <item>Stem with a pale to cream-yellow ring; fibrous and tough with age</item>
+        <item>White flesh and white spore print; taste is not an identification test</item>
         <item>In tufts, sometimes dozens of stems, on stumps, roots and trunks, mostly of broadleaves</item>
         <item>Very common in autumn</item>
     </string-array>
-    <string name="myco_mellea_note">Not recommended: ANSES considers it can cause digestive trouble (diarrhoea, vomiting, pain) a few hours after the meal, and nothing shows that long cooking or canning removes the risk. Between 1999 and 2015, French poison centres recorded 83 cases. Some authors call it edible when young and well cooked. It grows in tufts like toxic look-alikes, the funeral bell and the sulphur tuft.</string>
-    <string name="myco_mellea_history">Long cited as a middling edible, sometimes only when young, it is judged indigestible and sometimes allergenic. In Italy, where it is widely eaten, it caused 25% of the mushroom poisonings recorded by the Milan poison centre between 1994 and 1999. In 2015 ANSES judged it can cause poisonings, even after canning. An order of 5 August 2016 suspended for one year the sale of fresh honey fungus without a notice about full cooking.</string>
+    <string name="myco_mellea_note">Consumption discouraged: ANSES reports digestive illness, including after cooking. Some guides permit young Armillaria under conditions, but identification is difficult within the species complex and toxic wood-growing mushrooms may be confused with it.</string>
+    <string name="myco_mellea_history">Historically treated as edible when young and thoroughly cooked, honey fungus has also caused digestive poisonings. French health authorities reviewed this risk in 2015; the sales order of 5 August 2016 applied for one year and is a historical measure.</string>
 
     <!-- Horn of plenty -->
     <string name="myco_craterellus_name">Horn of plenty</string>
@@ -1100,14 +1107,14 @@
     <string name="myco_hydnum_alt">Pied-de-mouton</string>
     <string name="myco_hydnum_latin" translatable="false">Hydnum repandum</string>
     <string-array name="myco_hydnum_traits">
-        <item>Matt, more or less felted cap, whitish to ochre-brown, sometimes apricot, 3 to 10 cm; margin long rolled, then wavy</item>
+        <item>Matt, smooth to slightly velvety cap, whitish to ochre-brown, sometimes apricot, 3 to 10 cm; margin long rolled, then wavy</item>
         <item>Underside covered in 3 to 6 mm spines, cream, crowded and fragile, slightly decurrent: no gills</item>
         <item>Stocky stem, the colour of the spines, browning in places</item>
-        <item>Firm but brittle white flesh that turns orange · fruity smell, mild taste, sometimes peppery or bitter in old ones</item>
-        <item>Cream spores</item>
-        <item>Broadleaf and conifer woods, in groups, often in lines or half-circles · late summer to November</item>
+        <item>Firm but brittle white flesh, sometimes orange-stained when bruised · often fruity smell, mild taste, sometimes peppery or bitter in old ones</item>
+        <item>White spore print</item>
+        <item>Broadleaf and conifer woods, in groups · late summer to autumn</item>
     </string-array>
-    <string name="myco_hydnum_note">Spines instead of gills or pores: the feature shows at once when the cap is turned over. Old specimens turn bitter.</string>
+    <string name="myco_hydnum_note">Short, fragile teeth that extend slightly down the stem distinguish this group from gilled or pore-bearing fungi. Colour changes and bitterness in old specimens vary. The Hydnum repandum group includes several lineages that are difficult to separate in the field.</string>
 
     <!-- Bay bolete -->
     <string name="myco_badia_name">Bay bolete</string>
@@ -1261,7 +1268,7 @@
         <item>Pale spores (cream to white)</item>
         <item>In overlapping clusters on living or dead broadleaf trees, from autumn into winter</item>
     </string-array>
-    <string name="myco_ostreatus_note">It grows on wood, in overlapping clusters: that is the first feature. The related oyster mushrooms (horn of plenty oyster, lung oyster) are edible too, so the confusion is harmless. The spores are allergenic for people who breathe a lot of them, such as growers.</string>
+    <string name="myco_ostreatus_note">Overlapping clusters on wood are characteristic, but are not enough alone to identify a specimen. Other pale, wood-growing fungi, including Pleurocybella porrigens, can be confused with oyster mushrooms and may be dangerous. Ask a qualified local expert before eating a wild collection. Heavy exposure to oyster mushroom spores can also cause respiratory allergy.</string>
 
     <!-- Common puffball -->
     <string name="myco_perlatum_name">Common puffball</string>
@@ -1336,14 +1343,14 @@
     <string name="myco_silvicola_alt">Agaric sylvicole</string>
     <string name="myco_silvicola_latin" translatable="false">Agaricus silvicola</string>
     <string-array name="myco_silvicola_traits">
-        <item>White to cream cap, 6 to 9 cm (sometimes 12), globular then spreading, turning yellow with age or when touched</item>
+        <item>White to cream cap, 6 to 9 cm (sometimes 12), globular then spreading; surfaces may yellow when touched or with age</item>
         <item>Close gills, pale cream, then pink, then gradually chocolate brown</item>
         <item>Slender stem, 6 to 12 cm, whitish grey, with a bulb at the base</item>
         <item>A single ring, very wide, descending, fragile, turning yellowish</item>
-        <item>Thin whitish flesh that yellows in the stem · mild taste, strong smell of aniseed or almond</item>
+        <item>Thin, whitish flesh, sometimes slightly pinkish · mild taste, often aniseed or almond scented</item>
         <item>Dark brown spores · in small groups in woods · summer and autumn</item>
     </string-array>
-    <string name="myco_silvicola_note">Its gills, pale cream at first, make it mistaken for the deadly white amanitas, including the white form of the death cap. Amanitas have a volva at the base of the stem, always white gills and no aniseed smell. The German mycological society points out that yellowing agarics can concentrate a lot of cadmium.</string>
+    <string name="myco_silvicola_note">Identify white agarics cautiously: check for gills that turn pink then brown and for the absence of a volva; do not rely on smell alone. Deadly white amanitas retain white gills and have a volva at the stem base. DGfM notes that yellowing agarics can accumulate cadmium.</string>
 
     <!-- Granulated bolete -->
     <string name="myco_granulatus_name">Granulated bolete</string>
@@ -1380,15 +1387,15 @@
     <string name="myco_ovoidea_alt">Amanite ovoïde</string>
     <string name="myco_ovoidea_latin" translatable="false">Amanita ovoidea</string>
     <string-array name="myco_ovoidea_traits">
-        <item>White to very pale grey cap, thick, 15 to 20 cm (up to 30), hemispherical at first, flaky; the margin often keeps hanging cottony scraps of the veil</item>
-        <item>White, close, broad, free gills that may turn slightly pink with age</item>
+        <item>White to very pale grey cap, thick, 15 to 20 cm (up to 30), hemispherical at first, mostly smooth; the margin often keeps hanging cottony scraps of the veil</item>
+        <item>White to cream, broad, free gills</item>
         <item>White, stout, powdery stem, 15 to 20 cm</item>
         <item>Cream, fragile, cottony ring that tends to disappear</item>
         <item>Large sac-like volva at the base, white to ochre-beige</item>
         <item>Thick white flesh, strong unpleasant smell · white spores</item>
-        <item>Under broadleaves and especially pines, on sunny limy soil, in summer and autumn; fairly common in the south of France</item>
+        <item>On limy soil, especially under oaks and sometimes conifers, in summer and autumn; more frequent in Mediterranean areas</item>
     </string-array>
-    <string name="myco_ovoidea_note">Not recommended: books call it edible in some places and poisonous in others, and it is on neither the German mycological society list of edible species (2026) nor the Swiss controllers’ list (2023). ANSES records it among the mushrooms picked instead of puffballs or boletes in the second half of 2022. Its look-alike, Amanita proxima, damages the kidneys; poisonings happened in the south of France when it was mistaken for the bearded amanita: more russet volva, ring that stays, smooth margin.</string>
+    <string name="myco_ovoidea_note">Consumption is discouraged: its edibility is disputed and confusion with kidney-toxic Amanita proxima is dangerous. Volva colour can overlap; examine the whole specimen and seek expert identification.</string>
 
     <!-- Trooping funnel -->
     <string name="myco_geotropa_name">Trooping funnel</string>
@@ -1409,14 +1416,14 @@
     <string name="myco_amethystina_alt">Laccaire améthyste</string>
     <string name="myco_amethystina_latin" translatable="false">Laccaria amethystina</string>
     <string-array name="myco_amethystina_traits">
-        <item>Cap 2 to 8 cm, dark violet, matt, convex then dished like a navel; it fades and whitens as it dries; thin, striate margin</item>
+        <item>Cap 2 to 8 cm, vivid violet when moist, matt and depressed; it fades strongly when dry, with a finely fibrillose surface and striate margin</item>
         <item>Gills the colour of the cap, distant, unequal</item>
-        <item>Stem 4 to 10 cm, slender and twisted, the colour of the cap, downy towards the base, fibrous</item>
+        <item>Stem 4 to 10 cm, slender and twisted, violet, fibrous and hollow mainly at maturity</item>
         <item>Thin, pale lilac flesh, mild smell and taste</item>
         <item>White spores</item>
         <item>Damp woods of broadleaves or conifers, from late summer to early winter</item>
     </string-array>
-    <string name="myco_amethystina_note">Edible: it is on the German mycological society list and on the Swiss controllers’ list; the fibrous stem is not eaten. On polluted soil it can accumulate arsenic compounds: the German society advises against picking it near former military grounds, mines, factories and busy roads. The lilac bonnet, which is toxic, looks like it: ANSES records mycenas picked instead of deceivers.</string>
+    <string name="myco_amethystina_note">Listed as edible by DGfM and VAPKO; the fibrous stem is discarded. Arsenic accumulation depends on the site, so avoid polluted places. ANSES reports confusion with the toxic rosy bonnet (Mycena rosea); identification should use all the features.</string>
 
     <!-- Lilac bonnet -->
     <string name="myco_pura_name">Lilac bonnet</string>
@@ -1444,7 +1451,7 @@
         <item>Olive to olive-brown spores</item>
         <item>Under broadleaves and conifers, mostly beeches and oaks, often at altitude, on chalky soil · July to December</item>
     </string-array>
-    <string name="myco_calopus_note">Toxic: the German mycological society list puts it among the gastrointestinal-syndrome mushrooms. The bitterness does not go away with cooking and it can cause vomiting. ANSES records scarlet-stemmed boletes picked instead of dotted-stem boletes (2022) and the Zurich laboratory sorts it out among the toxic boletes (2023). It has the red stem of Satan’s bolete, but yellow pores; the porcino has no red stem.</string>
+    <string name="myco_calopus_note">Do not eat: the DGfM lists it for gastrointestinal poisoning. Its yellow pores bruise blue and its red-yellow stem has a pale network. Other boletes can share some of these features; do not taste a specimen to identify it.</string>
 
     <!-- Shaggy parasol (C. brunneum) -->
     <string name="myco_brunneum_name">Shaggy parasol (C. brunneum)</string>
@@ -1459,7 +1466,7 @@
         <item>White spores</item>
         <item>Gardens, parks, compost heaps, greenhouses and nitrogen-rich soils, near houses</item>
     </string-array>
-    <string name="myco_brunneum_note">Toxic: digestive upset, rarely serious, varying with the person and the quantity; the German mycological society list puts it among the gastrointestinal-syndrome mushrooms. Wikipedia counts it among the mushrooms that cause the most poisonings each year, often mistaken for the parasol; ANSES records it among the 2022 confusions. The Swiss controllers point out that it looks like Chlorophyllum rhacodes (shaggy parasol), which is edible.</string>
+    <string name="myco_brunneum_note">Toxic: the DGfM lists it for gastrointestinal poisoning, and ANSES records confusion with similar parasol mushrooms. Do not consume it; its appearance overlaps other Chlorophyllum species.</string>
 
     <!-- Shaggy parasol -->
     <string name="myco_rhacodes_name">Shaggy parasol (C. rhacodes)</string>
@@ -1470,11 +1477,11 @@
         <item>White, very close gills that redden when touched</item>
         <item>Stem 10 to 20 cm, smooth, hollow, grey, bulbous</item>
         <item>Double, thick, sliding, smooth, whitish ring</item>
-        <item>Thick, tender white flesh · mild taste; the whole mushroom turns bright red and saffron when cut or scraped, then browns</item>
+        <item>Thick white flesh · mild taste; cut flesh, especially in the stem, turns orange-red and may later brown</item>
         <item>White spores</item>
         <item>Soil of broadleaf and conifer woods and of meadows at the edge, from late summer to autumn</item>
     </string-array>
-    <string name="myco_rhacodes_note">A good edible according to Wikipedia, except the stem, which is fibrous and tough. Some people get gastroenteritis, which the article blames on the nitrates of very rich soils; others are allergic. The German mycological society and Swiss controllers’ lists put it among the edible species, under the name Chlorophyllum olivieri. Do not mistake it for Chlorophyllum brunneum (sharp-edged bulb, single ring, toxic), nor for the deadly parasol, which is much smaller.</string>
+    <string name="myco_rhacodes_note">Some guides call it edible, but it has caused serious illness and should not be collected for food. The German DGfM and Swiss VAPKO lists name Chlorophyllum olivieri, a distinct species, not C. rhacodes. Do not confuse it with C. brunneum, whose bulb has a sharp rim and whose simpler ring is also toxic.</string>
 
     <!-- The sickener -->
     <string name="myco_emetica_name">The sickener</string>
@@ -1527,11 +1534,11 @@
         <item>Close, pale beige then brownish, adnate gills</item>
         <item>Firm, fibrous, solid stem, pale then reddish brown, often curved</item>
         <item>Ample, membranous, white, persistent ring; it turns tobacco-coloured under the falling spores</item>
-        <item>Whitish flesh · hazelnut taste, strong fruity smell of old cask</item>
-        <item>Dirty brown spores</item>
+        <item>Whitish flesh · mild or nutty taste; pleasant smell, often fruity</item>
+        <item>Tobacco-brown spore print</item>
         <item>In tufts at the foot of trees and on dead wood, mostly poplars and willows, in autumn</item>
     </string-array>
-    <string name="myco_aegerita_note">A very good edible according to Wikipedia FR; the German mycological society and Swiss controllers’ lists put it under the name Cyclocybe cylindracea (« pholiote du peuplier »). Wikipedia EN warns that it resembles some deadly species, without naming them, and that the genus is difficult to identify.</string>
+    <string name="myco_aegerita_note">Listed as edible by the DGfM and VAPKO under the name Cyclocybe cylindracea. Brown, ringed mushrooms on wood include dangerous lookalikes such as Galerina marginata; a photograph or single trait is not enough to identify a wild specimen safely.</string>
 
     <!-- Winter chanterelle -->
     <string name="myco_tubaeformis_name">Winter chanterelle</string>
@@ -1565,26 +1572,26 @@
     <string name="myco_flammulina_alt">Collybie à pied velouté</string>
     <string name="myco_flammulina_latin" translatable="false">Flammulina velutipes</string>
     <string-array name="myco_flammulina_traits">
-        <item>Cap 5 to 10 cm, flat, yellow-orange to tawny, sticky, darker at the centre</item>
+        <item>Cap usually 2 to 7 cm (sometimes larger), convex then flatter, yellow-orange to tawny, sticky</item>
         <item>Broad, fairly distant gills, whitish to yellowish · white spores</item>
         <item>Stem about 5 cm, yellowish above, blackish-brown and velvety towards the base; no ring</item>
         <item>Pale flesh, faint smell</item>
-        <item>On dead broadleaf wood (willow, beech, alder), sometimes on weakened living trees; in bunches, from autumn to winter</item>
+        <item>On broadleaf wood, sometimes on weakened living trees; in bunches from autumn to early spring</item>
     </string-array>
-    <string name="myco_flammulina_note">Not recommended: the German mycological society (2026) and the Swiss controllers (2023) list it among the edible species, but the Missouri Department of Conservation advises against eating it, because it is easily mistaken for the funeral bell, which is deadly and also grows in clumps on wood. To tell them apart: the velvet foot has white spores and a velvety stem with no ring; the funeral bell has rusty spores and a ring, which may disappear with age.</string>
+    <string name="myco_flammulina_note">Listed as edible by German and Swiss mycological bodies, but wild collection is discouraged here because the deadly Galerina marginata grows on similar wood. A missing ring alone does not rule Galerina out; seek expert identification.</string>
 
     <!-- Conifer tuft -->
     <string name="myco_capnoides_name">Conifer tuft</string>
     <string name="myco_capnoides_alt">Hypholome à lames enfumées</string>
     <string name="myco_capnoides_latin" translatable="false">Hypholoma capnoides</string>
     <string-array name="myco_capnoides_traits">
-        <item>Cap 3 to 6 cm, yellowish to brownish yellow, dirty orange-brown centre, dry and smooth; convex then almost flat</item>
+        <item>Cap 3 to 6 cm, yellowish to brownish yellow with orange-brown centre, often hygrophanous; convex then almost flat</item>
         <item>Close gills: whitish, then lilac-grey, finally violet-brown · purple-brown spores</item>
         <item>Stem 3 to 8 cm, pale yellow above, rusty towards the base</item>
         <item>Whitish to pale olive-yellow flesh, mild taste, not bitter</item>
         <item>In tufts on old stumps and dead wood of conifers</item>
     </string-array>
-    <string name="myco_capnoides_note">Edible: it is on the German mycological society list (2026) and on the Swiss controllers’ list (2023), who warn that it is confused with the sulphur tuft and with Hypholoma sublateritium. Wikipedia (en) rates it « not recommended » because of these confusions and adds that it could also be taken for the funeral bell, which is deadly. The sulphur tuft, which is toxic, has greenish gills and a bitter taste; this one has grey gills and a mild taste.</string>
+    <string name="myco_capnoides_note">Listed as edible by German and Swiss mycological bodies, but it can be confused with toxic wood-growing fungi. Its smoky grey gills and conifer-wood habitat help; neither one character nor tasting confirms safe identification.</string>
 
     <!-- Spectacular rustgill -->
     <string name="myco_gymnopilus_name">Spectacular rustgill</string>
@@ -1605,12 +1612,12 @@
     <string name="myco_pleurocybella_latin" translatable="false">Pleurocybella porrigens</string>
     <string-array name="myco_pleurocybella_traits">
         <item>Shelves 4 to 9 cm, petal- or fan-shaped, pure white then yellowing with age, thin and fragile</item>
-        <item>White to cream, crowded gills running down to the point of attachment</item>
+        <item>White to cream, crowded gills converging towards the attachment point</item>
         <item>Almost no stem · white spores</item>
         <item>Thin flesh, faint, pleasant smell</item>
         <item>In groups on dead conifer wood; from late summer to autumn</item>
     </string-array>
-    <string name="myco_pleurocybella_note">Toxic: the German mycological society (2026) lists it among the mushrooms with a « Pleurocybella syndrome ». It was long eaten; in 2004 in Japan, dozens of people fell ill after eating it and several died, mostly people with kidney failure: brain damage, two to three weeks after the meal. The cause is not established. It is mistaken for the oyster mushroom, which is edible: this one is whiter, thinner, with almost no stem.</string>
+    <string name="myco_pleurocybella_note">Do not eat it: the DGfM places it in the Pleurocybella syndrome group. Japanese poisoning clusters included severe neurological illness and deaths, often in people with kidney disease; the delay varied, and the mechanism is not settled. Its pale, thin fans resemble other wood-growing mushrooms, so identification should be checked by an expert.</string>
 
     <!-- Sulphur polypore -->
     <string name="myco_laetiporus_name">Sulphur polypore</string>
@@ -1623,7 +1630,7 @@
         <item>Whitish flesh, soft and oozing yellow juice when young, then dry and crumbly; strong fungal smell</item>
         <item>On the trunks of many broadleaves (cherry, pear, black locust, poplar, oak), more rarely conifers; from spring to autumn</item>
     </string-array>
-    <string name="myco_laetiporus_note">To be cooked, and only when young: the Swiss controllers (2023) call it « edible when young »; it is not on the German mycological society list. Wikipedia (fr) cites ANSES, the FAO and the Belgian public health service to call it good when young and not parasitised, but some people had intestinal trouble and dizziness; Wikipedia (en) adds that it should not be eaten raw. The cinnabar polypore, entirely orange to blood red, is small and tough.</string>
+    <string name="myco_laetiporus_note">Eat only young, well-cooked specimens after reliable identification. VAPKO lists it as edible when young; the DGfM places it on a separate list for mushrooms whose edibility is not uniformly assessed, noting occasional digestive or allergic reactions and caution around treated orchards. Do not eat it raw or rely on this plate to identify a wild shelf fungus.</string>
 
     <!-- Beefsteak fungus -->
     <string name="myco_fistulina_name">Beefsteak fungus</string>
@@ -1637,7 +1644,7 @@
         <item>Pinkish to ochre spores, depending on the source</item>
         <item>On old oaks and sweet chestnuts, at the base of the trunk or on stumps; in autumn</item>
     </string-array>
-    <string name="myco_fistulina_note">Edible when young: it is on the German mycological society list (2026), where it is classed « endangered », and on the Swiss controllers’ list (2023), who call it « edible when young ». Old specimens are tough; Wikipedia (en) advises soaking them overnight because their juice can upset the stomach. Wikipedia (fr) says it is sometimes confused with a toxic polypore (polypore rutilant).</string>
+    <string name="myco_fistulina_note">VAPKO recommends it as edible when young; older fruit bodies can be tough. Its individual free tubes and marbled red-and-white flesh help distinguish it from ordinary pore fungi. Published accounts differ on spore-deposit colour, so it is not used here as a main identification feature. Cook thoroughly and have wild specimens checked by an expert.</string>
 
     <!-- Cauliflower fungus -->
     <string name="myco_sparassis_name">Cauliflower fungus</string>
@@ -1710,14 +1717,14 @@
     <string name="myco_bisporus_alt">Champignon de Paris</string>
     <string name="myco_bisporus_latin" translatable="false">Agaricus bisporus</string>
     <string-array name="myco_bisporus_traits">
-        <item>Wild form: cap 5 to 10 cm, pale grey-brown, with broad flat scales (the cultivated form is white)</item>
-        <item>Gills free and crowded: pink, then red-brown, then dark brown: never white</item>
+        <item>Wild form: cap 5 to 10 cm, pale grey-brown, finely fibrillose or with small flattened scales (the cultivated form is usually white)</item>
+        <item>Gills free and crowded, pale pink in open specimens, deepening through red-brown to dark brown; may be pale in closed buttons</item>
         <item>Thick, narrow ring, sometimes streaked above</item>
         <item>Cylindrical stem up to 6 cm, no bulb or volva</item>
         <item>Firm white flesh that turns pale pinkish-red when bruised</item>
-        <item>Rich soil, compost, manure, outside forests</item>
+        <item>Nutrient-rich soil, compost or manure, including gardens and woodland edges</item>
     </string-array>
-    <string name="myco_bisporus_note">Edible: it is the most cultivated mushroom in the world, and it is on the DGfM and VAPKO lists. In the wild it is rare. It is confused with look-alikes that can be deadly: destroying angels (a volva at the base, pure white gills) and the toxic yellow stainer (phenol smell, flesh turning yellow). A mushroom growing on polluted ground can accumulate heavy metals.</string>
+    <string name="myco_bisporus_note">Edible and widely cultivated; its frequency in the wild varies by region. Button specimens can still have very pale gills, so do not identify it by that feature alone. Check the stem base and the full set of characters, as destroying angels with a volva are deadly and yellow-staining agarics are toxic. Mushrooms can accumulate heavy metals on polluted ground.</string>
     <string name="myco_impudicus_name">Common stinkhorn</string>
     <string name="myco_impudicus_alt">Satyre puant</string>
     <string name="myco_impudicus_latin" translatable="false">Phallus impudicus</string>
@@ -1729,7 +1736,7 @@
         <item>Young stage: a whitish egg of about 3 to 6 cm, with a layer of jelly</item>
         <item>Broadleaf and conifer woods, near old stumps · late spring to autumn</item>
     </string-array>
-    <string name="myco_impudicus_note">Edible only as a young egg, according to the DGfM list. Cut every egg in two: the egg of a deadly amanita already shows its cap and gills in a sac (see the death cap egg), a stinkhorn egg shows jelly around a white core. Once it has opened, the smell rules out any use.</string>
+    <string name="myco_impudicus_note">DGfM lists it as edible only at the young egg stage. Cutting an egg can reveal internal structures, but it does not guarantee identification: do not eat an uncertain egg. If it may have been confused with an amanita after ingestion, contact a poison centre or emergency service immediately, without waiting for symptoms.</string>
     <string name="myco_erinaceus_name">Lion’s mane</string>
     <string name="myco_erinaceus_alt">Hydne hérisson</string>
     <string name="myco_erinaceus_latin" translatable="false">Hericium erinaceus</string>
@@ -1741,19 +1748,19 @@
         <item>White spore print</item>
         <item>Living or recently cut hardwood, mostly beech and oak · late summer and autumn</item>
     </string-array>
-    <string name="myco_erinaceus_note">Edible when young, according to the DGfM list and to Wikipedia, but it can be tough. It is rare: the DGfM marks it with category 2 of the German red list, and Wikipedia (en) says it is red-listed in several European countries. Close species also have spines on wood: Hericium coralloides and H. americanum.</string>
+    <string name="myco_erinaceus_note">Edible when young, but the species is locally protected: the DGfM places it in category 2 of the German Red List. Wild harvesting is prohibited in Great Britain. It forms a compact, unbranched white mass directly on broadleaf wood, especially beech; related Hericium species can look similar, so preserve habitat and confirm local rules before collecting.</string>
     <string name="myco_lignyotus_name">Chocolate milky</string>
     <string name="myco_lignyotus_alt">Lactaire velours</string>
     <string name="myco_lignyotus_latin" translatable="false">Lactarius lignyotus</string>
     <string-array name="myco_lignyotus_traits">
         <item>Cap 3 to 8 cm, dark bistre-brown, matt and velvety, not zoned, with a small boss</item>
-        <item>Gills white, decurrent and forked, turning pale ochre; they redden where hurt</item>
-        <item>Stem the colour of the cap, narrowed and pleated, even pitted, at the top</item>
-        <item>White, watery milk that slowly turns brick-coloured on the flesh</item>
-        <item>White flesh that reddens a little in the air; weak smell and taste</item>
+        <item>White, moderately spaced gills, slightly decurrent and sometimes forked, becoming pale ochre; injured tissues redden slowly</item>
+        <item>Dark stem, hollow at maturity, with longitudinal grooves near the top</item>
+        <item>White, watery milk; injured flesh may redden slowly</item>
+        <item>White flesh; weak smell and taste</item>
         <item>Acid soils in the mid mountains, in fir woods · autumn</item>
     </string-array>
-    <string name="myco_lignyotus_note">Edible, according to the DGfM and VAPKO lists, and to Wikipedia (fr), which finds it tastier than the saffron milk cap. It is on the German red list (category 3). To tell it from Lactarius picinus and L. fuliginosus, whose gills are more yellow, look for the dark brown cap against white gills and the pleated top of the stem.</string>
+    <string name="myco_lignyotus_note">DGfM and VAPKO list it as edible, and DGfM places it in category 3 of the German Red List. Its very dark cap, pale gills and grooved upper stem help identify it; similar dark-capped species can remain difficult to separate.</string>
     <string name="myco_turpis_name">Ugly milk-cap</string>
     <string name="myco_turpis_alt">Green birch milk cap</string>
     <string name="myco_turpis_latin" translatable="false">Lactarius turpis</string>
@@ -1831,10 +1838,10 @@
         <item>Cap 1 to 4 cm, conical, always with a boss, milk-white then slightly ochre, silky</item>
         <item>Gills white to cream, then grey, earthy brown with the spores</item>
         <item>Slender stem, white, powdery at the top</item>
-        <item>Strong spermatic smell, acrid flesh</item>
+        <item>Weak earthy or mealy smell, sometimes described as spermatic; smell alone is unreliable</item>
         <item>Shady broadleaf woods, sometimes conifers, grass, paths · June to November</item>
     </string-array>
-    <string name="myco_geophylla_note">Toxic: muscarine. Wikipedia (fr) counts it among the most toxic inocybes; the Belgian poison centre describes the sweating syndrome: runny nose, drooling, heavy sweating, tears, breathing difficulty, from a few minutes to 2 hours after the meal; it heals within 24 hours, atropine is sometimes needed. A lilac form exists and has been taken for the amethyst deceiver. The white form is also compared with St George’s mushroom (Wikipedia, en), which is larger, smells of flour and keeps white gills.</string>
+    <string name="myco_geophylla_note">Toxic: contains muscarine. Sweating, drooling, tears or breathing difficulty may begin within two hours of ingestion. Seek urgent medical advice. The white form can resemble other small pale mushrooms.</string>
     <string name="myco_sulphureum_name">Sulphur knight</string>
     <string name="myco_sulphureum_alt">Tricholome soufré</string>
     <string name="myco_sulphureum_latin" translatable="false">Tricholoma sulphureum</string>
@@ -1856,9 +1863,9 @@
         <item>Stem 6 to 12 cm, with an ample, persistent ring, striate above</item>
         <item>Bulb with a rim formed by the volva: not a sac</item>
         <item>Smell of raw potato or radish</item>
-        <item>Deciduous and conifer woods, silicate soils · autumn, very common</item>
+        <item>Broadleaf and mixed woods, sometimes conifers · late summer to autumn</item>
     </string-array>
-    <string name="myco_citrina_note">Toxic: the DGfM lists it for a gastrointestinal syndrome, notes bufotenin and warns against eating it raw. Wikipedia (fr) calls it a poor edible, slightly toxic, and says most mycologists advise throwing it away. Its real danger is its resemblance to the death cap, when young and in its yellowish and white forms; the raw-potato smell and the bulb with a rim, not a sac, set it apart.</string>
+    <string name="myco_citrina_note">Do not eat: the DGfM lists gastrointestinal poisoning, including reports after heating. It can resemble deadly amanitas; neither smell nor one feature of the bulb confirms a safe identification.</string>
     <string name="myco_l_rust_fibrous_cap">Rust-brown, fibrous cap</string>
     <string name="myco_l_yellow_veil_stem">Yellow veil fragments on the stem</string>
     <string name="myco_l_flesh_pale_yellow">Pale yellow flesh, radish smell</string>
@@ -1866,6 +1873,7 @@
     <string name="myco_l_ring_woolly">Woolly ring</string>
     <string name="myco_l_pale_cream_gills">Pale cream gills</string>
     <string name="myco_l_gills_greying">Gills turning grey</string>
+    <string name="myco_l_gills_clay_brown">Gills cream-grey, then clay-brown</string>
     <string name="myco_l_lemon_patched_cap">Pale lemon cap, grey-white patches</string>
     <string name="myco_g_knights_title">Yellow knight, or sulphur knight?</string>
     <string name="myco_g_knights_evidence">Wikipedia</string>
@@ -1884,7 +1892,7 @@
         <item>Wine-red milk when cut; flesh brick-red under the cap skin, mild to slightly bitter, almost no smell</item>
         <item>Pine woods on chalky soil, mostly southern Europe · September to November</item>
     </string-array>
-    <string name="myco_sanguifluus_note">Edible: Wikipedia (fr) calls it excellent and some authors the best of the milk caps; the DGfM and the VAPKO list it (red list category 2 in Germany). Wikipedia (en) warns that it can accumulate heavy metals: not from roadsides or polluted ground. The milk is the key: wine-red from the start. Orange milk points to the delicious milk cap or its cousins (see the group). Wikipedia (fr) says the look-alikes share its food safety but not its culinary value.</string>
+    <string name="myco_sanguifluus_note">The DGfM and VAPKO list it as edible; the German Red List places it in category 2. It is chiefly associated with pines, often on calcareous soil. Its fresh latex is wine-red as soon as it emerges, unlike the orange latex of related milkcaps. Similar species overlap in appearance, so the image cannot establish a safe identification.</string>
     <string name="myco_deterrimus_name">False saffron milkcap</string>
     <string name="myco_deterrimus_alt">Lactaire des épicéas</string>
     <string name="myco_deterrimus_latin" translatable="false">Lactarius deterrimus</string>
@@ -1979,10 +1987,10 @@
         <item>Gills narrow, very crowded, sometimes forked, pale golden yellow, turning brown when crushed</item>
         <item>Stem 4 to 12 cm, firm, slightly paler than the cap</item>
         <item>Abundant white milk that turns brownish in the air and stains brown; whitish, firm flesh</item>
-        <item>Fishy smell, which fades on cooking</item>
+        <item>Sometimes smells fishy, like herring; intensity varies</item>
         <item>Under broadleaf and conifer trees · summer and autumn</item>
     </string-array>
-    <string name="myco_volemus_note">Edible: the DGfM and the VAPKO list it. Wikipedia (fr) calls its taste mediocre, Wikipedia (en) recommends it for cooking, slowly rather than pan-fried because of the milk. The fishy smell fades on cooking (Wikipedia, en). Wikipedia (en) reports one case of transient pancreatitis in two elderly people in Turkey who had eaten it before. Close species (Lactifluus corrugis, L. rugatus) are hard to tell apart; the sources read give no field rule.</string>
+    <string name="myco_volemus_note">Lactifluus volemus in the broad sense is listed as edible by DGfM and VAPKO, with special protection in Germany. Its herring-like smell varies, and identification can be difficult within the L. volemus complex; do not rely on a single feature.</string>
     <string name="myco_glutinosus_name">Slimy spike-cap</string>
     <string name="myco_glutinosus_alt">Gomphide glutineux</string>
     <string name="myco_glutinosus_latin" translatable="false">Gomphidius glutinosus</string>
@@ -2034,10 +2042,10 @@
         <item>Cap 6 to 16 cm, dry, creamy-white, staining tan with age, sunken in the centre</item>
         <item>Gills very crowded and narrow, running down the stem, white then cream</item>
         <item>Stem 2 to 8 cm, white and smooth</item>
-        <item>Thick, firm white flesh; abundant white milk, very hot and acrid, drying olive-green</item>
+        <item>Thick, firm white flesh; abundant white milk, very hot and acrid; the colour of dried milk is variable and not diagnostic</item>
         <item>Deciduous woods, especially beech · summer to early winter</item>
     </string-array>
-    <string name="myco_piperatus_note">Not recommended: the DGfM lists it with the advice to cook it through thoroughly, but Wikipedia (en) says it contains toxins, that some sources call it inedible or poisonous, and that raw it irritated lips and tongue for about an hour. Boiling removes the bite. The most prudent status is kept. Wikipedia (fr) has no description of the species: the text comes from Wikipedia (en) alone. Do not confuse it with the white Russula delica, which gives no milk.</string>
+    <string name="myco_piperatus_note">The DGfM lists it with advice to cook thoroughly; this atlas labels it inedible as a cautious food-use recommendation because accounts of its culinary use differ. Its abundant white latex and exceptionally dense, narrow decurrent gills help separate it from white Russula species, which do not produce milk. Colour changes in dried latex are variable and do not distinguish it reliably from close relatives.</string>
     <string name="myco_decastes_name">Clustered domecap</string>
     <string name="myco_decastes_alt">Tricholome agrégé</string>
     <string name="myco_decastes_latin" translatable="false">Lyophyllum decastes</string>
@@ -2112,12 +2120,12 @@
     <string name="myco_agathosmus_latin" translatable="false">Hygrophorus agathosmus</string>
     <string-array name="myco_agathosmus_traits">
         <item>Cap 3 to 10 cm, convex with rolled-in edges, dull ashy grey, sticky when moist</item>
-        <item>Gills white then greyish, running slightly down the stem</item>
+        <item>Thick, waxy gills, white then greyish, adnate to slightly decurrent</item>
         <item>Stem 4 to 15 cm, whitish, pale ashy with age, no veil</item>
-        <item>Soft whitish flesh; strong smell of cherry stones or bitter almonds, bland taste</item>
-        <item>Under spruce and pine, scattered</item>
+        <item>Soft whitish flesh; pleasant almond or cherry-stone smell of variable strength</item>
+        <item>On the ground, especially under spruce · summer to autumn</item>
     </string-array>
-    <string name="myco_agathosmus_note">Edible but bland: the DGfM and the VAPKO list it; Wikipedia (en) is the only page with a description (the French page is a stub). The smell is the mark: Wikipedia (en) names smaller waxy caps with a similar almond smell, which this atlas does not draw.</string>
+    <string name="myco_agathosmus_note">DGfM and VAPKO list it as edible, but its almond-like smell varies and several close species form a difficult complex. Spruce association and thick waxy gills help narrow the identification; smell alone is not enough.</string>
     <string name="myco_marzuolus_name">March mushroom</string>
     <string name="myco_marzuolus_alt">Hygrophore de mars</string>
     <string name="myco_marzuolus_latin" translatable="false">Hygrophorus marzuolus</string>
@@ -2178,7 +2186,7 @@
         <item>White volva forming a small free rim at the base</item>
         <item>Sandy, slightly acid soil, near conifers · spring to autumn</item>
     </string-array>
-    <string name="myco_gemmata_note">Toxic: the DGfM lists it as suspect, with the panther cap syndrome, and Wikipedia (en) gives ibotenic acid and muscimol, with symptoms within three hours (hallucinations, nausea, vomiting, stomach pain), severe cases being extremely rare. Wikipedia (fr) says it causes the same symptoms as the panther cap and the fly agaric. Wikipedia (en) names the false death cap, Amanita fulva (the tawny grisette) and the panther cap as look-alikes; its cap is brighter yellow than the first.</string>
+    <string name="myco_gemmata_note">Do not eat: the DGfM considers it suspect for the panther-cap syndrome. Neurotoxic effects may vary; seek urgent medical advice after suspected ingestion. It can resemble other yellow amanitas.</string>
     <string name="myco_porphyria_name">Grey veiled amanita</string>
     <string name="myco_porphyria_alt">Porphyry amanita</string>
     <string name="myco_porphyria_latin" translatable="false">Amanita porphyria</string>
@@ -2186,11 +2194,11 @@
         <item>Cap 4 to 10 cm, brown with a purplish or greyish tint, sometimes with grey veil patches</item>
         <item>Gills whitish, free, darkening when bruised</item>
         <item>Stem 5 to 12 cm, bulbous base, with a fragile grey-violet or blackened ring</item>
-        <item>Base sometimes in a white membranous volva</item>
+        <item>Abrupt bulb with a short volval rim or fragments, without a loose sack</item>
         <item>White flesh with a smell of raw potato or radish</item>
         <item>Poor soil, mostly under conifers (spruce) · summer to autumn</item>
     </string-array>
-    <string name="myco_porphyria_note">Toxic: the DGfM lists it for a gastrointestinal syndrome, notes bufotenin and warns against eating it raw; Wikipedia (en) calls it inedible. It looks like the false death cap in shape and smell but differs in cap colour and ring colour, and is easily mistaken for the death cap, which is far more poisonous (Wikipedia, en). It can also be taken for the panther cap. It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM.</string>
+    <string name="myco_porphyria_note">Do not eat: the DGfM lists gastrointestinal poisoning and reports illness even after heating. It can resemble the false death cap, panther cap and death cap; inspect the entire base and seek expert identification.</string>
     <string name="myco_moelleri_name">Inky mushroom</string>
     <string name="myco_moelleri_alt">Agaric pintade</string>
     <string name="myco_moelleri_latin" translatable="false">Agaricus moelleri</string>
@@ -2201,7 +2209,7 @@
         <item>White flesh, chrome-yellow at the base of the stem; strong smell of phenol, iodoform or ink</item>
         <item>Broadleaf woods, mostly on chalky soil, also parks and meadows</item>
     </string-array>
-    <string name="myco_moelleri_note">Toxic: Wikipedia (fr) says so plainly, the DGfM lists it for a gastrointestinal syndrome, and Wikipedia (en) says that like the yellow stainer it upsets some people and not others. The yellowing and the carbolic smell are what warn. It is not the field mushroom: see the group.</string>
+    <string name="myco_moelleri_note">Toxic: the DGfM lists it for gastrointestinal poisoning. Chrome-yellow staining near the stem base and a carbolic or inky odour are warning signs, but a single feature cannot secure identification.</string>
     <string name="myco_clavipes_name">Club foot</string>
     <string name="myco_clavipes_alt">Club-footed clitocybe</string>
     <string name="myco_clavipes_latin" translatable="false">Ampulloclitocybe clavipes</string>
@@ -2224,7 +2232,7 @@
         <item>Strong smell of fenugreek, lovage or celery; mild taste</item>
         <item>Wet places, often among sphagnum, near spruce, pine and birch · late summer and autumn</item>
     </string-array>
-    <string name="myco_helvus_note">Toxic: the DGfM lists it for a gastrointestinal syndrome, and Wikipedia (en) calls it mildly toxic raw, with nausea, vomiting, vertigo and chills within 30 minutes, the toxins being destroyed by thorough boiling; 418 people were poisoned near Leipzig in October 1949. The dried mushroom is used as a spice in small amounts. The French Wikipedia page is a stub: the description comes from Wikipedia (en).</string>
+    <string name="myco_helvus_note">The DGfM lists it among mushrooms causing gastrointestinal illness. A strong curry-like odour is most noticeable in older or drying specimens and may be faint or absent in young fresh ones. Some regional traditions use it dried as a seasoning, but the safety of preparation is not settled by this description; do not use it as food without qualified local guidance.</string>
     <string name="myco_platyphylla_name">Broadgilled collybia</string>
     <string name="myco_platyphylla_alt">Collybie à lames larges</string>
     <string name="myco_platyphylla_latin" translatable="false">Megacollybia platyphylla</string>
@@ -2261,7 +2269,8 @@
     <string name="myco_l_golden_warty_cap">Golden-yellow cap, white plaques</string>
     <string name="myco_l_purple_brown_cap">Purplish-brown cap</string>
     <string name="myco_l_ring_grey_violet">Grey-violet ring</string>
-    <string name="myco_l_ring_thin_drooping">Thin, drooping ring</string>
+    <string name="myco_l_ring_broad_persistent">Broad, persistent ring</string>
+    <string name="myco_l_pink_to_brown_gills">Gills pinkish, then dark brown</string>
     <string name="myco_l_grey_brown_pale_margin_cap">Grey-brown cap, paler margin</string>
     <string name="myco_l_club_stem">Club-shaped stem</string>
     <string name="myco_l_beige_velvet_cap">Beige-grey, velvety cap</string>
@@ -2324,7 +2333,7 @@
         <item>Thin white flesh; no distinctive smell or taste</item>
         <item>In clusters on stumps and rotting wood · spring to early winter</item>
     </string-array>
-    <string name="myco_micaceus_note">Not recommended with alcohol: the DGfM lists it for the coprine syndrome while noting only small amounts of coprine; Wikipedia (fr) says European harvests may cause mild excitation with alcohol, less than the common ink cap; Wikipedia (en) says it has no coprine. Both pages call it edible when young, before the gills dissolve, though of little interest. The most prudent status is kept. Wikipedia (en) advises against roadside harvests (heavy metals) and separates it from the common ink cap, which is larger, grey and without glistening granules.</string>
+    <string name="myco_micaceus_note">Sources disagree about coprine and alcohol reactions: the DGfM lists it in the coprine syndrome group but notes low amounts, while other accounts report no coprine. A China CDC report attributed alcohol-associated cases to inkcaps but did not assay each species or specimen. Because the evidence remains unsettled, avoid alcohol around any uncertain inkcap meal and seek expert identification before food use.</string>
     <string name="myco_regalis_name">Royal fly agaric</string>
     <string name="myco_regalis_alt">Amanite royale</string>
     <string name="myco_regalis_latin" translatable="false">Amanita regalis</string>
@@ -2582,24 +2591,24 @@
     <string name="myco_pulmonarius_alt">Pleurote pulmonaire</string>
     <string name="myco_pulmonarius_latin" translatable="false">Pleurotus pulmonarius</string>
     <string-array name="myco_pulmonarius_traits">
-        <item>Cap 5 to over 20 cm, convex then flat, much paler and smaller than the oyster mushroom</item>
+        <item>Usually about 7 to 10 cm, though variable; pale cream to buff, convex then flattened</item>
         <item>Gills whitish, decurrent</item>
         <item>Stem short, off-centre or missing, no ring</item>
-        <item>Spore print white to greyish or lilac · pleasant anise smell (Wikipedia, en)</item>
-        <item>On dead wood, mostly broadleaf; later in summer than the oyster mushroom, preferring warmer weather</item>
+        <item>Spore print white to pale cream</item>
+        <item>On dead broadleaf wood, often in warmer months; season varies by region</item>
     </string-array>
-    <string name="myco_pulmonarius_note">Edible: the DGfM lists it; Wikipedia (fr) and (en) say its taste and cultivation are much the same as the oyster mushroom, and that it is the most cultivated mushroom of this kind in Europe and North America. Wikipedia (en) warns that clitocybes growing on wood can look like it and that some are poisonous; it also says the sold “Pleurotus sajor-caju” is a different mushroom with a ring. Neither page names a danger from the species itself. The atlas draws it as the oyster mushroom, only paler.</string>
+    <string name="myco_pulmonarius_note">The DGfM lists it as edible. Pale wood-growing species can be confused with oyster mushrooms, including Pleurocybella porrigens; compare the full set of features and seek expert identification before eating a wild collection. The plate shows typical forms but cannot verify the host tree or identify an individual specimen.</string>
     <string name="myco_sublateritium_name">Brick cap</string>
     <string name="myco_sublateritium_alt">Hypholome couleur de brique</string>
-    <string name="myco_sublateritium_latin" translatable="false">Hypholoma sublateritium</string>
+    <string name="myco_sublateritium_latin" translatable="false">Hypholoma lateritium</string>
     <string-array name="myco_sublateritium_traits">
         <item>Cap 3.5 to 10 cm, brick-red in the centre with a paler margin, smooth, sometimes with veil remnants at the edge</item>
-        <item>Gills crowded, yellowish or sulphur-yellow at first, greyish with age, never green</item>
-        <item>Stem light yellow, darker towards the base</item>
-        <item>Spore print purple-brown · mild nutty taste, a little bitter when old</item>
+        <item>Gills crowded, cream to pale yellow, then olive-grey and finally purple-brown; a faint greenish tint is possible</item>
+        <item>Stem pale yellow, reddish-brown towards the base</item>
+        <item>Spore print purple-brown · taste varies and is not an identification test</item>
         <item>In dense clusters on stumps and rotting broadleaf wood, in autumn</item>
     </string-array>
-    <string name="myco_sublateritium_note">Not recommended: the sources disagree. Wikipedia (fr) calls it toxic, edible after cooking and inedible in the same page; Wikipedia (en) says it is sometimes eaten, a choice edible in Japan, but often thought inedible or poisonous in Europe, and warns against mixing it up with deadly look-alikes, naming the funeral bell. The VAPKO only warns that the sulphur tuft can be confused with it, and it is absent from the DGfM lists. Kept at the most prudent edible status. It differs from the sulphur tuft by its brick-red cap and gills that are never green; the funeral bell is in the group below.</string>
+    <string name="myco_sublateritium_note">Consumption is discouraged: sources disagree on edibility, and dangerous wood-growing fungi can resemble it. A greenish tint to the gills does not exclude this species; identification needs more than one visible character.</string>
     <string name="myco_l_blue_close_gills">Blue, crowded gills</string>
     <string name="myco_l_straight_stem_no_bulb">Straight stem, no bulb</string>
     <string name="myco_l_flesh_pale_lilac">Pale lilac flesh</string>
@@ -2695,8 +2704,8 @@
     <string name="myco_agaricus_pilatianus_name">Agaricus pilatianus</string>
     <string name="myco_agaricus_pilatianus_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_agaricus_pilatianus_latin" translatable="false">Agaricus pilatianus</string>
-    <string name="myco_agaricus_pilatianus_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
-    <string-array name="myco_agaricus_pilatianus_traits"><item>General form: Agaricus with free gills and chocolate-brown mature spores.</item><item>Ecological context: Agaricus with free gills and chocolate-brown mature spores. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_agaricus_pilatianus_note">Toxic: accounts describe severe gastrointestinal illness. Typical features include a squat grey-brown scaly cap, a strongly folded ring, and chrome-yellow staining at the stem base; phenolic or iodine-like odour may be present. These traits do not make an uncertain Agaricus safe to eat.</string>
+    <string-array name="myco_agaricus_pilatianus_traits"><item>Stocky Agaricus with a grey-brown fibrillose or scaly cap</item><item>Free gills change from pale to pink and finally chocolate brown</item><item>Short robust stem with a strongly folded ring and base that stains chrome yellow</item><item>Often an unpleasant phenolic or iodine-like odour</item><item>Toxic; do not consume</item></string-array>
     <string name="myco_thanatephorus_cucumeris_name">Thanatephorus cucumeris</string>
     <string name="myco_thanatephorus_cucumeris_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_thanatephorus_cucumeris_latin" translatable="false">Thanatephorus cucumeris</string>
@@ -2758,10 +2767,10 @@
     <string name="myco_hygrophorus_penarioides_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
     <string-array name="myco_hygrophorus_penarioides_traits"><item>General form: woodland waxcap in a group of pale species.</item><item>Ecological context: woodland waxcap in a group of pale species. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
     <string name="myco_amanita_beckeri_name">Amanita beckeri</string>
-    <string name="myco_amanita_beckeri_alt">No stable common name retained without a corroborating source</string>
+    <string name="myco_amanita_beckeri_alt">Becker’s ringless amanita</string>
     <string name="myco_amanita_beckeri_latin" translatable="false">Amanita beckeri</string>
-    <string name="myco_amanita_beckeri_note">Taxonomic and ecological reference. This entry is outside the scope of foraging identification and gives no food-safety advice.</string>
-    <string-array name="myco_amanita_beckeri_traits"><item>General form: Amanita with free gills and a white spore print.</item><item>Ecological context: Amanita with free gills and a white spore print. Details vary with taxon and habitat.</item><item>Food status not assessed.</item></string-array>
+    <string name="myco_amanita_beckeri_note">Taxonomic reference, not a food recommendation. The absence of a ring does not prove safety; do not eat it and have a complete specimen checked by an expert.</string>
+    <string-array name="myco_amanita_beckeri_traits"><item>Hazel to golden-ochre cap, up to 12 cm, with a deeply grooved margin</item><item>Small veil patches white then brown; free gills white to cream</item><item>Slender white stem, 10 to 20 cm, without a true ring</item><item>Small fragile cup-like volva with a separate low belt on the stem</item><item>European deciduous woodland, especially on calcareous soil</item></string-array>
     <string name="myco_inocybe_tricolor_name">Inocybe tricolor</string>
     <string name="myco_inocybe_tricolor_alt">No stable common name retained without a corroborating source</string>
     <string name="myco_inocybe_tricolor_latin" translatable="false">Inocybe tricolor</string>

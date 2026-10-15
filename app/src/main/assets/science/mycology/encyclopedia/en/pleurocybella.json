@@ -1,0 +1,25 @@
+{
+  "id": "pleurocybella",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and identification", "text": "Pleurocybella porrigens, angel's wings, forms overlapping thin, fan-, tongue- or ear-shaped shelves, usually about 2–10 cm across. Young caps are pure white, becoming ivory or faintly cream with age; their edges may be lobed and wavy. The cap is smooth, sometimes translucent-striate when fresh. Narrow, crowded white gills cover the underside and converge on a narrow point of attachment. There is essentially no developed stem. The white flesh is thin, pliant and elastic. The spore print is white."},
+    {"title": "Habitat and season", "text": "It fruits in groups on dead, decaying conifer wood, such as fallen trunks and stumps, especially in damp forests; hemlock is a frequent host in the Pacific Northwest. The fruitbodies can overlap like small white shelves. Fruiting is mainly from late summer through autumn. The wood must be identified directly, since an old log can be difficult to recognise by surrounding trees alone."},
+    {"title": "Similar species", "text": "Pale forms of Pleurotus ostreatus and P. pulmonarius can also make fan-shaped, pale caps with descending gills. They usually have thicker flesh and a more evident short eccentric stem and are most often on broadleaf wood, but these contrasts are not absolute. Angel's wings usually attach to conifer wood almost without a stem and have a notably thin, flexible cap. White colour alone is inadequate; inspect substrate, flesh thickness, underside and attachment of every specimen."},
+    {"title": "Toxicity and response", "text": "The German Mycological Society lists P. porrigens under Pleurocybella syndrome. After a 2004 outbreak in Japan, clinical reports described severe encephalopathy, seizures and deaths among people with kidney failure who had eaten mushrooms identified as this species. The exact toxic agent and the range of individual susceptibility remain uncertain. Do not collect it for food, including for people without known kidney disease. If it may have been eaten, seek prompt poison-centre or medical advice and preserve any mushroom or meal remains; neurological symptoms may be delayed."}
+  ],
+  "traits": [
+    "Thin white to ivory fan- or ear-shaped shelves, usually 2–10 cm, wavy or lobed margin",
+    "Crowded narrow white gills converging on the attachment point",
+    "Almost no developed stem; thin pliant white flesh",
+    "White spore print",
+    "Overlapping groups on decaying conifer wood, late summer to autumn"
+  ],
+  "safetyNote": "Avoid eating Pleurocybella porrigens. It is listed under Pleurocybella syndrome, and severe delayed encephalopathy and deaths were reported after consumption in people with kidney failure. The mechanism and individual susceptibility are not fully settled. After possible ingestion, contact a poison centre or medical service promptly and retain specimens or meal remains.",
+  "sources": [
+    {"title": "German Mycological Society (DGfM) — Poisonous fungi by taxon, Pleurocybella syndrome (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "University of British Columbia Beaty Biodiversity Museum — Pleurocybella porrigens species account", "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/P_porrigens.html"},
+    {"title": "University of Washington Burke Herbarium — Pleurocybella porrigens identification notes", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Pleurocybella+porrigens"},
+    {"title": "Kato et al. — Encephalopathy after Pleurocybella porrigens ingestion in renal failure, ten cases (2004)", "url": "https://pubmed.ncbi.nlm.nih.gov/15729876/"}
+  ],
+  "related": ["ostreatus", "pulmonarius"]
+}

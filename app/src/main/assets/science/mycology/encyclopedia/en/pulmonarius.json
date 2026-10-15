@@ -1,0 +1,26 @@
+{
+  "id": "pulmonarius",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and identification", "text": "Pleurotus pulmonarius, the pale or lung oyster, has overlapping, tongue-, spatula- or shell-shaped caps. Typical wild caps are about 7–10 cm across, though size varies with growing conditions. They are white, cream or pale fawn to light grey-brown, smooth, with a margin that becomes wavy. Crowded whitish gills run down the short, pale eccentric stem, sometimes to its base; the stem can be very reduced. The flesh is whitish and flexible. The spore print is white to pale cream. A faint flour-like or aniseed odour may occur, but is too variable to prove identity."},
+    {"title": "Habitat and season", "text": "It grows in groups on living or dead deciduous wood, including trunks, stumps and branches of beech and willow. It is generally a wood decomposer, though it may occur on a living tree. Fruiting is mainly during the warmer months from summer into autumn in northern Europe; locality and weather affect timing. The actual substrate should be identified, rather than assuming that a pale bracket-like fungus is on broadleaf wood."},
+    {"title": "Similar species", "text": "Pleurotus ostreatus usually has darker grey or blue-grey caps in typical young fruitbodies, but its colour overlaps with this species; season and cap colour are clues, not proof. Some collections are difficult to separate confidently even with photographs. Pleurocybella porrigens, a delicate whitish fan-shaped wood fungus usually on conifers, is a safety-relevant lookalike: serious encephalopathy has been reported after its consumption by patients with kidney disease. Check cap texture, descending gills, stem attachment and host wood across every specimen, and seek expert verification."},
+    {"title": "Edibility and caution", "text": "The German Mycological Society lists P. pulmonarius as an edible species. This refers to correctly identified specimens, not every pale oyster-shaped fungus. There is no reliable food decision from this illustration or from a single colour or season cue. Do not eat an uncertain wild collection; ask a qualified mushroom expert to examine it. After uncertain ingestion or symptoms, obtain prompt poison-centre or medical advice and keep specimen or meal remains."}
+  ],
+  "traits": [
+    "Overlapping pale ivory to light grey-brown shell-shaped caps, often about 7–10 cm, wavy edge",
+    "Crowded whitish gills descending the short eccentric stem, sometimes to its base",
+    "Pale stem often very reduced; whitish flexible flesh",
+    "White to pale cream spore print; anise-like smell is possible but unreliable",
+    "On deciduous wood, especially beech or willow, mainly summer to autumn"
+  ],
+  "safetyNote": "Listed as edible only when correctly identified. It overlaps in appearance with other oyster mushrooms and pale fan-shaped wood fungi; Pleurocybella porrigens has been associated with serious encephalopathy in people with kidney disease. Do not eat wild specimens identified only from this plate. Seek expert confirmation and prompt medical or poison-centre advice after uncertain ingestion or illness.",
+  "sources": [
+    {"title": "German Mycological Society (DGfM) — Edible mushroom positive list, Pleurotus pulmonarius (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "Naturalis Biodiversity Center — Interactive Guide to Mushrooms, Pleurotus pulmonarius", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?cat=TAB_DESCRIPTION&id=100245"},
+    {"title": "Manaaki Whenua Landcare Research — Virtual Mycota, Pleurotus pulmonarius, based on Segedin et al. (1995)", "url": "https://virtualmycota.landcareresearch.co.nz/webforms/vM_Species_Details.aspx?pk=8312"},
+    {"title": "NatureSpot — Pale Oyster Mushroom species account", "url": "https://www.naturespot.org/species/pleurotus-pulmonarius"},
+    {"title": "Kato et al. — Encephalopathy after Pleurocybella porrigens ingestion in renal failure (2004)", "url": "https://pubmed.ncbi.nlm.nih.gov/15729876/"}
+  ],
+  "related": ["ostreatus", "pleurocybella", "aegerita"]
+}

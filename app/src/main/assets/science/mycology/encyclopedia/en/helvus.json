@@ -1,0 +1,27 @@
+{
+  "id": "helvus",
+  "reviewStatus": "verified",
+  "safetyNote": "Do not eat Lactarius helvus. The German Society for Mycology lists it under gastrointestinal poisoning, and the Czech Mycological Society calls it inedible to mildly poisonous. Older sources mention a dried culinary seasoning, but neither its pleasant spice-like odour nor drying establishes safety. Do not rely on an alleged 'toxins destroyed by boiling' rule. If eaten and symptoms occur, contact a poison centre promptly.",
+  "sections": [
+    {"title": "Dry tawny felted cap", "text": "The cap reaches about 4–14 cm, first low-convex and often shallowly depressed from a young age, later more broadly sunken or funnel-shaped. It is dry and finely velvety to felted, sometimes becoming minutely scaly or smoother with age. Colours range from cinnamon-buff and ochre-brown to greyish or rusty brown, usually paler toward the edge. Zoning is absent or faint; occasional darker spots should not be mistaken for bold concentric bands."},
+    {"title": "Pale gills, watery latex and hollowing stem", "text": "The moderately close, often forked gills begin cream and become pinkish ochre; they attach broadly and may run slightly down the stem. The rather firm, pale-to-ochre stem is initially full or stuffed and can become hollow with maturity. Flesh is whitish to pale pinkish. A fresh injury yields scant, thin, nearly colourless watery latex rather than thick white milk; old or dry specimens may release none. The spore deposit is whitish to pale cream."},
+    {"title": "A scent best checked on older or drying material", "text": "Mature or drying specimens often have a striking odour described as fenugreek, lovage, curry seasoning or roasted chicory. Young fresh mushrooms may be almost odourless, so absence of smell does not exclude the species. It fruits in wet or boggy sites, often among Sphagnum under spruce and pine, more rarely with birch, mainly from summer into autumn. The smaller L. camphoratus can have a related spice scent but is typically more reddish and grows in different settings."},
+    {"title": "Gastrointestinal risk", "text": "DGfM places L. helvus in its gastrointestinal syndrome list. The Czech Mycological Society and Associazione Micologica Bresadola describe it as inedible or mildly poisonous and report possible stomach upset. Published accounts of using dried material as a seasoning do not support recommending this species as food, and the exact response can vary. An illustration cannot convey its scent, the watery nature of fresh latex or its wetland habitat."}
+  ],
+  "traits": [
+    "Dry cinnamon-buff to grey-rust-brown cap, about 4–14 cm, velvety or finely felted, usually unzoned",
+    "Cream gills becoming pinkish ochre, broadly attached to slightly decurrent, often forked",
+    "Pale to ochre stem, initially full or stuffed and sometimes hollow in age",
+    "Scant nearly colourless watery latex; whitish to pale pinkish flesh",
+    "Fenugreek, lovage or roasted-chicory scent strongest in older or drying specimens",
+    "Wet, often Sphagnum-rich habitat with spruce or pine, sometimes birch"
+  ],
+  "sources": [
+    {"title": "German Society for Mycology (2026) — toxic fungi by taxon and syndrome", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Czech Mycological Society — Lactarius helvus", "url": "https://www.myko.cz/myko-atlas/Lactarius-helvus/"},
+    {"title": "Associazione Micologica Bresadola — Lactarius helvus", "url": "https://ambbresadola.it/lactarius-helvus-bull-ex-pers-p-kumm/"},
+    {"title": "Naturalis — Interactive Guide to Mushrooms, Lactarius helvus", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100466"},
+    {"title": "Cornell Mycology Blog — Lactarius helvus and its scent", "url": "https://blog.mycology.cornell.edu/2009/08/19/lactarius-helvus-the-maple-syrup-milky-cap/"}
+  ],
+  "related": ["turpis", "lignyotus"]
+}

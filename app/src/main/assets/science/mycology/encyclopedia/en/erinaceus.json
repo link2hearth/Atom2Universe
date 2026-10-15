@@ -1,0 +1,25 @@
+{
+  "id": "erinaceus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and identification", "text": "Hericium erinaceus, lion's mane or bearded tooth, forms one rounded to cushion-shaped, unbranched white mass rather than a conventional cap and stem. A mature fruitbody is commonly 10–20 cm broad, sometimes about 25 cm. Many long, soft, icicle-like teeth hang from the compact core; they may reach roughly 5–6 cm. The fresh mass is white to cream, yellowing or browning with age, with white firm to elastic flesh and a white spore print. The teeth are the fertile surface; there are no gills or pores."},
+    {"title": "Habitat and season", "text": "It grows from wounds or branch scars on trunks of living broadleaf trees, especially beech and oak, and also from decaying trunks and large branches. Fruiting in Europe is mainly from late summer through autumn, sometimes to early winter. A single compact hanging mass on wood is characteristic, but the location and full structure still matter."},
+    {"title": "Similar species", "text": "Hericium coralloides has a branched, coral-like framework with teeth along the branches, unlike the single dense core of H. erinaceus. H. cirrhatum has tiers of flatter brackets with shorter teeth beneath. North American H. americanum is also more branched. Hydnum repandum, a different tooth fungus in this atlas, has spines underneath a separate cap and grows on the ground. Check whether the teeth arise from an unbranched mass or from visible branches or shelves."},
+    {"title": "Food use and conservation", "text": "The German Mycological Society includes this fungus on its edible list under the spelling Hericium erinaceum, but marks it Red List category 2 in Germany. Cultivated lion's mane is used as food. Wild collection requires attention to local protections: in Great Britain this species is protected under Schedule 8 of the Wildlife and Countryside Act and must not be picked. Leave wild fruitbodies undisturbed, particularly where scarce, and prefer cultivated material if using it as food. A photograph or this plate is not a basis for identifying a meal; seek expert confirmation of any uncertain material."}
+  ],
+  "traits": [
+    "Single compact unbranched white cushion-like mass, about 10–20 cm, no ordinary cap or stem",
+    "Many soft long pendant teeth, often several centimetres, arising from the compact core",
+    "White to cream when fresh, yellowing or browning with age; firm pale flesh",
+    "White spore print; no gills or pores",
+    "On living or decaying broadleaf wood, especially beech and oak, late summer to autumn"
+  ],
+  "safetyNote": "Edible when correctly identified, but wild populations need protection. The German list marks it Red List category 2; wild picking is prohibited in Great Britain under Schedule 8. Leave wild specimens in place and use cultivated material for food where permitted. Do not infer edibility or legal permission from this illustration alone.",
+  "sources": [
+    {"title": "German Mycological Society (DGfM) — Edible mushroom positive list, Hericium erinaceum, RL 2 (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "Naturalis Biodiversity Center — Interactive Guide to Mushrooms, Hericium erinaceus", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?cat=TAB_DESCRIPTION&id=100654"},
+    {"title": "Woodland Trust — Bearded tooth fungus identification and UK protection", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/bearded-tooth/"},
+    {"title": "UK Natural England — Protected wild plants, fungi and lichens under Schedule 8", "url": "https://www.gov.uk/guidance/protected-plants-fungi-and-lichens-advice-for-making-planning-decisions"}
+  ],
+  "related": ["hydnum", "sparassis"]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "caesarea",
+  "reviewStatus": "verified",
+  "safetyNote": "A valued edible species only after reliable identification of a fully developed specimen. Do not collect closed 'eggs': they can be confused with the deadly Amanita phalloides. A rain-washed Amanita muscaria may also resemble it. Check the orange cap, yellow gills, ring and stem, and white sack-like volva together, and have any uncertain collection checked by a qualified mycologist. Do not eat a mushroom identified solely by an app or illustration.",
+  "sections": [
+    {"title": "Orange cap with a grooved rim", "text": "The cap begins hemispherical and opens into a broad, smooth orange to orange-red disc, usually 6–18 cm wide. Its margin is conspicuously striate or grooved. White veil remnants can occasionally remain on the cap, so an absolutely wart-free surface is not required. The cap may fade toward yellow-orange in dry weather. The flesh is pale inside and yellowish near the cap surface; it does not redden when cut."},
+    {"title": "Yellow gills and white volva", "text": "The crowded gills are free from the stem and golden yellow to yellow-orange. The stem and its broad, hanging, often grooved ring are yellow; the stem is not a prominent rounded bulb. At its base is a large, thick, white membranous volva with a free, often lobed rim, forming a distinct sac around the lower stem. The spore deposit is white. These colours and structures must be considered together, including the entire excavated base."},
+    {"title": "Warm broadleaf woodland", "text": "Amanita caesarea is ectomycorrhizal, associated especially with oak and sweet chestnut in warm southern European woodland. It fruits mainly from late summer into autumn. Regional records and collection rules vary; the German Society for Mycology lists it as an edible species but also marks it as legally protected in Germany. Its relative rarity in some regions makes local identification and conservation advice important."},
+    {"title": "Confusion at the egg stage", "text": "The Swiss VAPKO list specifically warns of confusion with Amanita muscaria and, while enclosed in its white 'egg', with the deadly death cap Amanita phalloides. The orange cap and yellow gills are concealed in a closed specimen, making an intact egg unsafe to identify by outward appearance. A rain-washed fly agaric may lose its veil warts and resemble an orange cap, but its gills and stem are pale and its volval remains are not the robust white sac of A. caesarea. ANSES advises avoiding undeveloped mushrooms, retaining the whole base for examination and seeking expert review whenever identification is uncertain."}
+  ],
+  "traits": [
+    "Smooth orange to orange-red cap, usually 6–18 cm, with a clearly striate margin",
+    "Crowded free golden-yellow to yellow-orange gills; white spore deposit",
+    "Yellow stem and broad pendant yellow ring, often grooved on its upper face",
+    "Large thick white sack-like volva around the stem base; no rounded warty bulb",
+    "Pale inner flesh, yellowish near the cap surface, without reddening",
+    "Ectomycorrhizal chiefly with oak and sweet chestnut in warm southern European woodland"
+  ],
+  "sources": [
+    {"title": "First Nature — Amanita caesarea", "url": "https://www.first-nature.com/fungi/amanita-caesarea.php"},
+    {"title": "Monaco Nature Encyclopedia — Amanita caesarea", "url": "https://www.monaconatureencyclopedia.com/amanita-caesarea/?lang=en"},
+    {"title": "German Society for Mycology (2026) — positive list of edible mushrooms", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023) — recommended mushroom list and confusion warning", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "ANSES (2015) — death cap risk and collecting advice", "url": "https://www.anses.fr/system/files/BIORISK2014sa0232Fi.pdf"}
+  ],
+  "related": ["muscaria", "phalloides"]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "lignyotus",
+  "reviewStatus": "verified",
+  "safetyNote": "Comestible d'après les listes de la DGfM et de la VAPKO suisse, mais la DGfM classe Lactarius lignyotus en catégorie 3 de la liste rouge allemande et l'université Lyon 1 recommande de le protéger là où il se raréfie. Respecter les règles locales et ne pas récolter les populations peu abondantes. Ne pas reconnaître un comestible à son seul chapeau sombre : examiner les lames pâles, les courtes cannelures du haut du pied, le lait blanc frais et l'association aux épicéas. Faire confirmer l'identification avant tout usage alimentaire et cuire convenablement.",
+  "sections": [
+    {"title": "Chapeau de velours couleur suie", "text": "Le chapeau mesure généralement 3 à 8 cm, parfois un peu plus ; d'abord convexe, il devient presque plat ou légèrement déprimé tout en gardant souvent un petit mamelon central. Il est sec, nettement velouté à finement feutré et ridé, brun bistre profond à brun noir ou presque noir, sans zones concentriques. La marge jeune est enroulée et parfois finement striée radialement ; le bord adulte peut onduler. Les lames pâles créent un contraste saisissant avec le chapeau."},
+    {"title": "Lames blanches et sommet du pied plissé", "text": "Les lames moyennement espacées, blanches puis crème, sont largement attachées au pied et ne descendent que brièvement ; une blessure peut les rosir ou rougir. Le pied mince, brun foncé à presque noir, est velouté comme le chapeau ; juste sous les lames, il porte de courtes cannelures ou des plis longitudinaux, et non un tapis de fossettes rondes. Plein jeune, il peut se creuser à maturité. La chair pâle rosit ou roussit lentement à la coupe."},
+    {"title": "Lait et habitat sous épicéas", "text": "Une blessure fraîche produit un lait blanc, souvent peu abondant. Les sources ne s'accordent pas entièrement sur un léger jaunissement tardif du lait isolé, mais elles signalent qu'au contact de la chair blessée il peut laisser une marque rougeâtre ou rousse. Ce lactaire forme surtout des mycorhizes avec les épicéas dans les bois de conifères de moyenne montagne ou de montagne, souvent sur sol acide ; il fructifie de l'été à l'automne. Le sombre L. picinus pousse aussi sous épicéas mais n'a pas le même contraste vif de lames blanches et son lait devient âcre ; comparer soigneusement les autres lactaires noirs."},
+    {"title": "Comestibilité et rareté régionale", "text": "La DGfM et la VAPKO inscrivent L. lignyotus parmi les comestibles. La DGfM mentionne également la catégorie 3 de la liste rouge en Allemagne ; Lyon 1 conseille sa protection en raison de son recul dans la région. Ces constats de conservation sont régionaux, mais une récolte mesurée est judicieuse partout où il est rare. La planche montre les lames pâles et les plis du haut du pied, sans pouvoir prouver l'arbre hôte ni les réactions colorées différées."}
+  ],
+  "traits": [
+    "Chapeau sec brun bistre à presque noir, velouté, environ 3 à 8 cm, souvent petit mamelon, sans zones",
+    "Lames blanches à crème moyennement espacées, largement attachées et brièvement décurrentes, rougissant aux blessures",
+    "Pied mince, brun sombre et velouté, à courtes cannelures longitudinales sous les lames, non à fossettes rondes",
+    "Lait blanc ; chair pâle rosissant ou roussissant lentement aux blessures",
+    "Sous épicéas en bois de conifères de moyenne montagne, souvent sur sol acide, de l'été à l'automne",
+    "Espèce comestible sur les listes, mais catégorie 3 de la liste rouge allemande"
+  ],
+  "sources": [
+    {"title": "Université Lyon 1 — Lactarius lignyotus", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/lactarius-lignyotus/"},
+    {"title": "Société mycologique tchèque — Lactarius lignyotus", "url": "https://www.myko.cz/myko-atlas/Lactarius-lignyotus/"},
+    {"title": "DGfM (2026) — liste positive des champignons comestibles", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023) — liste suisse des champignons recommandés", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
+  ],
+  "related": ["turpis", "helvus"]
+}

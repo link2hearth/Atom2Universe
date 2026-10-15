@@ -1,0 +1,20 @@
+{
+  "id": "bisporus",
+  "reviewStatus": "verified",
+  "safetyNote": "Agaricus bisporus est une espèce comestible très cultivée, mais il ne faut jamais consommer un champignon sauvage sur la seule base de cette planche ou de l'application. Plusieurs agarics toxiques et des amanites blanches mortelles peuvent ressembler aux jeunes exemplaires. Examiner la base entière du pied, l'évolution des lames, l'odeur et les changements de couleur, puis faire contrôler toute récolte sauvage par une personne qualifiée. Éviter les sites pollués.",
+  "sections": [
+    {"title": "Identification", "text": "La forme sauvage porte généralement un chapeau de 5 à 13 cm, d'abord hémisphérique à bord enroulé, puis convexe et plus étalé. Il est grisâtre à brun moyen, avec des fibrilles radiales ou des écailles brunes appliquées sur un fond plus clair et un bord pâle. Les formes cultivées vont du champignon de Paris blanc au cremini brun et au portobello mature. La couleur du chapeau ne suffit donc pas à identifier l'espèce."},
+    {"title": "Lames, pied et chair", "text": "Les lames, serrées et étroites, sont libres. Lorsque le voile s'ouvre, elles sont rose terne, puis brun rougeâtre ou violacé, enfin brun chocolat. Chez un bouton fermé, leur couleur peut être cachée. Le pied blanc et trapu mesure environ 3 à 8 cm ; il porte un anneau membraneux souvent à deux couches, parfois strié dessus et floconneux dessous. Il n'a pas de volve. La chair ferme et blanche peut rosir ou rougir légèrement à la coupe ou au frottement ; la sporée est brun chocolat."},
+    {"title": "Écologie et saison", "text": "Ce champignon saprotrophe pousse sur l'humus riche, le compost ou le fumier, dans les jardins, parcs, bords de route et autres milieux perturbés ; des populations sauvages vivent aussi dans les prairies ou parfois en bois sur sol riche. Il est bien moins fréquent à l'état sauvage qu'en culture. La fructification extérieure va surtout de la fin du printemps à l'automne, selon les régions et la météo."},
+    {"title": "Confusions et prudence", "text": "Agaricus campestris est proche, mais son anneau est généralement moins développé et il fréquente surtout les prés ; les basides majoritairement bisporiques d'A. bisporus nécessitent un microscope. Des agarics jaunissants toxiques, dont A. xanthodermus, peuvent dégager une odeur de phénol ou d'encre et jaunir vivement, surtout à la base du pied, mais ces signes sont variables. Les amanites blanches mortelles ont une volve et gardent des lames blanches à maturité. Conserver toute la base du pied et ne jamais juger la comestibilité sur un seul caractère ou sur l'illustration."},
+    {"title": "Lecture de la planche", "text": "La planche sur fond blanc compare un exemplaire entier du type sauvage brun, un jeune bouton cultivé pâle, une coupe longitudinale montrant la chair ferme et l'anneau, ainsi qu'une vue sous le chapeau où les lames libres foncent avec l'âge. Il s'agit de formes et stades représentatifs d'une même espèce."}
+  ],
+  "sources": [
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Liste positive des champignons comestibles, incluant Agaricus bisporus.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023). Liste suisse de recommandation des champignons comestibles, incluant Agaricus bisporus.", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "Naturalis Biodiversity Center. Guide interactif des champignons : Agaricus bisporus.", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100066"},
+    {"title": "Université de Colombie-Britannique, E-Flora BC. Fiche Agaricus bisporus par Ian Gibson.", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=1&sciname=Agaricus+bisporus"},
+    {"title": "First Nature. Identification, habitat et espèces similaires à Agaricus bisporus.", "url": "https://www.first-nature.com/fungi/agaricus-bisporus.php"}
+  ],
+  "related": ["campestris", "xanthodermus", "silvicola"]
+}

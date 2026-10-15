@@ -1,0 +1,33 @@
+{
+  "id": "amanita_beckeri",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Nom et silhouette", "text": "Amanita beckeri Huijsman est une amanite européenne sans anneau, aussi appelée amanite noisette ou amanite de Becker dans des sources françaises. Son chapeau atteint environ 12 cm de diamètre : d'abord hémisphérique, il devient convexe puis presque étalé. Le centre est brun noisette doré à ocre, souvent plus pâle vers le bord. L'étude du matériel type a corrigé une ancienne interprétation trop rouge-brun de la couleur publiée. La marge est profondément sillonnée et striée ; de petites plaques floconneuses du voile, blanches au départ, brunissent sans devenir gris-noir."},
+    {"title": "Lames, pied et volve", "text": "Les lames sont libres et serrées, blanches à crème au début, parfois tachées de brun en vieillissant. Les descriptions divergent sur leur éventuel grisonnement tardif : ce seul caractère n'est donc pas décisif. Le pied blanc et grêle mesure environ 10–20 cm sur 1,2–2 cm ; d'abord plein, il devient creux et ne porte pas de véritable anneau. Le voile universel forme une petite coupe fragile à la base et une ceinture distincte un peu plus haut. Initialement blancs, ces vestiges peuvent brunir. Il faut observer la base entière."},
+    {"title": "Milieu et espèces proches", "text": "Décrite à partir de récoltes françaises, l'espèce est signalée en Europe par la monographie spécialisée. La description originale indique des fructifications isolées ou groupées en forêt de feuillus sur sol calcaire, surtout lors de périodes très humides. Une source française documente notamment une récolte automnale en milieu calcaire avec des noisetiers. Amanita ceciliae est une espèce rapprochée par la monographie : chez A. beckeri, les restes du voile brunissent sans noircir. Une détermination sérieuse repose toutefois sur l'ensemble des caractères et peut nécessiter la microscopie."},
+    {"title": "Identification et sécurité", "text": "Cette fiche est une référence taxonomique, pas une recommandation de cueillette. Les sources examinées n'établissent pas de statut alimentaire fiable propre à cette espèce. L'absence d'anneau ne prouve pas l'innocuité : des caractères du voile peuvent être cachés, abîmés ou absents selon le stade, et le genre Amanita comprend des espèces mortelles. Ne consomme pas un spécimen supposé A. beckeri sur la seule base de cette planche ou de ce texte ; fais confirmer toute récolte par un spécialiste."}
+  ],
+  "traits": [
+    "Chapeau noisette doré à ocre-brun, jusqu'à environ 12 cm, plus pâle au bord fortement strié et sillonné",
+    "Petits flocons de voile d'abord blancs sur le chapeau, brunissant sans noircir",
+    "Lames libres et serrées, blanches à crème au début ; pied blanc grêle de 10–20 cm sans anneau",
+    "Petite coupe volvaire fragile à la base, avec ceinture distincte de voile juste au-dessus",
+    "Forêts européennes de feuillus sur sol calcaire ; description originale liée aux périodes très humides"
+  ],
+  "safetyNote": "Les sources examinées n'établissent ni comestibilité ni innocuité pour cette espèce. Ne la consomme pas. L'absence d'anneau ne garantit pas la sécurité chez les amanites ; fais identifier le spécimen entier par un spécialiste local et contacte d'urgence un centre antipoison en cas d'ingestion suspecte d'amanite dangereuse.",
+  "sources": [
+    {
+      "title": "GBIF Backbone Taxonomy — Amanita beckeri Huijsman",
+      "url": "https://www.gbif.org/species/5451688"
+    },
+    {
+      "title": "Index Fungorum — Amanita beckeri, notice 282978",
+      "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=282978"
+    },
+    {"title": "Amanitaceae.org, R. E. Tulloss — Amanita beckeri, description originale et examen du type", "url": "https://dikarya.us/amanitaceae/pages/amanita-beckeri/"},
+    {"title": "TaxinoHan — Amanita beckeri, récoltes d'herbier françaises et habitat", "url": "https://taxinohan.fr/?fiche=36"},
+    {"title": "Australian National Botanic Gardens — identification et risque liés à l'amanite phalloïde", "url": "https://www.cpbr.gov.au/fungi/deathcap.html"
+    }
+  ],
+  "related": ["phalloides"]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "sanguifluus",
+  "reviewStatus": "verified",
+  "safetyNote": "Inscrit parmi les comestibles par la DGfM et la VAPKO suisse, mais à consommer seulement après une identification certaine et une cuisson adaptée. Vérifier une coupe fraîche : son lait peu abondant est rouge vineux immédiatement, tandis que celui du proche L. semisanguifluus est d'abord orange puis rougit. Confirmer aussi la présence de pins et les autres caractères ; une couleur ou une image ne suffit pas. La DGfM le classe en catégorie 2 de la liste rouge allemande : respecter les règles locales de protection et de cueillette.",
+  "sections": [
+    {"title": "Tons orangés discrets et vineux", "text": "Le chapeau mesure jusqu'à environ 12 cm ; d'abord convexe à bord longtemps enroulé, il devient étalé puis déprimé. Sa couleur va de l'ocre orangé à l'orangé grisâtre, nuancée de rouge vineux ; les zones concentriques sont faibles ou absentes. La surface est un peu visqueuse par temps humide et peut montrer de petites taches verdâtres avec l'âge ou la manipulation, généralement moins étendues que chez L. semisanguifluus."},
+    {"title": "Lames rosées et lait rouge d'emblée", "text": "Les lames serrées et étroites sont adnées à légèrement décurrentes, d'abord crème rosé puis rosées à rouge vineux. Le pied court, rose pâle à vineux, porte parfois quelques fossettes rougeâtres dispersées ; plein jeune, il devient caverneux ou creux. La chair ferme est pâle au centre et rouge vineux près de la surface. Une blessure fraîche laisse sortir un lait épais, peu abondant, rouge vineux immédiatement : le moment d'apparition de la couleur compte davantage qu'une tache rouge observée plus tard."},
+    {"title": "Pinèdes et espèces proches", "text": "Ce lactaire européen vit avec les pins, notamment dans les bois méditerranéens sur sol calcaire, et fructifie surtout de l'été à l'automne selon les régions. L. semisanguifluus exsude d'abord un lait orange qui vire au rouge vineux après plusieurs minutes et verdit souvent davantage. L. deliciosus a lui aussi un lait initialement orange ; L. salmonicolor, lié aux sapins, a un chapeau saumon plus vif. L'arbre hôte, la couleur du lait à l'instant de la coupe, les lames et les zones du chapeau doivent être considérés ensemble."},
+    {"title": "Comestibilité et conservation", "text": "L'université Lyon 1 le qualifie d'excellent comestible ; la DGfM et la VAPKO le répertorient parmi les champignons comestibles. La DGfM lui attribue la catégorie 2 de la liste rouge en Allemagne : ce statut régional invite à éviter toute cueillette excessive. Ne récolter que des exemplaires frais dont l'identité est sûre et les cuire convenablement. La planche ne permet pas de mesurer la réaction du lait ni de prouver l'arbre hôte."}
+  ],
+  "traits": [
+    "Chapeau ocre orangé à orangé grisâtre nuancé de vineux, peu ou pas zoné, jusqu'à environ 12 cm",
+    "Lames serrées, rose pâle à rouge vineux, adnées à légèrement décurrentes",
+    "Pied court et rose pâle, parfois à fossettes rougeâtres éparses, devenant creux",
+    "Lait peu abondant rouge vineux dès la coupe ; chair centrale pâle et périphérie vineuse",
+    "Associé aux pins, souvent sur sol calcaire méditerranéen ; été à automne",
+    "Verdissement habituellement moins étendu que chez plusieurs lactaires orangés proches"
+  ],
+  "sources": [
+    {"title": "Nuytinck et Verbeken — clé des Lactarius européens de la section Deliciosi", "url": "https://www2.muse.it/russulales-news/id_deliciosi.asp"},
+    {"title": "Université Lyon 1 — Lactarius sanguifluus", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/lactarius-sanguifluus/"},
+    {"title": "Société mycologique de Barakaldo — Lactarius sanguifluus", "url": "https://micologica-barakaldo.org/lactarius-sanguifluus/"},
+    {"title": "DGfM (2026) — liste positive des champignons comestibles", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023) — liste suisse de champignons recommandés", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
+  ],
+  "related": ["semisanguifluus", "deliciosus", "salmonicolor"]
+}

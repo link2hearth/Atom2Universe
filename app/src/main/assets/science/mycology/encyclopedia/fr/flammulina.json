@@ -1,0 +1,27 @@
+{
+  "id": "flammulina",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaissance", "text": "La forme sauvage de Flammulina velutipes porte des chapeaux lisses jaune orangé à brun rougeâtre, généralement de 2 à 7 cm mais parfois jusqu'à 10 cm. D'abord convexes, ils s'étalent avec l'âge et deviennent nettement collants ou visqueux après la pluie. Les lames larges et plutôt espacées sont blanches à crème chez les jeunes exemplaires, puis jaune pâle ; la sporée est blanche. Le pied étroit et coriace est jaunâtre en haut, s'assombrit du brun au presque noir vers la base et acquiert une surface veloutée caractéristique. Il n'y a pas d'anneau. La forme sauvage est très différente des longues formes pâles cultivées à faible lumière ; le nom enoki a également servi pour des espèces cultivées proches du genre Flammulina."},
+    {"title": "Milieu et saison", "text": "La collybie à pied velouté pousse en groupes sur les arbres feuillus morts ou dépérissants, les souches et branches tombées, notamment ormes, peupliers, aulnes et saules. Elle se remarque surtout par temps froid : en Europe occidentale, les fructifications vont souvent de la fin de l'automne à l'hiver et au début du printemps. La date hivernale est un indice, mais ne suffit pas à déterminer l'espèce."},
+    {"title": "Sosies dangereux", "text": "La galère marginée (Galerina marginata), mortelle, est un autre champignon à chapeau brun des milieux lignicoles et peut pousser pendant les hivers doux. Sa sporée est brun rouille plutôt que blanche et elle possède souvent un anneau, qui peut toutefois disparaître avec l'âge. La pholiote changeante (Kuehneromyces mutabilis) a aussi une sporée brune, des lames plus foncées et un anneau ou ses restes. Il faut examiner ensemble la texture du pied, les lames et la sporée ; l'absence d'anneau, la couleur du chapeau ou la saison ne prouvent pas à elles seules l'innocuité. Vérifier chaque exemplaire d'une touffe mêlée."},
+    {"title": "Comestibilité et prudence", "text": "La Société allemande de mycologie, la liste suisse VAPKO et le Woodland Trust décrivent cette espèce comme comestible après identification certaine, mais le service de conservation du Missouri déconseille expressément la récolte de spécimens sauvages pour l'alimentation à cause de la confusion avec G. marginata, mortelle. Cette fiche suit cette recommandation prudente pour les récoltes sauvages. Une illustration ne permet pas une identification alimentaire. Après ingestion suspecte, si l'identification est incertaine, contacter rapidement un centre antipoison ou un service médical, même sans symptôme."}
+  ],
+  "traits": [
+    "Chapeau lisse et collant, jaune orangé à brun roux, souvent 2 à 7 cm, étalé avec l'âge",
+    "Lames larges et espacées, blanches à crème puis jaune pâle ; sporée blanche",
+    "Pied coriace jaunâtre en haut, brun noirâtre et velouté en bas ; sans anneau",
+    "Groupes sur bois mort ou dépérissant de feuillus",
+    "Fructification par temps froid, de la fin de l'automne au début du printemps"
+  ],
+  "safetyNote": "La récolte sauvage pour l'alimentation est déconseillée ici. La galère marginée mortelle pousse aussi en groupes bruns sur le bois, même en hiver doux. Sporée blanche et pied sombre velouté sont des indices utiles, mais une image ou un seul caractère ne prouvent pas l'innocuité ; après ingestion incertaine, demander rapidement conseil à un centre antipoison ou à un médecin.",
+  "sources": [
+    {"title": "Société allemande de mycologie (DGfM) — Liste positive des champignons comestibles (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, contrôleurs suisses — Liste des champignons recommandés (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "Missouri Department of Conservation — Fiche Velvet foot", "url": "https://mdc.mo.gov/discover-nature/field-guide/velvet-foot"},
+    {"title": "Missouri Department of Conservation — Fiche Deadly Galerina", "url": "https://mdc.mo.gov/discover-nature/field-guide/deadly-galerina"},
+    {"title": "Woodland Trust — Fiche Velvet shank", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/velvet-shank/"},
+    {"title": "Naturalis Biodiversity Center — Fiche Flammulina velutipes", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100333"}
+  ],
+  "related": ["galerina", "mutabilis", "mellea", "fasciculare"]
+}

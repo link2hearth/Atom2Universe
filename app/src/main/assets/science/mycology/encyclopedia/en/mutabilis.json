@@ -1,0 +1,27 @@
+{
+  "id": "mutabilis",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Identification", "text": "Kuehneromyces mutabilis grows in tufts of small brown mushrooms. Its smooth, hygrophanous cap is about 3–8 cm wide, convex then flatter, often with a broad low umbo. It is shiny cinnamon or orange-brown when wet and dries paler from the centre, frequently leaving a two-toned cap with a darker outer zone. The crowded attached gills are pale ochre when young and deepen to cinnamon brown. The slender stem, usually 3–8 cm long, is pale and relatively smooth above a fragile ragged ring, but becomes darker, fibrous and distinctly scaly beneath it. The ring can wear away with age. The spore print is reddish ochre to cinnamon brown. Odour is not a dependable separator from similar species."},
+    {"title": "Habitat and season", "text": "A saprotroph on decaying broadleaf wood, including stumps, fallen trunks, logs and buried timber; birch is a frequent host. Fruitbodies often grow in dense, sometimes fused clusters. In Britain and Ireland the species can appear through much of the year, especially in summer and autumn. The woody substrate may be concealed under leaf litter."},
+    {"title": "Dangerous lookalike", "text": "Galerina marginata, the deadly funeral bell, can closely resemble the sheathed woodtuft and grow on the same type of substrate. It contains amatoxins that can cause fatal liver injury. Scales below the ring and a pale centre on a drying cap can be useful clues, but neither a single feature nor a photograph reliably excludes Galerina; old specimens may lose key details. Swiss mushroom controllers explicitly warn about this confusion and advise microscopic confirmation in their comparison guidance. Mixed tufts must not be assumed to contain only one species."},
+    {"title": "Edibility and safe use", "text": "The German Mycological Society and Swiss mushroom controllers include K. mutabilis in edible-mushroom lists, and its fibrous stems are usually discarded. This status applies only to a reliably identified specimen. Because of the severe consequence of confusion with G. marginata, this guide does not support identification for eating from the illustration, cap drying pattern, smell or taste. If a wood-growing brown mushroom has been eaten and there is any doubt, seek immediate poison-centre or medical advice even before symptoms appear, and keep specimens or meal remains for identification."}
+  ],
+  "traits": [
+    "Hygrophanous 3–8 cm cap, cinnamon-brown when wet, drying paler from centre",
+    "Crowded attached gills, pale ochre then cinnamon brown",
+    "Pale smooth stem above fragile ring, dark and scaly below it",
+    "Reddish-ochre to cinnamon-brown spore print; odour not diagnostic",
+    "Dense tufts on dead broadleaf wood, especially in summer and autumn"
+  ],
+  "safetyNote": "Edible only when identified with certainty by an expert. The deadly, amatoxin-containing Galerina marginata can look very similar on the same wood; cap colour, drying pattern, smell and stem scales alone are insufficient safeguards. After uncertain ingestion, contact a poison centre or emergency medical service immediately, even without symptoms.",
+  "sources": [
+    {"title": "German Mycological Society (DGfM) — Edible mushroom positive list (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, Swiss mushroom controllers — Recommended mushroom list (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "VAPKO — Confusion table: Kuehneromyces mutabilis and Galerina marginata", "url": "https://www.vapko.ch/phocadownload/public/FR/A-Z/confusions.pdf"},
+    {"title": "Belgian Poison Centre — Mushroom information booklet (2026), Galerina marginata", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "First Nature — Kuehneromyces mutabilis identification and lookalikes", "url": "https://www.first-nature.com/fungi/kuehneromyces-mutabilis.php"},
+    {"title": "E-Flora BC, University of British Columbia — Kuehneromyces mutabilis account", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Pholiota+mutabilis"}
+  ],
+  "related": ["galerina", "fasciculare", "capnoides", "flammulina"]
+}

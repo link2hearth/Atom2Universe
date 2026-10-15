@@ -1,0 +1,20 @@
+{
+  "id": "excoriata",
+  "reviewStatus": "verified",
+  "safetyNote": "Macrolepiota excoriata appears on the DGfM and VAPKO edible-species lists, but a picture or app match does not establish food safety. Several parasol-like fungi include harmful species. Have the complete fresh specimen, especially its base and ring, checked by a qualified local expert before any consumption. Avoid collecting at roadsides or polluted sites; cook wild mushrooms thoroughly.",
+  "sections": [
+    {"title": "Identification", "text": "A medium-sized, pale parasol. The cap is generally 5–12 cm wide, rounded when young, then broadly convex to almost flat with a low brownish umbo. Its pale cream surface bears many small fibrous to granular buff or ochre scales, often most visible toward the centre, while the outer surface may look peeled or ragged. The crowded gills are free and white to cream, sometimes faintly pinkish with age."},
+    {"title": "Stem, ring and flesh", "text": "The slender whitish stem is roughly 5–14 cm long, smooth or finely felted without the strong brown snakeskin pattern of M. procera, and only moderately widened at its base. Its pale membranous ring is simple, usually movable, and can become inconspicuous in old fruit bodies. The white flesh does not rapidly stain orange or red when cut; the mature stem may become hollow. The spore deposit is whitish to cream."},
+    {"title": "Habitat and season", "text": "A saprobic mushroom of open grassland, pasture, meadows and coastal dunes, sometimes in small groups or arcs. Fruiting is chiefly in summer and autumn in Europe. Its distribution and conservation status vary by region; the 2026 German edible list marks it as Red List category 3."},
+    {"title": "Similar species", "text": "Macrolepiota procera is usually larger and has a conspicuous brown snakeskin pattern on the stem. M. mastoidea has a more prominent pointed central umbo. Chlorophyllum rhacodes and C. brunneum are more strongly shaggy and their damaged flesh stains orange to red. Small Lepiota species, including deadly ones, must never be judged by a superficial parasol resemblance; examine the whole fruit body with expert help."},
+    {"title": "About the plate", "text": "The white-background plate shows a whole specimen with a pale excoriated cap, slender plain stem, simple ring and gently widened base; a longitudinal cut with unchanged white flesh; the pale free gills from below; and the cap surface from above."}
+  ],
+  "sources": [
+    {"title": "Dutch Mycological Society. Coastal-dune field guide: Macrolepiota excoriata species account.", "url": "https://www.mycologen.nl/onderzoek/meetnet/zeereep-concept/veldgids-zeereepsoorten/plaatjeszwammen/parasolzwammen/"},
+    {"title": "Czech Mycological Society. Macrolepiota excoriata atlas account by Karel Tejkal.", "url": "https://www.myko.cz/myko-atlas/Macrolepiota-excoriata/"},
+    {"title": "Irish Grassland Fungi. Macrolepiota excoriata grassland account.", "url": "https://irishgrasslandfungi.irish/macrolepiota-excoriata/"},
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Positivliste der Speisepilze.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023). Swiss recommended edible mushroom list.", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
+  ],
+  "related": ["procera", "rhacodes", "brunneoincarnata"]
+}

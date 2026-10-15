@@ -1,0 +1,26 @@
+{
+  "id": "fistulina",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and identification", "text": "Fistulina hepatica, the beefsteak or ox-tongue fungus, begins as a reddish tongue-like projection and expands to a semicircular, fleshy bracket. Mature caps are commonly 10–25 cm across and 3–6 cm thick, attached laterally with no or only a short thick stub. The upper surface is salmon-red to wine-red or rusty brown, often moist or sticky, becoming rougher and darker with age. The whitish to straw-yellow or pinkish pore surface bruises deep red-brown. Unusually for a polypore, its short tubes are separate from each other rather than fused into a continuous honeycomb; they can be teased apart. Cut flesh is juicy, reddish and mottled with pale veins, often exuding red watery droplets. Reported spore-print shades differ among guides, from whitish to pale pinkish yellow; it is not the main field character."},
+    {"title": "Habitat and season", "text": "It usually appears low on living oak trunks, at wounds, or on oak stumps; sweet chestnut is another important host. It may continue fruiting on dead wood and causes brown rot. In Britain and Ireland it is found mainly from late summer into autumn, roughly July to October, although timing varies by locality. A solitary fleshy bracket at the base of an oak is characteristic but the tube and flesh details should still be checked."},
+    {"title": "Similar species", "text": "Other reddish or orange brackets such as the shaggy bracket, Inonotus hispidus, can resemble a weathered beefsteak fungus, but they lack its juicy marbled cut surface and discrete, individually separable tubes. Laetiporus sulphureus is normally sulphur-yellow and orange with a conventional fused pore layer. Examining a fresh underside and a cut section is more useful than judging an aged cap by colour alone."},
+    {"title": "Edibility and caution", "text": "The German Mycological Society lists F. hepatica on its edible positive list, and Swiss VAPKO specifies that young material is edible. Older fruitbodies become leathery; even young ones have a distinctly sour flavour and need thorough cooking. The German list entry does not label this species as endangered, contrary to the previous article text. Confirm wild material with a qualified mushroom expert, respect local collection rules, and do not consume an uncertain or decaying specimen. Seek medical advice if symptoms follow ingestion."}
+  ],
+  "traits": [
+    "Fleshy red tongue to semicircular bracket, commonly 10–25 cm, very short or no stem",
+    "Moist red to reddish-brown upper surface, darker and rougher with age",
+    "Cream to straw-yellow or pinkish pores bruising deep red-brown; tubes separate individually",
+    "Juicy red flesh with pale marbling and sometimes blood-like droplets on cutting",
+    "Low on living or dead oak, also sweet chestnut, late summer to autumn"
+  ],
+  "safetyNote": "Young correctly identified beefsteak fungus is listed as edible, but older specimens are tough and its flesh needs thorough cooking. Verify the individually separable tubes and marbled red flesh; do not use the plate alone to identify a meal. Avoid old or uncertain specimens, seek expert confirmation, and obtain medical advice if illness follows ingestion.",
+  "sources": [
+    {"title": "German Mycological Society (DGfM) — Edible mushroom positive list, Fistulina hepatica (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO — Recommended mushroom list, Fistulina hepatica edible young (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "First Nature — Fistulina hepatica identification, separate tubes and spore print", "url": "https://www.first-nature.com/fungi/fistulina-hepatica.php"},
+    {"title": "Naturalis Biodiversity Center — Interactive Guide to Mushrooms, Fistulina hepatica", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=100636"},
+    {"title": "Woodland Trust — Beefsteak fungus species account", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/beefsteak-fungus/"}
+  ],
+  "related": ["laetiporus", "gigantea"]
+}

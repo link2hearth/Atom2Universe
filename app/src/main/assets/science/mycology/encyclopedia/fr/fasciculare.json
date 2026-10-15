@@ -1,0 +1,26 @@
+{
+  "id": "fasciculare",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Hypholoma fasciculare forme des touffes serrées de petits à moyens champignons. Le chapeau lisse et convexe mesure environ 2 à 7 cm ; il est jaune soufre avec un centre jaune orangé à brun fauve plus foncé. De fines fibrilles du voile peuvent rester à sa marge. Les lames serrées et attachées au pied sont d'abord jaune soufre, puis prennent une nuance verte ou olivâtre caractéristique avant de foncer vers le gris brun ou le brun pourpré. Le pied jaune, mince et souvent courbé, brunit vers la base. Un voile fibreux éphémère peut laisser une faible zone sombre, mais il n'y a pas d'anneau membraneux persistant. La sporée est brun pourpré. La chair jaunâtre est très amère, mais goûter un champignon toxique n'est pas une méthode de reconnaissance sûre."},
+    {"title": "Milieu et saison", "text": "Saprotrophe décomposeur du bois, l'hypholome en touffe pousse en groupes denses sur les souches, troncs tombés, racines enfouies et autres bois morts de feuillus ou de conifères. Il peut sembler sortir de terre quand le bois est enterré. En Grande-Bretagne, il fructifie une grande partie de l'année, surtout de l'été à l'automne ; la période dépend de la région et de la météo."},
+    {"title": "Espèces proches", "text": "Hypholoma capnoides lui ressemble sur bois de conifère, mais ses jeunes lames sont gris fumé plutôt que jaune soufre à verdâtres. L'hypholome couleur de brique (H. lateritium) a généralement un chapeau plus rouge brique et n'a pas les lames vert olive caractéristiques. La galère marginée (Galerina marginata), mortelle, et la pholiote changeante (Kuehneromyces mutabilis), comestible, peuvent partager les mêmes supports ligneux ; leur sporée est brune et non brun pourpré foncé. Dans une touffe mêlée, chaque exemplaire doit être examiné. Une image seule ne permet pas d'établir la comestibilité."},
+    {"title": "Toxicité", "text": "L'hypholome en touffe est toxique ; la Société allemande de mycologie le classe parmi les champignons responsables d'un syndrome gastro-intestinal. Une intoxication peut provoquer nausées, vomissements, douleurs abdominales et diarrhée, parfois après un délai de 5 à 10 heures. La gravité varie ; des symptômes retardés exigent aussi une évaluation rapide, car d'autres espèces lignicoles, surtout G. marginata, provoquent une intoxication mortelle. Un ancien cas mortel rapporté ne démontre pas que cet hypholome en était l'unique cause. En cas d'ingestion suspecte, contacter un centre antipoison ou un service médical urgent et conserver les restes de champignons ou du repas."}
+  ],
+  "traits": [
+    "Chapeau jaune soufre de 2 à 7 cm, souvent plus orangé-fauve au centre",
+    "Lames serrées et attachées, jaunes puis vertes ou olivâtres, fonçant avec l'âge",
+    "Pied jaune mince et courbé, plus brun en bas ; voile fibreux sans anneau durable",
+    "Sporée brun pourpré ; chair très amère, sans jamais la goûter pour identifier",
+    "Touffes denses sur bois mort de feuillus ou de conifères, même enfoui"
+  ],
+  "safetyNote": "Toxique : peut provoquer des nausées, vomissements et diarrhées importants, parfois après 5 à 10 heures. Ne pas le consommer ni le goûter. En cas d'ingestion suspecte, consulter rapidement un centre antipoison ou un médecin ; la galère marginée, autre espèce lignicole ressemblante, est mortelle.",
+  "sources": [
+    {"title": "Beaty Biodiversity Museum, université de Colombie-Britannique — Hypholoma fasciculare", "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/H_fasciculare.html"},
+    {"title": "Société allemande de mycologie (DGfM) — Champignons toxiques par taxon et syndrome (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Centre Antipoisons belge — Brochure champignons (2026), confusions de la galère marginée", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "First Nature — Guide d'identification de Hypholoma fasciculare", "url": "https://www.first-nature.com/fungi/hypholoma-fasciculare.php"},
+    {"title": "Plantlife — Fiche de l'hypholome en touffe", "url": "https://www.plantlife.org.uk/plants-and-fungi/sulphur-tuft/"}
+  ],
+  "related": ["capnoides", "sublateritium", "galerina", "mutabilis"]
+}

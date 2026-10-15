@@ -1,0 +1,20 @@
+{
+  "id": "moelleri",
+  "reviewStatus": "verified",
+  "safetyNote": "Poisonous: do not eat Agaricus moelleri. The German mycological society lists it among mushrooms causing gastrointestinal illness, and cooking does not make it reliably safe. A strong phenolic or inky odour and rapid yellow staining, especially at the stem base, are warning signs. Seek poison-centre advice after suspected ingestion.",
+  "sections": [
+    {"title": "Identification", "text": "A medium to large Agaricus with a whitish cap covered by many fine, dark grey to grey-brown fibrillose scales, densest toward the centre. The cap can yellow when rubbed, notably near the margin. Crowded gills are free: they start pale or pink, then become chocolate brown and finally dark brown. The white silky stem often has a bulbous base and a broad, hanging white ring, sometimes double-edged."},
+    {"title": "Yellowing and odour", "text": "Scratching or cutting the stem base produces conspicuous chrome-yellow staining, later dulling toward brown; the ring and cap can also yellow where handled. The flesh is otherwise whitish. Its unpleasant smell is compared with ink, iodoform or phenol, particularly after bruising. Observe the whole mushroom and do not rely on odour alone."},
+    {"title": "Habitat and season", "text": "A saprobic species of deciduous woodland, leaf litter and hedgerows, also recorded in parks, gardens and grassy places. It appears chiefly from summer into autumn. Habitat alone cannot separate it from other Agaricus."},
+    {"title": "Similar species and poisoning", "text": "Agaricus xanthodermus also yellows and smells phenolic but generally lacks the conspicuous dark grey cap scaling. The edible A. campestris may look similar at first glance, yet the combination of chemical odour and rapid chrome-yellow bruising should rule out eating the specimen. The DGfM assigns A. moelleri to the gastrointestinal poisoning group; individual reactions can vary."},
+    {"title": "About the plate", "text": "The white-background plate shows a whole mature mushroom, a longitudinal section exposing yellow staining at the cut stem base, a scaled cap from above, and dark mature gills from below. Young specimens have paler, pinker gills than the mature underside shown."}
+  ],
+  "sources": [
+    {"title": "MycoCharentes, P. Tanchaud (2024). Agaricus moelleri species sheet.", "url": "https://www.mycocharentes.fr/pdf1/1530.pdf"},
+    {"title": "Aranzadi Science Society. Agaricus moelleri mycological record.", "url": "https://www.aranzadi.eus/index.php/buscador-micologico/ficha/1-1-003.06.01.06.07.00?from=gallery&limit=25"},
+    {"title": "Associazione Micologica Bresadola. Agaricus moelleri toxic species profile.", "url": "https://ambbresadola.it/funghi_tossici/agaricus-moelleri/"},
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). List of poisonous fungi by taxon and syndrome.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "First Nature. Agaricus moelleri identification guide.", "url": "https://www.first-nature.com/fungi/agaricus-moelleri.php"}
+  ],
+  "related": ["xanthodermus", "campestris", "silvicola"]
+}

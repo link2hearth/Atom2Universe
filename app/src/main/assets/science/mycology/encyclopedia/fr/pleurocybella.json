@@ -1,0 +1,25 @@
+{
+  "id": "pleurocybella",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Nom et identification", "text": "Pleurocybella porrigens, appelé pleurote en oreille ou oreille d'ange, forme de minces consoles superposées en éventail, langue ou oreille, généralement larges de 2 à 10 cm. Les jeunes chapeaux sont blancs purs, puis ivoire ou crème très pâle ; leur bord peut devenir lobé et ondulé. Le dessus est lisse, parfois strié par transparence à l'état frais. Des lames blanches, étroites et serrées couvrent le dessous et convergent vers un point d'attache étroit. Le pied développé est pratiquement absent. La chair blanche est mince, souple et élastique. La sporée est blanche."},
+    {"title": "Habitat et saison", "text": "Il fructifie en groupes sur le bois mort et décomposé de conifères, notamment les troncs tombés et les souches en forêt humide ; la pruche est un support fréquent dans le nord-ouest de l'Amérique. Les fructifications peuvent se superposer comme de petites étagères blanches. La saison va surtout de la fin de l'été à l'automne. Il faut reconnaître directement le bois support, car l'essence d'un vieux tronc ne se déduit pas toujours des arbres alentour."},
+    {"title": "Espèces proches", "text": "Les formes pâles de Pleurotus ostreatus et P. pulmonarius possèdent également des chapeaux clairs en éventail et des lames descendantes. Leur chair est en général plus épaisse, leur court pied excentré mieux marqué et leur support le plus souvent feuillu, mais ces différences ne sont pas absolues. Le pleurote en oreille s'attache presque sans pied à un conifère et possède un chapeau remarquablement mince et souple. La seule couleur blanche est insuffisante : vérifier le support, l'épaisseur de la chair, le dessous et l'attache de chaque exemplaire."},
+    {"title": "Toxicité et conduite à tenir", "text": "La Société allemande de mycologie classe P. porrigens dans le syndrome de Pleurocybella. Après une épidémie au Japon en 2004, des observations cliniques ont décrit de graves encéphalopathies, des convulsions et des décès chez des personnes insuffisantes rénales ayant consommé des champignons identifiés comme cette espèce. L'agent toxique exact et la variabilité de sensibilité individuelle restent incertains. Ne pas le récolter pour l'alimentation, même en l'absence de maladie rénale connue. En cas de consommation possible, contacter rapidement un centre antipoison ou un service médical et conserver les champignons ou restes du repas ; les signes neurologiques peuvent être différés."}
+  ],
+  "traits": [
+    "Consoles minces blanches à ivoire en éventail ou oreille, généralement 2–10 cm, marge ondulée ou lobée",
+    "Lames blanches étroites et serrées convergeant vers le point d'attache",
+    "Pied développé presque absent ; chair blanche mince et souple",
+    "Sporée blanche",
+    "Groupes superposés sur bois de conifère en décomposition, de la fin de l'été à l'automne"
+  ],
+  "safetyNote": "Ne pas consommer Pleurocybella porrigens. Il est classé dans le syndrome de Pleurocybella ; de graves encéphalopathies différées et des décès ont été rapportés après sa consommation chez des insuffisants rénaux. Le mécanisme et la sensibilité individuelle ne sont pas entièrement élucidés. Après une ingestion possible, joindre rapidement un centre antipoison ou un service médical et conserver des exemplaires ou restes du repas.",
+  "sources": [
+    {"title": "Société allemande de mycologie (DGfM) — Champignons toxiques par taxon, syndrome de Pleurocybella (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Université de Colombie-Britannique, Beaty Biodiversity Museum — Fiche de Pleurocybella porrigens", "url": "https://explore.beatymuseum.ubc.ca/mushroomsup/P_porrigens.html"},
+    {"title": "Université de Washington, Burke Herbarium — Critères de Pleurocybella porrigens", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Pleurocybella+porrigens"},
+    {"title": "Kato et al. — Dix encéphalopathies après consommation de Pleurocybella porrigens chez des insuffisants rénaux (2004)", "url": "https://pubmed.ncbi.nlm.nih.gov/15729876/"}
+  ],
+  "related": ["ostreatus", "pulmonarius"]
+}

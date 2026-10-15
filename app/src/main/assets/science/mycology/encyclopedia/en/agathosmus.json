@@ -1,0 +1,20 @@
+{
+  "id": "agathosmus",
+  "reviewStatus": "verified",
+  "safetyNote": "Hygrophorus agathosmus appears on the DGfM and VAPKO edible lists, but this plate and the almond scent cannot establish a wild mushroom's identity or safety. Research has separated several similar almond-scented species formerly called H. agathosmus, and smell can be faint. Do not eat a wild specimen based on this app; have it checked by a qualified local expert.",
+  "sections": [
+    {"title": "Recognition", "text": "This grey woodwax has a smooth, fleshy cap about 3–10 cm across, first convex with an inrolled margin and sometimes a low central bump, later broadly flattened or slightly depressed. The surface ranges from beige-grey to ash or brownish grey and is conspicuously slimy or sticky in damp conditions. A pale margin may become wavy with age. Its pleasant-to-bitter-almond or cherry-stone scent is characteristic of the group but can vary in strength."},
+    {"title": "Gills, stem and flesh", "text": "The gills are thick, soft and waxy rather than thin and crowded. They are white to cream, becoming dingy greyish with age, attached to the stem and often running slightly down it on mature specimens. The dry, whitish to pale-grey stem is about 4–10 cm tall, sometimes longer, solid and without a ring or volva; its upper surface may be finely pruinose or floccose. The flesh is soft and whitish, sometimes grey-tinged; the spore deposit is white."},
+    {"title": "Ecology and season", "text": "The mushroom forms ectomycorrhiza with conifers and grows on the ground in scattered fruit bodies or groups. Broad field descriptions mention spruce and pine, mainly from summer to autumn. A molecular study found H. agathosmus in the strict sense associated with spruce in moist, nutrient-rich, often calcareous old forests of northeastern Europe; some pine-associated reports appear to belong to other members of the complex."},
+    {"title": "Similar species and naming", "text": "Grey or brown Hygrophorus species can look alike, and an almond-like scent does not identify one species. A 2018 study distinguished several close northern European taxa, including H. suaveolens under pine and H. exiguus, a small species in old spruce forest. Some specimens reported from North America as H. agathosmus have proved to be H. odoratus. Cap shade, host tree, habitat, gill attachment and microscopic or molecular characters may all be needed for confident separation. The white colour form of H. agathosmus further widens its appearance."},
+    {"title": "About the plate", "text": "The white-background plate depicts a complete grey fruit body with moist-looking cap, inrolled edge and ringless whitish stem, a longitudinal section of pale flesh, a top view, and an underside view of thick waxy pale gills attached to the stem and slightly descending. The illustration shows a representative phenotype rather than the whole species complex."}
+  ],
+  "sources": [
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Positivliste der Speisepilze, including Hygrophorus agathosmus.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023). Swiss recommendation list, including Hygrophorus agathosmus.", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "University of British Columbia, E-Flora BC. Hygrophorus agathosmus morphology and similar species.", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?NoTransfer=1&sciname=Hygrophorus+agathosmus"},
+    {"title": "Naturalis Biodiversity Center. Interactive Guide to Mushrooms and Other Fungi: Hygrophorus agathosmus.", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=100353"},
+    {"title": "Larsson et al. (2018). Diversity within the Hygrophorus agathosmus group in Northern Europe. Mycological Progress.", "url": "https://doi.org/10.1007/s11557-018-1445-y"}
+  ],
+  "related": ["olivaceoalbus", "marzuolus", "hypothejus"]
+}

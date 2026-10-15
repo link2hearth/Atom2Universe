@@ -1,0 +1,27 @@
+{
+  "id": "piperatus",
+  "reviewStatus": "verified",
+  "safetyNote": "Cette application considère Lactifluus piperatus comme impropre à une consommation improvisée : son lait est extrêmement poivré et plusieurs lactaires blancs lui ressemblent. La DGfM le place toutefois dans sa liste des comestibles avec l'instruction de bien le poêler ; ce n'est pas une invitation à goûter ou manger un exemplaire reconnu seulement sur image. Ne jamais le consommer cru. Faire confirmer toute récolte destinée à l'alimentation par un spécialiste local et suivre les recommandations régionales de préparation.",
+  "sections": [
+    {"title": "Grand entonnoir blanc et sec", "text": "Le chapeau robuste mesure souvent environ 6 à 16 cm ; il est blanc crème, sec, finement mat et presque lisse. Son bord est d'abord enroulé, puis le centre se déprime fortement jusqu'à prendre la forme d'un entonnoir. L'âge et les manipulations peuvent laisser des taches fauves. La chair épaisse et cassante reste blanche à la coupe ; le pied pâle, ferme et assez trapu est lisse ou légèrement pruineux et peut se creuser chez les vieux exemplaires."},
+    {"title": "Lames exceptionnellement serrées et lait blanc", "text": "Les lames très étroites, blanches à crème et extraordinairement serrées descendent sur le pied. Une lame cassée produit un lait blanc au caractère fortement brûlant et poivré. Ne pas goûter un champignon inconnu pour vérifier ce caractère. Les descriptions divergent sur un éventuel verdissement du lait séché ; les études moléculaires montrent que cette réaction ne permet pas de distinguer sûrement L. piperatus du très proche L. glaucescens. La sporée est blanche."},
+    {"title": "Bois et espèces proches", "text": "C'est un champignon mycorhizien des bois, souvent signalé sous les feuillus dont le hêtre, qui fructifie de l'été à l'automne. L. vellereus porte un chapeau plus laineux et des lames moins serrées ; L. glaucescens est parfois presque identique sur le terrain et peut demander un examen microscopique de la surface du chapeau. Russula delica peut rappeler un gros lactaire blanc mais n'émet pas de lait. Examiner le chapeau, la densité des lames et une coupe fraîche."},
+    {"title": "Avis alimentaires variables", "text": "La Société allemande de mycologie inscrit L. piperatus sur sa liste positive des comestibles avec la mention explicite « bien poêler ». Le service de conservation du Missouri le décrit également comme comestible mais trop poivré pour la plupart des personnes, tandis que d'autres guides européens le jugent impropre à l'alimentation pour sa saveur. Ces avis ne justifient ni de le déclarer universellement vénéneux ni de le recommander sans réserve. Le statut non comestible de l'application appelle à la prudence ; une image ne tranche pas l'identité spécifique dans ce groupe."}
+  ],
+  "traits": [
+    "Grand chapeau blanc crème, sec et mat, souvent 6 à 16 cm, devenant profondément déprimé en entonnoir",
+    "Lames blanches à crème très étroites, exceptionnellement serrées et décurrentes",
+    "Pied blanc robuste et lisse ; chair blanche épaisse et cassante ; pied parfois creux avec l'âge",
+    "Lait blanc très poivré ; son éventuel verdissement tardif ne distingue pas sûrement L. glaucescens",
+    "Sporée blanche ; pousse en bois de feuillus, notamment sous les hêtres",
+    "Les lactaires blancs voisins peuvent exiger la microscopie pour être séparés"
+  ],
+  "sources": [
+    {"title": "De Crop et al. (2014) — Lactifluus piperatus et espèces proches d'Europe occidentale", "url": "https://biblio.ugent.be/publication/5327709"},
+    {"title": "Caboň et Adamčík (2014) — écologie et répartition des lactaires blancs en Slovaquie", "url": "https://www.czechmycology.org/_cmo/CM66206.pdf"},
+    {"title": "DGfM (2026) — liste positive des champignons comestibles", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "Service de conservation du Missouri — Peppery Milky", "url": "https://mdc.mo.gov/discover-nature/field-guide/peppery-milky"},
+    {"title": "First Nature — Peppery Milkcap", "url": "https://www.first-nature.com/fungi/lactarius-piperatus.php"}
+  ],
+  "related": ["volemus", "torminosus"]
+}

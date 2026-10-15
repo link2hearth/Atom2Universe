@@ -1,0 +1,27 @@
+{
+  "id": "salmonicolor",
+  "reviewStatus": "verified",
+  "safetyNote": "Espèce classée comestible par la Société allemande de mycologie et la VAPKO suisse, qui signale toutefois un goût résineux marqué. Ne la consommer qu’après une identification fiable et une cuisson adaptée. Ce lactaire à lait orange ne présente normalement pas le fort verdissement du lactaire de l’épicéa, mais l’absence de vert ne prouve pas à elle seule son identité. Examiner ensemble le sapin associé, les lames, les fossettes du pied et le lait orange frais ; en cas de doute, faire contrôler la récolte et ne pas la manger.",
+  "sections": [
+    {"title": "Chapeau orange saumon", "text": "Le large chapeau est orange à orange saumon, généralement de 5 à 15 cm. Sa marge d’abord enroulée s’ouvre et son centre se déprime, parfois en entonnoir peu profond. La surface est lisse et glissante par temps humide. Les zones concentriques peuvent être nettes, discrètes ou presque absentes. Les exemplaires frais ne portent généralement pas les fortes taches vertes typiques de Lactarius deterrimus ; des blessures brunâtres ou vineuses peuvent apparaître, et certaines clés mentionnent exceptionnellement des nuances verdâtres sur de vieux sujets."},
+    {"title": "Lames, pied fossetté et lait", "text": "Les lames orange saumon, serrées à assez serrées, descendent brièvement sur le pied. Les blessures peuvent prendre des tons rougeâtres ou brun vineux. Le pied orange porte souvent de petites fossettes plus foncées, plus ou moins marquées, et devient creux en vieillissant. Une coupe fraîche libère un lait orange à orange saumon, parfois abondant, qui fonce lentement vers le rouge ou le rouge vineux sur la chair ; il n’est pas rouge sang dès sa sortie. La chair est pâle au centre et plus orangée vers la surface du chapeau. La sporée est ocre pâle."},
+    {"title": "Sapins et espèces proches", "text": "Lactarius salmonicolor vit en ectomycorhize surtout avec les sapins (Abies), notamment le sapin pectiné dans les descriptions européennes, et fructifie le plus souvent en automne. La clé de la British Mycological Society le sépare de L. deterrimus associé aux épicéas et de L. deliciosus associé aux pins par l’arbre hôte. L. deterrimus verdit normalement de façon marquée, tandis que L. salmonicolor reste généralement orangé à vineux. Les formes de chapeau et les couleurs du lait se recouvrent : il faut donc croiser l’arbre, les fossettes du pied et l’évolution du lait."},
+    {"title": "Comestibilité et limites de l’image", "text": "La DGfM et la VAPKO inscrivent cette espèce parmi les comestibles, mais la VAPKO note expressément une forte saveur résineuse ; son intérêt culinaire relève donc des préférences. La fiche mycologique de l’université Lyon 1 décrit un lait orange qui rougit lentement et des lames orange descendant sur le pied. Une clé britannique ancienne rapporte des zones et des couleurs de vieillissement plus variables qu’un simple « ne verdit jamais ». Une image ne vérifie ni l’arbre partenaire ni le changement du lait dans le temps et ne peut prouver à elle seule la comestibilité d’un exemplaire."}
+  ],
+  "traits": [
+    "Large chapeau orange à orange saumon, généralement 5–15 cm, déprimé avec l’âge ; zonation variable",
+    "Généralement sans verdissement marqué, mais de vieux sujets peuvent avoir des tons verdâtres atypiques",
+    "Lames orange saumon serrées, brièvement décurrentes, se tachant de rouge à brun vineux",
+    "Pied orange souvent à petites fossettes plus foncées, creux à maturité ; sans anneau ni volve",
+    "Lait orange à saumon rougissant lentement vers le vineux sur la chair coupée ; sporée ocre pâle",
+    "En Europe, ectomycorhize surtout avec les sapins (Abies), notamment le sapin pectiné"
+  ],
+  "sources": [
+    {"title": "Université Lyon 1 — fiche Lactarius salmonicolor", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/lactarius-salmonicolor/"},
+    {"title": "British Mycological Society — clé des Lactarius de Patrick Leonard", "url": "https://www.britmycolsoc.org.uk/application/files/4215/2455/1813/Lactarius_Synoptic_Key_by_Patrick_Leonard.pdf"},
+    {"title": "Société allemande de mycologie (2026) — liste des champignons comestibles", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023) — liste suisse des champignons recommandés", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "Gobarsko društvo Lisička Maribor — Lactarius salmonicolor", "url": "https://www.gobe.si/Gobe/LactariusSalmonicolor"}
+  ],
+  "related": ["deterrimus", "deliciosus", "sanguifluus"]
+}

@@ -384,6 +384,9 @@
     <!-- Repères sur les dessins -->
     <string name="myco_l_olive_cap">Chapeau vert olive</string>
     <string name="myco_l_white_free_gills">Lames blanches libres</string>
+    <string name="myco_l_white_veil_patches">Flocons de voile blancs</string>
+    <string name="myco_l_small_volval_cup">Petite volve en coupe</string>
+    <string name="myco_l_low_veil_zone">Ceinture basse de voile</string>
     <string name="myco_l_ring">Anneau</string>
     <string name="myco_l_volva_sac">Volve en sac</string>
     <string name="myco_l_free_gills">Lames libres</string>
@@ -449,6 +452,7 @@
     <string name="myco_l_fused_points">Soudé en plusieurs points</string>
     <string name="myco_l_inrolled">Marge enroulée</string>
     <string name="myco_l_decurrent_gills">Lames décurrentes</string>
+    <string name="myco_l_adnate_slightly_decurrent_gills">Lames adnées, parfois un peu décurrentes</string>
     <string name="myco_l_no_ring">Pas d’anneau</string>
     <string name="myco_l_flesh_yellowish">Chair jaunâtre</string>
     <string name="myco_l_forked_gills">Lames fourchues</string>
@@ -488,6 +492,8 @@
     <string name="myco_l_cinnamon_gills">Lames cannelle</string>
     <string name="myco_l_sulphur_cap">Chapeau jaune soufre</string>
     <string name="myco_l_gills_green_ripe">Lames verdâtres à maturité</string>
+    <string name="myco_l_gills_green_then_brown">Lames jaunes, puis vert olive, enfin brunes</string>
+    <string name="myco_l_on_conifer_wood">Sur bois mort de conifère</string>
     <string name="myco_l_flesh_sulphur">Chair jaune soufre</string>
     <string name="myco_l_honey_cap">Chapeau miel, mèches sombres</string>
     <string name="myco_l_ring_white">Anneau blanc</string>
@@ -563,6 +569,7 @@
     <string name="myco_l_cream_ochre_gills">Lames crème à ocre</string>
     <string name="myco_l_dotted_pink_stem">Pied pointillé, rosé</string>
     <string name="myco_l_white_flaky_cap">Chapeau blanc, floconneux</string>
+    <string name="myco_l_white_fringed_cap">Chapeau blanc lisse, marge frangée</string>
     <string name="myco_l_cream_funnel_cap">Chapeau crème, creusé</string>
     <string name="myco_l_decurrent_cream_gills">Lames crème, très décurrentes</string>
     <string name="myco_l_solid_fibrous_stem">Pied plein, fibreux</string>
@@ -925,7 +932,7 @@
         <item>Sporée blanche</item>
         <item>Prairies, haies, vergers, souvent en ronds · fin avril à juin</item>
     </string-array>
-    <string name="myco_gambosa_note">Comestible, champignon de printemps. Deux sosies toxiques sortent à la même saison : l’inocybe de Patouillard, dont le chapeau est conique et rougit, et parfois l’entolome livide, aux lames d’abord jaunâtres puis roses. La sporée est blanche ; brun tabac chez l’inocybe, rose chez l’entolome. L’odeur de farine ne suffit pas : l’entolome l’a aussi.</string>
+    <string name="myco_gambosa_note">Comestible après identification fiable. L’inocybe rougissant mortel peut pousser au printemps ; l’entolome livide, surtout automnal, sent aussi la farine. Vérifier les lames pâles serrées, la base entière du pied et, au besoin, la sporée. Odeur et saison ne suffisent pas.</string>
 
     <!-- Inocybe de Patouillard -->
     <string name="myco_erubescens_name">Inocybe de Patouillard</string>
@@ -976,7 +983,7 @@
         <item>Sporée noirâtre</item>
         <item>Jardins, bords de chemins, souches enterrées, en touffes · été à fin d’automne</item>
     </string-array>
-    <string name="myco_atramentaria_note">Comestible, mais jamais avec de l’alcool : la coprine bloque la dégradation de l’alcool. Un verre de vin ou de bière pendant le repas, ou jusqu’à 72 heures après, donne rougeur du visage et du cou, maux de tête, vertiges, sueurs, vomissements et chute de tension. Les troubles passent en quelques heures (centre antipoisons belge).</string>
+    <string name="myco_atramentaria_note">Toxique avec l’alcool : la DGfM le classe parmi les champignons provoquant le syndrome acétaldéhyde. Une consommation d’alcool pendant le repas ou jusqu’à 72 heures après peut entraîner rougeur du visage, maux de tête, vertiges, sueurs, vomissements et baisse de tension. Certains guides le disent comestible s’il est bien cuit et consommé sans alcool ; cette fiche ne suffit pas à identifier ni à préparer une récolte sauvage.</string>
 
     <!-- Coprin chevelu -->
     <string name="myco_comatus_name">Coprin chevelu</string>
@@ -989,7 +996,7 @@
         <item>Sporée noirâtre</item>
         <item>Pelouses, prairies, bords de chemins, sols riches, en groupes</item>
     </string-array>
-    <string name="myco_comatus_note">Comestible jeune, tant que les lames sont blanches : on le mange vite, et on jette tout ce qui rosit ou noircit. Contrairement au coprin noir d’encre, il se prend sans danger avec de l’alcool.</string>
+    <string name="myco_comatus_note">Traditionnellement consommé jeune, quand les lames sont encore blanches ; ne mange pas un exemplaire identifié uniquement à partir de cette fiche. Les données sur l’alcool divergent : une revue de 2020 ne trouve pas de coprine établie chez C. comatus, tandis qu’un rapport du China CDC a ensuite attribué des cas liés à l’alcool à des coprins sans doser la coprine dans chaque spécimen. Évite l’alcool autour d’un repas de coprins incertain et demande un avis expert.</string>
 
     <!-- Galère marginée -->
     <string name="myco_galerina_name">Galère marginée</string>
@@ -1015,7 +1022,7 @@
         <item>Sporée rouille · odeur agréable, saveur douce</item>
         <item>En touffes de pieds parfois soudés, sur souches de feuillus · fin du printemps à l’automne</item>
     </string-array>
-    <string name="myco_mutabilis_note">Bon comestible, sauf le pied, fibreux. Mais la galère marginée, mortelle, peut tromper même des cueilleurs expérimentés. La pholiote sèche du centre vers le bord, la galère du bord vers le centre ; l’une a une odeur douce, l’autre farineuse. Les écailles sous l’anneau ne suffisent pas : la galère peut en avoir aussi.</string>
+    <string name="myco_mutabilis_note">Comestible seulement après identification fiable : la galère marginée mortelle peut pousser sur le même bois. Ni le sens du séchage, ni l’odeur, ni les écailles du pied ne l’excluent seuls ; une expertise, parfois microscopique, peut être nécessaire.</string>
 
     <!-- Hypholome en touffe -->
     <string name="myco_fasciculare_name">Hypholome en touffe</string>
@@ -1028,21 +1035,21 @@
         <item>Sporée brun pourpre</item>
         <item>En touffes soudées à la base, sur souches et bois de feuillus ou de conifères · printemps à automne</item>
     </string-array>
-    <string name="myco_fasciculare_note">Toxique : nausées, vomissements, diarrhée, parfois seulement 5 à 10 heures après le repas ; en général, ça passe en quelques jours. Un décès par hépatite fulgurante est cité, mais le plat contenait d’autres champignons. Il ressemble à la galère marginée et à la pholiote changeante (centre antipoisons belge).</string>
+    <string name="myco_fasciculare_note">Toxique : peut provoquer vomissements et diarrhée après ingestion. Demandez rapidement un avis médical si vous en avez mangé. Il pousse en touffes sur le bois et ressemble à d’autres espèces lignicoles.</string>
 
     <!-- Armillaire couleur de miel -->
     <string name="myco_mellea_name">Armillaire couleur de miel</string>
     <string name="myco_mellea_alt">Honey fungus</string>
     <string-array name="myco_mellea_traits">
-        <item>Chapeau 1 à 15 cm, jaune clair, moutarde ou brun olive, avec de fines mèches sombres surtout au centre</item>
+        <item>Chapeau généralement de 5 à 15 cm, jaune miel à brun, avec de fines mèches foncées surtout au centre</item>
         <item>Lames blanches puis jaunâtres, parfois tachées de brun</item>
-        <item>Pied élancé, strié au-dessus d’un anneau blanc, moucheté de blanc dessous ; fibreux et coriace avec l’âge</item>
-        <item>Chair blanche, saveur un peu amère · sporée blanche</item>
+        <item>Pied à anneau pâle à jaune crème ; fibreux et coriace avec l’âge</item>
+        <item>Chair et sporée blanches ; la saveur ne constitue pas un test d’identification</item>
         <item>En touffes, parfois de dizaines de pieds, sur souches, racines et troncs, surtout de feuillus</item>
         <item>Très commun à l’automne</item>
     </string-array>
-    <string name="myco_mellea_note">Non recommandé : l’ANSES estime qu’il peut donner des troubles digestifs (diarrhée, vomissements, douleurs), quelques heures après le repas, et rien ne prouve qu’une cuisson prolongée ou la mise en conserve écarte le risque. Entre 1999 et 2015, 83 cas ont été enregistrés en France par les centres antipoison. Certains auteurs le disent comestible jeune et bien cuit. Il pousse en touffe comme des sosies toxiques, la galère marginée et l’hypholome.</string>
-    <string name="myco_mellea_history">Longtemps cité comme un comestible moyen, parfois seulement jeune, il est jugé indigeste et parfois allergisant. En Italie, où on le mange beaucoup, il a causé 25 % des intoxications par champignons enregistrées par le centre antipoison de Milan entre 1994 et 1999. En 2015, l’ANSES estime qu’il peut provoquer des intoxications, y compris après mise en conserve. Un arrêté du 5 août 2016 suspend pour un an la vente d’armillaire frais non accompagné d’une information sur la cuisson complète.</string>
+    <string name="myco_mellea_note">Consommation déconseillée : l’ANSES signale des troubles digestifs, y compris après cuisson. Certains guides autorisent de jeunes armillaires sous conditions, mais l’identification du complexe est difficile et des champignons lignicoles toxiques peuvent être confondus avec lui.</string>
+    <string name="myco_mellea_history">Historiquement traité comme comestible jeune et bien cuit, l’armillaire a aussi causé des intoxications digestives. Les autorités sanitaires françaises ont réexaminé ce risque en 2015 ; l’arrêté de vente du 5 août 2016 s’appliquait pendant un an et constitue une mesure historique.</string>
 
     <!-- Trompette de la mort -->
     <string name="myco_craterellus_name">Trompette de la mort</string>
@@ -1061,14 +1068,14 @@
     <string name="myco_hydnum_name">Pied-de-mouton</string>
     <string name="myco_hydnum_alt">Hedgehog mushroom</string>
     <string-array name="myco_hydnum_traits">
-        <item>Chapeau mat, plus ou moins feutré, blanchâtre à brun ocre, parfois abricot, 3 à 10 cm ; marge longtemps enroulée, puis ondulée</item>
+        <item>Chapeau mat, lisse à légèrement velouté, blanchâtre à brun ocre, parfois abricot, 3 à 10 cm ; marge longtemps enroulée, puis ondulée</item>
         <item>Dessous garni d’aiguillons de 3 à 6 mm, crème, serrés et fragiles, un peu décurrents : pas de lames</item>
         <item>Pied trapu, de la couleur des aiguillons, qui brunit par endroits</item>
-        <item>Chair ferme mais cassante, blanche, qui vire à l’orange · odeur fruitée, saveur douce, parfois poivrée ou amère chez les vieux</item>
-        <item>Sporée crème</item>
-        <item>Feuillus et conifères, en groupes, souvent en lignes ou en demi-cercles · fin d’été à novembre</item>
+        <item>Chair ferme mais cassante, blanche, parfois teintée d’orange au froissement · odeur souvent fruitée, saveur douce, parfois poivrée ou amère chez les vieux</item>
+        <item>Sporée blanche</item>
+        <item>Feuillus et conifères, en groupes · fin d’été à automne</item>
     </string-array>
-    <string name="myco_hydnum_note">Des aiguillons à la place des lames ou des pores : le critère se voit tout de suite en retournant le chapeau. Les vieux exemplaires deviennent amers.</string>
+    <string name="myco_hydnum_note">Les aiguillons courts et fragiles, qui se prolongent un peu sur le pied, distinguent ce genre des champignons à lames ou à pores. La couleur et l’amertume des vieux exemplaires varient. Le groupe Hydnum repandum comprend plusieurs lignées difficiles à séparer sur le terrain.</string>
 
     <!-- Bolet bai -->
     <string name="myco_badia_name">Bolet bai</string>
@@ -1211,7 +1218,7 @@
         <item>Sporée pâle (crème à blanche)</item>
         <item>En touffes superposées sur des feuillus vivants ou morts, de l’automne à l’hiver</item>
     </string-array>
-    <string name="myco_ostreatus_note">Il pousse sur le bois, en touffes superposées : c’est le premier critère. Les pleurotes voisins (pleurote en corne d’abondance, pleurote pulmonaire) sont comestibles aussi, la confusion est sans conséquence. Les spores sont allergisantes pour qui en respire beaucoup, comme les producteurs.</string>
+    <string name="myco_ostreatus_note">Les touffes superposées sur le bois sont caractéristiques, mais ne suffisent pas à identifier un exemplaire. D’autres champignons pâles lignicoles, notamment Pleurocybella porrigens, peuvent être confondus avec un pleurote et sont potentiellement dangereux. Faire contrôler une récolte sauvage avant de la consommer. Une forte exposition aux spores de pleurote peut aussi provoquer une allergie respiratoire.</string>
 
     <!-- Vesse-de-loup perlée -->
     <string name="myco_perlatum_name">Vesse-de-loup perlée</string>
@@ -1280,14 +1287,14 @@
     <string name="myco_silvicola_name">Agaric sylvicole</string>
     <string name="myco_silvicola_alt">Wood mushroom</string>
     <string-array name="myco_silvicola_traits">
-        <item>Chapeau blanc à crème, 6 à 9 cm (parfois 12), globuleux puis étalé, qui jaunit en vieillissant ou au toucher</item>
+        <item>Chapeau blanc à crème, 6 à 9 cm (parfois 12), globuleux puis étalé ; les surfaces peuvent jaunir au toucher ou avec l’âge</item>
         <item>Lames serrées, crème pâle, puis roses, puis peu à peu brun chocolat</item>
         <item>Pied mince, 6 à 12 cm, gris blanchâtre, avec un bulbe à la base</item>
         <item>Un seul anneau, très large, descendant, fragile, qui jaunit</item>
-        <item>Chair mince et blanchâtre, qui jaunit dans le pied · saveur douce, forte odeur d’anis ou d’amande</item>
+        <item>Chair mince, blanchâtre, parfois un peu rosée · saveur douce, odeur souvent anisée ou d’amande</item>
         <item>Sporée brun foncé · en petits groupes dans les bois · été et automne</item>
     </string-array>
-    <string name="myco_silvicola_note">Ses lames, d’abord crème pâle, le font confondre avec les amanites blanches mortelles, dont la forme blanche de la phalloïde. Les amanites ont une volve à la base du pied, des lames toujours blanches et pas d’odeur d’anis. La société mycologique allemande signale que les agarics qui jaunissent peuvent concentrer beaucoup de cadmium.</string>
+    <string name="myco_silvicola_note">Les agarics blancs se reconnaissent avec prudence : vérifie les lames devenant roses puis brunes et l’absence de volve, et ne te fie pas à l’odeur seule. Les amanites blanches mortelles gardent des lames blanches et portent une volve à la base. La DGfM signale que les agarics jaunissants peuvent accumuler du cadmium.</string>
 
     <!-- Bolet granulé -->
     <string name="myco_granulatus_name">Bolet granulé</string>
@@ -1321,15 +1328,15 @@
     <string name="myco_ovoidea_name">Amanite ovoïde</string>
     <string name="myco_ovoidea_alt">Bearded amanita</string>
     <string-array name="myco_ovoidea_traits">
-        <item>Chapeau blanc à gris très clair, épais, 15 à 20 cm (jusqu’à 30), d’abord en demi-sphère, floconneux ; la marge garde souvent des lambeaux cotonneux du voile</item>
-        <item>Lames blanches, serrées, larges et libres, qui peuvent rosir un peu avec l’âge</item>
+        <item>Chapeau blanc à gris très clair, épais, 15 à 20 cm (jusqu’à 30), d’abord en demi-sphère, surtout lisse ; la marge garde souvent des lambeaux cotonneux du voile</item>
+        <item>Lames blanches à crème, larges et libres</item>
         <item>Pied blanc, robuste et poudreux, 15 à 20 cm</item>
         <item>Anneau crème, fragile et cotonneux, qui a tendance à disparaître</item>
         <item>Grande volve en sac à la base, blanche à beige ocre</item>
         <item>Chair épaisse et blanche, odeur forte et désagréable · sporée blanche</item>
-        <item>Sous les feuillus et surtout sous les pins, sur sol calcaire et ensoleillé, en été et en automne ; assez commune dans le Midi</item>
+        <item>Sur sol calcaire, surtout sous les chênes et parfois les conifères, en été et en automne ; plus fréquente en région méditerranéenne</item>
     </string-array>
-    <string name="myco_ovoidea_note">Non recommandée : les livres la disent tantôt comestible, tantôt vénéneuse, et elle ne figure ni sur la liste des comestibles de la société allemande de mycologie (2026), ni sur celle des contrôleurs suisses (2023). L’ANSES la relève parmi les champignons cueillis à la place de vesses-de-loup ou de bolets au second semestre 2022. Son sosie, l’amanite à volve rousse, abîme les reins ; des intoxications ont eu lieu dans le sud de la France en la prenant pour l’amanite ovoïde : volve plus rousse, anneau qui reste, marge lisse.</string>
+    <string name="myco_ovoidea_note">Consommation déconseillée : sa comestibilité est discutée et la confusion avec Amanita proxima, toxique pour les reins, est dangereuse. La couleur de la volve varie ; examiner le champignon entier et demander une identification experte.</string>
 
     <!-- Clitocybe géotrope -->
     <string name="myco_geotropa_name">Clitocybe géotrope</string>
@@ -1348,14 +1355,14 @@
     <string name="myco_amethystina_name">Laccaire améthyste</string>
     <string name="myco_amethystina_alt">Amethyst deceiver</string>
     <string-array name="myco_amethystina_traits">
-        <item>Chapeau de 2 à 8 cm, violet foncé, mat, convexe puis creusé en ombilic ; il pâlit et blanchit en séchant ; marge mince, striée</item>
+        <item>Chapeau de 2 à 8 cm, violet vif quand il est humide, mat et déprimé ; il pâlit fortement en séchant, avec une fine surface fibrilleuse et une marge striée</item>
         <item>Lames de la couleur du chapeau, espacées, inégales</item>
-        <item>Pied de 4 à 10 cm, mince et tortueux, de la couleur du chapeau, duveteux vers la base, fibreux</item>
+        <item>Pied de 4 à 10 cm, mince et tortueux, violet, fibreux et creux surtout à maturité</item>
         <item>Chair mince, lilas pâle, odeur et saveur douces</item>
         <item>Sporée blanche</item>
         <item>Bois humides de feuillus ou de conifères, de la fin de l’été au début de l’hiver</item>
     </string-array>
-    <string name="myco_amethystina_note">Comestible : il est sur la liste de la société allemande de mycologie et sur celle des contrôleurs suisses ; le pied fibreux ne se mange pas. Sur des sols pollués, il peut accumuler des composés de l’arsenic : la société allemande déconseille de le cueillir près d’anciens terrains militaires, de mines, d’usines et de routes fréquentées. Le mycène pur, toxique, lui ressemble : l’ANSES relève des mycènes cueillis à la place de laccaires.</string>
+    <string name="myco_amethystina_note">Comestible selon les listes DGfM et VAPKO ; le pied fibreux est écarté. L’accumulation d’arsenic dépend du site : évite les lieux pollués. L’ANSES rapporte des confusions avec le mycène rose (Mycena rosea), toxique ; l’identification doit s’appuyer sur tous les caractères.</string>
 
     <!-- Mycène pur -->
     <string name="myco_pura_name">Mycène pur</string>
@@ -1381,7 +1388,7 @@
         <item>Sporée olive à brun olive</item>
         <item>Sous feuillus et conifères, surtout hêtres et chênes, souvent en altitude, sur sol calcaire · de juillet à décembre</item>
     </string-array>
-    <string name="myco_calopus_note">Toxique : la liste de la société allemande de mycologie le range parmi les champignons à syndrome gastro-intestinal. L’amertume ne passe pas à la cuisson et il peut faire vomir. L’ANSES relève des bolets à beau pied cueillis à la place de bolets à pied rouge (2022) et le laboratoire de Zurich en trie parmi les bolets toxiques (2023). Il a le pied rouge du bolet de Satan, mais des pores jaunes ; le cèpe n’a pas de pied rouge.</string>
+    <string name="myco_calopus_note">Ne pas consommer : la DGfM le classe parmi les espèces à syndrome gastro-intestinal. Ses pores jaunes bleuissent et son pied rouge et jaune porte un réseau pâle. D’autres bolets partagent certains de ces signes ; ne pas goûter un spécimen pour l’identifier.</string>
 
     <!-- Lépiote des jardins -->
     <string name="myco_brunneum_name">Lépiote des jardins</string>
@@ -1395,7 +1402,7 @@
         <item>Sporée blanche</item>
         <item>Jardins, parcs, composts, serres et sols riches en azote, près des habitations</item>
     </string-array>
-    <string name="myco_brunneum_note">Toxique : troubles digestifs, rarement graves, qui varient selon les personnes et la quantité ; la liste de la société allemande de mycologie le range parmi les champignons à syndrome gastro-intestinal. Wikipédia le compte parmi les champignons qui font le plus d’intoxications chaque année, souvent pris pour la coulemelle ; l’ANSES le relève dans les confusions de 2022. Les contrôleurs suisses signalent qu’il ressemble à la lépiote déguenillée, comestible.</string>
+    <string name="myco_brunneum_note">Toxique : la DGfM le classe parmi les espèces à syndrome gastro-intestinal et l’ANSES signale des confusions avec des lépiotes proches. Ne pas le consommer ; son aspect chevauche celui d’autres Chlorophyllum.</string>
 
     <!-- Lépiote déguenillée -->
     <string name="myco_rhacodes_name">Lépiote déguenillée</string>
@@ -1405,11 +1412,11 @@
         <item>Lames blanches, très serrées, qui rougissent au toucher</item>
         <item>Pied de 10 à 20 cm, lisse, creux, gris, bulbeux</item>
         <item>Anneau double, épais, mobile, lisse, blanchâtre</item>
-        <item>Chair blanche, épaisse et tendre · saveur douce ; tout le champignon devient rouge vif et safran quand on le coupe ou le gratte, puis brunit</item>
+        <item>Chair blanche et épaisse · saveur douce ; la chair coupée, surtout dans le pied, vire à l’orange rougeâtre puis peut brunir</item>
         <item>Sporée blanche</item>
         <item>Sol des bois de feuillus et de conifères et des prairies de lisière, de la fin de l’été à l’automne</item>
     </string-array>
-    <string name="myco_rhacodes_note">Bon comestible selon Wikipédia, sauf le pied, fibreux et coriace. Certaines personnes ont une gastro-entérite, que l’article attribue aux nitrates des sols très riches ; d’autres sont allergiques. Les listes de la société allemande de mycologie et des contrôleurs suisses la rangent parmi les comestibles, sous le nom de Chlorophyllum olivieri. Ne pas la prendre pour la lépiote des jardins (bulbe à bord net, anneau simple, toxique), ni pour la lépiote brun-incarnat (la « lépiote helvéolée »), beaucoup plus petite et mortelle.</string>
+    <string name="myco_rhacodes_note">Certains guides la disent comestible, mais elle a déjà provoqué de graves intoxications et ne doit pas être cueillie pour l’alimentation. Les listes de la DGfM allemande et de la VAPKO suisse nomment Chlorophyllum olivieri, une espèce distincte, et non C. rhacodes. Ne pas la confondre avec C. brunneum, au bulbe nettement marginé et à l’anneau plus simple, elle aussi toxique.</string>
 
     <!-- Russule émétique -->
     <string name="myco_emetica_name">Russule émétique</string>
@@ -1458,11 +1465,11 @@
         <item>Lames serrées, beige pâle puis brunâtres, adnées</item>
         <item>Pied ferme, fibreux et plein, pâle puis brun roux, souvent courbe</item>
         <item>Anneau ample, membraneux, blanc, persistant ; il prend la couleur du tabac sous les spores qui tombent</item>
-        <item>Chair blanchâtre · saveur de noisette, forte odeur fruitée de vieux fût</item>
-        <item>Sporée brun sale</item>
+        <item>Chair blanchâtre · saveur douce ou de noisette ; odeur agréable, souvent fruitée</item>
+        <item>Sporée brun tabac</item>
         <item>En touffes au pied des arbres et sur le bois mort, surtout peupliers et saules, en automne</item>
     </string-array>
-    <string name="myco_aegerita_note">Très bon comestible selon Wikipédia FR ; les listes de la société allemande de mycologie et des contrôleurs suisses le rangent sous le nom de Cyclocybe cylindracea (« pholiote du peuplier »). Wikipédia EN avertit qu’il ressemble à certaines espèces mortelles, sans les nommer, et que le genre est difficile à identifier.</string>
+    <string name="myco_aegerita_note">La DGfM et la VAPKO le listent parmi les espèces comestibles sous le nom de Cyclocybe cylindracea. Des champignons bruns à anneau poussant sur le bois peuvent lui ressembler, notamment Galerina marginata, dangereuse ; une photo ou un seul caractère ne suffit pas à identifier une récolte sauvage.</string>
 
     <!-- Chanterelle en tube -->
     <string name="myco_tubaeformis_name">Chanterelle en tube</string>
@@ -1493,25 +1500,25 @@
     <string name="myco_flammulina_name">Collybie à pied velouté</string>
     <string name="myco_flammulina_alt">Velvet foot</string>
     <string-array name="myco_flammulina_traits">
-        <item>Chapeau de 5 à 10 cm, plat, jaune orangé à fauve, visqueux, plus foncé au centre</item>
+        <item>Chapeau généralement de 2 à 7 cm (parfois plus), convexe puis étalé, jaune orangé à fauve, visqueux</item>
         <item>Lames larges, peu serrées, blanchâtres à jaunâtres · sporée blanche</item>
         <item>Pied d’environ 5 cm, jaunâtre en haut, brun noirâtre et velouté vers la base ; pas d’anneau</item>
         <item>Chair pâle, odeur faible</item>
-        <item>Sur le bois mort de feuillus (saule, hêtre, aulne), parfois sur des arbres vivants affaiblis ; en bouquets, de l’automne à l’hiver</item>
+        <item>Sur bois de feuillus, parfois sur des arbres vivants affaiblis ; en bouquets de l’automne au début du printemps</item>
     </string-array>
-    <string name="myco_flammulina_note">Non recommandée : la société allemande de mycologie (2026) et les contrôleurs suisses (2023) la rangent parmi les comestibles, mais le service de la conservation du Missouri la déconseille, parce qu’elle se confond avec la galère marginée, mortelle, qui pousse aussi en touffes sur le bois. Pour les distinguer : la collybie a la sporée blanche et le pied velouté, sans anneau ; la galère a la sporée rouille et un anneau, qui peut disparaître avec l’âge.</string>
+    <string name="myco_flammulina_note">Classée comestible par des organismes mycologiques allemands et suisses, mais sa cueillette sauvage est déconseillée ici car la galère marginée mortelle pousse sur des bois semblables. L’absence d’anneau seule ne l’exclut pas ; demander une identification experte.</string>
 
     <!-- Hypholome à lames enfumées -->
     <string name="myco_capnoides_name">Hypholome à lames enfumées</string>
     <string name="myco_capnoides_alt">Conifer tuft</string>
     <string-array name="myco_capnoides_traits">
-        <item>Chapeau de 3 à 6 cm, jaunâtre à jaune brunâtre, centre brun orangé sale, sec et lisse ; convexe puis presque plat</item>
+        <item>Chapeau de 3 à 6 cm, jaunâtre à jaune brunâtre, centre brun orangé, souvent hygrophane ; convexe puis presque plat</item>
         <item>Lames serrées : blanchâtres, puis gris lilas, enfin brun violet · sporée brun pourpre</item>
         <item>Pied de 3 à 8 cm, jaune pâle en haut, rouille vers la base</item>
         <item>Chair blanchâtre à jaune olive pâle, saveur douce, pas amère</item>
         <item>En touffes sur les vieilles souches et le bois mort de conifères</item>
     </string-array>
-    <string name="myco_capnoides_note">Comestible : il est sur la liste de la société allemande de mycologie (2026) et sur celle des contrôleurs suisses (2023), qui préviennent qu’on le confond avec l’hypholome en touffe et avec l’Hypholoma sublateritium. Wikipédia (en) le classe « non recommandé » à cause de ces confusions et ajoute qu’on pourrait aussi le prendre pour la galère marginée, mortelle. L’hypholome en touffe, toxique, a les lames verdâtres et une saveur amère ; celui-ci a les lames grises et une saveur douce.</string>
+    <string name="myco_capnoides_note">Classé comestible par des organismes mycologiques allemands et suisses, mais il peut être confondu avec des champignons lignicoles toxiques. Ses lames gris fumé et son habitat sur conifère aident ; ni un caractère isolé ni la dégustation ne garantissent l’identification.</string>
 
     <!-- Gymnopile remarquable -->
     <string name="myco_gymnopilus_name">Gymnopile remarquable</string>
@@ -1530,12 +1537,12 @@
     <string name="myco_pleurocybella_alt">Angel wing</string>
     <string-array name="myco_pleurocybella_traits">
         <item>Étagères de 4 à 9 cm, en forme de pétale ou d’éventail, blanc pur puis jaunissant avec l’âge, minces et fragiles</item>
-        <item>Lames blanches à crème, serrées, qui descendent jusqu’au point d’attache</item>
+        <item>Lames blanches à crème, serrées, convergeant vers le point d’attache</item>
         <item>Presque pas de pied · sporée blanche</item>
         <item>Chair mince, odeur faible et agréable</item>
         <item>En groupes sur le bois mort de conifères ; de la fin de l’été à l’automne</item>
     </string-array>
-    <string name="myco_pleurocybella_note">Toxique : la société allemande de mycologie (2026) le range parmi les champignons à « syndrome de Pleurocybella ». On l’a longtemps mangé ; en 2004 au Japon, des dizaines de personnes sont tombées malades après en avoir mangé et plusieurs sont mortes, surtout des personnes atteintes d’insuffisance rénale : une atteinte du cerveau, deux à trois semaines après le repas. La cause n’est pas établie. On le prend pour le pleurote en huître, comestible : lui est plus blanc, plus mince, presque sans pied.</string>
+    <string name="myco_pleurocybella_note">Ne pas le consommer : la DGfM le range dans le groupe du syndrome de Pleurocybella. Des intoxications collectives au Japon ont provoqué des atteintes neurologiques graves et des décès, souvent chez des personnes atteintes d’une maladie rénale ; le délai variait et le mécanisme reste discuté. Ses éventails pâles et minces ressemblent à d’autres champignons lignicoles : faire vérifier l’identification par un expert.</string>
 
     <!-- Polypore soufré -->
     <string name="myco_laetiporus_name">Polypore soufré</string>
@@ -1547,7 +1554,7 @@
         <item>Chair blanchâtre, tendre et suintante de jus jaune chez le jeune, puis sèche et friable ; odeur forte de champignon</item>
         <item>Sur les troncs de nombreux feuillus (cerisier, poirier, robinier, peuplier, chêne), plus rarement de conifères ; du printemps à l’automne</item>
     </string-array>
-    <string name="myco_laetiporus_note">À cuire, et seulement jeune : les contrôleurs suisses (2023) le disent « comestible jeune » ; il n’est pas sur la liste de la société allemande de mycologie. Wikipédia (fr) cite l’ANSES, la FAO et le SPF belge pour le dire bon jeune et non parasité, mais des personnes ont eu des troubles intestinaux et des vertiges ; Wikipédia (en) précise qu’il ne se mange pas cru. Le polypore cinabre, tout orange à rouge sang, est petit et coriace.</string>
+    <string name="myco_laetiporus_note">Ne consommer que de jeunes exemplaires bien cuits et identifiés de manière fiable. La VAPKO le liste comme comestible jeune ; la DGfM le place dans une liste distincte de champignons à comestibilité discutée, mentionnant des réactions digestives ou allergiques occasionnelles et la prudence dans les vergers traités. Ne pas le manger cru ni se fier à cette planche pour identifier une console sauvage.</string>
 
     <!-- Langue de bœuf -->
     <string name="myco_fistulina_name">Langue de bœuf</string>
@@ -1560,7 +1567,7 @@
         <item>Sporée rosée à ocre, selon les sources</item>
         <item>Sur les vieux chênes et châtaigniers, à la base du tronc ou sur les souches ; en automne</item>
     </string-array>
-    <string name="myco_fistulina_note">Comestible jeune : elle est sur la liste de la société allemande de mycologie (2026), où elle est classée « menacée », et sur celle des contrôleurs suisses (2023), qui la disent « comestible jeune ». Les vieux exemplaires sont coriaces ; Wikipédia (en) conseille de les faire tremper une nuit parce que leur jus peut gêner l’estomac. Wikipédia (fr) dit qu’on la confond parfois avec le polypore rutilant, toxique.</string>
+    <string name="myco_fistulina_note">La VAPKO la recommande comme comestible jeune ; les vieux carpophores peuvent être coriaces. Ses tubes individuels libres et sa chair marbrée de rouge et de blanc la distinguent des polypores ordinaires. Les descriptions publiées divergent sur la couleur de la sporée, qui n’est donc pas retenue ici comme caractère principal. Bien cuire et faire contrôler les exemplaires sauvages par un expert.</string>
 
     <!-- Sparassis crépu -->
     <string name="myco_sparassis_name">Sparassis crépu</string>
@@ -1627,14 +1634,14 @@
     <string name="myco_bisporus_name">Champignon de Paris</string>
     <string name="myco_bisporus_alt">Button mushroom</string>
     <string-array name="myco_bisporus_traits">
-        <item>Forme sauvage : chapeau de 5 à 10 cm, gris-brun pâle, à larges écailles plates (la forme cultivée est blanche)</item>
-        <item>Lames libres et serrées : roses, puis brun-rouge, puis brun foncé : jamais blanches</item>
+        <item>Forme sauvage : chapeau de 5 à 10 cm, gris-brun pâle, finement fibrilleux ou à petites écailles aplaties (la forme cultivée est généralement blanche)</item>
+        <item>Lames libres et serrées, rose pâle chez les sujets ouverts, puis brun-rouge à brun foncé ; elles peuvent rester pâles dans les boutons fermés</item>
         <item>Anneau épais et étroit, parfois strié au-dessus</item>
         <item>Pied cylindrique jusqu’à 6 cm, sans bulbe ni volve</item>
         <item>Chair ferme et blanche qui rosit légèrement à la blessure</item>
-        <item>Sol riche, compost, fumier, hors des forêts</item>
+        <item>Sol riche en nutriments, compost ou fumier, y compris dans les jardins et les lisières boisées</item>
     </string-array>
-    <string name="myco_bisporus_note">Comestible : c’est le champignon le plus cultivé au monde, et il figure sur les listes de la DGfM et du VAPKO. À l’état sauvage, il est rare. On le confond avec des sosies parfois mortels : les anges destructeurs (volve à la base, lames toutes blanches) et l’agaric jaunissant, toxique (odeur de phénol, chair qui jaunit). Un champignon qui pousse sur un sol pollué peut accumuler des métaux lourds.</string>
+    <string name="myco_bisporus_note">Comestible et largement cultivé ; sa fréquence à l’état sauvage varie selon les régions. Les champignons en bouton peuvent encore avoir des lames très pâles : ne l’identifie pas sur ce seul critère. Vérifie toujours la base du pied et l’ensemble des caractères, car des amanites à volve sont mortelles et des agarics jaunissants sont toxiques. Les champignons peuvent accumuler des métaux lourds sur un sol pollué.</string>
     <string name="myco_impudicus_name">Satyre puant</string>
     <string name="myco_impudicus_alt">Common stinkhorn</string>
     <string-array name="myco_impudicus_traits">
@@ -1645,7 +1652,7 @@
         <item>Stade jeune : un œuf blanchâtre d’environ 3 à 6 cm, avec une couche de gelée</item>
         <item>Bois de feuillus et de résineux, près des vieilles souches · fin du printemps à l’automne</item>
     </string-array>
-    <string name="myco_impudicus_note">Comestible seulement à l’état d’œuf jeune, d’après la liste de la DGfM. Coupez chaque œuf en deux : l’œuf d’une amanite mortelle montre déjà son chapeau et ses lames dans un sac (voir l’œuf d’amanite phalloïde), celui du satyre montre de la gelée autour d’un cœur blanc. Une fois ouvert, l’odeur interdit tout usage.</string>
+    <string name="myco_impudicus_note">La DGfM ne le classe comestible qu’au stade d’œuf jeune. Une coupe peut aider à voir les structures internes, mais ne suffit pas à garantir l’identification : ne consomme aucun œuf douteux. En cas d’ingestion possiblement confondue avec une amanite, contacte immédiatement un centre antipoison ou les urgences, sans attendre de symptôme.</string>
     <string name="myco_erinaceus_name">Hydne hérisson</string>
     <string name="myco_erinaceus_alt">Lion’s mane</string>
     <string-array name="myco_erinaceus_traits">
@@ -1656,18 +1663,18 @@
         <item>Sporée blanche</item>
         <item>Bois vivant ou fraîchement coupé de feuillus, surtout hêtre et chêne · fin d’été et automne</item>
     </string-array>
-    <string name="myco_erinaceus_note">Comestible jeune, d’après la liste de la DGfM et Wikipédia, mais il peut être coriace. Il est rare : la DGfM le marque de la catégorie 2 de la liste rouge allemande, et Wikipédia (en) précise qu’il figure sur des listes rouges dans plusieurs pays d’Europe. Des espèces voisines portent aussi des aiguillons sur le bois : Hericium coralloides et H. americanum.</string>
+    <string name="myco_erinaceus_note">Comestible jeune, mais localement protégé : la DGfM le place en catégorie 2 de la liste rouge allemande. La cueillette sauvage est interdite en Grande-Bretagne. Il forme une masse blanche compacte et non ramifiée, directement fixée au bois de feuillus, surtout au hêtre ; d’autres Hericium peuvent lui ressembler. Préserver l’habitat et vérifier la réglementation locale avant toute cueillette.</string>
     <string name="myco_lignyotus_name">Lactaire velours</string>
     <string name="myco_lignyotus_alt">Chocolate milky</string>
     <string-array name="myco_lignyotus_traits">
         <item>Chapeau de 3 à 8 cm, brun bistre foncé, mat et velouté, sans zones, avec un petit mamelon</item>
-        <item>Lames blanches, décurrentes et fourchues, virant à l’ocre clair ; elles rougissent aux endroits blessés</item>
-        <item>Pied de la couleur du chapeau, resserré et plissé, voire alvéolé, au sommet</item>
-        <item>Lait blanc et aqueux, qui vire lentement à la couleur brique sur la chair</item>
-        <item>Chair blanche qui rougit un peu à l’air ; odeur et saveur faibles</item>
+        <item>Lames blanches, moyennement espacées, un peu décurrentes et parfois fourchues, devenant ocre pâle ; les tissus blessés rougissent lentement</item>
+        <item>Pied sombre, creux à maturité, avec des sillons longitudinaux au sommet</item>
+        <item>Lait blanc et aqueux ; la chair blessée peut rougir lentement</item>
+        <item>Chair blanche ; odeur et saveur faibles</item>
         <item>Sols acides de moyenne montagne, dans les sapinières · automne</item>
     </string-array>
-    <string name="myco_lignyotus_note">Comestible, d’après les listes de la DGfM et du VAPKO, et d’après Wikipédia (fr), qui le trouve plus savoureux que le lactaire délicieux. Il figure sur la liste rouge allemande (catégorie 3). Pour le distinguer de Lactarius picinus et de L. fuliginosus, dont les lames sont plus jaunes, cherchez le chapeau brun foncé contre les lames blanches et le sommet plissé du pied.</string>
+    <string name="myco_lignyotus_note">Les listes DGfM et VAPKO l’indiquent comme comestible, et la DGfM le classe en catégorie 3 de la liste rouge allemande. Son chapeau très sombre, ses lames pâles et le sommet sillonné du pied aident à le reconnaître ; les espèces proches à chapeau sombre peuvent rester difficiles à distinguer.</string>
     <string name="myco_turpis_name">Lactarius turpis</string>
     <string name="myco_turpis_alt">Ugly milk-cap, green birch milk cap</string>
     <string-array name="myco_turpis_traits">
@@ -1739,10 +1746,10 @@
         <item>Chapeau de 1 à 4 cm, conique, toujours mamelonné, blanc de lait puis légèrement ocré, soyeux</item>
         <item>Lames blanches à crème, puis grises, brun terreux avec les spores</item>
         <item>Pied grêle, blanc, pruineux au sommet</item>
-        <item>Forte odeur spermatique, chair âcre</item>
+        <item>Odeur faible, terreuse ou farineuse, parfois décrite comme spermatique ; l’odeur seule ne suffit pas</item>
         <item>Sous-bois ombragés de feuillus, parfois sous conifères, herbe, chemins · juin à novembre</item>
     </string-array>
-    <string name="myco_geophylla_note">Toxique : muscarine. Wikipédia (fr) le compte parmi les inocybes les plus toxiques ; le centre antipoison belge décrit le syndrome sudorien : écoulement du nez, hypersalivation, transpiration abondante, larmoiement, difficultés respiratoires, de quelques minutes à 2 heures après le repas ; la guérison se fait en moins de 24 heures, l’atropine est parfois nécessaire. Il existe une forme lilas, prise pour le laccaire améthyste. La forme blanche est aussi comparée au tricholome de la Saint-Georges (Wikipédia, en), plus grand, à odeur de farine et aux lames qui restent blanches.</string>
+    <string name="myco_geophylla_note">Toxique : contient de la muscarine. Sueurs, hypersalivation, larmoiement ou gêne respiratoire peuvent apparaître dans les deux heures après ingestion. Demandez rapidement un avis médical. La forme blanche ressemble à d’autres petits champignons pâles.</string>
     <string name="myco_sulphureum_name">Tricholome soufré</string>
     <string name="myco_sulphureum_alt">Sulphur knight</string>
     <string-array name="myco_sulphureum_traits">
@@ -1762,9 +1769,9 @@
         <item>Pied de 6 à 12 cm, avec un anneau ample et persistant, strié au-dessus</item>
         <item>Bulbe à bourrelet formé par la volve : pas un sac</item>
         <item>Odeur de pomme de terre crue ou de rave</item>
-        <item>Bois de feuillus et de conifères, sols siliceux · automne, très commune</item>
+        <item>Bois de feuillus et mixtes, parfois sous conifères · fin d’été à automne</item>
     </string-array>
-    <string name="myco_citrina_note">Toxique : la DGfM la range pour un syndrome gastro-intestinal, note la bufoténine et déconseille de la manger crue. Wikipédia (fr) la dit comestible médiocre, légèrement toxique, et ajoute que la plupart des mycologues conseillent de la rejeter. Son vrai danger est sa ressemblance avec l’amanite phalloïde, jeune et sous ses formes jaunâtres et blanches ; l’odeur de pomme de terre crue et le bulbe à bourrelet, pas en sac, la distinguent.</string>
+    <string name="myco_citrina_note">Ne pas consommer : la DGfM signale des troubles digestifs, y compris après chauffage. Elle ressemble à des amanites mortelles ; ni l’odeur ni un seul caractère du bulbe ne garantissent l’identification.</string>
     <string name="myco_l_rust_fibrous_cap">Chapeau roux, fibrilleux</string>
     <string name="myco_l_yellow_veil_stem">Débris jaunes de voile sur le pied</string>
     <string name="myco_l_flesh_pale_yellow">Chair jaune pâle, odeur de rave</string>
@@ -1772,6 +1779,7 @@
     <string name="myco_l_ring_woolly">Anneau laineux</string>
     <string name="myco_l_pale_cream_gills">Lames crème pâle</string>
     <string name="myco_l_gills_greying">Lames qui grisent</string>
+    <string name="myco_l_gills_clay_brown">Lames gris crème, puis brun argile</string>
     <string name="myco_l_lemon_patched_cap">Chapeau jaune citron pâle, lambeaux gris-blanc</string>
     <string name="myco_g_knights_title">Tricholome équestre, ou tricholome soufré ?</string>
     <string name="myco_g_knights_evidence">Wikipédia</string>
@@ -1789,7 +1797,7 @@
         <item>Lait rouge vineux à la coupe ; chair rouge brique sous la peau du chapeau, saveur douce à légèrement amère, presque pas d’odeur</item>
         <item>Pinèdes sur sol calcaire, surtout dans le sud de l’Europe · septembre à novembre</item>
     </string-array>
-    <string name="myco_sanguifluus_note">Comestible : Wikipédia (fr) le dit excellent et certains auteurs le tiennent pour le meilleur des lactaires ; la DGfM et la VAPKO le listent (liste rouge allemande, catégorie 2). Wikipédia (en) avertit qu’il peut accumuler des métaux lourds : pas au bord des routes ni sur un sol pollué. Le lait fait la différence : rouge vineux d’emblée. Un lait orange désigne le lactaire délicieux ou ses cousins (voir le groupe). Wikipédia (fr) dit que les sosies partagent sa sécurité alimentaire, mais pas sa valeur culinaire.</string>
+    <string name="myco_sanguifluus_note">La DGfM et la VAPKO le listent parmi les comestibles ; il figure en catégorie 2 de la liste rouge allemande. Il s’associe surtout aux pins, souvent sur sol calcaire. Son lait frais est rouge vineux dès qu’il sort, contrairement au lait orange des lactaires proches. Leurs aspects se recouvrent : l’image ne permet pas d’identifier une récolte avec certitude.</string>
     <string name="myco_deterrimus_name">Lactaire des épicéas</string>
     <string name="myco_deterrimus_alt">False saffron milkcap</string>
     <string-array name="myco_deterrimus_traits">
@@ -1878,10 +1886,10 @@
         <item>Lames étroites, très serrées, parfois fourchues, jaune d’or pâle, qui brunissent quand on les froisse</item>
         <item>Pied de 4 à 12 cm, ferme, un peu plus pâle que le chapeau</item>
         <item>Lait blanc abondant qui brunit à l’air et tache de brun ; chair blanchâtre et ferme</item>
-        <item>Odeur de poisson, qui disparaît à la cuisson</item>
+        <item>Odeur parfois de hareng, variable selon l’exemplaire</item>
         <item>Sous les feuillus et les conifères · été et automne</item>
     </string-array>
-    <string name="myco_volemus_note">Comestible : la DGfM et la VAPKO le listent. Wikipédia (fr) lui trouve un goût médiocre, Wikipédia (en) le recommande en cuisine, lentement plutôt que poêlé à cause du lait. L’odeur de poisson disparaît à la cuisson (Wikipédia, en). Wikipédia (en) rapporte un cas de pancréatite passagère chez deux personnes âgées en Turquie, qui en avaient déjà mangé. Des espèces voisines (Lactifluus corrugis, L. rugatus) sont difficiles à séparer ; les sources lues ne donnent aucune règle de terrain.</string>
+    <string name="myco_volemus_note">Lactifluus volemus au sens large est indiqué comme comestible dans les listes DGfM et VAPKO, avec une protection particulière en Allemagne. Son odeur de hareng est variable et son identification peut être délicate dans le complexe L. volemus ; ne te fie pas à un seul caractère.</string>
     <string name="myco_glutinosus_name">Gomphide glutineux</string>
     <string name="myco_glutinosus_alt">Slimy spike-cap</string>
     <string-array name="myco_glutinosus_traits">
@@ -1928,10 +1936,10 @@
         <item>Chapeau de 6 à 16 cm, sec, blanc crème, se tachant de fauve avec l’âge, creusé au centre</item>
         <item>Lames très serrées et étroites, décurrentes, blanches puis crème</item>
         <item>Pied de 2 à 8 cm, blanc et lisse</item>
-        <item>Chair blanche, épaisse et ferme ; lait blanc abondant, très brûlant et âcre, qui sèche en vert olive</item>
+        <item>Chair blanche, épaisse et ferme ; lait blanc abondant, très brûlant et âcre ; sa couleur en séchant varie et n’est pas diagnostique</item>
         <item>Bois de feuillus, surtout hêtre · été à début d’hiver</item>
     </string-array>
-    <string name="myco_piperatus_note">Non recommandé : la DGfM le liste avec le conseil de le cuire à fond, mais Wikipédia (en) dit qu’il contient des toxines, que certaines sources le disent immangeable ou vénéneux, et que cru il a irrité les lèvres et la langue pendant environ une heure. L’ébullition en ôte le piquant. Le statut le plus prudent est retenu. Wikipédia (fr) ne décrit pas l’espèce : le texte vient de Wikipédia (en) seule. Ne pas le confondre avec la russule blanche Russula delica, qui ne donne pas de lait.</string>
+    <string name="myco_piperatus_note">La DGfM le liste en recommandant une cuisson complète ; cet atlas le classe non comestible par prudence, car les avis sur son usage alimentaire divergent. Son lait blanc abondant et ses lames très serrées, étroites et décurrentes aident à le distinguer des russules blanches, qui ne produisent pas de lait. La couleur du lait séché varie et ne permet pas de le séparer sûrement des espèces proches.</string>
     <string name="myco_decastes_name">Tricholome agrégé</string>
     <string name="myco_decastes_alt">Lyophylle en touffe, clustered domecap</string>
     <string-array name="myco_decastes_traits">
@@ -2000,12 +2008,12 @@
     <string name="myco_agathosmus_alt">Gray almond waxy cap</string>
     <string-array name="myco_agathosmus_traits">
         <item>Chapeau de 3 à 10 cm, convexe à bord enroulé, gris cendré terne, visqueux par temps humide</item>
-        <item>Lames blanches puis grisâtres, un peu décurrentes</item>
+        <item>Lames épaisses, cireuses, blanches puis grisâtres, adnées à un peu décurrentes</item>
         <item>Pied de 4 à 15 cm, blanchâtre, cendré avec l’âge, sans voile</item>
-        <item>Chair molle et blanchâtre ; forte odeur de noyau de cerise ou d’amande amère, saveur fade</item>
-        <item>Sous les épicéas et les pins, épars</item>
+        <item>Chair molle et blanchâtre ; odeur agréable d’amande ou de noyau de cerise, d’intensité variable</item>
+        <item>Au sol, surtout sous les épicéas · été à automne</item>
     </string-array>
-    <string name="myco_agathosmus_note">Comestible mais fade : la DGfM et la VAPKO le listent ; Wikipédia (en) est la seule page à le décrire (la page française est une ébauche). L’odeur est le repère : Wikipédia (en) cite des hygrophores plus petits à odeur d’amande semblable, que l’atlas ne dessine pas.</string>
+    <string name="myco_agathosmus_note">Les listes DGfM et VAPKO le classent comestible, mais l’odeur d’amande varie et plusieurs espèces proches forment un complexe difficile à séparer. L’épicéa et les lames cireuses épaisses aident à préciser l’identification ; l’odeur seule ne suffit pas.</string>
     <string name="myco_marzuolus_name">Hygrophore de mars</string>
     <string name="myco_marzuolus_alt">Charbonnier de printemps, March mushroom</string>
     <string-array name="myco_marzuolus_traits">
@@ -2063,18 +2071,18 @@
         <item>Volve blanche formant un petit bourrelet libre à la base</item>
         <item>Sol sableux et un peu acide, près des conifères · printemps à automne</item>
     </string-array>
-    <string name="myco_gemmata_note">Toxique : la DGfM la liste comme suspecte, avec le syndrome de l’amanite panthère, et Wikipédia (en) donne l’acide iboténique et le muscimol, avec des symptômes en moins de trois heures (hallucinations, nausées, vomissements, douleurs d’estomac), les cas graves étant extrêmement rares. Wikipédia (fr) dit qu’elle donne les mêmes symptômes que l’amanite panthère et l’amanite tue-mouches. Wikipédia (en) cite l’amanite citrine, Amanita fulva et l’amanite panthère comme sosies ; son chapeau est d’un jaune plus vif que celui de la première.</string>
+    <string name="myco_gemmata_note">Ne pas consommer : la DGfM la considère suspecte pour le syndrome de l’amanite panthère. Les effets neurologiques peuvent varier ; demandez un avis médical urgent après ingestion suspectée. Elle ressemble à d’autres amanites jaunes.</string>
     <string name="myco_porphyria_name">Amanita porphyria</string>
     <string name="myco_porphyria_alt">Grey veiled amanita, porphyry amanita</string>
     <string-array name="myco_porphyria_traits">
         <item>Chapeau de 4 à 10 cm, brun à reflet pourpre ou grisâtre, parfois avec des plaques grises du voile</item>
         <item>Lames blanchâtres, libres, qui foncent au froissement</item>
         <item>Pied de 5 à 12 cm, base bulbeuse, avec un anneau fragile gris violet ou noirci</item>
-        <item>Base parfois dans une volve blanche membraneuse</item>
+        <item>Bulbe brusque à court rebord ou fragments de voile, sans sac libre</item>
         <item>Chair blanche, odeur de pomme de terre crue ou de rave</item>
         <item>Sol pauvre, surtout sous les conifères (épicéas) · été à automne</item>
     </string-array>
-    <string name="myco_porphyria_note">Toxique : la DGfM la liste pour un syndrome gastro-intestinal, note la bufoténine et déconseille de la manger crue ; Wikipédia (en) la dit immangeable. Elle ressemble à l’amanite citrine par la forme et l’odeur, mais s’en distingue par la couleur du chapeau et de l’anneau, et se prend facilement pour l’amanite phalloïde, bien plus vénéneuse (Wikipédia, en). On peut aussi la prendre pour l’amanite panthère. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.</string>
+    <string name="myco_porphyria_note">Ne pas consommer : la DGfM signale des troubles digestifs même après chauffage. Elle peut ressembler à l’amanite citrine, à l’amanite panthère et à l’amanite phalloïde ; examiner la base entière et demander une identification experte.</string>
     <string name="myco_moelleri_name">Agaric pintade</string>
     <string name="myco_moelleri_alt">Psalliote pintade, inky mushroom</string>
     <string-array name="myco_moelleri_traits">
@@ -2084,7 +2092,7 @@
         <item>Chair blanche, jaune chrome à la base du pied ; forte odeur de phénol, d’iodoforme ou d’encre</item>
         <item>Bois de feuillus, surtout sur sol calcaire, aussi parcs et prairies</item>
     </string-array>
-    <string name="myco_moelleri_note">Toxique : Wikipédia (fr) le dit sans détour, la DGfM le liste pour un syndrome gastro-intestinal, et Wikipédia (en) précise que, comme l’agaric jaunissant, il dérange certaines personnes et pas d’autres. Le jaunissement et l’odeur de phénol sont les signaux d’alerte. Ce n’est pas le rosé des prés : voir le groupe.</string>
+    <string name="myco_moelleri_note">Toxique : la DGfM le classe parmi les espèces à syndrome gastro-intestinal. Le jaunissement jaune chrome près de la base du pied et l’odeur de phénol ou d’encre alertent, mais un seul signe ne suffit pas à l’identifier.</string>
     <string name="myco_clavipes_name">Ampulloclitocybe clavipes</string>
     <string name="myco_clavipes_alt">Club foot, club-footed clitocybe</string>
     <string-array name="myco_clavipes_traits">
@@ -2105,7 +2113,7 @@
         <item>Forte odeur de fenugrec, de livèche ou de céleri ; saveur douce</item>
         <item>Lieux humides, souvent dans les sphaignes, près des épicéas, des pins et des bouleaux · fin d’été et automne</item>
     </string-array>
-    <string name="myco_helvus_note">Toxique : la DGfM le liste pour un syndrome gastro-intestinal, et Wikipédia (en) le dit légèrement toxique cru, avec nausées, vomissements, vertiges et frissons en moins de 30 minutes, les toxines étant détruites par une ébullition prolongée ; 418 personnes ont été intoxiquées près de Leipzig en octobre 1949. Séché, il sert de condiment en petite quantité. La page Wikipédia française est une ébauche : la description vient de Wikipédia (en).</string>
+    <string name="myco_helvus_note">La DGfM le classe parmi les champignons provoquant des troubles gastro-intestinaux. Son odeur forte de curry se remarque surtout chez les vieux exemplaires ou en séchant ; elle peut être faible ou absente chez un jeune sujet frais. Certaines traditions régionales l’emploient séché comme condiment, mais cette description ne permet pas d’établir la sécurité de cette préparation : ne l’utilise pas comme aliment sans avis local qualifié.</string>
     <string name="myco_platyphylla_name">Collybie à lames larges</string>
     <string name="myco_platyphylla_alt">Broadgilled collybia</string>
     <string-array name="myco_platyphylla_traits">
@@ -2139,7 +2147,8 @@
     <string name="myco_l_golden_warty_cap">Chapeau jaune d’or, plaques blanches</string>
     <string name="myco_l_purple_brown_cap">Chapeau brun pourpré</string>
     <string name="myco_l_ring_grey_violet">Anneau gris violet</string>
-    <string name="myco_l_ring_thin_drooping">Anneau mince et retombant</string>
+    <string name="myco_l_ring_broad_persistent">Anneau ample et persistant</string>
+    <string name="myco_l_pink_to_brown_gills">Lames rosées, puis brun foncé</string>
     <string name="myco_l_grey_brown_pale_margin_cap">Chapeau gris brun, marge plus pâle</string>
     <string name="myco_l_club_stem">Pied en massue</string>
     <string name="myco_l_beige_velvet_cap">Chapeau beige gris, velouté</string>
@@ -2198,7 +2207,7 @@
         <item>Chair mince et blanche ; ni odeur ni saveur marquées</item>
         <item>En touffes sur les souches et le bois pourri · printemps à début d’hiver</item>
     </string-array>
-    <string name="myco_micaceus_note">Non recommandé avec de l’alcool : la DGfM le liste pour le syndrome de la coprine en notant seulement de faibles quantités ; Wikipédia (fr) dit que des récoltes européennes peuvent donner une légère excitation avec l’alcool, moindre que le coprin noir d’encre ; Wikipédia (en) dit qu’il n’a pas de coprine. Les deux pages le disent comestible jeune, avant la liquéfaction des lames, mais de peu d’intérêt. Le statut le plus prudent est retenu. Wikipédia (en) déconseille les récoltes en bord de route (métaux lourds) et le sépare du coprin noir d’encre, plus grand, gris et sans granules brillants.</string>
+    <string name="myco_micaceus_note">Les sources divergent sur la coprine et l’alcool : la DGfM le classe dans le groupe du syndrome coprinien tout en signalant une faible teneur ; d’autres descriptions ne détectent pas de coprine. Un rapport du China CDC attribue des cas liés à l’alcool à des coprins sans analyser chaque espèce ni chaque spécimen. Les données restant incertaines, évite l’alcool autour d’un repas de coprins mal identifiés et demande un avis expert avant consommation.</string>
     <string name="myco_regalis_name">Amanite royale</string>
     <string name="myco_regalis_alt">Royal fly agaric, king fly agaric</string>
     <string-array name="myco_regalis_traits">
@@ -2437,23 +2446,23 @@
     <string name="myco_pulmonarius_name">Pleurote pulmonaire</string>
     <string name="myco_pulmonarius_alt">Lung oyster, Indian oyster, phoenix mushroom</string>
     <string-array name="myco_pulmonarius_traits">
-        <item>Chapeau de 5 à plus de 20 cm, convexe puis plat, bien plus pâle et plus petit que celui du pleurote en huître</item>
+        <item>Généralement autour de 7 à 10 cm, mais de taille variable ; crème pâle à beige, convexe puis aplati</item>
         <item>Lames blanchâtres, décurrentes</item>
         <item>Pied court, excentré ou absent, sans anneau</item>
-        <item>Sporée blanche à jaunâtre, parfois gris lavande · odeur agréable d’anis (Wikipédia, en)</item>
-        <item>Sur bois mort, surtout de feuillus ; plus tard en été que le pleurote en huître, aime la chaleur</item>
+        <item>Sporée blanche à crème pâle</item>
+        <item>Sur bois mort de feuillus, souvent par temps chaud ; saison variable selon la région</item>
     </string-array>
-    <string name="myco_pulmonarius_note">Comestible : la DGfM le liste ; Wikipédia (fr) et (en) disent que son goût et sa culture sont à peu près ceux du pleurote en huître, et qu’il est le plus cultivé de ce type en Europe et en Amérique du Nord. Wikipédia (en) avertit que des clitocybes poussant sur le bois peuvent lui ressembler et que certains sont vénéneux ; elle dit aussi que le « Pleurotus sajor-caju » vendu est un autre champignon, à anneau. Aucune des deux pages ne cite de danger propre à l’espèce. L’atlas le dessine comme le pleurote en huître, en plus pâle.</string>
+    <string name="myco_pulmonarius_note">La DGfM le liste parmi les comestibles. Des espèces pâles poussant sur le bois peuvent être confondues avec les pleurotes, notamment Pleurocybella porrigens ; il faut comparer l’ensemble des caractères et demander un avis expert avant de consommer une récolte sauvage. La planche montre une forme typique mais ne permet ni de vérifier l’arbre hôte ni d’identifier un exemplaire.</string>
     <string name="myco_sublateritium_name">Hypholome couleur de brique</string>
     <string name="myco_sublateritium_alt">Brick cap, red woodlover</string>
     <string-array name="myco_sublateritium_traits">
         <item>Chapeau de 3,5 à 10 cm, rouge brique au centre à marge plus pâle, lisse, parfois avec des restes de voile au bord</item>
-        <item>Lames serrées, d’abord jaunâtres ou jaune soufre, grisâtres avec l’âge, jamais vertes</item>
-        <item>Pied jaune clair, plus foncé vers le bas</item>
-        <item>Sporée brun violacé · saveur douce de noisette, un peu amère quand il est vieux</item>
+        <item>Lames serrées, crème à jaune pâle, puis gris olive et enfin brun pourpré ; une légère nuance verdâtre est possible</item>
+        <item>Pied jaune pâle, brun rougeâtre vers la base</item>
+        <item>Sporée brun pourpré · saveur variable, sans valeur de test d’identification</item>
         <item>En touffes denses sur les souches et le bois pourri de feuillus, en automne</item>
     </string-array>
-    <string name="myco_sublateritium_note">Non recommandé : les sources se contredisent. Wikipédia (fr) le dit toxique, comestible après cuisson et non comestible dans la même page ; Wikipédia (en) dit qu’il est parfois mangé, de choix au Japon, mais souvent tenu pour non comestible ou vénéneux en Europe, et met en garde contre la confusion avec des sosies mortels, dont la galère marginée. La VAPKO signale seulement que l’hypholome en touffe peut être confondu avec lui, et il ne figure sur aucune liste de la DGfM. Statut le plus prudent retenu. Il se distingue de l’hypholome en touffe par son chapeau rouge brique et ses lames jamais vertes ; la galère marginée est dans le groupe ci-dessous.</string>
+    <string name="myco_sublateritium_note">Consommation déconseillée : les sources divergent sur sa comestibilité et des champignons lignicoles dangereux lui ressemblent. Une nuance verdâtre des lames ne l’exclut pas ; l’identification exige plusieurs caractères.</string>
     <string name="myco_l_blue_close_gills">Lames bleues et serrées</string>
     <string name="myco_l_straight_stem_no_bulb">Pied droit, sans bulbe</string>
     <string name="myco_l_flesh_pale_lilac">Chair lilas pâle</string>
@@ -2533,8 +2542,8 @@
     <string-array name="myco_exidia_nigricans_traits"><item>Forme générale : masse gélatineuse sombre sur le bois mort.</item><item>Repère écologique : masse gélatineuse sombre sur le bois mort. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
     <string name="myco_agaricus_pilatianus_name">Agaricus pilatianus</string>
     <string name="myco_agaricus_pilatianus_alt">Nom commun stable non retenu faute de source concordante</string>
-    <string name="myco_agaricus_pilatianus_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
-    <string-array name="myco_agaricus_pilatianus_traits"><item>Forme générale : agaric à lames libres et sporée brun chocolat à maturité.</item><item>Repère écologique : agaric à lames libres et sporée brun chocolat à maturité. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_agaricus_pilatianus_note">Toxique : les descriptions signalent de graves troubles digestifs. Caractères habituels : chapeau trapu gris brun et squamuleux, anneau très plissé, jaunissement jaune chrome à la base du pied ; une odeur phénolique ou iodée est parfois présente. Ces caractères ne rendent pas sûr un Agaricus dont l’identification est incertaine.</string>
+    <string-array name="myco_agaricus_pilatianus_traits"><item>Agaric trapu, chapeau gris brun fibrilleux ou squamuleux</item><item>Lames libres, pâles puis roses et enfin brun chocolat</item><item>Pied court et robuste, anneau très plissé, base qui jaunit en jaune chrome</item><item>Odeur souvent désagréable, phénolique ou iodée</item><item>Toxique : ne pas consommer</item></string-array>
     <string name="myco_thanatephorus_cucumeris_name">Thanatephorus cucumeris</string>
     <string name="myco_thanatephorus_cucumeris_alt">Nom commun stable non retenu faute de source concordante</string>
     <string name="myco_thanatephorus_cucumeris_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
@@ -2584,9 +2593,9 @@
     <string name="myco_hygrophorus_penarioides_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
     <string-array name="myco_hygrophorus_penarioides_traits"><item>Forme générale : hygrophore forestier du groupe des espèces blanchâtres.</item><item>Repère écologique : hygrophore forestier du groupe des espèces blanchâtres. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
     <string name="myco_amanita_beckeri_name">Amanita beckeri</string>
-    <string name="myco_amanita_beckeri_alt">Nom commun stable non retenu faute de source concordante</string>
-    <string name="myco_amanita_beckeri_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>
-    <string-array name="myco_amanita_beckeri_traits"><item>Forme générale : amanite à lames libres et sporée blanche.</item><item>Repère écologique : amanite à lames libres et sporée blanche. Les détails peuvent varier selon le taxon et le milieu.</item><item>Statut alimentaire non évalué.</item></string-array>
+    <string name="myco_amanita_beckeri_alt">Amanite noisette</string>
+    <string name="myco_amanita_beckeri_note">Référence taxonomique : ce nom n’est pas une recommandation alimentaire. L’absence d’anneau ne prouve pas l’innocuité ; n’en consomme pas et fais vérifier tout spécimen entier par un spécialiste.</string>
+    <string-array name="myco_amanita_beckeri_traits"><item>Chapeau noisette à ocre doré, jusqu’à 12 cm, à marge profondément sillonnée</item><item>Petits flocons de voile blancs puis brunissants ; lames libres blanches à crème</item><item>Pied blanc élancé, 10 à 20 cm, sans véritable anneau</item><item>Petite volve fragile en coupe, avec une ceinture basse séparée sur le pied</item><item>Bois de feuillus européens, surtout sur sol calcaire</item></string-array>
     <string name="myco_inocybe_tricolor_name">Inocybe tricolor</string>
     <string name="myco_inocybe_tricolor_alt">Nom commun stable non retenu faute de source concordante</string>
     <string name="myco_inocybe_tricolor_note">Référence taxonomique et écologique. Cette fiche ne sert pas à identifier une récolte et ne donne pas de conseil de sécurité alimentaire.</string>

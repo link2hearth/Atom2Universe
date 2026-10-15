@@ -1,0 +1,20 @@
+{
+  "id": "rhacodes",
+  "reviewStatus": "verified",
+  "safetyNote": "Ne vous fiez pas à cette planche ni à l’application pour décider de consommer un champignon. Chlorophyllum rhacodes est présenté comme comestible dans certains guides, mais des réactions digestives graves sont rapportées et des espèces voisines de Chlorophyllum peuvent être nocives. La liste 2026 de la DGfM cite C. olivieri, espèce distincte, et ne cite pas C. rhacodes. Faites contrôler toute récolte destinée à être mangée par un spécialiste local ; contactez un centre antipoison en cas de suspicion d’intoxication.",
+  "sections": [
+    {"title": "Identification", "text": "Grande lépiote déguenillée au chapeau de 5 à 18 cm, d’abord arrondi puis convexe à largement étalé. Des écailles brun foncé, laineuses et souvent retroussées contrastent nettement avec le fond crème à blanchâtre ; le disque central reste presque lisse. Les lames serrées et libres sont blanches à crème pâle et peuvent rougir après blessure. Le pied clair est lisse, sans motif de peau de serpent, et porte un anneau mobile marqué de deux franges distinctes."},
+    {"title": "Bulbe et changement de couleur", "text": "Le pied s’évase progressivement en un bulbe arrondi, parfois excentré, sans rebord abrupt comme chez C. brunneum. Conserver la base entière pour l’examen. La chair blanche coupée ou froissée devient jaune safran à orangée, puis rose rougeâtre à brun rouge, surtout dans le pied. La sporée est blanche à crème pâle."},
+    {"title": "Écologie et saison", "text": "Espèce saprotrophe des bois et de leurs lisières, sur sol riche en humus sous feuillus ou conifères ; elle peut aussi pousser sur des sols riches remaniés. En Europe tempérée, les fructifications apparaissent surtout de l’été à l’automne. Le milieu et la saison ne suffisent pas à déterminer l’espèce."},
+    {"title": "Confusions et nomenclature", "text": "C. brunneum possède un bulbe plus nettement épaulé ou marginé et généralement un anneau plus simple. C. olivieri présente souvent des écailles gris olive ou brunes moins contrastées sur un fond de chapeau plus terne ; leur séparation demande de la prudence et la microscopie peut aider. Macrolepiota procera a un pied à motif caractéristique de peau de serpent et ne produit pas la même forte coloration orange rouge à la coupe. L’ancien emploi de « lépiote déguenillée » ou de Macrolepiota rhacodes a parfois regroupé plusieurs de ces taxons. Les listes alimentaires suisse VAPKO et allemande DGfM citent explicitement C. olivieri, pas ce taxon distinct."},
+    {"title": "Lecture de la planche", "text": "La planche sur fond blanc montre un champignon entier avec ses écailles contrastées, son pied lisse, son anneau double et son bulbe arrondi ; une coupe longitudinale colorée d’orange rouge ; les lames libres vues de dessous ; et un chapeau vu de dessus."}
+  ],
+  "sources": [
+    {"title": "First Nature. Chlorophyllum rhacodes : morphologie, milieu et toxicité.", "url": "https://www.first-nature.com/fungi/chlorophyllum-rhacodes.php"},
+    {"title": "Université de Colombie-Britannique, E-Flora BC. Fiche C. brunneum et comparaison avec C. rhacodes et C. olivieri.", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Chlorophyllum+brunneum"},
+    {"title": "Index Fungorum. Nom accepté Chlorophyllum rhacodes, fiche 374433.", "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=374433"},
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Liste positive des champignons comestibles, qui ne cite que C. olivieri.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023). Liste suisse de recommandation, citant C. olivieri et l’ancien usage « C. rachodes ».", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
+  ],
+  "related": ["brunneum", "procera", "brunneoincarnata"]
+}

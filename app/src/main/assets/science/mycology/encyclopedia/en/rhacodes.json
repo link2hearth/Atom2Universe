@@ -1,0 +1,20 @@
+{
+  "id": "rhacodes",
+  "reviewStatus": "verified",
+  "safetyNote": "Do not use this plate or the app to decide whether to eat a mushroom. Chlorophyllum rhacodes is described as edible in some guides, but serious gastrointestinal reactions have been reported and similar Chlorophyllum species can be harmful. The 2026 DGfM edible list names C. olivieri, a distinct species, and does not name C. rhacodes. Have any intended food specimen checked by a qualified local expert; seek poison-centre advice after a suspected poisoning.",
+  "sections": [
+    {"title": "Identification", "text": "A robust shaggy parasol with a 5–18 cm cap, initially rounded, then convex to broadly expanded. Dark brown, often upturned woolly scales contrast strongly with the cream to whitish cap background; the central disc remains mostly smooth. Crowded, free gills are white to pale cream and may redden where damaged. The pale stem is smooth rather than snakeskin patterned, and carries a prominent movable ring with two distinct fringed layers."},
+    {"title": "Base and bruising", "text": "The stem widens gradually into a rounded, sometimes eccentric bulb, without the abrupt rim typical of C. brunneum. Preserve the entire base when examining a specimen. White flesh stains saffron orange and then pinkish red to reddish brown on cutting or bruising, particularly in the stem. The spore deposit is white to pale cream."},
+    {"title": "Ecology and season", "text": "A saprobic species of woodland and woodland edges, on humus-rich ground under broadleaf or conifer trees; it can also occur in disturbed rich soil. Fruit bodies appear mainly from summer into autumn in temperate Europe. Habitat and season alone cannot confirm an identification."},
+    {"title": "Lookalikes and naming", "text": "C. brunneum has a more abruptly shouldered or marginate bulb and usually a simpler, single-edged ring. C. olivieri often has less contrasting olive-grey or brown scales on a dingier cap ground; the two require care to separate and microscopy can help. Macrolepiota procera has a conspicuous snakeskin pattern on the stem and does not show the same strong orange-red cut-flesh reaction. Older uses of the name 'shaggy parasol' and Macrolepiota rhacodes may include more than one of these taxa. Swiss VAPKO and German DGfM edible recommendations explicitly name C. olivieri, not this separately accepted taxon."},
+    {"title": "About the plate", "text": "The white-background plate shows a whole fruit body with contrasting shaggy cap scales, smooth stem, double ring and rounded bulb; a longitudinal section with orange-red bruising; a view of the free gills; and a cap seen from above."}
+  ],
+  "sources": [
+    {"title": "First Nature. Chlorophyllum rhacodes: morphology, habitat and toxicity account.", "url": "https://www.first-nature.com/fungi/chlorophyllum-rhacodes.php"},
+    {"title": "University of British Columbia, E-Flora BC. Chlorophyllum brunneum account, comparison with C. rhacodes and C. olivieri.", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Chlorophyllum+brunneum"},
+    {"title": "Index Fungorum. Chlorophyllum rhacodes accepted name record 374433.", "url": "https://www.indexfungorum.org/Names/NamesRecord.asp?RecordID=374433"},
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Positivliste der Speisepilze, naming C. olivieri only.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023). Swiss recommendation list, naming C. olivieri and noting older 'C. rachodes' usage.", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"}
+  ],
+  "related": ["brunneum", "procera", "brunneoincarnata"]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "ovoidea",
+  "reviewStatus": "verified",
+  "safetyNote": "Avoid eating this species. Its edibility is disputed and it is easily confused with the kidney-toxic Amanita proxima and other dangerous white amanitas. A kidney-injury case attributed to A. ovoidea remains disputed because mixed or misidentified specimens were not excluded. Seek urgent medical advice after any suspected ingestion with symptoms.",
+  "sections": [
+    {"title": "Identification", "text": "A very large, stout, ivory-white amanita, with a fleshy cap often 10–30 cm across. The cap is mostly smooth but its non-striate margin often carries dangling cream-coloured veil fragments. Gills are white to cream and free from the stem. The thick, white, floccose stem bears a creamy, fragile ring that may crumble or disappear. A broad white-to-cream sac-like volva encloses the swollen base; it may become ochraceous with handling. Examine the entire base."},
+    {"title": "Habitat and season", "text": "A warmth-loving species on calcareous ground, mainly with broadleaf trees such as oaks and sometimes with conifers. It is most frequent in Mediterranean regions but also occurs farther north. Fruiting is mainly from summer into autumn."},
+    {"title": "Similar species", "text": "Amanita proxima is usually slimmer, with a persistent membranous ring and typically russet volva, and can cause severe kidney injury. Amanita ovoidea can itself develop ochre tones at the volva, so volva colour alone cannot make the separation. Other white Amanita species are also dangerous; incomplete specimens are especially unreliable."},
+    {"title": "Edibility and evidence", "text": "Some field guides call A. ovoidea edible, while others report digestive intolerance or discourage consumption. A 2014 investigation from Siena did not recommend its use. A 2019 report attributed acute kidney injury to this species, but a 2023 mycological response questioned the identification because a mixed collection or A. proxima could not be ruled out. This uncertainty does not make foraging it safe."},
+    {"title": "About the plate", "text": "The plate shows a whole stout fruit body, a longitudinal section, the fringed cap from above, and the free pale gills from below. The pale volval sac and ragged, short-lived ring are visible. The views are illustrative and cannot confirm a specimen's identity."}
+  ],
+  "sources": [
+    {"title": "Université de Rouen, SmartChampi. Amanita ovoidea species description.", "url": "https://smartchampi.univ-rouen.fr/champignons/amanita-ovoidea.html"},
+    {"title": "Université Claude Bernard Lyon 1. Amanita ovoidea species sheet.", "url": "https://campus.univ-lyon1.fr/champignons/base-de-donnees/amanita-ovoidea/"},
+    {"title": "MycoCharentes, P. Tanchaud (2024). Amanita proxima, comparative species sheet.", "url": "https://www.mycocharentes.fr/pdf1/235.pdf"},
+    {"title": "Biagi et al. (2014). Investigations into Amanita ovoidea: edible or poisonous? Natural Resources.", "url": "https://www.scirp.org/journal/PaperInformation?PaperID=45559"},
+    {"title": "Li Cavoli et al. (2019). Acute renal failure after Amanita ovoidea eating. Indian Journal of Nephrology.", "url": "https://indianjnephrol.org/acute-renal-failure-after-amanita-ovoidea-eating/"},
+    {"title": "Loizides et al. (2023). Response questioning the A. ovoidea kidney-injury attribution. Indian Journal of Nephrology.", "url": "https://pubmed.ncbi.nlm.nih.gov/37234444/"},
+    {"title": "ANSES (2023). French poison-centre report on accidental mushroom poisonings in 2022.", "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf"}
+  ],
+  "related": ["proxima", "verna", "virosa"]
+}

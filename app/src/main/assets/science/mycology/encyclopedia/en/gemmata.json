@@ -1,0 +1,20 @@
+{
+  "id": "gemmata",
+  "reviewStatus": "verified",
+  "safetyNote": "Do not eat Amanita gemmata. The German mycological society treats it as suspect for the pantherina syndrome, which can include neurological disturbances; toxin content may vary among collections. If ingestion is suspected, contact a poison centre promptly, even if the ring or white cap patches are absent.",
+  "sections": [
+    {"title": "Identification", "text": "A medium-sized amanita with a creamy to jonquil or golden-yellow cap, often about 5–7 cm but variable in size. Its cap bears irregular soft white veil patches or warts that may wash off in rain; the paler margin is often finely striate. The white gills are close. Descriptions place their attachment from adnate or adnexed to nearly free, so this is not a single reliable separator. The pale stem bears a thin, fragile upper ring that can disappear."},
+    {"title": "Base and habitat", "text": "The lower stem expands into a bulb, usually with a small free white volval rim or collar at its top. Other veil remnants can remain as patches or a thin sheath. Preserve the complete base when examining it. This ectomycorrhizal species occurs on poor, often acidic ground with conifers or broadleaf trees, including fir, beech and oak; the main season is summer to autumn, with some regional spring records."},
+    {"title": "Similar species", "text": "Amanita pantherina is usually browner but can overlap in appearance, and rain can remove the white cap patches of A. gemmata. Pale forms of Amanita muscaria and Amanita citrina also require care. A missing fragile ring does not rule out A. gemmata. Use the complete combination of cap, gills, veil and intact bulb, and seek expert identification."},
+    {"title": "Poisoning evidence", "text": "The DGfM lists A. gemmata as suspected of producing pantherina syndrome and notes uncertainty about toxin-bearing and toxin-poor populations or larger doses. The syndrome is associated with ibotenic acid and muscimol and can cause altered consciousness, agitation or drowsiness and, in serious cases, seizures or coma. It would overstate the evidence to promise a predictable toxin content for every specimen."},
+    {"title": "About the plate", "text": "The illustration shows a whole yellow fruit body, a longitudinal section, a cap view from above and pale gills from below. The small white rim at the bulb and torn, short-lived ring are visible. White patches on the cap are shown as variable veil remnants."}
+  ],
+  "sources": [
+    {"title": "Naturalis Biodiversity Center. Amanita gemmata, Interactive Guide to Mushrooms and Other Fungi.", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=100103"},
+    {"title": "University of British Columbia, E-Flora BC. Amanita gemmata group species account.", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Amanita+gemmata"},
+    {"title": "University of Washington, Burke Herbarium. Amanita gemmata identification notes.", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Amanita+gemmata"},
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). List of poisonous fungi by taxon and syndrome.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"},
+    {"title": "Deutsche Gesellschaft für Mykologie. Description of pantherina syndrome.", "url": "https://www.dgfm-ev.de/de/beschreibung-symptome-und-karenzzeiten"}
+  ],
+  "related": ["pantherina", "muscaria", "citrina"]
+}

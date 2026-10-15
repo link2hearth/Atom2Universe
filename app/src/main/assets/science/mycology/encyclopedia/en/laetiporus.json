@@ -1,0 +1,25 @@
+{
+  "id": "laetiporus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and identification", "text": "Laetiporus sulphureus is the sulphur polypore or chicken of the woods. It makes thick, overlapping fan-like brackets directly on wood, without a conventional stem. Young fruitbodies are striking yellow with orange or pinkish zones and thick wavy edges; older ones become paler, thinner-edged and tougher. An individual bracket may be roughly 10–40 cm wide. The velvety upper surface contrasts with the lower surface of very fine round to oval pores, pale yellow to almost white, about 2–3 per millimetre. There are no gills. Moist young flesh is soft and yellowish to cream, becoming dry and crumbly with age; the spore print is white."},
+    {"title": "Habitat and season", "text": "It fruits on standing or fallen trees and large branches, most often hardwoods such as oak, beech, sweet chestnut, cherry and willow. It also occurs on yew, a conifer. The fungus causes brown rot in the wood. In Britain and Ireland fruitbodies are seen mainly from late spring or summer through autumn. A vivid shelf on a tree still requires inspection of the underside and the host."},
+    {"title": "Similar species", "text": "The giant polypore, Meripilus giganteus, can also form tiered brackets, but is generally brown rather than brilliant sulphur-yellow and its pore surface blackens when bruised. Ageing Laetiporus loses its bright colour, so a weathered fruitbody is less straightforward than a fresh one. Verify the presence of tiny pores rather than gills or teeth, the growth on wood, and the flesh and host tree; a colour match alone is insufficient."},
+    {"title": "Food use and caution", "text": "Swiss VAPKO calls this species edible when young. The German Mycological Society instead places it on its list of fungi with inconsistent assessment of edibility, noting occasional gastrointestinal complaints and allergic reactions, and cautioning about pesticide exposure in orchards. Use only correctly identified young fresh material, cook it thoroughly and start with a small amount; even cooked specimens may disagree with some people. Avoid collections from yew: possible contamination with toxic yew fragments or other host-related risk is unresolved. Do not eat uncertain or ageing specimens; obtain expert confirmation and seek medical advice after symptoms."}
+  ],
+  "traits": [
+    "Thick overlapping stemless shelves, vivid sulphur yellow with orange zones when fresh",
+    "Velvety upper surface and wavy thick young margin, paling and toughening with age",
+    "Underside has tiny pale yellow to whitish round pores, about 2–3 per mm; no gills",
+    "Soft moist yellowish to cream young flesh, drying crumbly; white spore print",
+    "On living or dead trees, mainly hardwoods but also yew, late spring to autumn"
+  ],
+  "safetyNote": "Young correctly identified material is eaten after thorough cooking, but the German Mycological Society records occasional gastrointestinal and allergic reactions and classifies edibility as inconsistently assessed. Avoid specimens from yew, orchard trees exposed to pesticides, and old or uncertain material. Seek expert identification; after symptoms, contact a poison centre or medical service.",
+  "sources": [
+    {"title": "VAPKO — Recommended mushroom list, Laetiporus sulphureus edible when young (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "German Mycological Society (DGfM) — Fungi with inconsistently assessed edibility, Laetiporus sulphureus (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_pilze-uneinheitl-speisewert.pdf"},
+    {"title": "First Nature — Laetiporus sulphureus identification", "url": "https://www.first-nature.com/fungi/laetiporus-sulphureus.php"},
+    {"title": "Woodland Trust — Chicken of the woods species account and yew caution", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/chicken-of-the-woods/"}
+  ],
+  "related": ["gigantea", "fistulina"]
+}

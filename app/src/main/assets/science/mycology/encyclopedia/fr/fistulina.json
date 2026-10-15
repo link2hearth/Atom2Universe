@@ -1,0 +1,26 @@
+{
+  "id": "fistulina",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Nom et identification", "text": "Fistulina hepatica, la langue de bœuf, débute en saillie rougeâtre en forme de langue avant de devenir une console charnue semi-circulaire. Les chapeaux mûrs mesurent couramment 10 à 25 cm de large et 3 à 6 cm d'épaisseur ; ils sont fixés latéralement, sans pied ou par un moignon court et épais. Le dessus va du rouge saumon au rouge vineux ou brun rouille, souvent humide ou visqueux, plus rugueux et foncé avec l'âge. La surface à pores blanchâtres, jaune paille ou rosés brunit fortement à la pression. Particularité de ce polypore : les petits tubes sont séparés les uns des autres, et non soudés en une masse continue ; on peut les détacher individuellement. La chair coupée est juteuse, rougeâtre et marbrée de veines pâles, souvent accompagnée de gouttes aqueuses rouges. Les guides divergent sur la nuance de la sporée, de blanchâtre à jaune rosé pâle ; ce n'est pas le critère de terrain principal."},
+    {"title": "Habitat et saison", "text": "Elle apparaît habituellement près du pied des chênes vivants, sur leurs blessures ou sur leurs souches ; le châtaignier est un autre hôte important. Elle peut continuer à fructifier sur du bois mort et provoque une pourriture brune. En Grande-Bretagne et en Irlande, on la voit surtout de la fin de l'été à l'automne, approximativement de juillet à octobre, avec des variations régionales. Une console charnue solitaire au pied d'un chêne est caractéristique, mais il faut aussi vérifier les tubes et la chair."},
+    {"title": "Espèces proches", "text": "D'autres consoles rouges ou orangées, notamment le polypore hérissé Inonotus hispidus, peuvent évoquer une vieille fistuline, mais elles n'ont ni sa coupe juteuse marbrée ni ses tubes distincts séparables un par un. Laetiporus sulphureus est normalement jaune soufre et orangé, avec une couche à pores soudés. L'examen du dessous frais et d'une coupe est plus utile que la seule couleur d'un vieux chapeau."},
+    {"title": "Comestibilité et prudence", "text": "La Société allemande de mycologie inscrit F. hepatica sur sa liste positive des espèces comestibles, et la VAPKO suisse précise que le jeune champignon est comestible. Les vieilles fructifications deviennent coriaces ; même les jeunes ont une saveur nettement acidulée et demandent une cuisson complète. La ligne de l'espèce dans la liste allemande ne la signale pas comme menacée, contrairement à l'ancienne fiche. Faire confirmer une récolte sauvage par un spécialiste, respecter les règles locales de cueillette et ne pas consommer d'exemplaire incertain ou dégradé. Consulter si des symptômes suivent l'ingestion."}
+  ],
+  "traits": [
+    "Langue charnue rouge devenant une console semi-circulaire, souvent 10–25 cm, pied nul ou très court",
+    "Dessus humide rouge à brun rouge, plus foncé et rugueux en vieillissant",
+    "Pores crème à jaune paille ou rosés brunissant fortement ; tubes séparables individuellement",
+    "Chair rouge juteuse marbrée de clair, parfois gouttes rouges à la coupe",
+    "Bas des chênes vivants ou morts, également châtaigniers, de la fin de l'été à l'automne"
+  ],
+  "safetyNote": "La jeune langue de bœuf correctement déterminée est classée comestible, mais les vieux exemplaires sont coriaces et sa chair demande une cuisson complète. Vérifier les tubes séparables et la chair rouge marbrée ; ne pas fonder un repas sur cette seule planche. Écarter les récoltes vieilles ou incertaines, demander une confirmation spécialisée et consulter en cas de symptômes.",
+  "sources": [
+    {"title": "Société allemande de mycologie (DGfM) — Liste positive des champignons comestibles, Fistulina hepatica (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO — Liste des champignons recommandés, Fistulina hepatica comestible jeune (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "First Nature — Identification de Fistulina hepatica, tubes distincts et sporée", "url": "https://www.first-nature.com/fungi/fistulina-hepatica.php"},
+    {"title": "Naturalis Biodiversity Center — Guide interactif des champignons, Fistulina hepatica", "url": "https://mushrooms.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=100636"},
+    {"title": "Woodland Trust — Fiche de la langue de bœuf", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/beefsteak-fungus/"}
+  ],
+  "related": ["laetiporus", "gigantea"]
+}

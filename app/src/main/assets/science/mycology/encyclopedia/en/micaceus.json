@@ -1,0 +1,20 @@
+{
+  "id": "micaceus",
+  "reviewStatus": "verified",
+  "safetyNote": "Avoid eating wild Coprinellus micaceus, especially with alcohol. Authoritative sources disagree about coprine: the 2026 German mycological society list assigns small amounts and an acetaldehyde syndrome, whereas some older accounts report none. A Chinese poisoning surveillance report also associates the species with illness. A photograph cannot resolve this uncertainty or exclude similar inkcaps; seek poison-centre advice after a suspected adverse reaction.",
+  "sections": [
+    {"title": "Identification", "text": "A small, warm ochre to tawny inkcap, darker cinnamon or rust brown at the crown. The cap is egg-shaped when young, then bell-shaped and about 1.5–5 cm across; fine radial grooves become prominent toward the margin. Fresh young caps are dusted with tiny glistening whitish veil particles attached to the surface, which can wash off in rain or vanish with age. The slender whitish stem is fragile and hollow, without a persistent ring."},
+    {"title": "Gills and maturity", "text": "Crowded gills may be narrowly attached to the stem or nearly free. They begin pale, then turn grey or purplish brown and finally almost black; the dark brown to black spore deposit is a separate diagnostic observation. Old caps may split at the edge and partly deliquesce, although some descriptions note less extensive ink-like decay than in C. atramentaria. The mica flecks should not be expected on every old or rain-washed specimen."},
+    {"title": "Ecology and season", "text": "Saprobic on dead wood and buried roots, especially of broadleaf trees. Many fruit bodies typically form tight clusters near stumps, in parks or beside paths where the wood may be hidden under soil. They can appear from spring through late autumn in Europe, sometimes into winter depending on climate."},
+    {"title": "Lookalikes and evidence", "text": "Coprinopsis atramentaria is usually larger, greyer and fleshier, lacks the juvenile mica-like grains and contains coprine. Other members of the C. micaceus complex can look very similar and may require microscopic work. Edibility references are inconsistent: First Nature and E-Flora BC describe young specimens as edible, the Czech Mycological Society generally treats them as inedible, and the DGfM assigns this species to the acetaldehyde syndrome with a note of low coprine content. A 2021 Chinese surveillance study reports poisoning incidents involving it but does not establish coprine concentration in each fruit body."},
+    {"title": "About the plate", "text": "The white-background plate shows a tight group of whole ochre, finely striate caps with tiny veil flecks attached to the young cap surfaces, an older almost fleck-free fruit body with darkening gills, a longitudinal cut showing thin flesh and a hollow stem, and a view from below."}
+  ],
+  "sources": [
+    {"title": "University of British Columbia, E-Flora BC. Coprinellus micaceus species account.", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Coprinus+micaceus"},
+    {"title": "Czech Mycological Society. Coprinellus micaceus atlas account by Karel Tejkal.", "url": "https://www.myko.cz/myko-atlas/Coprinellus-micaceus/"},
+    {"title": "First Nature. Coprinellus micaceus morphology, habitat and edibility account.", "url": "https://www.first-nature.com/fungi/coprinellus-micaceus.php"},
+    {"title": "China CDC Weekly (2022). Mushroom poisoning outbreaks, China, 2021.", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8796718/"},
+    {"title": "Deutsche Gesellschaft für Mykologie (2026). Toxic fungi by taxon and syndrome.", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf"}
+  ],
+  "related": ["atramentaria", "comatus"]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "ostreatus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and identification", "text": "Pleurotus ostreatus is the oyster mushroom, a variable wood-growing species. The oyster-shell or fan-shaped cap is commonly 5–18 cm across, sometimes larger, and ranges from cream or tan to grey, brown or blue-grey. Its edge becomes wavy with age. Crowded white to cream gills run down a short, off-centre or lateral stem; a stem may be nearly absent. The stem is pale, often woolly where it meets the wood, and has no ring. A mature spore print is white to pale lilac-grey. Colour, size and smell alone cannot distinguish all Pleurotus species."},
+    {"title": "Habitat and season", "text": "It forms overlapping groups on dying or dead broadleaf wood, especially beech and oak; it may grow on a standing trunk, stump or fallen branch. It is mainly saprobic but can occur on living, weakened trees. Fruiting extends from summer through autumn and into early winter in Britain and Ireland, and may continue later in milder places. The host tree and season help, but neither proves identity."},
+    {"title": "Similar species", "text": "Pleurotus pulmonarius and P. cornucopiae can be close in shape and require a full set of characters; some Pleurotus species cannot be reliably separated by a photograph. The delicate, often whitish angel's wing, Pleurocybella porrigens, typically grows on conifer wood and must not be assumed to be an oyster mushroom. Its consumption has been associated with severe encephalopathy in people with kidney failure. Examine the actual substrate, gills, stem attachment and every specimen in a cluster; do not rely on the overlapping fan shape alone."},
+    {"title": "Edibility and caution", "text": "The German Mycological Society and Swiss VAPKO list P. ostreatus as edible, and it is widely cultivated. Foraging is different from buying a cultivated crop: an uncertain wild specimen should be checked by a qualified mushroom expert before use. Do not eat a specimen identified only from an illustration, photograph or single feature. Seek prompt poison-centre or medical advice if illness follows ingestion, keeping the specimen or meal remains for identification."}
+  ],
+  "traits": [
+    "Oyster-shell to fan-shaped cap, usually 5–18 cm, cream, grey, brown or blue-grey",
+    "Crowded white to cream gills descending a short off-centre or lateral stem",
+    "Pale stem may be almost absent; no ring; woolly attachment to wood is common",
+    "White to pale lilac-grey spore print",
+    "Overlapping groups mainly on dying or dead broadleaf wood, summer to early winter"
+  ],
+  "safetyNote": "Listed as edible, but similar fan-shaped wood-growing fungi must be excluded. Angel's wing (Pleurocybella porrigens) has been linked to severe encephalopathy in people with kidney failure. Do not eat a wild specimen identified only from this plate; obtain expert confirmation. Seek prompt medical or poison-centre advice after uncertain ingestion or illness.",
+  "sources": [
+    {"title": "German Mycological Society (DGfM) — Edible mushroom positive list, Pleurotus ostreatus (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, Swiss mushroom controllers — Recommended mushroom list, Pleurotus ostreatus (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "First Nature — Pleurotus ostreatus identification", "url": "https://www.first-nature.com/fungi/pleurotus-ostreatus.php"},
+    {"title": "Woodland Trust — Oyster mushroom field description", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/oyster-mushroom/"},
+    {"title": "Kato et al. — Encephalopathy after Pleurocybella porrigens ingestion in renal failure (2004)", "url": "https://pubmed.ncbi.nlm.nih.gov/15729876/"}
+  ],
+  "related": ["pulmonarius", "pleurocybella", "aegerita"]
+}

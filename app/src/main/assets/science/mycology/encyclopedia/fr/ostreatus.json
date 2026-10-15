@@ -1,0 +1,26 @@
+{
+  "id": "ostreatus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Nom et identification", "text": "Pleurotus ostreatus est le pleurote en huître, espèce lignicole très variable. Son chapeau en coquille puis en éventail mesure généralement 5 à 18 cm, parfois davantage, et varie du crème ou brun clair au gris, brun ou gris bleuté. La marge devient ondulée avec l'âge. Les lames serrées, blanches à crème, descendent sur un pied court, excentré ou latéral, parfois presque absent. Ce pied pâle est souvent duveteux à son contact avec le bois et ne porte pas d'anneau. La sporée mûre est blanche à gris lilas pâle. Couleur, taille et odeur ne suffisent pas à distinguer tous les Pleurotus."},
+    {"title": "Habitat et saison", "text": "L'espèce forme des groupes superposés sur le bois de feuillus mourants ou morts, notamment hêtre et chêne : tronc encore debout, souche ou branche tombée. Elle est surtout saprotrophe, mais peut apparaître sur un arbre vivant affaibli. En Grande-Bretagne et en Irlande, la fructification s'étend de l'été au début de l'hiver ; elle peut se prolonger dans des régions plus douces. L'essence du bois et la saison orientent sans prouver l'identité."},
+    {"title": "Espèces proches", "text": "Pleurotus pulmonarius et P. cornucopiae sont proches d'aspect et réclament l'examen de plusieurs caractères ; certains pleurotes ne se séparent pas sûrement sur photo. L'oreille d'ange, Pleurocybella porrigens, délicate et souvent blanchâtre, pousse ordinairement sur le bois de conifère : elle ne doit pas être assimilée d'emblée au pleurote en huître. Sa consommation a été associée à de graves encéphalopathies chez des personnes insuffisantes rénales. Examiner le support réel, les lames, l'attache du pied et chaque exemplaire d'une touffe ; le seul profil en éventail ne suffit pas."},
+    {"title": "Comestibilité et prudence", "text": "La Société allemande de mycologie et la VAPKO suisse classent P. ostreatus parmi les espèces comestibles ; l'espèce est largement cultivée. Une récolte sauvage demande toutefois une identification indépendante par un spécialiste compétent. Ne pas consommer un exemplaire reconnu seulement par une planche, une photographie ou un caractère isolé. Si une maladie suit l'ingestion, consulter rapidement un centre antipoison ou un service médical et conserver des exemplaires ou restes du repas."}
+  ],
+  "traits": [
+    "Chapeau en coquille puis en éventail, généralement 5–18 cm, crème, gris, brun ou gris bleuté",
+    "Lames blanches à crème serrées et décurrentes sur un pied court excentré ou latéral",
+    "Pied pâle parfois presque absent, sans anneau, souvent duveteux au contact du bois",
+    "Sporée blanche à gris lilas très pâle",
+    "Groupes superposés surtout sur le bois de feuillus dépérissants ou morts, de l'été au début de l'hiver"
+  ],
+  "safetyNote": "Espèce classée comestible, mais il faut exclure les champignons lignicoles similaires en éventail. La consommation de Pleurocybella porrigens a été associée à de graves encéphalopathies chez des personnes insuffisantes rénales. Ne pas manger une récolte déterminée seulement grâce à cette planche ; faire confirmer par un spécialiste. En cas d'ingestion incertaine ou de symptômes, contacter rapidement un centre antipoison ou un service médical.",
+  "sources": [
+    {"title": "Société allemande de mycologie (DGfM) — Liste positive des champignons comestibles, Pleurotus ostreatus (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO — Liste suisse des champignons recommandés, Pleurotus ostreatus (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "First Nature — Identification de Pleurotus ostreatus", "url": "https://www.first-nature.com/fungi/pleurotus-ostreatus.php"},
+    {"title": "Woodland Trust — Description du pleurote en huître", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/oyster-mushroom/"},
+    {"title": "Kato et al. — Encéphalopathies après consommation de Pleurocybella porrigens chez des insuffisants rénaux (2004)", "url": "https://pubmed.ncbi.nlm.nih.gov/15729876/"}
+  ],
+  "related": ["pulmonarius", "pleurocybella", "aegerita"]
+}

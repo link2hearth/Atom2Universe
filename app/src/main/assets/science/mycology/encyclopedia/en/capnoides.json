@@ -1,0 +1,26 @@
+{
+  "id": "capnoides",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Identification", "text": "Hypholoma capnoides is a small tuft-forming mushroom with a smooth convex cap that flattens with age, usually about 2–7 cm wide. Its cap is yellow to tawny or orange-brown, often darker at the centre, and may carry pale threadlike veil fragments along the margin. It can look moist or slightly greasy in wet weather and becomes paler as it dries. The attached gills start pale whitish-grey, then turn smoky or lilac-grey and eventually grey-brown to purplish brown; they lack the conspicuous sulphur-yellow and olive-green stage of H. fasciculare. The slender stem is pale yellow above and rusty brown towards the base, without a durable membranous ring. The spore print is dark wine or purple-brown. Its flesh and taste are described as mild, but tasting mushrooms is not an appropriate safety check."},
+    {"title": "Habitat and season", "text": "This saprotrophic fungus grows in clusters on decaying conifer wood, including pine and spruce stumps, logs and buried roots. The wood can be hidden beneath soil or needles. In Britain and Ireland it is usually recorded from late summer into autumn; elsewhere fruiting may extend into winter or spring according to climate."},
+    {"title": "Similar species", "text": "The poisonous sulphur tuft (H. fasciculare) shares the clustered habit and can occupy the same woody substrate, but its gills pass through yellow-green or olive-green rather than smoky grey. Brick tuft (H. lateritium, also called H. sublateritium) tends to be larger and brick red at the cap centre, often on broadleaf wood. Deadly Galerina marginata and other brown wood-growing mushrooms also need exclusion. Neither cap colour, substrate nor the absence of a green tint alone proves an identification; every mushroom in a mixed cluster must be assessed."},
+    {"title": "Edibility and caution", "text": "The German Mycological Society and Swiss mushroom controllers include H. capnoides on edible-mushroom lists, while the Swiss list explicitly warns of confusion with H. fasciculare and H. sublateritium. First Nature additionally warns about possible confusion with deadly G. marginata. This guide's edible status applies only to professionally confirmed material; its illustrations and traits do not establish food safety. After uncertain ingestion, seek prompt poison-centre or medical advice and retain specimens or meal remains."}
+  ],
+  "traits": [
+    "Smooth yellow to tawny 2–7 cm cap, often darker orange-brown centrally",
+    "Attached gills whitish-grey, then smoky lilac-grey to purplish brown, not olive-green",
+    "Slender pale yellow stem, rusty brown towards base, no durable ring",
+    "Dark wine or purple-brown spore print; mild taste is not a safety test",
+    "Clusters on dead conifer stumps, logs and buried roots, especially autumn"
+  ],
+  "safetyNote": "Listed as edible by expert bodies, but easily confused with poisonous Hypholoma fasciculare and potentially with deadly Galerina marginata. Never decide edibility from this image, a single trait or a taste test. If identification is uncertain or symptoms follow ingestion, seek prompt poison-centre or medical advice.",
+  "sources": [
+    {"title": "German Mycological Society (DGfM) — Edible mushroom positive list (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, Swiss mushroom controllers — Recommended mushroom list and confusion warning (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "E-Flora BC, University of British Columbia — Hypholoma capnoides species account", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Hypholoma+capnoides"},
+    {"title": "First Nature — Hypholoma capnoides identification and lookalikes", "url": "https://www.first-nature.com/fungi/hypholoma-capnoides.php"},
+    {"title": "NatureSpot — Conifer Tuft species account", "url": "https://www.naturespot.org/species/conifer-tuft"}
+  ],
+  "related": ["fasciculare", "sublateritium", "galerina", "mutabilis"]
+}

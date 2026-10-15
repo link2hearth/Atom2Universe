@@ -1,0 +1,28 @@
+{
+  "id": "rufescens",
+  "reviewStatus": "verified",
+  "safetyNote": "Hydnum rufescens figure sur les listes de comestibles de la DGfM et de la VAPKO suisse. Ne le consommer qu'après une identification sûre et une cuisson adaptée. Retourner le chapeau : la face fertile porte des aiguillons souples et cassants, pas des lames ; il est en général plus petit et plus roux que le pied-de-mouton pâle H. repandum. Les aiguillons s'arrêtent habituellement avant le pied, mais ce caractère n'est pas absolu. Les études génétiques révèlent plusieurs espèces voisines sous l'aspect traditionnel de H. rufescens : un dessin ne confirme pas une identification stricte à l'espèce.",
+  "sections": [
+    {"title": "Petit chapeau couleur terre cuite", "text": "Le chapeau mesure souvent environ 3 à 8 cm, orange, roux terre cuite ou rouge rouille clair, avec un bord ondulé parfois plus pâle. Convexe jeune, il peut s'étaler, se déprimer légèrement ou devenir irrégulier avec l'âge. Sa surface est lisse à faiblement feutrée, sans laine épaisse. Le pied, bien distinct du chapeau, est plutôt mince, crème pâle à pêche, souvent approximativement central mais de position variable. La chair est pâle et cassante."},
+    {"title": "Des aiguillons, non des lames", "text": "La face inférieure porte des aiguillons souples, fragiles, dirigés vers le bas, crème pâle à orangé pêche. Ils s'attachent généralement près du pied sans descendre nettement sur lui, contrairement aux aiguillons souvent décurrents de H. repandum ; leur attache est variable et ne suffit pas seule à trancher. Les aiguillons se cassent ou s'effacent facilement au frottement. Voir le dessous entier est indispensable car le chapeau seul ressemble à ceux de nombreux champignons à lames."},
+    {"title": "Bois et espèces voisines", "text": "Ce champignon mycorhizien pousse dans les bois de feuillus comme de conifères ; les relevés européens incluent les hêtraies et pessières. Il fructifie en été et en automne. Le plus grand et plus pâle H. repandum a souvent un pied plus fort et des aiguillons descendant sur celui-ci. D'autres petits Hydnum roux sont presque identiques à l'œil : une étude a trouvé six lignées génétiques sous le nom traditionnel H. rufescens, et une révision ultérieure a reconnu une diversité plus large dans le genre. La microscopie ou le séquençage peuvent être nécessaires pour nommer précisément une récolte."},
+    {"title": "Comestibilité et limites de la reconnaissance", "text": "La Société allemande de mycologie et la VAPKO classent H. rufescens parmi les champignons alimentaires. Le groupe Hydnum se reconnaît à ses aiguillons mous, mais l'identification exacte au sein des formes rousses est délicate. Ne pas se limiter à la couleur : examiner le dessous et le champignon entier. La planche montre le concept de terrain traditionnel de H. rufescens sans pouvoir résoudre sa diversité cachée."}
+  ],
+  "traits": [
+    "Chapeau orange à roux terre cuite, souvent 3 à 8 cm, lisse à peu feutré et parfois à bord ondulé plus pâle",
+    "Dessous couvert d'aiguillons courts, souples et fragiles, crème à pêche, et non de lames",
+    "Aiguillons généralement peu ou pas décurrents, mais attache variable",
+    "Pied mince, bien distinct, crème à pêche, souvent assez central ; chair pâle cassante",
+    "Bois de feuillus et conifères, notamment hêtres et épicéas, en été et en automne",
+    "Appartient à un groupe taxonomiquement complexe de petits Hydnum roux proches"
+  ],
+  "sources": [
+    {"title": "Niskanen et al. (2018) — diversité et nomenclature des Hydnum", "url": "https://biblio.ugent.be/publication/8670140"},
+    {"title": "Grebenc et al. (2009) — diversité ITS des Hydnum européens", "url": "https://rjb.revistas.csic.es/index.php/rjb/article/view/333/"},
+    {"title": "Université Masaryk — champignons hydnoïdes de Tchéquie et Slovaquie", "url": "https://www.sci.muni.cz/botany/mycology/hydna.htm"},
+    {"title": "DGfM (2026) — liste positive des champignons comestibles", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO (2023) — liste suisse de champignons recommandés", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "First Nature — Hydnum rufescens", "url": "https://www.first-nature.com/fungi/hydnum-rufescens.php"}
+  ],
+  "related": ["hydnum"]
+}

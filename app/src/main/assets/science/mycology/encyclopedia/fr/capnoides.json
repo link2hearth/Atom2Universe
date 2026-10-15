@@ -1,0 +1,26 @@
+{
+  "id": "capnoides",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Reconnaissance", "text": "Hypholoma capnoides est un petit champignon poussant en touffes, au chapeau lisse d'abord convexe puis plus étalé, généralement large de 2 à 7 cm. Le chapeau est jaune à fauve ou brun orangé, souvent plus foncé au centre ; des fibrilles claires du voile peuvent rester à la marge. Il paraît parfois humide ou légèrement gras par temps mouillé et pâlit en séchant. Les lames attachées sont d'abord blanchâtres à gris pâle, puis gris fumé ou gris lilas, enfin gris brun à brun pourpré ; elles ne passent pas par le stade jaune soufre et vert olive marqué de H. fasciculare. Le pied mince est jaune pâle en haut et brun rouille vers la base, sans anneau membraneux durable. La sporée est brun vineux ou pourpré foncé. La chair et la saveur sont décrites comme douces, mais goûter un champignon n'est pas une vérification de sécurité appropriée."},
+    {"title": "Milieu et saison", "text": "Ce saprotrophe pousse en groupes sur le bois de conifères en décomposition : souches, troncs et racines enfouies de pins ou d'épicéas notamment. Le support peut être caché sous la terre ou les aiguilles. En Grande-Bretagne et en Irlande, il est surtout observé de la fin de l'été à l'automne ; ailleurs, la fructification peut s'étendre en hiver ou au printemps selon le climat."},
+    {"title": "Espèces proches", "text": "L'hypholome en touffe toxique (H. fasciculare) partage la croissance groupée et parfois le même bois, mais ses lames passent par des nuances jaune verdâtre ou vert olive plutôt que gris fumé. L'hypholome couleur de brique (H. lateritium, appelé aussi H. sublateritium) est souvent plus grand et rouge brique au centre du chapeau, fréquemment sur bois de feuillus. La galère marginée mortelle (Galerina marginata) et d'autres petits champignons bruns lignicoles doivent également être exclus. La couleur du chapeau, le support ou l'absence de vert ne prouvent pas à eux seuls une identification ; chaque exemplaire d'une touffe mêlée doit être examiné."},
+    {"title": "Comestibilité et prudence", "text": "La Société allemande de mycologie et les contrôleurs suisses incluent H. capnoides dans leurs listes de champignons comestibles, mais la liste suisse avertit explicitement de la confusion avec H. fasciculare et H. sublateritium. First Nature souligne aussi une possible confusion avec G. marginata, mortelle. Le statut comestible de cette fiche ne vaut que pour des exemplaires confirmés par un spécialiste ; les dessins et caractères énumérés ne prouvent pas qu'une récolte est sûre. Après ingestion incertaine, demander rapidement conseil à un centre antipoison ou à un médecin et conserver les exemplaires ou restes du repas."}
+  ],
+  "traits": [
+    "Chapeau lisse jaune à fauve de 2 à 7 cm, souvent brun orangé au centre",
+    "Lames attachées blanchâtres puis gris fumé à gris lilas et brun pourpré, non vert olive",
+    "Pied mince jaune pâle, brun rouille à la base, sans anneau durable",
+    "Sporée brun vineux ou pourpré foncé ; saveur douce sans valeur de test de sécurité",
+    "Touffes sur souches, troncs ou racines mortes de conifères, surtout en automne"
+  ],
+  "safetyNote": "Inscrit sur des listes de comestibles, mais facilement confondu avec Hypholoma fasciculare toxique et possiblement avec la galère marginée mortelle. Ne jamais décider de la comestibilité à partir de cette image, d'un seul caractère ou d'une dégustation. En cas d'identification incertaine ou de symptômes après ingestion, demander rapidement conseil à un centre antipoison ou à un médecin.",
+  "sources": [
+    {"title": "Société allemande de mycologie (DGfM) — Liste positive des champignons comestibles (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "VAPKO, contrôleurs suisses — Liste des champignons recommandés et avertissement de confusion (2023)", "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf"},
+    {"title": "E-Flora BC, université de Colombie-Britannique — fiche Hypholoma capnoides", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?noTransfer=0&sciname=Hypholoma+capnoides"},
+    {"title": "First Nature — Identification et sosies de Hypholoma capnoides", "url": "https://www.first-nature.com/fungi/hypholoma-capnoides.php"},
+    {"title": "NatureSpot — Fiche Conifer Tuft", "url": "https://www.naturespot.org/species/conifer-tuft"}
+  ],
+  "related": ["fasciculare", "sublateritium", "galerina", "mutabilis"]
+}

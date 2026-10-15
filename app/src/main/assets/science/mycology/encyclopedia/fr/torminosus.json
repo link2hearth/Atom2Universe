@@ -1,0 +1,27 @@
+{
+  "id": "torminosus",
+  "reviewStatus": "verified",
+  "safetyNote": "Ne pas consommer Lactarius torminosus cru ni simplement cuisiné : son lait très âcre peut provoquer des troubles digestifs. Le Centre Antipoisons belge le cite parmi les causes d'un syndrome gastro-intestinal léger (sous la graphie « L. terminosus » dans sa brochure). L'autorité alimentaire finlandaise décrit toutefois un usage traditionnel après une ébullition précise de 10 minutes suivie du rejet de l'eau. Cette pratique régionale ne rend pas sûres une identification incertaine ou une cuisson ordinaire ; demander l'avis d'un spécialiste local et suivre les recommandations sanitaires locales.",
+  "sections": [
+    {"title": "Chapeau rose à bord laineux", "text": "Le chapeau mesure souvent environ 4 à 12 cm ; d'abord convexe, il s'étale et se déprime au centre. Sa surface rose saumon à beige rosé présente des zones concentriques plus foncées. Le jeune bord, fortement enroulé, porte une frange de longs poils laineux très caractéristique. Le centre peut être presque lisse et les poils s'usent avec l'âge : un exemplaire délavé est moins facile à reconnaître."},
+    {"title": "Lames pâles, pied se creusant et lait blanc", "text": "Les lames étroites et serrées sont crème à rose chair, largement adnées à légèrement décurrentes. Une lame cassée émet un lait blanc à crème qui ne change pas de couleur à l'air et qui est extrêmement âcre. Ne pas goûter un champignon inconnu pour vérifier ce caractère. Le pied cylindrique et pâle est plein ou farci jeune, puis creux ; il peut être finement duveteux au début. La chair est pâle, cassante et ne change pas à la coupe. La sporée est crème pâle."},
+    {"title": "Bouleaux et confusions", "text": "Ce lactaire mycorhizien pousse avec les bouleaux, y compris en bois mixtes et dans les landes où ils sont présents ; il fructifie surtout de la fin de l'été à l'automne. L. pubescens, absent de ce catalogue, est plus pâle mais peut aussi porter un bord velu et produire un lait blanc. Les lactaires orangés comme L. deliciosus ou L. deterrimus n'ont pas cette frange et exsudent d'abord un lait orange. Examiner l'arbre hôte, le lait fraîchement émis et l'ensemble du chapeau."},
+    {"title": "Recommandations alimentaires selon les pays", "text": "Le Centre Antipoisons belge associe les lactaires âcres, dont celui-ci, à des nausées, vomissements et diarrhées débutant habituellement moins de trois heures après ingestion. À l'inverse, l'autorité alimentaire finlandaise le classe parmi les champignons alimentaires sous réserve d'une précuisson définie et du rejet de l'eau ; elle relève qu'il est souvent considéré comme impropre à la consommation en Europe centrale et méridionale. L'application le classe toxique pour éviter une consommation improvisée, tout en signalant cette pratique régionale documentée. En cas de symptômes après ingestion, contacter rapidement un centre antipoison."}
+  ],
+  "traits": [
+    "Chapeau rose saumon à beige rosé, environ 4 à 12 cm, avec zones concentriques plus foncées",
+    "Jeune marge fortement enroulée et bordée de longs poils laineux, qui peuvent disparaître avec l'âge",
+    "Lames serrées crème à rose chair, adnées à légèrement décurrentes",
+    "Lait blanc à crème restant pâle à l'air et très âcre",
+    "Pied cylindrique pâle, parfois duveteux jeune, se creusant ; chair pâle et cassante",
+    "Associé aux bouleaux en bois ou landes, surtout de la fin de l'été à l'automne"
+  ],
+  "sources": [
+    {"title": "Centre Antipoisons belge (2026) — brochure sur les intoxications aux champignons", "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf"},
+    {"title": "Autorité alimentaire finlandaise — Lactarius torminosus", "url": "https://www.ruokavirasto.fi/elintarvikkeet/ohjeita-kuluttajille/turvallisen-kayton-ohjeet/ruokasienet/suositeltavat-ruokasienet/karvarousku/"},
+    {"title": "Société mycologique du Queensland — fiche Lactarius torminosus", "url": "https://qldfungi.org.au/wp-content/uploads/2024/01/Lactarius-torminosus.pdf"},
+    {"title": "NatureSpot — Lactarius torminosus", "url": "https://www.naturespot.org/species/woolly-milkcap"},
+    {"title": "Martat, association finlandaise d'économie domestique — lactaire à toison", "url": "https://www.martat.fi/in-english/food-and-nutrition/mushrooms/woolly-milkcap/"}
+  ],
+  "related": ["deliciosus", "deterrimus"]
+}

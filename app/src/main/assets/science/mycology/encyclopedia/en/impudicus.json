@@ -1,0 +1,25 @@
+{
+  "id": "impudicus",
+  "reviewStatus": "verified",
+  "sections": [
+    {"title": "Name and life stages", "text": "Phallus impudicus, the common stinkhorn, begins as a whitish underground or partly exposed 'egg' usually about 4–8 cm across. A section shows an outer skin and gelatinous layer surrounding the folded young fruitbody, including the future cap and stem. The egg ruptures as the hollow, fragile, white, spongy stem expands rapidly, lifting a narrow conical head. A developed fruitbody is often about 15–25 cm tall. The head's raised honeycomb-like pits are initially coated with dark olive-green, sticky, spore-bearing gleba; after insects remove the slime, the pale pitted structure remains. The burst egg persists as a cup-like sheath at the base. There is no ordinary gilled cap and no useful dry spore print."},
+    {"title": "Habitat and season", "text": "This saprobic fungus grows from soil and decomposing plant material in broadleaf or conifer woodland and sometimes gardens, often near rotting stumps or buried wood. Eggs may be encountered before mature fruiting bodies; in Britain the developed stinkhorn is mainly seen from June to October. Its carrion-like smell attracts flies, which carry the spores in the slimy gleba. Smell can guide a search for a mature fruitbody, but does not identify an egg."},
+    {"title": "Similar species and egg-stage danger", "text": "Phallus hadriani can have a violet-tinged egg sheath and is linked especially to dunes; Mutinus caninus is smaller and has an orange head beneath its gleba. The highest food-safety concern is mistaking an enclosed egg for the young stage of another fungus, including deadly Amanita phalloides. A very young death cap may also be enclosed by a white veil; a vertical cut can reveal its future cap, gills and stem rather than the gelatinous stinkhorn structure. Do not treat this single distinction as a safe do-it-yourself food test: examine every individual egg and obtain expert confirmation."},
+    {"title": "Edibility and caution", "text": "The German Mycological Society lists P. impudicus as edible only when young in the egg stage. This does not establish the safety of an egg found in the field. Mature stinkhorns are generally not collected as food and the strong odour develops with the exposed gleba. Do not eat any white egg-like fungus without an expert identification of each specimen. If a death cap or another dangerous Amanita cannot be excluded after ingestion, contact a poison centre or emergency medical service immediately, even before symptoms, and preserve the remains."}
+  ],
+  "traits": [
+    "Immature whitish egg about 4–8 cm with gelatinous layer around folded fruitbody",
+    "Mature conical pitted head with dark olive-green sticky gleba, later pale when cleared by insects",
+    "Rapidly elongated hollow white spongy stem, usually 15–25 cm total height",
+    "Cup-like remnant of ruptured egg at base; powerful carrion smell in mature stage",
+    "From soil and rotting wood in broadleaf or conifer woodland; mature forms mainly summer to autumn"
+  ],
+  "safetyNote": "Only the correctly identified young egg is listed as edible. Similar white enclosed stages include deadly Amanita phalloides; cutting each egg open is informative but does not replace expert identification. Never eat an uncertain egg. If a dangerous Amanita might have been ingested, seek emergency poison-centre or medical advice immediately, even without symptoms, and keep specimen or meal remains.",
+  "sources": [
+    {"title": "German Mycological Society (DGfM) — Edible mushroom positive list, Phallus impudicus only as young egg (2026)", "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf"},
+    {"title": "First Nature — Phallus impudicus development, egg cross-section and identification", "url": "https://www.first-nature.com/fungi/phallus-impudicus.php"},
+    {"title": "Woodland Trust — Common stinkhorn field account", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/fungi-and-lichens/stinkhorn/"},
+    {"title": "Australian National Botanic Gardens — Death cap, young veiled stage and cross-section", "url": "https://www.cpbr.gov.au/fungi/deathcap.html"}
+  ],
+  "related": ["phalloides", "perlatum"]
+}
