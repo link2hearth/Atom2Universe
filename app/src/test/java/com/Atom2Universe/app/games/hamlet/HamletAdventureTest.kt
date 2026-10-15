@@ -14,6 +14,7 @@ class HamletAdventureTest {
     private fun finish(b: HamletBattle) { b.advance(100f); assertNotEquals(BattleOutcome.RUNNING, b.outcome) }
     private fun facility(g: HamletGame, id: String) {
         g.coins = 1_000_000; g.xp = 1_000_000
+        HamletIndustry.building(Hamlet.byId.getValue(id)).resources.forEach { (r, n) -> g.adventure.add(r, n) }
         val origin = g.realmOrigin()
         for (y in origin until origin + g.realmSize()) for (x in origin until origin + g.realmSize())
             if (g.canPlace(id, x, y, false)) { val o = g.buy(id, x, y, false)!!; time += o.def.build * 1000L + 1; return }
@@ -151,7 +152,7 @@ class HamletAdventureTest {
         val g = game(); g.startNew(true); val a = g.adventure
         assertTrue(a.heroes.all { it.owned }); assertTrue(a.pets.all { it > 0 }); assertTrue(a.relics.all { it > 0 })
         assertEquals(5, a.slotCount()); a.bag.fill(0); assertTrue(a.levelUp(11))
-        assertTrue(a.assign(11, 4)); assertArrayEquals(LongArray(8), a.bag)
+        assertTrue(a.assign(11, 4)); assertArrayEquals(LongArray(AdventureResource.entries.size), a.bag)
         val first = gameWithHeroes(); val second = gameWithHeroes()
         assertNull(first.adventure.beginBattle(BattleMode.CAMPAIGN, 999))
         val b1 = first.adventure.beginBattle(BattleMode.CAMPAIGN, 0)!!; val b2 = second.adventure.beginBattle(BattleMode.CAMPAIGN, 0)!!

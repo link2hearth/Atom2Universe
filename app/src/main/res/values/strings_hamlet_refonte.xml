@@ -38,7 +38,7 @@
     <string name="hamlet_need_crop">%1$s · %2$d / %3$d</string>
     <string name="hamlet_crop_stock">barn %1$d</string>
     <string name="hamlet_granary">Barn</string>
-    <string name="hamlet_granary_help">Every harvest puts crops in the barn, up to %1$d of each. Buildings use them to reach their next tier, the quests ask for them and so do the legends. A bigger Hall makes the barn bigger.</string>
+    <string name="hamlet_granary_help">Every harvest puts crops in the barn, up to %1$d of each. Workshops and animals consume them, and buildings and legends need them too. The highest Hall across your islands sets the shared storage capacity.</string>
     <string name="hamlet_a_find">Lucky find!</string>
     <string name="hamlet_a_first_clear">First victory!</string>
     <string name="hamlet_welcome_title">Welcome back!</string>

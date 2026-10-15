@@ -105,7 +105,10 @@ class HamletJourneyTest {
         repeat(12) { assertTrue(g.answerWork(g.workTool)) }
         assertEquals(300, g.workSeconds); assertEquals(0L, g.coins); assertEquals(0, g.gems)
         repeat(23 * 12) { assertTrue(g.answerWork(g.workTool)) }
-        assertEquals(7200, g.workSeconds); assertFalse(g.answerWork(g.workTool))
+        assertEquals(7200, g.workSeconds)
+        val timber = g.adventure[AdventureResource.TIMBER]
+        repeat(12) { assertTrue(g.answerWork(g.workTool)) }
+        assertEquals(7200, g.workSeconds); assertEquals(timber + 8, g.adventure[AdventureResource.TIMBER])
     }
 
     @Test fun `le farm gagne du travail et aide vraiment un chantier sans depense`() {

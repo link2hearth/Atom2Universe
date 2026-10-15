@@ -326,7 +326,7 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
         }
     }
     private fun workshop() {
-        section(s(R.string.hamlet_work), s(R.string.hamlet_work_intro) + "\n\n" + s(R.string.hamlet_work_help))
+        section(s(R.string.hamlet_work), s(R.string.hamlet_work_intro) + "\n\n" + s(R.string.hamlet_work_help) + "\n\n" + s(R.string.hamlet_industry_work))
         val box = card(s(R.string.hamlet_work), glyph = "hammer")
         g.beginWork()
         val scene = WorkScene(context) { g.workStep }
@@ -339,7 +339,6 @@ internal class HamletJournalPage(private val context: Context, private val g: Ha
         box.addView(tools)
         val glyphs = arrayOf("hammer", "brush", "wood")
         for (tool in 0..2) tools.addView(HamletUi.button(context, byName("hamlet_work_tool_$tool"), Weight.MAIN, glyph = glyphs[tool]) {
-            if (g.workSeconds >= 7200) return@button
             if (g.answerWork(tool)) {
                 if (nav.haptics) root.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
                 prompt.text = byName("hamlet_work_task_${g.workTool}")

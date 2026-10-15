@@ -23,13 +23,14 @@ class HamletLifeTest {
         time += 31_000; g.tick()
         assertEquals(Status.FEED, g.status(pen))
         val before = g.coins
+        g.pantry["corn"] = 1
         assertTrue(g.feed(pen)); val start = pen.t0
         assertFalse(g.feed(pen)); assertEquals(start, pen.t0)
         assertFalse(g.collectProduct(pen))
         time += 8 * Hamlet.DAY_MS
         assertEquals(1, g.productCount(pen))
         assertTrue(g.collectProduct(pen)); assertFalse(g.collectProduct(pen))
-        assertEquals(before - 8 + 30, g.coins)
+        assertEquals(before + 30, g.coins); assertEquals(0, g.stock("corn"))
         assertEquals(Status.FEED, g.status(pen))
     }
     @Test fun `les vergers gardent trois recoltes et la fraction du prochain cycle`() {
@@ -60,6 +61,7 @@ class HamletLifeTest {
         // sans les récoltes demandées, rien ne se passe
         assertFalse(g.canAffordUpgrade(home)); assertFalse(g.upgrade(home)); assertEquals(1, home.tier); assertEquals(10_000L, g.coins)
         for (tier in 2..5) {
+            HamletIndustry.upgrade(home).resources.forEach { (r, n) -> g.adventure.add(r, n) }
             for (need in g.upgradeNeeds(home)) g.pantry[need.crop] = need.units
             assertTrue(g.upgrade(home)); assertEquals(tier, home.tier)
         }
@@ -150,6 +152,7 @@ class HamletLifeTest {
         val pen = buy(g, "henyard")
         time += 31_000; g.tick()
         assertEquals(0, g.hurryCost(pen)); assertFalse(g.hurry(pen))
+        g.pantry["corn"] = 1
         assertTrue(g.feed(pen)); assertEquals(1, g.hurryCost(pen))
         val gems = g.gems
         assertTrue(g.hurry(pen)); assertEquals(gems - 1, g.gems)

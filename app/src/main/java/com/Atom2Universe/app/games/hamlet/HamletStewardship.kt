@@ -68,7 +68,7 @@ class HamletStewardship(private val g: HamletGame) {
     fun bonus(post: Int) = posts.getOrNull(post)?.let { heroBonus(post, it) } ?: 0
     fun assign(post: Int, hero: Int): Boolean {
         if (post !in posts.indices || (hero != -1 && g.adventure.heroes.getOrNull(hero)?.owned != true)) return false
-        g.adventure.advanceProduction()
+        g.adventure.advanceProduction(true)
         if (hero >= 0) posts.indices.filter { posts[it] == hero }.forEach { posts[it] = -1 }
         posts[post] = hero
         g.listener?.onChanged(); return true

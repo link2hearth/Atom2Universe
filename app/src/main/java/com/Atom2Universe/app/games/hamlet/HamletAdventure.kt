@@ -3,7 +3,7 @@ package com.Atom2Universe.app.games.hamlet
 import kotlin.math.max
 import kotlin.random.Random
 
-enum class AdventureResource { FOOD, TIMBER, STONE, ORE, BOOKS, CRYSTAL, RUNES, TICKETS }
+enum class AdventureResource { FOOD, TIMBER, STONE, ORE, BOOKS, CRYSTAL, RUNES, TICKETS, BREAD, TOOLS }
 /** [TREASURE] : un combat ordinaire qui offre un appel la première fois. */
 enum class AdventureNode { BATTLE, GATHER, SHRINE, TREASURE, BOSS }
 data class HeroRecruitment(val hero: Int, val newHero: Boolean, val shards: Long, val guaranteed: Boolean,
@@ -144,8 +144,9 @@ class HamletAdventure(private val g: HamletGame) {
         val count = teams[selectedTeam].take(slotCount()).filter { it >= 0 }.count { heroes[it].def.faction == faction }
         return when { count >= 5 -> 0.22; count >= 4 -> 0.14; count >= 3 -> 0.08; count >= 2 -> 0.04; else -> 0.0 }
     }
-    fun facility(id: String) = g.objs.values.filter { it.t == id && g.buildLeft(it) == 0L }.sumOf { it.tier }
-    fun facilityRank(id: String) = g.objs.values.filter { it.t == id && g.buildLeft(it) == 0L }.maxOfOrNull { it.tier } ?: 0
+    // Shared infrastructure uses its best rank; duplicate islands cannot multiply combat and camp bonuses.
+    fun facility(id: String) = facilityRank(id)
+    fun facilityRank(id: String) = g.realms.allObjects().filter { it.t == id && g.buildLeft(it) == 0L }.maxOfOrNull { it.tier } ?: 0
     /** Une recrue peut rejoindre une équipe déjà entraînée sans repartir de zéro. */
     fun trainingLevel(): Int {
         if (facilityRank("adventureAcademy") == 0) return 1
@@ -177,19 +178,19 @@ class HamletAdventure(private val g: HamletGame) {
     fun atLevelCap(hero: Int) = effectiveLevel(hero) >= levelCap(hero)
     fun levelUp(hero: Int): Boolean {
         if (hero !in heroes.indices || !heroes[hero].owned || atLevelCap(hero)) return false
-        advanceProduction()
+        advanceProduction(true)
         if (!pay(AdventureResource.FOOD, levelCost(hero))) return false
         heroes[hero].level = effectiveLevel(hero) + 1; g.stat("hero_upgrades"); changed(); return true
     }
     fun starCost(hero: Int) = STAR_COSTS.getOrElse(heroes[hero].stars) { Long.MAX_VALUE }
-    fun starLimit() = if (g.sandbox) HamletHeroes.STAR_CAP else HamletHeroes.starLimit(g.hall)
+    fun starLimit() = if (g.sandbox) HamletHeroes.STAR_CAP else HamletHeroes.starLimit(g.realms.bestHall())
     fun canPromote(hero: Int) = heroes.getOrNull(hero)?.let { it.owned && it.stars < starLimit() && (g.sandbox || it.shards >= starCost(hero)) } == true
     fun starGainPercent(hero: Int) = if (heroes[hero].stars >= HamletHeroes.STAR_CAP) 0.0 else HamletHeroes.STAR_BONUS * 100 / (1 + heroes[hero].stars * HamletHeroes.STAR_BONUS)
     fun promote(hero: Int): Boolean {
         if (hero !in heroes.indices || !heroes[hero].owned || heroes[hero].stars >= starLimit()) return false
         val h = heroes[hero]; val cost = starCost(hero)
         if (!g.sandbox && h.shards < cost) return false
-        advanceProduction()
+        advanceProduction(true)
         if (!g.sandbox) h.shards -= cost
         h.stars++; g.stat("hero_upgrades"); changed(); return true
     }
@@ -200,7 +201,7 @@ class HamletAdventure(private val g: HamletGame) {
     fun skillCap(hero: Int) = 3 + 2 * heroes[hero].stars
     fun studySkill(hero: Int, skill: Int): Boolean {
         if (hero !in heroes.indices || skill !in 0..3 || !heroes[hero].owned || !skillsOpen() || heroes[hero].skills[skill] >= skillCap(hero)) return false
-        advanceProduction()
+        advanceProduction(true)
         if (!pay(AdventureResource.BOOKS, skillCost(hero, skill))) return false
         heroes[hero].skills[skill]++; g.stat("hero_upgrades"); changed(); return true
     }
@@ -271,14 +272,14 @@ class HamletAdventure(private val g: HamletGame) {
     fun techCap() = if (g.sandbox) 20 else 4 + 4 * facilityRank("adventureAcademy")
     fun research(branch: Int): Boolean {
         if (branch !in tech.indices || tech[branch] >= techCap() || (!g.sandbox && facility("adventureAcademy") == 0)) return false
-        advanceProduction()
+        advanceProduction(true)
         if (!pay(AdventureResource.BOOKS, researchCost(branch))) return false
         tech[branch]++; g.stat("hero_upgrades"); changed(); return true
     }
     /** Un petit atelier de conversion permet de débloquer une progression sans attendre un tirage. */
     fun workshopSupplies(books: Boolean): Boolean {
         if (!g.sandbox && facility(if (books) "adventureAcademy" else "adventureStore") == 0) return false
-        advanceProduction()
+        advanceProduction(true)
         val first = if (books) AdventureResource.FOOD else AdventureResource.TIMBER
         val second = if (books) AdventureResource.TIMBER else AdventureResource.STONE
         val cost = if (books) 16L else 12L
@@ -290,17 +291,22 @@ class HamletAdventure(private val g: HamletGame) {
 
     // ------------------------------------------------------------------ le camp
 
-    fun productionPerMinute(): DoubleArray {
+    fun productionPerMinute(): DoubleArray = productionRates(g.now(), g.realms.allObjects())
+    private fun completedAt(o: Obj) = if (o.b0 == 0L) 0L else o.b0 + o.def.build * 1000L
+    private fun productionRates(at: Long, objects: List<Obj>): DoubleArray {
+        val complete = objects.filter { completedAt(it) <= at }
+        fun facility(id: String) = complete.filter { it.t == id }.maxOfOrNull { it.tier } ?: 0
+        var available = (complete.sumOf { it.def.pop } / 2).coerceIn(3, 24)
+        val active = IntArray(workers.size) { i -> minOf(workers[i], available).also { available -= it } }
         val boost = 1 + tech[2] * 0.04 + facility("adventureStore") * 0.1
-        val academy = facility("adventureAcademy"); val forge = facility("adventureForge")
-        val amounts = doubleArrayOf(workers[0] * 3.0 + 1, workers[1] * 2.0, workers[2] * 2.0,
-            workers[4].toDouble() + forge, workers[3].toDouble() + academy)
+        val amounts = doubleArrayOf(active[0] * 3.0 + 1, active[1] * 2.0, active[2] * 2.0,
+            active[4].toDouble() + facility("adventureForge"), active[3].toDouble() + facility("adventureAcademy"))
         return DoubleArray(amounts.size) { amounts[it] * boost * (1 + g.stewardship.productionBonus(AdventureResource.entries[it]) / 100.0) }
     }
-    fun workerCapacity() = (g.population() / 2).coerceIn(3, 24)
+    fun workerCapacity() = (g.realms.allObjects().filter { g.buildLeft(it) == 0L }.sumOf { it.def.pop } / 2).coerceIn(3, 24)
     fun assignWorker(job: Int, delta: Int): Boolean {
         if (job !in workers.indices || delta !in listOf(-1, 1) || workers[job] + delta < 0 || (delta > 0 && workers.sum() >= workerCapacity())) return false
-        advanceProduction(); workers[job] += delta; changed(); return true
+        advanceProduction(true); workers[job] += delta; changed(); return true
     }
     /** La réserve du camp se remplit pendant au plus ce temps ; l'entrepôt l'allonge. */
     fun campCapMinutes() = ((CAMP_HOURS + CAMP_HOURS_PER_RANK * facilityRank("adventureStore")).coerceAtMost(CAMP_HOURS_MAX)) * 60L
@@ -315,23 +321,31 @@ class HamletAdventure(private val g: HamletGame) {
         val elapsed = ((g.now() - productionAt) / 60_000).coerceAtLeast(0)
         return (campCapMinutes() - elapsed).coerceAtLeast(0)
     }
-    fun advanceProduction() {
+    fun advanceProduction(force: Boolean = false) {
         val t = g.now()
         if (productionAt <= 0) { productionAt = t; return }
         if (t < productionAt) return
-        val minutes = (t - productionAt) / 60_000
-        if (minutes <= 0) return
-        val rates = productionPerMinute()
-        val paid = minOf(minutes, campCapMinutes())
-        for (i in rates.indices) {
-            val produced = productionRemainder[i] + rates[i] * paid
-            // Fractional yields belong to the player, even when returning every minute.
-            val whole = kotlin.math.floor(produced + 1e-9).toLong()
-            bag[i] += whole
-            productionRemainder[i] = (produced - whole).coerceIn(0.0, 0.999999999999)
+        val elapsed = t - productionAt
+        if (elapsed <= 0 || !force && elapsed < 60_000) return
+        val objects = g.realms.allObjects()
+        val paidEnd = productionAt + minOf(elapsed, campCapMinutes() * 60_000)
+        // Integrate construction completions, so a return after ten minutes pays the same as ten visits.
+        val segments = (listOf(productionAt, paidEnd) + objects.map(::completedAt)
+            .filter { it > productionAt && it < paidEnd }).distinct().sorted()
+        for ((from, until) in segments.zipWithNext()) {
+            val rates = productionRates(from, objects)
+            for (i in rates.indices) {
+                val produced = productionRemainder[i] + rates[i] * ((until - from) / 60_000.0)
+                val whole = kotlin.math.floor(produced + 1e-9).toLong()
+                bag[i] += whole
+                productionRemainder[i] = (produced - whole).coerceIn(0.0, 0.999999999999)
+            }
         }
-        val productionEnd = productionAt + minutes * 60_000
-        val inns = g.objs.values.filter { it.t == "adventureInn" }.map { inn ->
+        // Once infrastructure has produced a benefit, undo must not refund its entire purchase.
+        for (o in objects) if (completedAt(o) < paidEnd &&
+            (o.t in FACILITIES || workers.sum() > 3 && o.def.pop > 0)) o.economicRevision++
+        val productionEnd = t
+        val inns = g.realms.allObjects().filter { it.t == "adventureInn" }.map { inn ->
             (if (inn.b0 == 0L) productionAt else inn.b0 + inn.def.build * 1000L) to inn.tier.coerceIn(1, 3)
         }
         val boundaries = (listOf(productionAt, productionEnd) + inns.map { it.first }.filter { it > productionAt && it < productionEnd }).distinct().sorted()
@@ -341,15 +355,13 @@ class HamletAdventure(private val g: HamletGame) {
         }
         add(AdventureResource.TICKETS, innTicketProgress / INN_INVITATION_UNITS)
         innTicketProgress %= INN_INVITATION_UNITS
-        productionAt += minutes * 60_000; changed()
+        productionAt = t; changed()
     }
     fun villageAction(key: String, count: Long) {
         val n = count.coerceIn(0, 100)
         if (n <= 0) return
         when (key) {
             "harvested" -> add(AdventureResource.FOOD, n * 6)
-            "products" -> { add(AdventureResource.FOOD, n * 4); add(AdventureResource.ORE, n) }
-            "delivered" -> add(AdventureResource.BOOKS, n * 2)
             "workshops" -> { add(AdventureResource.TIMBER, 8); add(AdventureResource.STONE, 8); add(AdventureResource.RUNES, 2) }
         }
         val invitationWork = when (key) { "harvested" -> n; "products" -> n * 2; "delivered" -> n * 3; "workshops" -> n * 4; else -> 0 }
@@ -371,20 +383,20 @@ class HamletAdventure(private val g: HamletGame) {
         pay(AdventureResource.FOOD, trained * 2L); pay(AdventureResource.ORE, trained.toLong())
         troops[faction] += trained; changed(); return true
     }
+    fun supportCost(pet: Boolean, index: Int) = (if (pet) 50L * SINK else 12L) * ((if (pet) pets else relics)[index] + 1)
+    fun troopUpgradeCost(faction: Int) = VillageCost(resources = mapOf(AdventureResource.TIMBER to 20L * troopTier[faction] * SINK,
+        AdventureResource.STONE to 20L * troopTier[faction] * SINK, AdventureResource.BOOKS to 15L * troopTier[faction] * SINK))
     fun upgradeSupport(pet: Boolean, index: Int): Boolean {
         val values = if (pet) pets else relics
         if (index !in values.indices || values[index] == 0) return false
         val resource = if (pet) AdventureResource.FOOD else AdventureResource.CRYSTAL
-        val cost = (if (pet) 50L * SINK else 12L) * (values[index] + 1)
+        val cost = supportCost(pet, index)
         if (!pay(resource, cost)) return false
         values[index]++; changed(); return true
     }
     fun improveTroops(faction: Int): Boolean {
         if (faction !in troopTier.indices || (!g.sandbox && facility("adventureYard") == 0)) return false
-        val tier = troopTier[faction]; val cost = 20L * tier * SINK
-        if (tier >= maxTroopTier()) return false
-        if (!g.sandbox && (this[AdventureResource.TIMBER] < cost || this[AdventureResource.STONE] < cost || this[AdventureResource.BOOKS] < 15L * tier * SINK)) return false
-        pay(AdventureResource.TIMBER, cost); pay(AdventureResource.STONE, cost); pay(AdventureResource.BOOKS, 15L * tier * SINK)
+        if (troopTier[faction] >= maxTroopTier() || !troopUpgradeCost(faction).pay(g)) return false
         troopTier[faction]++; changed(); return true
     }
     fun supplyBuilders(): Boolean {
@@ -423,7 +435,7 @@ class HamletAdventure(private val g: HamletGame) {
     /** A mastered route offers a brief visit alternative; it never advances the frontier. */
     fun sweep(stage: Int): Boolean {
         if (!canSweep(stage) || !pay(AdventureResource.FOOD, sweepCost(stage))) return false
-        grantLoot(stage, false, true, share = 1.0); g.stat("adventure_gathered"); changed(); return true
+        grantLoot(stage, false, true, recent = stage >= frontier - FARM_WINDOW, share = 1.0); g.stat("adventure_gathered"); changed(); return true
     }
     fun fielded() = teams[selectedTeam].take(slotCount()).count { it >= 0 && heroes[it].owned }
     fun canBattle(mode: BattleMode, stage: Int): Boolean {

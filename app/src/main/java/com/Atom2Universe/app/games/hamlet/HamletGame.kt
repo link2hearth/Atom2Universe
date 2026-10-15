@@ -5,7 +5,7 @@ import kotlin.math.min
 import kotlin.random.Random
 
 /** Une commande passée par un visiteur à un atelier. [t0] vaut 0 tant que l'atelier ne l'a pas acceptée. */
-class Order(val from: String, var t0: Long = 0L)
+class Order(val from: String, var t0: Long = 0L, var recipeRank: Int = 0)
 
 /** Un objet posé dans le village. Les horloges sont en millisecondes d'horloge murale : le village vit hors ligne. */
 class Obj(val id: Int, val t: String, var x: Int, var y: Int, var flip: Boolean = false) {
@@ -167,7 +167,7 @@ class HamletGame(
         return true
     }
 
-    fun canAfford(d: Def) = sandbox || if (d.gems > 0) gems >= d.gems else coins >= d.cost
+    fun canAfford(d: Def) = HamletIndustry.building(d).canPay(this)
 
     // ------------------------------------------------------------------ terrain
 
@@ -332,13 +332,12 @@ class HamletGame(
     fun upgradeNeeds(o: Obj) = HamletEconomy.upgradeNeeds(o.def, o.tier + 1)
     fun canUpgrade(o: Obj) = owns(o) && o.tier < HamletEconomy.MAX_TIER && o.def.gems == 0 && buildLeft(o) == 0L &&
         (o.def.cat in setOf(Cat.HOME, Cat.SHOP, Cat.FIELD, Cat.RANCH) || o.t in HamletLife.produce)
-    fun canAffordUpgrade(o: Obj) = canUpgrade(o) && (sandbox || coins >= upgradeCost(o) && upgradeNeeds(o).all { stock(it.crop) >= it.units })
+    fun canAffordUpgrade(o: Obj) = canUpgrade(o) && HamletIndustry.upgrade(o).canPay(this)
     fun upgrade(o: Obj): Boolean {
         if (!canAffordUpgrade(o)) return false
         val cost = upgradeCost(o)
-        spendCoins(cost)
-        if (!sandbox) for (need in upgradeNeeds(o)) pantry[need.crop] = stock(need.crop) - need.units
-        adventure.advanceProduction()
+        if (!HamletIndustry.upgrade(o).pay(this)) return false
+        adventure.advanceProduction(true)
         o.tier++
         o.economicRevision++
         stat("upgrades"); addXp(cost / 15)
@@ -348,19 +347,19 @@ class HamletGame(
 
     // ------------------------------------------------------------------ réserve de récoltes
 
-    fun pantryCap() = HamletEconomy.pantryCap(hall)
+    fun pantryCap() = HamletEconomy.pantryCap(realms.bestHall())
     fun stock(crop: String) = pantry[crop] ?: 0
     /** Range des unités ; ce qui dépasse la place de la réserve est perdu (les pièces sont déjà versées). */
     fun addStock(crop: String, units: Int) {
         if (units <= 0 || crop !in Hamlet.cropById) return
-        pantry[crop] = minOf(pantryCap(), stock(crop) + units)
+        pantry[crop] = maxOf(stock(crop), minOf(pantryCap().toLong(), stock(crop).toLong() + units).toInt())
     }
     fun yieldCoins(o: Obj, base: Int) = base * (100 + (o.tier - 1) * 25 + journey.bonus(o.def.cat) + stewardship.villageBonus(o.def.cat)) / 100
 
     /** Douze consignes de chantier, sans chronomètre ni dépense. Une erreur conserve l'avancement. */
     fun beginWork() { if (workTool < 0) workTool = workRng.nextInt(3) }
     fun answerWork(tool: Int): Boolean {
-        if (workTool < 0 || tool != workTool || workSeconds >= 7200) return false
+        if (workTool < 0 || tool != workTool) return false
         workStep++
         if (workStep == 12) {
             workSeconds = (workSeconds + 300).coerceAtMost(7200)
@@ -381,7 +380,7 @@ class HamletGame(
     fun applyWork(o: Obj): Boolean {
         val left = workLeft(o)
         if (left <= 0 || workSeconds <= 0) return false
-        adventure.advanceProduction()
+        adventure.advanceProduction(true)
         val used = minOf(workSeconds, ((left + 999) / 1000).toInt(), 300)
         val ms = used * 1000L
         when {
@@ -418,7 +417,7 @@ class HamletGame(
     fun feed(o: Obj): Boolean {
         val p = HamletLife.produce[o.t] ?: return false
         if (!owns(o) || p.feed == 0 || o.t0 != 0L || buildLeft(o) > 0) return false
-        if (!spendCoins(p.feed)) { listener?.onMessage("poor"); return false }
+        if (!HamletIndustry.feed(o).pay(this)) { listener?.onMessage("industry_missing"); return false }
         o.t0 = now()
         o.economicRevision++
         stat("fed"); touch(); changed()
@@ -432,6 +431,7 @@ class HamletGame(
         // Conserver la fraction de croissance, mais jeter le surplus au-delà du stockage.
         o.t0 = if (p.feed > 0) 0 else now() - (now() - o.t0) % (p.seconds * 1000L)
         o.economicRevision++
+        adventure.add(AdventureResource.FOOD, HamletIndustry.productFood(o) * count)
         stat("products", count.toLong())
         reward(o, yieldCoins(o, p.coins) * count, p.xp * count)
         touch(); changed()
@@ -556,6 +556,8 @@ class HamletGame(
         if (!owns(o) || o.def.cat != Cat.SHOP || buildLeft(o) > 0) return false
         val ord = o.order ?: return false
         if (ord.t0 != 0L) return false
+        if (!HamletIndustry.recipe(o.t, o.tier).cost.pay(this)) { listener?.onMessage("industry_missing"); return false }
+        ord.recipeRank = o.tier
         ord.t0 = now()
         o.economicRevision++
         stat("accepted")
@@ -578,6 +580,7 @@ class HamletGame(
         if (ord.t0 == 0L || jobLeft(o) > 0) return false
         val bonus = charmBonus(o)
         val from = ord.from
+        if (ord.recipeRank > 0) HamletIndustry.recipe(o.t, ord.recipeRank).output.forEach { (r, n) -> adventure.add(r, n) }
         o.order = null
         o.economicRevision++
         o.next = now() + rng.nextLong(25_000, 110_000)
@@ -608,7 +611,7 @@ class HamletGame(
         val cost = hurryCost(o)
         if (cost <= 0) return false
         if (!spendGems(cost)) { listener?.onMessage("poor_gems"); return false }
-        adventure.advanceProduction()
+        adventure.advanceProduction(true)
         val d = o.def
         when {
             buildLeft(o) > 0 -> { o.b0 = 0; if (o.t in HamletLife.produce && o.def.cat != Cat.RANCH) o.t0 = now() }
@@ -631,7 +634,9 @@ class HamletGame(
         val beforeLevel = level()
         val paidCoins = if (!sandbox && d.gems == 0) d.cost.toLong() else 0L
         val paidGems = if (!sandbox) d.gems else 0
-        if (!sandbox) { if (d.gems > 0) gems -= d.gems else coins -= d.cost }
+        val receipt = HamletIndustry.building(d)
+        if (!receipt.pay(this)) return null
+        adventure.advanceProduction(true)
         val o = Obj(nextId++, id, x, y, flip)
         if (d.build > 0 && !sandbox) o.b0 = now()
         if (d.cat == Cat.HOME) o.t0 = now()
@@ -640,7 +645,7 @@ class HamletGame(
         insert(o)
         addXp(d.xp)
         stat("built"); stat("built_$id"); stat("cat_${d.cat.name.lowercase()}")
-        buildHistory.bought(o, paidCoins, paidGems, constructionRewards(d.xp, beforeLevel, "built", "built_$id", "cat_${d.cat.name.lowercase()}"))
+        buildHistory.bought(o, paidCoins, paidGems, constructionRewards(d.xp, beforeLevel, "built", "built_$id", "cat_${d.cat.name.lowercase()}"), if (sandbox) emptyMap() else receipt.resources)
         buildHistory.noteRecent(id)
         changed()
         return o
@@ -662,7 +667,7 @@ class HamletGame(
 
     fun sell(o: Obj): Boolean {
         if (o.def.cat == Cat.HALL || objs[o.id] !== o) return false
-        adventure.advanceProduction()
+        adventure.advanceProduction(true)
         setOcc(o, 0)
         objs.remove(o.id)
         val v = sellValue(o)
@@ -766,7 +771,7 @@ class HamletGame(
 
     fun upgradeHall(): Boolean {
         val n = nextHall() ?: return false
-        if (ulvl() < n.lvl || !journey.canUpgradeHall() || !spendCoins(n.cost)) return false
+        if (ulvl() < n.lvl || !journey.canUpgradeHall() || !HamletIndustry.hall(this).pay(this)) return false
         hall++
         groundRev++
         addXp(n.cost / 20)
@@ -781,7 +786,7 @@ class HamletGame(
 
     fun expandLand(): Boolean {
         if (!canExpand()) return false
-        if (!spendCoins(expandCost())) { listener?.onMessage("poor"); return false }
+        if (!HamletIndustry.land(this).pay(this)) { listener?.onMessage("industry_missing"); return false }
         val c = Hamlet.expandCost(expand)
         expand++
         groundRev++
@@ -871,7 +876,7 @@ class HamletGame(
     /** À appeler souvent : termine les chantiers, fait venir les commandes. Rend vrai si l'allure d'un objet a changé. */
     fun tick(): Boolean {
         val t = now()
-        adventure.advanceProduction()
+        adventure.advanceProduction(objs.values.any { it.b0 != 0L && buildLeft(it) == 0L })
         ensureDaily()
         if (t - tickAt < 400) return false
         tickAt = t

@@ -38,7 +38,7 @@
     <string name="hamlet_need_crop">%1$s · %2$d / %3$d</string>
     <string name="hamlet_crop_stock">grange %1$d</string>
     <string name="hamlet_granary">Grange</string>
-    <string name="hamlet_granary_help">Chaque récolte range des cultures dans la grange, jusqu’à %1$d de chacune. Les bâtiments s’en servent pour passer au rang suivant, les quêtes en demandent, les légendes aussi. Une halle plus grande agrandit la grange.</string>
+    <string name="hamlet_granary_help">Chaque récolte range des cultures dans la grange, jusqu’à %1$d de chacune. Les ateliers et les animaux les consomment ; les bâtiments et les légendes en ont aussi besoin. La meilleure halle de tes îles détermine la capacité de la grange commune.</string>
     <string name="hamlet_a_find">Belle trouvaille !</string>
     <string name="hamlet_a_first_clear">Première victoire !</string>
     <string name="hamlet_welcome_title">Te revoilà !</string>

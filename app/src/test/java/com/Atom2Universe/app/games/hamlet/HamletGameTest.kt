@@ -213,6 +213,8 @@ class HamletGameTest {
         g.coins = 1_000_000
         g.xp = 1_000_000
         val before = g.realmSize()
+        assertFalse(g.upgradeHall()) // Coins alone no longer build a Hall.
+        HamletIndustry.hall(g).resources.forEach { (r, n) -> g.adventure.add(r, n) }
         assertTrue(g.upgradeHall())
         assertTrue(g.realmSize() > before)
         val e = g.realmSize()

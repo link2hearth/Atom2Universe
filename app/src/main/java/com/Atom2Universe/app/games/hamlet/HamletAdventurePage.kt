@@ -532,7 +532,7 @@ internal class HamletAdventurePage(private val context: Context, private val gam
                 row.addView(info(name, s(if (pet) "pet_story_$i" else "relic_story_$i")), LinearLayout.LayoutParams(dp(44), -2))
                 support.addView(row)
                 side(support, button(s("equip"), values[i] > 0 && !equipped) { a.selectSupport(pet, i); render() } to 1f,
-                    button(s("support_upgrade", (if (pet) 50L else 12L) * (values[i] + 1), s(if (pet) "resource_food" else "resource_crystal")), values[i] > 0, Weight.QUIET) {
+                    button(s("support_upgrade", a.supportCost(pet, i), s(if (pet) "resource_food" else "resource_crystal")), values[i] > 0, Weight.QUIET) {
                         if (a.upgradeSupport(pet, i)) render()
                     } to 1f)
             }
@@ -573,7 +573,7 @@ internal class HamletAdventurePage(private val context: Context, private val gam
     private fun kingdom() {
         val duties = card(context.getString(R.string.hamlet_s_posts), context.getString(R.string.hamlet_s_posts_help), glyph = "people")
         duties.addView(button(context.getString(R.string.hamlet_s_assign), glyph = "hat") { nav.open(HamletModule.JOURNAL, HamletJournalPage.POSTS) })
-        section(s("facilities"), s("facilities_help"))
+        section(s("facilities"), s("facilities_help") + "\n\n" + raw("hamlet_industry_domain"))
         for ((i, id) in HamletAdventure.FACILITIES.withIndex()) {
             val facility = card(item(id), s("facility_$i"))
             val showcase = line()
@@ -582,7 +582,9 @@ internal class HamletAdventurePage(private val context: Context, private val gam
             text(detail, s("facility_level", a.facility(id)), small = true)
             val best = game.objs.values.filter { it.t == id && game.buildLeft(it) == 0L }.maxByOrNull { it.tier }
             if (best != null && game.canUpgrade(best)) action(detail, raw("hamlet_progression_upgrade_building", best.tier + 1, game.upgradeCost(best)),
-                game.canUpgrade(best) && (game.sandbox || game.coins >= game.upgradeCost(best)), glyph = "star") { game.upgrade(best) }
+                game.canAffordUpgrade(best), glyph = "star") { game.upgrade(best) }
+            if (best != null && game.canUpgrade(best)) text(detail, HamletUi.costText(context, HamletIndustry.upgrade(best), game), small = true)
+            text(detail, HamletUi.costText(context, HamletIndustry.building(Hamlet.byId.getValue(id))), small = true)
             detail.addView(button(s("build_cost", Hamlet.byId.getValue(id).cost, Hamlet.byId.getValue(id).lvl),
                 weight = if (a.facility(id) == 0) Weight.NORMAL else Weight.QUIET, glyph = "hammer") { build(id) })
             showcase.addView(detail, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(8) })
@@ -598,18 +600,26 @@ internal class HamletAdventurePage(private val context: Context, private val gam
             row.addView(button(s("worker_plus"), a.workers.sum() < a.workerCapacity()) { if (a.assignWorker(i, 1)) render() }, LinearLayout.LayoutParams(dp(54), -2).apply { marginStart = dp(6) })
             workers.addView(row)
         }
+        if (a.workers.sum() > a.workerCapacity()) text(workers, raw("hamlet_industry_resting"), small = true)
         val tech = card(s("academy"), s("academy_help"), glyph = "book")
         for (i in a.tech.indices) action(tech, s("tech_cost", s("tech_$i"), a.tech[i], a.researchCost(i)), a.facility("adventureAcademy") > 0 || game.sandbox) { a.research(i) }
         val troops = card(s("troops"), s("troops_help", a.marchCapacity()) + "\n\n" + raw("hamlet_progression_militia_cap", a.maxTroopTier()), glyph = "lance")
         text(troops, s("militia_rank", a.maxTroopTier()), small = true)
         for (i in 0..2) {
             action(troops, s("troop_row", factionName(HeroFaction.entries[i]), a.troops[i]), a.facility("adventureYard") > 0 || game.sandbox) { a.trainTroops(i) }
-            action(troops, s("troop_upgrade", a.troopTier[i], 20L * a.troopTier[i], 15L * a.troopTier[i]),
+            action(troops, s("troop_upgrade", a.troopTier[i], a.troopUpgradeCost(i).resources.getValue(AdventureResource.TIMBER), a.troopUpgradeCost(i).resources.getValue(AdventureResource.BOOKS)),
                 (a.facility("adventureYard") > 0 || game.sandbox) && a.troopTier[i] < a.maxTroopTier(), Weight.QUIET) { a.improveTroops(i) }
         }
         val builders = card(s("builders"), s("builders_help", game.workSeconds), glyph = "hammer")
         text(builders, s("builders_reserve", game.workSeconds), small = true)
         action(builders, s("builders_cost")) { a.supplyBuilders() }
+        val industry = card(raw("hamlet_industry_title"), raw("hamlet_industry_sources"), glyph = "bread")
+        text(industry, HamletUi.costText(context, HamletIndustry.rations, game), small = true)
+        action(industry, raw("hamlet_industry_rations"), HamletIndustry.rations.canPay(game), glyph = "bread") { HamletIndustry.prepareRations(game) }
+        text(industry, HamletUi.costText(context, HamletIndustry.builders, game), small = true)
+        action(industry, raw("hamlet_industry_builders"), game.workSeconds <= 3600 && HamletIndustry.builders.canPay(game), glyph = "hammer") { HamletIndustry.supplyBuilders(game) }
+        text(industry, HamletUi.costText(context, HamletIndustry.caravan, game), small = true)
+        action(industry, raw("hamlet_industry_caravan"), (game.sandbox || a.facility("adventureInn") > 0) && HamletIndustry.caravan.canPay(game), glyph = "ticket") { HamletIndustry.welcomeCaravan(game) }
         val workshop = card(raw("hamlet_progression_supply_workshop"), raw("hamlet_progression_supply_help"), glyph = "crate")
         action(workshop, raw("hamlet_progression_supply_ore"), game.sandbox || a.facility("adventureStore") > 0, glyph = "ore") { a.workshopSupplies(false) }
         action(workshop, raw("hamlet_progression_supply_books"), game.sandbox || a.facility("adventureAcademy") > 0, glyph = "book") { a.workshopSupplies(true) }

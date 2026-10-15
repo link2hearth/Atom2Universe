@@ -66,7 +66,7 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
             if (begin >= startMs + days * DAY) break
             nextSessionStart = if (i + 1 < sessions.size) base + d * DAY + sessions[i + 1].first * 60_000L else base + (d + 1) * DAY + sessions[0].first * 60_000L
             if (begin > clock.t) { clock.t = begin; g.tick() }
-            sessionEnd = clock.t + s.second * 60_000L
+            sessionEnd = min(clock.t + s.second * 60_000L, startMs + days * DAY)
             // une reprise passe par la même sérialisation que l'application
             check(HamletSave.fromJson(g, HamletSave.toJson(g))) { "sauvegarde illisible" }
             session()
@@ -105,6 +105,9 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
         while (g.journey.canClaim()) { g.journey.claim(); action() }
         plantFields()
         feedAndOrders()
+        if (a[AdventureResource.FOOD] < 1000 && HamletIndustry.prepareRations(g)) action()
+        if (g.journey.expedition >= 0 && g.workSeconds < 3600 && HamletIndustry.supplyBuilders(g)) action()
+        if (HamletIndustry.welcomeCaravan(g)) action()
         developJourney()
         spendWork()
         shop()
@@ -134,6 +137,10 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
         for (id in HamletAdventure.FACILITIES) {
             val o = g.objs.values.filter { it.t == id }.maxByOrNull { it.tier } ?: continue
             if (g.canUpgrade(o)) g.upgradeNeeds(o).forEach { ask(it.crop, it.units) }
+        }
+        for (o in g.objs.values) {
+            if (o.def.cat == Cat.SHOP) HamletIndustry.recipe(o.t, o.tier).cost.crops.forEach { (crop, n) -> ask(crop, n * 3) }
+            if (HamletLife.produce[o.t]?.feed?.let { it > 0 } == true) HamletIndustry.feed(o).crops.forEach { (crop, n) -> ask(crop, n * 5) }
         }
         val wanted = want.filter { g.stock(it.key) < it.value }.toMutableMap()
         // une quête de récolte compte les récoltes faites, pas la réserve
@@ -223,6 +230,7 @@ class HamletBot(val rhythm: Rhythm, val seed: Int, startMs: Long = (1_800_000_00
         if (q != null && q.key.startsWith("built_") && !g.questDone(q) && buy(q.key.removePrefix("built_"))) return true
         if (count("field") < 4 && buy("field")) return true
         if (count("cottage") < 3 && buy("cottage")) return true
+        for (id in listOf("bakery", "lumbermill", "quarry")) if (count(id) == 0 && buy(id, 100)) return true
         for (id in HamletAdventure.FACILITIES) if (count(id) == 0 && buy(id, 100)) return true
         // les bâtiments de l'aventure montent en rang dès que possible : l'équipement et le camp en dépendent
         for (id in HamletAdventure.FACILITIES) {

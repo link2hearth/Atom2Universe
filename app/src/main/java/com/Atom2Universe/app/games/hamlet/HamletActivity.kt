@@ -303,11 +303,11 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         add("coin", game.coins.toLong(), getString(R.string.hamlet_ui_coins, game.coins))
         add("gem", game.gems.toLong(), getString(R.string.hamlet_ui_gems, game.gems))
         val a = game.adventure
-        if (a.opened()) {
+        run {
             a.advanceProduction()
             val glyphs = mapOf(AdventureResource.TICKETS to "ticket", AdventureResource.FOOD to "apple", AdventureResource.TIMBER to "wood", AdventureResource.STONE to "ore",
-                AdventureResource.ORE to "gear", AdventureResource.BOOKS to "book", AdventureResource.CRYSTAL to "crystal", AdventureResource.RUNES to "star")
-            for ((resource, glyph) in glyphs) add(glyph, a[resource], getString(R.string.hamlet_ui_resource_amount, stringByName("hamlet_a_resource_${resource.name.lowercase()}"), a[resource]))
+                AdventureResource.ORE to "gear", AdventureResource.BOOKS to "book", AdventureResource.CRYSTAL to "crystal", AdventureResource.RUNES to "star", AdventureResource.BREAD to "bread", AdventureResource.TOOLS to "hammer")
+            for ((resource, glyph) in glyphs.filterKeys { a.opened() || it in setOf(AdventureResource.TIMBER, AdventureResource.STONE, AdventureResource.BREAD) }) add(glyph, a[resource], getString(R.string.hamlet_ui_resource_amount, stringByName("hamlet_a_resource_${resource.name.lowercase()}"), a[resource]))
         }
         return list
     }
@@ -455,11 +455,11 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         when (game.status(o)) {
             Status.RIPE, Status.WITHERED -> addAction(R.string.hamlet_harvest, "sack", Weight.MAIN) { game.harvest(o) }
             Status.TAX -> addAction(R.string.hamlet_collect, "coin", Weight.MAIN) { game.collectTax(o) }
-            Status.ORDER_NEW -> { addAction(R.string.hamlet_accept, "scroll", Weight.MAIN) { game.acceptOrder(o) }; addAction(R.string.hamlet_decline, "cross", Weight.QUIET) { game.declineOrder(o) } }
+            Status.ORDER_NEW -> { addAction(R.string.hamlet_accept, "scroll", Weight.MAIN) { confirm(itemName(o.t), HamletUi.recipeText(this, o.t, o.tier, game), "crate") { game.acceptOrder(o) } }; addAction(R.string.hamlet_decline, "cross", Weight.QUIET) { game.declineOrder(o) } }
             Status.ORDER_DONE -> addAction(R.string.hamlet_deliver, "crate", Weight.MAIN) { game.deliver(o) }
             Status.GIFT -> addAction(R.string.hamlet_gift, "gift", Weight.MAIN) { game.openGift() }
             Status.FEED -> addAction(R.string.hamlet_feed, "apple", Weight.MAIN) {
-                confirm(getString(R.string.hamlet_feed), getString(R.string.hamlet_feed_confirm, HamletLife.produce.getValue(o.t).feed), "apple") { game.feed(o) }
+                confirm(getString(R.string.hamlet_feed), getString(R.string.hamlet_industry_feed, HamletUi.costText(this, HamletIndustry.feed(o), game)), "apple") { game.feed(o) }
             }
             Status.PRODUCT -> addAction(R.string.hamlet_products, "crate", Weight.MAIN) { game.collectProduct(o) }
             else -> Unit
@@ -525,6 +525,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         line(getString(R.string.hamlet_need_coins, cost), game.sandbox || game.coins >= cost)
         for (need in game.upgradeNeeds(o)) line(getString(R.string.hamlet_need_crop, itemName("c_${need.crop}"), game.stock(need.crop), need.units),
             game.sandbox || game.stock(need.crop) >= need.units)
+        line(HamletUi.costText(this, VillageCost(resources = HamletIndustry.upgrade(o).resources), game), VillageCost(resources = HamletIndustry.upgrade(o).resources).canPay(game))
         val ready = game.canAffordUpgrade(o)
         sheet.footer(HamletUi.button(this, getString(android.R.string.cancel), Weight.QUIET) { sheet.dismiss() } to 1f,
             HamletUi.button(this, getString(R.string.hamlet_upgrade), Weight.MAIN, glyph = "star") { if (game.upgrade(o)) sheet.dismiss() }.apply { isEnabled = ready } to 1.6f)
@@ -550,7 +551,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         var message = getString(R.string.hamlet_footprint, o.w, o.d, d.lvl, d.pop)
         message += when {
             o.t in HamletLife.produce -> HamletLife.produce.getValue(o.t).let { p ->
-                getString(R.string.hamlet_producer_info, game.yieldCoins(o, p.coins), duration(p.seconds * 1000L), p.feed) +
+                getString(R.string.hamlet_producer_info, game.yieldCoins(o, p.coins), duration(p.seconds * 1000L), if (p.feed > 0) HamletIndustry.feed(o).crops.getValue("corn") else 0) +
                     getString(if (p.feed > 0) R.string.hamlet_ranch_help else R.string.hamlet_orchard_help)
             }
             d.cat == Cat.HOME -> getString(R.string.hamlet_home_info, game.yieldCoins(o, d.tax), duration(d.period * 1000L), game.charmBonus(o))
@@ -558,6 +559,12 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
             d.cat == Cat.FIELD -> getString(R.string.hamlet_field_help)
             else -> getString(R.string.hamlet_charm_info, d.charm)
         }
+        if (d.cat == Cat.SHOP) {
+            val paidRank = o.order?.takeIf { it.t0 > 0 }?.recipeRank
+            message += "\n\n" + if (paidRank == 0) getString(R.string.hamlet_industry_legacy_order)
+                else HamletUi.recipeText(this, o.t, paidRank ?: o.tier, game)
+        }
+        if (o.t in HamletLife.produce) message += "\n" + HamletUi.costText(this, VillageCost(resources = mapOf(AdventureResource.FOOD to HamletIndustry.productFood(o))))
         if (d.shore) message += getString(R.string.hamlet_shore_help)
         if (game.stewardship.villageBonus(d.cat) > 0) message += getString(R.string.hamlet_s_village_bonus, game.stewardship.villageBonus(d.cat))
         HamletSheet.message(this, itemName(o.t), message)
@@ -663,12 +670,12 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
     }
     private fun expandLand() {
         if (!game.canExpand()) return
-        confirm(getString(R.string.hamlet_land), getString(R.string.hamlet_land_confirm, game.expandCost()), "map") { game.expandLand() }
+        confirm(getString(R.string.hamlet_land), getString(R.string.hamlet_land_confirm, game.expandCost()) + "\n\n" + HamletUi.costText(this, HamletIndustry.land(game), game), "map") { game.expandLand() }
     }
     private fun upgradeHall() {
         val next = game.nextHall() ?: return
         if (game.ulvl() < next.lvl || !game.journey.canUpgradeHall()) return
-        confirm(getString(R.string.hamlet_hall), getString(R.string.hamlet_hall_confirm, game.hall + 1, next.cost, next.realm), "castle") { game.upgradeHall() }
+        confirm(getString(R.string.hamlet_hall), getString(R.string.hamlet_hall_confirm, game.hall + 1, next.cost, next.realm) + "\n\n" + HamletUi.costText(this, HamletIndustry.hall(game), game), "castle") { game.upgradeHall() }
     }
     private fun showHelp() { HamletSheet.message(this, getString(R.string.hamlet_help), getString(R.string.hamlet_help_text)) }
     private fun showSettings() {

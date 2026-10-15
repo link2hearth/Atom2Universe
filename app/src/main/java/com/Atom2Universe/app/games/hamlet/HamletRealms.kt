@@ -15,6 +15,9 @@ class HamletRealms(private val game: HamletGame) {
     private val parked = linkedMapOf<Int, Land>()
     val count get() = parked.size + 1
 
+    internal fun allObjects(): List<Obj> = game.objs.values.toList() + parked.values.flatMap { it.objects.values }
+    fun bestHall() = maxOf(game.hall, parked.values.maxOfOrNull { it.hall } ?: 1)
+
     fun reset() { current = 1; currentName = ""; parked.clear() }
     fun name(no: Int = current): String = if (no == current) currentName else parked[no]?.name.orEmpty()
     fun entries(): List<Info> = (parked.values.map { Info(it.no, it.name, it.hall, Hamlet.realmSize(it.hall, it.expand), it.objects.size, false) } +
@@ -46,7 +49,7 @@ class HamletRealms(private val game: HamletGame) {
 
     fun found(template: Template = Template.STARTER): Boolean {
         if (!canFound() || !game.sandbox && template != Template.STARTER) return false
-        game.adventure.advanceProduction()
+        game.adventure.advanceProduction(true)
         val requirement = requirement()
         val no = count + 1
         val fresh = HamletGame(game::now, Random(no)).apply {
@@ -78,7 +81,7 @@ class HamletRealms(private val game: HamletGame) {
     fun switchTo(no: Int): Boolean {
         if (no == current) return true
         val land = parked[no] ?: return false
-        game.adventure.advanceProduction()
+        game.adventure.advanceProduction(true)
         parked[current] = capture()
         parked.remove(no)
         activate(land)
@@ -111,7 +114,7 @@ class HamletRealms(private val game: HamletGame) {
     companion object {
         internal fun clone(o: Obj, id: Int = o.id) = Obj(id, o.t, o.x, o.y, o.flip).also {
             it.crop = o.crop; it.t0 = o.t0; it.b0 = o.b0; it.next = o.next
-            it.order = o.order?.let { order -> Order(order.from, order.t0) }
+            it.order = o.order?.let { order -> Order(order.from, order.t0, order.recipeRank) }
             it.tier = o.tier; it.tended = o.tended
         }
     }

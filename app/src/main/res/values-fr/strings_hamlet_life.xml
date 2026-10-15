@@ -27,7 +27,7 @@
     <string name="hamlet_plant_all">Planter dans tous les champs vides compatibles</string>
     <string name="hamlet_crop_choice">%1$s · Coût %2$d · Vente %3$d pièces · %4$s</string>
     <string name="hamlet_footprint">Taille : %1$d × %2$d cases\nDéblocage : niveau %3$d · Habitants : %4$d\n</string>
-    <string name="hamlet_producer_info">Recette : %1$d pièces toutes les %2$s\nRepas par cycle : %3$d pièces\n</string>
+    <string name="hamlet_producer_info">Recette : %1$d pièces toutes les %2$s\nRepas par cycle : %3$d maïs\n</string>
     <string name="hamlet_ranch_help">\nNourris, attends, puis vends les produits. Tes animaux se reposent tranquillement entre les repas.</string>
     <string name="hamlet_orchard_help">\nPousse en ton absence. Conserve jusqu’à trois récoltes, sans faner.</string>
     <string name="hamlet_home_info">Impôt : %1$d pièces toutes les %2$s\nBonus de charme voisin : +%3$d%%\nLes décors et les services du village améliorent les recettes.</string>
@@ -59,7 +59,7 @@
     <string name="hamlet_category_path">Sols et eau</string>
     <string name="hamlet_search">Chercher dans cette catégorie</string>
     <string name="hamlet_search_empty">Aucun élément correspondant.</string>
-    <string name="hamlet_catalog_produce">%1$d pièces / %2$s · Repas %3$d</string>
+    <string name="hamlet_catalog_produce">%1$d pièces / %2$s · %3$d maïs</string>
     <string name="hamlet_catalog_home">%1$d habitants · %2$d pièces / %3$s</string>
     <string name="hamlet_catalog_shop">%1$d pièces / %2$s</string>
     <string name="hamlet_shore_short"> · Au bord de l’eau</string>

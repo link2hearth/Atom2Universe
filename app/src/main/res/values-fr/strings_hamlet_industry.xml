@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_a_resource_bread">Pain</string>
+    <string name="hamlet_industry_coins">Pièces</string>
+    <string name="hamlet_industry_gems">Gemmes</string>
+    <string name="hamlet_industry_supplies">Provisions d’expédition</string>
+    <string name="hamlet_industry_amount">%1$s : %2$d</string>
+    <string name="hamlet_industry_stock">%1$s : %2$d / %3$d</string>
+    <string name="hamlet_industry_recipe">Consommé à l’acceptation :\n%1$s\n\nProduit à la livraison :\n%2$s</string>
+    <string name="hamlet_industry_trade">Pièces et expérience pour ce service.</string>
+    <string name="hamlet_industry_feed">Nourrir les animaux avec les récoltes de la grange :\n%1$s</string>
+    <string name="hamlet_industry_title">Ravitaillement du village</string>
+    <string name="hamlet_industry_sources">Bois : scierie, ouvriers du camp, aventure ou atelier gratuit. Pierre : carrière, ouvriers du camp, aventure ou atelier. Pain : blé et bois à la boulangerie. Le maïs nourrit les animaux. Outils : bois et minerai à la forge ou chez le forgeron. Livres : académie ou bibliothèque. Provisions d’expédition : exploration. Les récoltes sont stockées dans la grange. Ces échanges sont répétables sans limite quotidienne.</string>
+    <string name="hamlet_industry_rations">Préparer des rations → 40 vivres</string>
+    <string name="hamlet_industry_builders">Ravitailler les bâtisseurs → 1 heure de travail</string>
+    <string name="hamlet_industry_caravan">Accueillir une caravane → 1 invitation (auberge requise)</string>
+    <string name="hamlet_industry_resting">Certains ouvriers affectés se reposent jusqu’à disposer de suffisamment de logements. Leurs affectations sont conservées.</string>
+    <string name="hamlet_industry_work">Chaque tâche terminée donne aussi 8 bois, 8 pierre et 2 runes, même quand la réserve de travail est pleine. La réserve de deux heures limite le stockage, jamais le farming.</string>
+    <string name="hamlet_msg_industry_missing">Il manque des ingrédients. Consulte la recette et tes stocks.</string>
+    <string name="hamlet_n_quarry">Carrière</string>
+    <string name="hamlet_n_p_quarry">Pierre taillée</string>
+    <string name="hamlet_industry_domain">Tes îles partagent ces bonus. Seul le meilleur rang terminé de chaque installation compte ; les exemplaires supplémentaires conservent leurs commandes d’atelier.</string>
+    <string name="hamlet_a_resource_tools">Outils</string>
+    <string name="hamlet_industry_legacy_order">Ancien contrat : les revenus habituels sont conservés. Les produits fabriqués commencent à la prochaine commande.</string>
+</resources>

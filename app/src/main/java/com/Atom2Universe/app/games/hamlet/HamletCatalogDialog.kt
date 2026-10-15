@@ -107,10 +107,16 @@ internal class HamletCatalogDialog(private val a: HamletActivity) {
             }
         }
         box.addView(tag, LinearLayout.LayoutParams(-2, -2).apply { topMargin = dp(5) })
+        if (unlocked && !a.game.sandbox && HamletIndustry.building(d).resources.isNotEmpty()) box.addView(TextView(a).apply {
+            text = HamletUi.costText(a, VillageCost(resources = HamletIndustry.building(d).resources))
+            textSize = 11.5f; gravity = Gravity.CENTER; setTextColor(if (affordable) HamletUi.MUTED else HamletUi.BAD)
+        }, LinearLayout.LayoutParams(-1, -2))
         box.contentDescription = a.getString(R.string.hamlet_catalog_item, a.itemName(d.id), tag.text, d.lvl)
         HamletMotion.press(box)
         box.setOnClickListener {
-            if (unlocked && affordable) { sheet.dismiss(); a.village.startPlacing(d) } else HamletMotion.pop(tag, 1.25f)
+            if (unlocked && affordable) { sheet.dismiss(); a.village.startPlacing(d) } else if (unlocked) HamletSheet.message(a, a.itemName(d.id),
+                HamletUi.costText(a, HamletIndustry.building(d), a.game) + "\n\n" + a.getString(R.string.hamlet_industry_sources))
+            else HamletMotion.pop(tag, 1.25f)
         }
         return box
     }
@@ -173,7 +179,7 @@ internal class HamletCatalogDialog(private val a: HamletActivity) {
     private fun summary(d: Def): String {
         val p = HamletLife.produce[d.id]
         return when {
-            p != null -> a.getString(R.string.hamlet_catalog_produce, p.coins, a.duration(p.seconds * 1000L), p.feed)
+            p != null -> a.getString(R.string.hamlet_catalog_produce, p.coins, a.duration(p.seconds * 1000L), if (p.feed > 0) 1 + p.feed / 20 else 0)
             d.cat == Cat.HOME -> a.getString(R.string.hamlet_catalog_home, d.pop, d.tax, a.duration(d.period * 1000L))
             d.cat == Cat.SHOP -> a.getString(R.string.hamlet_catalog_shop, d.pay, a.duration(d.job * 1000L)) + if (d.shore) a.getString(R.string.hamlet_shore_short) else ""
             d.cat == Cat.FIELD -> a.getString(if (d.magic) R.string.hamlet_catalog_magic else R.string.hamlet_catalog_field)

@@ -7,7 +7,7 @@ class HamletBuildHistory(private val game: HamletGame) {
     internal data class Rewards(val xp: Int, val firstLevel: Int, val lastLevel: Int,
         val stats: Map<String, Long>, val quest: Int, val chapter: Int)
     private sealed interface Change
-    private data class Bought(val obj: Obj, val coins: Long, val gems: Int, val revision: Int, val reward: Rewards) : Change
+    private data class Bought(val obj: Obj, val coins: Long, val gems: Int, val revision: Int, val reward: Rewards, val materials: Map<AdventureResource, Long>) : Change
     private data class Sold(val obj: Obj, val proceeds: Long) : Change
     private data class Moved(val obj: Obj, val oldX: Int, val oldY: Int, val oldFlip: Boolean,
         val newX: Int, val newY: Int, val newFlip: Boolean) : Change
@@ -53,7 +53,8 @@ class HamletBuildHistory(private val game: HamletGame) {
         gesture!!.add(change)
         if (own) endGesture()
     }
-    internal fun bought(o: Obj, coins: Long, gems: Int, reward: Rewards) = record(Bought(o, coins, gems, o.economicRevision, reward))
+    internal fun bought(o: Obj, coins: Long, gems: Int, reward: Rewards, materials: Map<AdventureResource, Long> = emptyMap()) =
+        record(Bought(o, coins, gems, o.economicRevision, reward, materials.toMap()))
     internal fun sold(o: Obj, proceeds: Long) = record(Sold(o, proceeds))
     internal fun moved(o: Obj, x: Int, y: Int, flip: Boolean) = record(Moved(o, x, y, flip, o.x, o.y, o.flip))
     internal fun ground(index: Int, before: Int, after: Int, cost: Long = 0, reward: Rewards? = null) =
@@ -65,6 +66,7 @@ class HamletBuildHistory(private val game: HamletGame) {
     fun undo(): Boolean {
         while (gesture != null) endGesture()
         val changes = stack.peekLast() ?: return fail("undo_empty")
+        game.adventure.advanceProduction(true)
         val objects = game.objs.mapValuesTo(LinkedHashMap()) { (_, o) -> Geometry(o, o.x, o.y, o.flip) }
         val ground = game.paths.copyOf()
         val stats = HashMap<String, Long>()
@@ -119,6 +121,7 @@ class HamletBuildHistory(private val game: HamletGame) {
                 occupancy[index] = id
             }
         }
+        changes.filterIsInstance<Bought>().forEach { change -> change.materials.forEach { (r, n) -> game.adventure.add(r, n) } }
         game.coins += coins; game.gems = (game.gems + gems).toInt(); game.xp -= xp
         stats.forEach { (key, n) -> game.stats[key] = game.stats.getValue(key) - n }
         game.objs.clear()

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_a_resource_bread">Bread</string>
+    <string name="hamlet_industry_coins">Coins</string>
+    <string name="hamlet_industry_gems">Gems</string>
+    <string name="hamlet_industry_supplies">Expedition supplies</string>
+    <string name="hamlet_industry_amount">%1$s: %2$d</string>
+    <string name="hamlet_industry_stock">%1$s: %2$d / %3$d</string>
+    <string name="hamlet_industry_recipe">Consumed when accepted:\n%1$s\n\nProduced on delivery:\n%2$s</string>
+    <string name="hamlet_industry_trade">Coins and experience for this service.</string>
+    <string name="hamlet_industry_feed">Feed the animals with crops from the barn:\n%1$s</string>
+    <string name="hamlet_industry_title">Village provisions</string>
+    <string name="hamlet_industry_sources">Wood: sawmill, camp workers, adventures or the free workshop. Stone: quarry, camp workers, adventures or workshop. Bread: wheat and wood at the bakery. Corn feeds the animals. Tools: timber and ore at the forge or blacksmith. Books: academy or library. Expedition supplies: exploration. Harvests are stored in the barn. These trades can be repeated without a daily limit.</string>
+    <string name="hamlet_industry_rations">Prepare rations → 40 food</string>
+    <string name="hamlet_industry_builders">Supply builders → 1 hour of work</string>
+    <string name="hamlet_industry_caravan">Welcome a caravan → 1 invitation (Inn required)</string>
+    <string name="hamlet_industry_resting">Some assigned workers are resting until enough housing is available. Their assignments are kept.</string>
+    <string name="hamlet_industry_work">Each completed task also gives 8 wood, 8 stone and 2 runes, even when the work reserve is full. The two-hour reserve limits storage, never farming.</string>
+    <string name="hamlet_msg_industry_missing">Missing ingredients. Check the recipe and your stocks.</string>
+    <string name="hamlet_n_quarry">Quarry</string>
+    <string name="hamlet_n_p_quarry">Cut stone</string>
+    <string name="hamlet_industry_domain">Your islands share these bonuses. Only the highest completed rank of each facility counts; extra copies keep their workshop orders.</string>
+    <string name="hamlet_a_resource_tools">Tools</string>
+    <string name="hamlet_industry_legacy_order">Existing contract: the usual income is preserved. Manufactured goods start with the next order.</string>
+</resources>

@@ -55,7 +55,7 @@ object HamletAdventureSave {
             }
         }
         fill("tech", a.tech); fill("workers", a.workers, hi = 24); fill("troops", a.troops)
-        var remaining = a.workerCapacity()
+        var remaining = 24 // Retain assignments when housing is sold; surplus workers rest until rehoused.
         for (i in a.workers.indices) { a.workers[i] = minOf(a.workers[i], remaining); remaining -= a.workers[i] }
         fill("troopTier", a.troopTier, 1, 10); fill("relics", a.relics); fill("pets", a.pets)
         fill("teamPets", a.teamPets, -1, 2); fill("teamRelics", a.teamRelics, -1, 2)

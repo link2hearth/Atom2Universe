@@ -51,9 +51,7 @@ class HamletArmory(private val g: HamletGame) {
     val inventory: List<GearPiece> get() = pieces.values.toList()
     fun reset() { pieces.clear(); assignments.clear(); nextId = 1 }
     private fun changed() { g.listener?.onChanged() }
-    fun forgeRank() = if (g.sandbox) 3 else g.objs.values.filter {
-        it.t == "adventureForge" && g.buildLeft(it) == 0L
-    }.maxOfOrNull { it.tier } ?: 0
+    fun forgeRank() = if (g.sandbox) 3 else g.adventure.facilityRank("adventureForge")
     fun requiredForge(rarity: EquipmentRarity) = when (rarity) {
         EquipmentRarity.RARE, EquipmentRarity.EPIC -> 1; EquipmentRarity.LEGENDARY -> 2; EquipmentRarity.MYTHIC -> 3
     }
@@ -80,7 +78,7 @@ class HamletArmory(private val g: HamletGame) {
     fun canCraft(slot: Int, set: GearSet, rarity: EquipmentRarity) = slot in 0..3 && nextId < Int.MAX_VALUE && unlocked(rarity) && canPay(craftCost(slot, set, rarity))
     fun craft(slot: Int, set: GearSet, rarity: EquipmentRarity): GearPiece? {
         if (slot !in 0..3 || nextId >= Int.MAX_VALUE || !unlocked(rarity)) return null
-        g.adventure.advanceProduction()
+        g.adventure.advanceProduction(true)
         if (!pay(craftCost(slot, set, rarity))) return null
         return GearPiece(nextId++, slot, set, rarity).also {
             pieces[it.id] = it; g.stat("gear_forged"); g.stat("hero_upgrades"); changed()
@@ -118,7 +116,7 @@ class HamletArmory(private val g: HamletGame) {
     fun enhance(pieceId: Int): Boolean {
         val piece = pieces[pieceId] ?: return false
         if (g.adventure.activeBattle != null || piece.level >= levelCap() || !unlocked(piece.rarity)) return false
-        g.adventure.advanceProduction()
+        g.adventure.advanceProduction(true)
         if (!pay(enhancementCost(piece.rarity, piece.level))) return false
         pieces[pieceId] = piece.copy(level = piece.level + 1)
         g.stat("gear_forged"); g.stat("hero_upgrades"); changed(); return true
@@ -147,7 +145,7 @@ class HamletArmory(private val g: HamletGame) {
         val piece = pieces[pieceId] ?: return false
         val next = nextQuality(pieceId) ?: return false
         if (g.adventure.activeBattle != null || !unlocked(next)) return false
-        g.adventure.advanceProduction()
+        g.adventure.advanceProduction(true)
         val cost = qualityCost(pieceId) ?: return false
         if (!pay(cost)) return false
         pieces[pieceId] = piece.copy(rarity = next)

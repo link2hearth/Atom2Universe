@@ -31,6 +31,28 @@ import com.Atom2Universe.app.R
  * the app's colour theme, so every text keeps its contrast whatever theme the player chose.
  */
 internal object HamletUi {
+    fun costText(context: Context, cost: VillageCost, game: HamletGame? = null): String {
+        fun named(key: String) = context.getString(context.resources.getIdentifier(key, "string", context.packageName))
+        val parts = mutableListOf<String>()
+        fun amount(name: String, need: Long, have: Long?) {
+            if (need <= 0) return
+            parts += if (have == null) context.getString(R.string.hamlet_industry_amount, name, need)
+                else context.getString(R.string.hamlet_industry_stock, name, have, need)
+        }
+        amount(named("hamlet_industry_coins"), cost.coins, game?.coins)
+        amount(named("hamlet_industry_gems"), cost.gems.toLong(), game?.gems?.toLong())
+        for ((r, n) in cost.resources) amount(named("hamlet_a_resource_${r.name.lowercase()}"), n, game?.adventure?.get(r))
+        for ((id, n) in cost.crops) amount(named("hamlet_n_c_$id"), n.toLong(), game?.stock(id)?.toLong())
+        amount(named("hamlet_industry_supplies"), cost.supplies.toLong(), game?.journey?.supplies?.toLong())
+        return parts.joinToString(context.getString(R.string.hamlet_ui_dot)).ifEmpty { context.getString(R.string.hamlet_price_free) }
+    }
+    fun recipeText(context: Context, id: String, tier: Int, game: HamletGame? = null): String {
+        val recipe = HamletIndustry.recipe(id, tier)
+        return context.getString(R.string.hamlet_industry_recipe, costText(context, recipe.cost, game),
+            if (recipe.output.isEmpty()) context.getString(R.string.hamlet_industry_trade)
+            else costText(context, VillageCost(resources = recipe.output)))
+    }
+
     const val FOREST = 0xFF213D38.toInt()
     const val DEEP = 0xFF102D2A.toInt()
     const val INK = 0xFF293D37.toInt()

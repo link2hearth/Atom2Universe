@@ -49,8 +49,10 @@ class HamletBuilderTest {
         val g = game(); g.xp = 6_000_000
         val gemDef = Hamlet.defs.first { it.gems > 0 && !it.onWater && !it.shore && it.cat != Cat.HALL }
         val coins = g.coins; val gems = g.gems
+        HamletIndustry.building(gemDef).resources.forEach { (r, n) -> g.adventure.add(r, n) }
+        val materials = g.adventure.bag.clone()
         buy(g, gemDef.id); assertTrue(g.buildHistory.undo())
-        assertEquals(coins, g.coins); assertEquals(gems, g.gems)
+        assertEquals(coins, g.coins); assertEquals(gems, g.gems); assertArrayEquals(materials, g.adventure.bag)
         val free = game(true); val before = free.coins
         buy(free, "field"); assertTrue(free.buildHistory.undo()); assertEquals(before, free.coins)
     }

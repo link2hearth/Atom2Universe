@@ -27,7 +27,7 @@
     <string name="hamlet_plant_all">Plant in every empty compatible field</string>
     <string name="hamlet_crop_choice">%1$s · Cost %2$d · Sale %3$d coins · %4$s</string>
     <string name="hamlet_footprint">Size: %1$d × %2$d tiles\nUnlock: level %3$d · Residents: %4$d\n</string>
-    <string name="hamlet_producer_info">Revenue: %1$d coins every %2$s\nFeed per cycle: %3$d coins\n</string>
+    <string name="hamlet_producer_info">Revenue: %1$d coins every %2$s\nFeed per cycle: %3$d corn\n</string>
     <string name="hamlet_ranch_help">\nFeed, wait, then sell the products. Your animals rest safely between meals.</string>
     <string name="hamlet_orchard_help">\nGrows while you are away. Holds up to three harvests, without withering.</string>
     <string name="hamlet_home_info">Tax: %1$d coins every %2$s\nNearby charm bonus: +%3$d%%\nDecorations and village services improve revenue.</string>
@@ -59,7 +59,7 @@
     <string name="hamlet_category_path">Paths and water</string>
     <string name="hamlet_search">Search in this category</string>
     <string name="hamlet_search_empty">No matching items.</string>
-    <string name="hamlet_catalog_produce">%1$d coins / %2$s · Feed %3$d</string>
+    <string name="hamlet_catalog_produce">%1$d coins / %2$s · %3$d corn</string>
     <string name="hamlet_catalog_home">%1$d residents · %2$d coins / %3$s</string>
     <string name="hamlet_catalog_shop">%1$d coins / %2$s</string>
     <string name="hamlet_shore_short"> · By the river</string>
